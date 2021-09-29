@@ -1,0 +1,41 @@
+# This workflow will build a Java project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Java 16 Tests
+on: [ push, pull_request, workflow_dispatch ]
+
+jobs:
+  Morphia:
+    if: false # always skip job until dokka works with java 16
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 16 ]
+        mongo: [ 4.4.6 ]
+    name: "Tests on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }})"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
+          restore-keys: \${{ runner.os }}-m2
+      - name: Compile Code
+        run: mvn install -DskipTests
+      - name: Run Tests
+        env:
+          MONGODB: ${{ matrix.mongo }}
+        run: mvn surefire:test
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}
+          path: |
+            core/target/**/*.log
+            core/target/**/*.err
+          retention-days: 5

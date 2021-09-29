@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static org.bson.assertions.Assertions.notNull;
 
@@ -47,7 +46,7 @@ public final class PropertyModelBuilder {
     private final Datastore datastore;
     private final List<String> alternateNames = new ArrayList<>();
     private PropertyAccessor<? super Object> accessor;
-    private List<Annotation> annotations = emptyList();
+    private List<Annotation> annotations = new ArrayList<>();
     private Boolean discriminatorEnabled;
     private EntityModel owner;
     private String mappedName;
@@ -60,22 +59,15 @@ public final class PropertyModelBuilder {
         this.datastore = datastore;
     }
 
-    public PropertyModelBuilder discoverMappedName(MapperOptions options) {
-        Property property = getAnnotation(Property.class);
-        Reference reference = getAnnotation(Reference.class);
-        Version version = getAnnotation(Version.class);
-
-        if (hasAnnotation(Id.class)) {
-            mappedName("_id");
-        } else if (property != null && !property.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName(property.value());
-        } else if (reference != null && !reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName(reference.value());
-        } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName(version.value());
-        } else {
-            mappedName(options.getFieldNaming().apply(name()));
-        }
+    /**
+     * Adds an annotation
+     *
+     * @param annotation the annotation
+     * @return this
+     * @since 2.3
+     */
+    public PropertyModelBuilder annotation(Annotation annotation) {
+        this.annotations.add(notNull("annotation", annotation));
         return this;
     }
 
@@ -112,6 +104,26 @@ public final class PropertyModelBuilder {
      */
     public List<String> alternateNames() {
         return alternateNames;
+    }
+
+    public PropertyModelBuilder discoverMappedName() {
+        MapperOptions options = datastore.getMapper().getOptions();
+        Property property = getAnnotation(Property.class);
+        Reference reference = getAnnotation(Reference.class);
+        Version version = getAnnotation(Version.class);
+
+        if (hasAnnotation(Id.class)) {
+            mappedName("_id");
+        } else if (property != null && !property.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(property.value());
+        } else if (reference != null && !reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(reference.value());
+        } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(version.value());
+        } else {
+            mappedName(options.getFieldNaming().apply(name()));
+        }
+        return this;
     }
 
     /**

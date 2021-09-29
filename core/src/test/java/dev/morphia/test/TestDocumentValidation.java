@@ -30,7 +30,6 @@ import dev.morphia.InsertOneOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Validation;
-import dev.morphia.annotations.builders.ValidationBuilder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Modify;
@@ -48,6 +47,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
+import static dev.morphia.annotations.builders.ValidationBuilder.validationBuilder;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
@@ -326,8 +326,9 @@ public class TestDocumentValidation extends TestBase {
     }
 
     private void updateValidation(EntityModel model, ValidationLevel level, ValidationAction action) {
-        ((DatastoreImpl) getDs()).enableValidation(model, new ValidationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
-                                                                                 .level(level)
-                                                                                 .action(action));
+        ((DatastoreImpl) getDs()).enableValidation(model, validationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
+                                                                             .level(level)
+                                                                             .action(action)
+                                                                             .build());
     }
 }

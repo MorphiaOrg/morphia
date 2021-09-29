@@ -9,22 +9,22 @@ import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 
 /**
+ * @param <T> the entity type
  * @morphia.internal
  * @since 2.2
  */
-public class LifecycleEncoder extends EntityEncoder {
+public class LifecycleEncoder<T> extends EntityEncoder<T> {
     /**
      * Creates a new encoder
      *
      * @param morphiaCodec the codec
-     * @param <T>          the type
      */
-    public <T> LifecycleEncoder(MorphiaCodec<T> morphiaCodec) {
+    public LifecycleEncoder(MorphiaCodec<T> morphiaCodec) {
         super(morphiaCodec);
     }
 
     @Override
-    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = getMorphiaCodec().getEntityModel();
         Mapper mapper = getMorphiaCodec().getMapper();
 

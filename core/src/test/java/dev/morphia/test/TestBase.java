@@ -92,7 +92,6 @@ public abstract class TestBase {
         return getDs().getMapper();
     }
 
-    @BeforeMethod
     public void installData() {
         File file = new File("zips.json");
         try {
@@ -332,6 +331,7 @@ public abstract class TestBase {
         database = null;
         datastore = null;
         MongoDatabase db = getDatabase();
+        db.runCommand(new Document("profile", 0).append("slowms", 0));
         db.listCollectionNames().forEach(s -> {
             if (!s.equals("zipcodes") && !s.startsWith("system")) {
                 db.getCollection(s).drop();

@@ -2,17 +2,22 @@ package dev.morphia.mapping;
 
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.experimental.ConstructorCreator;
+import dev.morphia.mapping.experimental.ReflectionConstructorCreator;
 import dev.morphia.mapping.experimental.UnsafeConstructorCreator;
 import dev.morphia.sofia.Sofia;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 /**
  * @morphia.internal
  */
 public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(InstanceCreatorFactoryImpl.class);
+
     private final EntityModel model;
     private Supplier<MorphiaInstanceCreator> creator;
 
@@ -29,23 +34,25 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
     public MorphiaInstanceCreator create() {
         if (creator == null) {
             if (!model.getType().isInterface()) {
-                try {
-                    Constructor<?> constructor = model.getType().getDeclaredConstructor();
-                    creator = () -> {
-                        return new NoArgCreator(constructor);
-                    };
-                } catch (NoSuchMethodException e) {
+                //try to find zero args constructor first
+                Constructor<?> noArgsConstructor = Arrays.stream(model.getType().getDeclaredConstructors())
+                        .filter(it -> it.getParameters().length == 0)
+                        .findFirst()
+                        .orElse(null);
+
+                if (noArgsConstructor != null) {
+                    creator = () -> new NoArgCreator(noArgsConstructor);
+                } else { //try instantiating using reflection
                     try {
-                        Constructor<?> constructor = ConstructorCreator.getFullConstructor(model);
-                        creator = () -> {
-                            return new ConstructorCreator(model, constructor);
-                        };
-                    } catch (IllegalStateException e1) {
-                        MorphiaInstanceCreator unsafeConstructorCreator = new UnsafeConstructorCreator(model);
-                        creator = () -> unsafeConstructorCreator;
+                        creator = () -> new ReflectionConstructorCreator(model);
+                    } catch (MappingException ex) {
+                        //as last resort, use unsafe constructor allocation
+                        creator = () -> new UnsafeConstructorCreator(model);
                     }
                 }
-            } else {
+            }
+
+            if (creator == null) {
                 throw new MappingException(Sofia.noSuitableConstructor(model.getType().getName()));
             }
         }

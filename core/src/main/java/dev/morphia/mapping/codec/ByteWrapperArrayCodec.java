@@ -31,7 +31,9 @@ public class ByteWrapperArrayCodec implements Codec<Byte[]> {
     private byte[] primitive(Byte[] value) {
         byte[] array = new byte[value.length];
         for (int i = 0; i < value.length; i++) {
-            array[i] = value[i];
+            if (value[i] != null) {
+                array[i] = value[i];
+            }
         }
 
         return array;

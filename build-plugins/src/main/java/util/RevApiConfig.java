@@ -10,8 +10,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +23,8 @@ import static java.util.Collections.singletonList;
 public class RevApiConfig extends AbstractMojo {
     @Parameter(name = "input", defaultValue = "${project.basedir}/config/revapi-input.json")
     private File input;
+    @Parameter(name = "seed", defaultValue = "${project.basedir}/../config/revapi-seed.json")
+    private File seed;
     @Parameter(name = "output", defaultValue = "${project.basedir}/config/revapi.json")
     private File output;
 
@@ -41,31 +41,27 @@ public class RevApiConfig extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         try {
             ObjectMapper mapper = new ObjectMapper(new JsonFactory());
-            Map<String, Object> inputMap = (Map<String, Object>) mapper.readValue(input, HashMap.class);
-            //            List<Map<String, String>> seedMap = (List<Map<String, String>>) mapper.readValue(seed, ArrayList.class);
-            Map config = new LinkedHashMap();
-            config.put("extension", "revapi.ignore");
-            final List<Map> nodes = new ArrayList<>();
+            Map<String, Object> inputMap = (Map<String, Object>) mapper.readValue(input, LinkedHashMap.class);
+            Map<String, Object> seed = (Map<String, Object>) mapper.readValue(this.seed, LinkedHashMap.class);
+            List<Map> differences = (List<Map>) ((Map) seed.get("configuration")).get("differences");
 
             for (Entry<String, Object> entry : inputMap.entrySet()) {
                 Map<String, List<Map<String, String>>> flatten = flatten(entry);
                 flatten.forEach((code, instances) -> {
-                    nodes.addAll(instances.stream()
-                                          .map(instance -> {
-                                              Map node = new LinkedHashMap();
-                                              node.put("code", "java." + code);
-                                              node.putAll(instance);
-                                              return node;
-                                          })
-                                          .collect(Collectors.toList()));
+                    instances.stream()
+                             .map(instance -> {
+                                 Map node = new LinkedHashMap();
+                                 node.put("code", "java." + code);
+                                 node.putAll(instance);
+                                 return node;
+                             })
+                             .collect(Collectors.toCollection(() -> differences));
                 });
             }
 
-            config.put("configuration", nodes);
-
             mapper.writer()
                   .withDefaultPrettyPrinter()
-                  .writeValue(output, singletonList(config));
+                  .writeValue(output, singletonList(seed));
         } catch (IOException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }

@@ -110,6 +110,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testStreams() {
         getMapper().map(City.class);
+        installData();
 
         List<String> list = getDs().find(City.class)
                                    .stream(new FindOptions().limit(50))

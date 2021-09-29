@@ -1,8 +1,13 @@
 package dev.morphia.mapping.experimental;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PostPersist;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.experimental.Name;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -10,9 +15,18 @@ import dev.morphia.sofia.Sofia;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
+
+import static java.lang.Integer.compare;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 
 /**
  * Defines a Creator that uses a full constructor to create an instance rather than field injection.  This requires that a class have a
@@ -25,6 +39,8 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     private final Constructor<?> constructor;
     private final EntityModel model;
     private final Map<String, BiFunction<Object[], Object, Void>> positions = new LinkedHashMap<>();
+    private final List<Consumer<Object>> setFunctions = new ArrayList<>();
+    private Object instance;
 
     /**
      * @param model       the model
@@ -33,22 +49,24 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     public ConstructorCreator(EntityModel model, Constructor<?> constructor) {
         this.model = model;
         this.constructor = constructor;
-        if (this.constructor == null) {
-            throw new MappingException(Sofia.noSuitableConstructor(model.getType()));
+        try {
+            this.constructor.setAccessible(true);
+        } catch (NullPointerException e) {
+            throw e;
         }
-        this.constructor.setAccessible(true);
 
         final Parameter[] constructorParameters = this.constructor.getParameters();
         this.parameters = new Object[constructorParameters.length];
         for (int i = 0; i < constructorParameters.length; i++) {
             final Parameter parameter = constructorParameters[i];
+            parameters[i] = zeroValue(parameter);
             final int finalI = i;
             String name = getParameterName(parameter);
             if (name.matches("arg[0-9]+")) {
                 throw new MappingException(Sofia.unnamedConstructorParameter(model.getType().getName()));
             }
             BiFunction<Object[], Object, Void> old = positions.put(name, (Object[] params, Object v) -> {
-                params[finalI] = v;
+                params[finalI] = Conversions.convert(v, parameter.getType());
                 return null;
             });
 
@@ -56,6 +74,49 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
                 throw new MappingException(Sofia.duplicatedParameterName(model.getType().getName(), name));
             }
         }
+    }
+
+    @Nullable
+    public static Constructor<?> bestConstructor(EntityModel model) {
+        var propertyMap = new TreeMap<String, Class<?>>();
+        model.getProperties()
+             .forEach(it -> propertyMap.put(it.getName(), it.getType()));
+
+        var constructors = asList(model.getType().getDeclaredConstructors());
+
+        if (hasLifecycleEvents(model)) {
+            return constructors.stream()
+                               .filter(it -> it.getParameters().length == 0)
+                               .findFirst()
+                               .orElseThrow(() -> new IllegalStateException("A type with lifecycle events must have a no-arg constructor"));
+        }
+
+        return constructors.stream()
+                           .filter(it -> stream(it.getParameters())
+                               .allMatch(param -> Objects.equals(propertyMap.get(getParameterName(param)), param.getType())))
+                           .sorted((o1, o2) -> compare(o2.getParameterCount(), o1.getParameterCount()))
+                           .findFirst()
+                           .orElse(null);
+    }
+
+    private static boolean hasLifecycleEvents(EntityModel model) {
+        return model.hasLifecycle(PreLoad.class)
+               || model.hasLifecycle(PostLoad.class)
+               || model.hasLifecycle(PrePersist.class)
+               || model.hasLifecycle(PostPersist.class);
+    }
+
+    @Override
+    public Object getInstance() {
+        if (instance == null) {
+            try {
+                instance = constructor.newInstance(parameters);
+                setFunctions.forEach(function -> function.accept(instance));
+            } catch (Exception e) {
+                throw new MappingException(Sofia.cannotInstantiate(model.getType().getName(), e.getMessage()), e);
+            }
+        }
+        return instance;
     }
 
     /**
@@ -93,16 +154,28 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     }
 
     @Override
-    public Object getInstance() {
-        try {
-            return constructor.newInstance(parameters);
-        } catch (ReflectiveOperationException e) {
-            throw new MappingException(Sofia.cannotInstantiate(model.getType().getName(), e.getMessage()));
+    public void set(@Nullable Object value, PropertyModel model) {
+        if (instance != null) {
+            model.setValue(instance, value);
+        } else {
+            BiFunction<Object[], Object, Void> function = positions.get(model.getName());
+            if (function != null) {
+                function.apply(parameters, value);
+            }
+            setFunctions.add((instance) -> {
+                model.setValue(instance, value);
+            });
         }
     }
 
-    @Override
-    public void set(@Nullable Object value, PropertyModel model) {
-        positions.get(model.getName()).apply(parameters, value);
+    @Nullable
+    private Object zeroValue(Parameter parameter) {
+        if (!parameter.getType().isPrimitive()) {
+            return null;
+        } else if (parameter.getType().equals(boolean.class)) {
+            return false;
+        } else {
+            return 0;
+        }
     }
 }

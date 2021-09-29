@@ -10,7 +10,7 @@ import dev.morphia.Key;
 import dev.morphia.aggregation.experimental.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.experimental.EmbeddedBuilder;
+import dev.morphia.annotations.builders.EmbeddedBuilder;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
@@ -18,6 +18,7 @@ import dev.morphia.mapping.codec.PrimitiveCodecRegistry;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.codec.pojo.experimental.EntityModelImporter;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -30,6 +31,7 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.lang.annotation.Annotation;
@@ -46,6 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
+import static dev.morphia.annotations.builders.EmbeddedBuilder.embeddedBuilder;
 import static dev.morphia.sofia.Sofia.entityOrEmbedded;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
@@ -77,7 +80,7 @@ public class Mapper {
 
     private final MorphiaCodecProvider morphiaCodecProvider;
     private final Datastore datastore;
-    private final CodecRegistry codecRegistry;
+    private CodecRegistry codecRegistry;
 
     /**
      * Creates a Mapper with the given options.
@@ -111,6 +114,20 @@ public class Mapper {
     }
 
     /**
+     * Updates a collection to use a specific WriteConcern
+     *
+     * @param collection the collection to update
+     * @param type       the entity type
+     * @return the updated collection
+     */
+    public MongoCollection enforceWriteConcern(MongoCollection collection, Class type) {
+        WriteConcern applied = getWriteConcern(type);
+        return applied != null
+               ? collection.withWriteConcern(applied)
+               : collection;
+    }
+
+    /**
      * @param type the class
      * @param <T>  the type
      * @return the id property model
@@ -125,30 +142,6 @@ public class Mapper {
             throw new MappingException(Sofia.idRequired(type.getName()));
         }
         return idField;
-    }
-
-    /**
-     * Maps a set of classes
-     *
-     * @param entityClasses the classes to map
-     * @return the EntityModel references
-     */
-    public List<EntityModel> map(Class... entityClasses) {
-        return map(List.of(entityClasses));
-    }
-
-    /**
-     * Updates a collection to use a specific WriteConcern
-     *
-     * @param collection the collection to update
-     * @param type       the entity type
-     * @return the updated collection
-     */
-    public MongoCollection enforceWriteConcern(MongoCollection collection, Class type) {
-        WriteConcern applied = getWriteConcern(type);
-        return applied != null
-               ? collection.withWriteConcern(applied)
-               : collection;
     }
 
     /**
@@ -270,24 +263,6 @@ public class Mapper {
     }
 
     /**
-     * Maps a set of classes
-     *
-     * @param classes the classes to map
-     * @return the list of mapped classes
-     */
-    public List<EntityModel> map(List<Class> classes) {
-        for (Class type : classes) {
-            if (!isMappable(type)) {
-                throw new MappingException(entityOrEmbedded(type.getName()));
-            }
-        }
-        return classes.stream()
-                      .map(this::getEntityModel)
-                      .filter(Objects::nonNull)
-                      .collect(Collectors.toList());
-    }
-
-    /**
      * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
      *
      * @param type the type to process
@@ -329,7 +304,6 @@ public class Mapper {
 
         return null;
     }
-
 
     /**
      * Gets list of {@link EntityInterceptor}s
@@ -394,6 +368,25 @@ public class Mapper {
     }
 
     /**
+     * Imports models defined externally.  Any models imported via this process will replace any models previously mapped if the models
+     * should conflict on an entity's type.
+     *
+     * @param importer the model importer to use
+     * @return the imported models
+     * @morphia.experimental
+     * @since 2.3
+     */
+    public List<EntityModel> importModels(EntityModelImporter importer) {
+        List<EntityModel> models = importer.importModels(datastore);
+        for (EntityModel model : models) {
+            register(model);
+        }
+
+        importer.importCodecProvider(datastore);
+        return models;
+    }
+
+    /**
      * Sets the options this Mapper should use
      *
      * @param options the options to use
@@ -433,6 +426,18 @@ public class Mapper {
     }
 
     /**
+     * Adds a new codec mapper to the registry
+     *
+     * @param codecProvider the new provider
+     * @morphia.internal
+     * @morphia.experimental
+     * @since 2.3
+     */
+    public void register(CodecProvider codecProvider) {
+        codecRegistry = fromProviders(codecProvider, codecRegistry);
+    }
+
+    /**
      * Checks if a type is mappable or not
      *
      * @param type the class to check
@@ -455,6 +460,34 @@ public class Mapper {
     }
 
     /**
+     * Maps a set of classes
+     *
+     * @param entityClasses the classes to map
+     * @return the EntityModel references
+     */
+    public List<EntityModel> map(Class... entityClasses) {
+        return map(List.of(entityClasses));
+    }
+
+    /**
+     * Maps a set of classes
+     *
+     * @param classes the classes to map
+     * @return the list of mapped classes
+     */
+    public List<EntityModel> map(List<Class> classes) {
+        for (Class type : classes) {
+            if (!isMappable(type)) {
+                throw new MappingException(entityOrEmbedded(type.getName()));
+            }
+        }
+        return classes.stream()
+                      .map(this::getEntityModel)
+                      .filter(Objects::nonNull)
+                      .collect(Collectors.toList());
+    }
+
+    /**
      * Maps an external class.  This is intended for use on types needed in a system but come from an external source where the more
      * traditional approach of decorating the type in source with Morphia annotations is not possible.
      *
@@ -472,7 +505,7 @@ public class Mapper {
 
         if (model == null) {
             if (annotation == null) {
-                annotation = (A) EmbeddedBuilder.builder();
+                annotation = (A) embeddedBuilder().build();
             }
             model = register(createEntityModel(type, annotation));
         }
@@ -502,22 +535,6 @@ public class Mapper {
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
-    }
-
-    /**
-     * @param clazz the model type
-     * @param <T>   type model type
-     * @return the new model
-     * @morphia.internal
-     */
-    private <T> EntityModel createEntityModel(Class<T> clazz) {
-        return new EntityModelBuilder(this.datastore, clazz)
-                   .build();
-    }
-
-    private <T, A extends Annotation> EntityModel createEntityModel(Class<T> clazz, A annotation) {
-        return new EntityModelBuilder(this.datastore, annotation, clazz)
-                   .build();
     }
 
     /**
@@ -613,6 +630,21 @@ public class Mapper {
         }
     }
 
+    /**
+     * @param clazz the model type
+     * @param <T>   type model type
+     * @return the new model
+     * @morphia.internal
+     */
+    private <T> EntityModel createEntityModel(Class<T> clazz) {
+        return new EntityModelBuilder(this.datastore, clazz)
+                   .build();
+    }
+
+    private <T, A extends Annotation> EntityModel createEntityModel(Class<T> clazz, A annotation) {
+        return new EntityModelBuilder(this.datastore, annotation, clazz)
+                   .build();
+    }
 
     private String discriminatorKey(Class<?> type) {
         return mappedEntities.get(type)

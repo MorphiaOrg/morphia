@@ -81,7 +81,7 @@ public @interface IndexOptions {
     String partialFilter() default "";
 
     /**
-     * @return the collation to be used for this index
+     * @return the collation to be used for this index.  If the locale is empty, the collation is ignored.
      * @since 1.3
      */
     Collation collation() default @Collation(locale = "");

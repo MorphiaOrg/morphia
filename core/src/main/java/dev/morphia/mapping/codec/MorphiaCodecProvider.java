@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
@@ -51,8 +52,9 @@ public class MorphiaCodecProvider implements CodecProvider {
         providers.forEach(propertyCodecProviders::add);
     }
 
+    @Nullable
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public <T> Codec<T> get(Class<T> type, CodecRegistry registry) {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
@@ -82,7 +84,7 @@ public class MorphiaCodecProvider implements CodecProvider {
         EntityModel model = mapper.getEntityModel(entity.getClass());
         return new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
             @Override
-            protected EntityDecoder getDecoder() {
+            protected EntityDecoder<T> getDecoder() {
                 return new EntityDecoder(this) {
                     @Override
                     protected MorphiaInstanceCreator getInstanceCreator() {
@@ -93,7 +95,7 @@ public class MorphiaCodecProvider implements CodecProvider {
                             }
 
                             @Override
-                            public void set(Object value, PropertyModel model) {
+                            public void set(@Nullable Object value, PropertyModel model) {
                                 model.getAccessor().set(entity, value);
                             }
                         };
@@ -103,4 +105,19 @@ public class MorphiaCodecProvider implements CodecProvider {
         };
     }
 
+    protected Map<Class<?>, Codec<?>> getCodecs() {
+        return codecs;
+    }
+
+    protected Datastore getDatastore() {
+        return datastore;
+    }
+
+    protected Mapper getMapper() {
+        return mapper;
+    }
+
+    protected List<PropertyCodecProvider> getPropertyCodecProviders() {
+        return propertyCodecProviders;
+    }
 }

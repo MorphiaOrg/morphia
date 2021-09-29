@@ -18,7 +18,7 @@ public abstract class DiscriminatorFunction {
         return new DiscriminatorFunction() {
             @Override
             public String compute(EntityModelBuilder builder) {
-                return builder.getType().getName();
+                return builder.type().getName();
             }
         };
     }
@@ -32,7 +32,7 @@ public abstract class DiscriminatorFunction {
         return new DiscriminatorFunction() {
             @Override
             public String compute(EntityModelBuilder builder) {
-                return builder.getType().getName().toLowerCase();
+                return builder.type().getName().toLowerCase();
             }
         };
     }
@@ -46,7 +46,7 @@ public abstract class DiscriminatorFunction {
         return new DiscriminatorFunction() {
             @Override
             public String compute(EntityModelBuilder builder) {
-                return builder.getType().getSimpleName().toLowerCase();
+                return builder.type().getSimpleName().toLowerCase();
             }
         };
     }
@@ -60,7 +60,7 @@ public abstract class DiscriminatorFunction {
         return new DiscriminatorFunction() {
             @Override
             public String compute(EntityModelBuilder builder) {
-                return builder.getType().getSimpleName();
+                return builder.type().getSimpleName();
             }
         };
     }

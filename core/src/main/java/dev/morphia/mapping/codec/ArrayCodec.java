@@ -6,8 +6,6 @@ import org.bson.BsonBinarySubType;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
-import org.bson.codecs.BsonTypeClassMap;
-import org.bson.codecs.BsonTypeCodecMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -21,7 +19,6 @@ class ArrayCodec implements Codec<Object> {
 
     private final Class type;
     private final Mapper mapper;
-    private BsonTypeCodecMap bsonTypeCodecMap;
 
     <T> ArrayCodec(Mapper mapper, Class type) {
         this.mapper = mapper;
@@ -35,8 +32,12 @@ class ArrayCodec implements Codec<Object> {
         int length = Array.getLength(value);
         for (int i = 0; i < length; i++) {
             Object element = Array.get(value, i);
-            Codec codec = mapper.getCodecRegistry().get(element.getClass());
-            codec.encode(writer, element, encoderContext);
+            if (element == null) {
+                writer.writeNull();
+            } else {
+                Codec codec = mapper.getCodecRegistry().get(element.getClass());
+                codec.encode(writer, element, encoderContext);
+            }
         }
         writer.writeEndArray();
     }
@@ -74,13 +75,6 @@ class ArrayCodec implements Codec<Object> {
             return mapper.getCodecRegistry().get(UUID.class).decode(reader, decoderContext);
         }
         return mapper.getCodecRegistry().get(type.getComponentType()).decode(reader, decoderContext);
-    }
-
-    private BsonTypeCodecMap getBsonTypeCodecMap() {
-        if (bsonTypeCodecMap == null) {
-            this.bsonTypeCodecMap = new BsonTypeCodecMap(new BsonTypeClassMap(), mapper.getCodecRegistry());
-        }
-        return bsonTypeCodecMap;
     }
 
 }
