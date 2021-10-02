@@ -30,7 +30,7 @@ public class PullOperator extends UpdateOperator {
         return new OperationTarget(pathTarget, value()) {
             @Override
             public Object encode(Mapper mapper) {
-                DocumentWriter writer = new DocumentWriter();
+                DocumentWriter writer = new DocumentWriter(mapper);
                 document(writer, () -> {
                     ((Filter) getValue())
                         .encode(mapper, writer, EncoderContext.builder().build());

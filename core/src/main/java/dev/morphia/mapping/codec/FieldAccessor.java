@@ -38,6 +38,7 @@ public class FieldAccessor implements PropertyAccessor<Object> {
     public void set(Object instance, Object value) {
         try {
             field.set(instance, value);
+//            field.set(instance, Conversions.convert(value, field.getType()));
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
         }

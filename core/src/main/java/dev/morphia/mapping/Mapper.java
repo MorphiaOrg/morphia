@@ -562,7 +562,7 @@ public class Mapper {
     public Document toDocument(Object entity) {
         final EntityModel entityModel = getEntityModel(entity.getClass());
 
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(this);
         ((Codec) getCodecRegistry().get(entityModel.getType()))
             .encode(writer, entity, EncoderContext.builder().build());
 

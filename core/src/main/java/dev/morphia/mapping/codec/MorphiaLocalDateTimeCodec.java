@@ -3,6 +3,7 @@ package dev.morphia.mapping.codec;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import org.bson.BsonReader;
+import org.bson.BsonType;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -27,6 +28,9 @@ public class MorphiaLocalDateTimeCodec implements Codec<LocalDateTime> {
 
     @Override
     public LocalDateTime decode(BsonReader reader, DecoderContext decoderContext) {
+        if (reader.getCurrentBsonType().equals(BsonType.INT64)) {
+            return ofEpochMilli(reader.readInt64()).atZone(mapper.getOptions().getDateStorage().getZone()).toLocalDateTime();
+        }
         return ofEpochMilli(reader.readDateTime()).atZone(mapper.getOptions().getDateStorage().getZone()).toLocalDateTime();
     }
 

@@ -75,7 +75,7 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
             } else {
                 wrap = MorphiaReference.wrap(value);
             }
-            DocumentWriter writer = new DocumentWriter();
+            DocumentWriter writer = new DocumentWriter(mapper);
             document(writer, () -> {
                 writer.writeName("ref");
                 encode(writer, wrap, EncoderContext.builder().build());

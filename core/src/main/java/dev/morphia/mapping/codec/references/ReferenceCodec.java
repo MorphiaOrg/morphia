@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec.references;
 
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
@@ -60,6 +61,7 @@ import static java.lang.String.format;
 public class ReferenceCodec extends BaseReferenceCodec<Object> implements PropertyHandler {
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
+    private final Mapper mapper;
 
     /**
      * Creates a codec
@@ -69,6 +71,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      */
     public ReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
         super(datastore, propertyModel);
+        mapper = datastore.getMapper();
         annotation = propertyModel.getAnnotation(Reference.class);
     }
 
@@ -129,7 +132,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         MongoCollection<?> collection;
         Class<?> type;
         if (value instanceof Key) {
-            idValue = ((Key) value).getId();
+            idValue = ((Key<?>) value).getId();
             String collectionName = ((Key<?>) value).getCollection();
             type = collectionName != null ? mapper.getClassFromCollection(collectionName) : ((Key<?>) value).getType();
             if (type == null) {
@@ -148,8 +151,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         String fieldCollectionName = model.getCollectionName();
 
         Reference annotation = model.getAnnotation(Reference.class);
-        if (annotation != null && !annotation.idOnly()
-            || valueCollectionName != null && !valueCollectionName.equals(fieldCollectionName)) {
+        if (annotation != null && !annotation.idOnly() || !valueCollectionName.equals(fieldCollectionName)) {
             idValue = new DBRef(valueCollectionName, idValue);
         }
         return idValue;
@@ -163,11 +165,12 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * @param decoderContext the decoder context
      * @return the decoded value
      */
+    @NonNull
     public static Object processId(Object decode, Mapper mapper, DecoderContext decoderContext) {
         Object id = decode;
         if (id instanceof Iterable) {
-            Iterable iterable = (Iterable) id;
-            List ids = new ArrayList();
+            Iterable<?> iterable = (Iterable<?>) id;
+            List<? super Object> ids = new ArrayList<>();
             for (Object o : iterable) {
                 ids.add(processId(o, mapper, decoderContext));
             }
@@ -200,6 +203,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return id;
     }
 
+    @Nullable
     @Override
     public Object decode(BsonReader reader, DecoderContext decoderContext) {
         Object decode = getDatastore().getMapper().getCodecRegistry()
@@ -212,7 +216,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     @Override
     public Object encode(Object value) {
         try {
-            DocumentWriter writer = new DocumentWriter();
+            DocumentWriter writer = new DocumentWriter(mapper);
             document(writer, () -> {
                 writer.writeName("ref");
                 encode(writer, value, EncoderContext.builder().build());

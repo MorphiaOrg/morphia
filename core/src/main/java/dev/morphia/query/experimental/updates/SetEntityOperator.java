@@ -38,7 +38,7 @@ public class SetEntityOperator extends UpdateOperator {
                 }
 
                 Codec<Object> codec = mapper.getCodecRegistry().get((Class<Object>) value.getClass());
-                DocumentWriter writer = new DocumentWriter();
+                DocumentWriter writer = new DocumentWriter(mapper);
 
                 codec.encode(writer, value, EncoderContext.builder().build());
 

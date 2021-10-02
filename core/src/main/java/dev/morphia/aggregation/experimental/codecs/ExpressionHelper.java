@@ -43,8 +43,8 @@ public final class ExpressionHelper {
         writer.writeEndDocument();
     }
 
-    public static Document document(Document seed, Consumer<BsonWriter> body) {
-        DocumentWriter writer = new DocumentWriter(seed);
+    public static Document document(Mapper mapper, Document seed, Consumer<BsonWriter> body) {
+        DocumentWriter writer = new DocumentWriter(mapper, seed);
         writer.writeStartDocument();
         body.accept(writer);
         writer.writeEndDocument();

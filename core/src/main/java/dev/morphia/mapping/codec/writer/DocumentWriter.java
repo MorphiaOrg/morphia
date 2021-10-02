@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.writer;
 
+import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
@@ -20,7 +21,6 @@ import org.bson.types.ObjectId;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 /**
  * Utility to write out to a Document
@@ -33,11 +33,15 @@ public class DocumentWriter implements BsonWriter {
     private WriteState state;
     private int arraysLevel;
     private int docsLevel;
+    private final Mapper mapper;
 
     /**
      * Creates a new Writer
+     *
+     * @param mapper the mapper to use
      */
-    public DocumentWriter() {
+    public DocumentWriter(Mapper mapper) {
+        this.mapper = mapper;
         root = new RootState(this);
         state = root;
     }
@@ -45,10 +49,12 @@ public class DocumentWriter implements BsonWriter {
     /**
      * Creates a new Writer with a seeded Document
      *
-     * @param seed the seed Document
+     * @param mapper the mapper to use
+     * @param seed   the seed Document
      */
-    public DocumentWriter(Document seed) {
+    public DocumentWriter(Mapper mapper, Document seed) {
         root = new RootState(this, seed);
+        this.mapper = mapper;
         state = root;
     }
 
@@ -130,12 +136,13 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeDateTime(long value) {
-        state.value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
+        state.value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), mapper.getOptions().getDateStorage().getZone()));
     }
 
     @Override
     public void writeDateTime(String name, long value) {
-        state.name(name).value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneOffset.UTC));
+        state.name(name);
+        writeDateTime(value);
     }
 
     @Override
