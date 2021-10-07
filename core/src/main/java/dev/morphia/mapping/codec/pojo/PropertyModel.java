@@ -165,6 +165,7 @@ public final class PropertyModel {
     /**
      * @return the cached codec
      */
+    @Nullable
     public Codec<? super Object> getCachedCodec() {
         return cachedCodec;
     }
