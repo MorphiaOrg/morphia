@@ -40,14 +40,10 @@ public class EntityDecoder<T> implements Decoder<T> {
         } else {
             entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
                 morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
-                         .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
+                .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
         }
 
         return entity;
-    }
-
-    protected MorphiaInstanceCreator getInstanceCreator() {
-        return classModel.getInstanceCreator();
     }
 
     protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
@@ -59,7 +55,7 @@ public class EntityDecoder<T> implements Decoder<T> {
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     reader.readNull();
                 } else {
-                    Object value = decoderContext.decodeWithChildContext(model.getCachedCodec(), reader);
+                    Object value = decoderContext.decodeWithChildContext(model.getCodec(), reader);
                     instanceCreator.set(value, model);
                 }
             } catch (BsonInvalidOperationException e) {
@@ -109,6 +105,10 @@ public class EntityDecoder<T> implements Decoder<T> {
             }
         }
         return codec != null ? codec : defaultCodec;
+    }
+
+    protected MorphiaInstanceCreator getInstanceCreator() {
+        return classModel.getInstanceCreator();
     }
 
     protected MorphiaCodec<T> getMorphiaCodec() {

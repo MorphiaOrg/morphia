@@ -70,6 +70,24 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     }
 
     @Override
+    public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
+        getEncoder().encode(writer, value, encoderContext);
+    }
+
+    @Override
+    public Class<T> getEncoderClass() {
+        return (Class<T>) getEntityModel().getType();
+    }
+
+    @Override
+    public Object generateIdIfAbsentFromDocument(Object entity) {
+        if (!documentHasId(entity)) {
+            idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType()));
+        }
+        return entity;
+    }
+
+    @Override
     public boolean documentHasId(Object entity) {
         PropertyModel idField = entityModel.getIdProperty();
         if (idField == null) {
@@ -78,21 +96,9 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return idField.getValue(entity) != null;
     }
 
-    /**
-     * @return the entity model backing this codec
-     */
-    public EntityModel getEntityModel() {
-        return entityModel;
-    }
-
     @Override
-    public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
-        getEncoder().encode(writer, value, encoderContext);
-    }
-
-    @Override
-    public Class<T> getEncoderClass() {
-        return (Class<T>) getEntityModel().getType();
+    public BsonValue getDocumentId(Object document) {
+        throw new UnsupportedOperationException();
     }
 
     public DiscriminatorLookup getDiscriminatorLookup() {
@@ -121,33 +127,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return this;
     }
 
-    public CodecRegistry getRegistry() {
-        return registry;
-    }
-
-    @Override
-    public Object generateIdIfAbsentFromDocument(Object entity) {
-        if (!documentHasId(entity)) {
-            idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType()));
-        }
-        return entity;
-    }
-
-    @Override
-    public BsonValue getDocumentId(Object document) {
-        throw new UnsupportedOperationException();
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void specializePropertyCodecs() {
-        EntityModel entityModel = getEntityModel();
-        for (PropertyModel propertyModel : entityModel.getProperties()) {
-            Codec codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
-                                                           : propertyCodecRegistry.get(propertyModel.getTypeData());
-            if (codec != null) {
-                propertyModel.cachedCodec(codec);
-            }
-        }
+    /**
+     * @return the entity model backing this codec
+     */
+    public EntityModel getEntityModel() {
+        return entityModel;
     }
 
     /**
@@ -155,6 +139,10 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      */
     public Mapper getMapper() {
         return mapper;
+    }
+
+    public CodecRegistry getRegistry() {
+        return registry;
     }
 
     /**
@@ -174,6 +162,18 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      */
     public void setDecoder(EntityDecoder<T> decoder) {
         this.decoder = decoder;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void specializePropertyCodecs() {
+        EntityModel entityModel = getEntityModel();
+        for (PropertyModel propertyModel : entityModel.getProperties()) {
+            Codec codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
+                                                           : propertyCodecRegistry.get(propertyModel.getTypeData());
+            if (codec != null) {
+                propertyModel.codec(codec);
+            }
+        }
     }
 
 }

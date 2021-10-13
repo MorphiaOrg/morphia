@@ -34,6 +34,7 @@ public class OperationTarget {
 
     /**
      * Encodes this target
+     *
      * @param mapper the mapper
      * @return the encoded form
      * @morphia.internal
@@ -53,9 +54,10 @@ public class OperationTarget {
                                            .getProperty(mappedField.getName())
                               : null;
 
-        Codec cachedCodec = model != null && !(mappedValue instanceof LegacyQuery)
-                            ? model.getCachedCodec()
-                            : null;
+        Codec cachedCodec = null;
+        if (model != null && !(mappedValue instanceof LegacyQuery)) {
+            cachedCodec = model.getCodec();
+        }
         if (cachedCodec instanceof PropertyHandler) {
             mappedValue = ((PropertyHandler) cachedCodec).encode(mappedValue);
         } else {
@@ -86,8 +88,8 @@ public class OperationTarget {
     @Override
     public String toString() {
         return new StringJoiner(", ", OperationTarget.class.getSimpleName() + "[", "]")
-                   .add("target=" + target)
-                   .add("value=" + value)
-                   .toString();
+            .add("target=" + target)
+            .add("value=" + value)
+            .toString();
     }
 }

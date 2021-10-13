@@ -60,14 +60,14 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         return morphiaCodec.getEncoderClass();
     }
 
-    protected void encodeDiscriminator(BsonWriter writer, EntityModel model) {
-        writer.writeString(model.getDiscriminatorKey(), model.getDiscriminator());
-    }
-
     protected <S, V> boolean areEquivalentTypes(Class<S> t1, Class<V> t2) {
         return t1.equals(t2)
                || Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)
                || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
+    }
+
+    protected void encodeDiscriminator(BsonWriter writer, EntityModel model) {
+        writer.writeString(model.getDiscriminatorKey(), model.getDiscriminator());
     }
 
     protected void encodeIdProperty(BsonWriter writer, Object instance, EncoderContext encoderContext, @Nullable PropertyModel idModel) {
@@ -84,6 +84,12 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         }
     }
 
+    protected void encodeValue(BsonWriter writer, EncoderContext encoderContext, PropertyModel model, @Nullable Object value) {
+        if (model.shouldSerialize(value)) {
+            writeValue(writer, encoderContext, model, value);
+        }
+    }
+
     @Nullable
     protected IdGenerator getIdGenerator() {
         if (idGenerator == null) {
@@ -96,10 +102,8 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         return idGenerator;
     }
 
-    protected void encodeValue(BsonWriter writer, EncoderContext encoderContext, PropertyModel model, @Nullable Object value) {
-        if (model.shouldSerialize(value)) {
-            writeValue(writer, encoderContext, model, value);
-        }
+    protected MorphiaCodec<T> getMorphiaCodec() {
+        return morphiaCodec;
     }
 
     protected void writeValue(BsonWriter writer, EncoderContext encoderContext, PropertyModel model, @Nullable Object value) {
@@ -107,12 +111,8 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         if (value == null) {
             writer.writeNull();
         } else {
-            Codec<? super Object> cachedCodec = model.getCachedCodec();
+            Codec<? super Object> cachedCodec = (Codec<? super Object>) model.getCodec();
             encoderContext.encodeWithChildContext(cachedCodec, writer, value);
         }
-    }
-
-    protected MorphiaCodec<T> getMorphiaCodec() {
-        return morphiaCodec;
     }
 }

@@ -58,13 +58,12 @@ public final class PropertyModel {
     private final String name;
     private final TypeData<?> typeData;
     private final String mappedName;
-    private Codec<? super Object> codec;
     private final PropertyAccessor<? super Object> accessor;
     private final MorphiaPropertySerialization serialization;
     private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
     private final List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
     private final EntityModel entityModel;
-    private volatile Codec<? super Object> cachedCodec;
+    private Codec<? super Object> codec;
     private Class<?> normalizedType;
 
     PropertyModel(PropertyModelBuilder builder) {
@@ -90,33 +89,8 @@ public final class PropertyModel {
         loadNames = result;
     }
 
-    /**
-     * Create a new {@link PropertyModelBuilder}
-     *
-     * @param datastore
-     * @return the builder
-     */
     static PropertyModelBuilder builder(Datastore datastore) {
         return new PropertyModelBuilder(datastore);
-    }
-
-    /**
-     * @return the full name of the class plus java field name
-     */
-    public String getFullName() {
-        return String.format("%s#%s", entityModel.getType().getName(), name);
-    }
-
-    /**
-     * Find an annotation of a specific type or null if not found.
-     *
-     * @param type the annotation type to find
-     * @param <A>  the class type
-     * @return the annotation instance or null
-     */
-    @Nullable
-    public <A extends Annotation> A getAnnotation(Class<A> type) {
-        return type.cast(annotationMap.get(type));
     }
 
     /**
@@ -148,25 +122,15 @@ public final class PropertyModel {
     }
 
     /**
-     * Gets the value of the property mapped on the instance given.
+     * Find an annotation of a specific type or null if not found.
      *
-     * @param instance the instance to use
-     * @return the value stored in the property
+     * @param type the annotation type to find
+     * @param <A>  the class type
+     * @return the annotation instance or null
      */
     @Nullable
-    public Object getValue(Object instance) {
-        Object target = instance;
-        if (target instanceof MorphiaProxy) {
-            target = ((MorphiaProxy) instance).unwrap();
-        }
-        return accessor.get(target);
-    }
-
-    /**
-     * @return the cached codec
-     */
-    public Codec<? super Object> getCachedCodec() {
-        return cachedCodec;
+    public <A extends Annotation> A getAnnotation(Class<A> type) {
+        return type.cast(annotationMap.get(type));
     }
 
     /**
@@ -193,10 +157,11 @@ public final class PropertyModel {
         return entityModel;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getTypeData(), getMappedName(), getCodec(), getAccessor(), serialization,
-            annotationMap.values(), getCachedCodec(), getNormalizedType());
+    /**
+     * @return the full name of the class plus java field name
+     */
+    public String getFullName() {
+        return String.format("%s#%s", entityModel.getType().getName(), name);
     }
 
     /**
@@ -247,6 +212,37 @@ public final class PropertyModel {
         return typeData;
     }
 
+    /**
+     * Gets the value of the property mapped on the instance given.
+     *
+     * @param instance the instance to use
+     * @return the value stored in the property
+     */
+    @Nullable
+    public Object getValue(Object instance) {
+        Object target = instance;
+        if (target instanceof MorphiaProxy) {
+            target = ((MorphiaProxy) instance).unwrap();
+        }
+        return accessor.get(target);
+    }
+
+    /**
+     * Indicates whether the annotation is present in the mapping (does not check the java field annotations, just the ones discovered)
+     *
+     * @param type the annotation to search for
+     * @return true if the annotation was found
+     */
+    public boolean hasAnnotation(Class<? extends Annotation> type) {
+        return annotationMap.containsKey(type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getTypeData(), getMappedName(), getCodec(), getAccessor(), serialization,
+            annotationMap.values(), getNormalizedType());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -262,51 +258,17 @@ public final class PropertyModel {
                && Objects.equals(getCodec(), that.getCodec())
                && getAccessor().equals(that.getAccessor())
                && serialization.equals(that.serialization)
-               && Objects.equals(getCachedCodec(), that.getCachedCodec())
                && Objects.equals(getNormalizedType(), that.getNormalizedType());
-    }
-
-    /**
-     * Indicates whether the annotation is present in the mapping (does not check the java field annotations, just the ones discovered)
-     *
-     * @param type the annotation to search for
-     * @return true if the annotation was found
-     */
-    public boolean hasAnnotation(Class<? extends Annotation> type) {
-        return annotationMap.containsKey(type);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", PropertyModel.class.getSimpleName() + "[", "]")
-                   .add("name='" + name + "'")
-                   .add("mappedName='" + mappedName + "'")
-                   .add("typeData=" + typeData)
-                   .add("annotations=" + annotationMap.values())
-                   .toString();
-    }
-
-    /**
-     * Sets the value for the java field
-     *
-     * @param instance the instance to update
-     * @param value    the value to set
-     */
-    public void setValue(Object instance, @Nullable Object value) {
-        accessor.set(instance, Conversions.convert(value, getType()));
-    }
-
-    private void configureCodec(Datastore datastore) {
-        Handler handler = getHandler();
-        if (handler != null) {
-            try {
-                codec = handler.value()
-                               .getDeclaredConstructor(Datastore.class, PropertyModel.class)
-                               .newInstance(datastore, this);
-            } catch (ReflectiveOperationException e) {
-                throw new MappingException(e.getMessage(), e);
-            }
-        }
+            .add("name='" + name + "'")
+            .add("mappedName='" + mappedName + "'")
+            .add("typeData=" + typeData)
+            .add("annotations=" + annotationMap.values())
+            .toString();
     }
 
     /**
@@ -363,6 +325,39 @@ public final class PropertyModel {
                && Modifier.isTransient(getType().getModifiers());
     }
 
+    /**
+     * Sets the value for the java field
+     *
+     * @param instance the instance to update
+     * @param value    the value to set
+     */
+    public void setValue(Object instance, @Nullable Object value) {
+        accessor.set(instance, Conversions.convert(value, getType()));
+    }
+
+    /**
+     * Checks a value against the configured rules for serialization
+     *
+     * @param value the value to check
+     * @return true if the given value should be serialized
+     */
+    public boolean shouldSerialize(@Nullable Object value) {
+        return serialization.shouldSerialize(value);
+    }
+
+    private void configureCodec(Datastore datastore) {
+        Handler handler = getHandler();
+        if (handler != null) {
+            try {
+                codec = handler.value()
+                               .getDeclaredConstructor(Datastore.class, PropertyModel.class)
+                               .newInstance(datastore, this);
+            } catch (ReflectiveOperationException e) {
+                throw new MappingException(e.getMessage(), e);
+            }
+        }
+    }
+
     @Nullable
     private Handler getHandler() {
         Handler handler = typeData.getType().getAnnotation(Handler.class);
@@ -380,16 +375,6 @@ public final class PropertyModel {
         }
 
         return handler;
-    }
-
-    /**
-     * Checks a value against the configured rules for serialization
-     *
-     * @param value the value to check
-     * @return true if the given value should be serialized
-     */
-    public boolean shouldSerialize(@Nullable Object value) {
-        return serialization.shouldSerialize(value);
     }
 
     private boolean isCollection() {
@@ -411,8 +396,8 @@ public final class PropertyModel {
         return null;
     }
 
-    void cachedCodec(Codec<? super Object> codec) {
-        this.cachedCodec = codec;
+    void codec(Codec<? super Object> codec) {
+        this.codec = codec;
     }
 
 }
