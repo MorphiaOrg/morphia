@@ -6,7 +6,6 @@ on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
   Morphia:
-    if: false # always skip job until dokka works with java 16
     runs-on: ubuntu-latest
     strategy:
       matrix:
