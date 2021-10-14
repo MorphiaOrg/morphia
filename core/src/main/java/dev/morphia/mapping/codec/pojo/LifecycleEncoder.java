@@ -31,7 +31,7 @@ public class LifecycleEncoder<T> extends EntityEncoder<T> {
         Document document = new Document();
         model.callLifecycleMethods(PrePersist.class, value, document, mapper);
 
-        final DocumentWriter documentWriter = new DocumentWriter(document);
+        final DocumentWriter documentWriter = new DocumentWriter(mapper, document);
         super.encode(documentWriter, value, encoderContext);
         document = documentWriter.getDocument();
         model.callLifecycleMethods(PostPersist.class, value, document, mapper);

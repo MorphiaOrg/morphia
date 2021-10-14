@@ -292,7 +292,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return stages.stream()
                      .map(s -> {
                          Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
-                         DocumentWriter writer = new DocumentWriter();
+                         DocumentWriter writer = new DocumentWriter(datastore.getMapper());
                          codec.encode(writer, s, EncoderContext.builder().build());
                          return writer.getDocument();
                      })

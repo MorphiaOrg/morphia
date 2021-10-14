@@ -26,7 +26,7 @@ public class ExpressionsTestBase extends TestBase {
     @SuppressWarnings("unchecked")
     protected void assertAndCheckDocShape(String expectedString, Expression value, Object expectedValue) {
         Document expected = Document.parse(expectedString);
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
         ((Codec) getMapper().getCodecRegistry()
                             .get(MathExpression.class))
             .encode(writer, value, EncoderContext.builder().build());

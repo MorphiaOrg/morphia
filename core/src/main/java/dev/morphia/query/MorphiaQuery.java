@@ -330,7 +330,7 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     Document getQueryDocument() {
-        DocumentWriter writer = new DocumentWriter(seedQuery);
+        DocumentWriter writer = new DocumentWriter(mapper, seedQuery);
         document(writer, () -> {
             EncoderContext context = EncoderContext.builder().build();
             for (Filter filter : filters) {

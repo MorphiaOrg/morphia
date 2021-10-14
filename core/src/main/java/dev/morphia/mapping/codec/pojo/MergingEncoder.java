@@ -21,7 +21,7 @@ import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
  */
 public class MergingEncoder<T> extends EntityEncoder {
     private final Query<T> query;
-    private final DocumentWriter setOperations = new DocumentWriter();
+    private final DocumentWriter setOperations;
     private Update<T> update;
 
     /**
@@ -33,6 +33,7 @@ public class MergingEncoder<T> extends EntityEncoder {
     public MergingEncoder(Query<T> query, MorphiaCodec<T> morphiaCodec) {
         super(morphiaCodec);
         this.query = query;
+        setOperations = new DocumentWriter(morphiaCodec.getMapper());
     }
 
     public Update<T> encode(Object entity) {

@@ -20,7 +20,7 @@ public class TestDocumentWriter extends TestBase {
 
     @Test
     public void arrays() {
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
 
         document(writer, () -> {
             check(writer, 1, 0);
@@ -41,7 +41,7 @@ public class TestDocumentWriter extends TestBase {
 
     @Test
     public void arraysWithDocs() {
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
 
         document(writer, () -> {
             check(writer, 1, 0);
@@ -61,7 +61,7 @@ public class TestDocumentWriter extends TestBase {
     @Test
     public void basic() {
         for (int i = 0; i < 3; i++) {
-            DocumentWriter writer = new DocumentWriter();
+            DocumentWriter writer = new DocumentWriter(getMapper());
             Document expected = new Document();
 
             int finalI = i;
@@ -78,7 +78,7 @@ public class TestDocumentWriter extends TestBase {
 
     @Test
     public void duplicateKeys() {
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
         document(writer, () -> {
             document(writer, "id", () -> writer.writeInt32("first", 1));
             document(writer, "id", () -> writer.writeInt32("second", 2));
@@ -92,7 +92,7 @@ public class TestDocumentWriter extends TestBase {
 
     @Test
     public void nestedArrays() {
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
 
         startDoc(writer);
         startArray(writer, "top");
@@ -115,7 +115,7 @@ public class TestDocumentWriter extends TestBase {
         String expected = "{$group : {_id : {$dateToString: {format: \"%Y-%m-%d\", date: \"$date\"}}, totalSaleAmount: {$sum: "
                           + "{$multiply: [ \"$price\", \"$quantity\" ]}}, averageQuantity: {$avg: \"$quantity\"},count: {$sum: 1}}}";
 
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
         document(writer, () -> {
             document(writer, "$group", () -> {
 
@@ -149,7 +149,7 @@ public class TestDocumentWriter extends TestBase {
 
     @Test
     public void subdocuments() {
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
         document(writer, () -> {
             writer.writeName("subdoc");
             document(writer, () -> writer.writeInt32("nested", 42));

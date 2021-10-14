@@ -36,7 +36,7 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     public Document toDocument() {
         Document query;
         dev.morphia.query.FilterOperator operator = getOperator();
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
         ((Codec) getMapper().getCodecRegistry().get(geometry.getClass()))
             .encode(writer, geometry, EncoderContext.builder().build());
         Document document = new Document("$geometry", writer.getDocument());

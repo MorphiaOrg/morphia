@@ -213,7 +213,7 @@ public class CodecStructureTest extends TestBase {
 
     @Test
     public void testSample() {
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
         getMapper().getCodecRegistry()
                    .get(Sample.class)
                    .encode(writer, Sample.sample(15L), EncoderContext.builder().build());
@@ -225,7 +225,7 @@ public class CodecStructureTest extends TestBase {
 
     @Test
     public void testSkip() {
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
         getMapper().getCodecRegistry()
                    .get(Skip.class)
                    .encode(writer, Skip.skip(15L), EncoderContext.builder().build());
@@ -237,7 +237,7 @@ public class CodecStructureTest extends TestBase {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void evaluate(Document expected, Object value) {
-        DocumentWriter writer = new DocumentWriter();
+        DocumentWriter writer = new DocumentWriter(getMapper());
         ((Codec) getMapper().getCodecRegistry()
                             .get(value.getClass()))
             .encode(writer, value, EncoderContext.builder().build());
