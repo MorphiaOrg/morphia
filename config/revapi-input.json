@@ -147,6 +147,10 @@
       {
         "package": "dev.morphia.annotations.builders",
         "justification": "internal package"
+      },
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
       }
     ]
   }
