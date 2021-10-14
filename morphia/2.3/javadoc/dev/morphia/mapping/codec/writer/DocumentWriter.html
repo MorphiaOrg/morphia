@@ -376,13 +376,14 @@ implements org.bson.BsonWriter</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">DocumentWriter</a></span>()</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper)">DocumentWriter</a></span>​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
 <td class="colLast">
 <div class="block">Creates a new Writer</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(org.bson.Document)">DocumentWriter</a></span>​(org.bson.Document&nbsp;seed)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper,org.bson.Document)">DocumentWriter</a></span>​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+              org.bson.Document&nbsp;seed)</code></th>
 <td class="colLast">
 <div class="block">Creates a new Writer with a seeded Document</div>
 </td>
@@ -718,26 +719,32 @@ implements org.bson.BsonWriter</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>()">
+<a id="<init>(dev.morphia.mapping.Mapper)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>DocumentWriter</h4>
-<pre>public&nbsp;DocumentWriter()</pre>
+<pre>public&nbsp;DocumentWriter​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
 <div class="block">Creates a new Writer</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mapper</code> - the mapper to use</dd>
+</dl>
 </li>
 </ul>
-<a id="<init>(org.bson.Document)">
+<a id="<init>(dev.morphia.mapping.Mapper,org.bson.Document)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DocumentWriter</h4>
-<pre>public&nbsp;DocumentWriter​(org.bson.Document&nbsp;seed)</pre>
+<pre>public&nbsp;DocumentWriter​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+                      org.bson.Document&nbsp;seed)</pre>
 <div class="block">Creates a new Writer with a seeded Document</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mapper</code> - the mapper to use</dd>
 <dd><code>seed</code> - the seed Document</dd>
 </dl>
 </li>

@@ -557,32 +557,6 @@ implements org.bson.codecs.CollectibleCodec&lt;T&gt;</pre>
 </dl>
 </li>
 </ul>
-<a id="documentHasId(java.lang.Object)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>documentHasId</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;documentHasId​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>documentHasId</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.CollectibleCodec&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></dd>
-</dl>
-</li>
-</ul>
-<a id="getEntityModel()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getEntityModel</h4>
-<pre class="methodSignature">public&nbsp;<a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;getEntityModel()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the entity model backing this codec</dd>
-</dl>
-</li>
-</ul>
 <a id="encode(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a><a id="encode(org.bson.BsonWriter,T,org.bson.codecs.EncoderContext)">
@@ -610,6 +584,45 @@ implements org.bson.codecs.CollectibleCodec&lt;T&gt;</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getEncoderClass</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Encoder&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a id="generateIdIfAbsentFromDocument(java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>generateIdIfAbsentFromDocument</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;generateIdIfAbsentFromDocument​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>generateIdIfAbsentFromDocument</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.CollectibleCodec&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a id="documentHasId(java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>documentHasId</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;documentHasId​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>documentHasId</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.CollectibleCodec&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a id="getDocumentId(java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDocumentId</h4>
+<pre class="methodSignature">public&nbsp;org.bson.BsonValue&nbsp;getDocumentId​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;document)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getDocumentId</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.CollectibleCodec&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
@@ -653,38 +666,16 @@ implements org.bson.codecs.CollectibleCodec&lt;T&gt;</pre>
 </dl>
 </li>
 </ul>
-<a id="getRegistry()">
+<a id="getEntityModel()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getRegistry</h4>
-<pre class="methodSignature">public&nbsp;org.bson.codecs.configuration.CodecRegistry&nbsp;getRegistry()</pre>
-</li>
-</ul>
-<a id="generateIdIfAbsentFromDocument(java.lang.Object)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>generateIdIfAbsentFromDocument</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;generateIdIfAbsentFromDocument​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity)</pre>
+<h4>getEntityModel</h4>
+<pre class="methodSignature">public&nbsp;<a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;getEntityModel()</pre>
 <dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>generateIdIfAbsentFromDocument</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.CollectibleCodec&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></dd>
-</dl>
-</li>
-</ul>
-<a id="getDocumentId(java.lang.Object)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getDocumentId</h4>
-<pre class="methodSignature">public&nbsp;org.bson.BsonValue&nbsp;getDocumentId​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;document)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>getDocumentId</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.CollectibleCodec&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the entity model backing this codec</dd>
 </dl>
 </li>
 </ul>
@@ -699,6 +690,15 @@ implements org.bson.codecs.CollectibleCodec&lt;T&gt;</pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the mapper being used</dd>
 </dl>
+</li>
+</ul>
+<a id="getRegistry()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getRegistry</h4>
+<pre class="methodSignature">public&nbsp;org.bson.codecs.configuration.CodecRegistry&nbsp;getRegistry()</pre>
 </li>
 </ul>
 <a id="getDecoder()">

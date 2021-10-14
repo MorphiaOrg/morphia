@@ -582,16 +582,6 @@ implements org.bson.codecs.Encoder&lt;T&gt;</pre>
 </dl>
 </li>
 </ul>
-<a id="encodeDiscriminator(org.bson.BsonWriter,dev.morphia.mapping.codec.pojo.EntityModel)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>encodeDiscriminator</h4>
-<pre class="methodSignature">protected&nbsp;void&nbsp;encodeDiscriminator​(org.bson.BsonWriter&nbsp;writer,
-                                   <a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model)</pre>
-</li>
-</ul>
 <a id="areEquivalentTypes(java.lang.Class,java.lang.Class)">
 <!--   -->
 </a>
@@ -600,6 +590,16 @@ implements org.bson.codecs.Encoder&lt;T&gt;</pre>
 <h4>areEquivalentTypes</h4>
 <pre class="methodSignature">protected&nbsp;&lt;S,​V&gt;&nbsp;boolean&nbsp;areEquivalentTypes​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;S&gt;&nbsp;t1,
                                                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;V&gt;&nbsp;t2)</pre>
+</li>
+</ul>
+<a id="encodeDiscriminator(org.bson.BsonWriter,dev.morphia.mapping.codec.pojo.EntityModel)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>encodeDiscriminator</h4>
+<pre class="methodSignature">protected&nbsp;void&nbsp;encodeDiscriminator​(org.bson.BsonWriter&nbsp;writer,
+                                   <a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model)</pre>
 </li>
 </ul>
 <a id="encodeIdProperty(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel)">
@@ -615,16 +615,6 @@ implements org.bson.codecs.Encoder&lt;T&gt;</pre>
                                 <a href="PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;idModel)</pre>
 </li>
 </ul>
-<a id="getIdGenerator()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getIdGenerator</h4>
-<pre class="methodSignature">@Nullable
-protected&nbsp;org.bson.codecs.IdGenerator&nbsp;getIdGenerator()</pre>
-</li>
-</ul>
 <a id="encodeValue(org.bson.BsonWriter,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel,java.lang.Object)">
 <!--   -->
 </a>
@@ -638,10 +628,29 @@ protected&nbsp;org.bson.codecs.IdGenerator&nbsp;getIdGenerator()</pre>
                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 </li>
 </ul>
-<a id="writeValue(org.bson.BsonWriter,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel,java.lang.Object)">
+<a id="getIdGenerator()">
 <!--   -->
 </a>
 <ul class="blockList">
+<li class="blockList">
+<h4>getIdGenerator</h4>
+<pre class="methodSignature">@Nullable
+protected&nbsp;org.bson.codecs.IdGenerator&nbsp;getIdGenerator()</pre>
+</li>
+</ul>
+<a id="getMorphiaCodec()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getMorphiaCodec</h4>
+<pre class="methodSignature">protected&nbsp;<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="EntityEncoder.html" title="type parameter in EntityEncoder">T</a>&gt;&nbsp;getMorphiaCodec()</pre>
+</li>
+</ul>
+<a id="writeValue(org.bson.BsonWriter,org.bson.codecs.EncoderContext,dev.morphia.mapping.codec.pojo.PropertyModel,java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockListLast">
 <li class="blockList">
 <h4>writeValue</h4>
 <pre class="methodSignature">protected&nbsp;void&nbsp;writeValue​(org.bson.BsonWriter&nbsp;writer,
@@ -649,15 +658,6 @@ protected&nbsp;org.bson.codecs.IdGenerator&nbsp;getIdGenerator()</pre>
                           <a href="PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;model,
                           @Nullable
                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
-</li>
-</ul>
-<a id="getMorphiaCodec()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getMorphiaCodec</h4>
-<pre class="methodSignature">protected&nbsp;<a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="EntityEncoder.html" title="type parameter in EntityEncoder">T</a>&gt;&nbsp;getMorphiaCodec()</pre>
 </li>
 </ul>
 </li>
