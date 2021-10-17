@@ -38,12 +38,11 @@ public class MorphiaCodecProvider implements CodecProvider {
     /**
      * Creates a provider
      *
-     * @param mapper    the mapper to use
      * @param datastore the datastore to use
      */
-    public MorphiaCodecProvider(Mapper mapper, Datastore datastore) {
+    public MorphiaCodecProvider(Datastore datastore) {
         this.datastore = datastore;
-        this.mapper = mapper;
+        this.mapper = datastore.getMapper();
 
         propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
             new MorphiaCollectionPropertyCodecProvider()));
@@ -80,6 +79,7 @@ public class MorphiaCodecProvider implements CodecProvider {
      * @param <T>      the entity type
      * @return the new codec
      */
+    @Nullable
     public <T> Codec<T> getRefreshCodec(T entity, CodecRegistry registry) {
         EntityModel model = mapper.getEntityModel(entity.getClass());
         return new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {

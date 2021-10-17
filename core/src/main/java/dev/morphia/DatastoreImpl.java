@@ -96,8 +96,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         updateDatabaseWithRegistry();
     }
 
-    @Override
-    public void updateDatabaseWithRegistry() {
+    private void updateDatabaseWithRegistry() {
         this.database = database.withCodecRegistry(mapper.getCodecRegistry());
     }
 

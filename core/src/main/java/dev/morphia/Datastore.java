@@ -555,13 +555,6 @@ public interface Datastore {
     }
 
     /**
-     * @morphia.internal
-     * @morphia.experimental
-     * @since 2.3
-     */
-    void updateDatabaseWithRegistry();
-
-    /**
      * @param transaction the transaction wrapper
      * @param <T>         the return type
      * @return the return value

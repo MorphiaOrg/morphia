@@ -4,7 +4,7 @@ package dev.morphia.mapping;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
 import dev.morphia.aggregation.experimental.codecs.AggregationCodecProvider;
@@ -43,6 +43,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -76,11 +77,9 @@ public class Mapper {
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
     private final MapperOptions options;
     private final DiscriminatorLookup discriminatorLookup;
-
-
-    private final MorphiaCodecProvider morphiaCodecProvider;
-    private final Datastore datastore;
-    private CodecRegistry codecRegistry;
+    private final DatastoreImpl datastore;
+    private final CodecRegistry codecRegistry;
+    private final List<MorphiaCodecProvider> morphiaCodecProviders = new ArrayList<>();
 
     /**
      * Creates a Mapper with the given options.
@@ -90,18 +89,23 @@ public class Mapper {
      * @param options       the options to use
      * @morphia.internal
      */
-    public Mapper(Datastore datastore, CodecRegistry codecRegistry, MapperOptions options) {
+    public Mapper(DatastoreImpl datastore, CodecRegistry codecRegistry, MapperOptions options) {
         this.datastore = datastore;
         this.options = options;
-        morphiaCodecProvider = new MorphiaCodecProvider(this, datastore);
         discriminatorLookup = new DiscriminatorLookup(options.getClassLoader());
+        if (options.isAutoImportModels()) {
+            importModels();
+        }
+        morphiaCodecProviders.add(new MorphiaCodecProvider(datastore));
 
-        this.codecRegistry = fromProviders(new MorphiaTypesCodecProvider(this),
+        List<CodecProvider> providers = new ArrayList<>(List.of(new MorphiaTypesCodecProvider(this),
             new PrimitiveCodecRegistry(codecRegistry),
             new EnumCodecProvider(),
-            new AggregationCodecProvider(this),
-            morphiaCodecProvider,
-            codecRegistry);
+            new AggregationCodecProvider(this)));
+
+        providers.addAll(morphiaCodecProviders);
+        providers.add(codecRegistry);
+        this.codecRegistry = fromProviders(providers);
     }
 
     /**
@@ -129,12 +133,11 @@ public class Mapper {
 
     /**
      * @param type the class
-     * @param <T>  the type
      * @return the id property model
      * @morphia.internal
      * @since 2.2
      */
-    public <T> PropertyModel findIdProperty(Class<?> type) {
+    public PropertyModel findIdProperty(Class<?> type) {
         EntityModel entityModel = getEntityModel(type);
         PropertyModel idField = entityModel.getIdProperty();
 
@@ -368,22 +371,26 @@ public class Mapper {
     }
 
     /**
-     * Imports models defined externally.  Any models imported via this process will replace any models previously mapped if the models
-     * should conflict on an entity's type.
+     * Refreshes an entity with the current state in the database.
      *
-     * @param importer the model importer to use
-     * @return the imported models
-     * @morphia.experimental
-     * @since 2.3
+     * @param entity the entity to refresh
+     * @param <T>    the entity type
      */
-    public List<EntityModel> importModels(EntityModelImporter importer) {
-        List<EntityModel> models = importer.importModels(datastore);
-        for (EntityModel model : models) {
-            register(model);
+    public <T> void refresh(T entity) {
+        Codec<T> refreshCodec = getRefreshCodec(entity);
+
+        MongoCollection<?> collection = getCollection(entity.getClass());
+        PropertyModel idField = getEntityModel(entity.getClass())
+            .getIdProperty();
+        if (idField == null) {
+            throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
 
-        importer.importCodecProvider(datastore);
-        return models;
+        Document id = collection.find(new Document("_id", idField.getValue(entity)), Document.class)
+                                .iterator()
+                                .next();
+
+        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     /**
@@ -423,18 +430,6 @@ public class Mapper {
      */
     public boolean hasInterceptors() {
         return !interceptors.isEmpty();
-    }
-
-    /**
-     * Adds a new codec mapper to the registry
-     *
-     * @param codecProvider the new provider
-     * @morphia.internal
-     * @morphia.experimental
-     * @since 2.3
-     */
-    public void register(CodecProvider codecProvider) {
-        codecRegistry = fromProviders(codecProvider, codecRegistry);
     }
 
     /**
@@ -546,27 +541,25 @@ public class Mapper {
         mapPackage(clazz.getPackage().getName());
     }
 
-    /**
-     * Refreshes an entity with the current state in the database.
-     *
-     * @param entity the entity to refresh
-     * @param <T>    the entity type
-     */
-    public <T> void refresh(T entity) {
-        Codec<T> refreshCodec = morphiaCodecProvider.getRefreshCodec(entity, getCodecRegistry());
-
-        MongoCollection<?> collection = getCollection(entity.getClass());
-        PropertyModel idField = getEntityModel(entity.getClass())
-                                    .getIdProperty();
-        if (idField == null) {
-            throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
+    private <T> Codec<T> getRefreshCodec(T entity) {
+        for (MorphiaCodecProvider codecProvider : morphiaCodecProviders) {
+            Codec<T> refreshCodec = codecProvider.getRefreshCodec(entity, getCodecRegistry());
+            if (refreshCodec != null) {
+                return refreshCodec;
+            }
         }
+        throw new IllegalStateException(Sofia.noRefreshCodec(entity.getClass().getName()));
+    }
 
-        Document id = collection.find(new Document("_id", idField.getValue(entity)), Document.class)
-                                .iterator()
-                                .next();
+    private void importModels() {
+        ServiceLoader<EntityModelImporter> importers = ServiceLoader.load(EntityModelImporter.class);
+        for (EntityModelImporter importer : importers) {
+            for (EntityModel model : importer.importModels(datastore)) {
+                register(model);
+            }
 
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+            morphiaCodecProviders.add(importer.getCodecProvider(datastore));
+        }
     }
 
     /**
@@ -644,11 +637,6 @@ public class Mapper {
     private <T, A extends Annotation> EntityModel createEntityModel(Class<T> clazz, A annotation) {
         return new EntityModelBuilder(this.datastore, annotation, clazz)
                    .build();
-    }
-
-    private String discriminatorKey(Class<?> type) {
-        return mappedEntities.get(type)
-                             .getDiscriminatorKey();
     }
 
     private List<Class> getClasses(ClassLoader loader, String packageName, boolean mapSubPackages)

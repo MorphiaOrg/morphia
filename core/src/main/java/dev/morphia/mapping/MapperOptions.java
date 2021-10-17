@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
+import dev.morphia.mapping.codec.pojo.experimental.EntityModelImporter;
 import dev.morphia.mapping.conventions.ConfigureProperties;
 import dev.morphia.mapping.conventions.FieldDiscovery;
 import dev.morphia.mapping.conventions.MethodDiscovery;
@@ -32,6 +33,7 @@ public class MapperOptions {
     public static final MapperOptions DEFAULT = MapperOptions.builder().build();
     private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
 
+    private final boolean autoImportModels;
     private final boolean ignoreFinals;
     private final boolean storeNulls;
     private final boolean storeEmpties;
@@ -50,6 +52,7 @@ public class MapperOptions {
     private ClassLoader classLoader;
 
     private MapperOptions(Builder builder) {
+        autoImportModels = builder.autoImportModels;
         cacheClassLookups = builder.cacheClassLookups;
         classLoader = builder.classLoader;
         collectionNaming = builder.collectionNaming;
@@ -107,6 +110,14 @@ public class MapperOptions {
             classLoader = Thread.currentThread().getContextClassLoader();
         }
         return classLoader;
+    }
+
+    /**
+     * @return true if {@link EntityModelImporter} instances should be loaded
+     * @since 2.3
+     */
+    public boolean isAutoImportModels() {
+        return autoImportModels;
     }
 
     /**
@@ -233,6 +244,7 @@ public class MapperOptions {
     public static final class Builder {
 
         private final List<MorphiaConvention> conventions = new ArrayList<>();
+        private boolean autoImportModels = true;
         private boolean ignoreFinals;
         private boolean storeNulls;
         private boolean storeEmpties;
@@ -254,13 +266,14 @@ public class MapperOptions {
         }
 
         public Builder(MapperOptions original) {
-            cacheClassLookups = original.isCacheClassLookups();
+            autoImportModels = original.autoImportModels;
+            cacheClassLookups = original.cacheClassLookups;
             classLoader = original.getClassLoader();
-            dateStorage = original.getDateStorage();
-            ignoreFinals = original.isIgnoreFinals();
-            mapSubPackages = original.isMapSubPackages();
-            storeEmpties = original.isStoreEmpties();
-            storeNulls = original.isStoreNulls();
+            dateStorage = original.dateStorage;
+            ignoreFinals = original.ignoreFinals;
+            mapSubPackages = original.mapSubPackages;
+            storeEmpties = original.storeEmpties;
+            storeNulls = original.storeNulls;
 
             enablePolymorphicQueries = original.enablePolymorphicQueries;
             discriminatorKey = original.discriminatorKey;
@@ -294,6 +307,18 @@ public class MapperOptions {
                 options = new MapperOptions(this);
             }
             return options;
+        }
+
+        /**
+         * This feature automatically discovers and uses {@link EntityModelImporter} instances to allow for external definition of class
+         * models.  This feature defaults to true.
+         *
+         * @param autoImportModels Set to true to auto import definitions via {@link EntityModelImporter}. Defaults to true.
+         * @return this
+         */
+        public Builder autoImportModels(boolean autoImportModels) {
+            this.autoImportModels = autoImportModels;
+            return this;
         }
 
         /**
@@ -437,7 +462,7 @@ public class MapperOptions {
         /**
          * Determines how properties are discovered on mapped entities
          *
-         * @param discovery
+         * @param discovery the discovery strategy to use
          * @return this
          * @since 2.2
          */
