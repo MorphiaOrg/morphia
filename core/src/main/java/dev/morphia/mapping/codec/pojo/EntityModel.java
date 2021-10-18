@@ -39,7 +39,7 @@ import static java.util.Arrays.asList;
  * @morphia.internal
  * @since 2.0
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "deprecation"})
 public class EntityModel {
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
         PreLoad.class,
@@ -200,14 +200,6 @@ public class EntityModel {
      */
     public MorphiaInstanceCreator getInstanceCreator() {
         return creatorFactory.create();
-    }
-
-    /**
-     * @return thee creator factory
-     * @morphia.internal
-     */
-    public InstanceCreatorFactory getInstanceCreatorFactory() {
-        return creatorFactory;
     }
 
     /**
