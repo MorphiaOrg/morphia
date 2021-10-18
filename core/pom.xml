@@ -292,6 +292,7 @@
                             <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
                         </configuration>
                     </plugin>
+<!--
                     <plugin>
                         <groupId>org.revapi</groupId>
                         <artifactId>revapi-maven-plugin</artifactId>
@@ -335,6 +336,7 @@
                             </analysisConfiguration>
                         </configuration>
                     </plugin>
+-->
                 </plugins>
             </build>
         </profile>

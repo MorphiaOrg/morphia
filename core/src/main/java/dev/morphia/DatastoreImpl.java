@@ -103,7 +103,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         providers.add(codecRegistry);
         this.codecRegistry = fromProviders(providers);
 
-        updateDatabaseWithRegistry();
+        this.database = database.withCodecRegistry(this.codecRegistry);
     }
 
     /**
@@ -688,10 +688,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
             }
         }
-    }
-
-    private void updateDatabaseWithRegistry() {
-        this.database = database.withCodecRegistry(codecRegistry);
     }
 
     private <T> void updateVersion(T entity, @Nullable PropertyModel versionProperty, @Nullable Long newVersion) {

@@ -106,8 +106,12 @@
   "method": {
     "addedToInterface": [
       {
-        "new": "method void dev.morphia.Datastore::updateDatabaseWithRegistry()",
-        "justification": "necessary for new functionality"
+        "new": "method void dev.morphia.Datastore::getCodecRegistry()",
+        "justification": "internal method"
+      },
+      {
+        "new": "method void dev.morphia.Datastore::getCollection()",
+        "justification": "internal method"
       }
     ],
     "numberOfParametersChanged": [
@@ -119,6 +123,48 @@
       {
         "package": "dev.morphia.mapping.codec.pojo",
         "justification": "internal types"
+      },
+      {
+        "package": "dev.morphia.mapping.experimental",
+        "justification": "internal types"
+      }
+    ],
+    "parameterTypeChanged": [
+      {
+        "package": "dev.morphia.query.internal",
+        "justification": "internal package"
+      },
+      {
+        "package": "dev.morphia.aggregation.experimental.expressions",
+        "justification": "experimental package"
+      },
+      {
+        "package": "dev.morphia.aggregation.experimental.expressions.impls",
+        "justification": "experimental package"
+      },
+      {
+        "package": "dev.morphia.experimental.codecs.stages",
+        "justification": "experimental package"
+      },
+      {
+        "package": "dev.morphia.experimental.filters",
+        "justification": "experimental package"
+      },
+      {
+        "package": "dev.morphia.query.experimental.filters",
+        "justification": "experimental package"
+      },
+      {
+        "package": "dev.morphia.mapping.codec",
+        "justification": "internal package"
+      },
+      {
+        "package": "dev.morphia.mapping.conventions",
+        "justification": "internal package"
+      },
+      {
+        "package": "dev.morphia.mapping.codec.pojo",
+        "justification": "internal package"
       }
     ],
     "parameterTypeParameterChanged": [
@@ -128,6 +174,18 @@
       }
     ],
     "removed": [
+      {
+        "old": "method org.bson.Document dev.morphia.mapping.Mapper::toDocument(java.lang.Object)",
+        "justification": "internal method"
+      },
+      {
+        "old": "method <T> T dev.morphia.mapping.Mapper::fromDocument(java.lang.Class<T>, org.bson.Document)",
+        "justification": "internal method"
+      },
+      {
+        "old": "method org.bson.codecs.configuration.CodecRegistry dev.morphia.mapping.Mapper::getCodecRegistry()",
+        "justification": "internal method"
+      },
       {
         "package": "dev.morphia.annotations.builders",
         "justification": "internal package"

@@ -186,7 +186,6 @@ public class Mapper {
      * @param type the type to process
      * @return the EntityModel for the object given
      */
-    @Nullable
     public EntityModel getEntityModel(Class type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
         EntityModel model = mappedEntities.get(actual);
