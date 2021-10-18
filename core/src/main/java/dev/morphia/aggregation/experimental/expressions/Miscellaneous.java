@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -27,7 +27,7 @@ public final class Miscellaneous {
     public static Expression rand() {
         return new Expression("$rand") {
             @Override
-            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
                 document(writer, () -> {
                     document(writer, getOperation(), () -> {
                     });
@@ -48,8 +48,8 @@ public final class Miscellaneous {
     public static Filter sampleRate(double rate) {
         return new Filter("$sampleRate", null, rate) {
             @Override
-            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                writeNamedValue(getName(), getValue(), mapper, writer, context);
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+                writeNamedValue(getName(), getValue(), datastore, writer, context);
             }
         };
     }

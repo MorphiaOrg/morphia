@@ -1,7 +1,7 @@
 package dev.morphia.query.experimental.updates;
 
+import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -29,16 +29,16 @@ public class SetEntityOperator extends UpdateOperator {
         return new OperationTarget(null, value()) {
             @Override
             @SuppressWarnings("unchecked")
-            public Object encode(Mapper mapper) {
+            public Object encode(Datastore datastore) {
                 Object value = value();
-                EntityModel entityModel = mapper.getEntityModel(value.getClass());
+                EntityModel entityModel = datastore.getMapper().getEntityModel(value.getClass());
                 PropertyModel versionProperty = entityModel.getVersionProperty();
                 if (versionProperty == null) {
-                    return super.encode(mapper);
+                    return super.encode(datastore);
                 }
 
-                Codec<Object> codec = mapper.getCodecRegistry().get((Class<Object>) value.getClass());
-                DocumentWriter writer = new DocumentWriter(mapper);
+                Codec<Object> codec = datastore.getCodecRegistry().get((Class<Object>) value.getClass());
+                DocumentWriter writer = new DocumentWriter(datastore.getMapper());
 
                 codec.encode(writer, value, EncoderContext.builder().build());
 

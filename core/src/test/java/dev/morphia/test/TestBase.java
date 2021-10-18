@@ -17,10 +17,15 @@ import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
+import dev.morphia.mapping.codec.reader.DocumentReader;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
+import org.bson.codecs.EncoderContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -200,12 +205,26 @@ public abstract class TestBase {
         }
     }
 
+    protected <T> T fromDocument(Class<T> type, Document document) {
+        Class<T> aClass = type;
+        Mapper mapper = getMapper();
+        if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
+            aClass = mapper.getClass(document);
+        }
+
+        DocumentReader reader = new DocumentReader(document);
+
+        return getDs().getCodecRegistry()
+                      .get(aClass)
+                      .decode(reader, DecoderContext.builder().build());
+    }
+
     protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
         return getDatabase().getCollection(getMapper().getEntityModel(type).getCollectionName());
     }
 
     protected List<Document> getIndexInfo(Class<?> clazz) {
-        return getMapper().getCollection(clazz).listIndexes().into(new ArrayList<>());
+        return getDs().getCollection(clazz).listIndexes().into(new ArrayList<>());
     }
 
     protected MongoClient getMongoClient() {
@@ -217,10 +236,10 @@ public abstract class TestBase {
 
     @NonNull
     protected Document getOptions(Class<?> type) {
-        MongoCollection<?> collection = getMapper().getCollection(type);
+        String collection = getMapper().getEntityModel(type).getCollectionName();
         Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
-                                                       .append("filter",
-                                                           new Document("name", collection.getNamespace().getCollectionName())));
+            .append("filter",
+                new Document("name", collection)));
 
         Document cursor = (Document) result.get("cursor");
         return (Document) cursor.getList("firstBatch", Document.class)
@@ -250,8 +269,17 @@ public abstract class TestBase {
         return getServerVersion().greaterThanOrEqualTo(version);
     }
 
+    protected Document toDocument(Object entity) {
+        final Class<?> type = getMapper().getEntityModel(entity.getClass()).getType();
+
+        DocumentWriter writer = new DocumentWriter(getMapper());
+        ((Codec) getDs().getCodecRegistry().get(type)).encode(writer, entity, EncoderContext.builder().build());
+
+        return writer.getDocument();
+    }
+
     protected String toString(Document document) {
-        return document.toJson(getMapper().getCodecRegistry().get(Document.class));
+        return document.toJson(getDs().getCodecRegistry().get(Document.class));
     }
 
     protected void withOptions(MapperOptions options, Runnable block) {

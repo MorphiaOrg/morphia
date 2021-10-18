@@ -2,7 +2,7 @@ package dev.morphia.query.experimental.filters;
 
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Point;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -22,33 +22,18 @@ public class NearFilter extends Filter {
         super(filterName, field, point);
     }
 
-    @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(mapper));
-        if (isNot()) {
-            writer.writeStartDocument("$not");
-        }
-        writer.writeStartDocument(getName());
-        writer.writeName("$geometry");
-        writeUnnamedValue(getValue(mapper), mapper, writer, context);
-        if (maxDistance != null) {
-            writeNamedValue("$maxDistance", maxDistance, mapper, writer, context);
-        }
-        if (minDistance != null) {
-            writeNamedValue("$minDistance", minDistance, mapper, writer, context);
-        }
-        if (crs != null) {
-            writeNamedValue("crs", crs, mapper, writer, context);
-        }
-        writer.writeEndDocument();
-        if (isNot()) {
-            writer.writeEndDocument();
-        }
-        writer.writeEndDocument();
+    /**
+     * @param opts the options to apply
+     * @morphia.internal
+     */
+    public void applyOpts(Map<?, ?> opts) {
+        maxDistance = (Double) opts.get("$maxDistance");
+        minDistance = (Double) opts.get("$minDistance");
     }
 
     /**
      * Sets the max distance to consider
+     *
      * @param maxDistance the max
      * @return this
      */
@@ -69,6 +54,7 @@ public class NearFilter extends Filter {
 
     /**
      * Sets the coordinate reference system to use
+     *
      * @param crs the crs
      * @return this
      */
@@ -77,13 +63,29 @@ public class NearFilter extends Filter {
         return this;
     }
 
-    /**
-     * @param opts the options to apply
-     * @morphia.internal
-     */
-    public void applyOpts(Map opts) {
-        maxDistance = (Double) opts.get("$maxDistance");
-        minDistance = (Double) opts.get("$minDistance");
+    @Override
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+        writer.writeStartDocument(path(datastore.getMapper()));
+        if (isNot()) {
+            writer.writeStartDocument("$not");
+        }
+        writer.writeStartDocument(getName());
+        writer.writeName("$geometry");
+        writeUnnamedValue(getValue(datastore), datastore, writer, context);
+        if (maxDistance != null) {
+            writeNamedValue("$maxDistance", maxDistance, datastore, writer, context);
+        }
+        if (minDistance != null) {
+            writeNamedValue("$minDistance", minDistance, datastore, writer, context);
+        }
+        if (crs != null) {
+            writeNamedValue("crs", crs, datastore, writer, context);
+        }
+        writer.writeEndDocument();
+        if (isNot()) {
+            writer.writeEndDocument();
+        }
+        writer.writeEndDocument();
     }
 
 }

@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -20,12 +20,12 @@ public class ReduceExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                expression(mapper, writer, "input", input, encoderContext);
-                expression(mapper, writer, "initialValue", initial, encoderContext);
-                expression(mapper, writer, "in", in, encoderContext);
+                expression(datastore, writer, "input", input, encoderContext);
+                expression(datastore, writer, "initialValue", initial, encoderContext);
+                expression(datastore, writer, "in", in, encoderContext);
             });
         });
     }

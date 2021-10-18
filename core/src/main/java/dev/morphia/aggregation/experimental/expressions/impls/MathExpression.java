@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -40,7 +40,7 @@ public class MathExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             writer.writeName(getOperation());
             if (operands.size() > 1) {
@@ -48,7 +48,7 @@ public class MathExpression extends Expression {
             }
             for (Expression operand : operands) {
                 if (operand != null) {
-                    expression(mapper, writer, operand, encoderContext);
+                    expression(datastore, writer, operand, encoderContext);
                 } else {
                     writer.writeNull();
                 }

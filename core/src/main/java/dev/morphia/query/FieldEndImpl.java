@@ -5,7 +5,7 @@ import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.lang.Nullable;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.utils.Assert;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     private final T target;
     private final EntityModel model;
     private final boolean validating;
-    private final Mapper mapper;
+    private final Datastore datastore;
     private boolean not;
 
     /**
@@ -44,8 +44,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
      * @param model      the mapped class
      * @param validating validate names or not
      */
-    protected FieldEndImpl(Mapper mapper, String field, T target, EntityModel model, boolean validating) {
-        this.mapper = mapper;
+    protected FieldEndImpl(Datastore datastore, String field, T target, EntityModel model, boolean validating) {
+        this.datastore = datastore;
         this.field = field;
         this.target = target;
         this.model = model;
@@ -149,13 +149,13 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T intersects(com.mongodb.client.model.geojson.Geometry geometry) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.INTERSECTS, geometry, model, validating));
+        target.add(Geo2dSphereCriteria.geo(datastore, field, FilterOperator.INTERSECTS, geometry, model, validating));
         return target;
     }
 
     @Override
     public T intersects(com.mongodb.client.model.geojson.Geometry geometry, CoordinateReferenceSystem crs) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.INTERSECTS, geometry, model, validating)
+        target.add(Geo2dSphereCriteria.geo(datastore, field, FilterOperator.INTERSECTS, geometry, model, validating)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
@@ -202,13 +202,13 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T near(com.mongodb.client.model.geojson.Point point) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.NEAR, point, model, validating));
+        target.add(Geo2dSphereCriteria.geo(datastore, field, FilterOperator.NEAR, point, model, validating));
         return target;
     }
 
     @Override
     public T near(com.mongodb.client.model.geojson.Point point, Double maxDistance, Double minDistance) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.NEAR, point, model, validating)
+        target.add(Geo2dSphereCriteria.geo(datastore, field, FilterOperator.NEAR, point, model, validating)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
         return target;
@@ -221,7 +221,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T nearSphere(com.mongodb.client.model.geojson.Point point, @Nullable Double maxDistance, @Nullable Double minDistance) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.NEAR_SPHERE, point, model, validating)
+        target.add(Geo2dSphereCriteria.geo(datastore, field, FilterOperator.NEAR_SPHERE, point, model, validating)
                                       .maxDistance(maxDistance)
                                       .minDistance(minDistance));
         return target;
@@ -275,27 +275,27 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T within(Polygon boundary) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundary, model,
+        target.add(Geo2dSphereCriteria.geo(datastore, field, FilterOperator.GEO_WITHIN, boundary, model,
             validating));
         return target;
     }
 
     @Override
     public T within(MultiPolygon boundaries) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundaries, model, validating));
+        target.add(Geo2dSphereCriteria.geo(datastore, field, FilterOperator.GEO_WITHIN, boundaries, model, validating));
         return target;
     }
 
     @Override
     public T within(Polygon boundary, CoordinateReferenceSystem crs) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundary, model, validating)
+        target.add(Geo2dSphereCriteria.geo(datastore, field, FilterOperator.GEO_WITHIN, boundary, model, validating)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
 
     @Override
     public T within(MultiPolygon boundaries, CoordinateReferenceSystem crs) {
-        target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundaries, model, validating)
+        target.add(Geo2dSphereCriteria.geo(datastore, field, FilterOperator.GEO_WITHIN, boundaries, model, validating)
                                       .addCoordinateReferenceSystem(crs));
         return target;
     }
@@ -305,7 +305,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     protected T addCriteria(FilterOperator op, Object val, boolean not) {
-        target.add(new FieldCriteria(mapper, field, op, val, not, model, validating));
+        target.add(new FieldCriteria(datastore, field, op, val, not, model, validating));
         return target;
     }
 
@@ -314,7 +314,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
             throw new QueryException("Geospatial queries cannot be negated with 'not'.");
         }
 
-        target.add(new Geo2dCriteria(mapper, field, op, val, opts, model, validating));
+        target.add(new Geo2dCriteria(datastore, field, op, val, opts, model, validating));
         return target;
     }
 

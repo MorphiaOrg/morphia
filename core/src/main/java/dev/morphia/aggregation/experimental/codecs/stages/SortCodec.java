@@ -1,16 +1,16 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.Sort.SortType;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
 public class SortCodec extends StageCodec<Sort> {
-    public SortCodec(Mapper mapper) {
-        super(mapper);
+    public SortCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override

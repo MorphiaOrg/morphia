@@ -186,7 +186,7 @@ public class TestQuery extends TestBase {
     public void testAlternateCollections() {
         getDs().save(new Photo(List.of("i", "am", "keywords")));
 
-        getDs().getMapper().getCollection(Photo.class)
+        getDs().getCollection(Photo.class)
                .renameCollection(new MongoNamespace(getDatabase().getName(), "alternate"));
         assertEquals(getDs().find(Photo.class).count(), 0);
 
@@ -386,12 +386,12 @@ public class TestQuery extends TestBase {
         assertNotEquals(profileCollection.countDocuments(), 0);
 
         Document query = new Document("op", "query")
-                             .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName())
+            .append("ns", getDs().getCollection(Pic.class).getNamespace().getFullName())
                              .append("command.comment", new Document("$exists", true));
         Document profileRecord = profileCollection.find(query).first();
 
         assertEquals(getCommentFromProfileRecord(profileRecord), expectedComment,
-            profileRecord.toJson(getMapper().getCodecRegistry().get(Document.class)));
+            profileRecord.toJson(getDs().getCodecRegistry().get(Document.class)));
     }
 
     @Test

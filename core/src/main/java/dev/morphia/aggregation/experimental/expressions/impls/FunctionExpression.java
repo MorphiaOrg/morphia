@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -31,12 +31,12 @@ public class FunctionExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                value(mapper, writer, "body", body, encoderContext);
-                value(mapper, writer, "args", args, encoderContext);
-                value(mapper, writer, "lang", lang, encoderContext);
+                value(datastore, writer, "body", body, encoderContext);
+                value(datastore, writer, "args", args, encoderContext);
+                value(datastore, writer, "lang", lang, encoderContext);
             });
         });
     }

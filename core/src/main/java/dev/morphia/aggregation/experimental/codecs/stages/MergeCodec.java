@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.Merge;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -16,8 +16,8 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class MergeCodec extends StageCodec<Merge> {
-    public MergeCodec(Mapper mapper) {
-        super(mapper);
+    public MergeCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class MergeCodec extends StageCodec<Merge> {
     protected void encodeStage(BsonWriter writer, Merge merge, EncoderContext encoderContext) {
         document(writer, () -> {
             String collection = merge.getType() != null
-                                ? getMapper().getEntityModel(merge.getType()).getCollectionName()
+                                ? getDatastore().getMapper().getEntityModel(merge.getType()).getCollectionName()
                                 : merge.getCollection();
             String database = merge.getDatabase();
 
@@ -54,12 +54,12 @@ public class MergeCodec extends StageCodec<Merge> {
             if (variables != null) {
                 document(writer, "let", () -> {
                     for (Entry<String, Expression> entry : variables.entrySet()) {
-                        value(getMapper(), writer, entry.getKey(), entry.getValue(), encoderContext);
+                        value(getDatastore(), writer, entry.getKey(), entry.getValue(), encoderContext);
                     }
                 });
             }
             writeEnum(writer, "whenMatched", merge.getWhenMatched());
-            value(getMapper(), writer, "whenMatched", merge.getWhenMatchedPipeline(), encoderContext);
+            value(getDatastore(), writer, "whenMatched", merge.getWhenMatchedPipeline(), encoderContext);
             writeEnum(writer, "whenNotMatched", merge.getWhenNotMatched());
         });
     }

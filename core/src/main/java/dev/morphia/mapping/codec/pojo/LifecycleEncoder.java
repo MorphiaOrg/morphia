@@ -1,8 +1,8 @@
 package dev.morphia.mapping.codec.pojo;
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PrePersist;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -26,15 +26,15 @@ public class LifecycleEncoder<T> extends EntityEncoder<T> {
     @Override
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = getMorphiaCodec().getEntityModel();
-        Mapper mapper = getMorphiaCodec().getMapper();
+        Datastore datastore = getMorphiaCodec().getDatastore();
 
         Document document = new Document();
-        model.callLifecycleMethods(PrePersist.class, value, document, mapper);
+        model.callLifecycleMethods(PrePersist.class, value, document, datastore);
 
-        final DocumentWriter documentWriter = new DocumentWriter(mapper, document);
+        final DocumentWriter documentWriter = new DocumentWriter(datastore.getMapper(), document);
         super.encode(documentWriter, value, encoderContext);
         document = documentWriter.getDocument();
-        model.callLifecycleMethods(PostPersist.class, value, document, mapper);
+        model.callLifecycleMethods(PostPersist.class, value, document, datastore);
 
         getMorphiaCodec().getRegistry().get(Document.class).encode(writer, document, encoderContext);
     }

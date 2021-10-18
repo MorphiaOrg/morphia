@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -18,11 +18,11 @@ public class LetExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                expression(mapper, writer, "vars", variables, encoderContext);
-                expression(mapper, writer, "in", in, encoderContext);
+                expression(datastore, writer, "vars", variables, encoderContext);
+                expression(datastore, writer, "in", in, encoderContext);
             });
         });
     }

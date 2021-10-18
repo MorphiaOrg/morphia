@@ -150,7 +150,7 @@ public class TestDateExpression extends ExpressionsTestBase {
 
     @Test
     public void testDateToParts() {
-        getMapper().getCollection(User.class).drop();
+        getDs().getCollection(User.class).drop();
         getDocumentCollection(User.class)
             .insertOne(parse("{'_id': 2, 'item': 'abc', 'price': 10, 'quantity': 2, 'date': ISODate('2017-01-01T01:29:09.123Z')}"));
 
@@ -172,7 +172,7 @@ public class TestDateExpression extends ExpressionsTestBase {
     @Test
     public void testDateToString() {
         LocalDate joined = LocalDate.parse("2016-05-01 UTC", DateTimeFormatter.ofPattern("yyyy-MM-dd z"));
-        getMapper().getCollection(User.class).drop();
+        getDs().getCollection(User.class).drop();
         getDs().save(new User("John Doe", joined));
         Aggregation<User> pipeline = getDs()
                                          .aggregate(User.class)

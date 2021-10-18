@@ -1,7 +1,7 @@
 package dev.morphia.query.experimental.filters;
 
 import com.mongodb.client.model.geojson.Geometry;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -14,14 +14,14 @@ public class GeoIntersectsFilter extends Filter {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(mapper));
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+        writer.writeStartDocument(path(datastore.getMapper()));
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
         writer.writeStartDocument(getName());
         writer.writeName("$geometry");
-        writeUnnamedValue(getValue(mapper), mapper, writer, context);
+        writeUnnamedValue(getValue(datastore), datastore, writer, context);
         writer.writeEndDocument();
         if (isNot()) {
             writer.writeEndDocument();

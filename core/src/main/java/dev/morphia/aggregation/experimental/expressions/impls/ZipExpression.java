@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -40,12 +40,12 @@ public class ZipExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                value(mapper, writer, "inputs", inputs, encoderContext);
-                value(mapper, writer, "useLongestLength", useLongestLength, encoderContext);
-                value(mapper, writer, "defaults", defaults, encoderContext);
+                value(datastore, writer, "inputs", inputs, encoderContext);
+                value(datastore, writer, "useLongestLength", useLongestLength, encoderContext);
+                value(datastore, writer, "defaults", defaults, encoderContext);
             });
         });
     }

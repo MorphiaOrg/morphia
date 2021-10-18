@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -26,12 +26,12 @@ public class DateToParts extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                expression(mapper, writer, "date", date, encoderContext);
-                expression(mapper, writer, "timezone", timeZone, encoderContext);
-                value(mapper, writer, "iso8601", iso8601, encoderContext);
+                expression(datastore, writer, "date", date, encoderContext);
+                expression(datastore, writer, "timezone", timeZone, encoderContext);
+                value(datastore, writer, "iso8601", iso8601, encoderContext);
             });
         });
     }

@@ -508,9 +508,9 @@ public class TestAggregation extends TestBase {
         getDs().aggregate(Book.class)
                .group(Group.group(id("author"))
                            .field("books", push()
-                                               .single(field("title"))))
+                               .single(field("title"))))
                .out(Out.to(Author.class));
-        assertEquals(getMapper().getCollection(Author.class).countDocuments(), 2);
+        assertEquals(getDs().getCollection(Author.class).countDocuments(), 2);
 
         getDs().aggregate(Book.class)
                .group(Group.group(id("author"))

@@ -1,6 +1,5 @@
 package dev.morphia.mapping.conventions;
 
-import dev.morphia.Datastore;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
@@ -14,8 +13,8 @@ import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 public class MorphiaDefaultsConvention implements MorphiaConvention {
 
     @Override
-    public void apply(Datastore datastore, EntityModelBuilder modelBuilder) {
-        MapperOptions options = datastore.getMapper().getOptions();
+    public void apply(Mapper mapper, EntityModelBuilder modelBuilder) {
+        MapperOptions options = mapper.getOptions();
 
         final Entity entity = modelBuilder.getAnnotation(Entity.class);
         final Embedded embedded = modelBuilder.getAnnotation(Embedded.class);

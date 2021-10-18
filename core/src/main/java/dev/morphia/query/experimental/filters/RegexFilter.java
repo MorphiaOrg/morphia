@@ -1,17 +1,20 @@
 package dev.morphia.query.experimental.filters;
 
-import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import java.util.regex.Pattern;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+
 /**
  * Defines a regular expression filter
+ *
  * @since 2.0
  */
+@SuppressWarnings("unused")
 public class RegexFilter extends Filter {
     private String regex;
     private String options;
@@ -21,13 +24,13 @@ public class RegexFilter extends Filter {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(mapper));
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+        writer.writeStartDocument(path(datastore.getMapper()));
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
-        ExpressionHelper.value(mapper, writer, "$regex", new BsonRegularExpression(regex), context);
-        ExpressionHelper.value(mapper, writer, "$options", options, context);
+        value(datastore, writer, "$regex", new BsonRegularExpression(regex), context);
+        value(datastore, writer, "$options", options, context);
         if (isNot()) {
             writer.writeEndDocument();
         }

@@ -4,35 +4,21 @@ package dev.morphia.mapping;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
-import dev.morphia.DatastoreImpl;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
-import dev.morphia.aggregation.experimental.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.builders.EmbeddedBuilder;
-import dev.morphia.mapping.codec.EnumCodecProvider;
-import dev.morphia.mapping.codec.MorphiaCodecProvider;
-import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
-import dev.morphia.mapping.codec.PrimitiveCodecRegistry;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.mapping.codec.pojo.experimental.EntityModelImporter;
-import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
-import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
-import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecProvider;
-import org.bson.codecs.configuration.CodecRegistry;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -43,7 +29,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -51,7 +36,6 @@ import java.util.stream.Collectors;
 
 import static dev.morphia.annotations.builders.EmbeddedBuilder.embeddedBuilder;
 import static dev.morphia.sofia.Sofia.entityOrEmbedded;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
 
 /**
@@ -77,35 +61,16 @@ public class Mapper {
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
     private final MapperOptions options;
     private final DiscriminatorLookup discriminatorLookup;
-    private final DatastoreImpl datastore;
-    private final CodecRegistry codecRegistry;
-    private final List<MorphiaCodecProvider> morphiaCodecProviders = new ArrayList<>();
 
     /**
      * Creates a Mapper with the given options.
      *
-     * @param datastore     the datastore to use
-     * @param codecRegistry the codec registry
-     * @param options       the options to use
+     * @param options the options to use
      * @morphia.internal
      */
-    public Mapper(DatastoreImpl datastore, CodecRegistry codecRegistry, MapperOptions options) {
-        this.datastore = datastore;
+    public Mapper(MapperOptions options) {
         this.options = options;
         discriminatorLookup = new DiscriminatorLookup(options.getClassLoader());
-        if (options.isAutoImportModels()) {
-            importModels();
-        }
-        morphiaCodecProviders.add(new MorphiaCodecProvider(datastore));
-
-        List<CodecProvider> providers = new ArrayList<>(List.of(new MorphiaTypesCodecProvider(this),
-            new PrimitiveCodecRegistry(codecRegistry),
-            new EnumCodecProvider(),
-            new AggregationCodecProvider(this)));
-
-        providers.addAll(morphiaCodecProviders);
-        providers.add(codecRegistry);
-        this.codecRegistry = fromProviders(providers);
     }
 
     /**
@@ -145,30 +110,6 @@ public class Mapper {
             throw new MappingException(Sofia.idRequired(type.getName()));
         }
         return idField;
-    }
-
-    /**
-     * Converts a Document back to a type-safe java object (POJO)
-     *
-     * @param <T>      the type of the entity
-     * @param type     the target type
-     * @param document the Document containing the document from mongodb
-     * @return the new entity
-     * @morphia.internal
-     */
-    public <T> T fromDocument(Class<T> type, Document document) {
-        Class<T> aClass = type;
-        if (document.containsKey(options.getDiscriminatorKey())) {
-            aClass = getClass(document);
-        }
-
-        CodecRegistry codecRegistry = getCodecRegistry();
-
-        DocumentReader reader = new DocumentReader(document);
-
-        return codecRegistry
-                   .get(aClass)
-                   .decode(reader, DecoderContext.builder().build());
     }
 
     /**
@@ -233,32 +174,6 @@ public class Mapper {
     }
 
     /**
-     * @return the codec registry
-     */
-    public CodecRegistry getCodecRegistry() {
-        return codecRegistry;
-    }
-
-    /**
-     * @param type the type look up
-     * @param <T>  the class type
-     * @return the collection mapped for this class
-     * @morphia.internal
-     */
-    public <T> MongoCollection<T> getCollection(Class<T> type) {
-        EntityModel entityModel = getEntityModel(type);
-        String collectionName = entityModel.getCollectionName();
-
-        MongoCollection<T> collection = datastore.getDatabase().getCollection(collectionName, type);
-
-        Entity annotation = entityModel.getEntityAnnotation();
-        if (annotation != null && WriteConcern.valueOf(annotation.concern()) != null) {
-            collection = collection.withWriteConcern(WriteConcern.valueOf(annotation.concern()));
-        }
-        return collection;
-    }
-
-    /**
      * @return the DiscriminatorLookup in use
      */
     public DiscriminatorLookup getDiscriminatorLookup() {
@@ -271,6 +186,7 @@ public class Mapper {
      * @param type the type to process
      * @return the EntityModel for the object given
      */
+    @Nullable
     public EntityModel getEntityModel(Class type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
         EntityModel model = mappedEntities.get(actual);
@@ -368,29 +284,6 @@ public class Mapper {
      */
     public MapperOptions getOptions() {
         return options;
-    }
-
-    /**
-     * Refreshes an entity with the current state in the database.
-     *
-     * @param entity the entity to refresh
-     * @param <T>    the entity type
-     */
-    public <T> void refresh(T entity) {
-        Codec<T> refreshCodec = getRefreshCodec(entity);
-
-        MongoCollection<?> collection = getCollection(entity.getClass());
-        PropertyModel idField = getEntityModel(entity.getClass())
-            .getIdProperty();
-        if (idField == null) {
-            throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
-        }
-
-        Document id = collection.find(new Document("_id", idField.getValue(entity)), Document.class)
-                                .iterator()
-                                .next();
-
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     /**
@@ -541,44 +434,6 @@ public class Mapper {
         mapPackage(clazz.getPackage().getName());
     }
 
-    private <T> Codec<T> getRefreshCodec(T entity) {
-        for (MorphiaCodecProvider codecProvider : morphiaCodecProviders) {
-            Codec<T> refreshCodec = codecProvider.getRefreshCodec(entity, getCodecRegistry());
-            if (refreshCodec != null) {
-                return refreshCodec;
-            }
-        }
-        throw new IllegalStateException(Sofia.noRefreshCodec(entity.getClass().getName()));
-    }
-
-    private void importModels() {
-        ServiceLoader<EntityModelImporter> importers = ServiceLoader.load(EntityModelImporter.class);
-        for (EntityModelImporter importer : importers) {
-            for (EntityModel model : importer.importModels(datastore)) {
-                register(model);
-            }
-
-            morphiaCodecProviders.add(importer.getCodecProvider(datastore));
-        }
-    }
-
-    /**
-     * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
-     *
-     * @param entity The POJO
-     * @return the Document
-     * @morphia.internal
-     */
-    public Document toDocument(Object entity) {
-        final EntityModel entityModel = getEntityModel(entity.getClass());
-
-        DocumentWriter writer = new DocumentWriter(this);
-        ((Codec) getCodecRegistry().get(entityModel.getType()))
-            .encode(writer, entity, EncoderContext.builder().build());
-
-        return writer.getDocument();
-    }
-
     /**
      * Updates the collection value on a Key with the mapped value on the Key's type Class
      *
@@ -624,19 +479,36 @@ public class Mapper {
     }
 
     /**
+     * @param entityModel the model to register
+     * @return the model
+     * @morphia.internal
+     * @since 2.3
+     */
+    public EntityModel register(EntityModel entityModel) {
+        discriminatorLookup.addModel(entityModel);
+        mappedEntities.put(entityModel.getType(), entityModel);
+        if (entityModel.getCollectionName() != null) {
+            mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
+                                      .add(entityModel);
+        }
+
+        if (!entityModel.isInterface()) {
+            new MappingValidator()
+                .validate(this, entityModel);
+
+        }
+        return entityModel;
+    }
+
+    /**
      * @param clazz the model type
      * @param <T>   type model type
      * @return the new model
      * @morphia.internal
      */
     private <T> EntityModel createEntityModel(Class<T> clazz) {
-        return new EntityModelBuilder(this.datastore, clazz)
-                   .build();
-    }
-
-    private <T, A extends Annotation> EntityModel createEntityModel(Class<T> clazz, A annotation) {
-        return new EntityModelBuilder(this.datastore, annotation, clazz)
-                   .build();
+        return new EntityModelBuilder(this, clazz)
+            .build();
     }
 
     private List<Class> getClasses(ClassLoader loader, String packageName, boolean mapSubPackages)
@@ -674,21 +546,9 @@ public class Mapper {
                         .reduce(false, (l, r) -> l || r);
     }
 
-    private EntityModel register(EntityModel entityModel) {
-        discriminatorLookup.addModel(entityModel);
-        mappedEntities.put(entityModel.getType(), entityModel);
-        if (entityModel.getCollectionName() != null) {
-            mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                                      .add(entityModel);
-        }
-
-        if (!entityModel.isInterface()) {
-            new MappingValidator()
-                .validate(this, entityModel);
-
-        }
-
-        return entityModel;
+    private <T, A extends Annotation> EntityModel createEntityModel(Class<T> clazz, A annotation) {
+        return new EntityModelBuilder(this, annotation, clazz)
+            .build();
     }
 
 }

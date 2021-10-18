@@ -72,9 +72,9 @@ public class TestReferenceAnnotationOrdering extends TestBase {
 		getDs().save(List.of(item1, item2));
 		getDs().save(box);
 
-		MongoCollection<Document> collection = getMapper()
-												   .getCollection(Box.class)
-												   .withDocumentClass(Document.class);
+		MongoCollection<Document> collection = getDs()
+			.getCollection(Box.class)
+			.withDocumentClass(Document.class);
 
 		Document firstDoc = collection.find().first();
 		Object items = firstDoc.get("items");

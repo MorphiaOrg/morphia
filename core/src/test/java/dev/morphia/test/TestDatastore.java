@@ -58,7 +58,7 @@ public class TestDatastore extends TestBase {
     @Test
     public void testBulkInsert() {
 
-        MongoCollection collection = getMapper().getCollection(TestEntity.class);
+        MongoCollection collection = getDs().getCollection(TestEntity.class);
         this.getDs().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
             new InsertManyOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
         assertEquals(collection.countDocuments(), 5);
@@ -330,7 +330,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testInsert() {
-        MongoCollection collection = getMapper().getCollection(TestEntity.class);
+        MongoCollection collection = getDs().getCollection(TestEntity.class);
         this.getDs().insert(new TestEntity());
         assertEquals(collection.countDocuments(), 1);
         this.getDs().insert(new TestEntity(), new InsertOneOptions()

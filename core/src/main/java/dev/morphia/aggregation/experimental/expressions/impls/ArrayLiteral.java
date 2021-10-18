@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -18,8 +18,8 @@ public class ArrayLiteral extends ArrayExpression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        Codec codec = mapper.getCodecRegistry().get(values.getClass());
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        Codec codec = datastore.getCodecRegistry().get(values.getClass());
         encoderContext.encodeWithChildContext(codec, writer, values);
     }
 }

@@ -1,6 +1,6 @@
 package dev.morphia.mapping.conventions;
 
-import dev.morphia.Datastore;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MethodAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -19,7 +19,7 @@ public class MethodDiscovery implements MorphiaConvention {
     private EntityModelBuilder entityModelBuilder;
 
     @Override
-    public void apply(Datastore datastore, EntityModelBuilder builder) {
+    public void apply(Mapper mapper, EntityModelBuilder builder) {
         if (builder.propertyModels().isEmpty()) {
             this.entityModelBuilder = builder;
 

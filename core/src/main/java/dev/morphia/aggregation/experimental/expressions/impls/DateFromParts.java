@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -51,20 +51,20 @@ public class DateFromParts extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                expression(mapper, writer, "year", year, encoderContext);
-                expression(mapper, writer, "month", month, encoderContext);
-                expression(mapper, writer, "day", day, encoderContext);
-                expression(mapper, writer, "hour", hour, encoderContext);
-                expression(mapper, writer, "minute", minute, encoderContext);
-                expression(mapper, writer, "second", second, encoderContext);
-                expression(mapper, writer, "millisecond", millisecond, encoderContext);
-                expression(mapper, writer, "isoWeekYear", isoWeekYear, encoderContext);
-                expression(mapper, writer, "isoWeek", isoWeek, encoderContext);
-                expression(mapper, writer, "isoDayOfWeek", isoDayOfWeek, encoderContext);
-                expression(mapper, writer, "timezone", timezone, encoderContext);
+                expression(datastore, writer, "year", year, encoderContext);
+                expression(datastore, writer, "month", month, encoderContext);
+                expression(datastore, writer, "day", day, encoderContext);
+                expression(datastore, writer, "hour", hour, encoderContext);
+                expression(datastore, writer, "minute", minute, encoderContext);
+                expression(datastore, writer, "second", second, encoderContext);
+                expression(datastore, writer, "millisecond", millisecond, encoderContext);
+                expression(datastore, writer, "isoWeekYear", isoWeekYear, encoderContext);
+                expression(datastore, writer, "isoWeek", isoWeek, encoderContext);
+                expression(datastore, writer, "isoDayOfWeek", isoDayOfWeek, encoderContext);
+                expression(datastore, writer, "timezone", timezone, encoderContext);
             });
         });
     }

@@ -116,7 +116,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
             MongoCollection<Document> collection = this.collection.withDocumentClass(Document.class);
             MongoCursor<Document> results = collection.aggregate(getDocuments()).iterator();
             EntityModel entityModel = datastore.getMapper().getEntityModel(this.collection.getDocumentClass());
-            cursor = new MappingCursor<>(results, datastore.getMapper().getCodecRegistry().get(resultType),
+            cursor = new MappingCursor<>(results, datastore.getCodecRegistry().get(resultType),
                 entityModel.getDiscriminatorKey());
         } else {
             cursor = collection.aggregate(getDocuments(), resultType).iterator();
@@ -291,7 +291,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     private List<Document> getDocuments() {
         return stages.stream()
                      .map(s -> {
-                         Codec codec = datastore.getMapper().getCodecRegistry().get(s.getClass());
+                         Codec codec = datastore.getCodecRegistry().get(s.getClass());
                          DocumentWriter writer = new DocumentWriter(datastore.getMapper());
                          codec.encode(writer, s, EncoderContext.builder().build());
                          return writer.getDocument();

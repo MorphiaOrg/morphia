@@ -1,7 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.lang.Nullable;
-import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.NotMappableException;
@@ -33,7 +32,6 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("UnusedReturnValue")
 public class EntityModelBuilder {
-    private final Datastore datastore;
     private final List<PropertyModelBuilder> propertyModels = new ArrayList<>();
     private final List<EntityModel> interfaceModels = new ArrayList<>();
     private final Map<Class<? extends Annotation>, Annotation> annotationsMap = new HashMap<>();
@@ -41,6 +39,7 @@ public class EntityModelBuilder {
     private final Set<Class<?>> interfaces = new LinkedHashSet<>();
     private final Set<Annotation> annotations = new LinkedHashSet<>();
     private final Map<String, Map<String, Type>> parameterization = new LinkedHashMap<>();
+    private final Mapper mapper;
     private Class<?> type;
     private boolean discriminatorEnabled;
     private String discriminator;
@@ -50,28 +49,18 @@ public class EntityModelBuilder {
     private EntityModel superclass;
 
     /**
-     * Creates a baseline builder for customized model building
-     *
-     * @param datastore the datastore to use
-     * @since 2.3
-     */
-    public EntityModelBuilder(Datastore datastore) {
-        this.datastore = datastore;
-    }
-
-    /**
      * Create a builder
      *
-     * @param datastore the datastore to use
-     * @param type      the entity type
+     * @param mapper the mapper to use
+     * @param type   the entity type
      */
-    public EntityModelBuilder(Datastore datastore, Class<?> type) {
-        this.datastore = datastore;
+    public EntityModelBuilder(Mapper mapper, Class<?> type) {
+        this.mapper = mapper;
         this.type = type;
 
         if (type.getSuperclass() != null) {
             try {
-                this.superclass = datastore.getMapper().getEntityModel(type.getSuperclass());
+                this.superclass = mapper.getEntityModel(type.getSuperclass());
             } catch (NotMappableException ignored) {
             }
         }
@@ -84,7 +73,7 @@ public class EntityModelBuilder {
         interfaces.stream()
                   .map(i -> {
                       try {
-                          return datastore.getMapper().getEntityModel(i);
+                          return mapper.getEntityModel(i);
                       } catch (NotMappableException ignored) {
                           return null;
                       }
@@ -95,15 +84,15 @@ public class EntityModelBuilder {
     }
 
     /**
-     * @param datastore  the datastore
+     * @param mapper  the mapper
      * @param annotation the annotation
      * @param clazz      the type
      * @param <T>        the class type
      * @param <A>        the annotation type
      * @morphia.internal
      */
-    public <T, A extends Annotation> EntityModelBuilder(Datastore datastore, A annotation, Class<T> clazz) {
-        this(datastore, clazz);
+    public <T, A extends Annotation> EntityModelBuilder(Mapper mapper, A annotation, Class<T> clazz) {
+        this(mapper, clazz);
         LinkedHashSet<Annotation> temp = new LinkedHashSet<>();
         temp.add(annotation);
         temp.addAll(annotations);
@@ -129,7 +118,7 @@ public class EntityModelBuilder {
      * @return the new PropertyModelBuilder
      */
     public PropertyModelBuilder addProperty() {
-        PropertyModelBuilder builder = PropertyModel.builder(datastore);
+        PropertyModelBuilder builder = PropertyModel.builder(mapper);
         propertyModels.add(builder);
         return builder;
     }
@@ -161,8 +150,8 @@ public class EntityModelBuilder {
     public EntityModel build() {
         annotations.forEach(a -> annotationsMap.putIfAbsent(a.annotationType(), a));
 
-        for (MorphiaConvention convention : datastore.getMapper().getOptions().getConventions()) {
-            convention.apply(datastore, this);
+        for (MorphiaConvention convention : mapper.getOptions().getConventions()) {
+            convention.apply(mapper, this);
         }
 
         if (discriminatorEnabled) {
@@ -170,7 +159,7 @@ public class EntityModelBuilder {
             Objects.requireNonNull(discriminator, Sofia.notNull("discriminator"));
         }
 
-        return new EntityModel(this);
+        return new EntityModel(mapper, this);
     }
 
     /**
@@ -376,11 +365,7 @@ public class EntityModelBuilder {
         Entity entityAn = getAnnotation(Entity.class);
         return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
                ? entityAn.value()
-               : datastore.getMapper().getOptions().getCollectionNaming().apply(type.getSimpleName());
-    }
-
-    protected Datastore getDatastore() {
-        return datastore;
+               : mapper.getOptions().getCollectionNaming().apply(type.getSimpleName());
     }
 
     private void buildHierarchy(Class<?> type) {

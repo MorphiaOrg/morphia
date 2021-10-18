@@ -1,14 +1,11 @@
 package dev.morphia.experimental;
 
 import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
-import dev.morphia.mapping.Mapper;
-import dev.morphia.query.QueryFactory;
 
 import java.util.List;
 
@@ -22,15 +19,11 @@ public class MorphiaSessionImpl extends BaseMorphiaSession {
     /**
      * Creates a new session.
      *
-     * @param session      the client session
-     * @param database     the database
-     * @param mapper       the mapper
-     * @param mongoClient  the client
-     * @param queryFactory the factory
+     * @param datastore the datastore
+     * @param session   the client session
      */
-    public MorphiaSessionImpl(ClientSession session, MongoClient mongoClient, MongoDatabase database,
-                              Mapper mapper, QueryFactory queryFactory) {
-        super(session, mongoClient, database, mapper, queryFactory);
+    public MorphiaSessionImpl(DatastoreImpl datastore, ClientSession session) {
+        super(datastore, session);
     }
 
     @Override

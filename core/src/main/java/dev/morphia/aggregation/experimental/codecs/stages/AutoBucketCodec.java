@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.stages.AutoBucket;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -11,8 +11,8 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expre
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class AutoBucketCodec extends StageCodec<AutoBucket> {
-    public AutoBucketCodec(Mapper mapper) {
-        super(mapper);
+    public AutoBucketCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -23,12 +23,12 @@ public class AutoBucketCodec extends StageCodec<AutoBucket> {
     @Override
     protected void encodeStage(BsonWriter writer, AutoBucket value, EncoderContext encoderContext) {
         document(writer, () -> {
-            expression(getMapper(), writer, "groupBy", value.getGroupBy(), encoderContext);
-            value(getMapper(), writer, "buckets", value.getBuckets(), encoderContext);
-            value(getMapper(), writer, "granularity", value.getGranularity(), encoderContext);
+            expression(getDatastore(), writer, "groupBy", value.getGroupBy(), encoderContext);
+            value(getDatastore(), writer, "buckets", value.getBuckets(), encoderContext);
+            value(getDatastore(), writer, "granularity", value.getGranularity(), encoderContext);
             DocumentExpression output = value.getOutput();
             if (output != null) {
-                output.encode("output", getMapper(), writer, encoderContext);
+                output.encode("output", getDatastore(), writer, encoderContext);
             }
         });
     }

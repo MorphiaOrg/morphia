@@ -1,15 +1,15 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
 public class ReplaceRootCodec extends StageCodec<ReplaceRoot> {
-    public ReplaceRootCodec(Mapper mapper) {
-        super(mapper);
+    public ReplaceRootCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -22,9 +22,9 @@ public class ReplaceRootCodec extends StageCodec<ReplaceRoot> {
         document(writer, () -> {
             writer.writeName("newRoot");
             if (replace.getValue() != null) {
-                replace.getValue().encode(getMapper(), writer, encoderContext);
+                replace.getValue().encode(getDatastore(), writer, encoderContext);
             } else {
-                replace.getDocument().encode(getMapper(), writer, encoderContext);
+                replace.getDocument().encode(getDatastore(), writer, encoderContext);
             }
         });
     }

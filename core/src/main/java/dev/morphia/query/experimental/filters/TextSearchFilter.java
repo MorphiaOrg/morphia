@@ -1,6 +1,6 @@
 package dev.morphia.query.experimental.filters;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -43,17 +43,17 @@ public class TextSearchFilter extends Filter {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(getName());
-        writeNamedValue("$search", searchText, mapper, writer, context);
+        writeNamedValue("$search", searchText, datastore, writer, context);
         if (language != null) {
-            writeNamedValue("$language", language, mapper, writer, context);
+            writeNamedValue("$language", language, datastore, writer, context);
         }
         if (Boolean.TRUE.equals(caseSensitive)) {
-            writeNamedValue("$caseSensitive", caseSensitive, mapper, writer, context);
+            writeNamedValue("$caseSensitive", caseSensitive, datastore, writer, context);
         }
         if (Boolean.TRUE.equals(diacriticSensitive)) {
-            writeNamedValue("$diacriticSensitive", diacriticSensitive, mapper, writer, context);
+            writeNamedValue("$diacriticSensitive", diacriticSensitive, datastore, writer, context);
         }
         writer.writeEndDocument();
     }

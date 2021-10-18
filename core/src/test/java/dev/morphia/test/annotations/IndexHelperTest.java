@@ -54,15 +54,15 @@ public class IndexHelperTest extends TestBase {
     public void calculateBadKeys() {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
         Index index = indexBuilder()
-                          .fields(new Field[]{fieldBuilder()
-                                                  .value("texting")
-                                                  .type(IndexType.TEXT)
-                                                  .weight(1)
-                                                  .build(),
-                                              fieldBuilder()
-                                                  .value("nest")
-                                                  .type(IndexType.DESC)
-                                                  .build()})
+            .fields(fieldBuilder()
+                    .value("texting")
+                    .type(IndexType.TEXT)
+                    .weight(1)
+                    .build(),
+                fieldBuilder()
+                    .value("nest")
+                    .type(IndexType.DESC)
+                    .build())
                           .build();
         try {
             getIndexHelper().calculateKeys(model, index);
@@ -72,15 +72,15 @@ public class IndexHelperTest extends TestBase {
         }
 
         index = indexBuilder()
-                    .fields(new Field[]{fieldBuilder()
-                                            .value("texting")
-                                            .type(IndexType.TEXT)
-                                            .weight(1)
-                                            .build(),
-                                        fieldBuilder()
-                                            .value("nest")
-                                            .type(IndexType.DESC)
-                                            .build()})
+            .fields(fieldBuilder()
+                    .value("texting")
+                    .type(IndexType.TEXT)
+                    .weight(1)
+                    .build(),
+                fieldBuilder()
+                    .value("nest")
+                    .type(IndexType.DESC)
+                    .build())
                     .options(indexOptionsBuilder().disableValidation(true).build())
                     .build();
         getIndexHelper().calculateKeys(model, index);
@@ -90,15 +90,15 @@ public class IndexHelperTest extends TestBase {
     public void calculateKeys() {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
         Document keys = getIndexHelper().calculateKeys(model, indexBuilder()
-                                                                  .fields(new Field[]{fieldBuilder()
-                                                                                          .value("text")
-                                                                                          .type(IndexType.TEXT)
-                                                                                          .weight(1)
-                                                                                          .build(),
-                                                                                      fieldBuilder()
-                                                                                          .value("nest")
-                                                                                          .type(IndexType.DESC)
-                                                                                          .build()})
+            .fields(fieldBuilder()
+                    .value("text")
+                    .type(IndexType.TEXT)
+                    .weight(1)
+                    .build(),
+                fieldBuilder()
+                    .value("nest")
+                    .type(IndexType.DESC)
+                    .build())
                                                                   .build());
         assertEquals(keys, new Document()
                                .append("text", "text")
@@ -134,7 +134,7 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void createIndex() {
-        String collectionName = getMapper().getCollection(IndexedClass.class).getNamespace().getCollectionName();
+        String collectionName = getDs().getCollection(IndexedClass.class).getNamespace().getCollectionName();
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         Mapper mapper = getMapper();
 
@@ -160,7 +160,7 @@ public class IndexHelperTest extends TestBase {
         }
         assertTrue(names.isEmpty(), "Should be empty: " + names);
 
-        collection = getDatabase().getCollection(getMapper().getCollection(AbstractParent.class).getNamespace().getCollectionName());
+        collection = getDatabase().getCollection(getDs().getCollection(AbstractParent.class).getNamespace().getCollectionName());
         getIndexHelper().createIndex(collection, mapper.getEntityModel(AbstractParent.class));
         indexInfo = getIndexInfo(AbstractParent.class);
         assertTrue(indexInfo.isEmpty(), "Shouldn't find any indexes: " + indexInfo);
@@ -211,13 +211,13 @@ public class IndexHelperTest extends TestBase {
                                    .unique(true)
                                    .build();
         Index index = indexBuilder()
-                          .fields(new Field[]{fieldBuilder()
-                                                  .value("indexName")
-                                                  .build(),
-                                              fieldBuilder()
-                                                  .value("text")
-                                                  .type(IndexType.DESC)
-                                                  .build()})
+            .fields(fieldBuilder()
+                    .value("indexName")
+                    .build(),
+                fieldBuilder()
+                    .value("text")
+                    .type(IndexType.DESC)
+                    .build())
                           .options(options)
                           .build();
         getIndexHelper().createIndex(collection, model, index);
@@ -285,7 +285,7 @@ public class IndexHelperTest extends TestBase {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
         Index index = indexBuilder()
-                          .fields(new Field[]{fieldBuilder().value("text").build()})
+            .fields(fieldBuilder().value("text").build())
                           .options(indexOptionsBuilder()
                                        .partialFilter("{ name : { $gt : 13 } }")
                                        .build())
@@ -352,10 +352,10 @@ public class IndexHelperTest extends TestBase {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
         Index index = indexBuilder()
-                          .fields(new Field[]{fieldBuilder()
-                                                  .value("name")
-                                                  .weight(10)
-                                                  .build()})
+            .fields(fieldBuilder()
+                .value("name")
+                .weight(10)
+                .build())
                           .build();
 
         getIndexHelper().createIndex(indexes, model, index);
@@ -367,10 +367,10 @@ public class IndexHelperTest extends TestBase {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
         Index index = indexBuilder()
-                          .fields(new Field[]{fieldBuilder()
-                                                  .value("$**")
-                                                  .type(IndexType.TEXT)
-                                                  .build()})
+            .fields(fieldBuilder()
+                .value("$**")
+                .type(IndexType.TEXT)
+                .build())
                           .build();
 
         getIndexHelper().createIndex(indexes, model, index);

@@ -1,6 +1,6 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -20,10 +20,10 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
  */
 public class MorphiaMapCodec extends MapCodec {
 
-    private final Mapper mapper;
+    private final Datastore datastore;
 
-    MorphiaMapCodec(Mapper mapper) {
-        this.mapper = mapper;
+    MorphiaMapCodec(Datastore datastore) {
+        this.datastore = datastore;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class MorphiaMapCodec extends MapCodec {
                 if (entry.getValue() == null) {
                     writer.writeNull();
                 } else {
-                    Codec codec = mapper.getCodecRegistry().get(entry.getValue().getClass());
+                    Codec codec = datastore.getCodecRegistry().get(entry.getValue().getClass());
                     codec.encode(writer, entry.getValue(), encoderContext);
                 }
             }

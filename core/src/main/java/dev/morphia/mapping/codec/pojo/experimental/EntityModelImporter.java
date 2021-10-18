@@ -1,6 +1,5 @@
 package dev.morphia.mapping.codec.pojo.experimental;
 
-import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
@@ -11,7 +10,7 @@ import java.util.List;
  * @since 2.3
  */
 public interface EntityModelImporter {
-    List<EntityModel> importModels(Datastore datastore);
+    MorphiaCodecProvider getCodecProvider();
 
-    MorphiaCodecProvider getCodecProvider(Datastore datastore);
+    List<EntityModel> importModels();
 }

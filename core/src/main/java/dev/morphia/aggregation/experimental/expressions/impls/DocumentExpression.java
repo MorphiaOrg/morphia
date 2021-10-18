@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -13,13 +13,13 @@ public class DocumentExpression extends Expression implements FieldHolder<Docume
         super("unused");
     }
 
-    public void encode(String name, Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, name, () -> fields.encode(mapper, writer, encoderContext));
+    public void encode(String name, Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        document(writer, name, () -> fields.encode(datastore, writer, encoderContext));
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> fields.encode(mapper, writer, encoderContext));
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        document(writer, () -> fields.encode(datastore, writer, encoderContext));
     }
 
     @Override

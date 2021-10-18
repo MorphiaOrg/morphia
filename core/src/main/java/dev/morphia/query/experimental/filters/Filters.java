@@ -4,8 +4,8 @@ import com.mongodb.client.model.geojson.Geometry;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Type;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -202,16 +202,16 @@ public final class Filters {
     public static Filter eq(String field, Object val) {
         return new Filter("$eq", field, val) {
             @Override
-            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
                 if (isNot()) {
-                    document(writer, path(mapper), () -> {
+                    document(writer, path(datastore.getMapper()), () -> {
                         document(writer, "$not", () -> {
                             writer.writeName(getName());
-                            writeUnnamedValue(getValue(mapper), mapper, writer, context);
+                            writeUnnamedValue(getValue(datastore), datastore, writer, context);
                         });
                     });
                 } else {
-                    writeNamedValue(path(mapper), getValue(mapper), mapper, writer, context);
+                    writeNamedValue(path(datastore.getMapper()), getValue(datastore), datastore, writer, context);
                 }
             }
         };
@@ -227,8 +227,8 @@ public final class Filters {
     public static Filter exists(String field) {
         return new Filter("$exists", field, null) {
             @Override
-            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                writer.writeStartDocument(path(mapper));
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+                writer.writeStartDocument(path(datastore.getMapper()));
                 writer.writeName(getName());
                 writer.writeBoolean(!isNot());
                 writer.writeEndDocument();
@@ -246,11 +246,11 @@ public final class Filters {
     public static Filter expr(Expression expression) {
         return new Filter("$expr", null, expression) {
             @Override
-            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
                 writer.writeName("$expr");
                 Expression value = getValue();
                 if (value != null) {
-                    value.encode(mapper, writer, context);
+                    value.encode(datastore, writer, context);
                 } else {
                     writer.writeNull();
                 }
@@ -372,8 +372,8 @@ public final class Filters {
     public static Filter jsonSchema(Document schema) {
         return new Filter("$jsonSchema", null, schema) {
             @Override
-            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                value(mapper, writer, "$jsonSchema", schema, context);
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+                value(datastore, writer, "$jsonSchema", schema, context);
             }
         };
     }
@@ -438,12 +438,12 @@ public final class Filters {
     public static Filter mod(String field, long divisor, long remainder) {
         return new Filter("$mod", field, null) {
             @Override
-            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-                writer.writeStartDocument(path(mapper));
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+                writer.writeStartDocument(path(datastore.getMapper()));
                 writer.writeName(getName());
                 writer.writeStartArray();
-                writeUnnamedValue(divisor, mapper, writer, context);
-                writeUnnamedValue(remainder, mapper, writer, context);
+                writeUnnamedValue(divisor, datastore, writer, context);
+                writeUnnamedValue(remainder, datastore, writer, context);
                 writer.writeEndArray();
                 writer.writeEndDocument();
             }
@@ -613,9 +613,9 @@ public final class Filters {
     public static Filter where(String val) {
         return new Filter("$where", null, val) {
             @Override
-            public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
                 writer.writeName(getName());
-                Object where = getValue(mapper);
+                Object where = getValue(datastore);
                 if (where != null) {
                     String value = where.toString().trim();
                     if (!value.startsWith("function()")) {

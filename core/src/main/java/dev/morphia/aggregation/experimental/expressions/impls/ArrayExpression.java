@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
 import com.mongodb.lang.Nullable;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -18,8 +18,8 @@ public class ArrayExpression extends Expression {
 
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        super.encode(mapper, writer, encoderContext);
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        super.encode(datastore, writer, encoderContext);
     }
 
 }

@@ -1,6 +1,6 @@
 package dev.morphia.mapping.conventions;
 
-import dev.morphia.Datastore;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
 import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
@@ -14,7 +14,7 @@ import java.util.List;
 public class FieldDiscovery implements MorphiaConvention {
 
     @Override
-    public void apply(Datastore datastore, EntityModelBuilder builder) {
+    public void apply(Mapper mapper, EntityModelBuilder builder) {
         if (builder.propertyModels().isEmpty()) {
             List<Class<?>> list = new ArrayList<>(List.of(builder.type()));
             list.addAll(builder.classHierarchy());

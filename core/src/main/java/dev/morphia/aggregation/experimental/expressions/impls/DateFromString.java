@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -29,14 +29,14 @@ public class DateFromString extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                expression(mapper, writer, "dateString", dateString, encoderContext);
-                expression(mapper, writer, "format", format, encoderContext);
-                expression(mapper, writer, "timezone", timeZone, encoderContext);
-                expression(mapper, writer, "onError", onError, encoderContext);
-                expression(mapper, writer, "onNull", onNull, encoderContext);
+                expression(datastore, writer, "dateString", dateString, encoderContext);
+                expression(datastore, writer, "format", format, encoderContext);
+                expression(datastore, writer, "timezone", timeZone, encoderContext);
+                expression(datastore, writer, "onError", onError, encoderContext);
+                expression(datastore, writer, "onNull", onNull, encoderContext);
             });
         });
     }

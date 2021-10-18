@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.Facet;
 import dev.morphia.aggregation.experimental.stages.Stage;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -13,8 +13,8 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class FacetCodec extends StageCodec<Facet> {
-    public FacetCodec(Mapper mapper) {
-        super(mapper);
+    public FacetCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class FacetCodec extends StageCodec<Facet> {
     protected void encodeStage(BsonWriter writer, Facet value, EncoderContext encoderContext) {
         document(writer, () -> {
             for (Entry<String, List<Stage>> entry : value.getFields().entrySet()) {
-                value(getMapper(), writer, entry.getKey(), entry.getValue(), encoderContext);
+                value(getDatastore(), writer, entry.getKey(), entry.getValue(), encoderContext);
             }
         });
     }

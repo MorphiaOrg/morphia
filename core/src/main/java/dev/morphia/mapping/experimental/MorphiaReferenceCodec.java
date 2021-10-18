@@ -48,21 +48,20 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
 
     @Override
     public MorphiaReference decode(BsonReader reader, DecoderContext decoderContext) {
-        Mapper mapper = getDatastore().getMapper();
-        Object value = mapper.getCodecRegistry()
-                             .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
-                             .decode(reader, decoderContext);
-        value = processId(value, mapper, decoderContext);
+        Object value = getDatastore().getCodecRegistry()
+                                     .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
+                                     .decode(reader, decoderContext);
+        value = processId(getDatastore(), value, decoderContext);
         TypeData typeData = getTypeData().getTypeParameters().get(0);
         EntityModel fieldEntityModel = getEntityModelForField();
         if (Set.class.isAssignableFrom(typeData.getType())) {
-            return new SetReference<>(getDatastore(), fieldEntityModel, (List) value);
+            return new SetReference<>(getDatastore(), mapper, fieldEntityModel, (List) value);
         } else if (Collection.class.isAssignableFrom(typeData.getType())) {
-            return new ListReference<>(getDatastore(), fieldEntityModel, (List) value);
+            return new ListReference<>(getDatastore(), mapper, fieldEntityModel, (List) value);
         } else if (Map.class.isAssignableFrom(typeData.getType())) {
-            return new MapReference<>(getDatastore(), (Map) value, fieldEntityModel);
+            return new MapReference<>(getDatastore(), mapper, (Map) value, fieldEntityModel);
         } else {
-            return new SingleReference<>(getDatastore(), fieldEntityModel, value);
+            return new SingleReference<>(getDatastore(), mapper, fieldEntityModel, value);
         }
     }
 
@@ -88,14 +87,14 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
 
     @Override
     public void encode(BsonWriter writer, MorphiaReference value, EncoderContext encoderContext) {
-        Object ids = value.getId(mapper, getDatastore(), getEntityModelForField());
+        Object ids = value.getId(mapper, getEntityModelForField());
         if (ids == null
             || (ids instanceof Collection && ((Collection<?>) ids).isEmpty())
             || (ids instanceof Map && ((Map<?, ?>) ids).isEmpty())) {
             throw new ReferenceException(Sofia.noIdForReference());
         }
 
-        Codec codec = mapper.getCodecRegistry().get(ids.getClass());
+        Codec codec = getDatastore().getCodecRegistry().get(ids.getClass());
         codec.encode(writer, ids, encoderContext);
     }
 

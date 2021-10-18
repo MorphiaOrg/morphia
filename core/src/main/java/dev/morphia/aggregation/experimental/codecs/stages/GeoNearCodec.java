@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.GeoNear;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -10,8 +10,8 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class GeoNearCodec extends StageCodec<GeoNear> {
-    public GeoNearCodec(Mapper mapper) {
-        super(mapper);
+    public GeoNearCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -22,23 +22,23 @@ public class GeoNearCodec extends StageCodec<GeoNear> {
     @Override
     protected void encodeStage(BsonWriter writer, GeoNear value, EncoderContext encoderContext) {
         document(writer, () -> {
-            value(getMapper(), writer, "near", value.getPoint(), encoderContext);
-            value(getMapper(), writer, "near", value.getCoordinates(), encoderContext);
-            value(getMapper(), writer, "key", value.getKey(), encoderContext);
-            value(getMapper(), writer, "distanceField", value.getDistanceField(), encoderContext);
-            value(getMapper(), writer, "spherical", value.getSpherical(), encoderContext);
-            value(getMapper(), writer, "maxDistance", value.getMaxDistance(), encoderContext);
-            value(getMapper(), writer, "minDistance", value.getMinDistance(), encoderContext);
+            value(getDatastore(), writer, "near", value.getPoint(), encoderContext);
+            value(getDatastore(), writer, "near", value.getCoordinates(), encoderContext);
+            value(getDatastore(), writer, "key", value.getKey(), encoderContext);
+            value(getDatastore(), writer, "distanceField", value.getDistanceField(), encoderContext);
+            value(getDatastore(), writer, "spherical", value.getSpherical(), encoderContext);
+            value(getDatastore(), writer, "maxDistance", value.getMaxDistance(), encoderContext);
+            value(getDatastore(), writer, "minDistance", value.getMinDistance(), encoderContext);
             Filter[] filters = value.getFilters();
             if (filters != null) {
                 document(writer, "query", () -> {
                     for (Filter filter : filters) {
-                        filter.encode(getMapper(), writer, encoderContext);
+                        filter.encode(getDatastore(), writer, encoderContext);
                     }
                 });
             }
-            value(getMapper(), writer, "distanceMultiplier", value.getDistanceMultiplier(), encoderContext);
-            value(getMapper(), writer, "includeLocs", value.getIncludeLocs(), encoderContext);
+            value(getDatastore(), writer, "distanceMultiplier", value.getDistanceMultiplier(), encoderContext);
+            value(getDatastore(), writer, "includeLocs", value.getIncludeLocs(), encoderContext);
         });
     }
 }

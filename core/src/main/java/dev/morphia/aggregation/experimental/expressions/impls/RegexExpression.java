@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -22,12 +22,12 @@ public class RegexExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                expression(mapper, writer, "input", input, encoderContext);
-                value(mapper, writer, "regex", new BsonRegularExpression(regex), encoderContext);
-                value(mapper, writer, "options", options, encoderContext);
+                expression(datastore, writer, "input", input, encoderContext);
+                value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);
+                value(datastore, writer, "options", options, encoderContext);
             });
         });
     }

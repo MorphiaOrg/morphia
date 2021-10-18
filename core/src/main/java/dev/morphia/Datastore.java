@@ -4,6 +4,7 @@ import com.mongodb.ClientSessionOptions;
 import com.mongodb.DBCollection;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.DeleteResult;
@@ -24,6 +25,7 @@ import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -232,11 +234,11 @@ public interface Datastore {
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query, FindAndModifyOptions options) {
         return query.findAndDelete(new FindAndDeleteOptions()
-                                       .writeConcern(options.getWriteConcern())
-                                       .collation(options.getCollation())
-                                       .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
-                                       .sort(options.getSort())
-                                       .projection(options.getProjection()));
+            .writeConcern(options.getWriteConcern())
+            .collation(options.getCollation())
+            .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
+            .sort(options.getSort())
+            .projection(options.getProjection()));
     }
 
     /**
@@ -270,7 +272,7 @@ public interface Datastore {
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
         return query.modify(operations).execute(new ModifyOptions()
-                                                    .returnDocument(ReturnDocument.AFTER));
+            .returnDocument(ReturnDocument.AFTER));
     }
 
     /**
@@ -281,6 +283,22 @@ public interface Datastore {
      */
     @Nullable
     ClientSession findSession(SessionConfigurable<?> configurable);
+
+    /**
+     * @return the codec registry
+     * @morphia.internal
+     * @since 2.3
+     */
+    CodecRegistry getCodecRegistry();
+
+    /**
+     * @param type the type look up
+     * @param <T>  the class type
+     * @return the collection mapped for this class
+     * @morphia.internal
+     * @since 2.3
+     */
+    <T> MongoCollection<T> getCollection(Class<T> type);
 
     /**
      * @return the MongoDatabase used by this DataStore
@@ -549,9 +567,9 @@ public interface Datastore {
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> UpdateResult update(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
         return query.update(operations).execute(new UpdateOptions()
-                                                    .upsert(false)
-                                                    .multi(true)
-                                                    .writeConcern(getMapper().getWriteConcern(query.getEntityClass())));
+            .upsert(false)
+            .multi(true)
+            .writeConcern(getMapper().getWriteConcern(query.getEntityClass())));
     }
 
     /**

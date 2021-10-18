@@ -21,13 +21,15 @@ import java.util.StringJoiner;
 @Handler(MorphiaReferenceCodec.class)
 public abstract class MorphiaReference<T> {
     private Datastore datastore;
+    private Mapper mapper;
     private boolean ignoreMissing;
     private boolean resolved;
 
     MorphiaReference() {
     }
 
-    MorphiaReference(Datastore datastore) {
+    MorphiaReference(Datastore datastore, Mapper mapper) {
+        this.mapper = mapper;
         this.datastore = datastore;
     }
 
@@ -57,10 +59,21 @@ public abstract class MorphiaReference<T> {
     @Nullable
     public abstract T get();
 
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", getClass().getSimpleName() + "<<", ">>")
+            .add(getIds().toString())
+            .toString();
+    }
+
     /**
      * @return the referenced IDs
      */
     public abstract List<Object> getIds();
+
+    protected Datastore getDatastore() {
+        return datastore;
+    }
 
     /**
      * @return the referenced type
@@ -86,11 +99,8 @@ public abstract class MorphiaReference<T> {
         return getIds().equals(that.getIds());
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", getClass().getSimpleName() + "<<", ">>")
-                   .add(getIds().toString())
-                   .toString();
+    protected Mapper getMapper() {
+        return mapper;
     }
 
     /**
@@ -123,13 +133,5 @@ public abstract class MorphiaReference<T> {
         resolved = true;
     }
 
-    /**
-     * @return the datastore
-     * @morphia.internal
-     */
-    Datastore getDatastore() {
-        return datastore;
-    }
-
-    abstract Object getId(Mapper mapper, Datastore datastore, EntityModel entityModel);
+    abstract Object getId(Mapper mapper, EntityModel entityModel);
 }

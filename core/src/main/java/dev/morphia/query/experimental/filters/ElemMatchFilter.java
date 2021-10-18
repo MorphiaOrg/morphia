@@ -1,6 +1,6 @@
 package dev.morphia.query.experimental.filters;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -13,8 +13,8 @@ class ElemMatchFilter extends Filter {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(mapper));
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+        writer.writeStartDocument(path(datastore.getMapper()));
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
@@ -22,7 +22,7 @@ class ElemMatchFilter extends Filter {
         List<Filter> filters = (List<Filter>) getValue();
         if (filters != null) {
             for (Filter filter : filters) {
-                filter.encode(mapper, writer, context);
+                filter.encode(datastore, writer, context);
             }
         }
         if (isNot()) {

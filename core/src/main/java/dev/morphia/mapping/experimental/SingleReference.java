@@ -28,12 +28,13 @@ public class SingleReference<T> extends MorphiaReference<T> {
 
     /**
      * @param datastore   the datastore to use
+     * @param mapper      the mapper to use
      * @param entityModel the entity's mapped class
      * @param id          the ID value
      * @morphia.internal
      */
-    public SingleReference(Datastore datastore, EntityModel entityModel, Object id) {
-        super(datastore);
+    public SingleReference(Datastore datastore, Mapper mapper, EntityModel entityModel, Object id) {
+        super(datastore, mapper);
         this.entityModel = entityModel;
         this.id = id;
         if (entityModel.getType().isInstance(id)) {
@@ -69,7 +70,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
         final EntityModel entityModel = mapper.getEntityModel(paramType);
         Object id = document.get(mappedField.getMappedName());
 
-        return new SingleReference<>(datastore, entityModel, id);
+        return new SingleReference<>(datastore, mapper, entityModel, id);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
     }
 
     @Override
-    Object getId(Mapper mapper, Datastore datastore, EntityModel fieldClass) {
+    Object getId(Mapper mapper, EntityModel fieldClass) {
         if (id == null) {
             EntityModel entityModel = getEntityModel(mapper);
             if (entityModel != null && entityModel.getIdProperty() != null) {

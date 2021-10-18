@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.UnionWith;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -21,8 +21,8 @@ public class UnionWithCodec extends StageCodec<UnionWith> {
      * @param mapper the mapper to use
      * @morphia.internal
      */
-    public UnionWithCodec(Mapper mapper) {
-        super(mapper);
+    public UnionWithCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -34,11 +34,11 @@ public class UnionWithCodec extends StageCodec<UnionWith> {
     protected void encodeStage(BsonWriter writer, UnionWith unionWith, EncoderContext encoderContext) {
         String name = unionWith.getCollectionName();
         String collectionName = name != null ? name
-                                             : getMapper().getCollection(unionWith.getCollectionType()).getNamespace().getCollectionName();
+                                             : getDatastore().getMapper().getEntityModel(unionWith.getCollectionType()).getCollectionName();
 
         document(writer, () -> {
-            value(getMapper(), writer, "coll", collectionName, encoderContext);
-            value(getMapper(), writer, "pipeline", unionWith.getStages(), encoderContext);
+            value(getDatastore(), writer, "coll", collectionName, encoderContext);
+            value(getDatastore(), writer, "pipeline", unionWith.getStages(), encoderContext);
         });
     }
 }

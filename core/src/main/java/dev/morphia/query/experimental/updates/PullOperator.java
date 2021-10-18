@@ -1,7 +1,7 @@
 package dev.morphia.query.experimental.updates;
 
+import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.experimental.filters.Filter;
@@ -29,11 +29,10 @@ public class PullOperator extends UpdateOperator {
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, value()) {
             @Override
-            public Object encode(Mapper mapper) {
-                DocumentWriter writer = new DocumentWriter(mapper);
+            public Object encode(Datastore datastore) {
+                DocumentWriter writer = new DocumentWriter(datastore.getMapper());
                 document(writer, () -> {
-                    ((Filter) getValue())
-                        .encode(mapper, writer, EncoderContext.builder().build());
+                    ((Filter) getValue()).encode(datastore, writer, EncoderContext.builder().build());
                 });
 
                 return new Document(field(), writer.getDocument());

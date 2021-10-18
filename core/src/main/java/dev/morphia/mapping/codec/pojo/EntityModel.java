@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
@@ -48,7 +49,6 @@ public class EntityModel {
     private final Map<Class<? extends Annotation>, Annotation> annotations;
     private final Map<String, PropertyModel> propertyModelsByName;
     private final Map<String, PropertyModel> propertyModelsByMappedName;
-    private final Datastore datastore;
     private final InstanceCreatorFactory creatorFactory;
     private final boolean discriminatorEnabled;
     private final String discriminatorKey;
@@ -59,6 +59,7 @@ public class EntityModel {
     private final EntityModel superClass;
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
+    private final Mapper mapper;
     private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
 
     /**
@@ -66,8 +67,9 @@ public class EntityModel {
      *
      * @param builder the builder to pull values from
      */
-    EntityModel(EntityModelBuilder builder) {
+    EntityModel(Mapper mapper, EntityModelBuilder builder) {
         type = builder.type();
+        this.mapper = mapper;
         if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
             throw new MappingException(Sofia.noInnerClasses(type.getName()));
         }
@@ -82,8 +84,8 @@ public class EntityModel {
         this.propertyModelsByMappedName = new LinkedHashMap<>();
         builder.propertyModels().forEach(modelBuilder -> {
             PropertyModel model = modelBuilder
-                                      .owner(this)
-                                      .build();
+                .owner(this)
+                .build();
             propertyModelsByMappedName.put(model.getMappedName(), model);
             for (String name : modelBuilder.alternateNames()) {
                 if (propertyModelsByMappedName.put(name, model) != null) {
@@ -93,7 +95,6 @@ public class EntityModel {
             propertyModelsByName.putIfAbsent(model.getName(), model);
         });
 
-        this.datastore = builder.getDatastore();
         this.collectionName = builder.getCollectionName();
         creatorFactory = new InstanceCreatorFactoryImpl(this);
 
@@ -105,20 +106,21 @@ public class EntityModel {
 
         builder.interfaces().forEach(i -> i.addSubtype(this));
     }
+
     /**
      * Invokes any lifecycle methods
      *
-     * @param event    the event to run
-     * @param entity   the entity to use
-     * @param document the document used in persistence
-     * @param mapper   the mapper to use
+     * @param event     the event to run
+     * @param entity    the entity to use
+     * @param document  the document used in persistence
+     * @param datastore the Datastore to use
      */
     public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
-                                     Mapper mapper) {
+                                     Datastore datastore) {
         final List<ClassMethodPair> methodPairs = getLifecycleMethods().get(event);
         if (methodPairs != null) {
             for (ClassMethodPair cm : methodPairs) {
-                cm.invoke(document, entity);
+                cm.invoke(datastore, document, entity);
             }
         }
 
@@ -147,6 +149,7 @@ public class EntityModel {
     /**
      * @return the mapped collection name for the type
      */
+    @NonNull
     public String getCollectionName() {
         if (collectionName == null) {
             throw new MappingException(Sofia.noMappedCollection(getType().getName()));
@@ -193,36 +196,6 @@ public class EntityModel {
     }
 
     /**
-     * Returns all the properties on this model annotated by the given type
-     *
-     * @param type the annotation type
-     * @return the list of properties
-     */
-    public List<PropertyModel> getProperties(Class<? extends Annotation> type) {
-        return propertyModelsByName.values().stream()
-                                   .filter(model -> model.hasAnnotation(type))
-                                   .collect(Collectors.toList());
-    }
-
-    /**
-     * Returns all the properties on this model
-     *
-     * @return the list of properties
-     */
-    public List<PropertyModel> getProperties() {
-        return new ArrayList<>(propertyModelsByName.values());
-    }
-
-    /**
-     * @param name the property name
-     * @return the named PropertyModel or null if it does not exist
-     */
-    @Nullable
-    public PropertyModel getProperty(@Nullable String name) {
-        return name != null ? propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name)) : null;
-    }
-
-    /**
      * @return a new InstanceCreator instance for the ClassModel
      */
     public MorphiaInstanceCreator getInstanceCreator() {
@@ -261,6 +234,36 @@ public class EntityModel {
      */
     public String getName() {
         return type.getSimpleName();
+    }
+
+    /**
+     * Returns all the properties on this model annotated by the given type
+     *
+     * @param type the annotation type
+     * @return the list of properties
+     */
+    public List<PropertyModel> getProperties(Class<? extends Annotation> type) {
+        return propertyModelsByName.values().stream()
+                                   .filter(model -> model.hasAnnotation(type))
+                                   .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns all the properties on this model
+     *
+     * @return the list of properties
+     */
+    public List<PropertyModel> getProperties() {
+        return new ArrayList<>(propertyModelsByName.values());
+    }
+
+    /**
+     * @param name the property name
+     * @return the named PropertyModel or null if it does not exist
+     */
+    @Nullable
+    public PropertyModel getProperty(@Nullable String name) {
+        return name != null ? propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name)) : null;
     }
 
     /**
@@ -305,7 +308,7 @@ public class EntityModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAnnotations(), propertyModelsByName, propertyModelsByMappedName, datastore, creatorFactory,
+        return Objects.hash(getAnnotations(), propertyModelsByName, propertyModelsByMappedName, creatorFactory,
             discriminatorEnabled,
             getDiscriminatorKey(), getDiscriminator(), getType(), getCollectionName(), getLifecycleMethods());
     }
@@ -323,7 +326,6 @@ public class EntityModel {
                && Objects.equals(getAnnotations(), that.getAnnotations())
                && Objects.equals(propertyModelsByName, that.propertyModelsByName)
                && Objects.equals(propertyModelsByMappedName, that.propertyModelsByMappedName)
-               && Objects.equals(datastore, that.datastore)
                && Objects.equals(creatorFactory, that.creatorFactory)
                && Objects.equals(getDiscriminatorKey(), that.getDiscriminatorKey())
                && Objects.equals(getDiscriminator(), that.getDiscriminator())
@@ -410,7 +412,7 @@ public class EntityModel {
             for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
                 if (method.isAnnotationPresent(annotationClass)) {
                     lifecycleMethods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
-                                    .add(new ClassMethodPair(datastore, method, entityListener ? type : null, annotationClass));
+                                    .add(new ClassMethodPair(method, entityListener ? type : null, annotationClass));
                 }
             }
         }

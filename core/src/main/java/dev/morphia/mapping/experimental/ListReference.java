@@ -1,6 +1,7 @@
 package dev.morphia.mapping.experimental;
 
 import dev.morphia.Datastore;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
 import java.util.ArrayList;
@@ -15,12 +16,13 @@ public class ListReference<T> extends CollectionReference<List<T>> {
 
     /**
      * @param datastore the datastore to use
+     * @param mapper    the mapper to use
      * @param ids       the IDs of the entities
      * @param model     the EntityModel for the entity type
      * @morphia.internal
      */
-    public ListReference(Datastore datastore, EntityModel model, List ids) {
-        super(datastore, model, ids);
+    public ListReference(Datastore datastore, Mapper mapper, EntityModel model, List ids) {
+        super(datastore, mapper, model, ids);
     }
 
     /**

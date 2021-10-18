@@ -1,7 +1,6 @@
 package dev.morphia.mapping.codec.references;
 
 import com.mongodb.DBRef;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
@@ -42,6 +41,7 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -78,49 +78,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     /**
      * Encodes a value
      *
-     * @param mapper    the mapper to use
-     * @param datastore the datastore to use
-     * @param value     the value to encode
-     * @param model     the mapped class of the field type
-     * @return the encoded value
-     * @morphia.internal
-     */
-    public static Object encodeId(Mapper mapper, Datastore datastore, Object value, PropertyModel model) {
-        Object idValue;
-        MongoCollection<?> collection;
-        if (value instanceof Key) {
-            idValue = ((Key<?>) value).getId();
-            String collectionName = ((Key<?>) value).getCollection();
-            Class<?> type = ((Key<?>) value).getType();
-            if (collectionName == null || type == null) {
-                throw new QueryException("Missing type or collection information in key");
-            }
-            collection = datastore.getDatabase().getCollection(collectionName, type);
-        } else {
-            idValue = mapper.getId(value);
-            if (idValue == null) {
-                if (!mapper.isMappable(value.getClass())) {
-                    return value;
-                }
-                throw new QueryException("No ID value found on referenced entity.  Save referenced entities before defining references to"
-                                         + " them.");
-            }
-            collection = mapper.getCollection(value.getClass());
-        }
-
-        String valueCollectionName = collection.getNamespace().getCollectionName();
-
-        Reference annotation = model.getAnnotation(Reference.class);
-        if (annotation != null && !annotation.idOnly()) {
-            idValue = new DBRef(valueCollectionName, idValue);
-        }
-        return idValue;
-    }
-
-    /**
-     * Encodes a value
-     *
-     * @param mapper the mapper to use
+     * @param mapper
      * @param value  the value to encode
      * @param model  the mapped class of the field type
      * @return the encoded value
@@ -129,7 +87,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     @Nullable
     public static Object encodeId(Mapper mapper, Object value, EntityModel model) {
         Object idValue;
-        MongoCollection<?> collection;
         Class<?> type;
         if (value instanceof Key) {
             idValue = ((Key) value).getId();
@@ -145,9 +102,8 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             }
             type = value.getClass();
         }
-        collection = mapper.getCollection(type);
 
-        String valueCollectionName = collection.getNamespace().getCollectionName();
+        String valueCollectionName = mapper.getEntityModel(type).getCollectionName();
         String fieldCollectionName = model.getCollectionName();
 
         Reference annotation = model.getAnnotation(Reference.class);
@@ -161,31 +117,31 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     /**
      * Decodes an ID value
      *
+     * @param datastore      the Datastore to use
      * @param decode         the value to decode
-     * @param mapper         the mapper to use
      * @param decoderContext the decoder context
      * @return the decoded value
      */
     @NonNull
-    public static Object processId(Object decode, Mapper mapper, DecoderContext decoderContext) {
+    public static Object processId(Datastore datastore, Object decode, DecoderContext decoderContext) {
         Object id = decode;
         if (id instanceof Iterable) {
-            Iterable iterable = (Iterable) id;
-            List ids = new ArrayList();
+            Iterable<?> iterable = (Iterable<?>) id;
+            List<Object> ids = new ArrayList<>();
             for (Object o : iterable) {
-                ids.add(processId(o, mapper, decoderContext));
+                ids.add(processId(datastore, o, decoderContext));
             }
             id = ids;
         } else if (id instanceof Document) {
             Document document = (Document) id;
             if (document.containsKey("$ref")) {
-                id = processId(new DBRef(document.getString("$db"), document.getString("$ref"), document.get("$id")),
-                    mapper, decoderContext);
-            } else if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
+                id = processId(datastore, new DBRef(document.getString("$db"), document.getString("$ref"), document.get("$id")),
+                    decoderContext);
+            } else if (document.containsKey(datastore.getMapper().getOptions().getDiscriminatorKey())) {
                 try {
-                    id = mapper.getCodecRegistry()
-                               .get(mapper.getClass(document))
-                               .decode(new DocumentReader(document), decoderContext);
+                    id = datastore.getCodecRegistry()
+                                  .get(datastore.getMapper().getClass(document))
+                                  .decode(new DocumentReader(document), decoderContext);
                 } catch (CodecConfigurationException e) {
                     throw new MappingException(Sofia.cannotFindTypeInDocument(), e);
                 }
@@ -195,9 +151,9 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             DBRef ref = (DBRef) id;
             Object refId = ref.getId();
             if (refId instanceof Document) {
-                refId = mapper.getCodecRegistry()
-                              .get(Object.class)
-                              .decode(new DocumentReader((Document) refId), decoderContext);
+                refId = datastore.getCodecRegistry()
+                                 .get(Object.class)
+                                 .decode(new DocumentReader((Document) refId), decoderContext);
             }
             id = new DBRef(ref.getDatabaseName(), ref.getCollectionName(), refId);
         }
@@ -207,10 +163,10 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     @Nullable
     @Override
     public Object decode(BsonReader reader, DecoderContext decoderContext) {
-        Object decode = getDatastore().getMapper().getCodecRegistry()
+        Object decode = getDatastore().getCodecRegistry()
                                       .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
                                       .decode(reader, decoderContext);
-        decode = processId(decode, getDatastore().getMapper(), decoderContext);
+        decode = processId(getDatastore(), decode, decoderContext);
         return fetch(decode);
     }
 
@@ -233,7 +189,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         Object idValue = collectIdValues(instance);
 
         if (idValue != null) {
-            final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
+            final Codec codec = getDatastore().getCodecRegistry().get(idValue.getClass());
             codec.encode(writer, idValue, encoderContext);
         } else {
             throw new ReferenceException(Sofia.noIdForReference());
@@ -252,11 +208,9 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
 
     private Object collectIdValues(Object value) {
         if (value instanceof Collection) {
-            List<Object> ids = new ArrayList<>(((Collection<?>) value).size());
-            for (Object o : (Collection<?>) value) {
-                ids.add(collectIdValues(o));
-            }
-            return ids;
+            return ((Collection<?>) value).stream()
+                                          .map(o -> collectIdValues(o))
+                                          .collect(Collectors.toCollection(ArrayList::new));
         } else if (value instanceof Map) {
             final Map<Object, Object> ids = new LinkedHashMap<>();
             Map<Object, Object> map = (Map<Object, Object>) value;
@@ -265,13 +219,11 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             }
             return ids;
         } else if (value.getClass().isArray()) {
-            List<Object> ids = new ArrayList<>(((Object[]) value).length);
-            for (Object o : (Object[]) value) {
-                ids.add(collectIdValues(o));
-            }
-            return ids;
+            return Arrays.stream((Object[]) value)
+                         .map(o -> collectIdValues(o))
+                         .collect(Collectors.toCollection(ArrayList::new));
         } else {
-            return encodeId(getDatastore().getMapper(), getDatastore(), value, getPropertyModel());
+            return encodeId(value, getPropertyModel());
         }
     }
 
@@ -311,6 +263,44 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         }
     }
 
+    /**
+     * Encodes a value
+     *
+     * @param value the value to encode
+     * @param model the mapped class of the field type
+     * @return the encoded value
+     * @morphia.internal
+     */
+    private Object encodeId(Object value, PropertyModel model) {
+        Object idValue;
+        final String valueCollectionName;
+        if (value instanceof Key) {
+            idValue = ((Key<?>) value).getId();
+            String collectionName = ((Key<?>) value).getCollection();
+            Class<?> type = ((Key<?>) value).getType();
+            if (collectionName == null || type == null) {
+                throw new QueryException("Missing type or collection information in key");
+            }
+            valueCollectionName = collectionName;
+        } else {
+            idValue = mapper.getId(value);
+            if (idValue == null) {
+                if (!mapper.isMappable(value.getClass())) {
+                    return value;
+                }
+                throw new QueryException("No ID value found on referenced entity.  Save referenced entities before defining references to"
+                                         + " them.");
+            }
+            valueCollectionName = mapper.getEntityModel(value.getClass()).getCollectionName();
+        }
+
+        Reference annotation = model.getAnnotation(Reference.class);
+        if (annotation != null && !annotation.idOnly()) {
+            idValue = new DBRef(valueCollectionName, idValue);
+        }
+        return idValue;
+    }
+
     @Nullable
     private Object fetch(Object value) {
         MorphiaReference<?> reference;
@@ -334,8 +324,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     private List<?> mapToEntitiesIfNecessary(List<?> value) {
-        Mapper mapper = getDatastore().getMapper();
-        Codec<?> codec = mapper.getCodecRegistry().get(getEntityModelForField().getType());
+        Codec<?> codec = getDatastore().getCodecRegistry().get(getEntityModelForField().getType());
         return value.stream()
                     .filter(v -> v instanceof Document && ((Document) v).containsKey("_id"))
                     .map(d -> codec.decode(new DocumentReader((Document) d), DecoderContext.builder().build()))
@@ -343,16 +332,15 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     MorphiaReference<?> readDocument(Document value) {
-        Mapper mapper = getDatastore().getMapper();
-        final Object id = mapper.getCodecRegistry().get(Object.class)
-                                .decode(new DocumentReader(value), DecoderContext.builder().build());
+        final Object id = getDatastore().getCodecRegistry().get(Object.class)
+                                        .decode(new DocumentReader(value), DecoderContext.builder().build());
         return readSingle(id);
     }
 
     MorphiaReference<?> readList(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
-               ? new ListReference<>(getDatastore(), getEntityModelForField(), value)
+               ? new ListReference<>(getDatastore(), mapper, getEntityModelForField(), value)
                : new ListReference<>(mapped);
     }
 
@@ -363,18 +351,18 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             ids.put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
         }
 
-        return new MapReference(getDatastore(), ids, getEntityModelForField());
+        return new MapReference(getDatastore(), mapper, ids, getEntityModelForField());
     }
 
     MorphiaReference<?> readSet(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
-               ? new SetReference<>(getDatastore(), getEntityModelForField(), value)
+               ? new SetReference<>(getDatastore(), getDatastore().getMapper(), getEntityModelForField(), value)
                : new SetReference<>(new LinkedHashSet<>(mapped));
     }
 
     MorphiaReference<?> readSingle(Object value) {
-        return new SingleReference<>(getDatastore(), getEntityModelForField(), value);
+        return new SingleReference<>(getDatastore(), mapper, getEntityModelForField(), value);
     }
 }
 

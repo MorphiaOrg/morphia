@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -53,60 +54,60 @@ public final class ExpressionHelper {
     }
 
     /**
-     * @param mapper
+     * @param datastore
      * @param writer
      * @param name
      * @param expression
      * @param encoderContext
      * @morphia.internal
      */
-    public static void expression(Mapper mapper, BsonWriter writer, String name, @Nullable Expression expression,
+    public static void expression(Datastore datastore, BsonWriter writer, String name, @Nullable Expression expression,
                                   EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
-            expression.encode(mapper, writer, encoderContext);
+            expression.encode(datastore, writer, encoderContext);
         }
     }
 
     /**
-     * @param mapper
+     * @param datastore
      * @param writer
      * @param expression
      * @param encoderContext
      * @morphia.internal
      */
-    public static void expression(Mapper mapper, BsonWriter writer, @Nullable Expression expression, EncoderContext encoderContext) {
+    public static void expression(Datastore datastore, BsonWriter writer, @Nullable Expression expression, EncoderContext encoderContext) {
         if (expression != null) {
-            expression.encode(mapper, writer, encoderContext);
+            expression.encode(datastore, writer, encoderContext);
         }
     }
 
     /**
-     * @param mapper
+     * @param datastore
      * @param writer
      * @param name
      * @param value
      * @param encoderContext
      * @morphia.internal
      */
-    public static void value(Mapper mapper, BsonWriter writer, String name, @Nullable Object value, EncoderContext encoderContext) {
+    public static void value(Datastore datastore, BsonWriter writer, String name, @Nullable Object value, EncoderContext encoderContext) {
         if (value != null) {
             writer.writeName(name);
-            Codec codec = mapper.getCodecRegistry().get(value.getClass());
+            Codec codec = datastore.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
         }
     }
 
     /**
-     * @param mapper
+     * @param datastore
      * @param writer
      * @param value
      * @param encoderContext
      * @morphia.internal
      */
-    public static void value(Mapper mapper, BsonWriter writer, @Nullable Object value, EncoderContext encoderContext) {
+    public static void value(Datastore datastore, BsonWriter writer, @Nullable Object value, EncoderContext encoderContext) {
         if (value != null) {
-            Codec codec = mapper.getCodecRegistry().get(value.getClass());
+            Codec codec = datastore.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
         }
     }

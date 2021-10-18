@@ -27,26 +27,24 @@ public abstract class UpdateBase<T> {
     private final Datastore datastore;
 
     UpdateBase(Datastore datastore,
-               Mapper mapper,
                @Nullable MongoCollection<T> collection,
                @Nullable Query<T> query,
                Class<T> type) {
         this.datastore = datastore;
-        this.mapper = mapper;
+        this.mapper = datastore.getMapper();
         this.collection = collection;
         this.query = query;
         this.type = type;
     }
 
     UpdateBase(Datastore datastore,
-               Mapper mapper,
                MongoCollection<T> collection,
                Query<T> query,
                Class<T> type,
                UpdateOperator first,
                UpdateOperator[] updates) {
         this.datastore = datastore;
-        this.mapper = mapper;
+        this.mapper = datastore.getMapper();
         this.type = type;
         this.updates.add(first);
         this.updates.addAll(asList(updates));
@@ -55,12 +53,11 @@ public abstract class UpdateBase<T> {
     }
 
     UpdateBase(Datastore datastore,
-               Mapper mapper,
                MongoCollection<T> collection,
                Query<T> query,
                Class<T> type,
                List<UpdateOperator> updates) {
-        this(datastore, mapper, collection, query, type);
+        this(datastore, collection, query, type);
         this.updates.addAll(updates);
     }
 
@@ -79,7 +76,7 @@ public abstract class UpdateBase<T> {
      * @return the operations listed
      */
     public Document toDocument() {
-        final Operations operations = new Operations(mapper, mapper.getEntityModel(type));
+        final Operations operations = new Operations(datastore, mapper.getEntityModel(type));
 
         for (UpdateOperator update : updates) {
             PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), true);

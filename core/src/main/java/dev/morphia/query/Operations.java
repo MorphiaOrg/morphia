@@ -1,7 +1,7 @@
 package dev.morphia.query;
 
+import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import org.bson.Document;
@@ -18,19 +18,19 @@ import java.util.StringJoiner;
  */
 class Operations {
     private final Map<String, List<OperationTarget>> ops = new HashMap<>();
-    private final Mapper mapper;
+    private final Datastore datastore;
     private final EntityModel entityModel;
 
-    Operations(Mapper mapper, EntityModel model) {
-        this.mapper = mapper;
+    Operations(Datastore datastore, EntityModel model) {
+        this.datastore = datastore;
         this.entityModel = model;
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Operations.class.getSimpleName() + "[", "]")
-                   .add("ops=" + ops)
-                   .toString();
+            .add("ops=" + ops)
+            .toString();
     }
 
     protected void versionUpdate() {
@@ -45,7 +45,7 @@ class Operations {
                                                      return target != null && target.translatedPath().equals(version);
                                                  });
             if (!already) {
-                add("$inc", new OperationTarget(new PathTarget(mapper, entityModel, versionField.getName()), 1L));
+                add("$inc", new OperationTarget(new PathTarget(datastore.getMapper(), entityModel, versionField.getName()), 1L));
             }
         }
     }
@@ -71,7 +71,7 @@ class Operations {
         for (Entry<String, List<OperationTarget>> entry : ops.entrySet()) {
             Document targets = new Document();
             for (OperationTarget operationTarget : entry.getValue()) {
-                Object encode = operationTarget.encode(mapper);
+                Object encode = operationTarget.encode(datastore);
                 if (encode instanceof Document) {
                     targets.putAll((Document) encode);
                 } else {

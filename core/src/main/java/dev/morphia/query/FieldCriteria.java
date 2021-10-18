@@ -1,8 +1,8 @@
 package dev.morphia.query;
 
 
+import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.Document;
 
@@ -19,21 +19,27 @@ class FieldCriteria extends AbstractCriteria {
     private final FilterOperator operator;
     private final Object value;
     private final boolean not;
-    private final Mapper mapper;
+    private final Datastore datastore;
 
-    FieldCriteria(Mapper mapper, String field, FilterOperator op, Object value, EntityModel model,
+    FieldCriteria(Datastore datastore, String field, FilterOperator op, Object value, EntityModel model,
                   boolean validating) {
-        this(mapper, field, op, value, false, model, validating);
+        this(datastore, field, op, value, false, model, validating);
     }
 
-    FieldCriteria(Mapper mapper, String fieldName, FilterOperator op, Object value, boolean not, EntityModel model, boolean validating) {
-        this.mapper = mapper;
-        final PathTarget pathTarget = new PathTarget(mapper, model, fieldName, validating);
+    FieldCriteria(Datastore datastore,
+                  String fieldName,
+                  FilterOperator op,
+                  Object value,
+                  boolean not,
+                  EntityModel model,
+                  boolean validating) {
+        this.datastore = datastore;
+        final PathTarget pathTarget = new PathTarget(datastore.getMapper(), model, fieldName, validating);
 
         this.field = pathTarget.translatedPath();
 
         this.operator = op;
-        this.value = ((Document) new OperationTarget(pathTarget, value).encode(mapper)).get(this.field);
+        this.value = ((Document) new OperationTarget(pathTarget, value).encode(datastore)).get(this.field);
         this.not = not;
     }
 
@@ -106,7 +112,7 @@ class FieldCriteria extends AbstractCriteria {
         return field + " " + operator.val() + " " + value;
     }
 
-    protected Mapper getMapper() {
-        return mapper;
+    protected Datastore getDatastore() {
+        return datastore;
     }
 }

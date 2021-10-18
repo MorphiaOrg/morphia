@@ -38,7 +38,7 @@ public class MorphiaCodecProvider implements CodecProvider {
     /**
      * Creates a provider
      *
-     * @param datastore the datastore to use
+     * @param datastore the Datastore to use
      */
     public MorphiaCodecProvider(Datastore datastore) {
         this.datastore = datastore;
@@ -105,19 +105,7 @@ public class MorphiaCodecProvider implements CodecProvider {
         };
     }
 
-    protected Map<Class<?>, Codec<?>> getCodecs() {
-        return codecs;
-    }
-
-    protected Datastore getDatastore() {
-        return datastore;
-    }
-
     protected Mapper getMapper() {
         return mapper;
-    }
-
-    protected List<PropertyCodecProvider> getPropertyCodecProviders() {
-        return propertyCodecProviders;
     }
 }

@@ -24,6 +24,7 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
@@ -74,7 +75,6 @@ public final class PropertyModel {
         accessor = builder.accessor();
         serialization = builder.serialization();
         builder.annotations().forEach(ann -> annotationMap.put(ann.annotationType(), ann));
-        configureCodec(builder.datastore());
 
         List<String> result;
         final AlsoLoad al = getAnnotation(AlsoLoad.class);
@@ -89,8 +89,8 @@ public final class PropertyModel {
         loadNames = result;
     }
 
-    static PropertyModelBuilder builder(Datastore datastore) {
-        return new PropertyModelBuilder(datastore);
+    static PropertyModelBuilder builder(Mapper mapper) {
+        return new PropertyModelBuilder(mapper);
     }
 
     /**
@@ -133,12 +133,14 @@ public final class PropertyModel {
         return type.cast(annotationMap.get(type));
     }
 
-    /**
-     * @return the custom codec to use if set or null
-     */
-    @Nullable
     public Codec<?> getCodec() {
         return codec;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getTypeData(), getMappedName(), codec, getAccessor(), serialization,
+            annotationMap.values(), getNormalizedType());
     }
 
     /**
@@ -238,12 +240,6 @@ public final class PropertyModel {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getTypeData(), getMappedName(), getCodec(), getAccessor(), serialization,
-            annotationMap.values(), getNormalizedType());
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -255,10 +251,22 @@ public final class PropertyModel {
         return getName().equals(that.getName())
                && getTypeData().equals(that.getTypeData())
                && getMappedName().equals(that.getMappedName())
-               && Objects.equals(getCodec(), that.getCodec())
+               && Objects.equals(codec, that.codec)
                && getAccessor().equals(that.getAccessor())
                && serialization.equals(that.serialization)
                && Objects.equals(getNormalizedType(), that.getNormalizedType());
+    }
+
+    /**
+     * @param datastore
+     * @return the custom codec to use if set or null
+     */
+    @Nullable
+    public Codec<?> specializeCodec(Datastore datastore) {
+        if (codec == null) {
+            configureCodec(datastore);
+        }
+        return codec;
     }
 
     @Override

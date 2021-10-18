@@ -1,6 +1,7 @@
 package dev.morphia.query.experimental.filters;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
@@ -51,19 +52,19 @@ public class Filter {
     }
 
     /**
-     * @param mapper  the mapper
-     * @param writer  the writer
-     * @param context the context
+     * @param datastore the datastore
+     * @param writer    the writer
+     * @param context   the context
      * @morphia.internal
      */
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        document(writer, path(mapper), () -> {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+        document(writer, path(datastore.getMapper()), () -> {
             if (not) {
                 document(writer, "$not", () -> {
-                    writeNamedValue(name, getValue(mapper), mapper, writer, context);
+                    writeNamedValue(name, getValue(datastore), datastore, writer, context);
                 });
             } else {
-                writeNamedValue(name, getValue(mapper), mapper, writer, context);
+                writeNamedValue(name, getValue(datastore), datastore, writer, context);
             }
         });
     }
@@ -133,14 +134,14 @@ public class Filter {
     }
 
     @Nullable
-    protected Object getValue(Mapper mapper) {
+    protected Object getValue(Datastore datastore) {
         if (!mapped) {
-            PathTarget target = pathTarget(mapper);
+            PathTarget target = pathTarget(datastore.getMapper());
             OperationTarget operationTarget = new OperationTarget(pathTarget, value);
             this.value = operationTarget.getValue();
             PropertyModel property = target.getTarget();
-            if (property != null && property.getCodec() instanceof PropertyHandler) {
-                this.value = ((Document) operationTarget.encode(mapper)).get(field);
+            if (property != null && property.specializeCodec(datastore) instanceof PropertyHandler) {
+                this.value = ((Document) operationTarget.encode(datastore)).get(field);
             }
             mapped = true;
         }
@@ -164,20 +165,20 @@ public class Filter {
         return pathTarget;
     }
 
-    protected void writeNamedValue(@Nullable String name, @Nullable Object named, Mapper mapper, BsonWriter writer,
+    protected void writeNamedValue(@Nullable String name, @Nullable Object named, Datastore datastore, BsonWriter writer,
                                    EncoderContext encoderContext) {
         writer.writeName(name);
         if (named != null) {
-            Codec codec = mapper.getCodecRegistry().get(named.getClass());
+            Codec codec = datastore.getCodecRegistry().get(named.getClass());
             encoderContext.encodeWithChildContext(codec, writer, named);
         } else {
             writer.writeNull();
         }
     }
 
-    protected void writeUnnamedValue(@Nullable Object value, Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    protected void writeUnnamedValue(@Nullable Object value, Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         if (value != null) {
-            Codec codec = mapper.getCodecRegistry().get(value.getClass());
+            Codec codec = datastore.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
         } else {
             writer.writeNull();

@@ -4,9 +4,12 @@ import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.NonNull;
+import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.Document;
+import org.bson.codecs.DecoderContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,7 @@ import java.util.NoSuchElementException;
 @Deprecated(since = "2.0", forRemoval = true)
 public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     private final MongoCursor<Document> wrapped;
-    private final Mapper mapper;
+    private final Datastore datastore;
     private final Class<T> clazz;
     private final String collection;
 
@@ -29,16 +32,16 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
      * Create
      *
      * @param cursor     the cursor to use
-     * @param mapper     the Mapper to use
+     * @param datastore  the Datastore to use
      * @param clazz      the original type being iterated
      * @param collection the mongodb collection
      */
-    public MorphiaKeyCursor(MongoCursor<Document> cursor, Mapper mapper, Class<T> clazz, String collection) {
+    public MorphiaKeyCursor(MongoCursor<Document> cursor, Datastore datastore, Class<T> clazz, String collection) {
         this.wrapped = cursor;
         if (wrapped == null) {
             throw new IllegalArgumentException("The wrapped cursor can not be null");
         }
-        this.mapper = mapper;
+        this.datastore = datastore;
         this.clazz = clazz;
         this.collection = collection;
     }
@@ -92,9 +95,23 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     private Key<T> convertItem(Document document) {
         Object id = document.get("_id");
         if (id instanceof Document) {
-            id = mapper.fromDocument(clazz, (Document) id);
+            id = fromDocument(clazz, (Document) id);
         }
         return new Key<>(clazz, collection, id);
+    }
+
+    private <I> I fromDocument(Class<I> type, Document document) {
+        Class<I> aClass = type;
+        Mapper mapper = datastore.getMapper();
+        if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
+            aClass = mapper.getClass(document);
+        }
+
+        DocumentReader reader = new DocumentReader(document);
+
+        return datastore.getCodecRegistry()
+                        .get(aClass)
+                        .decode(reader, DecoderContext.builder().build());
     }
 
     /**

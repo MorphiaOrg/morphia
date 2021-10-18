@@ -1,6 +1,5 @@
 package dev.morphia.mapping.conventions;
 
-import dev.morphia.Datastore;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -35,8 +34,8 @@ public class ConfigureProperties implements MorphiaConvention {
     }
 
     @Override
-    public void apply(Datastore datastore, EntityModelBuilder modelBuilder) {
-        MapperOptions options = datastore.getMapper().getOptions();
+    public void apply(Mapper mapper, EntityModelBuilder modelBuilder) {
+        MapperOptions options = mapper.getOptions();
 
         processProperties(modelBuilder, options);
 

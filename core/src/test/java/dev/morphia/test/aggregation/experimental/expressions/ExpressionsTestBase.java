@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 public class ExpressionsTestBase extends TestBase {
     @BeforeMethod
     public void seed() {
-        getMapper().getCollection(User.class).drop();
+        getDs().getCollection(User.class).drop();
         getDs().save(new User("", LocalDate.now()));
     }
 
@@ -27,8 +27,8 @@ public class ExpressionsTestBase extends TestBase {
     protected void assertAndCheckDocShape(String expectedString, Expression value, Object expectedValue) {
         Document expected = Document.parse(expectedString);
         DocumentWriter writer = new DocumentWriter(getMapper());
-        ((Codec) getMapper().getCodecRegistry()
-                            .get(MathExpression.class))
+        ((Codec) getDs().getCodecRegistry()
+                        .get(MathExpression.class))
             .encode(writer, value, EncoderContext.builder().build());
         Document actual = writer.getDocument();
         assertEquals(writer.getDocsLevel(), 0);

@@ -39,21 +39,23 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
+    private final Datastore datastore;
     private EntityEncoder<T> encoder;
     private EntityDecoder<T> decoder;
 
     /**
      * Creates a new codec
      *
-     * @param datastore              the datastore
+     * @param datastore              the Datastore to use
      * @param model                  the model backing this codec
      * @param propertyCodecProviders the codec provider for properties
-     * @param registry               the codec registry for lookups
      * @param discriminatorLookup    the discriminator to type lookup
+     * @param registry               the codec registry for lookups
      */
     public MorphiaCodec(Datastore datastore, EntityModel model,
                         List<PropertyCodecProvider> propertyCodecProviders,
                         DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
+        this.datastore = datastore;
         this.mapper = datastore.getMapper();
         this.discriminatorLookup = discriminatorLookup;
 
@@ -99,6 +101,14 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     @Override
     public BsonValue getDocumentId(Object document) {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @return the datastore
+     * @since 2.3
+     */
+    public Datastore getDatastore() {
+        return datastore;
     }
 
     public DiscriminatorLookup getDiscriminatorLookup() {
@@ -168,8 +178,9 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private void specializePropertyCodecs() {
         EntityModel entityModel = getEntityModel();
         for (PropertyModel propertyModel : entityModel.getProperties()) {
-            Codec codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
-                                                           : propertyCodecRegistry.get(propertyModel.getTypeData());
+            Codec<?> specializeCodec = propertyModel.specializeCodec(datastore);
+            Codec codec = specializeCodec != null ? specializeCodec
+                                                  : propertyCodecRegistry.get(propertyModel.getTypeData());
             if (codec != null) {
                 propertyModel.codec(codec);
             }

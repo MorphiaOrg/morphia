@@ -1,13 +1,13 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class SortByCountCodec extends StageCodec<SortByCount> {
-    public SortByCountCodec(Mapper mapper) {
-        super(mapper);
+    public SortByCountCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -17,6 +17,6 @@ public class SortByCountCodec extends StageCodec<SortByCount> {
 
     @Override
     protected void encodeStage(BsonWriter writer, SortByCount value, EncoderContext encoderContext) {
-        value.getExpression().encode(getMapper(), writer, encoderContext);
+        value.getExpression().encode(getDatastore(), writer, encoderContext);
     }
 }

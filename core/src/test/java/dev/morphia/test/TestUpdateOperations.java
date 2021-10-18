@@ -283,7 +283,7 @@ public class TestUpdateOperations extends TestBase {
                .update(currentDate("localDateTime"))
                .execute();
 
-        Document document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
+        Document document = getDatabase().getCollection(getDs().getCollection(DumbColl.class).getNamespace().getCollectionName())
                                          .find()
                                          .first();
         assertNotNull(document.getDate("localDateTime"));
@@ -293,7 +293,7 @@ public class TestUpdateOperations extends TestBase {
                            .type(TypeSpecification.TIMESTAMP))
                .execute();
 
-        document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
+        document = getDatabase().getCollection(getDs().getCollection(DumbColl.class).getNamespace().getCollectionName())
                                 .find()
                                 .first();
         Assert.assertTrue(document.get("localDateTime") instanceof BsonTimestamp);
@@ -722,7 +722,7 @@ public class TestUpdateOperations extends TestBase {
                .update(rename("opaqueId", "anythingElse"))
                .execute();
 
-        Document document = getDatabase().getCollection(getMapper().getCollection(DumbColl.class).getNamespace().getCollectionName())
+        Document document = getDatabase().getCollection(getDs().getCollection(DumbColl.class).getNamespace().getCollectionName())
                                          .find()
                                          .first();
         Assert.assertNull(document.getString("opaqueId"));

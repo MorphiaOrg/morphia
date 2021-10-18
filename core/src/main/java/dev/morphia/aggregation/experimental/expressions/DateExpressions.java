@@ -1,12 +1,12 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromString;
 import dev.morphia.aggregation.experimental.expressions.impls.DateToParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateToString;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IsoDates;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -234,8 +234,8 @@ public final class DateExpressions {
         }
 
         @Override
-        public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-            document(writer, () -> expression(mapper, writer, getOperation(), (Expression) getValue(), encoderContext));
+        public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+            document(writer, () -> expression(datastore, writer, getOperation(), (Expression) getValue(), encoderContext));
         }
     }
 }

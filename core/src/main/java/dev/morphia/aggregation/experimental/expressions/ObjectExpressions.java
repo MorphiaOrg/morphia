@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -53,8 +53,8 @@ public final class ObjectExpressions {
         }
 
         @Override
-        public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-            super.encode(mapper, writer, encoderContext);
+        public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+            super.encode(datastore, writer, encoderContext);
         }
     }
 }
