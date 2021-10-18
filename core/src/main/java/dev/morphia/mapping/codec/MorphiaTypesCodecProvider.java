@@ -22,7 +22,7 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
     /**
      * Create the provider
      *
-     * @param mapper the mapper to use
+     * @param datastore the Datastore to use
      */
     public MorphiaTypesCodecProvider(Datastore datastore) {
         this.datastore = datastore;
