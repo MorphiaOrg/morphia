@@ -1,7 +1,7 @@
 package dev.morphia.query;
 
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.Document;
 
@@ -22,17 +22,17 @@ import static dev.morphia.query.CriteriaJoin.AND;
 @SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
-    private final Mapper mapper;
+    private final Datastore datastore;
     private final EntityModel model;
     private final CriteriaJoin joinMethod;
     private final List<Criteria> children = new ArrayList<>();
     private LegacyQuery<?> query;
 
-    protected CriteriaContainerImpl(Mapper mapper, LegacyQuery<?> query, CriteriaJoin joinMethod) {
+    protected CriteriaContainerImpl(Datastore datastore, LegacyQuery<?> query, CriteriaJoin joinMethod) {
         this.joinMethod = joinMethod;
-        this.mapper = mapper;
+        this.datastore = datastore;
         this.query = query;
-        model = mapper.getEntityModel(query.getEntityClass());
+        model = datastore.getMapper().getEntityModel(query.getEntityClass());
     }
 
     /**
@@ -117,7 +117,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(String name) {
-        return new FieldEndImpl<>(mapper, name, this, model, query.isValidatingNames());
+        return new FieldEndImpl<>(datastore, name, this, model, query.isValidatingNames());
     }
 
     /**
@@ -152,7 +152,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
     private CriteriaContainer collect(CriteriaJoin cj, Criteria... criteria) {
-        final CriteriaContainerImpl parent = new CriteriaContainerImpl(mapper, query, cj);
+        final CriteriaContainerImpl parent = new CriteriaContainerImpl(datastore, query, cj);
 
         for (Criteria c : criteria) {
             parent.add(c);

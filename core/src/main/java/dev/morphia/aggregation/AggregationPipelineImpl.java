@@ -65,7 +65,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public <U> Iterator<U> aggregate(Class<U> target, AggregationOptions options,
                                      ReadPreference readPreference) {
-        return aggregate(mapper.getCollection(target).getNamespace().getCollectionName(), target, options, readPreference);
+        return aggregate(mapper.getEntityModel(target).getCollectionName(), target, options, readPreference);
     }
 
     @Override
@@ -175,12 +175,12 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public <U> Iterator<U> out(Class<U> target) {
-        return out(mapper.getCollection(target).getNamespace().getCollectionName(), target);
+        return out(mapper.getEntityModel(target).getCollectionName(), target);
     }
 
     @Override
     public <U> Iterator<U> out(Class<U> target, AggregationOptions options) {
-        return out(mapper.getCollection(target).getNamespace().getCollectionName(), target, options);
+        return out(mapper.getEntityModel(target).getCollectionName(), target, options);
     }
 
     @Override
@@ -264,12 +264,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public String toString() {
         return stages.toString();
-    }
-
-    private void putIfNull(Document document, String name, @Nullable Object value) {
-        if (value != null) {
-            document.put(name, value);
-        }
     }
 
     private Document toDocument(Group group) {

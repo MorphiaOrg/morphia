@@ -1,6 +1,6 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import dev.morphia.mapping.MapperOptions;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -18,20 +18,22 @@ import java.time.LocalDate;
  */
 public class MorphiaDateCodec implements Codec<LocalDate> {
 
-    private final Mapper mapper;
+    private final Datastore datastore;
 
-    MorphiaDateCodec(Mapper mapper) {
-        this.mapper = mapper;
+    MorphiaDateCodec(Datastore datastore) {
+        this.datastore = datastore;
     }
 
     @Override
     public LocalDate decode(BsonReader reader, DecoderContext decoderContext) {
-        return Instant.ofEpochMilli(reader.readDateTime()).atZone(mapper.getOptions().getDateStorage().getZone()).toLocalDate();
+        return Instant.ofEpochMilli(reader.readDateTime())
+                      .atZone(datastore.getMapper().getOptions().getDateStorage().getZone())
+                      .toLocalDate();
     }
 
     @Override
     public void encode(BsonWriter writer, LocalDate value, EncoderContext encoderContext) {
-        writer.writeDateTime(value.atStartOfDay(mapper.getOptions().getDateStorage().getZone()).toInstant().toEpochMilli());
+        writer.writeDateTime(value.atStartOfDay(datastore.getMapper().getOptions().getDateStorage().getZone()).toInstant().toEpochMilli());
     }
 
     @Override

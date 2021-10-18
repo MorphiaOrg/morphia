@@ -1,7 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import com.mongodb.lang.Nullable;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonBinarySubType;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -18,33 +18,11 @@ import java.util.UUID;
 class ArrayCodec implements Codec<Object> {
 
     private final Class type;
-    private final Mapper mapper;
+    private final Datastore datastore;
 
-    <T> ArrayCodec(Mapper mapper, Class type) {
-        this.mapper = mapper;
+    <T> ArrayCodec(Datastore datastore, Class type) {
+        this.datastore = datastore;
         this.type = type;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
-        writer.writeStartArray();
-        int length = Array.getLength(value);
-        for (int i = 0; i < length; i++) {
-            Object element = Array.get(value, i);
-            if (element == null) {
-                writer.writeNull();
-            } else {
-                Codec codec = mapper.getCodecRegistry().get(element.getClass());
-                codec.encode(writer, element, encoderContext);
-            }
-        }
-        writer.writeEndArray();
-    }
-
-    @Override
-    public Class<Object> getEncoderClass() {
-        return null;
     }
 
     @Override
@@ -65,6 +43,28 @@ class ArrayCodec implements Codec<Object> {
         return list.toArray();
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public void encode(BsonWriter writer, Object value, EncoderContext encoderContext) {
+        writer.writeStartArray();
+        int length = Array.getLength(value);
+        for (int i = 0; i < length; i++) {
+            Object element = Array.get(value, i);
+            if (element == null) {
+                writer.writeNull();
+            } else {
+                Codec codec = datastore.getCodecRegistry().get(element.getClass());
+                codec.encode(writer, element, encoderContext);
+            }
+        }
+        writer.writeEndArray();
+    }
+
+    @Override
+    public Class<Object> getEncoderClass() {
+        return null;
+    }
+
     @Nullable
     private Object readValue(BsonReader reader, DecoderContext decoderContext) {
         BsonType bsonType = reader.getCurrentBsonType();
@@ -72,9 +72,9 @@ class ArrayCodec implements Codec<Object> {
             reader.readNull();
             return null;
         } else if (bsonType == BsonType.BINARY && BsonBinarySubType.isUuid(reader.peekBinarySubType()) && reader.peekBinarySize() == 16) {
-            return mapper.getCodecRegistry().get(UUID.class).decode(reader, decoderContext);
+            return datastore.getCodecRegistry().get(UUID.class).decode(reader, decoderContext);
         }
-        return mapper.getCodecRegistry().get(type.getComponentType()).decode(reader, decoderContext);
+        return datastore.getCodecRegistry().get(type.getComponentType()).decode(reader, decoderContext);
     }
 
 }

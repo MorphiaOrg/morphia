@@ -3,7 +3,7 @@ package dev.morphia.query;
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Geometry;
 import com.mongodb.lang.Nullable;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import org.bson.Document;
@@ -20,15 +20,15 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     private Document options;
     private CoordinateReferenceSystem crs;
 
-    private Geo2dSphereCriteria(Mapper mapper, String field, dev.morphia.query.FilterOperator operator,
+    private Geo2dSphereCriteria(Datastore datastore, String field, dev.morphia.query.FilterOperator operator,
                                 Geometry geometry, EntityModel model, boolean validating) {
-        super(mapper, field, operator, geometry, model, validating);
+        super(datastore, field, operator, geometry, model, validating);
         this.geometry = geometry;
     }
 
-    static Geo2dSphereCriteria geo(Mapper mapper, String field, dev.morphia.query.FilterOperator operator,
+    static Geo2dSphereCriteria geo(Datastore datastore, String field, dev.morphia.query.FilterOperator operator,
                                    Geometry value, EntityModel model, boolean validating) {
-        return new Geo2dSphereCriteria(mapper, field, operator, value, model, validating);
+        return new Geo2dSphereCriteria(datastore, field, operator, value, model, validating);
     }
 
     @Override
@@ -36,8 +36,8 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     public Document toDocument() {
         Document query;
         dev.morphia.query.FilterOperator operator = getOperator();
-        DocumentWriter writer = new DocumentWriter(getMapper());
-        ((Codec) getMapper().getCodecRegistry().get(geometry.getClass()))
+        DocumentWriter writer = new DocumentWriter(getDatastore().getMapper());
+        ((Codec) getDatastore().getCodecRegistry().get(geometry.getClass()))
             .encode(writer, geometry, EncoderContext.builder().build());
         Document document = new Document("$geometry", writer.getDocument());
 

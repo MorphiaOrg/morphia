@@ -1,8 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
-import com.mongodb.client.MongoCollection;
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.GraphLookup;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -12,8 +11,8 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expre
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class GraphLookupCodec extends StageCodec<GraphLookup> {
-    public GraphLookupCodec(Mapper mapper) {
-        super(mapper);
+    public GraphLookupCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -22,26 +21,24 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void encodeStage(BsonWriter writer, GraphLookup value, EncoderContext encoderContext) {
         document(writer, () -> {
             if (value.getFrom() != null) {
-                value(getMapper(), writer, "from", value.getFrom(), encoderContext);
+                value(getDatastore(), writer, "from", value.getFrom(), encoderContext);
             } else {
-                MongoCollection collection = getMapper().getCollection(value.getFromType());
-                writer.writeString("from", collection.getNamespace().getCollectionName());
+                writer.writeString("from", getDatastore().getMapper().getEntityModel(value.getFromType()).getCollectionName());
             }
-            expression(getMapper(), writer, "startWith", value.getStartWith(), encoderContext);
-            value(getMapper(), writer, "connectFromField", value.getConnectFromField(), encoderContext);
-            value(getMapper(), writer, "connectToField", value.getConnectToField(), encoderContext);
-            value(getMapper(), writer, "as", value.getAs(), encoderContext);
-            value(getMapper(), writer, "maxDepth", value.getMaxDepth(), encoderContext);
-            value(getMapper(), writer, "depthField", value.getDepthField(), encoderContext);
+            expression(getDatastore(), writer, "startWith", value.getStartWith(), encoderContext);
+            value(getDatastore(), writer, "connectFromField", value.getConnectFromField(), encoderContext);
+            value(getDatastore(), writer, "connectToField", value.getConnectToField(), encoderContext);
+            value(getDatastore(), writer, "as", value.getAs(), encoderContext);
+            value(getDatastore(), writer, "maxDepth", value.getMaxDepth(), encoderContext);
+            value(getDatastore(), writer, "depthField", value.getDepthField(), encoderContext);
             Filter[] restriction = value.getRestriction();
             if (restriction != null) {
                 document(writer, "restrictSearchWithMatch", () -> {
                     for (Filter filter : restriction) {
-                        filter.encode(getMapper(), writer, encoderContext);
+                        filter.encode(getDatastore(), writer, encoderContext);
                     }
                 });
             }

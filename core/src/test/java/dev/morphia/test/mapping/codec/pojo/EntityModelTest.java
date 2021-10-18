@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 public class EntityModelTest extends TestBase {
     @Test
     public void testFindParameterization() {
-        EntityModel model = new EntityModelBuilder(getDs(), Child.class).build();
+        EntityModel model = new EntityModelBuilder(getMapper(), Child.class).build();
         assertEquals(model.getProperty("someField").getType(), LocalDate.class);
     }
 

@@ -91,8 +91,8 @@ public class DocumentReaderTest extends TestBase {
 
         Document first = collection.find().first();
 
-        Parent decode = getMapper().getCodecRegistry().get(Parent.class)
-                                   .decode(new DocumentReader(first), DecoderContext.builder().build());
+        Parent decode = getDs().getCodecRegistry().get(Parent.class)
+                               .decode(new DocumentReader(first), DecoderContext.builder().build());
 
         assertEquals(parent, decode);
     }
@@ -158,10 +158,10 @@ public class DocumentReaderTest extends TestBase {
         HasByteArray hasByteArray = new HasByteArray();
         hasByteArray.data = new byte[]{1, 2, 3};
         getDs().save(hasByteArray);
-        Document first = getDs().getMapper().getCollection(HasByteArray.class)
+        Document first = getDs().getCollection(HasByteArray.class)
                                 .withDocumentClass(Document.class)
                                 .find().first();
-        getDs().getMapper().fromDocument(HasByteArray.class, first);
+        fromDocument(HasByteArray.class, first);
     }
 
     @Test
@@ -171,10 +171,10 @@ public class DocumentReaderTest extends TestBase {
         HasNestedByteArray hasNestedByteArray = new HasNestedByteArray();
         hasNestedByteArray.nested = hasByteArray;
         getDs().save(hasNestedByteArray);
-        Document first = getDs().getMapper().getCollection(HasNestedByteArray.class)
+        Document first = getDs().getCollection(HasNestedByteArray.class)
                                 .withDocumentClass(Document.class)
                                 .find().first();
-        getDs().getMapper().fromDocument(HasNestedByteArray.class, first);
+        fromDocument(HasNestedByteArray.class, first);
     }
 
     @Test
@@ -188,10 +188,10 @@ public class DocumentReaderTest extends TestBase {
         };
         try {
             getDs().getMapper().addInterceptor(interceptor);
-            Document first = getDs().getMapper().getCollection(HasNestedByteArray.class)
+            Document first = getDs().getCollection(HasNestedByteArray.class)
                                     .withDocumentClass(Document.class)
                                     .find().first();
-            getDs().getMapper().fromDocument(HasNestedByteArray.class, first);
+            fromDocument(HasNestedByteArray.class, first);
         } finally {
             getDs().getMapper().getInterceptors().remove(interceptor);
         }

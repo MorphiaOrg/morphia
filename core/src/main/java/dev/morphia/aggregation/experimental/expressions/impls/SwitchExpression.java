@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -53,18 +53,18 @@ public class SwitchExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
                 array(writer, "branches", () -> {
                     for (Pair branch : branches) {
                         document(writer, () -> {
-                            expression(mapper, writer, "case", branch.caseExpression, encoderContext);
-                            expression(mapper, writer, "then", branch.then, encoderContext);
+                            expression(datastore, writer, "case", branch.caseExpression, encoderContext);
+                            expression(datastore, writer, "then", branch.then, encoderContext);
                         });
                     }
                 });
-                expression(mapper, writer, "default", defaultCase, encoderContext);
+                expression(datastore, writer, "default", defaultCase, encoderContext);
             });
         });
     }
@@ -73,7 +73,7 @@ public class SwitchExpression extends Expression {
         private final Expression caseExpression;
         private final Expression then;
 
-        public Pair(Expression caseExpression, Expression then) {
+        Pair(Expression caseExpression, Expression then) {
             this.caseExpression = caseExpression;
             this.then = then;
         }

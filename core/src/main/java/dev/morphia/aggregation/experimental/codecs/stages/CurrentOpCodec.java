@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.CurrentOp;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -9,8 +9,8 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class CurrentOpCodec extends StageCodec<CurrentOp> {
-    public CurrentOpCodec(Mapper mapper) {
-        super(mapper);
+    public CurrentOpCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class CurrentOpCodec extends StageCodec<CurrentOp> {
 
     private void writeBoolean(BsonWriter writer, String name, boolean value, EncoderContext context) {
         if (value) {
-            value(getMapper(), writer, name, value, context);
+            value(getDatastore(), writer, name, value, context);
         }
     }
 

@@ -111,8 +111,8 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         if (value == null) {
             writer.writeNull();
         } else {
-            Codec<? super Object> cachedCodec = (Codec<? super Object>) model.getCodec();
-            encoderContext.encodeWithChildContext(cachedCodec, writer, value);
+            Codec<? super Object> codec = (Codec<? super Object>) model.getCodec();
+            encoderContext.encodeWithChildContext(codec, writer, value);
         }
     }
 }

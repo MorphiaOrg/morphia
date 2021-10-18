@@ -17,7 +17,6 @@
 package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.lang.Nullable;
-import dev.morphia.Datastore;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
@@ -43,8 +42,8 @@ import static org.bson.assertions.Assertions.notNull;
  * @since 2.0
  */
 public final class PropertyModelBuilder {
-    private final Datastore datastore;
     private final List<String> alternateNames = new ArrayList<>();
+    private final Mapper mapper;
     private PropertyAccessor<? super Object> accessor;
     private List<Annotation> annotations = new ArrayList<>();
     private Boolean discriminatorEnabled;
@@ -55,8 +54,8 @@ public final class PropertyModelBuilder {
     private TypeData<?> typeData;
     private MorphiaPropertySerialization serialization;
 
-    PropertyModelBuilder(Datastore datastore) {
-        this.datastore = datastore;
+    PropertyModelBuilder(Mapper mapper) {
+        this.mapper = mapper;
     }
 
     /**
@@ -107,7 +106,7 @@ public final class PropertyModelBuilder {
     }
 
     public PropertyModelBuilder discoverMappedName() {
-        MapperOptions options = datastore.getMapper().getOptions();
+        MapperOptions options = mapper.getOptions();
         Property property = getAnnotation(Property.class);
         Reference reference = getAnnotation(Reference.class);
         Version version = getAnnotation(Version.class);
@@ -153,13 +152,6 @@ public final class PropertyModelBuilder {
      */
     public PropertyModel build() {
         return new PropertyModel(this);
-    }
-
-    /**
-     * @return the datastore in use
-     */
-    public Datastore datastore() {
-        return datastore;
     }
 
     /**

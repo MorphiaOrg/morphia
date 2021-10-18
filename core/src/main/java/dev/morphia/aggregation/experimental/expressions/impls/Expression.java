@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
 import com.mongodb.lang.Nullable;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -36,13 +36,13 @@ public class Expression {
     }
 
     /**
-     * @param mapper         the mapper
+     * @param datastore      the datastore
      * @param writer         the writer
      * @param encoderContext the context
      * @morphia.internal
      */
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> value(mapper, writer, operation, value, encoderContext));
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        document(writer, () -> value(datastore, writer, operation, value, encoderContext));
     }
 
     /**

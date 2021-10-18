@@ -1,7 +1,7 @@
 package dev.morphia.query.experimental.updates;
 
+import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.OperationTarget;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ public class SetOnInsertOperator extends UpdateOperator {
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(null, null) {
             @Override
-            public Object encode(Mapper mapper) {
+            public Object encode(Datastore datastore) {
                 return insertValues;
             }
         };

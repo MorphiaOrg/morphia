@@ -284,7 +284,7 @@ public class TestMapping extends TestBase {
         final ContainsEmbeddedArray cea = new ContainsEmbeddedArray();
         cea.res = new RenamedEmbedded[]{new RenamedEmbedded()};
 
-        final Document document = getMapper().toDocument(cea);
+        final Document document = toDocument(cea);
         List<Document> res = (List<Document>) document.get("res");
         assertFalse(res.get(0).containsKey(getMapper().getOptions().getDiscriminatorKey()));
     }
@@ -317,7 +317,7 @@ public class TestMapping extends TestBase {
         final ContainsEmbeddedEntity cee = new ContainsEmbeddedEntity();
         cee.cil = new ContainsIntegerList();
         cee.cil.intList = Collections.singletonList(1);
-        final Document document = getMapper().toDocument(cee);
+        final Document document = toDocument(cee);
         assertFalse(((Document) document.get("cil")).containsKey(getMapper().getOptions().getDiscriminatorKey()));
     }
 
@@ -404,7 +404,7 @@ public class TestMapping extends TestBase {
                                  .build(), () -> {
             getMapper().map(ContainsFinalField.class);
             final ObjectId savedKey = getDs().save(new ContainsFinalField("blah")).id;
-            final Document loaded = getDs().getMapper().getCollection(ContainsFinalField.class)
+            final Document loaded = getDs().getCollection(ContainsFinalField.class)
                                            .withDocumentClass(Document.class)
                                            .find(Filters.eq("_id", savedKey))
                                            .first();

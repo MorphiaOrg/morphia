@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.AggregationException;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -21,12 +21,12 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             array(writer, getOperation(), () -> {
-                expression(mapper, writer, target, encoderContext);
-                expression(mapper, writer, replacement, encoderContext);
-                expression(mapper, writer, document, encoderContext);
+                expression(datastore, writer, target, encoderContext);
+                expression(datastore, writer, replacement, encoderContext);
+                expression(datastore, writer, document, encoderContext);
             });
         });
     }

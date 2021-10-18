@@ -63,7 +63,7 @@ class MorphiaQuery<T> implements Query<T> {
             this.collection = datastore.getDatabase().getCollection(collectionName, type);
             this.collectionName = collectionName;
         } else if (mapper.isMappable(type)) {
-            this.collection = mapper.getCollection(type);
+            this.collection = datastore.getCollection(type);
             this.collectionName = this.collection.getNamespace().getCollectionName();
         } else {
             this.collection = null;
@@ -76,7 +76,7 @@ class MorphiaQuery<T> implements Query<T> {
         this.datastore = datastore;
         this.seedQuery = query;
         mapper = this.datastore.getMapper();
-        collection = mapper.getCollection(type);
+        collection = datastore.getCollection(type);
         collectionName = collection.getNamespace().getCollectionName();
     }
 
@@ -206,19 +206,18 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
+    public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
+        return new Modify<>(datastore, getCollection(), this, getEntityClass(), first, updates);
+    }
+
+    @Override
     public MorphiaKeyCursor<T> keys(FindOptions options) {
         FindOptions includeId = new FindOptions().copy(options)
                                                  .projection()
                                                  .include("_id");
 
-        return new MorphiaKeyCursor<>(prepareCursor(includeId,
-            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
-            type, getCollectionName());
-    }
-
-    @Override
-    public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, mapper, getCollection(), this, getEntityClass(), first, updates);
+        return new MorphiaKeyCursor<>(prepareCursor(includeId, datastore.getDatabase().getCollection(getCollectionName())),
+            datastore, type, getCollectionName());
     }
 
     @Override
@@ -244,7 +243,7 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, mapper, getCollection(), this, type, first, updates);
+        return new Update<>(datastore, getCollection(), this, type, first, updates);
     }
 
     @Override
@@ -334,7 +333,7 @@ class MorphiaQuery<T> implements Query<T> {
         document(writer, () -> {
             EncoderContext context = EncoderContext.builder().build();
             for (Filter filter : filters) {
-                filter.encode(mapper, writer, context);
+                filter.encode(datastore, writer, context);
             }
         });
 
@@ -352,7 +351,7 @@ class MorphiaQuery<T> implements Query<T> {
         private final String name;
 
         private MorphiaQueryFieldEnd(String name) {
-            super(mapper, name, MorphiaQuery.this, mapper.getEntityModel(getEntityClass()), validate);
+            super(datastore, name, MorphiaQuery.this, mapper.getEntityModel(getEntityClass()), validate);
             this.name = name;
         }
 

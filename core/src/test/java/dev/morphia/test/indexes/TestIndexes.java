@@ -194,7 +194,7 @@ public class TestIndexes extends TestBase {
     @Test
     public void testIndexedRecursiveEntity() {
         getMapper().getEntityModel(CircularEmbeddedEntity.class);
-        getMapper().getCollection(CircularEmbeddedEntity.class).drop();
+        getDs().getCollection(CircularEmbeddedEntity.class).drop();
         getDs().ensureIndexes(CircularEmbeddedEntity.class);
         assertThat(getIndexInfo(CircularEmbeddedEntity.class), hasIndexNamed("a_1"));
     }

@@ -319,7 +319,7 @@ public class TestLegacyQuery extends TestBase {
         assertNotEquals(profileCollection.countDocuments(), 0);
 
         Document query = new Document("op", "query")
-                             .append("ns", getMapper().getCollection(Pic.class).getNamespace().getFullName())
+            .append("ns", getDs().getCollection(Pic.class).getNamespace().getFullName())
                              .append("command.comment", new Document("$exists", true));
         Document profileRecord = profileCollection.find(query).first();
 

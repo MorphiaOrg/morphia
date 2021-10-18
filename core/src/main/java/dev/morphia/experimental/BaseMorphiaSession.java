@@ -4,15 +4,11 @@ import com.mongodb.ClientSessionOptions;
 import com.mongodb.ServerAddress;
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.TransactionBody;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import com.mongodb.session.ServerSession;
 import dev.morphia.DatastoreImpl;
-import dev.morphia.mapping.Mapper;
-import dev.morphia.query.QueryFactory;
 import org.bson.BsonDocument;
 import org.bson.BsonTimestamp;
 
@@ -23,12 +19,9 @@ import org.bson.BsonTimestamp;
 public abstract class BaseMorphiaSession extends DatastoreImpl implements MorphiaSession {
     private final ClientSession session;
 
-    BaseMorphiaSession(ClientSession session,
-                       MongoClient mongoClient,
-                       MongoDatabase database,
-                       Mapper mapper,
-                       QueryFactory queryFactory) {
-        super(database, mongoClient, mapper, queryFactory);
+    BaseMorphiaSession(DatastoreImpl datastore,
+                       ClientSession session) {
+        super(datastore);
         this.session = session;
     }
 

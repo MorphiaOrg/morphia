@@ -13,7 +13,6 @@ import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -46,7 +45,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
     private final DatastoreImpl datastore;
     private final Class<T> clazz;
-    private final Mapper mapper;
     private final String collectionName;
     private final MongoCollection<T> collection;
     private final EntityModel model;
@@ -66,17 +64,16 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     protected LegacyQuery(Datastore datastore, @Nullable String collectionName, Class<T> clazz) {
         this.clazz = clazz;
         this.datastore = (DatastoreImpl) datastore;
-        mapper = this.datastore.getMapper();
-        model = mapper.getEntityModel(clazz);
+        model = datastore.getMapper().getEntityModel(clazz);
         if (collectionName != null) {
             this.collection = datastore.getDatabase().getCollection(collectionName, clazz);
             this.collectionName = collectionName;
         } else {
-            this.collection = mapper.getCollection(clazz);
+            this.collection = datastore.getCollection(clazz);
             this.collectionName = this.collection.getNamespace().getCollectionName();
         }
 
-        compoundContainer = new CriteriaContainerImpl(mapper, this, AND);
+        compoundContainer = new CriteriaContainerImpl(datastore, this, AND);
     }
 
     @Override
@@ -94,10 +91,10 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(String field) {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(mapper, this, AND);
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(datastore, this, AND);
         add(container);
 
-        return new FieldEndImpl<CriteriaContainer>(mapper, field, container, model, this.isValidatingNames());
+        return new FieldEndImpl<CriteriaContainer>(datastore, field, container, model, this.isValidatingNames());
     }
 
     @Override
@@ -212,7 +209,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public FieldEnd<? extends Query<T>> field(String name) {
-        return new FieldEndImpl<>(mapper, name, this, model, this.isValidatingNames());
+        return new FieldEndImpl<>(datastore, name, this, model, this.isValidatingNames());
     }
 
     @Override
@@ -225,14 +222,15 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         final String prop = parts[0].trim();
         final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
 
-        add(new FieldCriteria(mapper, prop, op, value, mapper.getEntityModel(this.getEntityClass()), this.isValidatingNames()));
+        add(new FieldCriteria(datastore, prop, op, value, datastore.getMapper().getEntityModel(this.getEntityClass()),
+            this.isValidatingNames()));
 
         return this;
     }
 
     @Override
     public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, mapper, getCollection(), this, clazz, first, updates);
+        return new Modify<>(datastore, getCollection(), this, clazz, first, updates);
     }
 
     @Override
@@ -257,8 +255,14 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, mapper, getCollection(), this, clazz, first, updates);
+    public MorphiaKeyCursor<T> keys(FindOptions options) {
+        FindOptions returnKey = new FindOptions().copy(options)
+                                                 .projection()
+                                                 .include("_id");
+
+        return new MorphiaKeyCursor<>(prepareCursor(returnKey,
+            datastore.getDatabase().getCollection(getCollectionName())), datastore,
+            clazz, getCollectionName());
     }
 
     @Override
@@ -272,19 +276,13 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public MorphiaKeyCursor<T> keys(FindOptions options) {
-        FindOptions returnKey = new FindOptions().copy(options)
-                                                 .projection()
-                                                 .include("_id");
-
-        return new MorphiaKeyCursor<>(prepareCursor(returnKey,
-            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
-            clazz, getCollectionName());
+    public Modify<T> modify(UpdateOperations<T> operations) {
+        return new Modify<>(datastore, getCollection(), this, clazz, (UpdateOpsImpl) operations);
     }
 
     @Override
-    public Modify<T> modify(UpdateOperations<T> operations) {
-        return new Modify<>(datastore, mapper, getCollection(), this, clazz, (UpdateOpsImpl) operations);
+    public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
+        return new Update<>(datastore, getCollection(), this, clazz, first, updates);
     }
 
     @Override
@@ -317,7 +315,18 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     @Deprecated(since = "2.0", forRemoval = true)
     public Update<T> update(UpdateOperations<T> operations) {
-        return new Update<>(datastore, mapper, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
+        return new Update<>(datastore, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
+    }
+
+    /**
+     * @return the Mongo fields {@link Document}.
+     * @morphia.internal
+     */
+    @Nullable
+    public Document getFieldsObject() {
+        Projection projection = getOptions().getProjection();
+
+        return projection != null ? projection.map(datastore.getMapper(), clazz) : null;
     }
 
     /**
@@ -329,13 +338,13 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public Document toDocument() {
         final Document query = getQueryDocument();
-        EntityModel model = mapper.getEntityModel(getEntityClass());
+        EntityModel model = datastore.getMapper().getEntityModel(getEntityClass());
         Entity entityAnnotation = model.getEntityAnnotation();
         if (entityAnnotation != null && entityAnnotation.useDiscriminator()
             && !query.containsKey("_id")
             && !query.containsKey(model.getDiscriminatorKey())) {
 
-            List<EntityModel> subtypes = mapper.getEntityModel(getEntityClass()).getSubtypes();
+            List<EntityModel> subtypes = datastore.getMapper().getEntityModel(getEntityClass()).getSubtypes();
             List<String> values = new ArrayList<>();
             values.add(model.getDiscriminator());
             for (EntityModel subtype : subtypes) {
@@ -345,17 +354,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                 new Document("$in", values));
         }
         return query;
-    }
-
-    /**
-     * @return the Mongo fields {@link Document}.
-     * @morphia.internal
-     */
-    @Nullable
-    public Document getFieldsObject() {
-        Projection projection = getOptions().getProjection();
-
-        return projection != null ? projection.map(mapper, clazz) : null;
     }
 
     /**
@@ -428,7 +426,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
 
         obj.putAll(compoundContainer.toDocument());
-        mapper.updateQueryWithDiscriminators(mapper.getEntityModel(getEntityClass()), obj);
+        datastore.getMapper().updateQueryWithDiscriminators(datastore.getMapper().getEntityModel(getEntityClass()), obj);
         return obj;
     }
 
@@ -460,7 +458,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
         try {
             return options
-                       .apply(iterable(options, collection), mapper, clazz)
+                .apply(iterable(options, collection), datastore.getMapper(), clazz)
                        .iterator();
         } finally {
             if (options.isLogQuery()) {

@@ -214,10 +214,10 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(tom.friends);
         getDs().save(tom);
 
-        Document loaded = getMapper().getCollection(FacebookUser.class)
-                                     .withDocumentClass(Document.class)
-                                     .find(new Document("_id", 1))
-                                     .first();
+        Document loaded = getDs().getCollection(FacebookUser.class)
+                                 .withDocumentClass(Document.class)
+                                 .find(new Document("_id", 1))
+                                 .first();
         ((List<Object>) loaded.get("friends"))
             .forEach(f -> assertEquals(f.getClass(), DBRef.class));
     }
@@ -287,10 +287,10 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(tom.list);
         getDs().save(tom);
 
-        Document loaded = getMapper().getCollection(HasIdOnly.class)
-                                     .withDocumentClass(Document.class)
-                                     .find(new Document())
-                                     .first();
+        Document loaded = getDs().getCollection(HasIdOnly.class)
+                                 .withDocumentClass(Document.class)
+                                 .find(new Document())
+                                 .first();
         ((List<Object>) loaded.get("list"))
             .forEach(f -> assertEquals(f.getClass(), Long.class));
     }

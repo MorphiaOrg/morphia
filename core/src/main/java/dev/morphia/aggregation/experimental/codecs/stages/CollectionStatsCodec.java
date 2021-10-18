@@ -1,15 +1,15 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.CollectionStats;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
 public class CollectionStatsCodec extends StageCodec<CollectionStats> {
-    public CollectionStatsCodec(Mapper mapper) {
-        super(mapper);
+    public CollectionStatsCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override

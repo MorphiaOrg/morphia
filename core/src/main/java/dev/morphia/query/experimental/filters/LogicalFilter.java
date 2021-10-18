@@ -1,6 +1,6 @@
 package dev.morphia.query.experimental.filters;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -19,10 +19,10 @@ class LogicalFilter extends Filter {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartArray(getName());
         for (Filter filter : filters) {
-            document(writer, () -> filter.encode(mapper, writer, context));
+            document(writer, () -> filter.encode(datastore, writer, context));
         }
         writer.writeEndArray();
     }

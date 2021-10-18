@@ -1,14 +1,14 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
-    public ReplaceWithCodec(Mapper mapper) {
-        super(mapper);
+    public ReplaceWithCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -20,9 +20,9 @@ public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
     protected void encodeStage(BsonWriter writer, ReplaceWith replace, EncoderContext encoderContext) {
         Expression value = replace.getValue();
         if (value != null) {
-            value.encode(getMapper(), writer, encoderContext);
+            value.encode(getDatastore(), writer, encoderContext);
         } else {
-            replace.getDocument().encode(getMapper(), writer, encoderContext);
+            replace.getDocument().encode(getDatastore(), writer, encoderContext);
         }
     }
 }

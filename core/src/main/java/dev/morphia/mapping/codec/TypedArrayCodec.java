@@ -1,6 +1,6 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -17,11 +17,11 @@ import static java.lang.String.format;
 class TypedArrayCodec implements Codec {
     private final Class type;
     private Codec codec;
-    private final Mapper mapper;
+    private final Datastore datastore;
 
-    TypedArrayCodec(Class type, Mapper mapper) {
+    TypedArrayCodec(Class type, Datastore datastore) {
         this.type = type;
-        this.mapper = mapper;
+        this.datastore = datastore;
     }
 
     @Override
@@ -46,7 +46,7 @@ class TypedArrayCodec implements Codec {
 
     private Codec getCodec() {
         if (codec == null) {
-            codec = mapper.getCodecRegistry().get(type);
+            codec = datastore.getCodecRegistry().get(type);
         }
         return codec;
     }

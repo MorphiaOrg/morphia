@@ -1,13 +1,13 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.Count;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class CountCodec extends StageCodec<Count> {
-    public CountCodec(Mapper mapper) {
-        super(mapper);
+    public CountCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override

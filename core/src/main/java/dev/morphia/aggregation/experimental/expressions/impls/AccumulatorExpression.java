@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -34,16 +34,16 @@ public class AccumulatorExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                value(mapper, writer, "init", initFunction, encoderContext);
-                value(mapper, writer, "initArgs", initArgs, encoderContext);
-                value(mapper, writer, "accumulate", accumulateFunction, encoderContext);
-                value(mapper, writer, "accumulateArgs", accumulateArgs, encoderContext);
-                value(mapper, writer, "merge", mergeFunction, encoderContext);
-                value(mapper, writer, "finalize", finalizeFunction, encoderContext);
-                value(mapper, writer, "lang", lang, encoderContext);
+                value(datastore, writer, "init", initFunction, encoderContext);
+                value(datastore, writer, "initArgs", initArgs, encoderContext);
+                value(datastore, writer, "accumulate", accumulateFunction, encoderContext);
+                value(datastore, writer, "accumulateArgs", accumulateArgs, encoderContext);
+                value(datastore, writer, "merge", mergeFunction, encoderContext);
+                value(datastore, writer, "finalize", finalizeFunction, encoderContext);
+                value(datastore, writer, "lang", lang, encoderContext);
             });
         });
     }

@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -11,10 +11,10 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
 public class ExpressionCodec<T extends Expression> implements Codec<T> {
-    private final Mapper mapper;
+    private final Datastore datastore;
 
-    public ExpressionCodec(Mapper mapper) {
-        this.mapper = mapper;
+    public ExpressionCodec(Datastore datastore) {
+        this.datastore = datastore;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
     @Override
     public void encode(BsonWriter writer, T expression, EncoderContext encoderContext) {
         if (expression != null) {
-            expression.encode(mapper, writer, encoderContext);
+            expression.encode(datastore, writer, encoderContext);
         } else {
             writer.writeNull();
         }
@@ -37,10 +37,10 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
     }
 
     protected CodecRegistry getCodecRegistry() {
-        return mapper.getCodecRegistry();
+        return datastore.getCodecRegistry();
     }
 
-    protected Mapper getMapper() {
-        return mapper;
+    protected Datastore getDatastore() {
+        return datastore;
     }
 }

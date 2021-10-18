@@ -1,9 +1,9 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Fields;
 import dev.morphia.aggregation.experimental.stages.Group;
 import dev.morphia.aggregation.experimental.stages.Group.GroupId;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -11,8 +11,8 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
 
 public class GroupCodec extends StageCodec<Group> {
 
-    public GroupCodec(Mapper mapper) {
-        super(mapper);
+    public GroupCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -27,10 +27,10 @@ public class GroupCodec extends StageCodec<Group> {
             if (id != null) {
                 writer.writeName("_id");
                 if (id.getDocument() != null) {
-                    id.getDocument().encode(getMapper(), writer, encoderContext);
+                    id.getDocument().encode(getDatastore(), writer, encoderContext);
                 } else {
                     if (id.getField() != null) {
-                        id.getField().encode(getMapper(), writer, encoderContext);
+                        id.getField().encode(getDatastore(), writer, encoderContext);
                     }
                 }
             } else {
@@ -39,7 +39,7 @@ public class GroupCodec extends StageCodec<Group> {
 
             Fields<Group> fields = group.getFields();
             if (fields != null) {
-                fields.encode(getMapper(), writer, encoderContext);
+                fields.encode(getDatastore(), writer, encoderContext);
             }
 
         });

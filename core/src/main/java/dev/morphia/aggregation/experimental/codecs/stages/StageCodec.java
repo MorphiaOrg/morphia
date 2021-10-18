@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.Stage;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.sofia.Sofia;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -13,10 +13,10 @@ import org.bson.codecs.configuration.CodecRegistry;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
 public abstract class StageCodec<T extends Stage> implements Codec<T> {
-    private final Mapper mapper;
+    private final Datastore datastore;
 
-    protected StageCodec(Mapper mapper) {
-        this.mapper = mapper;
+    protected StageCodec(Datastore datastore) {
+        this.datastore = datastore;
     }
 
     @Override
@@ -34,12 +34,11 @@ public abstract class StageCodec<T extends Stage> implements Codec<T> {
 
     protected abstract void encodeStage(BsonWriter writer, T value, EncoderContext encoderContext);
 
+    public Datastore getDatastore() {
+        return datastore;
+    }
+
     protected CodecRegistry getCodecRegistry() {
-        return mapper.getCodecRegistry();
+        return datastore.getCodecRegistry();
     }
-
-    protected Mapper getMapper() {
-        return mapper;
-    }
-
 }

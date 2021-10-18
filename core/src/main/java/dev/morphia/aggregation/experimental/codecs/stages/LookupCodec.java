@@ -1,8 +1,7 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
-import com.mongodb.client.MongoCollection;
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.stages.Lookup;
-import dev.morphia.mapping.Mapper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -11,8 +10,8 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value
 
 public class LookupCodec extends StageCodec<Lookup> {
 
-    public LookupCodec(Mapper mapper) {
-        super(mapper);
+    public LookupCodec(Datastore datastore) {
+        super(datastore);
     }
 
     @Override
@@ -24,18 +23,17 @@ public class LookupCodec extends StageCodec<Lookup> {
     protected void encodeStage(BsonWriter writer, Lookup value, EncoderContext encoderContext) {
         document(writer, () -> {
             if (value.getFrom() != null) {
-                value(getMapper(), writer, "from", value.getFrom(), encoderContext);
+                value(getDatastore(), writer, "from", value.getFrom(), encoderContext);
             } else {
-                MongoCollection collection = getMapper().getCollection(value.getFromType());
-                writer.writeString("from", collection.getNamespace().getCollectionName());
+                writer.writeString("from", getDatastore().getMapper().getEntityModel(value.getFromType()).getCollectionName());
             }
 
             if (value.getPipeline() == null) {
                 writer.writeString("localField", value.getLocalField());
                 writer.writeString("foreignField", value.getForeignField());
             } else {
-                value(getMapper(), writer, "let", value.getVariables(), encoderContext);
-                value(getMapper(), writer, "pipeline", value.getPipeline(), encoderContext);
+                value(getDatastore(), writer, "let", value.getVariables(), encoderContext);
+                value(getDatastore(), writer, "pipeline", value.getPipeline(), encoderContext);
             }
             writer.writeString("as", value.getAs());
         });

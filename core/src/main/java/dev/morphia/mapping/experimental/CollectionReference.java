@@ -32,8 +32,8 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     private List ids;
     private final Map<String, List<Object>> collections = new HashMap<>();
 
-    CollectionReference(Datastore datastore, EntityModel entityModel, List ids) {
-        super(datastore);
+    protected CollectionReference(Datastore datastore, Mapper mapper, EntityModel entityModel, List ids) {
+        super(datastore, mapper);
         this.entityModel = entityModel;
         if (ids != null) {
             if (ids.stream().allMatch(entityModel.getType()::isInstance)) {
@@ -97,7 +97,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     @Override
-    final List<Object> getId(Mapper mapper, Datastore datastore, EntityModel entityModel) {
+    final List<Object> getId(Mapper mapper, EntityModel entityModel) {
         if (ids == null) {
             ids = getValues().stream()
                              .map(v -> ReferenceCodec.encodeId(mapper, v, entityModel))
@@ -159,7 +159,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                                                    .filter(in("_id", collectionIds)).iterator()) {
             while (cursor.hasNext()) {
                 final Object entity = cursor.next();
-                idMap.put(getDatastore().getMapper().getId(entity), entity);
+                idMap.put(getMapper().getId(entity), entity);
             }
 
             if (!ignoreMissing() && idMap.size() != collectionIds.size()) {

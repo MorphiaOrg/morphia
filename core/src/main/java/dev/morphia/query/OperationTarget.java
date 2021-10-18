@@ -1,8 +1,8 @@
 package dev.morphia.query;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -34,11 +34,12 @@ public class OperationTarget {
 
     /**
      * Encodes this target
-     * @param mapper the mapper
+     *
+     * @param datastore the datastore
      * @return the encoded form
      * @morphia.internal
      */
-    public Object encode(Mapper mapper) {
+    public Object encode(Datastore datastore) {
         if (target == null) {
             if (value == null) {
                 throw new NullPointerException();
@@ -55,14 +56,14 @@ public class OperationTarget {
 
         Codec cachedCodec = null;
         if (model != null && !(mappedValue instanceof LegacyQuery)) {
-            cachedCodec = model.getCodec();
+            cachedCodec = model.specializeCodec(datastore);
         }
         if (cachedCodec instanceof PropertyHandler) {
             mappedValue = ((PropertyHandler) cachedCodec).encode(mappedValue);
         } else {
-            DocumentWriter writer = new DocumentWriter(mapper);
+            DocumentWriter writer = new DocumentWriter(datastore.getMapper());
             Object finalMappedValue = mappedValue;
-            document(writer, () -> value(mapper, writer, "mapped", finalMappedValue, EncoderContext.builder().build()));
+            document(writer, () -> value(datastore, writer, "mapped", finalMappedValue, EncoderContext.builder().build()));
             mappedValue = writer.getDocument().get("mapped");
         }
         return new Document(target.translatedPath(), mappedValue);

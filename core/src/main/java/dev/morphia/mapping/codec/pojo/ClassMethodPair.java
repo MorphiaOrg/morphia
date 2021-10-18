@@ -18,17 +18,15 @@ import java.util.List;
 public class ClassMethodPair {
     private final Class<?> type;
     private final Method method;
-    private final Datastore datastore;
     private final Class<? extends Annotation> event;
 
-    ClassMethodPair(Datastore datastore, Method method, @Nullable Class<?> type, Class<? extends Annotation> event) {
+    ClassMethodPair(Method method, @Nullable Class<?> type, Class<? extends Annotation> event) {
         this.event = event;
         this.type = type;
         this.method = method;
-        this.datastore = datastore;
     }
 
-    void invoke(Document document, Object entity) {
+    void invoke(Datastore datastore, Document document, Object entity) {
         try {
             Object instance;
             if (type != null) {

@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.codecs;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.codecs.stages.AddFieldsCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.AutoBucketCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.BucketCodec;
@@ -58,7 +59,6 @@ import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.UnionWith;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
-import dev.morphia.mapping.Mapper;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -70,12 +70,12 @@ import java.util.Map;
 public class AggregationCodecProvider implements CodecProvider {
 
     private final Codec expressionCodec;
-    private final Mapper mapper;
+    private final Datastore datastore;
     private Map<Class, StageCodec> codecs;
 
-    public AggregationCodecProvider(Mapper mapper) {
-        this.mapper = mapper;
-        expressionCodec = new ExpressionCodec(this.mapper);
+    public AggregationCodecProvider(Datastore datastore) {
+        this.datastore = datastore;
+        expressionCodec = new ExpressionCodec(datastore);
     }
 
     @Override
@@ -94,34 +94,34 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs = new HashMap<>();
 
             // Stages
-            codecs.put(AddFields.class, new AddFieldsCodec(mapper));
-            codecs.put(AutoBucket.class, new AutoBucketCodec(mapper));
-            codecs.put(Bucket.class, new BucketCodec(mapper));
-            codecs.put(CollectionStats.class, new CollectionStatsCodec(mapper));
-            codecs.put(Count.class, new CountCodec(mapper));
-            codecs.put(CurrentOp.class, new CurrentOpCodec(mapper));
-            codecs.put(Facet.class, new FacetCodec(mapper));
-            codecs.put(GeoNear.class, new GeoNearCodec(mapper));
-            codecs.put(GraphLookup.class, new GraphLookupCodec(mapper));
-            codecs.put(Group.class, new GroupCodec(mapper));
-            codecs.put(IndexStats.class, new IndexStatsCodec(mapper));
-            codecs.put(Merge.class, new MergeCodec(mapper));
-            codecs.put(PlanCacheStats.class, new PlanCacheStatsCodec(mapper));
-            codecs.put(Limit.class, new LimitCodec(mapper));
-            codecs.put(Lookup.class, new LookupCodec(mapper));
-            codecs.put(Match.class, new MatchCodec(mapper));
-            codecs.put(Out.class, new OutCodec(mapper));
-            codecs.put(Projection.class, new ProjectionCodec(mapper));
-            codecs.put(Redact.class, new RedactCodec(mapper));
-            codecs.put(ReplaceRoot.class, new ReplaceRootCodec(mapper));
-            codecs.put(ReplaceWith.class, new ReplaceWithCodec(mapper));
-            codecs.put(Sample.class, new SampleCodec(mapper));
-            codecs.put(Skip.class, new SkipCodec(mapper));
-            codecs.put(Sort.class, new SortCodec(mapper));
-            codecs.put(SortByCount.class, new SortByCountCodec(mapper));
-            codecs.put(UnionWith.class, new UnionWithCodec(mapper));
-            codecs.put(Unset.class, new UnsetCodec(mapper));
-            codecs.put(Unwind.class, new UnwindCodec(mapper));
+            codecs.put(AddFields.class, new AddFieldsCodec(datastore));
+            codecs.put(AutoBucket.class, new AutoBucketCodec(datastore));
+            codecs.put(Bucket.class, new BucketCodec(datastore));
+            codecs.put(CollectionStats.class, new CollectionStatsCodec(datastore));
+            codecs.put(Count.class, new CountCodec(datastore));
+            codecs.put(CurrentOp.class, new CurrentOpCodec(datastore));
+            codecs.put(Facet.class, new FacetCodec(datastore));
+            codecs.put(GeoNear.class, new GeoNearCodec(datastore));
+            codecs.put(GraphLookup.class, new GraphLookupCodec(datastore));
+            codecs.put(Group.class, new GroupCodec(datastore));
+            codecs.put(IndexStats.class, new IndexStatsCodec(datastore));
+            codecs.put(Merge.class, new MergeCodec(datastore));
+            codecs.put(PlanCacheStats.class, new PlanCacheStatsCodec(datastore));
+            codecs.put(Limit.class, new LimitCodec(datastore));
+            codecs.put(Lookup.class, new LookupCodec(datastore));
+            codecs.put(Match.class, new MatchCodec(datastore));
+            codecs.put(Out.class, new OutCodec(datastore));
+            codecs.put(Projection.class, new ProjectionCodec(datastore));
+            codecs.put(Redact.class, new RedactCodec(datastore));
+            codecs.put(ReplaceRoot.class, new ReplaceRootCodec(datastore));
+            codecs.put(ReplaceWith.class, new ReplaceWithCodec(datastore));
+            codecs.put(Sample.class, new SampleCodec(datastore));
+            codecs.put(Skip.class, new SkipCodec(datastore));
+            codecs.put(Sort.class, new SortCodec(datastore));
+            codecs.put(SortByCount.class, new SortByCountCodec(datastore));
+            codecs.put(UnionWith.class, new UnionWithCodec(datastore));
+            codecs.put(Unset.class, new UnsetCodec(datastore));
+            codecs.put(Unwind.class, new UnwindCodec(datastore));
         }
         return codecs;
     }

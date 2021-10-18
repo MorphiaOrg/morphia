@@ -29,7 +29,7 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
      * @param mapper    the Mapper to use
      */
     public UpdateOpsImpl(Datastore datastore, Class<T> type, Mapper mapper) {
-        super(datastore, mapper, null, null, type);
+        super(datastore, null, null, type);
     }
 
     static <T> List<T> iterToList(Iterable<T> it) {

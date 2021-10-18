@@ -199,7 +199,7 @@ public class TestGeoQueries extends TestBase {
 
     @Test(expectedExceptions = MongoQueryException.class)
     public void testNearNoIndex() {
-        getMapper().getCollection(Place.class).drop();
+        getDs().getCollection(Place.class).drop();
         final Place place1 = new Place("place1", new double[]{1, 1});
         getDs().save(place1);
         Place found = getDs().find(Place.class)

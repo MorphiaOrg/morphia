@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -35,12 +35,12 @@ public class ReplaceExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                value(mapper, writer, "input", input, encoderContext);
-                value(mapper, writer, "find", find, encoderContext);
-                value(mapper, writer, "replacement", replacement, encoderContext);
+                value(datastore, writer, "input", input, encoderContext);
+                value(datastore, writer, "find", find, encoderContext);
+                value(datastore, writer, "replacement", replacement, encoderContext);
             });
         });
     }

@@ -53,7 +53,7 @@ public interface AdvancedDatastore extends Datastore {
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default <T, V> DBRef createRef(Class<T> clazz, V id) {
-        return new DBRef(getMapper().getCollection(clazz).getNamespace().getCollectionName(), id);
+        return new DBRef(getMapper().getEntityModel(clazz).getCollectionName(), id);
     }
 
     /**

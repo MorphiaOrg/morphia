@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -29,14 +29,14 @@ public class Accumulator extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             writer.writeName(getOperation());
             if (expressions.size() > 1) {
                 writer.writeStartArray();
             }
             for (Expression expression : expressions) {
-                expression(mapper, writer, expression, encoderContext);
+                expression(datastore, writer, expression, encoderContext);
             }
             if (expressions.size() > 1) {
                 writer.writeEndArray();

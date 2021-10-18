@@ -3,7 +3,7 @@ package dev.morphia.query.experimental.filters;
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Polygon;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -36,14 +36,14 @@ public class GeoWithinFilter extends Filter {
     }
 
     @Override
-    public final void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(mapper));
+    public final void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+        writer.writeStartDocument(path(datastore.getMapper()));
         writer.writeStartDocument(getName());
         writer.writeName("$geometry");
 
         Object shape = getValue();
         if (shape != null) {
-            Codec codec = mapper.getCodecRegistry().get(shape.getClass());
+            Codec codec = datastore.getCodecRegistry().get(shape.getClass());
             codec.encode(writer, shape, context);
         }
 

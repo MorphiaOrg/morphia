@@ -2,7 +2,7 @@ package dev.morphia.query.experimental.filters;
 
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.lang.NonNull;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -15,8 +15,8 @@ class CenterFilter extends Filter {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(mapper));
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+        writer.writeStartDocument(path(datastore.getMapper()));
         writer.writeStartDocument("$geoWithin");
 
         writer.writeStartArray(getName());

@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -21,13 +21,13 @@ public class ConvertExpression extends Expression {
     }
 
     @Override
-    public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, getOperation(), () -> {
-                expression(mapper, writer, "input", input, encoderContext);
-                value(mapper, writer, "to", to.getName(), encoderContext);
-                expression(mapper, writer, "onError", onError, encoderContext);
-                expression(mapper, writer, "onNull", onNull, encoderContext);
+                expression(datastore, writer, "input", input, encoderContext);
+                value(datastore, writer, "to", to.getName(), encoderContext);
+                expression(datastore, writer, "onError", onError, encoderContext);
+                expression(datastore, writer, "onNull", onNull, encoderContext);
             });
         });
     }

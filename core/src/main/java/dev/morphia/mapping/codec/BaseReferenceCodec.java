@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -14,6 +15,7 @@ import org.bson.codecs.Codec;
  */
 public abstract class BaseReferenceCodec<T> implements Codec<T> {
     private final PropertyModel property;
+    private final Mapper mapper;
     private EntityModel entityModel;
     private final Datastore datastore;
 
@@ -26,6 +28,7 @@ public abstract class BaseReferenceCodec<T> implements Codec<T> {
     public BaseReferenceCodec(Datastore datastore, PropertyModel property) {
         this.datastore = datastore;
         this.property = property;
+        mapper = datastore.getMapper();
     }
 
     /**
@@ -51,7 +54,7 @@ public abstract class BaseReferenceCodec<T> implements Codec<T> {
 
     protected EntityModel getEntityModelForField() {
         if (entityModel == null) {
-            entityModel = datastore.getMapper().getEntityModel(PropertyModel.normalize(getTypeData()));
+            entityModel = mapper.getEntityModel(PropertyModel.normalize(getTypeData()));
         }
         return entityModel;
     }
