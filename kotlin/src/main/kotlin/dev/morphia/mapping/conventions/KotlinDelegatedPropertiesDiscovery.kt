@@ -1,13 +1,13 @@
 package dev.morphia.mapping.conventions
 
-import dev.morphia.Datastore
+import dev.morphia.mapping.Mapper
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 
 class KotlinDelegatedPropertiesDiscovery : MorphiaConvention {
     @Suppress("UNCHECKED_CAST")
-    override fun apply(datastore: Datastore, builder: EntityModelBuilder) {
+    override fun apply(mapper: Mapper, builder: EntityModelBuilder) {
         val field = builder.type().declaredFields.firstOrNull { it.name == "\$\$delegatedProperties" }
         if (field != null) {
             field.trySetAccessible()
