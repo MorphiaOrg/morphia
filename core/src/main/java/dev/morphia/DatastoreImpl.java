@@ -21,6 +21,7 @@ import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.IndexHelper;
 import dev.morphia.annotations.Validation;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.experimental.MorphiaSessionImpl;
 import dev.morphia.internal.SessionConfigurable;
@@ -72,6 +73,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings({"unchecked", "rawtypes", "removal"})
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);

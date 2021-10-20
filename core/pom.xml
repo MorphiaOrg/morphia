@@ -221,6 +221,7 @@
             <build>
                 <defaultGoal>verify</defaultGoal>
                 <plugins>
+<!--
                     <plugin>
                         <groupId>${project.groupId}</groupId>
                         <artifactId>build-plugins</artifactId>
@@ -239,6 +240,7 @@
                             <output>../config/revapi.json</output>
                         </configuration>
                     </plugin>
+-->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -292,7 +294,6 @@
                             <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
                         </configuration>
                     </plugin>
-<!--
                     <plugin>
                         <groupId>org.revapi</groupId>
                         <artifactId>revapi-maven-plugin</artifactId>
@@ -316,7 +317,7 @@
                         <configuration>
                             <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
                             <analysisConfigurationFiles>
-                                <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
+                                <analysisConfigurationFile>../config/revapi-filtered.json</analysisConfigurationFile>
                             </analysisConfigurationFiles>
                             <analysisConfiguration>
                                 <revapi.versions>
@@ -336,7 +337,6 @@
                             </analysisConfiguration>
                         </configuration>
                     </plugin>
--->
                 </plugins>
             </build>
         </profile>

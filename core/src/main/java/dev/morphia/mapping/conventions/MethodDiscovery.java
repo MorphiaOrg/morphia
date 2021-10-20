@@ -1,5 +1,6 @@
 package dev.morphia.mapping.conventions;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MethodAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+@MorphiaInternal
 public class MethodDiscovery implements MorphiaConvention {
     private EntityModelBuilder entityModelBuilder;
 

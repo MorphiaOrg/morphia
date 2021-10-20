@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.Document;
 
@@ -11,14 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static dev.morphia.query.CriteriaJoin.AND;
-
 /**
  * Defines a container of Criteria and a join method.
  *
  * @morphia.internal
  * @see CriteriaJoin
  */
+@MorphiaInternal
 @SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
@@ -59,12 +59,8 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
     @Override
-    public Document toDocument() {
-        if (joinMethod == AND) {
-            return and();
-        } else {
-            return or();
-        }
+    public CriteriaContainer and(Criteria... criteria) {
+        return collect(CriteriaJoin.AND, criteria);
     }
 
     private Document and() {
@@ -111,8 +107,12 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
     @Override
-    public CriteriaContainer and(Criteria... criteria) {
-        return collect(AND, criteria);
+    public Document toDocument() {
+        if (joinMethod == CriteriaJoin.AND) {
+            return and();
+        } else {
+            return or();
+        }
     }
 
     @Override

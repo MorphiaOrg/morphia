@@ -2,6 +2,7 @@ package dev.morphia.mapping.conventions;
 
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
@@ -9,7 +10,8 @@ import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 /**
  * A set of conventions to apply to Morphia entities
  */
-@SuppressWarnings("unchecked")
+@MorphiaInternal
+@SuppressWarnings({"unchecked", "deprecation"})
 public class MorphiaDefaultsConvention implements MorphiaConvention {
 
     @Override

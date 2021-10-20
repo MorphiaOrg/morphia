@@ -55,6 +55,7 @@ import static java.util.Arrays.asList;
  * @morphia.internal
  * @since 2.0
  */
+@SuppressWarnings("removal")
 public final class PropertyModel {
     private final String name;
     private final TypeData<?> typeData;
