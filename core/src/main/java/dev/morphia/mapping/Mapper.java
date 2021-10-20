@@ -9,6 +9,7 @@ import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.builders.EmbeddedBuilder;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -41,6 +42,7 @@ import static dev.morphia.sofia.Sofia.entityOrEmbedded;
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings({"unchecked", "rawtypes", "removal"})
 public class Mapper {
 

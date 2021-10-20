@@ -15,6 +15,7 @@ import static java.lang.String.format;
 /**
  * Checks that @Entity and @Embed aren't both used on a type.
  */
+@SuppressWarnings("deprecation")
 public class EntityAndEmbed implements ClassConstraint {
 
     @Override

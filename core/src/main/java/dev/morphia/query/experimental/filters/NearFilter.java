@@ -3,6 +3,7 @@ package dev.morphia.query.experimental.filters;
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Point;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -26,6 +27,7 @@ public class NearFilter extends Filter {
      * @param opts the options to apply
      * @morphia.internal
      */
+    @MorphiaInternal
     public void applyOpts(Map<?, ?> opts) {
         maxDistance = (Double) opts.get("$maxDistance");
         minDistance = (Double) opts.get("$minDistance");
@@ -64,6 +66,7 @@ public class NearFilter extends Filter {
     }
 
     @Override
+    @MorphiaInternal
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(path(datastore.getMapper()));
         if (isNot()) {

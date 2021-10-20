@@ -17,6 +17,7 @@ import java.util.Set;
 /**
  * Checks that @Id is not with any other mapping annotation
  */
+@SuppressWarnings("deprecation")
 public class IdDoesNotMix extends PropertyConstraint {
 
     @Override

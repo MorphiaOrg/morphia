@@ -6,6 +6,7 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.annotations.experimental.IdField;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
@@ -24,6 +25,7 @@ import static java.lang.reflect.Modifier.isStatic;
  *
  * @since 2.2
  */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 public class ConfigureProperties implements MorphiaConvention {
 

@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -41,6 +42,7 @@ public class Expression {
      * @param encoderContext the context
      * @morphia.internal
      */
+    @MorphiaInternal
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> value(datastore, writer, operation, value, encoderContext));
     }

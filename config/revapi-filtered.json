@@ -1,0 +1,177 @@
+[
+  {
+    "extension": "revapi.filter",
+    "configuration": {
+      "elements": {
+        "exclude": [
+          {
+            "matcher": "java",
+            "match": "@dev.morphia.annotations.internal.MorphiaInternal ^*;"
+          },
+          {
+            "matcher": "java",
+            "match": "@dev.morphia.annotations.internal.MorphiaExperimental ^*;"
+          },
+          {
+            "matcher": "java-package",
+            "match": "dev.morphia.mapping.codec"
+          },
+          {
+            "matcher": "java-package",
+            "match": "dev.morphia.mapping.codec.pojo"
+          },
+          {
+            "matcher": "java-package",
+            "match": "/.*codec.*/"
+          },
+          {
+            "matcher": "java-package",
+            "match": "/.*internal.*/"
+          },
+          {
+            "matcher": "java-package",
+            "match": "dev.morphia.mapping.experimental"
+          },
+          {
+            "matcher": "java-package",
+            "match": "dev.morphia.annotations.builders"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "extension": "revapi.differences",
+    "configuration": {
+      "ignore": true,
+      "differences": [
+        {
+          "code": "java.method.parameterTypeChanged",
+          "package": "dev.morphia.mapping.conventions",
+          "methodName": "apply",
+          "justification": "implementation detail"
+        },
+        {
+          "code": "java.method.parameterTypeChanged",
+          "package": "dev.morphia.query.experimental.filters",
+          "methodName": "writeUnnamedValue",
+          "justification": "implementation detail"
+        },
+        {
+          "code": "java.method.parameterTypeChanged",
+          "package": "dev.morphia.query.experimental.filters",
+          "methodName": "writeNamedValue",
+          "justification": "implementation detail"
+        },
+        {
+          "code": "java.method.parameterTypeChanged",
+          "package": "dev.morphia.query.experimental.filters",
+          "methodName": "getValue",
+          "justification": "implementation detail"
+        },
+        {
+          "code": "java.method.parameterTypeChanged",
+          "methodName": "encode",
+          "justification": "implementation detail"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.addedToInterface",
+          "new": "method org.bson.codecs.configuration.CodecRegistry dev.morphia.Datastore::getCodecRegistry()",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.addedToInterface",
+          "new": "method <T> com.mongodb.client.MongoCollection<T> dev.morphia.Datastore::getCollection(java.lang.Class<T>)",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method void dev.morphia.query.experimental.filters.NearFilter::applyOpts(java.util.Map)",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "package": "dev.morphia.aggregation.experimental.expressions",
+          "methodName": "encode",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.parameterTypeChanged",
+          "justification": "constructors aren't API",
+          "elementKind": "constructor"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.numberOfParametersChanged",
+          "justification": "constructors aren't API",
+          "elementKind": "constructor"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.parameterTypeChanged",
+          "justification": "constructors aren't API",
+          "elementKind": "constructor"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.removed",
+          "package": "dev.morphia",
+          "justification": "hiding internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.removed",
+          "classQualifiedName": "dev.morphia.mapping.Mapper",
+          "justification": "hiding internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.removed",
+          "package": "dev.morphia.query",
+          "justification": "hiding internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.removed",
+          "package": "dev.morphia.mapping.conventions",
+          "justification": "hiding internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.removed",
+          "package": "dev.morphia.annotations.experimental",
+          "justification": "hiding internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.removed",
+          "package": "dev.morphia.mapping",
+          "justification": "hiding internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "package": "dev.morphia.query.experimental.filters",
+          "justification": "hiding internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "package": "dev.morphia.aggregation.experimental.expressions.impls",
+          "justification": "hiding internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "classQualifiedName": "dev.morphia.mapping.Mapper",
+          "justification": "hiding internal types"
+        }
+      ]
+    }
+  }
+]

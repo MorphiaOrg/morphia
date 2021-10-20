@@ -1,5 +1,6 @@
 package dev.morphia.mapping;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
@@ -9,6 +10,7 @@ import java.lang.reflect.Constructor;
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 public class NoArgCreator implements MorphiaInstanceCreator {
     private Object instance;
     private final Constructor<?> noArgsConstructor;

@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.NonNull;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.Document;
@@ -36,6 +37,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
      * @param clazz      the original type being iterated
      * @param collection the mongodb collection
      */
+    @MorphiaInternal
     public MorphiaKeyCursor(MongoCursor<Document> cursor, Datastore datastore, Class<T> clazz, String collection) {
         this.wrapped = cursor;
         if (wrapped == null) {

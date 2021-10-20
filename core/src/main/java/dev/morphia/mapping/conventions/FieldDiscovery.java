@@ -1,5 +1,6 @@
 package dev.morphia.mapping.conventions;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
 import dev.morphia.mapping.codec.FieldAccessor;
@@ -11,6 +12,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+@MorphiaInternal
 public class FieldDiscovery implements MorphiaConvention {
 
     @Override

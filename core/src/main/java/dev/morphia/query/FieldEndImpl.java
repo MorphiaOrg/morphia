@@ -6,6 +6,7 @@ import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.utils.Assert;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import static java.util.regex.Pattern.quote;
  * @morphia.internal
  */
 @SuppressWarnings("removal")
+@MorphiaInternal
 @Deprecated(since = "2.0", forRemoval = true)
 public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     private static final Logger LOG = LoggerFactory.getLogger(FieldEndImpl.class);

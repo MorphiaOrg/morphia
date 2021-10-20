@@ -49,6 +49,7 @@ import static dev.morphia.internal.MorphiaInternals.tryInvoke;
  * @mongodb.driver.manual ../meta-driver/latest/legacy/mongodb-wire-protocol/#op-query OP_QUERY
  * @since 1.3
  */
+@SuppressWarnings("deprecation")
 public final class FindOptions implements SessionConfigurable<FindOptions>, ReadConfigurable<FindOptions> {
     private Boolean allowDiskUse;
     private int batchSize;
