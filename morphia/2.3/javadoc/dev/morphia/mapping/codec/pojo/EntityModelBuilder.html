@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -374,19 +374,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore)">EntityModelBuilder</a></span>​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
-<td class="colLast">
-<div class="block">Creates a baseline builder for customized model building</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,A,java.lang.Class)">EntityModelBuilder</a></span>​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper,A,java.lang.Class)">EntityModelBuilder</a></span>​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                   A&nbsp;annotation,
                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class)">EntityModelBuilder</a></span>​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<tr class="rowColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper,java.lang.Class)">EntityModelBuilder</a></span>​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block">Create a builder</div>
@@ -495,81 +489,76 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i14" class="altColor">
-<td class="colFirst"><code>protected <a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDatastore()">getDatastore</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&lt;?&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTypeData(java.lang.Class,dev.morphia.mapping.codec.pojo.TypeData,java.lang.reflect.Type)">getTypeData</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type,
            <a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&lt;?&gt;&nbsp;suggested,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Type.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Type</a>&nbsp;genericType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasAnnotation(java.lang.Class)">hasAnnotation</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#idPropertyName()">idPropertyName</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="EntityModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">EntityModelBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#idPropertyName(java.lang.String)">idPropertyName</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">
 <div class="block">Sets the name of the id property</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#interfaces()">interfaces</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isDiscriminatorEnabled()">isDiscriminatorEnabled</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#propertyModelByName(java.lang.String)">propertyModelByName</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">
 <div class="block">Gets a property by its name</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#propertyModels()">propertyModels</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#superclass()">superclass</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#type()">type</a></span>()</code></th>
 <td class="colLast">
 <div class="block">The type of this model</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="EntityModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">EntityModelBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#type(java.lang.Class)">type</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block">Sets the type of this model</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#versionPropertyName()">versionPropertyName</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code><a href="EntityModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">EntityModelBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#versionPropertyName(java.lang.String)">versionPropertyName</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">
@@ -600,47 +589,31 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.Datastore)">
+<a id="<init>(dev.morphia.mapping.Mapper,java.lang.Class)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>EntityModelBuilder</h4>
-<pre>public&nbsp;EntityModelBuilder​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
-<div class="block">Creates a baseline builder for customized model building</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>datastore</code> - the datastore to use</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.3</dd>
-</dl>
-</li>
-</ul>
-<a id="<init>(dev.morphia.Datastore,java.lang.Class)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>EntityModelBuilder</h4>
-<pre>public&nbsp;EntityModelBuilder​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<pre>public&nbsp;EntityModelBuilder​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</pre>
 <div class="block">Create a builder</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>datastore</code> - the datastore to use</dd>
+<dd><code>mapper</code> - the mapper to use</dd>
 <dd><code>type</code> - the entity type</dd>
 </dl>
 </li>
 </ul>
-<a id="<init>(dev.morphia.Datastore,java.lang.annotation.Annotation,java.lang.Class)">
+<a id="<init>(dev.morphia.mapping.Mapper,java.lang.annotation.Annotation,java.lang.Class)">
 <!--   -->
-</a><a id="<init>(dev.morphia.Datastore,A,java.lang.Class)">
+</a><a id="<init>(dev.morphia.mapping.Mapper,A,java.lang.Class)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>EntityModelBuilder</h4>
-<pre>public&nbsp;EntityModelBuilder​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<pre>public&nbsp;EntityModelBuilder​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                           A&nbsp;annotation,
                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</pre>
 <dl>
@@ -648,7 +621,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>T</code> - the class type</dd>
 <dd><code>A</code> - the annotation type</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>datastore</code> - the datastore</dd>
+<dd><code>mapper</code> - the mapper</dd>
 <dd><code>annotation</code> - the annotation</dd>
 <dd><code>clazz</code> - the type</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
@@ -1050,19 +1023,10 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <a id="getCollectionName()">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>getCollectionName</h4>
 <pre class="methodSignature">protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getCollectionName()</pre>
-</li>
-</ul>
-<a id="getDatastore()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getDatastore</h4>
-<pre class="methodSignature">protected&nbsp;<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;getDatastore()</pre>
 </li>
 </ul>
 </li>

@@ -380,7 +380,7 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper)">StageCodec</a></span>​(<a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore)">StageCodec</a></span>​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -427,8 +427,8 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>protected <a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMapper()">getMapper</a></span>()</code></th>
+<td class="colFirst"><code><a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDatastore()">getDatastore</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -462,13 +462,13 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.mapping.Mapper)">
+<a id="<init>(dev.morphia.Datastore)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>StageCodec</h4>
-<pre>protected&nbsp;StageCodec​(<a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+<pre>protected&nbsp;StageCodec​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
 </li>
 </ul>
 </li>
@@ -525,22 +525,22 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
                                     org.bson.codecs.EncoderContext&nbsp;encoderContext)</pre>
 </li>
 </ul>
-<a id="getCodecRegistry()">
+<a id="getDatastore()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getCodecRegistry</h4>
-<pre class="methodSignature">protected&nbsp;org.bson.codecs.configuration.CodecRegistry&nbsp;getCodecRegistry()</pre>
+<h4>getDatastore</h4>
+<pre class="methodSignature">public&nbsp;<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;getDatastore()</pre>
 </li>
 </ul>
-<a id="getMapper()">
+<a id="getCodecRegistry()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getMapper</h4>
-<pre class="methodSignature">protected&nbsp;<a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;getMapper()</pre>
+<h4>getCodecRegistry</h4>
+<pre class="methodSignature">protected&nbsp;org.bson.codecs.configuration.CodecRegistry&nbsp;getCodecRegistry()</pre>
 </li>
 </ul>
 </li>

@@ -355,7 +355,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;T&gt;</code></dd>
 </dl>
 <hr>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
+<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
 public class <span class="typeNameLabel">FieldEndImpl&lt;T extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&gt;</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
@@ -386,7 +387,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper,java.lang.String,T,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">FieldEndImpl</a></span>​(<a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,java.lang.String,T,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">FieldEndImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
             <a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;target,
             <a href="../mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model,
@@ -831,15 +832,15 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.mapping.Mapper,java.lang.String,dev.morphia.query.CriteriaContainer,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">
+<a id="<init>(dev.morphia.Datastore,java.lang.String,dev.morphia.query.CriteriaContainer,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">
 <!--   -->
-</a><a id="<init>(dev.morphia.mapping.Mapper,java.lang.String,T,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">
+</a><a id="<init>(dev.morphia.Datastore,java.lang.String,T,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>FieldEndImpl</h4>
-<pre>protected&nbsp;FieldEndImpl​(<a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<pre>protected&nbsp;FieldEndImpl​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                        <a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;target,
                        <a href="../mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model,

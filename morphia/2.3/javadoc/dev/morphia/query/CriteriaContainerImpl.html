@@ -356,7 +356,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a></code>, <code><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></dd>
 </dl>
 <hr>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
+<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
 public class <span class="typeNameLabel">CriteriaContainerImpl</span>
 extends <a href="AbstractCriteria.html" title="class in dev.morphia.query">AbstractCriteria</a>
@@ -389,7 +390,7 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper,dev.morphia.query.LegacyQuery,dev.morphia.query.CriteriaJoin)">CriteriaContainerImpl</a></span>​(<a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,dev.morphia.query.LegacyQuery,dev.morphia.query.CriteriaJoin)">CriteriaContainerImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                      <a href="LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a>&lt;?&gt;&nbsp;query,
                      <a href="CriteriaJoin.html" title="enum in dev.morphia.query">CriteriaJoin</a>&nbsp;joinMethod)</code></th>
 <td class="colLast">
@@ -542,13 +543,13 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.mapping.Mapper,dev.morphia.query.LegacyQuery,dev.morphia.query.CriteriaJoin)">
+<a id="<init>(dev.morphia.Datastore,dev.morphia.query.LegacyQuery,dev.morphia.query.CriteriaJoin)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>CriteriaContainerImpl</h4>
-<pre>protected&nbsp;CriteriaContainerImpl​(<a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<pre>protected&nbsp;CriteriaContainerImpl​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                                 <a href="LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a>&lt;?&gt;&nbsp;query,
                                 <a href="CriteriaJoin.html" title="enum in dev.morphia.query">CriteriaJoin</a>&nbsp;joinMethod)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -612,19 +613,23 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 </dl>
 </li>
 </ul>
-<a id="toDocument()">
+<a id="and(dev.morphia.query.Criteria...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>toDocument</h4>
-<pre class="methodSignature">public&nbsp;org.bson.Document&nbsp;toDocument()</pre>
+<h4>and</h4>
+<pre class="methodSignature">public&nbsp;<a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&nbsp;and​(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="CriteriaContainer.html#and(dev.morphia.query.Criteria...)">CriteriaContainer</a></code></span></div>
+<div class="block">Ands Criteria with this CriteriaContainer.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Criteria.html#toDocument()">toDocument</a></code>&nbsp;in interface&nbsp;<code><a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a></code></dd>
+<dd><code><a href="CriteriaContainer.html#and(dev.morphia.query.Criteria...)">and</a></code>&nbsp;in interface&nbsp;<code><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>criteria</code> - the criteria</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the Document form of this type</dd>
+<dd>the container</dd>
 </dl>
 </li>
 </ul>
@@ -644,23 +649,19 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 </dl>
 </li>
 </ul>
-<a id="and(dev.morphia.query.Criteria...)">
+<a id="toDocument()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>and</h4>
-<pre class="methodSignature">public&nbsp;<a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&nbsp;and​(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</pre>
+<h4>toDocument</h4>
+<pre class="methodSignature">public&nbsp;org.bson.Document&nbsp;toDocument()</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="CriteriaContainer.html#and(dev.morphia.query.Criteria...)">CriteriaContainer</a></code></span></div>
-<div class="block">Ands Criteria with this CriteriaContainer.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="CriteriaContainer.html#and(dev.morphia.query.Criteria...)">and</a></code>&nbsp;in interface&nbsp;<code><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>criteria</code> - the criteria</dd>
+<dd><code><a href="Criteria.html#toDocument()">toDocument</a></code>&nbsp;in interface&nbsp;<code><a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the container</dd>
+<dd>the Document form of this type</dd>
 </dl>
 </li>
 </ul>

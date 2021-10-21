@@ -242,8 +242,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":18,"i1":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
+var data = {"i0":6,"i1":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -358,20 +358,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>default void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importCodecProvider(dev.morphia.Datastore)">importCodecProvider</a></span>​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<td class="colFirst"><code><a href="../../MorphiaCodecProvider.html" title="class in dev.morphia.mapping.codec">MorphiaCodecProvider</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCodecProvider()">getCodecProvider</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importModels(dev.morphia.Datastore)">importModels</a></span>​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importModels()">importModels</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -391,22 +391,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="importModels(dev.morphia.Datastore)">
+<a id="getCodecProvider()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>importModels</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&nbsp;importModels​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
+<h4>getCodecProvider</h4>
+<pre class="methodSignature"><a href="../../MorphiaCodecProvider.html" title="class in dev.morphia.mapping.codec">MorphiaCodecProvider</a>&nbsp;getCodecProvider()</pre>
 </li>
 </ul>
-<a id="importCodecProvider(dev.morphia.Datastore)">
+<a id="importModels()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>importCodecProvider</h4>
-<pre class="methodSignature">default&nbsp;void&nbsp;importCodecProvider​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
+<h4>importModels</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&nbsp;importModels()</pre>
 </li>
 </ul>
 </li>

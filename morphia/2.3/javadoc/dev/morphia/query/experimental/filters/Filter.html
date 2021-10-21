@@ -410,7 +410,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -439,7 +439,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue(dev.morphia.mapping.Mapper)">getValue</a></span>​(<a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue(dev.morphia.Datastore)">getValue</a></span>​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
@@ -473,17 +473,17 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeNamedValue(java.lang.String,java.lang.Object,dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeNamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeNamedValue(java.lang.String,java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeNamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;named,
-               <a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+               <a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                org.bson.BsonWriter&nbsp;writer,
                org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeUnnamedValue(java.lang.Object,dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeUnnamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
-                 <a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeUnnamedValue(java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeUnnamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
+                 <a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                  org.bson.BsonWriter&nbsp;writer,
                  org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -559,18 +559,18 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
-<a id="encode(dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
+<a id="encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>encode</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;encode​(<a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<pre class="methodSignature">public&nbsp;void&nbsp;encode​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                    org.bson.BsonWriter&nbsp;writer,
                    org.bson.codecs.EncoderContext&nbsp;context)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>mapper</code> - the mapper</dd>
+<dd><code>datastore</code> - the datastore</dd>
 <dd><code>writer</code> - the writer</dd>
 <dd><code>context</code> - the context</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
@@ -664,14 +664,14 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
-<a id="getValue(dev.morphia.mapping.Mapper)">
+<a id="getValue(dev.morphia.Datastore)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getValue</h4>
 <pre class="methodSignature">@Nullable
-protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;getValue​(<a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;getValue​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
 </li>
 </ul>
 <a id="toString()">
@@ -696,7 +696,7 @@ protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.
 <pre class="methodSignature">protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;path​(<a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
 </li>
 </ul>
-<a id="writeNamedValue(java.lang.String,java.lang.Object,dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
+<a id="writeNamedValue(java.lang.String,java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -706,12 +706,12 @@ protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.
                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                                @Nullable
                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;named,
-                               <a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+                               <a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                                org.bson.BsonWriter&nbsp;writer,
                                org.bson.codecs.EncoderContext&nbsp;encoderContext)</pre>
 </li>
 </ul>
-<a id="writeUnnamedValue(java.lang.Object,dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
+<a id="writeUnnamedValue(java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -719,7 +719,7 @@ protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.
 <h4>writeUnnamedValue</h4>
 <pre class="methodSignature">protected&nbsp;void&nbsp;writeUnnamedValue​(@Nullable
                                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
-                                 <a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+                                 <a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                                  org.bson.BsonWriter&nbsp;writer,
                                  org.bson.codecs.EncoderContext&nbsp;encoderContext)</pre>
 </li>

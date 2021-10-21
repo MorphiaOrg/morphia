@@ -351,7 +351,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="MorphiaConvention.html" title="interface in dev.morphia.mapping.conventions">MorphiaConvention</a></code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">MethodDiscovery</span>
+<pre><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public class <span class="typeNameLabel">MethodDiscovery</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="MorphiaConvention.html" title="interface in dev.morphia.mapping.conventions">MorphiaConvention</a></pre>
 </li>
@@ -397,7 +398,7 @@ implements <a href="MorphiaConvention.html" title="interface in dev.morphia.mapp
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#apply(dev.morphia.Datastore,dev.morphia.mapping.codec.pojo.EntityModelBuilder)">apply</a></span>​(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#apply(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModelBuilder)">apply</a></span>​(<a href="../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
      <a href="../codec/pojo/EntityModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">EntityModelBuilder</a>&nbsp;builder)</code></th>
 <td class="colLast">
 <div class="block">This method applies this Convention to the given builder</div>
@@ -446,21 +447,19 @@ implements <a href="MorphiaConvention.html" title="interface in dev.morphia.mapp
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="apply(dev.morphia.Datastore,dev.morphia.mapping.codec.pojo.EntityModelBuilder)">
+<a id="apply(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModelBuilder)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>apply</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;apply​(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<pre class="methodSignature">public&nbsp;void&nbsp;apply​(<a href="../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                   <a href="../codec/pojo/EntityModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">EntityModelBuilder</a>&nbsp;builder)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="MorphiaConvention.html#apply(dev.morphia.Datastore,dev.morphia.mapping.codec.pojo.EntityModelBuilder)">MorphiaConvention</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="MorphiaConvention.html#apply(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModelBuilder)">MorphiaConvention</a></code></span></div>
 <div class="block">This method applies this Convention to the given builder</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="MorphiaConvention.html#apply(dev.morphia.Datastore,dev.morphia.mapping.codec.pojo.EntityModelBuilder)">apply</a></code>&nbsp;in interface&nbsp;<code><a href="MorphiaConvention.html" title="interface in dev.morphia.mapping.conventions">MorphiaConvention</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>datastore</code> - the datastore to use</dd>
+<dd><code><a href="MorphiaConvention.html#apply(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModelBuilder)">apply</a></code>&nbsp;in interface&nbsp;<code><a href="MorphiaConvention.html" title="interface in dev.morphia.mapping.conventions">MorphiaConvention</a></code></dd>
 <dd><code>builder</code> - the builder to apply the convention to</dd>
 </dl>
 </li>

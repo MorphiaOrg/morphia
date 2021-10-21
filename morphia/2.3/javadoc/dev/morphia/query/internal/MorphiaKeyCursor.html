@@ -382,8 +382,8 @@ implements com.mongodb.client.MongoCursor&lt;<a href="../../Key.html" title="cla
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.mongodb.client.MongoCursor,dev.morphia.mapping.Mapper,java.lang.Class,java.lang.String)">MorphiaKeyCursor</a></span>​(com.mongodb.client.MongoCursor&lt;org.bson.Document&gt;&nbsp;cursor,
-                <a href="../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.mongodb.client.MongoCursor,dev.morphia.Datastore,java.lang.Class,java.lang.String)">MorphiaKeyCursor</a></span>​(com.mongodb.client.MongoCursor&lt;org.bson.Document&gt;&nbsp;cursor,
+                <a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;&nbsp;clazz,
                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
 <td class="colLast">
@@ -498,14 +498,15 @@ implements com.mongodb.client.MongoCursor&lt;<a href="../../Key.html" title="cla
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(com.mongodb.client.MongoCursor,dev.morphia.mapping.Mapper,java.lang.Class,java.lang.String)">
+<a id="<init>(com.mongodb.client.MongoCursor,dev.morphia.Datastore,java.lang.Class,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>MorphiaKeyCursor</h4>
-<pre>public&nbsp;MorphiaKeyCursor​(com.mongodb.client.MongoCursor&lt;org.bson.Document&gt;&nbsp;cursor,
-                        <a href="../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<pre><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public&nbsp;MorphiaKeyCursor​(com.mongodb.client.MongoCursor&lt;org.bson.Document&gt;&nbsp;cursor,
+                        <a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;&nbsp;clazz,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -513,7 +514,7 @@ implements com.mongodb.client.MongoCursor&lt;<a href="../../Key.html" title="cla
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>cursor</code> - the cursor to use</dd>
-<dd><code>mapper</code> - the Mapper to use</dd>
+<dd><code>datastore</code> - the Datastore to use</dd>
 <dd><code>clazz</code> - the original type being iterated</dd>
 <dd><code>collection</code> - the mongodb collection</dd>
 </dl>

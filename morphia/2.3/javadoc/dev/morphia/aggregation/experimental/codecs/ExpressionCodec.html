@@ -374,7 +374,7 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper)">ExpressionCodec</a></span>​(<a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore)">ExpressionCodec</a></span>​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -414,13 +414,13 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="ExpressionCodec.html" title="type parameter in ExpressionCodec">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoderClass()">getEncoderClass</a></span>()</code></th>
+<td class="colFirst"><code>protected <a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDatastore()">getDatastore</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>protected <a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMapper()">getMapper</a></span>()</code></th>
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="ExpressionCodec.html" title="type parameter in ExpressionCodec">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoderClass()">getEncoderClass</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -447,13 +447,13 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.mapping.Mapper)">
+<a id="<init>(dev.morphia.Datastore)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ExpressionCodec</h4>
-<pre>public&nbsp;ExpressionCodec​(<a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+<pre>public&nbsp;ExpressionCodec​(<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
 </li>
 </ul>
 </li>
@@ -519,13 +519,13 @@ implements org.bson.codecs.Codec&lt;T&gt;</pre>
 <pre class="methodSignature">protected&nbsp;org.bson.codecs.configuration.CodecRegistry&nbsp;getCodecRegistry()</pre>
 </li>
 </ul>
-<a id="getMapper()">
+<a id="getDatastore()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getMapper</h4>
-<pre class="methodSignature">protected&nbsp;<a href="../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;getMapper()</pre>
+<h4>getDatastore</h4>
+<pre class="methodSignature">protected&nbsp;<a href="../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;getDatastore()</pre>
 </li>
 </ul>
 </li>

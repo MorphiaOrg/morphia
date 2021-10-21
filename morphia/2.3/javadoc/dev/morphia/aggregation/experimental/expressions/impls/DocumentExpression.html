@@ -402,15 +402,15 @@ implements <a href="FieldHolder.html" title="interface in dev.morphia.aggregatio
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(java.lang.String,dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-      <a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(java.lang.String,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+      <a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -471,32 +471,32 @@ implements <a href="FieldHolder.html" title="interface in dev.morphia.aggregatio
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="encode(java.lang.String,dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
+<a id="encode(java.lang.String,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>encode</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;encode​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-                   <a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+                   <a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                    org.bson.BsonWriter&nbsp;writer,
                    org.bson.codecs.EncoderContext&nbsp;encoderContext)</pre>
 </li>
 </ul>
-<a id="encode(dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
+<a id="encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>encode</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;encode​(<a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<pre class="methodSignature">public&nbsp;void&nbsp;encode​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                    org.bson.BsonWriter&nbsp;writer,
                    org.bson.codecs.EncoderContext&nbsp;encoderContext)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="Expression.html#encode(dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></code>&nbsp;in class&nbsp;<code><a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></dd>
+<dd><code><a href="Expression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></code>&nbsp;in class&nbsp;<code><a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>mapper</code> - the mapper</dd>
+<dd><code>datastore</code> - the datastore</dd>
 <dd><code>writer</code> - the writer</dd>
 <dd><code>encoderContext</code> - the context</dd>
 </dl>

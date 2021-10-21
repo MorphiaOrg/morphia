@@ -409,7 +409,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -488,18 +488,19 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="encode(dev.morphia.mapping.Mapper,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
+<a id="encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>encode</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;encode​(<a href="../../../../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<pre class="methodSignature"><a href="../../../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public&nbsp;void&nbsp;encode​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                    org.bson.BsonWriter&nbsp;writer,
                    org.bson.codecs.EncoderContext&nbsp;encoderContext)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>mapper</code> - the mapper</dd>
+<dd><code>datastore</code> - the datastore</dd>
 <dd><code>writer</code> - the writer</dd>
 <dd><code>encoderContext</code> - the context</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>

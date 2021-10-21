@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":42,"i6":10,"i7":42,"i8":10,"i9":10,"i10":10,"i11":42,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":42,"i20":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":42,"i7":10,"i8":42,"i9":10,"i10":10,"i11":10,"i12":42,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":42,"i21":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -403,28 +403,36 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#autoImportModels(boolean)">autoImportModels</a></span>​(boolean&nbsp;autoImportModels)</code></th>
+<td class="colLast">
+<div class="block">This feature automatically discovers and uses <a href="codec/pojo/experimental/EntityModelImporter.html" title="interface in dev.morphia.mapping.codec.pojo.experimental"><code>EntityModelImporter</code></a> instances to allow for external definition of class
+ models.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#build()">build</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#cacheClassLookups(boolean)">cacheClassLookups</a></span>​(boolean&nbsp;cacheClassLookups)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#classLoader(java.lang.ClassLoader)">classLoader</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;classLoader)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collectionNaming(dev.morphia.mapping.NamingStrategy)">collectionNaming</a></span>​(<a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a>&nbsp;strategy)</code></th>
 <td class="colLast">
 <div class="block">Sets the naming strategy to use for collection names</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateForm(dev.morphia.mapping.DateStorage)">dateForm</a></span>​(<a href="DateStorage.html" title="enum in dev.morphia.mapping">DateStorage</a>&nbsp;dateStorage)</code></th>
 <td class="colLast">
@@ -433,14 +441,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateStorage(dev.morphia.mapping.DateStorage)">dateStorage</a></span>​(<a href="DateStorage.html" title="enum in dev.morphia.mapping">DateStorage</a>&nbsp;dateStorage)</code></th>
 <td class="colLast">
 <div class="block">The default value for this is <a href="DateStorage.html#UTC"><code>DateStorage.UTC</code></a>.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#disableEmbeddedIndexes(boolean)">disableEmbeddedIndexes</a></span>​(boolean&nbsp;disableEmbeddedIndexes)</code></th>
 <td class="colLast">
@@ -449,26 +457,26 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#discriminator(dev.morphia.mapping.DiscriminatorFunction)">discriminator</a></span>​(<a href="DiscriminatorFunction.html" title="class in dev.morphia.mapping">DiscriminatorFunction</a>&nbsp;function)</code></th>
 <td class="colLast">
 <div class="block">Sets the discriminator function to use</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#discriminatorKey(java.lang.String)">discriminatorKey</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block">Defines the discriminator key name</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#enablePolymorphicQueries(boolean)">enablePolymorphicQueries</a></span>​(boolean&nbsp;enablePolymorphicQueries)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fieldNaming(dev.morphia.mapping.NamingStrategy)">fieldNaming</a></span>​(<a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a>&nbsp;strategy)</code></th>
 <td class="colLast">
@@ -477,46 +485,46 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ignoreFinals(boolean)">ignoreFinals</a></span>​(boolean&nbsp;ignoreFinals)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapSubPackages(boolean)">mapSubPackages</a></span>​(boolean&nbsp;mapSubPackages)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#propertyDiscovery(dev.morphia.mapping.MapperOptions.PropertyDiscovery)">propertyDiscovery</a></span>​(<a href="MapperOptions.PropertyDiscovery.html" title="enum in dev.morphia.mapping">MapperOptions.PropertyDiscovery</a>&nbsp;discovery)</code></th>
 <td class="colLast">
 <div class="block">Determines how properties are discovered on mapped entities</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#propertyNaming(dev.morphia.mapping.NamingStrategy)">propertyNaming</a></span>​(<a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a>&nbsp;strategy)</code></th>
 <td class="colLast">
 <div class="block">Sets the naming strategy to use for propertys unless expliclity set via @Property</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryFactory(dev.morphia.query.QueryFactory)">queryFactory</a></span>​(<a href="../query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&nbsp;queryFactory)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeEmpties(boolean)">storeEmpties</a></span>​(boolean&nbsp;storeEmpties)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeNulls(boolean)">storeNulls</a></span>​(boolean&nbsp;storeNulls)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#useLowerCaseCollectionNames(boolean)">useLowerCaseCollectionNames</a></span>​(boolean&nbsp;useLowerCaseCollectionNames)</code></th>
 <td class="colLast">
@@ -525,7 +533,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidRepresentation(org.bson.UuidRepresentation)">uuidRepresentation</a></span>​(org.bson.UuidRepresentation&nbsp;uuidRepresentation)</code></th>
 <td class="colLast">
@@ -603,6 +611,23 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new options instance</dd>
+</dl>
+</li>
+</ul>
+<a id="autoImportModels(boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>autoImportModels</h4>
+<pre class="methodSignature">public&nbsp;<a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a>&nbsp;autoImportModels​(boolean&nbsp;autoImportModels)</pre>
+<div class="block">This feature automatically discovers and uses <a href="codec/pojo/experimental/EntityModelImporter.html" title="interface in dev.morphia.mapping.codec.pojo.experimental"><code>EntityModelImporter</code></a> instances to allow for external definition of class
+ models.  This feature defaults to true.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>autoImportModels</code> - Set to true to auto import definitions via <a href="codec/pojo/experimental/EntityModelImporter.html" title="interface in dev.morphia.mapping.codec.pojo.experimental"><code>EntityModelImporter</code></a>. Defaults to true.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
 </dl>
 </li>
 </ul>
@@ -819,7 +844,7 @@ public&nbsp;<a href="MapperOptions.Builder.html" title="class in dev.morphia.map
 <div class="block">Determines how properties are discovered on mapped entities</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>discovery</code> - </dd>
+<dd><code>discovery</code> - the discovery strategy to use</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
