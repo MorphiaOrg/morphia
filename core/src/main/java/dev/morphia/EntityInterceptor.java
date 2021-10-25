@@ -11,6 +11,7 @@ import org.bson.Document;
 /**
  * Interface for intercepting @Entity lifecycle events
  */
+@SuppressWarnings("unused")
 public interface EntityInterceptor {
     /**
      * @param ent      the entity being processed

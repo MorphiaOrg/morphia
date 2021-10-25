@@ -34,7 +34,6 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 @SuppressWarnings("unchecked")
 public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final PropertyModel idProperty;
-    private final Mapper mapper;
     private final EntityModel entityModel;
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
@@ -56,7 +55,6 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
                         List<PropertyCodecProvider> propertyCodecProviders,
                         DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
         this.datastore = datastore;
-        this.mapper = datastore.getMapper();
         this.discriminatorLookup = discriminatorLookup;
 
         this.entityModel = model;
@@ -148,7 +146,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * @return the mapper being used
      */
     public Mapper getMapper() {
-        return mapper;
+        return datastore.getMapper();
     }
 
     public CodecRegistry getRegistry() {
