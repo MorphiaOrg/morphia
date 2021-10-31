@@ -71,6 +71,18 @@ public class MorphiaCodecProvider implements CodecProvider {
         return codec;
     }
 
+    protected Map<Class<?>, Codec<?>> getCodecs() {
+        return codecs;
+    }
+
+    protected Datastore getDatastore() {
+        return datastore;
+    }
+
+    protected List<PropertyCodecProvider> getPropertyCodecProviders() {
+        return propertyCodecProviders;
+    }
+
     /**
      * Creates a codec that uses an existing entity for loading rather than creating a new instance.
      *

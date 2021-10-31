@@ -611,11 +611,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     private void importModels() {
         ServiceLoader<EntityModelImporter> importers = ServiceLoader.load(EntityModelImporter.class);
         for (EntityModelImporter importer : importers) {
-            for (EntityModel model : importer.importModels()) {
+            for (EntityModel model : importer.getModels(getMapper())) {
                 mapper.register(model);
             }
 
-            morphiaCodecProviders.add(importer.getCodecProvider());
+            morphiaCodecProviders.add(importer.getCodecProvider(this));
         }
     }
 
