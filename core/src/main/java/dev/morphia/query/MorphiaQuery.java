@@ -48,8 +48,8 @@ class MorphiaQuery<T> implements Query<T> {
     private final Datastore datastore;
     private final Class<T> type;
     private final Mapper mapper;
-    private final String collectionName;
-    private final MongoCollection<T> collection;
+    private String collectionName;
+    private MongoCollection<T> collection;
     private final List<Filter> filters = new ArrayList<>();
     private final Document seedQuery;
     private boolean validate = true;
@@ -59,19 +59,16 @@ class MorphiaQuery<T> implements Query<T> {
         this.datastore = datastore;
         mapper = this.datastore.getMapper();
         seedQuery = null;
+        this.collectionName = collectionName;
         if (collectionName != null) {
             this.collection = datastore.getDatabase().getCollection(collectionName, type);
-            this.collectionName = collectionName;
         } else if (mapper.isMappable(type)) {
             this.collection = datastore.getCollection(type);
             this.collectionName = this.collection.getNamespace().getCollectionName();
-        } else {
-            this.collection = null;
-            this.collectionName = null;
         }
     }
 
-    protected MorphiaQuery(Datastore datastore, Class<T> type, Document query) {
+    protected MorphiaQuery(Datastore datastore, Class<T> type, @Nullable Document query) {
         this.type = type;
         this.datastore = datastore;
         this.seedQuery = query;

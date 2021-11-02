@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 public class HoldsUnannotated {
-    public UnannotatedEmbedded embedded;
+    public ThirdPartyEmbedded embedded;
     @Id
     private ObjectId id;
 

@@ -68,7 +68,7 @@ public class EntityModel {
      * @param builder the builder to pull values from
      */
     EntityModel(Mapper mapper, EntityModelBuilder builder) {
-        type = builder.type();
+        type = builder.targetType();
         this.mapper = mapper;
         if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
             throw new MappingException(Sofia.noInnerClasses(type.getName()));
@@ -79,7 +79,7 @@ public class EntityModel {
         discriminatorKey = builder.discriminatorKey();
         discriminator = builder.discriminator();
 
-        this.annotations = builder.annotationsMap();
+        this.annotations = builder.annotations();
         this.propertyModelsByName = new LinkedHashMap<>();
         this.propertyModelsByMappedName = new LinkedHashMap<>();
         builder.propertyModels().forEach(modelBuilder -> {

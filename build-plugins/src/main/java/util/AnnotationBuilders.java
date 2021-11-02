@@ -246,7 +246,9 @@ public class AnnotationBuilders extends AbstractMojo {
                 String literal = defaultValue.getLiteral();
                 var annot = defaultValue.getAnnotation();
                 if (annot != null) {
-                    literal = format("%sBuilder.%s().build()", annot.getName(), builderMethodName(annot.getName()));
+                    literal = format("%sBuilder.%s().build()",
+                        annot.getQualifiedName().replace(annot.getName(), "") + "builders." + annot.getName(),
+                        builderMethodName(annot.getName()));
                 } else if (literal != null && element.getType().isArray()) {
                     literal = format("new %s%s", element.getType().getName(), literal);
                 }

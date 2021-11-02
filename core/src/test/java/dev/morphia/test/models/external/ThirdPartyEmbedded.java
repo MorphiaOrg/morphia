@@ -2,7 +2,7 @@ package dev.morphia.test.models.external;
 
 import java.util.Objects;
 
-public class UnannotatedEmbedded {
+public class ThirdPartyEmbedded {
     public String field;
     public Long number;
 
@@ -16,10 +16,10 @@ public class UnannotatedEmbedded {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof UnannotatedEmbedded)) {
+        if (!(o instanceof ThirdPartyEmbedded)) {
             return false;
         }
-        UnannotatedEmbedded that = (UnannotatedEmbedded) o;
+        ThirdPartyEmbedded that = (ThirdPartyEmbedded) o;
         return Objects.equals(field, that.field) && Objects.equals(number, that.number);
     }
 }

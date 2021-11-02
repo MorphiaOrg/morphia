@@ -8,7 +8,7 @@ import dev.morphia.EntityInterceptor;
 import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.builders.EmbeddedBuilder;
+import dev.morphia.annotations.experimental.ExternalEntity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
@@ -34,11 +34,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
-
-import static dev.morphia.annotations.builders.EmbeddedBuilder.embeddedBuilder;
-import static dev.morphia.sofia.Sofia.entityOrEmbedded;
-
-
 /**
  * @morphia.internal
  */
@@ -52,6 +47,7 @@ public class Mapper {
      * @morphia.internal
      */
     public static final String IGNORED_FIELDNAME = ".";
+    public static final List<Class<? extends Annotation>> MAPPING_ANNOTATIONS = List.of(Entity.class, Embedded.class, ExternalEntity.class);
 
     /**
      * Set of classes that registered by this mapper
@@ -335,7 +331,7 @@ public class Mapper {
      */
     public <T> boolean isMappable(Class<T> type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        return hasAnnotation(actual, List.of(Entity.class, Embedded.class));
+        return hasAnnotation(actual, MAPPING_ANNOTATIONS);
     }
 
     /**
@@ -367,40 +363,13 @@ public class Mapper {
     public List<EntityModel> map(List<Class> classes) {
         for (Class type : classes) {
             if (!isMappable(type)) {
-                throw new MappingException(entityOrEmbedded(type.getName()));
+                throw new MappingException(Sofia.mappingAnnotationNeeded(type.getName()));
             }
         }
         return classes.stream()
                       .map(this::getEntityModel)
                       .filter(Objects::nonNull)
                       .collect(Collectors.toList());
-    }
-
-    /**
-     * Maps an external class.  This is intended for use on types needed in a system but come from an external source where the more
-     * traditional approach of decorating the type in source with Morphia annotations is not possible.
-     *
-     * @param annotation the annotation to apply.  pass null to apply the defaults.
-     * @param type       the type to map
-     * @param <A>        the annotation to apply.  Currently only {@code @Embedded} is supported
-     * @return the list of mapped classes
-     * @morphia.experimental
-     * @see EmbeddedBuilder
-     * @since 2.1
-     */
-    public <A extends Annotation> EntityModel mapExternal(@Nullable A annotation, Class type) {
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        EntityModel model = mappedEntities.get(actual);
-
-        if (model == null) {
-            if (annotation == null) {
-                annotation = (A) embeddedBuilder().build();
-            }
-            model = register(createEntityModel(type, annotation));
-        }
-
-
-        return model;
     }
 
     /**
@@ -545,11 +514,6 @@ public class Mapper {
                || Arrays.stream(clazz.getInterfaces())
                         .map(i -> hasAnnotation(i, annotations))
                         .reduce(false, (l, r) -> l || r);
-    }
-
-    private <T, A extends Annotation> EntityModel createEntityModel(Class<T> clazz, A annotation) {
-        return new EntityModelBuilder(this, annotation, clazz)
-            .build();
     }
 
 }

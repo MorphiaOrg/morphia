@@ -38,7 +38,10 @@ import dev.morphia.test.models.errors.ContainsMapLike;
 import dev.morphia.test.models.errors.ContainsXKeyMap;
 import dev.morphia.test.models.errors.OuterClass.NonStaticInnerClass;
 import dev.morphia.test.models.external.HoldsUnannotated;
-import dev.morphia.test.models.external.UnannotatedEmbedded;
+import dev.morphia.test.models.external.ThirdPartyEmbedded;
+import dev.morphia.test.models.external.ThirdPartyEmbeddedProxy;
+import dev.morphia.test.models.external.ThirdPartyEntity;
+import dev.morphia.test.models.external.ThirdPartyEntityProxy;
 import dev.morphia.test.models.generics.Another;
 import dev.morphia.test.models.generics.Child;
 import dev.morphia.test.models.generics.EmbeddedType;
@@ -65,7 +68,6 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import static dev.morphia.Morphia.createDatastore;
-import static dev.morphia.annotations.builders.EmbeddedBuilder.embeddedBuilder;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
 import static java.util.stream.Collectors.toList;
@@ -205,7 +207,7 @@ public class TestMapping extends TestBase {
         });
 
         assertThrows(MappingException.class, () -> {
-            getMapper().map(UnannotatedEmbedded.class);
+            getMapper().map(ThirdPartyEmbedded.class);
             fail("Missing @Entity and @Embedded should have been caught");
         });
 
@@ -344,20 +346,72 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testExternalClass() {
-        getDs().getMapper().mapPackage(UnannotatedEmbedded.class.getPackageName());
+        assertFalse(getDs().getMapper().isMapped(HoldsUnannotated.class));
+        assertFalse(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
+        assertFalse(getDs().getMapper().isMapped(ThirdPartyEntity.class));
 
-        assertTrue(getDs().getMapper().isMapped(HoldsUnannotated.class));
-        assertFalse(getDs().getMapper().isMapped(UnannotatedEmbedded.class),
-            "Should not be able to map unannotated classes with mapPackage");
-        assertNotNull(getDs().getMapper().mapExternal(embeddedBuilder().build(), UnannotatedEmbedded.class),
-            "Should be able to map explicitly passed class references");
+        assertThrows(MappingException.class, () -> getDs().getMapper().map(ThirdPartyEntity.class));
+        assertThrows(MappingException.class, () -> getDs().getMapper().map(ThirdPartyEmbedded.class));
+
+        getDs().getMapper().mapPackageFromClass(HoldsUnannotated.class);
+
+        assertTrue(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
+        assertTrue(getDs().getMapper().isMapped(ThirdPartyEntity.class));
+
         HoldsUnannotated holdsUnannotated = new HoldsUnannotated();
-        holdsUnannotated.embedded = new UnannotatedEmbedded();
+        holdsUnannotated.embedded = new ThirdPartyEmbedded();
         holdsUnannotated.embedded.number = 42L;
         holdsUnannotated.embedded.field = "Left";
         getDs().save(holdsUnannotated);
-        HoldsUnannotated first = getDs().find(HoldsUnannotated.class).first();
-        assertEquals(first, holdsUnannotated);
+
+        assertEquals(getDs().find(HoldsUnannotated.class).first(), holdsUnannotated);
+
+        withOptions(MapperOptions.DEFAULT, () -> {
+            assertFalse(getDs().getMapper().map(ThirdPartyEntityProxy.class).isEmpty());
+            assertFalse(getDs().getMapper().map(ThirdPartyEmbeddedProxy.class).isEmpty());
+
+            EntityModel model = getDs().getMapper().getEntityModel(ThirdPartyEntity.class);
+            assertEquals(model.getCollectionName(), "extEnt");
+            assertEquals(model.getDiscriminator(), "ext");
+            assertEquals(model.getDiscriminatorKey(), "_xt");
+            Entity annotation = model.getAnnotation(Entity.class);
+            assertEquals(annotation.concern(), "JOURNALED");
+            assertEquals(annotation.cap().count(), 123);
+            assertEquals(annotation.cap().value(), 456);
+
+            ThirdPartyEntity entity = new ThirdPartyEntity();
+            entity.field = "hi";
+            entity.number = 42L;
+            getDs().save(entity);
+
+            assertEquals(getDs().find(ThirdPartyEntity.class).first(), entity);
+        });
+    }
+
+    @Test
+    public void testExternalClassUsingMethods() {
+        withOptions(MapperOptions.builder()
+                                 .propertyDiscovery(PropertyDiscovery.METHODS)
+                                 .build(), () -> {
+            assertFalse(getDs().getMapper().map(ThirdPartyEntityProxy.class).isEmpty());
+            assertFalse(getDs().getMapper().map(ThirdPartyEmbeddedProxy.class).isEmpty());
+
+            EntityModel model = getDs().getMapper().getEntityModel(ThirdPartyEntity.class);
+            assertEquals(model.getCollectionName(), "extEnt");
+            assertEquals(model.getDiscriminator(), "ext");
+            assertEquals(model.getDiscriminatorKey(), "_xt");
+            Entity annotation = model.getAnnotation(Entity.class);
+            assertEquals(annotation.concern(), "JOURNALED");
+            assertEquals(annotation.cap().count(), 123);
+            assertEquals(annotation.cap().value(), 456);
+
+            ThirdPartyEntity entity = new ThirdPartyEntity();
+            entity.setField("hi");
+            entity.setNumber(42L);
+            getDs().save(entity);
+
+            assertEquals(getDs().find(ThirdPartyEntity.class).first(), entity);
+        });
     }
 
     @Test(dataProvider = "queryFactories")

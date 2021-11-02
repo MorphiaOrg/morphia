@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
 public class EntityModelBuilder {
     private final List<PropertyModelBuilder> propertyModels = new ArrayList<>();
     private final List<EntityModel> interfaceModels = new ArrayList<>();
-    private final Map<Class<? extends Annotation>, Annotation> annotationsMap = new HashMap<>();
+    private final Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
     private final Set<Class<?>> classes = new LinkedHashSet<>();
     private final Set<Class<?>> interfaces = new LinkedHashSet<>();
-    private final Set<Annotation> annotations = new LinkedHashSet<>();
     private final Map<String, Map<String, Type>> parameterization = new LinkedHashMap<>();
     private final Mapper mapper;
-    private Class<?> type;
+    private final Class<?> type;
+    private Class<?> targetType;
     private boolean discriminatorEnabled;
     private String discriminator;
     private String discriminatorKey;
@@ -57,6 +57,7 @@ public class EntityModelBuilder {
     public EntityModelBuilder(Mapper mapper, Class<?> type) {
         this.mapper = mapper;
         this.type = type;
+        this.targetType = type;
 
         if (type.getSuperclass() != null) {
             try {
@@ -84,23 +85,6 @@ public class EntityModelBuilder {
     }
 
     /**
-     * @param mapper  the mapper
-     * @param annotation the annotation
-     * @param clazz      the type
-     * @param <T>        the class type
-     * @param <A>        the annotation type
-     * @morphia.internal
-     */
-    public <T, A extends Annotation> EntityModelBuilder(Mapper mapper, A annotation, Class<T> clazz) {
-        this(mapper, clazz);
-        LinkedHashSet<Annotation> temp = new LinkedHashSet<>();
-        temp.add(annotation);
-        temp.addAll(annotations);
-        annotations.clear();
-        annotations.addAll(temp);
-    }
-
-    /**
      * Adds a property to the model
      *
      * @param builder the new builder to add
@@ -124,13 +108,6 @@ public class EntityModelBuilder {
     }
 
     /**
-     * @return the annotation on this model
-     */
-    public Set<Annotation> annotations() {
-        return annotations;
-    }
-
-    /**
      * Adds an annotation
      *
      * @param type the annotation to add
@@ -138,7 +115,7 @@ public class EntityModelBuilder {
      * @since 2.3
      */
     public EntityModelBuilder annotation(Annotation type) {
-        annotations.add(type);
+        annotations.putIfAbsent(type.annotationType(), type);
         return this;
     }
 
@@ -148,8 +125,6 @@ public class EntityModelBuilder {
      * @return the new instance
      */
     public EntityModel build() {
-        annotations.forEach(a -> annotationsMap.putIfAbsent(a.annotationType(), a));
-
         for (MorphiaConvention convention : mapper.getOptions().getConventions()) {
             convention.apply(mapper, this);
         }
@@ -225,7 +200,7 @@ public class EntityModelBuilder {
     @SuppressWarnings("unchecked")
     @Nullable
     public <A extends Annotation> A getAnnotation(Class<A> type) {
-        return (A) annotationsMap.get(type);
+        return (A) annotations.get(type);
     }
 
     public TypeData<?> getTypeData(Class<?> type, TypeData<?> suggested, Type genericType) {
@@ -240,6 +215,14 @@ public class EntityModelBuilder {
             }
         }
         return suggested;
+    }
+
+    /**
+     * @param type the annotation class
+     * @return the annotation if it exists
+     */
+    public boolean hasAnnotation(Class<? extends Annotation> type) {
+        return annotations.containsKey(type);
     }
 
     /**
@@ -262,19 +245,6 @@ public class EntityModelBuilder {
     }
 
     /**
-     * @param type the annotation class
-     * @return the annotation if it exists
-     */
-    public boolean hasAnnotation(Class<? extends Annotation> type) {
-        for (Annotation annotation : annotations) {
-            if (type.equals(annotation.annotationType())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * @return the interfaces implemented by this model or its super types
      */
     public List<EntityModel> interfaces() {
@@ -286,23 +256,6 @@ public class EntityModelBuilder {
      */
     public boolean isDiscriminatorEnabled() {
         return discriminatorEnabled;
-    }
-
-    /**
-     * @return the super class of this type or null
-     */
-    @Nullable
-    public EntityModel superclass() {
-        return superclass;
-    }
-
-    /**
-     * The type of this model
-     *
-     * @return the type
-     */
-    public Class<?> type() {
-        return type;
     }
 
     /**
@@ -327,15 +280,42 @@ public class EntityModelBuilder {
     }
 
     /**
-     * Sets the type of this model
+     * @return the super class of this type or null
+     */
+    @Nullable
+    public EntityModel superclass() {
+        return superclass;
+    }
+
+    /**
+     * The target type of this model
      *
-     * @param type the type
+     * @return the type
+     * @since 2.3
+     */
+    public Class<?> targetType() {
+        return targetType;
+    }
+
+    /**
+     * The target type of this model
+     *
+     * @param targetType the type
      * @return this
      * @since 2.3
      */
-    public EntityModelBuilder type(Class<?> type) {
-        this.type = type;
+    public EntityModelBuilder targetType(Class<?> targetType) {
+        this.targetType = targetType;
         return this;
+    }
+
+    /**
+     * The type of this model
+     *
+     * @return the type
+     */
+    public Class<?> type() {
+        return type;
     }
 
     /**
@@ -357,19 +337,21 @@ public class EntityModelBuilder {
         return this;
     }
 
-    protected Map<Class<? extends Annotation>, Annotation> annotationsMap() {
-        return annotationsMap;
+    protected Map<Class<? extends Annotation>, Annotation> annotations() {
+        return annotations;
     }
 
     protected String getCollectionName() {
         Entity entityAn = getAnnotation(Entity.class);
         return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
                ? entityAn.value()
-               : mapper.getOptions().getCollectionNaming().apply(type.getSimpleName());
+               : mapper.getOptions().getCollectionNaming().apply(targetType.getSimpleName());
     }
 
     private void buildHierarchy(Class<?> type) {
-        annotations.addAll(Set.of(type.getAnnotations()));
+        for (Annotation annotation : type.getAnnotations()) {
+            annotation(annotation);
+        }
         interfaces.addAll(findInterfaces(type));
 
         classes.addAll(findParentClasses(type.getSuperclass()));
@@ -379,7 +361,9 @@ public class EntityModelBuilder {
     private List<? extends Class<?>> findInterfaces(Class<?> type) {
         List<Class<?>> list = new ArrayList<>();
         List<Class<?>> interfaces = Arrays.asList(type.getInterfaces());
-        annotations.addAll(Set.of(type.getAnnotations()));
+        for (Annotation annotation : type.getAnnotations()) {
+            annotation(annotation);
+        }
         list.addAll(interfaces);
         list.addAll(interfaces.stream()
                               .flatMap(i -> findInterfaces(i).stream())
@@ -403,7 +387,9 @@ public class EntityModelBuilder {
         Set<Class<?>> classes = new LinkedHashSet<>();
         while (type != null && !type.isEnum() && !type.equals(Object.class)) {
             classes.add(type);
-            annotations.addAll(Set.of(type.getAnnotations()));
+            for (Annotation annotation : type.getAnnotations()) {
+                annotation(annotation);
+            }
             type = type.getSuperclass();
         }
         return classes;

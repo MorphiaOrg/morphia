@@ -2,9 +2,12 @@ package dev.morphia.mapping.conventions;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MethodAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.sofia.Sofia;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -28,7 +31,7 @@ public class MethodDiscovery implements MorphiaConvention {
             List<Class<?>> list = new ArrayList<>(List.of(builder.type()));
             list.addAll(builder.classHierarchy());
             for (Class<?> type : list) {
-                processMethods(type);
+                processMethods(builder, type);
             }
         }
     }
@@ -39,7 +42,20 @@ public class MethodDiscovery implements MorphiaConvention {
                    .collect(Collectors.toList());
     }
 
-    private void processMethods(Class<?> type) {
+    @NotNull
+    private Method getTargetMethod(EntityModelBuilder builder, Method method) {
+        try {
+            if (builder.type().equals(builder.targetType())) {
+                return method;
+            }
+            return builder.targetType().getDeclaredMethod(method.getName(), method.getParameterTypes());
+        } catch (ReflectiveOperationException e) {
+            throw new MappingException(Sofia.mismatchedMethodOnExternalType(method.getName(),
+                method.getParameterTypes(), builder.type().getName(), builder.targetType().getName()));
+        }
+    }
+
+    private void processMethods(EntityModelBuilder builder, Class<?> type) {
         class Methods {
             private final Method getter;
             private final Method setter;
@@ -70,13 +86,15 @@ public class MethodDiscovery implements MorphiaConvention {
 
                 entityModelBuilder.addProperty()
                                   .name(entry.getKey())
-                                  .accessor(new MethodAccessor(methods.getter, methods.setter))
+                                  .accessor(new MethodAccessor(getTargetMethod(builder, methods.getter),
+                                      getTargetMethod(builder, methods.setter)))
                                   .annotations(discoverAnnotations(methods.getter, methods.setter))
                                   .typeData(typeData)
                                   .discoverMappedName();
             }
         }
     }
+
 
     private String stripPrefix(Method method, int size) {
         String name = method.getName().substring(size);

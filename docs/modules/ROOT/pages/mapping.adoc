@@ -2,18 +2,18 @@
 
 === Classes
 
-Mapping is triggered by annotating your type with the xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] annotation.  This
-instructs Morphia to inspect your type compute various metadata items about it.  If you wish use a particular type as "top level" type,
-you will need to annotate one field with the xref:javadoc:dev/morphia/annotations/Id.html#[@Id] annotation.  Not every type will need to
+Mapping is triggered by annotating your type with the xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] annotation.This
+instructs Morphia to inspect your type compute various metadata items about it.If you wish use a particular type as "top level" type,
+you will need to annotate one field with the xref:javadoc:dev/morphia/annotations/Id.html#[@Id] annotation.Not every type will need to
 serve as a top level type (read: be mapped to a collection) and so this ID field is optional with the caveat mentioned in the call out
-note below.  Top level types have their own collections whose names can be mapped via the `value` parameter. Leaving this value
+note below.Top level types have their own collections whose names can be mapped via the `value` parameter.Leaving this value
 blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in
-xref:javadoc:dev/morphia/mapping/MapperOptions.html#[MapperOptions].  That default is currently the camel case value of the class's
-simple name.  For example, to map a `UserProfile` entity under this strategy, the collection name would be mapped to `userProfile`.
+xref:javadoc:dev/morphia/mapping/MapperOptions.html#[MapperOptions].That default is currently the camel case value of the class's
+simple name.For example, to map a `UserProfile` entity under this strategy, the collection name would be mapped to `userProfile`.
 
 Any type annotated with xref:javadoc:dev/morphia/annotations/Entity.html#[@Entity] may optionally have a field annotated with
-xref:javadoc:dev/morphia/annotations/Id.html#[@Id]. The type of the field can be any type so long as Morphia, or the driver, has a codec
-that can map the data to and from mongodb.  When mapping an entity, one can also define <<_indexing, indexes>> and
+xref:javadoc:dev/morphia/annotations/Id.html#[@Id].The type of the field can be any type so long as Morphia, or the driver, has a codec
+that can map the data to and from mongodb.When mapping an entity, one can also define <<_indexing, indexes>> and
 <<_schema_validation,schema validations>> as part of the entity declaration as well.
 
 [NOTE]
@@ -65,13 +65,61 @@ For maven users, it's as simple as adding one line to the Kotlin maven plugin `<
 
 === External types
 
-Some times persisted types come from external libraries whose source is either unavailable or simply can't be modified.
+Sometimes persisted types come from external libraries whose source is either unavailable or simply can't be modified.
 Using these types would be impossible give then annotation requirements as stated above.
-Morphia 2.1 introduced a new experimental API that loosens these restrictions a bit.
-Using xref:javadoc:dev/morphia/mapping/Mapper.html#mapExternal#(A,java.lang.Class)[Mapper#mapExternal] these external types can be passed in for use as embedded types in other entities.
-An optional instance of `@Embedded` can created using the
-xref:javadoc:dev/morphia/annotations/experimental/EmbeddedBuilder.html#[EmbeddedBuilder].
-A null can be passed in to simply accept the default values.
+Morphia 2.3 introduces a new experimental API that loosens these restrictions a bit.
+Using xref:javadoc:dev/morphia/annotations/experimental/ExternalEntity.html[ExternalEntity] these external types can be mapped using a proxy type.
+
+Consider the following two types.
+This first type is an external entity which, for whatever reason, can not be annotated with Morphia's annotations.
+
+[source,java]
+----
+public class ThirdPartyEntity {
+    public String field;
+    public Long number;
+
+    // other methods
+
+    @Override
+    public int hashCode() {
+        // ...
+    }
+
+    @Override
+    public boolean equals(Object o) {
+       // ...
+    }
+}
+----
+
+This class could contain any amount of other code but what we're interested in is mapping those two fields.
+To accomplish this, we define a mix-in type:
+
+[source,java]
+----
+@ExternalEntity(value = "extEnt",
+    discriminator = "ext",
+    discriminatorKey = "_xt",
+    concern = "JOURNALED",
+    cap = @CappedAt(count = 123, value = 456),
+    target = ThirdPartyEntity.class)
+public class ThirdPartyEntityMixIn {
+    public String field;
+    @Id
+    public Long number;
+}
+----
+
+Here you'll note the use of the new annotation.  `ExternalEntity` looks just like xref:javadoc:dev/morphia/annotations/Entity.html[Entity]
+but has a new field called `targetType`.
+As you can see here, we list the target type as our original `ThirdPartyEntity`.
+But this mix-in type otherwise looks just like the external type we're trying to map.
+Annotations can be applied to the fields and methods on the mix-in types and those values will be applied to the mapping data as normal.
+Using this approach, we can define alternate names for fields and map collection names, etc., as if we owned the original type all without touching it.
+As with all top level entities, if you want to store this type in its own collection, you'll need to mark a field as the ID field.
+But once this mapping is done, you can then query against the original type just as you would any other Morphia entity.
+The mix-in type can happily be ignored once you're done with mapping.
 
 [NOTE]
 ====
@@ -81,8 +129,8 @@ This API is experimental and is likely to shift a bit as it sees usage and feedb
 === Versioning
 
 Entities can be versioned to ensure that changes are applied serially and that no other processes are modifying an object in between the time it's fetched, modified, and written back to the database.
-To achieve this, simply add a field to a type, it can be a `long` or a `Long`, and annotate that field with
-xref:javadoc:dev/morphia/annotations/Version.html#[@Version].
+To achieve this, simply add a field to a type, it can be a `long` or a
+`Long`, and annotate that field with  xref:javadoc:dev/morphia/annotations/Version.html#[@Version].
 Morphia will take care of the rest.
 If an object is fetched and another process updates the corresponding document in the database before it can be persisted back, an exception will be thrown when the write is attempted.
 
@@ -96,7 +144,8 @@ If neither of these conditions are true, the entity will not be persisted.
 === Fields
 
 By default, any non-static field on a mapped class will be processed for persistence.
-If a field is to be excluded from the mapping, it can be decorated with the `transient` keyword, annotated with  xref:javadoc:dev/morphia/annotations/Transient.html#[@Transient], or with the `java.beans.Transient` annotation.
+If a field is to be excluded from the mapping, it can be decorated with the `transient` keyword, annotated with
+xref:javadoc:dev/morphia/annotations/Transient.html#[@Transient], or with the `java.beans.Transient` annotation.
 Otherwise all fields will be included that are defined on the mapped class and any super type.
 However, Morphia will ignore fields in any super types found in `java*` packages which includes the standard JDK classes and the Java EE APIs.
 
@@ -105,8 +154,7 @@ xref:javadoc:dev/morphia/annotations/Property.html#[@Property] annotation, a new
 During a schema evolution, it is possible to load a field from an old name as well using the
 xref:javadoc:dev/morphia/annotations/AlsoLoad.html#[@AlsoLoad] annotation.
 Using this annotation, multiple old names can be used to find a field's value in a returned document from query.
-However, only the field's name or the value specified in the `@Property`
-annotation will be used when writing documents back to the database.
+However, only the field's name or the value specified in the `@Property` annotation will be used when writing documents back to the database.
 Similarly, if data is only intended to be loaded from the database but never written back, that field can be annotated with xref:javadoc:dev/morphia/annotations/LoadOnly.html#[@LoadOnly]
 
 If you do not specify a name via `@Property`, the default field naming strategy will be used.
@@ -120,23 +168,16 @@ This can be done via the xref:javadoc:dev/morphia/annotations/Indexed.html#[@Ind
 
 [WARNING]
 ====
-Method-based mapping is new in 2.2. While testing has been done to ensure everything works the same as with fields, there may some
-esoteric combinations of features that reveal a gap in functionality.Please file an https://github.com/MorphiaOrg/morphia/issues[issue]
+Method-based mapping is new in 2.2. While testing has been done to ensure everything works the same as with fields, there may some esoteric combinations of features that reveal a gap in functionality.Please file an https://github.com/MorphiaOrg/morphia/issues[issue]
 if you encounter such a case.
 ====
 
-As of 2.2, mapping information can be defined on methods instead of fields.All the same rules apply, simply the location of the
-annotations are moved to the getters and/or setters.Annotations can live on either the `get` or the `set` method and Morphia will
-detect them.If the same annotation is applied to both the `get` and the `set` behavior is unpredictable so care should be taken to
-avoid such a scenario.Customs in other libraries tend to favor annotating the `get` methods and this is also recommended here for
-consistency.
+As of 2.2, mapping information can be defined on methods instead of fields.All the same rules apply, simply the location of the annotations are moved to the getters and/or setters.Annotations can live on either the `get` or the `set` method and Morphia will detect them.If the same annotation is applied to both the `get` and the `set` behavior is unpredictable so care should be taken to avoid such a scenario.Customs in other libraries tend to favor annotating the `get` methods and this is also recommended here for consistency.
 
-In order for methods to be considered as definitions of persistable properties, the Java Bean Spec largely applies here.This has some
-very basic rules for your methods:
+In order for methods to be considered as definitions of persistable properties, the Java Bean Spec largely applies here.This has some very basic rules for your methods:
 
 1. `get` methods take no parameters
-2. `set` methods take one parameter and the type of that parameter should generally match the return type of the getter.These setter
-methods also return void.
+2. `set` methods take one parameter and the type of that parameter should generally match the return type of the getter.These setter methods also return void.
 3. If a property is a boolean type, the getter often uses `is` rather than `get` yielding a method named, e.g., `isEnabled() rather than
 `getEnabled()`.
 4. The type of the property is determined by the return value of the getter.
@@ -149,6 +190,6 @@ allowing for the configuration of either field or method mapping.
 
 [NOTE]
 ====
-Mapping is currently done via either fields or by methods.  It is not currently allowed to map using both schemes simultaneously.  This will
+Mapping is currently done via either fields or by methods.It is not currently allowed to map using both schemes simultaneously.This will
 likely change in the future but for now is not allowed.
 ====

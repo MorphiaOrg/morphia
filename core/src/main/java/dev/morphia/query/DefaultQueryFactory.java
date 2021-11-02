@@ -15,8 +15,6 @@ public class DefaultQueryFactory implements QueryFactory {
 
     @Override
     public <T> Query<T> createQuery(Datastore datastore, Class<T> type, @Nullable Document query) {
-        return query != null
-               ? new MorphiaQuery<>(datastore, type, query)
-               : new MorphiaQuery<>(datastore, null, type);
+        return new MorphiaQuery<>(datastore, type, query);
     }
 }
