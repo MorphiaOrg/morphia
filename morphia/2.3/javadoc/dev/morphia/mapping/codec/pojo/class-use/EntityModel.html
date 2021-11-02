@@ -498,14 +498,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;<br><a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Mapper.</span><code><span class="memberNameLink"><a href="../../../Mapper.html#mapExternal(A,java.lang.Class)">mapExternal</a></span>​(A&nbsp;annotation,
-           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;type)</code></th>
-<td class="colLast">
-<div class="block">Maps an external class.</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code><a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Mapper.</span><code><span class="memberNameLink"><a href="../../../Mapper.html#register(dev.morphia.mapping.codec.pojo.EntityModel)">register</a></span>​(<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;entityModel)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -759,8 +751,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">EntityModelImporter.</span><code><span class="memberNameLink"><a href="../experimental/EntityModelImporter.html#importModels()">importModels</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">EntityModelImporter.</span><code><span class="memberNameLink"><a href="../experimental/EntityModelImporter.html#getModels(dev.morphia.mapping.Mapper)">getModels</a></span>​(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<td class="colLast">
+<div class="block">Returns the models to be introduced by this importer.</div>
+</td>
 </tr>
 </tbody>
 </table>

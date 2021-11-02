@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -406,11 +406,26 @@ implements org.bson.codecs.configuration.CodecProvider</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;,​org.bson.codecs.Codec&lt;?&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCodecs()">getCodecs</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>protected <a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDatastore()">getDatastore</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>protected <a href="../Mapper.html" title="class in dev.morphia.mapping">Mapper</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMapper()">getMapper</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;org.bson.codecs.pojo.PropertyCodecProvider&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPropertyCodecProviders()">getPropertyCodecProviders</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;org.bson.codecs.Codec&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRefreshCodec(T,org.bson.codecs.configuration.CodecRegistry)">getRefreshCodec</a></span>​(T&nbsp;entity,
                org.bson.codecs.configuration.CodecRegistry&nbsp;registry)</code></th>
@@ -479,6 +494,33 @@ public&nbsp;&lt;T&gt;&nbsp;org.bson.codecs.Codec&lt;T&gt;&nbsp;get​(<a href="h
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>get</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.configuration.CodecProvider</code></dd>
 </dl>
+</li>
+</ul>
+<a id="getCodecs()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCodecs</h4>
+<pre class="methodSignature">protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;,​org.bson.codecs.Codec&lt;?&gt;&gt;&nbsp;getCodecs()</pre>
+</li>
+</ul>
+<a id="getDatastore()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDatastore</h4>
+<pre class="methodSignature">protected&nbsp;<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;getDatastore()</pre>
+</li>
+</ul>
+<a id="getPropertyCodecProviders()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getPropertyCodecProviders</h4>
+<pre class="methodSignature">protected&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;org.bson.codecs.pojo.PropertyCodecProvider&gt;&nbsp;getPropertyCodecProviders()</pre>
 </li>
 </ul>
 <a id="getRefreshCodec(java.lang.Object,org.bson.codecs.configuration.CodecRegistry)">

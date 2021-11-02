@@ -339,7 +339,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public interface <span class="typeNameLabel">EntityModelImporter</span></pre>
+<pre><a href="../../../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<a href="../../../../annotations/internal/MorphiaExperimental.html" title="annotation in dev.morphia.annotations.internal">@MorphiaExperimental</a>
+public interface <span class="typeNameLabel">EntityModelImporter</span></pre>
+<div class="block">Defines an import to allow for the external definition and import of model and codec definitions.
+ <p>
+ NOTE:  This interface is marked as an internal interface but is intended for use in more advanced scenarios.  While this API should
+ remain relatively stable over time, breaking changes might happen occasionally.</p></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
@@ -366,13 +372,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../MorphiaCodecProvider.html" title="class in dev.morphia.mapping.codec">MorphiaCodecProvider</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCodecProvider()">getCodecProvider</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCodecProvider(dev.morphia.Datastore)">getCodecProvider</a></span>​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<td class="colLast">
+<div class="block">Returns the codec provider responsible for creating the codecs for the <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo"><code>EntityModel</code></a>s returned by this importer.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#importModels()">importModels</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getModels(dev.morphia.mapping.Mapper)">getModels</a></span>​(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<td class="colLast">
+<div class="block">Returns the models to be introduced by this importer.</div>
+</td>
 </tr>
 </tbody></table>
 </li>
@@ -391,22 +401,36 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="getCodecProvider()">
+<a id="getCodecProvider(dev.morphia.Datastore)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getCodecProvider</h4>
-<pre class="methodSignature"><a href="../../MorphiaCodecProvider.html" title="class in dev.morphia.mapping.codec">MorphiaCodecProvider</a>&nbsp;getCodecProvider()</pre>
+<pre class="methodSignature"><a href="../../MorphiaCodecProvider.html" title="class in dev.morphia.mapping.codec">MorphiaCodecProvider</a>&nbsp;getCodecProvider​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
+<div class="block">Returns the codec provider responsible for creating the codecs for the <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo"><code>EntityModel</code></a>s returned by this importer.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>datastore</code> - The datastore to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the provider</dd>
+</dl>
 </li>
 </ul>
-<a id="importModels()">
+<a id="getModels(dev.morphia.mapping.Mapper)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>importModels</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&nbsp;importModels()</pre>
+<h4>getModels</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&gt;&nbsp;getModels​(<a href="../../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+<div class="block">Returns the models to be introduced by this importer.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>mapper</code> - the Mapper to use while building the <a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo"><code>EntityModel</code></a>s</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the models</dd>
+</dl>
 </li>
 </ul>
 </li>
