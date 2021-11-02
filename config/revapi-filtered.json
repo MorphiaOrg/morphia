@@ -13,6 +13,10 @@
             "match": "@dev.morphia.annotations.internal.MorphiaExperimental ^*;"
           },
           {
+            "matcher": "java",
+            "match": "class dev.morphia.sofia.Sofia {}"
+          },
+          {
             "matcher": "java-package",
             "match": "dev.morphia.mapping.codec"
           },

@@ -1,6 +1,8 @@
 package dev.morphia.mapping.codec.pojo.experimental;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaExperimental;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -16,10 +18,13 @@ import java.util.List;
  * @morphia.internal
  * @since 2.3
  */
+@MorphiaInternal
+@MorphiaExperimental
 public interface EntityModelImporter {
     /**
      * Returns the codec provider responsible for creating the codecs for the {@link EntityModel}s returned by this importer.
      *
+     * @param datastore The datastore to use
      * @return the provider
      */
     MorphiaCodecProvider getCodecProvider(Datastore datastore);
