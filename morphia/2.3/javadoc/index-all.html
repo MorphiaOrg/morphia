@@ -1378,6 +1378,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Defines a function to use the class name for the discriminator value</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#clearTransactionContext()">clearTransactionContext()</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/AggregationOptions.html#clientSession()">clientSession()</a></span> - Method in class dev.morphia.aggregation.experimental.<a href="dev/morphia/aggregation/experimental/AggregationOptions.html" title="class in dev.morphia.aggregation.experimental">AggregationOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#clientSession()">clientSession()</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
@@ -4566,6 +4568,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getSkip()">getSkip()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#getSnapshotTimestamp()">getSnapshotTimestamp()</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getSort()">getSort()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#getSort()">getSort()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
@@ -4616,6 +4620,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the PropertyModel found at the end of a path.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/OperationTarget.html#getTarget()">getTarget()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/OperationTarget.html" title="class in dev.morphia.query">OperationTarget</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#getTransactionContext()">getTransactionContext()</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#getTransactionOptions()">getTransactionOptions()</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
 <dd>&nbsp;</dd>
@@ -7049,6 +7055,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 &nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#notifyMessageSent()">notifyMessageSent()</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#notifyOperationInitiated(java.lang.Object)">notifyOperationInitiated(Object)</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FieldEnd.html#notIn(java.lang.Iterable)">notIn(Iterable&lt;?&gt;)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -8686,8 +8694,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationComment">no longer used</div>
 </div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#setPinnedServerAddress(com.mongodb.ServerAddress)">setPinnedServerAddress(ServerAddress)</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CriteriaContainerImpl.html#setQuery(dev.morphia.query.LegacyQuery)">setQuery(LegacyQuery&lt;?&gt;)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CriteriaContainerImpl.html" title="class in dev.morphia.query">CriteriaContainerImpl</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -8712,11 +8718,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Creates an instance with prepopulated values.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#setSnapshotTimestamp(org.bson.BsonTimestamp)">setSnapshotTimestamp(BsonTimestamp)</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/GeoNear.GeoNearBuilder.html#setSpherical(java.lang.Boolean)">setSpherical(Boolean)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">If true, MongoDB references points using a spherical surface.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/experimental/BaseMorphiaSession.html#setTransactionContext(com.mongodb.ServerAddress,java.lang.Object)">setTransactionContext(ServerAddress, Object)</a></span> - Method in class dev.morphia.experimental.<a href="dev/morphia/experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/Key.html#setType(java.lang.Class)">setType(Class&lt;? extends T&gt;)</a></span> - Method in class dev.morphia.<a href="dev/morphia/Key.html" title="class in dev.morphia">Key</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>

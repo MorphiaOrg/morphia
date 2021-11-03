@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -401,102 +401,128 @@ implements <a href="MorphiaSession.html" title="interface in dev.morphia.experim
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#close()">close</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#clearTransactionContext()">clearTransactionContext</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#commitTransaction()">commitTransaction</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#close()">close</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#commitTransaction()">commitTransaction</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>org.bson.BsonDocument</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClusterTime()">getClusterTime</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>org.bson.BsonTimestamp</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOperationTime()">getOperationTime</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>com.mongodb.ClientSessionOptions</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOptions()">getOptions</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOriginator()">getOriginator</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>com.mongodb.ServerAddress</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPinnedServerAddress()">getPinnedServerAddress</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>org.bson.BsonDocument</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRecoveryToken()">getRecoveryToken</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>com.mongodb.session.ServerSession</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getServerSession()">getServerSession</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>com.mongodb.client.ClientSession</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSession()">getSession</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the session this datastore is attached to or null if none is attached.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
+<td class="colFirst"><code>org.bson.BsonTimestamp</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSnapshotTimestamp()">getSnapshotTimestamp</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTransactionContext()">getTransactionContext</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>com.mongodb.TransactionOptions</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTransactionOptions()">getTransactionOptions</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasActiveTransaction()">hasActiveTransaction</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isCausallyConsistent()">isCausallyConsistent</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notifyMessageSent()">notifyMessageSent</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setPinnedServerAddress(com.mongodb.ServerAddress)">setPinnedServerAddress</a></span>​(com.mongodb.ServerAddress&nbsp;address)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notifyOperationInitiated(java.lang.Object)">notifyOperationInitiated</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;operation)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setRecoveryToken(org.bson.BsonDocument)">setRecoveryToken</a></span>​(org.bson.BsonDocument&nbsp;recoveryToken)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i22" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setSnapshotTimestamp(org.bson.BsonTimestamp)">setSnapshotTimestamp</a></span>​(org.bson.BsonTimestamp&nbsp;bsonTimestamp)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i23" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setTransactionContext(com.mongodb.ServerAddress,java.lang.Object)">setTransactionContext</a></span>​(com.mongodb.ServerAddress&nbsp;serverAddress,
+                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;o)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startTransaction()">startTransaction</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startTransaction(com.mongodb.TransactionOptions)">startTransaction</a></span>​(com.mongodb.TransactionOptions&nbsp;transactionOptions)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(com.mongodb.client.TransactionBody)">withTransaction</a></span>​(com.mongodb.client.TransactionBody&lt;T&gt;&nbsp;transactionBody)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(com.mongodb.client.TransactionBody,com.mongodb.TransactionOptions)">withTransaction</a></span>​(com.mongodb.client.TransactionBody&lt;T&gt;&nbsp;transactionBody,
                com.mongodb.TransactionOptions&nbsp;options)</code></th>
@@ -560,22 +586,6 @@ public&nbsp;com.mongodb.ServerAddress&nbsp;getPinnedServerAddress()</pre>
 <dd><code>getPinnedServerAddress</code>&nbsp;in interface&nbsp;<code>com.mongodb.client.ClientSession</code></dd>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getPinnedServerAddress</code>&nbsp;in interface&nbsp;<code>com.mongodb.session.ClientSession</code></dd>
-</dl>
-</li>
-</ul>
-<a id="setPinnedServerAddress(com.mongodb.ServerAddress)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>setPinnedServerAddress</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setPinnedServerAddress​(@Nullable
-                                   com.mongodb.ServerAddress&nbsp;address)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>setPinnedServerAddress</code>&nbsp;in interface&nbsp;<code>com.mongodb.client.ClientSession</code></dd>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>setPinnedServerAddress</code>&nbsp;in interface&nbsp;<code>com.mongodb.session.ClientSession</code></dd>
 </dl>
 </li>
 </ul>
@@ -697,6 +707,46 @@ public&nbsp;com.mongodb.ServerAddress&nbsp;getPinnedServerAddress()</pre>
 </dl>
 </li>
 </ul>
+<a id="getTransactionContext()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTransactionContext</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;getTransactionContext()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getTransactionContext</code>&nbsp;in interface&nbsp;<code>com.mongodb.session.ClientSession</code></dd>
+</dl>
+</li>
+</ul>
+<a id="setTransactionContext(com.mongodb.ServerAddress,java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setTransactionContext</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setTransactionContext​(com.mongodb.ServerAddress&nbsp;serverAddress,
+                                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;o)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>setTransactionContext</code>&nbsp;in interface&nbsp;<code>com.mongodb.session.ClientSession</code></dd>
+</dl>
+</li>
+</ul>
+<a id="clearTransactionContext()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clearTransactionContext</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;clearTransactionContext()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>clearTransactionContext</code>&nbsp;in interface&nbsp;<code>com.mongodb.session.ClientSession</code></dd>
+</dl>
+</li>
+</ul>
 <a id="getRecoveryToken()">
 <!--   -->
 </a>
@@ -708,6 +758,45 @@ public&nbsp;org.bson.BsonDocument&nbsp;getRecoveryToken()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getRecoveryToken</code>&nbsp;in interface&nbsp;<code>com.mongodb.session.ClientSession</code></dd>
+</dl>
+</li>
+</ul>
+<a id="notifyOperationInitiated(java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>notifyOperationInitiated</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;notifyOperationInitiated​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;operation)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>notifyOperationInitiated</code>&nbsp;in interface&nbsp;<code>com.mongodb.client.ClientSession</code></dd>
+</dl>
+</li>
+</ul>
+<a id="setSnapshotTimestamp(org.bson.BsonTimestamp)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setSnapshotTimestamp</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setSnapshotTimestamp​(org.bson.BsonTimestamp&nbsp;bsonTimestamp)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>setSnapshotTimestamp</code>&nbsp;in interface&nbsp;<code>com.mongodb.session.ClientSession</code></dd>
+</dl>
+</li>
+</ul>
+<a id="getSnapshotTimestamp()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSnapshotTimestamp</h4>
+<pre class="methodSignature">public&nbsp;org.bson.BsonTimestamp&nbsp;getSnapshotTimestamp()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>getSnapshotTimestamp</code>&nbsp;in interface&nbsp;<code>com.mongodb.session.ClientSession</code></dd>
 </dl>
 </li>
 </ul>
