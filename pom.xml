@@ -35,7 +35,7 @@
         <awaitility.version>1.7.0</awaitility.version>
         <bottlerocket.version>0.15</bottlerocket.version>
         <dokka.version>1.5.31</dokka.version>
-        <driver.version>4.2.2</driver.version>
+        <driver.version>4.3.3</driver.version>
         <json.assert.version>1.2.3</json.assert.version>
         <kotlin.version>1.6.0-RC</kotlin.version>
         <maven.version>3.8.1</maven.version>
@@ -125,12 +125,12 @@
             <dependency>
                 <groupId>org.mongodb</groupId>
                 <artifactId>mongodb-driver-sync</artifactId>
-                <version>4.2.2</version>
+                <version>${driver.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mongodb</groupId>
                 <artifactId>mongodb-driver-legacy</artifactId>
-                <version>4.2.2</version>
+                <version>${driver.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
