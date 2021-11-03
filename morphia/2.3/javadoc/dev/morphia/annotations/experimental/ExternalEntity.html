@@ -338,9 +338,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a href="../internal/MorphiaExperimental.html" title="annotation in dev.morphia.annotations.internal">@MorphiaExperimental</a>
 public @interface <span class="memberNameLabel">ExternalEntity</span></pre>
 <div class="block">Marks a class as a "stand in" for an external class whose source can not be properly annotated.  A class annotated with this
- annotation will be processed like any class annotated with <a href="../Entity.html" title="annotation in dev.morphia.annotations"><code>Entity</code></a> however, the resulting information stored will be reference the
+ annotation will be processed like any class annotated with <a href="../Entity.html" title="annotation in dev.morphia.annotations"><code>Entity</code></a> however, the resulting information stored will reference the
  target type instead of the annotated type.  In this way third party classes can be mapped properly in spite of not having access to the
- source, e.g.  See the documentation for more detail.</div>
+ source.  See the documentation for more detail.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
