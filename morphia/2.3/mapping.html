@@ -239,19 +239,19 @@
 <div class="sect2">
 <h3 id="_classes"><a class="anchor" href="#_classes"></a>Classes</h3>
 <div class="paragraph">
-<p>Mapping is triggered by annotating your type with the <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> annotation.  This
-instructs Morphia to inspect your type compute various metadata items about it.  If you wish use a particular type as "top level" type,
-you will need to annotate one field with the <a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a> annotation.  Not every type will need to
+<p>Mapping is triggered by annotating your type with the <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> annotation.This
+instructs Morphia to inspect your type compute various metadata items about it.If you wish use a particular type as "top level" type,
+you will need to annotate one field with the <a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a> annotation.Not every type will need to
 serve as a top level type (read: be mapped to a collection) and so this ID field is optional with the caveat mentioned in the call out
-note below.  Top level types have their own collections whose names can be mapped via the <code>value</code> parameter. Leaving this value
+note below.Top level types have their own collections whose names can be mapped via the <code>value</code> parameter.Leaving this value
 blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in
-<a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">MapperOptions</a>.  That default is currently the camel case value of the class&#8217;s
-simple name.  For example, to map a <code>UserProfile</code> entity under this strategy, the collection name would be mapped to <code>userProfile</code>.</p>
+<a href="javadoc/dev/morphia/mapping/MapperOptions.html" class="page">MapperOptions</a>.That default is currently the camel case value of the class&#8217;s
+simple name.For example, to map a <code>UserProfile</code> entity under this strategy, the collection name would be mapped to <code>userProfile</code>.</p>
 </div>
 <div class="paragraph">
 <p>Any type annotated with <a href="javadoc/dev/morphia/annotations/Entity.html" class="page">@Entity</a> may optionally have a field annotated with
-<a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a>. The type of the field can be any type so long as Morphia, or the driver, has a codec
-that can map the data to and from mongodb.  When mapping an entity, one can also define <a href="#_indexing">indexes</a> and
+<a href="javadoc/dev/morphia/annotations/Id.html" class="page">@Id</a>.The type of the field can be any type so long as Morphia, or the driver, has a codec
+that can map the data to and from mongodb.When mapping an entity, one can also define <a href="#_indexing">indexes</a> and
 <a href="#_schema_validation">schema validations</a> as part of the entity declaration as well.</p>
 </div>
 <div class="admonitionblock note">
@@ -342,13 +342,64 @@ For maven users, it&#8217;s as simple as adding one line to the Kotlin maven plu
 <div class="sect2">
 <h3 id="_external_types"><a class="anchor" href="#_external_types"></a>External types</h3>
 <div class="paragraph">
-<p>Some times persisted types come from external libraries whose source is either unavailable or simply can&#8217;t be modified.
+<p>Sometimes persisted types come from external libraries whose source is either unavailable or simply can&#8217;t be modified.
 Using these types would be impossible give then annotation requirements as stated above.
-Morphia 2.1 introduced a new experimental API that loosens these restrictions a bit.
-Using <a href="javadoc/dev/morphia/mapping/Mapper.html#mapExternal#(A,java.lang.Class)" class="page">Mapper#mapExternal</a> these external types can be passed in for use as embedded types in other entities.
-An optional instance of <code>@Embedded</code> can created using the
-<a href="#javadoc:dev/morphia/annotations/experimental/EmbeddedBuilder.html" class="page unresolved">EmbeddedBuilder</a>.
-A null can be passed in to simply accept the default values.</p>
+Morphia 2.3 introduces a new experimental API that loosens these restrictions a bit.
+Using <a href="#javadoc:dev/morphia/annotations/experimental/ExternalEntity.html">ExternalEntity</a> these external types can be mapped using a proxy type.</p>
+</div>
+<div class="paragraph">
+<p>Consider the following two types.
+This first type is an external entity which, for whatever reason, can not be annotated with Morphia&#8217;s annotations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class ThirdPartyEntity {
+    public String field;
+    public Long number;
+
+    // other methods
+
+    @Override
+    public int hashCode() {
+        // ...
+    }
+
+    @Override
+    public boolean equals(Object o) {
+       // ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This class could contain any amount of other code but what we&#8217;re interested in is mapping those two fields.
+To accomplish this, we define a mix-in type:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@ExternalEntity(value = "extEnt",
+    discriminator = "ext",
+    discriminatorKey = "_xt",
+    concern = "JOURNALED",
+    cap = @CappedAt(count = 123, value = 456),
+    target = ThirdPartyEntity.class)
+public class ThirdPartyEntityMixIn {
+    public String field;
+    @Id
+    public Long number;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here you&#8217;ll note the use of the new annotation.  <code>ExternalEntity</code> looks just like <a href="#javadoc:dev/morphia/annotations/Entity.html">Entity</a>
+but has a new field called <code>targetType</code>.
+As you can see here, we list the target type as our original <code>ThirdPartyEntity</code>.
+But this mix-in type otherwise looks just like the external type we&#8217;re trying to map.
+Annotations can be applied to the fields and methods on the mix-in types and those values will be applied to the mapping data as normal.
+Using this approach, we can define alternate names for fields and map collection names, etc., as if we owned the original type all without touching it.
+As with all top level entities, if you want to store this type in its own collection, you&#8217;ll need to mark a field as the ID field.
+But once this mapping is done, you can then query against the original type just as you would any other Morphia entity.
+The mix-in type can happily be ignored once you&#8217;re done with mapping.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -369,8 +420,8 @@ A null can be passed in to simply accept the default values.</p>
 <h3 id="_versioning"><a class="anchor" href="#_versioning"></a>Versioning</h3>
 <div class="paragraph">
 <p>Entities can be versioned to ensure that changes are applied serially and that no other processes are modifying an object in between the time it&#8217;s fetched, modified, and written back to the database.
-To achieve this, simply add a field to a type, it can be a <code>long</code> or a <code>Long</code>, and annotate that field with
-<a href="javadoc/dev/morphia/annotations/Version.html" class="page">@Version</a>.
+To achieve this, simply add a field to a type, it can be a <code>long</code> or a
+<code>Long</code>, and annotate that field with  <a href="javadoc/dev/morphia/annotations/Version.html" class="page">@Version</a>.
 Morphia will take care of the rest.
 If an object is fetched and another process updates the corresponding document in the database before it can be persisted back, an exception will be thrown when the write is attempted.</p>
 </div>
@@ -395,7 +446,8 @@ If neither of these conditions are true, the entity will not be persisted.</p>
 <h3 id="_fields"><a class="anchor" href="#_fields"></a>Fields</h3>
 <div class="paragraph">
 <p>By default, any non-static field on a mapped class will be processed for persistence.
-If a field is to be excluded from the mapping, it can be decorated with the <code>transient</code> keyword, annotated with  <a href="javadoc/dev/morphia/annotations/Transient.html" class="page">@Transient</a>, or with the <code>java.beans.Transient</code> annotation.
+If a field is to be excluded from the mapping, it can be decorated with the <code>transient</code> keyword, annotated with
+<a href="javadoc/dev/morphia/annotations/Transient.html" class="page">@Transient</a>, or with the <code>java.beans.Transient</code> annotation.
 Otherwise all fields will be included that are defined on the mapped class and any super type.
 However, Morphia will ignore fields in any super types found in <code>java*</code> packages which includes the standard JDK classes and the Java EE APIs.</p>
 </div>
@@ -405,8 +457,7 @@ However, Morphia will ignore fields in any super types found in <code>java*</cod
 During a schema evolution, it is possible to load a field from an old name as well using the
 <a href="javadoc/dev/morphia/annotations/AlsoLoad.html" class="page">@AlsoLoad</a> annotation.
 Using this annotation, multiple old names can be used to find a field&#8217;s value in a returned document from query.
-However, only the field&#8217;s name or the value specified in the <code>@Property</code>
-annotation will be used when writing documents back to the database.
+However, only the field&#8217;s name or the value specified in the <code>@Property</code> annotation will be used when writing documents back to the database.
 Similarly, if data is only intended to be loaded from the database but never written back, that field can be annotated with <a href="javadoc/dev/morphia/annotations/LoadOnly.html" class="page">@LoadOnly</a></p>
 </div>
 <div class="paragraph">
@@ -428,8 +479,7 @@ This can be done via the <a href="javadoc/dev/morphia/annotations/Indexed.html" 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Method-based mapping is new in 2.2. While testing has been done to ensure everything works the same as with fields, there may some
-esoteric combinations of features that reveal a gap in functionality.Please file an <a href="https://github.com/MorphiaOrg/morphia/issues">issue</a>
+<p>Method-based mapping is new in 2.2. While testing has been done to ensure everything works the same as with fields, there may some esoteric combinations of features that reveal a gap in functionality.Please file an <a href="https://github.com/MorphiaOrg/morphia/issues">issue</a>
 if you encounter such a case.</p>
 </div>
 </td>
@@ -437,15 +487,10 @@ if you encounter such a case.</p>
 </table>
 </div>
 <div class="paragraph">
-<p>As of 2.2, mapping information can be defined on methods instead of fields.All the same rules apply, simply the location of the
-annotations are moved to the getters and/or setters.Annotations can live on either the <code>get</code> or the <code>set</code> method and Morphia will
-detect them.If the same annotation is applied to both the <code>get</code> and the <code>set</code> behavior is unpredictable so care should be taken to
-avoid such a scenario.Customs in other libraries tend to favor annotating the <code>get</code> methods and this is also recommended here for
-consistency.</p>
+<p>As of 2.2, mapping information can be defined on methods instead of fields.All the same rules apply, simply the location of the annotations are moved to the getters and/or setters.Annotations can live on either the <code>get</code> or the <code>set</code> method and Morphia will detect them.If the same annotation is applied to both the <code>get</code> and the <code>set</code> behavior is unpredictable so care should be taken to avoid such a scenario.Customs in other libraries tend to favor annotating the <code>get</code> methods and this is also recommended here for consistency.</p>
 </div>
 <div class="paragraph">
-<p>In order for methods to be considered as definitions of persistable properties, the Java Bean Spec largely applies here.This has some
-very basic rules for your methods:</p>
+<p>In order for methods to be considered as definitions of persistable properties, the Java Bean Spec largely applies here.This has some very basic rules for your methods:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -453,8 +498,7 @@ very basic rules for your methods:</p>
 <p><code>get</code> methods take no parameters</p>
 </li>
 <li>
-<p><code>set</code> methods take one parameter and the type of that parameter should generally match the return type of the getter.These setter
-methods also return void.</p>
+<p><code>set</code> methods take one parameter and the type of that parameter should generally match the return type of the getter.These setter methods also return void.</p>
 </li>
 <li>
 <p>If a property is a boolean type, the getter often uses <code>is</code> rather than <code>get</code> yielding a method named, e.g., <code>isEnabled() rather than
@@ -482,7 +526,7 @@ allowing for the configuration of either field or method mapping.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Mapping is currently done via either fields or by methods.  It is not currently allowed to map using both schemes simultaneously.  This will
+<p>Mapping is currently done via either fields or by methods.It is not currently allowed to map using both schemes simultaneously.This will
 likely change in the future but for now is not allowed.</p>
 </div>
 </td>
