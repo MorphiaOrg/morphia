@@ -34,6 +34,14 @@
           },
           {
             "matcher": "java-package",
+            "match": "/com.mongodb.*/"
+          },
+          {
+            "matcher": "java-package",
+            "match": "/org.bson.*/"
+          },
+          {
+            "matcher": "java-package",
             "match": "/.*internal.*/"
           },
           {
