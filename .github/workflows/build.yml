@@ -12,7 +12,7 @@ jobs:
       matrix:
         java: [ 11, 17 ]
         mongo: [ 4.4.9, 4.2.16, 4.0.27 ]
-        driver: [ 4.3.3, 4.2.3, 4.1.2 ]
+        driver: [ 4.3.3 ]
     name: "Tests on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
     steps:
       - uses: actions/checkout@v2

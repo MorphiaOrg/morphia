@@ -32,11 +32,6 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
-    public void setPinnedServerAddress(@Nullable ServerAddress address) {
-        session.setPinnedServerAddress(address);
-    }
-
-    @Override
     public boolean hasActiveTransaction() {
         return session.hasActiveTransaction();
     }
@@ -82,10 +77,41 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
+    public Object getTransactionContext() {
+        return session.getTransactionContext();
+    }
+
+    @Override
+    public void setTransactionContext(ServerAddress serverAddress, Object o) {
+        session.setTransactionContext(serverAddress, o);
+    }
+
+    @Override
+    public void clearTransactionContext() {
+        session.clearTransactionContext();
+    }
+
+    @Override
     @Nullable
     public BsonDocument getRecoveryToken() {
         return session.getRecoveryToken();
     }
+
+    @Override
+    public void notifyOperationInitiated(Object operation) {
+        session.notifyOperationInitiated(operation);
+    }
+
+    @Override
+    public void setSnapshotTimestamp(BsonTimestamp bsonTimestamp) {
+        session.setSnapshotTimestamp(bsonTimestamp);
+    }
+
+    @Override
+    public BsonTimestamp getSnapshotTimestamp() {
+        return session.getSnapshotTimestamp();
+    }
+
 
     @Override
     public void setRecoveryToken(BsonDocument recoveryToken) {
