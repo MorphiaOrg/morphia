@@ -68,7 +68,7 @@ For maven users, it's as simple as adding one line to the Kotlin maven plugin `<
 Sometimes persisted types come from external libraries whose source is either unavailable or simply can't be modified.
 Using these types would be impossible give then annotation requirements as stated above.
 Morphia 2.3 introduces a new experimental API that loosens these restrictions a bit.
-Using xref:javadoc:dev/morphia/annotations/experimental/ExternalEntity.html[ExternalEntity] these external types can be mapped using a proxy type.
+Using xref:javadoc:dev/morphia/annotations/experimental/ExternalEntity.html#[@ExternalEntity] these external types can be mapped using a proxy type.
 
 Consider the following two types.
 This first type is an external entity which, for whatever reason, can not be annotated with Morphia's annotations.
