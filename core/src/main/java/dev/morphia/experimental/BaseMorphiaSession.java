@@ -112,7 +112,6 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
         return session.getSnapshotTimestamp();
     }
 
-
     @Override
     public void setRecoveryToken(BsonDocument recoveryToken) {
         session.setRecoveryToken(recoveryToken);

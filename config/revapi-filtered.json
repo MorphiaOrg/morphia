@@ -17,6 +17,10 @@
             "match": "class dev.morphia.sofia.Sofia {}"
           },
           {
+            "matcher": "java",
+            "match": "type ^* implements com.mongodb.session.ClientSession {}"
+          },
+          {
             "matcher": "java-package",
             "match": "dev.morphia.mapping.codec"
           },
