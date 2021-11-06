@@ -178,6 +178,18 @@
           "code": "java.method.removed",
           "classQualifiedName": "dev.morphia.mapping.Mapper",
           "justification": "hiding internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.annotation.removed",
+          "methodName": "getLoggedQuery",
+          "annotation": "@com.mongodb.lang.Nullable"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.addedToInterface",
+          "classQualifiedName": "dev.morphia.query.Query",
+          "methodName": "getLoggedQuery"
         }
       ]
     }
