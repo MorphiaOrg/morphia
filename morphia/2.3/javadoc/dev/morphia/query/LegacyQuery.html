@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":42,"i11":42,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":42};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":42,"i11":42,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":42};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -559,42 +559,47 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i23" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLoggedQuery()">getLoggedQuery</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>org.bson.Document</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSort()">getSort</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hashCode()">hashCode</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isValidatingNames()">isValidatingNames</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="internal/MorphiaCursor.html" title="class in dev.morphia.query.internal">MorphiaCursor</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#iterator(dev.morphia.query.FindOptions)">iterator</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Execute the query and get the results.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="internal/MorphiaKeyCursor.html" title="class in dev.morphia.query.internal">MorphiaKeyCursor</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys()">keys</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Execute the query and get the results (as a <code>MorphiaCursor&lt;Key&lt;T&gt;&gt;</code>)</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="internal/MorphiaKeyCursor.html" title="class in dev.morphia.query.internal">MorphiaKeyCursor</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys(dev.morphia.query.FindOptions)">keys</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Execute the query and get the results (as a <code>MorphiaCursor&lt;Key&lt;T&gt;&gt;</code>)</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">modify</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
       <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
@@ -602,42 +607,42 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 <div class="block">Create a modify operation based on this query</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.UpdateOperations)">modify</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block">This is only intended for migration of legacy uses of UpdateOperations</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#or(dev.morphia.query.Criteria...)">or</a></span>​(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
 <td class="colLast">
 <div class="block">Ors Criteria with this CriteriaContainer.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(dev.morphia.query.Criteria)">remove</a></span>​(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>&nbsp;criteria)</code></th>
 <td class="colLast">
 <div class="block">Removes Criteria to this container</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#retrieveKnownFields()">retrieveKnownFields</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Limits the fields retrieved to those of the query type -- dangerous with interfaces and abstract classes</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#search(java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;search)</code></th>
 <td class="colLast">
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#search(java.lang.String,java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;search,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;language)</code></th>
@@ -645,26 +650,26 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setQueryObject(org.bson.Document)">setQueryObject</a></span>​(org.bson.Document&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block">Sets query structure directly</div>
 </td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i38" class="altColor">
 <td class="colFirst"><code>org.bson.Document</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDocument()">toDocument</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Converts the query to a Document and updates for any discriminator values as my be necessary</div>
 </td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i39" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i40" class="altColor">
 <td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
       <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
@@ -672,7 +677,7 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 <div class="block">Creates an update operation based on this query</div>
 </td>
 </tr>
-<tr id="i40" class="altColor">
+<tr id="i41" class="rowColor">
 <td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;operations)</code></th>
 <td class="colLast">
@@ -745,6 +750,19 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="getCollection()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCollection</h4>
+<pre class="methodSignature">public&nbsp;com.mongodb.client.MongoCollection&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;getCollection()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the collection this query targets</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
 <a id="add(dev.morphia.query.Criteria...)">
 <!--   -->
 </a>
@@ -871,6 +889,35 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 <dd><code><a href="Criteria.html#getFieldName()">getFieldName</a></code>&nbsp;in interface&nbsp;<code><a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the field name for the criteria</dd>
+</dl>
+</li>
+</ul>
+<a id="getFieldsObject()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getFieldsObject</h4>
+<pre class="methodSignature">@Nullable
+public&nbsp;org.bson.Document&nbsp;getFieldsObject()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Mongo fields <code>Document</code>.</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="getLoggedQuery()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLoggedQuery</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getLoggedQuery()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Query.html#getLoggedQuery()">getLoggedQuery</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>The query logged during the previous execution of this query</dd>
 </dl>
 </li>
 </ul>
@@ -1181,25 +1228,6 @@ public&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.qu
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
-<a id="keys(dev.morphia.query.FindOptions)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>keys</h4>
-<pre class="methodSignature">public&nbsp;<a href="internal/MorphiaKeyCursor.html" title="class in dev.morphia.query.internal">MorphiaKeyCursor</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;keys​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#keys(dev.morphia.query.FindOptions)">Query</a></code></span></div>
-<div class="block">Execute the query and get the results (as a <code>MorphiaCursor&lt;Key&lt;T&gt;&gt;</code>)</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#keys(dev.morphia.query.FindOptions)">keys</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>options</code> - the options to apply to the find operation</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the keys of the documents returned by this query</dd>
-</dl>
-</li>
-</ul>
 <a id="iterator(dev.morphia.query.FindOptions)">
 <!--   -->
 </a>
@@ -1236,6 +1264,46 @@ public&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.qu
 </dl>
 </li>
 </ul>
+<a id="search(java.lang.String,java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>search</h4>
+<pre class="methodSignature">public&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;search​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;search,
+                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;language)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#search(java.lang.String,java.lang.String)">Query</a></code></span></div>
+<div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Query.html#search(java.lang.String,java.lang.String)">search</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>search</code> - the text to search for</dd>
+<dd><code>language</code> - the language to use during the search</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Query to enable chaining of commands</dd>
+</dl>
+</li>
+</ul>
+<a id="keys(dev.morphia.query.FindOptions)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keys</h4>
+<pre class="methodSignature">public&nbsp;<a href="internal/MorphiaKeyCursor.html" title="class in dev.morphia.query.internal">MorphiaKeyCursor</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;keys​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#keys(dev.morphia.query.FindOptions)">Query</a></code></span></div>
+<div class="block">Execute the query and get the results (as a <code>MorphiaCursor&lt;Key&lt;T&gt;&gt;</code>)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Query.html#keys(dev.morphia.query.FindOptions)">keys</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>options</code> - the options to apply to the find operation</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the keys of the documents returned by this query</dd>
+</dl>
+</li>
+</ul>
 <a id="modify(dev.morphia.query.UpdateOperations)">
 <!--   -->
 </a>
@@ -1252,27 +1320,6 @@ public&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.qu
 <dd><code>operations</code> - the prebuilt operations</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the Modify instance</dd>
-</dl>
-</li>
-</ul>
-<a id="update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>update</h4>
-<pre class="methodSignature">public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;update​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
-                        <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">Query</a></code></span></div>
-<div class="block">Creates an update operation based on this query</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>first</code> - the first and required update operator</dd>
-<dd><code>updates</code> - lists the set of updates to apply</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the update operation</dd>
 </dl>
 </li>
 </ul>
@@ -1312,37 +1359,42 @@ public&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.qu
 </dl>
 </li>
 </ul>
-<a id="search(java.lang.String,java.lang.String)">
+<a id="update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>search</h4>
-<pre class="methodSignature">public&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;search​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;search,
-                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;language)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#search(java.lang.String,java.lang.String)">Query</a></code></span></div>
-<div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
+<h4>update</h4>
+<pre class="methodSignature">public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;update​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
+                        <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">Query</a></code></span></div>
+<div class="block">Creates an update operation based on this query</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#search(java.lang.String,java.lang.String)">search</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
+<dd><code><a href="Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>search</code> - the text to search for</dd>
-<dd><code>language</code> - the language to use during the search</dd>
+<dd><code>first</code> - the first and required update operator</dd>
+<dd><code>updates</code> - lists the set of updates to apply</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the Query to enable chaining of commands</dd>
+<dd>the update operation</dd>
 </dl>
 </li>
 </ul>
-<a id="getCollection()">
+<a id="toDocument()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getCollection</h4>
-<pre class="methodSignature">public&nbsp;com.mongodb.client.MongoCollection&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;getCollection()</pre>
+<h4>toDocument</h4>
+<pre class="methodSignature">public&nbsp;org.bson.Document&nbsp;toDocument()</pre>
+<div class="block">Converts the query to a Document and updates for any discriminator values as my be necessary</div>
 <dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Criteria.html#toDocument()">toDocument</a></code>&nbsp;in interface&nbsp;<code><a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a></code></dd>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Query.html#toDocument()">toDocument</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the collection this query targets</dd>
+<dd>the query</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
@@ -1364,38 +1416,6 @@ public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the Updates instance</dd>
 </dl>
-</li>
-</ul>
-<a id="getFieldsObject()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getFieldsObject</h4>
-<pre class="methodSignature">@Nullable
-public&nbsp;org.bson.Document&nbsp;getFieldsObject()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the Mongo fields <code>Document</code>.</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
-</li>
-</ul>
-<a id="toDocument()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>toDocument</h4>
-<pre class="methodSignature">public&nbsp;org.bson.Document&nbsp;toDocument()</pre>
-<div class="block">Converts the query to a Document and updates for any discriminator values as my be necessary</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Criteria.html#toDocument()">toDocument</a></code>&nbsp;in interface&nbsp;<code><a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a></code></dd>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#toDocument()">toDocument</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the query</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 <a id="getSort()">

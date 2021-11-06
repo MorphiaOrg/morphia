@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":38,"i3":50,"i4":50,"i5":50,"i6":50,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":50,"i17":50,"i18":50,"i19":50,"i20":6,"i21":6,"i22":6,"i23":6,"i24":6,"i25":6,"i26":18,"i27":18,"i28":6,"i29":6,"i30":6,"i31":6,"i32":50,"i33":6,"i34":6,"i35":6,"i36":50,"i37":50,"i38":18,"i39":6,"i40":18,"i41":6,"i42":50,"i43":6,"i44":6,"i45":50,"i46":50,"i47":6,"i48":6};
+var data = {"i0":6,"i1":6,"i2":38,"i3":50,"i4":50,"i5":50,"i6":50,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":50,"i17":50,"i18":50,"i19":50,"i20":6,"i21":6,"i22":6,"i23":6,"i24":38,"i25":6,"i26":18,"i27":18,"i28":6,"i29":6,"i30":6,"i31":6,"i32":50,"i33":6,"i34":6,"i35":6,"i36":50,"i37":50,"i38":18,"i39":6,"i40":18,"i41":6,"i42":50,"i43":6,"i44":6,"i45":50,"i46":50,"i47":6,"i48":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -557,7 +557,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLoggedQuery(dev.morphia.query.FindOptions)">getLoggedQuery</a></span>​(<a href="query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">Use <a href="query/Query.html#getLoggedQuery()"><code>Query.getLoggedQuery()</code></a> instead</div>
+</div>
+</td>
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a></code></td>
@@ -1207,7 +1211,8 @@ com.mongodb.client.ClientSession&nbsp;findSession​(<a href="internal/SessionCo
 <ul class="blockList">
 <li class="blockList">
 <h4>getCodecRegistry</h4>
-<pre class="methodSignature">org.bson.codecs.configuration.CodecRegistry&nbsp;getCodecRegistry()</pre>
+<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+org.bson.codecs.configuration.CodecRegistry&nbsp;getCodecRegistry()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the codec registry</dd>
@@ -1256,8 +1261,11 @@ com.mongodb.client.ClientSession&nbsp;findSession​(<a href="internal/SessionCo
 <ul class="blockList">
 <li class="blockList">
 <h4>getLoggedQuery</h4>
-<pre class="methodSignature">@Nullable
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getLoggedQuery​(<a href="query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">Use <a href="query/Query.html#getLoggedQuery()"><code>Query.getLoggedQuery()</code></a> instead</div>
+</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>options</code> - the options used when requesting logging</dd>
