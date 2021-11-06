@@ -22,14 +22,6 @@
           },
           {
             "matcher": "java-package",
-            "match": "dev.morphia.mapping.codec"
-          },
-          {
-            "matcher": "java-package",
-            "match": "dev.morphia.mapping.codec.pojo"
-          },
-          {
-            "matcher": "java-package",
             "match": "/.*codec.*/"
           },
           {
@@ -46,7 +38,7 @@
           },
           {
             "matcher": "java-package",
-            "match": "dev.morphia.mapping.experimental"
+            "match": "/.*experimental.*/"
           },
           {
             "matcher": "java-package",

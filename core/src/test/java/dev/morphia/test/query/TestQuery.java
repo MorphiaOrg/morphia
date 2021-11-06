@@ -22,7 +22,6 @@ import dev.morphia.query.CountOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.LegacyQueryFactory;
-import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
@@ -96,15 +95,11 @@ public class TestQuery extends TestBase {
         getDs().save(value);
 
         Query<GenericKeyValue> query = getDs()
-                                           .find(GenericKeyValue.class)
-                                           .filter(in("key", keys));
-        FindOptions options = new FindOptions()
-                                  .logQuery();
-        final GenericKeyValue<String> found = query.iterator(options)
-                                                   .tryNext();
-        String loggedQuery = getDs().getLoggedQuery(options);
+            .find(GenericKeyValue.class)
+            .filter(in("key", keys));
+        assertEquals(((GenericKeyValue<String>) query.first(new FindOptions().logQuery())).id, value.id);
+        String loggedQuery = query.getLoggedQuery();
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
-        assertEquals(found.id, value.id);
     }
 
     @Test
@@ -135,15 +130,12 @@ public class TestQuery extends TestBase {
         value.key = keys;
         getDs().save(value);
 
-        FindOptions options = new FindOptions().logQuery();
         final Query<KeyValue> query = getDs().find(KeyValue.class)
                                              .filter(in("key", keys));
-        query.iterator(options);
-        String loggedQuery = getDs().getLoggedQuery(options);
+        query.iterator(new FindOptions().logQuery());
+        String loggedQuery = query.getLoggedQuery();
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
-        assertEquals(query.iterator(new FindOptions().limit(1))
-                          .tryNext()
-                         .id, value.id);
+        assertEquals(query.first(new FindOptions().limit(1)).id, value.id);
     }
 
     @Test
@@ -351,11 +343,6 @@ public class TestQuery extends TestBase {
             and(
                 eq("width", 10),
                 eq("height", 1)));
-        FindOptions options = new FindOptions()
-                                  .logQuery();
-        List<Rectangle> list = q.iterator(options)
-                                .toList();
-        String loggedQuery = getDs().getLoggedQuery(options);
         assertEquals(q.count(), 1);
 
         q = getDs().find(Rectangle.class);
@@ -651,14 +638,10 @@ public class TestQuery extends TestBase {
                                         .filter(gt("_id", 5),
                                             lt("_id", 20));
 
-        FindOptions options = new FindOptions().logQuery();
-        MorphiaCursor<HasIntId> list = filter.iterator(options);
-        String loggedQuery = getDs().getLoggedQuery(options);
-        assertEquals(filter
-                            .count(), 2);
+        assertEquals(filter.count(), 2);
         assertEquals(getDs().find(HasIntId.class)
                             .filter(gt("_id", 0),
-                                   lt("_id", 11))
+                                lt("_id", 11))
                             .count(), 1);
     }
 
@@ -1102,27 +1085,14 @@ public class TestQuery extends TestBase {
 
         Query<HasPhotoReference> query = getDs().find(HasPhotoReference.class)
                                                 .filter(eq("photo", p));
-        FindOptions options = new FindOptions()
-                                  .logQuery()
-                                  .limit(1);
-        HasPhotoReference photoKey = query.iterator(options)
-                                          .tryNext();
 
-        assertNotNull(photoKey, getDs().getLoggedQuery(options));
+        assertNotNull(query.first(new FindOptions().logQuery().limit(1)), query.getLoggedQuery());
 
-        assertNotNull(getDs().find(HasPhotoReference.class)
-                             .filter(eq("photo", cpk.photo)).iterator(new FindOptions()
-                                                                          .limit(1))
-                             .tryNext());
-        assertNull(getDs().find(HasPhotoReference.class)
-                          .filter(eq("photo", 1)).iterator(new FindOptions()
-                                                               .limit(1))
-                          .tryNext());
+        FindOptions limit = new FindOptions().limit(1);
+        assertNotNull(getDs().find(HasPhotoReference.class).filter(eq("photo", cpk.photo)).first(limit));
+        assertNull(getDs().find(HasPhotoReference.class).filter(eq("photo", 1)).first(limit));
 
-        getDs().find(HasPhotoReference.class)
-               .filter(eq("photo.keywords", "foo")).iterator(new FindOptions()
-                                                                 .limit(1))
-               .next();
+        assertNotNull(getDs().find(HasPhotoReference.class).filter(eq("photo.keywords", "foo")).first(limit));
     }
 
     @Test

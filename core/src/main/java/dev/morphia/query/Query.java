@@ -60,6 +60,16 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
+     * Adds filters to this query.  This operation is cumulative.
+     *
+     * @param filters the filters to add
+     * @return this
+     */
+    default Query<T> filter(Filter... filters) {
+        throw new UnsupportedOperationException(Sofia.modernOperation());
+    }
+
+    /**
      * Count the total number of values in the result, ignoring limit and offset
      *
      * @return the count
@@ -218,14 +228,10 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
-     * Adds filters to this query.  This operation is cumulative.
-     *
-     * @param filters the filters to add
-     * @return this
+     * @return The query logged during the previous execution of this query
+     * @since 2.3
      */
-    default Query<T> filter(Filter... filters) {
-        throw new UnsupportedOperationException(Sofia.notAvailableInLegacy());
-    }
+    String getLoggedQuery();
 
     /**
      * Deletes an entity from the database and returns it.

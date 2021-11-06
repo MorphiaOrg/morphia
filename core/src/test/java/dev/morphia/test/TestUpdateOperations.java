@@ -990,8 +990,7 @@ public class TestUpdateOperations extends TestBase {
                        .filter(eq("values", new Integer[]{4, 5, 7, 6}));
         FindOptions options = new FindOptions()
                                   .logQuery();
-        ContainsIntArray values = query.first(options);
-        assertNotNull(values, getDs().getLoggedQuery(options));
+        assertNotNull(query.first(options), query.getLoggedQuery());
     }
 
     @Test(expectedExceptions = ValidationException.class)

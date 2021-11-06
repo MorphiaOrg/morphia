@@ -25,6 +25,8 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaExperimental;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.SessionConfigurable;
@@ -104,6 +106,9 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @morphia.internal
      */
     public <T> FindIterable<T> apply(FindIterable<T> iterable, Mapper mapper, Class<?> type) {
+        if (isLogQuery()) {
+            logQuery();  //  reset to a new ID
+        }
         if (projection != null) {
             iterable.projection(projection.map(mapper, type));
         }
@@ -550,7 +555,10 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      *
      * @return this
      * @morphia.internal
+     * @morphia.experimental
      */
+    @MorphiaInternal
+    @MorphiaExperimental
     public FindOptions logQuery() {
         queryLogId = new ObjectId().toString();
         comment(Sofia.loggedQuery(queryLogId));

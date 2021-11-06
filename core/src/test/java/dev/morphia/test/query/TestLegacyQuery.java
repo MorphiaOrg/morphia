@@ -21,7 +21,6 @@ import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.ArraySlice;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
@@ -85,14 +84,11 @@ public class TestLegacyQuery extends TestBase {
         getDs().save(value);
 
         Query<GenericKeyValue> query = getDs()
-                                           .find(GenericKeyValue.class)
-                                           .field("key").hasAnyOf(keys);
-        FindOptions options = new FindOptions()
-                                  .logQuery();
-        final GenericKeyValue found = query
-                                          .execute(options)
-                                          .tryNext();
-        String loggedQuery = getDs().getLoggedQuery(options);
+            .find(GenericKeyValue.class)
+            .field("key").hasAnyOf(keys);
+        final GenericKeyValue found = query.execute(new FindOptions().logQuery())
+                                           .tryNext();
+        String loggedQuery = query.getLoggedQuery();
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
         assertEquals(found.id, value.id);
     }
@@ -106,16 +102,13 @@ public class TestLegacyQuery extends TestBase {
         value.key = keys;
         getDs().save(value);
 
-        FindOptions options = new FindOptions().logQuery();
         final Query<KeyValue> query = getDs().find(KeyValue.class)
                                              .field("key")
                                              .hasAnyOf(keys);
-        query.execute(options);
-        String loggedQuery = getDs().getLoggedQuery(options);
+        query.execute(new FindOptions().logQuery());
+        String loggedQuery = query.getLoggedQuery();
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
-        assertEquals(query.execute(new FindOptions().limit(1))
-                          .tryNext()
-                         .id, value.id);
+        assertEquals(query.execute(new FindOptions().limit(1)).tryNext().id, value.id);
     }
 
     @Test(groups = {"references"})
@@ -283,11 +276,7 @@ public class TestLegacyQuery extends TestBase {
 
         Query<Rectangle> q = getDs().find(Rectangle.class);
         q.and(q.criteria("width").equal(10), q.criteria("height").equal(1));
-        FindOptions options = new FindOptions()
-                                  .logQuery();
-        List<Rectangle> list = q.execute(options)
-                                .toList();
-        String loggedQuery = getDs().getLoggedQuery(options);
+        List<Rectangle> list = q.execute(new FindOptions().logQuery()).toList();
         assertEquals(q.count(), 1);
 
         q = getDs().find(Rectangle.class);
@@ -296,11 +285,8 @@ public class TestLegacyQuery extends TestBase {
 
         q = getDs().find(Rectangle.class);
         q.or(q.criteria("width").equal(10), q.and(q.criteria("width").equal(5), q.criteria("height").equal(8)));
-        options = new FindOptions()
-                      .logQuery();
-        q.execute(options)
-         .toList();
-        assertEquals(q.count(), 3, getDs().getLoggedQuery(options));
+        q.execute(new FindOptions().logQuery()).toList();
+        assertEquals(q.count(), 3, q.getLoggedQuery());
     }
 
     @Test
@@ -588,11 +574,7 @@ public class TestLegacyQuery extends TestBase {
                                         .filter("_id >", 5)
                                         .filter("_id <", 20);
 
-        FindOptions options = new FindOptions().logQuery();
-        MorphiaCursor<HasIntId> list = filter.execute(options);
-        String loggedQuery = getDs().getLoggedQuery(options);
-        assertEquals(filter
-                         .count(), 2);
+        assertEquals(filter.count(), 2);
         assertEquals(getDs().find(HasIntId.class)
                             .field("_id").greaterThan(0)
                             .field("_id").lessThan(11)

@@ -17,6 +17,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
+import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -54,6 +55,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private Document baseQuery;
     @Deprecated
     private FindOptions options;
+    private FindOptions lastOptions;
 
     /**
      * Creates a Query for the given type and collection
@@ -74,6 +76,14 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
 
         compoundContainer = new CriteriaContainerImpl(datastore, this, AND);
+    }
+
+    /**
+     * @return the collection this query targets
+     * @morphia.internal
+     */
+    public MongoCollection<T> getCollection() {
+        return collection;
     }
 
     @Override
@@ -115,6 +125,40 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public String getFieldName() {
         throw new UnsupportedOperationException("this method is unused on a Query");
+    }
+
+    /**
+     * @return the Mongo fields {@link Document}.
+     * @morphia.internal
+     */
+    @Nullable
+    public Document getFieldsObject() {
+        Projection projection = getOptions().getProjection();
+
+        return projection != null ? projection.map(datastore.getMapper(), clazz) : null;
+    }
+
+    @Override
+    public String getLoggedQuery() {
+        if (lastOptions.isLogQuery()) {
+            String json = "{}";
+            Document first = datastore.getDatabase()
+                                      .getCollection("system.profile")
+                                      .find(new Document("command.comment", "logged query: " + lastOptions.getQueryLogId()),
+                                          Document.class)
+                                      .projection(new Document("command.filter", 1))
+                                      .first();
+            if (first != null) {
+                Document command = (Document) first.get("command");
+                Document filter = (Document) command.get("filter");
+                if (filter != null) {
+                    json = filter.toJson(datastore.getCodecRegistry().get(Document.class));
+                }
+            }
+            return json;
+        } else {
+            throw new IllegalStateException(Sofia.queryNotLogged());
+        }
     }
 
     /**
@@ -255,6 +299,23 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    public MorphiaCursor<T> iterator(FindOptions options) {
+        return new MorphiaCursor<>(prepareCursor(options, getCollection()));
+    }
+
+    @Override
+    public MorphiaKeyCursor<T> keys() {
+        return keys(new FindOptions());
+    }
+
+    @Override
+    public Query<T> search(String search, String language) {
+        this.criteria("$text").equal(new Document("$search", search)
+            .append("$language", language));
+        return this;
+    }
+
+    @Override
     public MorphiaKeyCursor<T> keys(FindOptions options) {
         FindOptions returnKey = new FindOptions().copy(options)
                                                  .projection()
@@ -266,23 +327,8 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public MorphiaCursor<T> iterator(FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, getCollection()));
-    }
-
-    @Override
-    public MorphiaKeyCursor<T> keys() {
-        return keys(new FindOptions());
-    }
-
-    @Override
     public Modify<T> modify(UpdateOperations<T> operations) {
         return new Modify<>(datastore, getCollection(), this, clazz, (UpdateOpsImpl) operations);
-    }
-
-    @Override
-    public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, getCollection(), this, clazz, first, updates);
     }
 
     @Override
@@ -298,35 +344,8 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Query<T> search(String search, String language) {
-        this.criteria("$text").equal(new Document("$search", search)
-                                         .append("$language", language));
-        return this;
-    }
-
-    /**
-     * @return the collection this query targets
-     * @morphia.internal
-     */
-    public MongoCollection<T> getCollection() {
-        return collection;
-    }
-
-    @Override
-    @Deprecated(since = "2.0", forRemoval = true)
-    public Update<T> update(UpdateOperations<T> operations) {
-        return new Update<>(datastore, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
-    }
-
-    /**
-     * @return the Mongo fields {@link Document}.
-     * @morphia.internal
-     */
-    @Nullable
-    public Document getFieldsObject() {
-        Projection projection = getOptions().getProjection();
-
-        return projection != null ? projection.map(datastore.getMapper(), clazz) : null;
+    public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
+        return new Update<>(datastore, getCollection(), this, clazz, first, updates);
     }
 
     /**
@@ -354,6 +373,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                 new Document("$in", values));
         }
         return query;
+    }
+
+    @Override
+    @Deprecated(since = "2.0", forRemoval = true)
+    public Update<T> update(UpdateOperations<T> operations) {
+        return new Update<>(datastore, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
     }
 
     /**
@@ -453,18 +478,19 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     private <E> MongoCursor<E> prepareCursor(FindOptions options, MongoCollection<E> collection) {
         Document oldProfile = null;
+        lastOptions = options;
         if (options.isLogQuery()) {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
         try {
             return options
                 .apply(iterable(options, collection), datastore.getMapper(), clazz)
-                       .iterator();
+                .iterator();
         } finally {
             if (options.isLogQuery()) {
                 datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
-                                                       .append("slowms", oldProfile.get("slowms"))
-                                                       .append("sampleRate", oldProfile.get("sampleRate")));
+                    .append("slowms", oldProfile.get("slowms"))
+                    .append("sampleRate", oldProfile.get("sampleRate")));
             }
 
         }

@@ -15,6 +15,7 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
@@ -289,6 +290,7 @@ public interface Datastore {
      * @morphia.internal
      * @since 2.3
      */
+    @MorphiaInternal
     CodecRegistry getCodecRegistry();
 
     /**
@@ -312,8 +314,9 @@ public interface Datastore {
      * @return the logged query
      * @morphia.internal
      * @since 2.0
+     * @deprecated Use {@link Query#getLoggedQuery()} instead
      */
-    @Nullable
+    @Deprecated(forRemoval = true)
     String getLoggedQuery(FindOptions options);
 
     /**

@@ -118,11 +118,8 @@ public class TestMapperOptions extends TestBase {
 
         Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class)
                                                    .filter(ne("name", "hi"));
-        FindOptions options = new FindOptions()
-                                  .logQuery();
-        List<EntityDiscriminator2> list = query.iterator(options)
-                                               .toList();
-        assertEquals(list.size(), 1, getDs().getLoggedQuery(options));
+        List<EntityDiscriminator2> list = query.iterator(new FindOptions().logQuery()).toList();
+        assertEquals(list.size(), 1, query.getLoggedQuery());
     }
 
     @Test

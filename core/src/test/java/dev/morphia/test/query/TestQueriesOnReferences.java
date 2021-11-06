@@ -148,17 +148,8 @@ public class TestQueriesOnReferences extends TestBase {
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class)
                                           .filter(eq("pic", new Key<>(Pic.class, "pic", p.getId())));
-        FindOptions options = new FindOptions()
-            .logQuery()
-            .limit(1);
-        ContainsPic containsPic = query.iterator(options)
-                                       .tryNext();
 
-        assertEquals(containsPic.getId(), cpk.getId(), getDs().getLoggedQuery(options));
-
-        containsPic = query.iterator(new FindOptions().limit(1))
-                           .tryNext();
-        assertEquals(cpk.getId(), containsPic.getId());
+        assertEquals(query.first(new FindOptions().logQuery().limit(1)).getId(), cpk.getId(), query.getLoggedQuery());
     }
 
     @Entity

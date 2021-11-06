@@ -48,11 +48,12 @@ class MorphiaQuery<T> implements Query<T> {
     private final Datastore datastore;
     private final Class<T> type;
     private final Mapper mapper;
-    private String collectionName;
-    private MongoCollection<T> collection;
     private final List<Filter> filters = new ArrayList<>();
     private final Document seedQuery;
+    private String collectionName;
+    private MongoCollection<T> collection;
     private boolean validate = true;
+    private FindOptions lastOptions;
 
     protected MorphiaQuery(Datastore datastore, @Nullable String collectionName, Class<T> type) {
         this.type = type;
@@ -79,6 +80,29 @@ class MorphiaQuery<T> implements Query<T> {
 
     static <V> V legacyOperation() {
         throw new UnsupportedOperationException(Sofia.legacyOperation());
+    }
+
+    @Override
+    public String getLoggedQuery() {
+        if (lastOptions.isLogQuery()) {
+            String json = "{}";
+            Document first = datastore.getDatabase()
+                                      .getCollection("system.profile")
+                                      .find(new Document("command.comment", "logged query: " + lastOptions.getQueryLogId()),
+                                          Document.class)
+                                      .projection(new Document("command.filter", 1))
+                                      .first();
+            if (first != null) {
+                Document command = (Document) first.get("command");
+                Document filter = (Document) command.get("filter");
+                if (filter != null) {
+                    json = filter.toJson(datastore.getCodecRegistry().get(Document.class));
+                }
+            }
+            return json;
+        } else {
+            throw new IllegalStateException(Sofia.queryNotLogged());
+        }
     }
 
     @Override
@@ -160,8 +184,8 @@ class MorphiaQuery<T> implements Query<T> {
     public Query<T> filter(Filter... additional) {
         for (Filter filter : additional) {
             filters.add(filter
-                            .entityType(getEntityClass())
-                            .isValidating(validate));
+                .entityType(getEntityClass())
+                .isValidating(validate));
         }
         return this;
     }
@@ -193,6 +217,11 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
+    public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
+        return new Modify<>(datastore, getCollection(), this, getEntityClass(), first, updates);
+    }
+
+    @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, getCollection()));
     }
@@ -200,11 +229,6 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     public MorphiaKeyCursor<T> keys() {
         return keys(new FindOptions());
-    }
-
-    @Override
-    public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, getCollection(), this, getEntityClass(), first, updates);
     }
 
     @Override
@@ -265,9 +289,9 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     public String toString() {
         return new StringJoiner(", ", MorphiaQuery.class.getSimpleName() + "[", "]")
-                   .add("clazz=" + type.getSimpleName())
-                   .add("query=" + getQueryDocument())
-                   .toString();
+            .add("clazz=" + type.getSimpleName())
+            .add("query=" + getQueryDocument())
+            .toString();
     }
 
     /**
@@ -308,18 +332,19 @@ class MorphiaQuery<T> implements Query<T> {
     @SuppressWarnings("ConstantConditions")
     private <E> MongoCursor<E> prepareCursor(FindOptions findOptions, MongoCollection<E> collection) {
         Document oldProfile = null;
+        lastOptions = findOptions;
         if (findOptions.isLogQuery()) {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
         try {
             return findOptions
-                       .apply(iterable(findOptions, collection), mapper, type)
-                       .iterator();
+                .apply(iterable(findOptions, collection), mapper, type)
+                .iterator();
         } finally {
             if (findOptions.isLogQuery()) {
                 datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
-                                                       .append("slowms", oldProfile.get("slowms"))
-                                                       .append("sampleRate", oldProfile.get("sampleRate")));
+                    .append("slowms", oldProfile.get("slowms"))
+                    .append("sampleRate", oldProfile.get("sampleRate")));
             }
 
         }
