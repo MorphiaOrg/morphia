@@ -18,7 +18,7 @@ public class UnionWithCodec extends StageCodec<UnionWith> {
     /**
      * Creates the codec
      *
-     * @param mapper the mapper to use
+     * @param datastore the datastore to use
      * @morphia.internal
      */
     public UnionWithCodec(Datastore datastore) {
