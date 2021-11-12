@@ -555,7 +555,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         private final Long newVersion;
         private final PropertyModel versionProperty;
 
-        public VersionBumpInfo() {
+        private VersionBumpInfo() {
             versioned = false;
             newVersion = null;
             oldVersion = null;
