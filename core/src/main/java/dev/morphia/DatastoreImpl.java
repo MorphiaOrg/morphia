@@ -43,7 +43,6 @@ import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
-import dev.morphia.query.ValidationException;
 import dev.morphia.query.experimental.updates.UpdateOperators;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
@@ -316,26 +315,12 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> void insert(T entity, InsertOneOptions options) {
-        insert(getCollection(entity.getClass()), entity, options);
+        save(entity, options);
     }
 
     @Override
     public <T> void insert(List<T> entities, InsertManyOptions options) {
-        if (!entities.isEmpty()) {
-            Class<?> type = entities.get(0).getClass();
-            EntityModel model = mapper.getEntityModel(type);
-            for (T entity : entities) {
-                setInitialVersion(model, entity);
-            }
-
-            MongoCollection mongoCollection = options.prepare(getCollection(type));
-            ClientSession session = options.clientSession();
-            if (session == null) {
-                mongoCollection.insertMany(entities, options.getOptions());
-            } else {
-                mongoCollection.insertMany(session, entities, options.getOptions());
-            }
-        }
+        save(entities, options);
     }
 
     @Override
@@ -350,20 +335,11 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new MappingException("Could not get id for " + entity.getClass().getName());
         }
 
-        final EntityModel model = mapper.getEntityModel(entity.getClass());
-        final PropertyModel versionProperty = model.getVersionProperty();
-        Long oldVersion = null;
-        long newVersion = -1;
-
-        if (versionProperty != null) {
-            oldVersion = (Long) versionProperty.getValue(entity);
-            newVersion = oldVersion == null ? 1L : oldVersion + 1;
-        }
+        VersionBumpInfo info = updateVersioning(entity);
 
         final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
-        if (newVersion != -1) {
-            updateVersion(entity, versionProperty, newVersion);
-            query.filter(eq(versionProperty.getMappedName(), oldVersion));
+        if (info.versioned && info.newVersion != -1) {
+            query.filter(eq(info.versionProperty.getMappedName(), info.oldVersion));
         }
 
         Update<T> update;
@@ -379,8 +355,8 @@ public class DatastoreImpl implements AdvancedDatastore {
                 .clientSession(findSession(options))
                 .writeConcern(options.writeConcern()));
         if (execute.getModifiedCount() != 1) {
-            updateVersion(entity, versionProperty, oldVersion);
-            if (versionProperty != null) {
+            if (info.versioned) {
+                info.rollbackVersion(entity);
                 throw new VersionMismatchException(entity.getClass(), id);
             }
             throw new UpdateException("Nothing updated");
@@ -456,7 +432,8 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> T save(T entity) {
-        return save(entity, new InsertOneOptions());
+        return save(entity, new InsertOneOptions()
+            .writeConcern(mapper.getWriteConcern(entity.getClass())));
     }
 
     @Override
@@ -547,17 +524,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return writer.getDocument();
     }
 
-    protected <T> void insert(MongoCollection collection, T entity, InsertOneOptions options) {
-        setInitialVersion(mapper.getEntityModel(entity.getClass()), entity);
-        MongoCollection mongoCollection = mapper.enforceWriteConcern(collection, entity.getClass());
-        ClientSession clientSession = findSession(options);
-        if (clientSession == null) {
-            mongoCollection.insertOne(entity, options.getOptions());
-        } else {
-            mongoCollection.insertOne(clientSession, entity, options.getOptions());
-        }
-    }
-
     private <T> T doTransaction(MorphiaSession morphiaSession, MorphiaTransaction<T> body) {
         try (morphiaSession) {
             ClientSession session = morphiaSession.getSession();
@@ -622,80 +588,54 @@ public class DatastoreImpl implements AdvancedDatastore {
     private <T> void save(MongoCollection collection, T entity, InsertOneOptions options) {
         ClientSession clientSession = findSession(options);
 
-        PropertyModel idField = mapper.findIdProperty(entity.getClass());
-        Object id = idField.getValue(entity);
+        Object id = mapper.findIdProperty(entity.getClass()).getValue(entity);
+        VersionBumpInfo info = updateVersioning(entity);
 
-        final EntityModel model = mapper.getEntityModel(entity.getClass());
-        final PropertyModel versionProperty = model.getVersionProperty();
-        Long oldVersion = null;
-        long newVersion = -1;
-
-        if (versionProperty != null) {
-            oldVersion = (Long) versionProperty.getValue(entity);
-            newVersion = oldVersion == null ? 1L : oldVersion + 1;
-        }
-
-        Runnable operation;
-
-        if (id == null || newVersion == 1) {
-            operation = () -> {
+        try {
+            if (id == null || info.versioned && info.newVersion == 1) {
                 if (clientSession == null) {
                     options.prepare(collection).insertOne(entity, options.getOptions());
                 } else {
                     options.prepare(collection).insertOne(clientSession, entity, options.getOptions());
                 }
-            };
-        } else {
-            ReplaceOptions updateOptions = new ReplaceOptions()
-                .bypassDocumentValidation(options.getBypassDocumentValidation())
-                .upsert(true);
-            Document filter = new Document("_id", id);
-            if (versionProperty != null) {
-                filter.put(versionProperty.getMappedName(), oldVersion);
-            }
-            operation = () -> {
-                UpdateResult updateResult;
-                if (clientSession == null) {
-                    updateResult = options.prepare(collection).replaceOne(filter, entity, updateOptions);
-                } else {
-                    updateResult = options.prepare(collection).replaceOne(clientSession, filter, entity, updateOptions);
+            } else {
+                ReplaceOptions updateOptions = new ReplaceOptions()
+                    .bypassDocumentValidation(options.getBypassDocumentValidation())
+                    .upsert(true);
+                Document filter = new Document("_id", id);
+                if (info.versioned) {
+                    filter.put(info.versionProperty.getMappedName(), info.oldVersion);
                 }
-                if (versionProperty != null && updateResult.getModifiedCount() != 1) {
+                UpdateResult updateResult = clientSession == null
+                                            ? options.prepare(collection).replaceOne(filter, entity, updateOptions)
+                                            : options.prepare(collection).replaceOne(clientSession, filter, entity, updateOptions);
+
+                if (info.versioned && updateResult.getModifiedCount() != 1) {
+                    info.rollbackVersion(entity);
                     throw new VersionMismatchException(entity.getClass(), id);
                 }
-            };
-        }
+            }
 
-        try {
-            updateVersion(entity, versionProperty, newVersion);
-            operation.run();
         } catch (MongoWriteException e) {
-            updateVersion(entity, versionProperty, oldVersion);
-            if (versionProperty != null) {
+            if (info.versioned) {
+                info.rollbackVersion(entity);
                 throw new VersionMismatchException(entity.getClass(), id);
             }
             throw e;
         }
     }
 
-    private <T> void setInitialVersion(@Nullable EntityModel entityModel, T entity) {
-        if (entityModel != null) {
-            PropertyModel versionProperty = entityModel.getVersionProperty();
-            if (versionProperty != null) {
-                Object value = versionProperty.getValue(entity);
-                if (value != null && !value.equals(0)) {
-                    throw new ValidationException(Sofia.versionManuallySet());
-                } else {
-                    versionProperty.setValue(entity, 1L);
-                }
-            }
-        }
-    }
-
-    private <T> void updateVersion(T entity, @Nullable PropertyModel versionProperty, @Nullable Long newVersion) {
+    private <T> VersionBumpInfo updateVersioning(T entity) {
+        final EntityModel entityModel = mapper.getEntityModel(entity.getClass());
+        PropertyModel versionProperty = entityModel.getVersionProperty();
         if (versionProperty != null) {
-            versionProperty.setValue(entity, newVersion);
+            Long value = (Long) versionProperty.getValue(entity);
+            long updated = value == null ? 1 : value + 1;
+            versionProperty.setValue(entity, updated);
+            return new VersionBumpInfo(versionProperty, value, updated);
         }
+
+        return new VersionBumpInfo();
     }
 
     private static class NoDeleteResult extends DeleteResult {
@@ -707,6 +647,33 @@ public class DatastoreImpl implements AdvancedDatastore {
         @Override
         public long getDeletedCount() {
             return 0;
+        }
+    }
+
+    private static class VersionBumpInfo {
+        private final Long oldVersion;
+        private final boolean versioned;
+        private final Long newVersion;
+        private final PropertyModel versionProperty;
+
+        private VersionBumpInfo() {
+            versioned = false;
+            newVersion = null;
+            oldVersion = null;
+            versionProperty = null;
+        }
+
+        private VersionBumpInfo(PropertyModel versionProperty, @Nullable Long oldVersion, Long newVersion) {
+            versioned = true;
+            this.newVersion = newVersion;
+            this.oldVersion = oldVersion;
+            this.versionProperty = versionProperty;
+        }
+
+        private <T> void rollbackVersion(T entity) {
+            if (versioned) {
+                versionProperty.setValue(entity, oldVersion);
+            }
         }
     }
 }
