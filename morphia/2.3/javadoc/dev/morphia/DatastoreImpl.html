@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -550,13 +550,6 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i21" class="rowColor">
-<td class="colFirst"><code>protected &lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(com.mongodb.client.MongoCollection,T,dev.morphia.InsertOneOptions)">insert</a></span>​(com.mongodb.client.MongoCollection&nbsp;collection,
-      T&nbsp;entity,
-      <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i22" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.util.List,dev.morphia.InsertManyOptions)">insert</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
       <a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;options)</code></th>
@@ -564,14 +557,14 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Inserts entities in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T)">insert</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Inserts an entity in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T,dev.morphia.InsertOneOptions)">insert</a></span>​(T&nbsp;entity,
       <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -579,14 +572,14 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Inserts an entity in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T)">merge</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
      <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -594,7 +587,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(java.lang.String,T)">queryByExample</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
               T&nbsp;ex)</code></th>
@@ -602,21 +595,21 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Returns a new query based on the example object</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(T)">queryByExample</a></span>​(T&nbsp;example)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query based on the example object</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#refresh(T)">refresh</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Refreshes an existing entity to its current state in the database.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.util.List,dev.morphia.InsertManyOptions)">save</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
     <a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;options)</code></th>
@@ -624,14 +617,14 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Saves the entities (Objects) and updates the @Id field</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T)">save</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Saves an entity (Object) and updates the @Id field</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T,dev.morphia.InsertOneOptions)">save</a></span>​(T&nbsp;entity,
     <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -639,34 +632,34 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Saves an entity (Object) and updates the @Id field</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession()">startSession</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession(com.mongodb.ClientSessionOptions)">startSession</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>org.bson.Document</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDocument(java.lang.Object)">toDocument</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Converts an entity (POJO) to a Document.</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options,
                <a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></span>​(<a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;body)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -1478,7 +1471,7 @@ public&nbsp;com.mongodb.client.ClientSession&nbsp;findSession​(<a href="intern
 <a id="toDocument(java.lang.Object)">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>toDocument</h4>
 <pre class="methodSignature">public&nbsp;org.bson.Document&nbsp;toDocument​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity)</pre>
@@ -1491,19 +1484,6 @@ public&nbsp;com.mongodb.client.ClientSession&nbsp;findSession​(<a href="intern
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
-</li>
-</ul>
-<a id="insert(com.mongodb.client.MongoCollection,java.lang.Object,dev.morphia.InsertOneOptions)">
-<!--   -->
-</a><a id="insert(com.mongodb.client.MongoCollection,T,dev.morphia.InsertOneOptions)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>insert</h4>
-<pre class="methodSignature">protected&nbsp;&lt;T&gt;&nbsp;void&nbsp;insert​(com.mongodb.client.MongoCollection&nbsp;collection,
-                          T&nbsp;entity,
-                          <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</pre>
 </li>
 </ul>
 </li>
