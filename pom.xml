@@ -41,7 +41,7 @@
         <maven.version>3.8.3</maven.version>
         <revapi.maven.plugin.version>0.14.5</revapi.maven.plugin.version>
         <revapi.java.version>0.26.0</revapi.java.version>
-        <roaster.version>2.23.0.Final</roaster.version>
+        <roaster.version>2.23.2.Final</roaster.version>
         <slf4j.version>1.7.30</slf4j.version>
         <sofia.version>0.23</sofia.version>
         <surefire.version>3.0.0-M5</surefire.version>
