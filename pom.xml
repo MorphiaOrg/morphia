@@ -46,7 +46,7 @@
         <sofia.version>0.23</sofia.version>
         <surefire.version>3.0.0-M5</surefire.version>
         <testng.version>7.4.0</testng.version>
-        <zt.exec.version>1.11</zt.exec.version>
+        <zt.exec.version>1.12</zt.exec.version>
     </properties>
 
     <build>
