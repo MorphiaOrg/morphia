@@ -39,7 +39,7 @@
         <json.assert.version>1.2.3</json.assert.version>
         <kotlin.version>1.6.0</kotlin.version>
         <maven.version>3.8.3</maven.version>
-        <revapi.maven.plugin.version>0.14.5</revapi.maven.plugin.version>
+        <revapi.maven.plugin.version>0.14.6</revapi.maven.plugin.version>
         <revapi.java.version>0.26.0</revapi.java.version>
         <roaster.version>2.23.2.Final</roaster.version>
         <slf4j.version>1.7.30</slf4j.version>
