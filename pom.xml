@@ -37,7 +37,7 @@
         <dokka.version>1.5.31</dokka.version>
         <driver.version>4.3.3</driver.version>
         <json.assert.version>1.2.3</json.assert.version>
-        <kotlin.version>1.6.0-RC2</kotlin.version>
+        <kotlin.version>1.6.0</kotlin.version>
         <maven.version>3.8.3</maven.version>
         <revapi.maven.plugin.version>0.14.5</revapi.maven.plugin.version>
         <revapi.java.version>0.26.0</revapi.java.version>
