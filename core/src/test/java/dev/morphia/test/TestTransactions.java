@@ -1,5 +1,6 @@
 package dev.morphia.test;
 
+import com.mongodb.MongoQueryException;
 import com.mongodb.TransactionOptions;
 import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.test.models.Rectangle;
@@ -88,20 +89,33 @@ public class TestTransactions extends TestBase {
 
     @Test
     public void manual() {
-        try (MorphiaSession session = getDs().startSession()) {
-            session.startTransaction();
+        boolean success = false;
+        int count = 0;
+        while (!success && count < 5) {
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
 
-            Rectangle rectangle = new Rectangle(1, 1);
-            session.save(rectangle);
+                Rectangle rectangle = new Rectangle(1, 1);
+                session.save(rectangle);
 
-            session.save(new User("transactions", LocalDate.now()));
+                session.save(new User("transactions", LocalDate.now()));
 
-            assertNull(getDs().find(Rectangle.class).first());
-            assertNull(getDs().find(User.class).first());
-            assertNotNull(session.find(Rectangle.class).first());
-            assertNotNull(session.find(User.class).first());
+                assertNull(getDs().find(Rectangle.class).first());
+                assertNull(getDs().find(User.class).first());
+                assertNotNull(session.find(Rectangle.class).first());
+                assertNotNull(session.find(User.class).first());
 
-            session.commitTransaction();
+                session.commitTransaction();
+                success = true;
+            } catch (MongoQueryException e) {
+                if (e.getErrorCode() == 251 && e.getErrorMessage().contains("has been aborted")) {
+                    count++;
+                } else {
+                    throw e;
+                }
+            } catch (RuntimeException e) {
+                throw e;
+            }
         }
 
         assertNotNull(getDs().find(Rectangle.class).first());
