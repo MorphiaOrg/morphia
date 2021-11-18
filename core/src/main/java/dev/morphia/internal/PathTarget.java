@@ -23,6 +23,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.util.Iterator;
 import java.util.List;
@@ -63,6 +64,7 @@ public class PathTarget {
      * @param path          path
      * @param validateNames true if names should be validated
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public PathTarget(Mapper mapper, @Nullable EntityModel root, String path, boolean validateNames) {
         segments = asList(path.split("\\."));
         this.root = root;

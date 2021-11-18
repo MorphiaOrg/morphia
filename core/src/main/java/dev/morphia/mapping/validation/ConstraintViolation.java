@@ -3,6 +3,7 @@ package dev.morphia.mapping.validation;
 
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 /**
@@ -24,6 +25,7 @@ public class ConstraintViolation {
      * @param validator   the constraint failed
      * @param message     the message for the failure
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public ConstraintViolation(Level level, EntityModel entityModel, PropertyModel property,
                                Class<? extends ClassConstraint> validator, String message) {
         this(level, entityModel, validator, message);
@@ -38,6 +40,7 @@ public class ConstraintViolation {
      * @param validator   the constraint failed
      * @param message     the message for the failure
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public ConstraintViolation(Level level, EntityModel entityModel, Class<? extends ClassConstraint> validator,
                                String message) {
         this.level = level;

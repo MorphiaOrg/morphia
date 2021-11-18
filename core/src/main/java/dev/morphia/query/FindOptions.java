@@ -455,7 +455,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     public FindOptions hint(Document hint) {
-        this.hint = hint;
+        this.hint = new Document(hint);
         return this;
     }
 
@@ -566,7 +566,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     public FindOptions max(Document max) {
-        this.max = max;
+        this.max = new Document(max);
         return this;
     }
 
@@ -616,7 +616,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     public FindOptions min(Document min) {
-        this.min = min;
+        this.min = new Document(min);
         return this;
     }
 
@@ -726,7 +726,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
      * @return this
      */
     public FindOptions sort(Document sort) {
-        this.sort = sort;
+        this.sort = new Document(sort);
         return this;
     }
 

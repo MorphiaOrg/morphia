@@ -4,6 +4,7 @@ import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.experimental.ConstructorCreator;
 import dev.morphia.sofia.Sofia;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
      *
      * @param model the type's model
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public InstanceCreatorFactoryImpl(EntityModel model) {
         this.model = model;
     }

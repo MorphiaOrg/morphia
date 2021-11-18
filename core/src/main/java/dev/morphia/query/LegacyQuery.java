@@ -7,6 +7,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
@@ -19,7 +20,6 @@ import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -455,7 +455,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return obj;
     }
 
-    @NotNull
+    @NonNull
     private <E> FindIterable<E> iterable(FindOptions options, MongoCollection<E> collection) {
         final Document query = this.toDocument();
 

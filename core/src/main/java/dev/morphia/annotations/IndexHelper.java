@@ -8,6 +8,7 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.IndexType;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ public final class IndexHelper {
      * @param mapper the mapper
      * @morphia.internal
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public IndexHelper(Mapper mapper) {
         this.mapper = mapper;
     }
@@ -66,12 +68,12 @@ public final class IndexHelper {
         return text == null
                ? null
                : indexBuilder()
-                     .options(text.options())
-                     .fields(new Field[]{fieldBuilder()
-                                             .value(nameToStore)
-                                             .type(IndexType.TEXT)
-                                             .weight(text.value())
-                                             .build()})
+                   .options(text.options())
+                   .fields(fieldBuilder()
+                       .value(nameToStore)
+                       .type(IndexType.TEXT)
+                       .weight(text.value())
+                       .build())
                      .build();
     }
 
@@ -80,11 +82,11 @@ public final class IndexHelper {
         return indexed == null
                ? null
                : indexBuilder()
-                     .options(indexed.options())
-                     .fields(new Field[]{fieldBuilder()
-                                             .value(nameToStore)
-                                             .type(fromValue(indexed.value().toIndexValue()))
-                                             .build()})
+                   .options(indexed.options())
+                   .fields(fieldBuilder()
+                       .value(nameToStore)
+                       .type(fromValue(indexed.value().toIndexValue()))
+                       .build())
                      .build();
     }
 

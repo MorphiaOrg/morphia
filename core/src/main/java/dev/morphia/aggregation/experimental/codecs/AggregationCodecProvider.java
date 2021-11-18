@@ -59,6 +59,7 @@ import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.UnionWith;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -73,6 +74,7 @@ public class AggregationCodecProvider implements CodecProvider {
     private final Datastore datastore;
     private Map<Class, StageCodec> codecs;
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public AggregationCodecProvider(Datastore datastore) {
         this.datastore = datastore;
         expressionCodec = new ExpressionCodec(datastore);

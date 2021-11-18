@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
@@ -22,7 +23,6 @@ import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -306,7 +306,7 @@ class MorphiaQuery<T> implements Query<T> {
         return collectionName;
     }
 
-    @NotNull
+    @NonNull
     private <E> FindIterable<E> iterable(FindOptions findOptions, MongoCollection<E> collection) {
         final Document query = toDocument();
 

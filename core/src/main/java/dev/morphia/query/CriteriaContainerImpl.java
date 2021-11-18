@@ -4,6 +4,7 @@ package dev.morphia.query;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     private final List<Criteria> children = new ArrayList<>();
     private LegacyQuery<?> query;
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     protected CriteriaContainerImpl(Datastore datastore, LegacyQuery<?> query, CriteriaJoin joinMethod) {
         this.joinMethod = joinMethod;
         this.datastore = datastore;
@@ -132,6 +134,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
      *
      * @param query the query
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void setQuery(LegacyQuery<?> query) {
         this.query = query;
     }

@@ -4,6 +4,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.lang.reflect.Constructor;
 
@@ -20,6 +21,7 @@ public class NoArgCreator implements MorphiaInstanceCreator {
      *
      * @param noArgsConstructor the constructor
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public NoArgCreator(Constructor<?> noArgsConstructor) {
         this.noArgsConstructor = noArgsConstructor;
         this.noArgsConstructor.setAccessible(true);

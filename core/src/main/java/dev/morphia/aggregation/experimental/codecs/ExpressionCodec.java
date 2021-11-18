@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.codecs;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.sofia.Sofia;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -13,6 +14,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 public class ExpressionCodec<T extends Expression> implements Codec<T> {
     private final Datastore datastore;
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public ExpressionCodec(Datastore datastore) {
         this.datastore = datastore;
     }
