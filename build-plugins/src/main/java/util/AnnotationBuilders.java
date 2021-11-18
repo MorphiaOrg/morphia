@@ -231,8 +231,8 @@ public class AnnotationBuilders extends AbstractMojo {
     private void output() throws IOException {
         var outputFile = new File(generated, source.getPackage().replace('.', '/')
                                              + "/builders/" + builder.getName() + ".java");
-        if (!outputFile.getParentFile().mkdirs()) {
-            throw new IOException(format("Could not create directory: ", outputFile.getParentFile()));
+        if (!outputFile.getParentFile().mkdirs() && !outputFile.getParentFile().exists()) {
+            throw new IOException(format("Could not create directory: %s", outputFile.getParentFile()));
         }
         try (var writer = new FileWriter(outputFile)) {
             writer.write(builder.toString());
