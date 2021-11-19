@@ -4,6 +4,7 @@ import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -19,7 +20,7 @@ public class SetOnInsertOperator extends UpdateOperator {
      */
     public SetOnInsertOperator(Map<String, Object> values) {
         super("$setOnInsert", "unused", "unused");
-        insertValues = values;
+        insertValues = new LinkedHashMap<>(values);
     }
 
     @Override

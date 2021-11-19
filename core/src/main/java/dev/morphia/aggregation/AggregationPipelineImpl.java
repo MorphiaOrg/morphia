@@ -15,6 +15,7 @@ import dev.morphia.query.BucketOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import dev.morphia.sofia.Sofia;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
      * @param collection the database collection on which to operate
      * @param source     the source type to aggregate
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public AggregationPipelineImpl(Datastore datastore, MongoCollection collection, Class source) {
         this.collection = collection;
         mapper = datastore.getMapper();
@@ -161,9 +163,9 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     public AggregationPipeline lookup(String from, String localField,
                                       String foreignField, String as) {
         stages.add(new Document("$lookup", new Document("from", from)
-                                               .append("localField", localField)
-                                               .append("foreignField", foreignField)
-                                               .append("as", as)));
+            .append("localField", localField)
+            .append("foreignField", foreignField)
+            .append("as", as)));
         return this;
     }
 
@@ -238,7 +240,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public AggregationPipeline unwind(String field, UnwindOptions options) {
         Document unwindOptions = new Document("path", "$" + field)
-                                     .append("preserveNullAndEmptyArrays", options.isPreserveNullAndEmptyArrays());
+            .append("preserveNullAndEmptyArrays", options.isPreserveNullAndEmptyArrays());
         String includeArrayIndex = options.getIncludeArrayIndex();
         if (includeArrayIndex != null) {
             unwindOptions.append("includeArrayIndex", includeArrayIndex);

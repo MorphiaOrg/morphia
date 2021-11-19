@@ -13,6 +13,7 @@ import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.sofia.Sofia;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.UuidRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -335,6 +336,7 @@ public class MapperOptions {
          * @param classLoader the ClassLoader to use
          * @return this
          */
+        @SuppressFBWarnings("EI_EXPOSE_REP2")
         public Builder classLoader(ClassLoader classLoader) {
             assertNotLocked();
             this.classLoader = classLoader;

@@ -42,6 +42,7 @@ import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -68,6 +69,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
      * @param collection the source collection
      * @morphia.internal
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public AggregationImpl(Datastore datastore, MongoCollection<T> collection) {
         this.datastore = datastore;
         this.collection = collection;

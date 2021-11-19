@@ -18,6 +18,7 @@ package dev.morphia.aggregation;
 
 import dev.morphia.geo.Point;
 import dev.morphia.query.Query;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Outputs documents in order of nearest to farthest from a specified point.
@@ -293,6 +294,7 @@ public final class GeoNear {
          * @return this
          * @mongodb.driver.manual tutorial/query-documents/ read operation query syntax
          */
+        @SuppressFBWarnings("EI_EXPOSE_REP2")
         public GeoNearBuilder setQuery(Query query) {
             this.query = query;
             return this;

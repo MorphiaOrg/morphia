@@ -190,6 +190,12 @@
           "code": "java.method.addedToInterface",
           "classQualifiedName": "dev.morphia.query.Query",
           "methodName": "getLoggedQuery"
+        },
+        {
+          "ignore": true,
+          "code": "java.annotation.added",
+          "annotation": "@edu.umd.cs.findbugs.annotations.SuppressFBWarnings({\"EI_EXPOSE_REP2\"})",
+          "justification": "spotbugs config"
         }
       ]
     }

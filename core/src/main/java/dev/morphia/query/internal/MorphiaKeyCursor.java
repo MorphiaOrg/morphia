@@ -9,6 +9,7 @@ import dev.morphia.Key;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.reader.DocumentReader;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
 
@@ -38,6 +39,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
      * @param collection the mongodb collection
      */
     @MorphiaInternal
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public MorphiaKeyCursor(MongoCursor<Document> cursor, Datastore datastore, Class<T> clazz, String collection) {
         this.wrapped = cursor;
         if (wrapped == null) {

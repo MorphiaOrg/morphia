@@ -197,7 +197,7 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
      * @param ops the operations
      */
     public void setOps(Document ops) {
-        this.ops = ops;
+        this.ops = new Document(ops);
     }
 
     protected UpdateOperations<T> remove(String fieldExpr, boolean firstNotLast) {

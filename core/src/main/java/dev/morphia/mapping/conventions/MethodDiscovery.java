@@ -1,5 +1,6 @@
 package dev.morphia.mapping.conventions;
 
+import com.mongodb.lang.NonNull;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -7,7 +8,7 @@ import dev.morphia.mapping.codec.MethodAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.sofia.Sofia;
-import org.jetbrains.annotations.NotNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -24,6 +25,7 @@ public class MethodDiscovery implements MorphiaConvention {
     private EntityModelBuilder entityModelBuilder;
 
     @Override
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void apply(Mapper mapper, EntityModelBuilder builder) {
         if (builder.propertyModels().isEmpty()) {
             this.entityModelBuilder = builder;
@@ -42,8 +44,8 @@ public class MethodDiscovery implements MorphiaConvention {
                    .collect(Collectors.toList());
     }
 
-    @NotNull
-    private Method getTargetMethod(EntityModelBuilder builder, Method method) {
+    @NonNull
+    private Method getTargetMethod(EntityModelBuilder builder, @NonNull Method method) {
         try {
             if (builder.type().equals(builder.targetType())) {
                 return method;
