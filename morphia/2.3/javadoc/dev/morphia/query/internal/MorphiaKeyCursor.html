@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":42,"i1":42,"i2":42,"i3":42,"i4":42,"i5":42,"i6":42,"i7":42};
+var data = {"i0":42,"i1":42,"i2":42,"i3":42,"i4":42,"i5":42,"i6":42,"i7":42,"i8":42};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -410,6 +410,13 @@ implements com.mongodb.client.MongoCursor&lt;<a href="../../Key.html" title="cla
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#available()">available</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#close()">close</a></span>()</code></th>
 <td class="colLast">
@@ -417,42 +424,42 @@ implements com.mongodb.client.MongoCursor&lt;<a href="../../Key.html" title="cla
 <div class="block">Closes the underlying cursor.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>com.mongodb.ServerAddress</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getServerAddress()">getServerAddress</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>com.mongodb.ServerCursor</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getServerCursor()">getServerCursor</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasNext()">hasNext</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#next()">next</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove()">remove</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toList()">toList</a></span>()</code></th>
 <td class="colLast">
@@ -460,7 +467,7 @@ implements com.mongodb.client.MongoCursor&lt;<a href="../../Key.html" title="cla
 <div class="block">Converts this cursor to a List.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tryNext()">tryNext</a></span>()</code></th>
 <td class="colLast">
@@ -579,6 +586,20 @@ public&nbsp;<a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;<a 
 <dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true#next()" title="class or interface in java.util" class="externalLink">next</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;<a href="MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;</code></dd>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>next</code>&nbsp;in interface&nbsp;<code>com.mongodb.client.MongoCursor&lt;<a href="MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a id="available()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>available</h4>
+<pre class="methodSignature">public&nbsp;int&nbsp;available()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>available</code>&nbsp;in interface&nbsp;<code>com.mongodb.client.MongoCursor&lt;<a href="MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;</code></dd>
 </dl>
 </li>
 </ul>
