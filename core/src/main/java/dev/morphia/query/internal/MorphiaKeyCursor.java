@@ -76,6 +76,10 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
         return convertItem(wrapped.next());
     }
 
+    public int available() {
+        return wrapped.available();
+    }
+
     @Override
     public Key<T> tryNext() {
         if (hasNext()) {
