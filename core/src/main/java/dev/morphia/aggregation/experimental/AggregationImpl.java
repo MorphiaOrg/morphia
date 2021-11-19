@@ -327,6 +327,10 @@ public class AggregationImpl<T> implements Aggregation<T> {
             return map(results.next());
         }
 
+        public int available() {
+            return results.available();
+        }
+
         @Override
         @Nullable
         public R tryNext() {
