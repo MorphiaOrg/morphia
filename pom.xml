@@ -38,7 +38,7 @@
         <driver.version>4.4.0</driver.version>
         <json.assert.version>1.5.0</json.assert.version>
         <kotlin.version>1.6.0</kotlin.version>
-        <maven.version>3.8.3</maven.version>
+        <maven.version>3.8.4</maven.version>
         <revapi.maven.plugin.version>0.14.6</revapi.maven.plugin.version>
         <revapi.java.version>0.26.1</revapi.java.version>
         <roaster.version>2.23.2.Final</roaster.version>
