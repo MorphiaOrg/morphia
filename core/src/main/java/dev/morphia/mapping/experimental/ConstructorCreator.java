@@ -49,11 +49,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     public ConstructorCreator(EntityModel model, Constructor<?> constructor) {
         this.model = model;
         this.constructor = constructor;
-        try {
-            this.constructor.setAccessible(true);
-        } catch (NullPointerException e) {
-            throw e;
-        }
+        this.constructor.setAccessible(true);
 
         final Parameter[] constructorParameters = this.constructor.getParameters();
         this.parameters = new Object[constructorParameters.length];
