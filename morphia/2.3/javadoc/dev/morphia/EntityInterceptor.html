@@ -242,8 +242,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":18,"i1":18,"i2":18,"i3":18};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],16:["t5","Default Methods"]};
+var data = {"i0":18,"i1":50,"i2":18,"i3":50,"i4":18,"i5":50,"i6":18,"i7":50};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -359,7 +359,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -367,31 +367,77 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>default void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">postLoad</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#postLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">postLoad</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
         org.bson.Document&nbsp;document,
-        <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+        <a href="Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>default void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">postPersist</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
-           org.bson.Document&nbsp;document,
-           <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
-<td class="colLast">&nbsp;</td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">postLoad</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+        org.bson.Document&nbsp;document,
+        <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>default void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">preLoad</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
-       org.bson.Document&nbsp;document,
-       <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">postPersist</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+           org.bson.Document&nbsp;document,
+           <a href="Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">postPersist</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+           org.bson.Document&nbsp;document,
+           <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">preLoad</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+       org.bson.Document&nbsp;document,
+       <a href="Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">preLoad</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+       org.bson.Document&nbsp;document,
+       <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>preLoad(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
+</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>default void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">prePersist</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+          org.bson.Document&nbsp;document,
+          <a href="Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">prePersist</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
           org.bson.Document&nbsp;document,
           <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>prePersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
+</div>
+</td>
 </tr>
 </tbody></table>
 </li>
@@ -416,14 +462,39 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>postLoad</h4>
-<pre class="methodSignature">default&nbsp;void&nbsp;postLoad​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+default&nbsp;void&nbsp;postLoad​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
                       org.bson.Document&nbsp;document,
                       <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ent</code> - the entity being processed</dd>
 <dd><code>document</code> - the Document form of the entity</dd>
 <dd><code>mapper</code> - the Mapper being used</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="annotations/PostLoad.html" title="annotation in dev.morphia.annotations"><code>PostLoad</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="postLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>postLoad</h4>
+<pre class="methodSignature">default&nbsp;void&nbsp;postLoad​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+                      org.bson.Document&nbsp;document,
+                      <a href="Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ent</code> - the entity being processed</dd>
+<dd><code>document</code> - the Document form of the entity</dd>
+<dd><code>datastore</code> - the Datastore being used</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="annotations/PostLoad.html" title="annotation in dev.morphia.annotations"><code>PostLoad</code></a></dd>
 </dl>
@@ -435,14 +506,39 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>postPersist</h4>
-<pre class="methodSignature">default&nbsp;void&nbsp;postPersist​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+default&nbsp;void&nbsp;postPersist​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
                          org.bson.Document&nbsp;document,
                          <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ent</code> - the entity being processed</dd>
 <dd><code>document</code> - the Document form of the entity</dd>
 <dd><code>mapper</code> - the Mapper being used</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="annotations/PostPersist.html" title="annotation in dev.morphia.annotations"><code>PostPersist</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>postPersist</h4>
+<pre class="methodSignature">default&nbsp;void&nbsp;postPersist​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+                         org.bson.Document&nbsp;document,
+                         <a href="Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ent</code> - the entity being processed</dd>
+<dd><code>document</code> - the Document form of the entity</dd>
+<dd><code>datastore</code> - the Datastore being used</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="annotations/PostPersist.html" title="annotation in dev.morphia.annotations"><code>PostPersist</code></a></dd>
 </dl>
@@ -454,9 +550,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>preLoad</h4>
-<pre class="methodSignature">default&nbsp;void&nbsp;preLoad​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+default&nbsp;void&nbsp;preLoad​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
                      org.bson.Document&nbsp;document,
                      <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>preLoad(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
+</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ent</code> - the entity being processed</dd>
@@ -467,7 +568,52 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 </li>
 </ul>
+<a id="preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>preLoad</h4>
+<pre class="methodSignature">default&nbsp;void&nbsp;preLoad​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+                     org.bson.Document&nbsp;document,
+                     <a href="Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ent</code> - the entity being processed</dd>
+<dd><code>document</code> - the Document form of the entity</dd>
+<dd><code>datastore</code> - the Datastore being used</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="annotations/PreLoad.html" title="annotation in dev.morphia.annotations"><code>PreLoad</code></a></dd>
+</dl>
+</li>
+</ul>
 <a id="prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>prePersist</h4>
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+default&nbsp;void&nbsp;prePersist​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
+                        org.bson.Document&nbsp;document,
+                        <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>prePersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
+</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ent</code> - the entity being processed</dd>
+<dd><code>document</code> - the Document form of the entity</dd>
+<dd><code>mapper</code> - the Mapper being used</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="annotations/PrePersist.html" title="annotation in dev.morphia.annotations"><code>PrePersist</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -475,14 +621,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>prePersist</h4>
 <pre class="methodSignature">default&nbsp;void&nbsp;prePersist​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
                         org.bson.Document&nbsp;document,
-                        <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+                        <a href="Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ent</code> - the entity being processed</dd>
 <dd><code>document</code> - the Document form of the entity</dd>
-<dd><code>mapper</code> - the Mapper being used</dd>
+<dd><code>datastore</code> - the Datastore being used</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="annotations/PostPersist.html" title="annotation in dev.morphia.annotations"><code>PostPersist</code></a></dd>
+<dd><a href="annotations/PrePersist.html" title="annotation in dev.morphia.annotations"><code>PrePersist</code></a></dd>
 </dl>
 </li>
 </ul>

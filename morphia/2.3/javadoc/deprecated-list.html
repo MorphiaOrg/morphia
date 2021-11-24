@@ -633,6 +633,32 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postLoad​(Object, Document, Mapper)</a></th>
+<td class="colLast">
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postPersist​(Object, Document, Mapper)</a></th>
+<td class="colLast">
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.preLoad​(Object, Document, Mapper)</a></th>
+<td class="colLast">
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.preLoad(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.prePersist​(Object, Document, Mapper)</a></th>
+<td class="colLast">
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.prePersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/FindAndModifyOptions.html" title="class in dev.morphia">dev.morphia.FindAndModifyOptions</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia"><code>ModifyOptions</code></a> instead</div>
@@ -1743,6 +1769,32 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">dev.morphia.Datastore.update​(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, UpdateOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postLoad​(Object, Document, Mapper)</a></th>
+<td class="colLast">
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postPersist​(Object, Document, Mapper)</a></th>
+<td class="colLast">
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.preLoad​(Object, Document, Mapper)</a></th>
+<td class="colLast">
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.preLoad(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
+</td>
+</tr>
+<tr class="altColor">
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.prePersist​(Object, Document, Mapper)</a></th>
+<td class="colLast">
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.prePersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
 </td>
 </tr>
 <tr class="rowColor">

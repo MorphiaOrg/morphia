@@ -7611,14 +7611,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/SliceExpression.html#position(java.lang.Integer)">position(Integer)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/SliceExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">SliceExpression</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">postLoad(Object, Document, Mapper)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">postLoad(Object, Document, Datastore)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">postLoad(Object, Document, Mapper)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</div>
+</dd>
 <dt><a href="dev/morphia/annotations/PostLoad.html" title="annotation in dev.morphia.annotations"><span class="typeNameLink">PostLoad</span></a> - Annotation Type in <a href="dev/morphia/annotations/package-summary.html">dev.morphia.annotations</a></dt>
 <dd>
 <div class="block">Called after the data has been loaded into the java object.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">postPersist(Object, Document, Mapper)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">postPersist(Object, Document, Datastore)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">postPersist(Object, Document, Mapper)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
+</div>
+</dd>
 <dt><a href="dev/morphia/annotations/PostPersist.html" title="annotation in dev.morphia.annotations"><span class="typeNameLink">PostPersist</span></a> - Annotation Type in <a href="dev/morphia/annotations/package-summary.html">dev.morphia.annotations</a></dt>
 <dd>
 <div class="block">Called after the data has been persisted from the java object.</div>
@@ -7631,8 +7643,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">preLoad(Object, Document, Mapper)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">preLoad(Object, Document, Datastore)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">preLoad(Object, Document, Mapper)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.preLoad(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
+</div>
+</dd>
 <dt><a href="dev/morphia/annotations/PreLoad.html" title="annotation in dev.morphia.annotations"><span class="typeNameLink">PreLoad</span></a> - Annotation Type in <a href="dev/morphia/annotations/package-summary.html">dev.morphia.annotations</a></dt>
 <dd>
 <div class="block">Called before the data has been loaded from the datastore.</div>
@@ -7645,8 +7664,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Applies the options to the collection</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">prePersist(Object, Document, Mapper)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">prePersist(Object, Document, Datastore)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">prePersist(Object, Document, Mapper)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.prePersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
+ necessary</div>
+</div>
+</dd>
 <dt><a href="dev/morphia/annotations/PrePersist.html" title="annotation in dev.morphia.annotations"><span class="typeNameLink">PrePersist</span></a> - Annotation Type in <a href="dev/morphia/annotations/package-summary.html">dev.morphia.annotations</a></dt>
 <dd>
 <div class="block">Called before the data has been persisted to the datastore (before mapping is done).</div>
