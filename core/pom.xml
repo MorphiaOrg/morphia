@@ -188,6 +188,7 @@
         <dependency>
             <groupId>com.antwerkz.bottlerocket</groupId>
             <artifactId>bottlerocket</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.zeroturnaround</groupId>
@@ -215,127 +216,19 @@
                     <name>quality</name>
                 </property>
             </activation>
-            <properties>
-                <maven.test.skip>true</maven.test.skip>
-            </properties>
             <build>
-                <defaultGoal>verify</defaultGoal>
                 <plugins>
-<!--
-                    <plugin>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>build-plugins</artifactId>
-                        <version>${project.version}</version>
-                        <executions>
-                            <execution>
-                                <id>revapi-config</id>
-                                <goals>
-                                    <goal>revapi-config</goal>
-                                </goals>
-                                <phase>generate-resources</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <input>../config/revapi-input.json</input>
-                            <output>../config/revapi.json</output>
-                        </configuration>
-                    </plugin>
--->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>3.1.2</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.puppycrawl.tools</groupId>
-                                <artifactId>checkstyle</artifactId>
-                                <version>9.1</version>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <id>checkstyle</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <phase>verify</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <configLocation>../config/checkstyle.xml</configLocation>
-                            <suppressionsLocation>../config/checkstyle-exclude.xml</suppressionsLocation>
-                            <encoding>UTF-8</encoding>
-                            <linkXRef>false</linkXRef>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>4.5.0.0</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.github.spotbugs</groupId>
-                                <artifactId>spotbugs</artifactId>
-                                <version>4.5.0</version>
-                                <type>pom</type>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <id>spotbugs</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <phase>verify</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
-                            <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.revapi</groupId>
                         <artifactId>revapi-maven-plugin</artifactId>
-                        <version>${revapi.maven.plugin.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.revapi</groupId>
-                                <artifactId>revapi-java</artifactId>
-                                <version>${revapi.java.version}</version>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <id>revapi</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                                <phase>verify</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                            <analysisConfigurationFiles>
-                                <analysisConfigurationFile>../config/revapi-filtered.json</analysisConfigurationFile>
-                            </analysisConfigurationFiles>
-                            <analysisConfiguration>
-                                <revapi.versions>
-                                    <enabled>true</enabled>
-                                    <versionIncreaseAllows>
-                                        <major>
-                                            <severity>BREAKING</severity>
-                                        </major>
-                                        <minor>
-                                            <severity>NON_BREAKING</severity>
-                                        </minor>
-                                        <patch>
-                                            <severity>EQUIVALENT</severity>
-                                        </patch>
-                                    </versionIncreaseAllows>
-                                </revapi.versions>
-                            </analysisConfiguration>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

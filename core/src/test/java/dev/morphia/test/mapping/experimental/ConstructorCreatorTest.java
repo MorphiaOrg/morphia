@@ -392,7 +392,7 @@ class Invoice {
     }
 }
 
-@Embedded
+@Entity
 class Item {
     private String name;
     private Double price;

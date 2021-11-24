@@ -3,6 +3,8 @@ package dev.morphia.test.mapping;
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.client.model.geojson.Position;
 import com.mongodb.lang.NonNull;
+import com.mongodb.lang.Nullable;
+import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -11,7 +13,6 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
@@ -83,7 +84,6 @@ public class TestLifecycles extends TestBase {
 
     @Test
     public void testGlobalInterceptorRunsAfterEntityCallback() {
-
         getMapper().addInterceptor(new NonNullValidation());
         getMapper().map(ValidNullHolder.class);
         getMapper().map(InvalidNullHolder.class);
@@ -221,9 +221,9 @@ public class TestLifecycles extends TestBase {
 
     private static class NonNullValidation implements EntityInterceptor {
         @Override
-        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Mapper mapper) {
-            final List<PropertyModel> fieldsToTest = mapper.getEntityModel(ent.getClass())
-                                                           .getProperties(NonNull.class);
+        public void prePersist(Object ent, Document document, Datastore datastore) {
+            final List<PropertyModel> fieldsToTest = datastore.getMapper().getEntityModel(ent.getClass())
+                                                              .getProperties(NonNull.class);
             for (PropertyModel mf : fieldsToTest) {
                 if (mf.getValue(ent) == null) {
                     throw new NonNullValidationException(mf);
@@ -266,7 +266,7 @@ public class TestLifecycles extends TestBase {
         @Id
         private final ObjectId id = new ObjectId();
 
-        @NonNull
+        @Nullable
         private Date lastModified;
 
         @PrePersist

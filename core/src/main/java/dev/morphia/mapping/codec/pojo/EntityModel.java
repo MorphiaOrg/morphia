@@ -39,7 +39,7 @@ import static java.util.Arrays.asList;
  * @morphia.internal
  * @since 2.0
  */
-@SuppressWarnings({"unchecked", "deprecation"})
+@SuppressWarnings({"unchecked", "deprecation", "removal"})
 public class EntityModel {
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
         PreLoad.class,
@@ -124,7 +124,7 @@ public class EntityModel {
             }
         }
 
-        callGlobalInterceptors(event, entity, document, mapper);
+        callGlobalInterceptors(event, entity, document, datastore);
     }
 
     /**
@@ -363,18 +363,22 @@ public class EntityModel {
     }
 
     private void callGlobalInterceptors(Class<? extends Annotation> event, Object entity, Document document,
-                                        Mapper mapper) {
-        for (EntityInterceptor ei : mapper.getInterceptors()) {
+                                        Datastore datastore) {
+        for (EntityInterceptor ei : datastore.getMapper().getInterceptors()) {
             Sofia.logCallingInterceptorMethod(event.getSimpleName(), ei);
 
             if (event.equals(PreLoad.class)) {
                 ei.preLoad(entity, document, mapper);
+                ei.preLoad(entity, document, datastore);
             } else if (event.equals(PostLoad.class)) {
                 ei.postLoad(entity, document, mapper);
+                ei.postLoad(entity, document, datastore);
             } else if (event.equals(PrePersist.class)) {
                 ei.prePersist(entity, document, mapper);
+                ei.prePersist(entity, document, datastore);
             } else if (event.equals(PostPersist.class)) {
                 ei.postPersist(entity, document, mapper);
+                ei.postPersist(entity, document, datastore);
             }
         }
     }

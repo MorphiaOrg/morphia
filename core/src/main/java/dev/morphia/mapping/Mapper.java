@@ -489,10 +489,10 @@ public class Mapper {
                                     .addClassLoader(loader)
                                     .enableAllInfo();
         if (mapSubPackages) {
-            classGraph.whitelistPackages(packageName);
-            classGraph.whitelistPackages(packageName + ".*");
+            classGraph.acceptPackages(packageName);
+            classGraph.acceptPackages(packageName + ".*");
         } else {
-            classGraph.whitelistPackagesNonRecursive(packageName);
+            classGraph.acceptPackagesNonRecursive(packageName);
         }
 
         try (ScanResult scanResult = classGraph.scan()) {
