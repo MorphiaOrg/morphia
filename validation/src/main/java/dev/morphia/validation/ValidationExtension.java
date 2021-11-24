@@ -3,15 +3,15 @@ package dev.morphia.validation;
 
 import dev.morphia.EntityInterceptor;
 import dev.morphia.mapping.Mapper;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 import org.bson.Document;
 
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 
 /**
- * Enables javax.validation support.
+ * Enables jakarta.validation support.
  *
  * @since 2.3
  */

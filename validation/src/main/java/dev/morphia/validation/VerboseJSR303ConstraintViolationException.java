@@ -1,7 +1,8 @@
 package dev.morphia.validation;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
