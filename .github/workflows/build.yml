@@ -8,7 +8,6 @@ on: [ push, pull_request, workflow_dispatch ]
 jobs:
   Morphia:
     runs-on: ubuntu-latest
-    if: ${{ github.actor != 'dependabot[bot]' }}
     strategy:
       matrix:
         java: [ 11, 17 ]
@@ -89,7 +88,6 @@ jobs:
         run: mvn -e compile source:jar javadoc:jar deploy -DskipTests
   Docs:
     name: Update Documentation
-    if: "github.repository == 'MorphiaOrg/morphia'"
     needs:
       - Snapshots
     runs-on: ubuntu-latest
