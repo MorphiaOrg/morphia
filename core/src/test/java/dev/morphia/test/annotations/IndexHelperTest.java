@@ -12,6 +12,7 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
+import dev.morphia.annotations.builders.CollationBuilder;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -28,6 +29,7 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
@@ -44,6 +46,7 @@ import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -201,9 +204,9 @@ public class IndexHelperTest extends TestBase {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
         IndexOptions options = indexOptionsBuilder()
-                                   .name("index_name")
-                                   .background(true)
-                                   .collation(collation())
+            .name("index_name")
+            .background(true)
+            .collation(collation().build())
                                    .disableValidation(true)
                                    .language("en")
                                    .languageOverride("de")
@@ -247,17 +250,41 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void indexCollationConversion() {
-        Collation collation = collation();
-        com.mongodb.client.model.Collation driver = getIndexHelper().convert(collation);
-        assertEquals(driver.getLocale(), "en");
-        assertTrue(driver.getCaseLevel());
-        assertEquals(driver.getCaseFirst(), UPPER);
-        assertEquals(driver.getStrength(), IDENTICAL);
-        assertTrue(driver.getNumericOrdering());
-        assertEquals(driver.getAlternate(), SHIFTED);
-        assertEquals(driver.getMaxVariable(), SPACE);
-        assertTrue(driver.getNormalization());
-        assertTrue(driver.getBackwards());
+        Collation collation = collation().build();
+        com.mongodb.client.model.Collation driverCollation = getIndexHelper().convert(collation);
+        assertEquals(driverCollation.getLocale(), "en");
+        assertTrue(driverCollation.getCaseLevel());
+        assertEquals(driverCollation.getCaseFirst(), UPPER);
+        assertEquals(driverCollation.getStrength(), IDENTICAL);
+        assertTrue(driverCollation.getNumericOrdering());
+        assertEquals(driverCollation.getAlternate(), SHIFTED);
+        assertEquals(driverCollation.getMaxVariable(), SPACE);
+        assertTrue(driverCollation.getNormalization());
+        assertTrue(driverCollation.getBackwards());
+
+        assertNull(getIndexHelper()
+            .convert(collation()
+                .locale("")
+                .build()));
+
+        Locale defaultLocale = Locale.getDefault();
+
+        driverCollation = getIndexHelper()
+            .convert(collation()
+                .locale(Collation.DEFAULT_LOCALE)
+                .build());
+        assertEquals(driverCollation.getLocale(), defaultLocale.toString());
+
+        try {
+            Locale.setDefault(Locale.CANADA_FRENCH);
+            driverCollation = getIndexHelper()
+                .convert(collation()
+                    .locale(Collation.DEFAULT_LOCALE)
+                    .build());
+            assertEquals(driverCollation.getLocale(), "fr_CA");
+        } finally {
+            Locale.setDefault(defaultLocale);
+        }
     }
 
     @Test
@@ -385,9 +412,9 @@ public class IndexHelperTest extends TestBase {
 
     private IndexOptions buildOptions(boolean background) {
         IndexOptions indexOptions = indexOptionsBuilder()
-                                        .name("index_name")
-                                        .background(background)
-                                        .collation(collation())
+            .name("index_name")
+            .background(background)
+            .collation(collation().build())
                                         .disableValidation(true)
                                         .expireAfterSeconds(42)
                                         .language("en")
@@ -411,18 +438,17 @@ public class IndexHelperTest extends TestBase {
         indexHelper = null;
     }
 
-    private Collation collation() {
+    private CollationBuilder collation() {
         return collationBuilder()
-                   .alternate(SHIFTED)
-                   .backwards(true)
-                   .caseFirst(UPPER)
-                   .caseLevel(true)
-                   .locale("en")
-                   .maxVariable(SPACE)
-                   .normalization(true)
-                   .numericOrdering(true)
-                   .strength(IDENTICAL)
-                   .build();
+            .alternate(SHIFTED)
+            .backwards(true)
+            .caseFirst(UPPER)
+            .caseLevel(true)
+            .locale("en")
+            .maxVariable(SPACE)
+            .normalization(true)
+            .numericOrdering(true)
+            .strength(IDENTICAL);
     }
 
     private void findPartialIndex(Document expected) {

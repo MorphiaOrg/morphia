@@ -17,9 +17,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static dev.morphia.annotations.Collation.DEFAULT_LOCALE;
 import static dev.morphia.annotations.builders.FieldBuilder.fieldBuilder;
 import static dev.morphia.annotations.builders.IndexBuilder.indexBuilder;
 import static dev.morphia.utils.IndexType.fromValue;
@@ -111,25 +113,31 @@ public final class IndexHelper {
         if (!options.partialFilter().equals("")) {
             indexOptions.partialFilterExpression(Document.parse(options.partialFilter()));
         }
-        if (!options.collation().locale().equals("")) {
-            indexOptions.collation(convert(options.collation()));
-        }
+        indexOptions.collation(convert(options.collation()));
 
         return indexOptions;
     }
 
+    @Nullable
     public com.mongodb.client.model.Collation convert(Collation collation) {
-        return com.mongodb.client.model.Collation.builder()
-                                                 .locale(collation.locale())
-                                                 .backwards(collation.backwards())
-                                                 .caseLevel(collation.caseLevel())
-                                                 .collationAlternate(collation.alternate())
-                                                 .collationCaseFirst(collation.caseFirst())
-                                                 .collationMaxVariable(collation.maxVariable())
-                                                 .collationStrength(collation.strength())
-                                                 .normalization(collation.normalization())
-                                                 .numericOrdering(collation.numericOrdering())
-                                                 .build();
+        if (!collation.locale().equals("")) {
+            return com.mongodb.client.model.Collation.builder()
+                                                     .locale(collation.locale().equals(DEFAULT_LOCALE)
+                                                             ? Locale.getDefault().toString()
+                                                             : collation.locale())
+                                                     .backwards(collation.backwards())
+                                                     .caseLevel(collation.caseLevel())
+                                                     .collationAlternate(collation.alternate())
+                                                     .collationCaseFirst(collation.caseFirst())
+                                                     .collationMaxVariable(collation.maxVariable())
+                                                     .collationStrength(collation.strength())
+                                                     .normalization(collation.normalization())
+                                                     .numericOrdering(collation.numericOrdering())
+                                                     .build();
+        } else {
+            return null;
+        }
+
     }
 
     /**

@@ -23,13 +23,16 @@ import com.mongodb.client.model.CollationStrength;
 
 /**
  * Defines the collation options for an index
+ *
  * @since 1.3
  */
 public @interface Collation {
+    String DEFAULT_LOCALE = "<default>";
+
     /**
      * Causes secondary differences to be considered in reverse order, as it is done in the French language
      *
-     * @return  the backwards value
+     * @return the backwards value
      */
     boolean backwards() default false;
 
@@ -41,8 +44,13 @@ public @interface Collation {
     boolean caseLevel() default false;
 
     /**
+     * If this value is empty, no collation will be configured for an index.  Any other string passed will be parsed as the name of the
+     * localed you wish to use.  However, if you want to use the default locale as defined by the JVM, pass the value "&lt;default&gt;"
+     * instead.
+     *
      * @return the locale
      * @see <a href="http://userguide.icu-project.org/locale">ICU User Guide - Locale</a>
+     * @see java.util.Locale#getDefault()
      */
     String locale() default "";
 
