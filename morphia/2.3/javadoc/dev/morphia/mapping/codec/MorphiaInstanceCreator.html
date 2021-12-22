@@ -242,12 +242,6 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
-var altColor = "altColor";
-var rowColor = "rowColor";
-var tableTab = "tableTab";
-var activeTableTab = "activeTableTab";
 var pathtoroot = "../../../../";
 var useModuleDirectories = true;
 loadScripts(document, 'script');</script>
@@ -278,7 +272,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="subNav">
 <ul class="navList" id="allclasses_navbar_top">
-<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&#xA0;Classes</a></li>
 </ul>
 <ul class="navListSearch">
 <li><label for="search">SEARCH:</label>
@@ -303,17 +297,17 @@ loadScripts(document, 'script');</script>
 </div>
 <div>
 <ul class="subNavList">
-<li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li>Summary:&#xA0;</li>
+<li>Nested&#xA0;|&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
+<li>Constr&#xA0;|&#xA0;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
-<li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
+<li>Detail:&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
+<li>Constr&#xA0;|&#xA0;</li>
+<li>Method</li>
 </ul>
 </div>
 <a id="skip.navbar.top">
@@ -321,7 +315,7 @@ loadScripts(document, 'script');</script>
 </a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
 </div>
-<div class="navPadding">&nbsp;</div>
+<div class="navPadding">&#xA0;</div>
 <script type="text/javascript"><!--
 $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 //-->
@@ -331,7 +325,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.mapping.codec</a></div>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&#xA0;<a href="package-summary.html">dev.morphia.mapping.codec</a></div>
 <h2 title="Interface MorphiaInstanceCreator" class="title">Interface MorphiaInstanceCreator</h2>
 </div>
 <div class="contentContainer">
@@ -339,11 +333,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt>All Superinterfaces:</dt>
+<dd><code><a href="InstanceCreator.html" title="interface in dev.morphia.mapping.codec">InstanceCreator</a></code></dd>
+</dl>
+<dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../experimental/ConstructorCreator.html" title="class in dev.morphia.mapping.experimental">ConstructorCreator</a></code>, <code><a href="../NoArgCreator.html" title="class in dev.morphia.mapping">NoArgCreator</a></code>, <code><a href="../experimental/UnsafeConstructorCreator.html" title="class in dev.morphia.mapping.experimental">UnsafeConstructorCreator</a></code></dd>
+<dd><code><a href="../experimental/ConstructorCreator.html" title="class in dev.morphia.mapping.experimental">ConstructorCreator</a></code>, <code><a href="../NoArgCreator.html" title="class in dev.morphia.mapping">NoArgCreator</a></code></dd>
 </dl>
 <hr>
-<pre>public interface <span class="typeNameLabel">MorphiaInstanceCreator</span></pre>
+<pre>public interface <span class="typeNameLabel">MorphiaInstanceCreator</span>
+extends <a href="InstanceCreator.html" title="interface in dev.morphia.mapping.codec">InstanceCreator</a></pre>
 <div class="block">Marker interface for creators</div>
 <dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
@@ -359,72 +358,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInstance()">getInstance</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#set(java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">set</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
-   <a href="pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;model)</code></th>
-<td class="colLast">
-<div class="block">Sets a value for the given FieldModel</div>
-</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-</section>
-</li>
-</ul>
-</div>
-<div class="details">
 <ul class="blockList">
-<li class="blockList">
-<!-- ============ METHOD DETAIL ========== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="method.detail">
+<li class="blockList"><a id="methods.inherited.from.class.dev.morphia.mapping.codec.InstanceCreator">
 <!--   -->
 </a>
-<h3>Method Detail</h3>
-<a id="getInstance()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getInstance</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;getInstance()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new class instance.</dd>
-</dl>
-</li>
-</ul>
-<a id="set(java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>set</h4>
-<pre class="methodSignature">void&nbsp;set​(@Nullable
-         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
-         <a href="pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;model)</pre>
-<div class="block">Sets a value for the given FieldModel</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>value</code> - the value</dd>
-<dd><code>model</code> - the model</dd>
-</dl>
-</li>
+<h3>Methods inherited from interface&#xA0;dev.morphia.mapping.codec.<a href="InstanceCreator.html" title="interface in dev.morphia.mapping.codec">InstanceCreator</a></h3>
+<code><a href="InstanceCreator.html#getInstance()">getInstance</a>, <a href="InstanceCreator.html#set(java.lang.Object,dev.morphia.mapping.codec.pojo.PropertyModel)">set</a></code></li>
 </ul>
 </li>
 </ul>
@@ -458,7 +397,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 <div class="subNav">
 <ul class="navList" id="allclasses_navbar_bottom">
-<li><a href="../../../../allclasses.html">All&nbsp;Classes</a></li>
+<li><a href="../../../../allclasses.html">All&#xA0;Classes</a></li>
 </ul>
 <div>
 <script type="text/javascript"><!--
@@ -477,17 +416,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 <div>
 <ul class="subNavList">
-<li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li>Summary:&#xA0;</li>
+<li>Nested&#xA0;|&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
+<li>Constr&#xA0;|&#xA0;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
-<li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
-<li><a href="#method.detail">Method</a></li>
+<li>Detail:&#xA0;</li>
+<li>Field&#xA0;|&#xA0;</li>
+<li>Constr&#xA0;|&#xA0;</li>
+<li>Method</li>
 </ul>
 </div>
 <a id="skip.navbar.bottom">
@@ -495,7 +434,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2021. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#xA9; 2021. All rights reserved.</small></p>
 </footer>
 
 
