@@ -7,5 +7,5 @@ nav:
 
 asciidoc:
   attributes:
-    version: 2.2.1
+    version: 2.2.3
     srcRef: https://github.com/MorphiaOrg/morphia/blob/master
