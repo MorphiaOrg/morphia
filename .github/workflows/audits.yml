@@ -35,5 +35,5 @@ jobs:
         with:
           name: audit-report
           path: |
-            target/*.adoc
-            target/*.html
+            audits/target/*.adoc
+            audits/target/*.html
