@@ -34,7 +34,4 @@ jobs:
           mkdir -p ~/.m2
           curl -o ~/.m2/settings.xml https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/settings.xml
       - name: Build
-        run: |
-          pwd
-          ls
-          mvn -e -f audits/pom.xml test -DGITHUB_PROPERTIES=`pwd`/github.properties
+        run: mvn -e -f audits/pom.xml test -DGITHUB_PROPERTIES=`pwd`/github.properties
