@@ -3,11 +3,9 @@ package dev.morphia
 import dev.morphia.model.MorphiaMethod
 import dev.morphia.model.State
 import dev.morphia.model.Version
-import org.junit.Assert
-import org.junit.Test
+import org.testng.Assert
 
 class SinceAuditTest {
-    @Test
     fun deprecations() {
         val since = SinceAudit()
 
