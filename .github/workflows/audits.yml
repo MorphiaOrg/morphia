@@ -30,8 +30,11 @@ jobs:
       - name: Configure the job
         run: |
           rm -vf github.properties
-          curl -o github.properties https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/testing-github.properties
+          curl -o ~/github.properties https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/testing-github.properties
           mkdir -p ~/.m2
           curl -o ~/.m2/settings.xml https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/settings.xml
       - name: Build
-        run: mvn -e -f audits/pom.xml test
+        run: |
+          pwd
+          ls
+          mvn -e -f audits/pom.xml test -DGITHUB_PROPERTIES=~/github.properties
