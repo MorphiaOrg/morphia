@@ -31,6 +31,7 @@ jobs:
         run: mvn -e -f audits/pom.xml test
       - name: Archive audit results
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: audit-report
           path: |
