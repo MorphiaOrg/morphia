@@ -322,5 +322,6 @@
         <module>kotlin</module>
         <module>validation</module>
         <module>examples</module>
+        <module>audits</module>
     </modules>
 </project>

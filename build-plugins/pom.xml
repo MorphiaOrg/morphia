@@ -34,8 +34,6 @@
                             <extractors>
                                 <extractor>java-annotations</extractor>
                             </extractors>
-                            <dependencies>
-                            </dependencies>
                         </configuration>
                     </execution>
                 </executions>
