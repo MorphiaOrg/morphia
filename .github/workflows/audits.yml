@@ -27,6 +27,12 @@ jobs:
           path: ~/.m2
           key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
           restore-keys: \${{ runner.os }}-m2
+      - name: Configure the job
+        run: |
+          rm -vf testing-github.properties
+          curl -o testing-github.properties https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/testing-github.properties
+          mkdir -p ~/.m2
+          curl -o ~/.m2/settings.xml https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/settings.xml
       - name: Build
         run: mvn -e -f audits/pom.xml test
       - name: Archive audit results

@@ -1,15 +1,19 @@
 package dev.morphia
 
-import org.asciidoctor.Asciidoctor.Factory
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader
 import org.jboss.forge.roaster.Roaster
 import org.jboss.forge.roaster.model.JavaType
 import org.jboss.forge.roaster.model.MethodHolder
 import org.jboss.forge.roaster.model.source.MethodSource
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import org.jsoup.select.Evaluator
+import org.kohsuke.github.GHIssueState.OPEN
+import org.kohsuke.github.GHLabel
+import org.kohsuke.github.GitHubBuilder
 import java.io.File
+import java.io.FileReader
 import java.net.URL
-import java.text.NumberFormat
-import kotlin.system.exitProcess
 
 private val core = File("../core/src/main/java")
 
@@ -27,105 +31,71 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
         }
     }
 
-    fun audit(name: String, url: String, filter: List<String> = listOf()): Int {
-        val doc = Jsoup.parse(URL(url), 30000)
-        val operators = doc
-            .select("code")
-            .distinctBy { it.text() }
+    val github by lazy {
+        GitHubBuilder
+            .fromPropertyFile(System.getProperty("GITHUB_PROPERTIES") ?: "github.properties")
+            .build()
+            .getRepository("MorphiaOrg/Morphia")
+    }
+    val issues by lazy { github.getIssues(OPEN) }
+    val milestone by lazy {
+        val pom = MavenXpp3Reader().read(FileReader("pom.xml"))
+        val releaseVersion: String = (pom.version ?: pom.parent.version)
+            .replace("-SNAPSHOT", "")
+        github.listMilestones(OPEN).first { it.title == releaseVersion }
+    }
+
+    fun audit(name: String, url: String, excludes: List<String> = listOf()): Int {
+        val remaining = Jsoup
+            .parse(URL(url), 30000)
+            .select(object : Evaluator() {
+                override fun matches(root: Element, element: Element) = element.normalName() == "code" &&
+                    element.childrenSize() == 0 &&
+                    element.text().startsWith("$") && !element.text().contains(",")
+            })
             .map { it.text() }
-            .filter { it !in filter && it.startsWith('$') }
+            .ifEmpty { throw IllegalStateException("No operators found for $url.") }
             .sorted()
-        if (operators.isEmpty()) {
-            throw IllegalStateException("No operators found for $url.")
-        }
-        val map = operators.map {
-            it to methods[it]?.let { list -> impls(list) }
-        }
-        val remaining = map.filter { it.second == null }
-        val done = map.filter { it.second != null }
-        val percent = NumberFormat.getPercentInstance().format(1.0 * done.size / operators.size)
-        var document = """
-            = $url
-            
-            .${name}
-            [cols="e,a"]
-            |===
-            |Operator Name ($percent of ${operators.size} complete. ${remaining.size} remain)|Implementation
-            """.trimIndent()
+            .distinctBy { it }
+            .filter {
+                it !in excludes && methods[it] == null
+            }
+        val docRoot = url.replace("/index.html", "")
 
-        document += writeImpls(remaining)
-        document += writeImpls(done)
-
-        document += "\n|==="
-        val asciidoctor = Factory.create()
-
-        File("target/${name}.html").writeText(asciidoctor.convert(document, mapOf()))
-        File("target/${name}.adoc").writeText(document)
-
-        asciidoctor.shutdown()
         if (remaining.isNotEmpty()) {
-            println("source: $url")
-            println("missing items:  ${name}:  ${remaining.map { pair -> pair.first }}")
+            val enhancement: GHLabel = github.getLabel("enhancement")
+            val labels = mutableListOf(enhancement)
+            val targetLabel = if (name.contains("aggregation")) {
+                val label = github.getLabel("aggregation")
+                labels += label
+                label
+            } else null
+
+            remaining.forEach {
+                val title = "Implement $it"
+                issues
+                    .filter { issue -> issue.title == title }
+                    .filter { issue -> targetLabel == null || issue.labels.contains(targetLabel) }
+                    .ifEmpty {
+                        val body = """${docRoot}/${it.drop(1)}"""
+                        println(
+                            """
+                            Creating a new issue for $name:
+                               Title: '$title'
+                               Milestone: ${milestone.title}
+                               Labels: ${labels.joinToString { label -> label.name }}
+                               Body: $body
+                               """.trimIndent()
+                        )
+                        val builder = github.createIssue(title)
+                            .milestone(milestone)
+                            .body(body)
+
+                        labels.forEach { builder.label(it.name) }
+                        builder.create()
+                    }
+            }
         }
         return remaining.size
     }
-
-    private fun writeImpls(operators: List<Pair<String, String?>>): String {
-        var document1 = ""
-        for (operator in operators) {
-            document1 += """
-                    
-                |${operator.first}
-                |${operator.second ?: ""}
-                
-                """.trimIndent()
-        }
-        return document1
-    }
-
-    private fun impls(list: List<MethodSource<*>>): String {
-        return list.joinToString("\n") { method ->
-            method.removeJavaDoc()
-            method.removeAllAnnotations()
-            val signature = method.toString().substringBefore("{").trim()
-            ". ${signature} [_${method.origin.name}_]"
-        }
-    }
-}
-
-fun main() {
-    var remaining = 0
-
-    remaining += OperationAudit
-        .parse(taglet = "@query.filter")
-        .audit(
-            "query-filters", "https://docs.mongodb.com/manual/reference/operator/query/",
-            listOf("$", "\$rand")
-        )
-
-    remaining += OperationAudit
-        .parse(taglet = "@update.operator")
-        .audit(
-            "update-operators", "https://docs.mongodb.com/manual/reference/operator/update/",
-            listOf("$", "$[]", "$[<identifier>]", "\$position", "\$slice", "\$sort")
-        )
-
-    remaining += OperationAudit
-        .parse(taglet = "@aggregation.expression")
-        .audit(
-            "aggregation-pipeline", "https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline",
-            listOf(
-                "$", "\$listSessions", "\$listLocalSessions",
-                "\$search" /* not terribly well doc'd.  atlas only? */
-            )
-        )
-
-    remaining += OperationAudit
-        .parse(taglet = "@aggregation.expression")
-        .audit(
-            "aggregation-expressions", "https://docs.mongodb.com/manual/reference/operator/aggregation/index.html",
-            listOf("$", "\$addFields", "\$group", "\$project", "\$set")
-        )
-
-    exitProcess(remaining)
 }

@@ -5,7 +5,7 @@ import org.testng.annotations.Test
 
 class OperationAuditTest {
     @Test
-    fun deprecations() {
+    fun audits() {
         var remaining = 0
 
         remaining += OperationAudit
@@ -26,10 +26,7 @@ class OperationAuditTest {
             .parse(taglet = "@aggregation.expression")
             .audit(
                 "aggregation-pipeline", "https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline",
-                listOf(
-                    "$", "\$listSessions", "\$listLocalSessions",
-                    "\$search" /* not terribly well doc'd.  atlas only? */
-                )
+                listOf("$", "\$listSessions", "\$listLocalSessions", "\$search" /* not terribly well doc'd.  atlas only? */)
             )
 
         remaining += OperationAudit
