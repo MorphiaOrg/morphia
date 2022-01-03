@@ -93,12 +93,14 @@ public class Mapper {
         morphiaCodecProvider = new MorphiaCodecProvider(this, datastore);
         discriminatorLookup = new DiscriminatorLookup(options.getClassLoader());
 
-        this.codecRegistry = fromProviders(new MorphiaTypesCodecProvider(this),
+        this.codecRegistry = fromProviders(
+            new MorphiaTypesCodecProvider(this),
             new PrimitiveCodecRegistry(codecRegistry),
-            new EnumCodecProvider(),
             new AggregationCodecProvider(this),
             morphiaCodecProvider,
-            codecRegistry);
+            codecRegistry,
+            new EnumCodecProvider()
+        );
     }
 
     /**
