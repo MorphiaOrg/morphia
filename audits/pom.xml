@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
-            <version>1.125</version>
+            <version>1.301</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
