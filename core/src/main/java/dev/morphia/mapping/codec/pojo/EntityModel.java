@@ -60,7 +60,7 @@ public class EntityModel {
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
     private final Mapper mapper;
-    private Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
+    private final Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
 
     /**
      * Creates a new instance
@@ -105,6 +105,17 @@ public class EntityModel {
         versionProperty = getProperty(builder.versionPropertyName());
 
         builder.interfaces().forEach(i -> i.addSubtype(this));
+
+        lifecycleMethods = new HashMap<>();
+
+        final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
+        if (entityLisAnn != null && entityLisAnn.value().length != 0) {
+            for (Class<?> aClass : entityLisAnn.value()) {
+                mapEvent(aClass, true);
+            }
+        }
+
+        mapEvent(getType(), false);
     }
 
     /**
@@ -117,7 +128,7 @@ public class EntityModel {
      */
     public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
                                      Datastore datastore) {
-        final List<ClassMethodPair> methodPairs = getLifecycleMethods().get(event);
+        final List<ClassMethodPair> methodPairs = lifecycleMethods.get(event);
         if (methodPairs != null) {
             for (ClassMethodPair cm : methodPairs) {
                 cm.invoke(datastore, document, entity);
@@ -203,25 +214,6 @@ public class EntityModel {
     }
 
     /**
-     * @return the lifecycle event methods
-     */
-    public Map<Class<? extends Annotation>, List<ClassMethodPair>> getLifecycleMethods() {
-        if (lifecycleMethods == null) {
-            lifecycleMethods = new HashMap<>();
-
-            final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
-            if (entityLisAnn != null && entityLisAnn.value().length != 0) {
-                for (Class<?> aClass : entityLisAnn.value()) {
-                    mapEvent(aClass, true);
-                }
-            }
-
-            mapEvent(getType(), false);
-        }
-        return lifecycleMethods;
-    }
-
-    /**
      * @return the name of this model
      */
     public String getName() {
@@ -295,14 +287,14 @@ public class EntityModel {
      * @return true if that even has been configured
      */
     public boolean hasLifecycle(Class<? extends Annotation> type) {
-        return getLifecycleMethods().containsKey(type);
+        return lifecycleMethods.containsKey(type);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getAnnotations(), propertyModelsByName, propertyModelsByMappedName, creatorFactory,
             discriminatorEnabled,
-            getDiscriminatorKey(), getDiscriminator(), getType(), getCollectionName(), getLifecycleMethods());
+            getDiscriminatorKey(), getDiscriminator(), getType(), getCollectionName(), lifecycleMethods);
     }
 
     @Override
@@ -323,7 +315,7 @@ public class EntityModel {
                && Objects.equals(getDiscriminator(), that.getDiscriminator())
                && Objects.equals(getType(), that.getType())
                && Objects.equals(getCollectionName(), that.getCollectionName())
-               && Objects.equals(getLifecycleMethods(), that.getLifecycleMethods());
+               && Objects.equals(lifecycleMethods, that.lifecycleMethods);
     }
 
     @Override
