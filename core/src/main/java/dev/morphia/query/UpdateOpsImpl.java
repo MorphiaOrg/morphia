@@ -1,12 +1,9 @@
 package dev.morphia.query;
 
-import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
-import dev.morphia.UpdateOptions;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.updates.PopOperator;
 import dev.morphia.query.experimental.updates.PushOperator;
-import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.experimental.updates.UpdateOperators;
 import org.bson.Document;
 
@@ -21,7 +18,7 @@ import static java.util.Collections.emptyList;
  */
 @SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
-public class UpdateOpsImpl<T> extends UpdateBase<T, UpdateOperator> implements UpdateOperations<T> {
+public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<T> {
     private Document ops = new Document();
 
     /**
@@ -209,8 +206,4 @@ public class UpdateOpsImpl<T> extends UpdateBase<T, UpdateOperator> implements U
         return this;
     }
 
-    @Override
-    public UpdateResult execute(UpdateOptions options) {
-        throw new UnsupportedOperationException();
-    }
 }

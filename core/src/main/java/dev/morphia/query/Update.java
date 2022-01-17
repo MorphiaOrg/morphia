@@ -5,7 +5,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
-import dev.morphia.internal.PathTarget;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import org.bson.Document;
 
@@ -16,7 +15,7 @@ import java.util.List;
  *
  * @param <T>
  */
-public class Update<T> extends UpdateBase<T, UpdateOperator> {
+public class Update<T> extends UpdateBase<T> {
     @SuppressWarnings("rawtypes")
     Update(Datastore datastore, MongoCollection<T> collection,
            Query<T> query, Class<T> type, UpdateOpsImpl operations) {
@@ -28,7 +27,21 @@ public class Update<T> extends UpdateBase<T, UpdateOperator> {
         super(datastore, collection, query, type, updates);
     }
 
-    @Override
+    /**
+     * Executes the update
+     *
+     * @return the results
+     */
+    public UpdateResult execute() {
+        return execute(new UpdateOptions());
+    }
+
+    /**
+     * Executes the update
+     *
+     * @param options the options to apply
+     * @return the results
+     */
     public UpdateResult execute(UpdateOptions options) {
         Document updateOperations = toDocument();
         final Document queryObject = getQuery().toDocument();
@@ -43,15 +56,5 @@ public class Update<T> extends UpdateBase<T, UpdateOperator> {
             return session == null ? mongoCollection.updateOne(queryObject, updateOperations, options)
                                    : mongoCollection.updateOne(session, queryObject, updateOperations, options);
         }
-    }
-
-    private Document toDocument() {
-        final Operations operations = new Operations(getDatastore(), getMapper().getEntityModel(getType()));
-
-        for (UpdateOperator update : getUpdates()) {
-            PathTarget pathTarget = new PathTarget(getMapper(), getMapper().getEntityModel(getType()), update.field(), true);
-            operations.add(update.operator(), update.toTarget(pathTarget));
-        }
-        return operations.toDocument();
     }
 }

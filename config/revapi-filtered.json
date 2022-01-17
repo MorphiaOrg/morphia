@@ -196,6 +196,11 @@
           "code": "java.annotation.added",
           "annotation": "@edu.umd.cs.findbugs.annotations.SuppressFBWarnings({\"EI_EXPOSE_REP2\"})",
           "justification": "spotbugs config"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.addedToInterface",
+          "new": "method dev.morphia.query.PipelineUpdate dev.morphia.query.Query<T>::update(dev.morphia.aggregation.experimental.stages.Stage, dev.morphia.aggregation.experimental.stages.Stage[])"
         }
       ]
     }

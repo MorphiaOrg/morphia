@@ -41,9 +41,8 @@ import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
-import dev.morphia.query.UpdateBase;
+import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
-import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
 import org.bson.Document;
@@ -342,7 +341,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             query.filter(eq(info.versionProperty.getMappedName(), info.oldVersion));
         }
 
-        UpdateBase<T, UpdateOperator> update;
+        Update<T> update;
         if (!options.unsetMissing()) {
             update = query.update(dev.morphia.query.experimental.updates.UpdateOperators.set(entity));
         } else {

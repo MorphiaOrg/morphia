@@ -29,7 +29,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
-import dev.morphia.query.UpdateBase;
+import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.updates.CurrentDateOperator.TypeSpecification;
@@ -1046,7 +1046,7 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @SuppressWarnings("rawtypes")
-    private void doUpdates(ContainsIntArray updated, ContainsIntArray control, UpdateBase update, Integer[] target) {
+    private void doUpdates(ContainsIntArray updated, ContainsIntArray control, Update update, Integer[] target) {
         assertUpdated(update.execute(new UpdateOptions()), 1);
         assertThat(getDs().find(ContainsIntArray.class)
                           .filter(eq("_id", updated.id))

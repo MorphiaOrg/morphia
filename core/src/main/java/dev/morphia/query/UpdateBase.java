@@ -1,12 +1,12 @@
 package dev.morphia.query;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
-import dev.morphia.UpdateOptions;
-import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.query.experimental.updates.UpdateOperator;
+import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -16,29 +16,28 @@ import static java.util.Arrays.asList;
 
 /**
  * @param <T>
- * @param <O>
  * @morphia.internal
  */
-public abstract class UpdateBase<T, O> {
+public abstract class UpdateBase<T> {
 
-    private final List<O> updates = new ArrayList<>();
     private final Query<T> query;
     private final MongoCollection<T> collection;
     private final Mapper mapper;
     private final Class<T> type;
+    private final List<UpdateOperator> updates = new ArrayList<>();
     private final Datastore datastore;
 
     UpdateBase(Datastore datastore,
                @Nullable MongoCollection<T> collection,
                @Nullable Query<T> query,
                Class<T> type,
-               List<O> updates) {
+               List<UpdateOperator> updates) {
         this.datastore = datastore;
         this.mapper = datastore.getMapper();
-        this.collection = collection;
-        this.query = query;
         this.type = type;
         this.updates.addAll(updates);
+        this.query = query;
+        this.collection = collection;
     }
 
     @NotNull
@@ -56,29 +55,26 @@ public abstract class UpdateBase<T, O> {
      * @morphia.internal
      * @since 2.2
      */
-    @MorphiaInternal
-    public void add(O operator) {
+    public void add(UpdateOperator operator) {
         updates.add(operator);
     }
 
     /**
-     * Executes the update
-     *
-     * @param options the options to apply
-     * @return the results
+     * @return the operations listed
      */
-    public abstract UpdateResult execute(UpdateOptions options);
+    public Document toDocument() {
+        final Operations operations = new Operations(datastore, mapper.getEntityModel(type));
 
-    public UpdateResult execute() {
-        return execute(new UpdateOptions());
+        for (UpdateOperator update : updates) {
+            PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), true);
+            operations.add(update.operator(), update.toTarget(pathTarget));
+        }
+        return operations.toDocument();
     }
 
-    public Mapper getMapper() {
-        return mapper;
-    }
-
-    public Class<T> getType() {
-        return type;
+    @Override
+    public String toString() {
+        return toDocument().toString();
     }
 
     protected MongoCollection<T> getCollection() {
@@ -93,7 +89,11 @@ public abstract class UpdateBase<T, O> {
         return query;
     }
 
-    protected List<O> getUpdates() {
+    /**
+     * @return the updates
+     * @morphia.internal
+     */
+    protected List<UpdateOperator> getUpdates() {
         return updates;
     }
 }
