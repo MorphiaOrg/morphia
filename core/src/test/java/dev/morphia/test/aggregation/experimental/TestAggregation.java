@@ -762,6 +762,7 @@ public class TestAggregation extends TestBase {
 
     @Test
     public void testSet() {
+        checkMinServerVersion(4.2);
         List<Document> list = List.of(
             parse("{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }"),
             parse("{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }"));
