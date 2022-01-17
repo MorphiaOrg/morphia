@@ -1,10 +1,12 @@
 package dev.morphia.query;
 
+import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
-import dev.morphia.mapping.Mapper;
+import dev.morphia.UpdateOptions;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.updates.PopOperator;
 import dev.morphia.query.experimental.updates.PushOperator;
+import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.experimental.updates.UpdateOperators;
 import org.bson.Document;
 
@@ -12,24 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyList;
+
 /**
  * @param <T> the type to update
  */
 @SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
-public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<T> {
+public class UpdateOpsImpl<T> extends UpdateBase<T, UpdateOperator> implements UpdateOperations<T> {
     private Document ops = new Document();
-    private boolean validateNames = true;
 
     /**
      * Creates an UpdateOpsImpl for the type given.
      *
      * @param datastore the datastore to use
      * @param type      the type to update
-     * @param mapper    the Mapper to use
      */
-    public UpdateOpsImpl(Datastore datastore, Class<T> type, Mapper mapper) {
-        super(datastore, null, null, type);
+    public UpdateOpsImpl(Datastore datastore, Class<T> type) {
+        super(datastore, null, null, type, emptyList());
     }
 
     static <T> List<T> iterToList(Iterable<T> it) {
@@ -81,13 +83,11 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
 
     @Override
     public UpdateOperations<T> disableValidation() {
-        validateNames = false;
         return this;
     }
 
     @Override
     public UpdateOperations<T> enableValidation() {
-        validateNames = true;
         return this;
     }
 
@@ -207,5 +207,10 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
         }
         add(pop);
         return this;
+    }
+
+    @Override
+    public UpdateResult execute(UpdateOptions options) {
+        throw new UnsupportedOperationException();
     }
 }

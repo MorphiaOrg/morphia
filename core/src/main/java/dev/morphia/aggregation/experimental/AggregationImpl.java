@@ -30,6 +30,7 @@ import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Sample;
+import dev.morphia.aggregation.experimental.stages.Set;
 import dev.morphia.aggregation.experimental.stages.Skip;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
@@ -78,6 +79,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> addFields(AddFields fields) {
         stages.add(fields);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> set(Set set) {
+        stages.add(set);
         return this;
     }
 

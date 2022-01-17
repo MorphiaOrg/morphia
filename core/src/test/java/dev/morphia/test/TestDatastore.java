@@ -54,6 +54,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
+@SuppressWarnings({"rawtypes", "ConstantConditions"})
 public class TestDatastore extends TestBase {
     @Test
     public void testBulkInsert() {
@@ -89,7 +90,7 @@ public class TestDatastore extends TestBase {
 
         assertTrue(query.iterator(new FindOptions().limit(1))
                         .next()
-                       .message.contains("Bad"));
+            .message.contains("Bad"));
 
         getDs().save(new CurrentStatus("Kinda Bad2"));
         assertEquals(query.count(), 1);
@@ -116,10 +117,10 @@ public class TestDatastore extends TestBase {
         assertEquals(query.delete().getDeletedCount(), 1);
 
         assertEquals(query.delete(new DeleteOptions()
-                                      .collation(Collation.builder()
-                                                          .locale("en")
-                                                          .collationStrength(SECONDARY)
-                                                          .build()))
+                              .collation(Collation.builder()
+                                                  .locale("en")
+                                                  .collationStrength(SECONDARY)
+                                                  .build()))
                           .getDeletedCount(), 1);
     }
 
@@ -195,10 +196,10 @@ public class TestDatastore extends TestBase {
         assertNull(query.findAndDelete());
 
         FindAndDeleteOptions options = new FindAndDeleteOptions()
-                                           .collation(Collation.builder()
-                                                               .locale("en")
-                                                               .collationStrength(SECONDARY)
-                                                               .build());
+            .collation(Collation.builder()
+                                .locale("en")
+                                .collationStrength(SECONDARY)
+                                .build());
         assertNotNull(query.findAndDelete(options));
         assertNull(query.iterator().tryNext());
     }
@@ -232,8 +233,8 @@ public class TestDatastore extends TestBase {
                               eq("username", "Jon Snow"))
                           .modify(inc("loginCount", 4))
                           .execute(new ModifyOptions()
-                                       .returnDocument(BEFORE)
-                                       .upsert(true)));
+                              .returnDocument(BEFORE)
+                              .upsert(true)));
 
         FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3)).first();
         assertEquals(user.loginCount, 4);
@@ -244,8 +245,8 @@ public class TestDatastore extends TestBase {
                                           eq("username", "Ron Swanson"))
                                       .modify(inc("loginCount"))
                                       .execute(new ModifyOptions()
-                                                   .returnDocument(AFTER)
-                                                   .upsert(true));
+                                          .returnDocument(AFTER)
+                                          .upsert(true));
         assertEquals(results.loginCount, 1);
         assertEquals(results.username, "Ron Swanson");
 
@@ -276,11 +277,11 @@ public class TestDatastore extends TestBase {
                         .filter(eq("username", "john doe"))
                         .modify(inc("loginCount"))
                         .execute(new ModifyOptions()
-                                     .returnDocument(BEFORE)
-                                     .collation(Collation.builder()
-                                                         .locale("en")
-                                                         .collationStrength(SECONDARY)
-                                                         .build()));
+                            .returnDocument(BEFORE)
+                            .collation(Collation.builder()
+                                                .locale("en")
+                                                .collationStrength(SECONDARY)
+                                                .build()));
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
                             .next()
                          .loginCount, 1);
@@ -294,8 +295,8 @@ public class TestDatastore extends TestBase {
                             eq("username", "Jon Snow"))
                         .modify(inc("loginCount"))
                         .execute(new ModifyOptions()
-                                     .returnDocument(BEFORE)
-                                     .upsert(true));
+                            .returnDocument(BEFORE)
+                            .upsert(true));
 
         assertNull(result);
         FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3)).iterator(new FindOptions().limit(1))
@@ -309,8 +310,8 @@ public class TestDatastore extends TestBase {
                             eq("username", "Ron Swanson"))
                         .modify(inc("loginCount"))
                         .execute(new ModifyOptions()
-                                     .returnDocument(AFTER)
-                                     .upsert(true));
+                            .returnDocument(AFTER)
+                            .upsert(true));
 
         assertNotNull(result);
         user = getDs().find(FacebookUser.class).filter(eq("id", 4)).iterator(new FindOptions().limit(1))
@@ -334,7 +335,7 @@ public class TestDatastore extends TestBase {
         this.getDs().insert(new TestEntity());
         assertEquals(collection.countDocuments(), 1);
         this.getDs().insert(new TestEntity(), new InsertOneOptions()
-                                                  .writeConcern(WriteConcern.ACKNOWLEDGED));
+            .writeConcern(WriteConcern.ACKNOWLEDGED));
         assertEquals(collection.countDocuments(), 2);
     }
 
@@ -342,7 +343,7 @@ public class TestDatastore extends TestBase {
     public void testInsertEmpty() {
         this.getDs().insert(emptyList());
         this.getDs().insert(emptyList(), new InsertManyOptions()
-                                             .writeConcern(WriteConcern.ACKNOWLEDGED));
+            .writeConcern(WriteConcern.ACKNOWLEDGED));
     }
 
     @Test
@@ -439,11 +440,11 @@ public class TestDatastore extends TestBase {
                          .loginCount, 1);
 
         results = update.execute(new UpdateOptions()
-                                     .multi(true)
-                                     .collation(Collation.builder()
-                                                         .locale("en")
-                                                         .collationStrength(SECONDARY)
-                                                         .build()));
+            .multi(true)
+            .collation(Collation.builder()
+                                .locale("en")
+                                .collationStrength(SECONDARY)
+                                .build()));
         assertEquals(results.getModifiedCount(), 2);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
                             .next()

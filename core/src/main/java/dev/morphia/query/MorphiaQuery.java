@@ -11,6 +11,7 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
+import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -36,6 +37,7 @@ import java.util.StringJoiner;
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
+import static dev.morphia.query.UpdateBase.coalesce;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.lang.String.format;
 
@@ -83,26 +85,13 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public String getLoggedQuery() {
-        if (lastOptions.isLogQuery()) {
-            String json = "{}";
-            Document first = datastore.getDatabase()
-                                      .getCollection("system.profile")
-                                      .find(new Document("command.comment", "logged query: " + lastOptions.getQueryLogId()),
-                                          Document.class)
-                                      .projection(new Document("command.filter", 1))
-                                      .first();
-            if (first != null) {
-                Document command = (Document) first.get("command");
-                Document filter = (Document) command.get("filter");
-                if (filter != null) {
-                    json = filter.toJson(datastore.getCodecRegistry().get(Document.class));
-                }
-            }
-            return json;
-        } else {
-            throw new IllegalStateException(Sofia.queryNotLogged());
+    public Query<T> filter(Filter... additional) {
+        for (Filter filter : additional) {
+            filters.add(filter
+                .entityType(getEntityClass())
+                .isValidating(validate));
         }
+        return this;
     }
 
     @Override
@@ -181,13 +170,26 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Query<T> filter(Filter... additional) {
-        for (Filter filter : additional) {
-            filters.add(filter
-                .entityType(getEntityClass())
-                .isValidating(validate));
+    public String getLoggedQuery() {
+        if (lastOptions.isLogQuery()) {
+            String json = "{}";
+            Document first = datastore.getDatabase()
+                                      .getCollection("system.profile")
+                                      .find(new Document("command.comment", "logged query: " + lastOptions.getQueryLogId()),
+                                          Document.class)
+                                      .projection(new Document("command.filter", 1))
+                                      .first();
+            if (first != null) {
+                Document command = (Document) first.get("command");
+                Document filter = (Document) command.get("filter");
+                if (filter != null) {
+                    json = filter.toJson(datastore.getCodecRegistry().get(Document.class));
+                }
+            }
+            return json;
+        } else {
+            throw new IllegalStateException(Sofia.queryNotLogged());
         }
-        return this;
     }
 
     @Override
@@ -218,7 +220,8 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, getCollection(), this, getEntityClass(), first, updates);
+        List<UpdateOperator> operators = coalesce(first, updates);
+        return new Modify<>(datastore, getCollection(), this, getEntityClass(), operators);
     }
 
     @Override
@@ -263,8 +266,19 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
+    @Deprecated
+    public Update<T> update(List<UpdateOperator> updates) {
+        return new Update<>(datastore, getCollection(), this, type, updates);
+    }
+
+    @Override
     public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, getCollection(), this, type, first, updates);
+        return new Update<>(datastore, getCollection(), this, type, coalesce(first, updates));
+    }
+
+    @Override
+    public PipelineUpdate update(Stage first, Stage... updates) {
+        return new PipelineUpdate<>(datastore, getCollection(), this, type, coalesce(first, updates));
     }
 
     @Override

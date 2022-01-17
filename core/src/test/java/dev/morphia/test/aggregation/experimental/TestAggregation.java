@@ -23,6 +23,7 @@ import dev.morphia.aggregation.experimental.stages.Out;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
+import dev.morphia.aggregation.experimental.stages.Set;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
@@ -771,9 +772,9 @@ public class TestAggregation extends TestBase {
                                        .set(AddFields.addFields()
                                                      .field("totalHomework", sum(field("homework")))
                                                      .field("totalQuiz", sum(field("quiz"))))
-                                       .set(AddFields.addFields()
-                                                     .field("totalScore", add(field("totalHomework"),
-                                                         field("totalQuiz"), field("extraCredit"))))
+                                       .set(Set.set()
+                                               .field("totalScore", add(field("totalHomework"),
+                                                   field("totalQuiz"), field("extraCredit"))))
                                        .execute(Document.class)
                                        .toList();
 

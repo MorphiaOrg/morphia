@@ -5,6 +5,7 @@ import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.Nullable;
 import dev.morphia.DeleteOptions;
+import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -461,4 +462,14 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     default Update<T> update(UpdateOperations<T> operations) {
         return legacyOperation();
     }
+
+    /**
+     * Creates an update operation based on this query
+     *
+     * @param first   the first and required update
+     * @param updates lists the set of updates to apply
+     * @return the update operation
+     * @since 2.3
+     */
+    PipelineUpdate update(Stage first, Stage... updates);
 }

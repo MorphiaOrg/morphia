@@ -12,6 +12,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
+import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -32,6 +33,7 @@ import java.util.Objects;
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.query.CriteriaJoin.AND;
+import static dev.morphia.query.UpdateBase.coalesce;
 import static java.lang.String.format;
 
 
@@ -274,7 +276,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, getCollection(), this, clazz, first, updates);
+        return new Modify<>(datastore, getCollection(), this, clazz, coalesce(first, updates));
     }
 
     @Override
@@ -327,6 +329,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    @Deprecated
     public Modify<T> modify(UpdateOperations<T> operations) {
         return new Modify<>(datastore, getCollection(), this, clazz, (UpdateOpsImpl) operations);
     }
@@ -344,8 +347,19 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    @Deprecated
+    public Update<T> update(List<UpdateOperator> updates) {
+        return new Update<>(datastore, getCollection(), this, clazz, updates);
+    }
+
+    @Override
     public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, getCollection(), this, clazz, first, updates);
+        return new Update<>(datastore, getCollection(), this, clazz, coalesce(first, updates));
+    }
+
+    @Override
+    public PipelineUpdate<T> update(Stage first, Stage... updates) {
+        return new PipelineUpdate<>(datastore, getCollection(), this, clazz, coalesce(first, updates));
     }
 
     /**

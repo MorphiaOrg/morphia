@@ -29,7 +29,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
-import dev.morphia.query.Update;
+import dev.morphia.query.UpdateBase;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.updates.CurrentDateOperator.TypeSpecification;
@@ -52,6 +52,7 @@ import org.testng.annotations.Test;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -64,6 +65,9 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static dev.morphia.aggregation.experimental.expressions.Expressions.literal;
+import static dev.morphia.aggregation.experimental.expressions.SystemVariables.NOW;
+import static dev.morphia.aggregation.experimental.stages.Set.set;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.regex;
 import static dev.morphia.query.experimental.updates.UpdateOperators.addToSet;
@@ -96,8 +100,10 @@ import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.hasItem;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
 
+@SuppressWarnings({"ConstantConditions", "unused"})
 public class TestUpdateOperations extends TestBase {
     @Test
     public void retainsClassName() {
@@ -156,7 +162,7 @@ public class TestUpdateOperations extends TestBase {
         ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
 
-        assertThat(get(cIntArray), is((new ContainsIntArray()).values));
+        assertThat(get(cIntArray), is(new ContainsIntArray().values));
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
         //add 4 to array
@@ -215,7 +221,7 @@ public class TestUpdateOperations extends TestBase {
 
         finder.update(addToSet("logs", latestLogs))
               .execute(new UpdateOptions()
-                           .upsert(true));
+                  .upsert(true));
         validateClassName(finder.first());
 
         // this entry will NOT have a className attribute
@@ -239,7 +245,7 @@ public class TestUpdateOperations extends TestBase {
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class)
                                                .filter(eq("_id", cIntArray.id));
 
-        assertThat(query.first().values, is((new ContainsIntArray()).values));
+        assertThat(query.first().values, is(new ContainsIntArray().values));
 
         assertUpdated(query.update(addToSet("values", 5)).execute(), 1);
 
@@ -290,7 +296,7 @@ public class TestUpdateOperations extends TestBase {
 
         getDs().find(DumbColl.class)
                .update(currentDate("localDateTime")
-                           .type(TypeSpecification.TIMESTAMP))
+                   .type(TypeSpecification.TIMESTAMP))
                .execute();
 
         document = getDatabase().getCollection(getDs().getCollection(DumbColl.class).getNamespace().getCollectionName())
@@ -358,8 +364,8 @@ public class TestUpdateOperations extends TestBase {
         assertThat(heightOf2.count(), is(0L));
 
         UpdateResult results = heightOf1
-                                   .update(inc("height"))
-                                   .execute(new UpdateOptions().multi(true));
+            .update(inc("height"))
+            .execute(new UpdateOptions().multi(true));
         assertUpdated(results, 3);
 
         assertThat(heightOf1.count(), is(0L));
@@ -497,7 +503,7 @@ public class TestUpdateOperations extends TestBase {
         getDs().find(User.class).delete();
         getDs().save(entities);
         Calendar instance = Calendar.getInstance();
-        instance.set(2136, 4, 13);
+        instance.set(2136, Calendar.MAY, 13);
         Date date = instance.getTime();
         updated = getDs().find(User.class)
                          .update(max("joined", date))
@@ -528,7 +534,7 @@ public class TestUpdateOperations extends TestBase {
         getDs().find(User.class).delete();
         getDs().save(entities);
         Calendar instance = Calendar.getInstance();
-        instance.set(86, 4, 13);
+        instance.set(86, Calendar.MAY, 13);
         Date date = instance.getTime();
         updated = getDs().find(User.class)
                          .update(min("joined", date))
@@ -605,8 +611,8 @@ public class TestUpdateOperations extends TestBase {
 
         Query<DumbColl> query = getDs().find(DumbColl.class)
                                        .filter(regex("opaqueId")
-                                                   .pattern("ID")
-                                                   .caseInsensitive());
+                                           .pattern("ID")
+                                           .caseInsensitive());
 
         Assert.assertEquals(query.first().fromArray.size(), 2);
         query.update(pull("fromArray", Filters.eq("name", "something else")))
@@ -624,15 +630,15 @@ public class TestUpdateOperations extends TestBase {
 
         getDs().find(DumbColl.class)
                .filter(regex("opaqueId")
-                           .pattern("ID")
-                           .caseInsensitive())
+                   .pattern("ID")
+                   .caseInsensitive())
                .update(pull("fromArray", Filters.eq("whereId", "not there")))
                .execute();
 
         getDs().find(DumbColl.class)
                .filter(regex("opaqueId")
-                           .pattern("ID")
-                           .caseInsensitive())
+                   .pattern("ID")
+                   .caseInsensitive())
                .update(pullAll("fromArray", List.of(new DumbArrayElement("something"))))
                .execute();
     }
@@ -641,7 +647,7 @@ public class TestUpdateOperations extends TestBase {
     public void testPush() {
         ContainsIntArray cIntArray = new ContainsIntArray();
         getDs().save(cIntArray);
-        assertThat(get(cIntArray), is((new ContainsIntArray()).values));
+        assertThat(get(cIntArray), is(new ContainsIntArray().values));
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
         query.update(push("values", 4))
@@ -658,13 +664,13 @@ public class TestUpdateOperations extends TestBase {
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 3, 4, 4, 5, 6}));
 
         query.update(push("values", 12)
-                         .position(2))
+                 .position(2))
              .execute();
 
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 12, 3, 4, 4, 5, 6}));
 
         query.update(push("values", asList(99, 98, 97))
-                         .position(4))
+                 .position(4))
              .execute();
         assertThat(get(cIntArray), is(new Integer[]{1, 2, 12, 3, 99, 98, 97, 4, 4, 5, 6}));
     }
@@ -704,7 +710,7 @@ public class TestUpdateOperations extends TestBase {
         getDs().save(cIntArray);
         Integer[] values = get(cIntArray);
         assertThat(values.length, is(3));
-        assertThat(values, is((new ContainsIntArray()).values));
+        assertThat(values, is(new ContainsIntArray().values));
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
         assertUpdated(query.update(pop("values").removeFirst()).execute(), 1);
@@ -751,16 +757,16 @@ public class TestUpdateOperations extends TestBase {
         ObjectId id = new ObjectId();
 
         Query<Circle> query = getDs()
-                                  .find(Circle.class)
-                                  .filter(eq("id", id));
+            .find(Circle.class)
+            .filter(eq("id", id));
 
         assertInserted(query.update(setOnInsert(Map.of("radius", 1D)))
                             .execute(new UpdateOptions()
-                                         .upsert(true)));
+                                .upsert(true)));
 
         Assert.assertEquals(query.update(setOnInsert(Map.of("radius", 2D)))
                                  .execute(new UpdateOptions()
-                                              .upsert(true)).getMatchedCount(), 1);
+                                     .upsert(true)).getMatchedCount(), 1);
 
         final Circle updatedCircle = getDs().find(Circle.class)
                                             .filter(eq("_id", id))
@@ -893,7 +899,7 @@ public class TestUpdateOperations extends TestBase {
         getMapper().map(Stuff1.class);
 
         getDs().find(Stuff1.class)
-               .update(List.of(set("foo", "update1")))
+               .update(set("foo", "update1"))
                .execute();
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -961,7 +967,7 @@ public class TestUpdateOperations extends TestBase {
         assertUpdated(res, 1);
 
         Assert.assertEquals(query.iterator(new FindOptions()
-                                               .limit(1))
+                                     .limit(1))
                                  .next().val, 22);
     }
 
@@ -989,7 +995,7 @@ public class TestUpdateOperations extends TestBase {
         query = getDs().find(ContainsIntArray.class)
                        .filter(eq("values", new Integer[]{4, 5, 7, 6}));
         FindOptions options = new FindOptions()
-                                  .logQuery();
+            .logQuery();
         assertNotNull(query.first(options), query.getLoggedQuery());
     }
 
@@ -1017,6 +1023,51 @@ public class TestUpdateOperations extends TestBase {
         Assert.assertEquals(first.val, 16);
     }
 
+    @Test//(dataProvider = "mapperOptions")
+    public void testUpdateWithStages(/*MapperOptions options*/) {
+        //        withOptions(options, () -> {
+        getDs().save(List.of(
+            new Student(1, 95, 92, 90, LocalDate.of(2020, Month.JANUARY, 5)),
+            new Student(2, 98, 100, 102, LocalDate.of(2020, Month.JANUARY, 5)),
+            new Student(3, 95, 110, null, LocalDate.of(2020, Month.JANUARY, 4))));
+
+        Query<Student> query = getDs().find(Student.class)
+                                      .filter(eq("id", 3));
+        assertNull(query.first().test3);
+
+        query
+            .update(set()
+                .field("test3", literal(98))
+                .field("modified", NOW))
+            .execute();
+
+        assertEquals(query.first().test3, 98);
+        //        });
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void doUpdates(ContainsIntArray updated, ContainsIntArray control, UpdateBase update, Integer[] target) {
+        assertUpdated(update.execute(new UpdateOptions()), 1);
+        assertThat(getDs().find(ContainsIntArray.class)
+                          .filter(eq("_id", updated.id))
+                          .first().values,
+            is(target));
+        assertThat(getDs().find(ContainsIntArray.class)
+                          .filter(eq("_id", control.id))
+                          .first().values,
+            is(new Integer[]{1, 2, 3}));
+
+        Assert.assertEquals(update.execute(new UpdateOptions()).getMatchedCount(), 1);
+        assertThat(getDs().find(ContainsIntArray.class)
+                          .filter(eq("_id", updated.id))
+                          .first().values,
+            is(target));
+        assertThat(getDs().find(ContainsIntArray.class)
+                          .filter(eq("_id", control.id))
+                          .first().values,
+            is(new Integer[]{1, 2, 3}));
+    }
+
     private void assertInserted(UpdateResult res) {
         assertNotNull(res.getUpsertedId());
         Assert.assertEquals(res.getModifiedCount(), 0);
@@ -1040,26 +1091,22 @@ public class TestUpdateOperations extends TestBase {
         return logs;
     }
 
-    private void doUpdates(ContainsIntArray updated, ContainsIntArray control, Update update, Integer[] target) {
-        assertUpdated(update.execute(new UpdateOptions()), 1);
-        assertThat((getDs().find(ContainsIntArray.class)
-                           .filter(eq("_id", updated.id))
-                           .first()).values,
-            is(target));
-        assertThat((getDs().find(ContainsIntArray.class)
-                           .filter(eq("_id", control.id))
-                           .first()).values,
-            is(new Integer[]{1, 2, 3}));
+    @Entity("students")
+    private static class Student {
+        private final Integer test1;
+        private final Integer test2;
+        private final Integer test3;
+        private final LocalDate modified;
+        @Id
+        private int id;
 
-        Assert.assertEquals(update.execute(new UpdateOptions()).getMatchedCount(), 1);
-        assertThat((getDs().find(ContainsIntArray.class)
-                           .filter(eq("_id", updated.id))
-                           .first()).values,
-            is(target));
-        assertThat((getDs().find(ContainsIntArray.class)
-                           .filter(eq("_id", control.id))
-                           .first()).values,
-            is(new Integer[]{1, 2, 3}));
+        public Student(int id, Integer test1, Integer test2, Integer test3, LocalDate modified) {
+            this.id = id;
+            this.test1 = test1;
+            this.test2 = test2;
+            this.test3 = test3;
+            this.modified = modified;
+        }
     }
 
     private Integer[] get(ContainsIntArray array) {
@@ -1294,12 +1341,12 @@ public class TestUpdateOperations extends TestBase {
         @Override
         public String toString() {
             return new StringJoiner(", ", LogHolder.class.getSimpleName() + "[", "]")
-                       .add("id=" + id)
-                       .add("uuid='" + uuid + "'")
-                       .add("log=" + log)
-                       .add("logs=" + logs)
-                       .add("raw=" + raw)
-                       .toString();
+                .add("id=" + id)
+                .add("uuid='" + uuid + "'")
+                .add("log=" + log)
+                .add("logs=" + logs)
+                .add("raw=" + raw)
+                .toString();
         }
 
         @PreLoad

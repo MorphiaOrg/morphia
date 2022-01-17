@@ -9,7 +9,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Evaluator
 import org.kohsuke.github.GHIssueState.OPEN
-import org.kohsuke.github.GHLabel
 import org.kohsuke.github.GitHubBuilder
 import java.io.File
 import java.io.FileReader
@@ -45,7 +44,7 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
         github.listMilestones(OPEN).first { it.title == releaseVersion }
     }
 
-    fun audit(name: String, url: String, excludes: List<String> = listOf()): Int {
+    fun audit(name: String, url: String, excludes: List<String> = listOf()): Pair<Int, Int> {
         val remaining = Jsoup
             .parse(URL(url), 30000)
             .select(object : Evaluator() {
@@ -61,9 +60,9 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
                 it !in excludes && methods[it] == null
             }
         val docRoot = url.replace("/index.html", "")
-
+        var issuesCreated = 0
         if (remaining.isNotEmpty()) {
-            val enhancement: GHLabel = github.getLabel("enhancement")
+            val enhancement = github.getLabel("enhancement")
             val labels = mutableListOf(enhancement)
             val targetLabel = if (name.contains("aggregation")) {
                 val label = github.getLabel("aggregation")
@@ -73,29 +72,31 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
 
             remaining.forEach {
                 val title = "Implement $it"
-                issues
+                val ifEmpty = issues
                     .filter { issue -> issue.title == title }
                     .filter { issue -> targetLabel == null || issue.labels.contains(targetLabel) }
-                    .ifEmpty {
-                        val body = """${docRoot}/${it.drop(1)}"""
-                        println(
-                            """
+
+                if (ifEmpty.isEmpty()) {
+                    issuesCreated++
+                    val body = """${docRoot}/${it.drop(1)}"""
+                    println(
+                        """
                             Creating a new issue for $name:
                                Title: '$title'
                                Milestone: ${milestone.title}
                                Labels: ${labels.joinToString { label -> label.name }}
                                Body: $body
                                """.trimIndent()
-                        )
-                        val builder = github.createIssue(title)
-                            .milestone(milestone)
-                            .body(body)
+                    )
+                    val builder = github.createIssue(title)
+                        .milestone(milestone)
+                        .body(body)
 
-                        labels.forEach { builder.label(it.name) }
-                        builder.create()
-                    }
+                    labels.forEach { builder.label(it.name) }
+                    builder.create()
+                }
             }
         }
-        return remaining.size
+        return remaining.size to issuesCreated
     }
 }

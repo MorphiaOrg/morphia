@@ -93,7 +93,7 @@ public interface Datastore {
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> dev.morphia.query.UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
-        return new dev.morphia.query.UpdateOpsImpl<>(this, clazz, getMapper());
+        return new dev.morphia.query.UpdateOpsImpl<>(this, clazz);
     }
 
     /**

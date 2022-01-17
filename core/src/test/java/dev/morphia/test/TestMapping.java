@@ -416,27 +416,27 @@ public class TestMapping extends TestBase {
 
     @Test(dataProvider = "queryFactories")
     public void testFieldAsDiscriminator(QueryFactory queryFactory) {
-        Datastore datastore = createDatastore(getMongoClient(), getDatabase().getName(),
-            MapperOptions.builder()
-                         .queryFactory(queryFactory)
-                         .enablePolymorphicQueries(true)
-                         .build());
+        withOptions(MapperOptions.builder()
+                                 .queryFactory(queryFactory)
+                                 .enablePolymorphicQueries(true)
+                                 .build(), () -> {
+            getDs().getMapper().map(BlogImage.class, Png.class, Jpg.class);
 
-        datastore.getMapper().map(BlogImage.class, Png.class, Jpg.class);
+            BlogImage png = new Png();
+            png.content = "I'm a png";
+            getDs().save(png);
 
-        BlogImage png = new Png();
-        png.content = "I'm a png";
-        datastore.save(png);
+            BlogImage jpg = new Jpg();
+            jpg.content = "I'm a jpg";
+            getDs().save(jpg);
 
-        BlogImage jpg = new Jpg();
-        jpg.content = "I'm a jpg";
-        datastore.save(jpg);
+            findFirst(getDs(), Png.class, png);
+            findFirst(getDs(), Jpg.class, jpg);
+            Query<BlogImage> query = getDs().find(BlogImage.class);
+            assertEquals(query.count(), 2, query.toString());
+            assertListEquals(query.iterator().toList(), List.of(jpg, png));
+        });
 
-        findFirst(datastore, Png.class, png);
-        findFirst(datastore, Jpg.class, jpg);
-        Query<BlogImage> query = datastore.find(BlogImage.class);
-        assertEquals(query.count(), 2, query.toString());
-        assertListEquals(query.iterator().toList(), List.of(jpg, png));
     }
 
     @Test

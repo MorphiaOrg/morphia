@@ -5,10 +5,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
-import dev.morphia.internal.PathTarget;
-import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,21 +20,19 @@ import java.util.List;
  *
  * @param <T>
  */
-public class Update<T> extends UpdateBase<T, UpdateOperator> {
-    @SuppressWarnings("rawtypes")
-    Update(Datastore datastore, MongoCollection<T> collection,
-           Query<T> query, Class<T> type, UpdateOpsImpl operations) {
-        super(datastore, collection, query, type, operations.getUpdates());
-    }
-
-    Update(Datastore datastore, MongoCollection<T> collection,
-           Query<T> query, Class<T> type, List<UpdateOperator> updates) {
+public class PipelineUpdate<T> extends UpdateBase<T, Stage> {
+    PipelineUpdate(Datastore datastore, MongoCollection<T> collection, Query<T> query, Class<T> type, List<Stage> updates) {
         super(datastore, collection, query, type, updates);
     }
 
-    @Override
+    /**
+     * Executes the update
+     *
+     * @param options the options to apply
+     * @return the results
+     */
     public UpdateResult execute(UpdateOptions options) {
-        Document updateOperations = toDocument();
+        List<Document> updateOperations = toDocument();
         final Document queryObject = getQuery().toDocument();
 
         ClientSession session = getDatastore().findSession(options);
@@ -38,20 +40,22 @@ public class Update<T> extends UpdateBase<T, UpdateOperator> {
         if (options.isMulti()) {
             return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)
                                    : mongoCollection.updateMany(session, queryObject, updateOperations, options);
-
         } else {
             return session == null ? mongoCollection.updateOne(queryObject, updateOperations, options)
                                    : mongoCollection.updateOne(session, queryObject, updateOperations, options);
         }
     }
 
-    private Document toDocument() {
-        final Operations operations = new Operations(getDatastore(), getMapper().getEntityModel(getType()));
-
-        for (UpdateOperator update : getUpdates()) {
-            PathTarget pathTarget = new PathTarget(getMapper(), getMapper().getEntityModel(getType()), update.field(), true);
-            operations.add(update.operator(), update.toTarget(pathTarget));
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private List<Document> toDocument() {
+        CodecRegistry registry = getDatastore().getCodecRegistry();
+        List<Document> documents = new ArrayList<>();
+        for (Stage update : getUpdates()) {
+            DocumentWriter writer = new DocumentWriter(getMapper());
+            Codec codec = registry.get(update.getClass());
+            codec.encode(writer, update, EncoderContext.builder().build());
+            documents.add(writer.getDocument());
         }
-        return operations.toDocument();
+        return documents;
     }
 }

@@ -132,6 +132,14 @@ public abstract class TestBase {
         }
     }
 
+    @DataProvider(name = "mapperOptions")
+    public Object[][] mapperOptions() {
+        return new Object[][]{
+            new Object[]{MapperOptions.DEFAULT},
+            new Object[]{MapperOptions.legacy().build()}
+        };
+    }
+
     @DataProvider(name = "queryFactories")
     public Object[][] queryFactories() {
         return new Object[][]{

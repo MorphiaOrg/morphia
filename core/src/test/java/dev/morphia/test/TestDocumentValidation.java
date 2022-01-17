@@ -145,7 +145,7 @@ public class TestDocumentValidation extends TestBase {
         insert("contacts", List.of(
             parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
             parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
-        EntityModel mapped = getDs().getMapper().map(Contact.class).get(0);
+        getDs().getMapper().map(Contact.class);
         getDs().enableDocumentValidation();
 
         Assert.assertThrows(MongoWriteException.class,
@@ -250,6 +250,7 @@ public class TestDocumentValidation extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("rawtypes")
     public void update() {
         getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();

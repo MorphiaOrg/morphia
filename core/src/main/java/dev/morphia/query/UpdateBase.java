@@ -1,12 +1,13 @@
 package dev.morphia.query;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
-import dev.morphia.internal.PathTarget;
+import dev.morphia.UpdateOptions;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.query.experimental.updates.UpdateOperator;
-import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,50 +16,37 @@ import static java.util.Arrays.asList;
 
 /**
  * @param <T>
+ * @param <O>
  * @morphia.internal
  */
-public abstract class UpdateBase<T> {
+public abstract class UpdateBase<T, O> {
 
+    private final List<O> updates = new ArrayList<>();
     private final Query<T> query;
     private final MongoCollection<T> collection;
     private final Mapper mapper;
     private final Class<T> type;
-    private final List<UpdateOperator> updates = new ArrayList<>();
     private final Datastore datastore;
 
     UpdateBase(Datastore datastore,
                @Nullable MongoCollection<T> collection,
                @Nullable Query<T> query,
-               Class<T> type) {
+               Class<T> type,
+               List<O> updates) {
         this.datastore = datastore;
         this.mapper = datastore.getMapper();
         this.collection = collection;
         this.query = query;
         this.type = type;
-    }
-
-    UpdateBase(Datastore datastore,
-               MongoCollection<T> collection,
-               Query<T> query,
-               Class<T> type,
-               UpdateOperator first,
-               UpdateOperator[] updates) {
-        this.datastore = datastore;
-        this.mapper = datastore.getMapper();
-        this.type = type;
-        this.updates.add(first);
-        this.updates.addAll(asList(updates));
-        this.query = query;
-        this.collection = collection;
-    }
-
-    UpdateBase(Datastore datastore,
-               MongoCollection<T> collection,
-               Query<T> query,
-               Class<T> type,
-               List<UpdateOperator> updates) {
-        this(datastore, collection, query, type);
         this.updates.addAll(updates);
+    }
+
+    @NotNull
+    static <T> List<T> coalesce(T first, T[] updates) {
+        List<T> operators = new ArrayList<>();
+        operators.add(first);
+        operators.addAll(asList(updates));
+        return operators;
     }
 
     /**
@@ -68,26 +56,29 @@ public abstract class UpdateBase<T> {
      * @morphia.internal
      * @since 2.2
      */
-    public void add(UpdateOperator operator) {
+    @MorphiaInternal
+    public void add(O operator) {
         updates.add(operator);
     }
 
     /**
-     * @return the operations listed
+     * Executes the update
+     *
+     * @param options the options to apply
+     * @return the results
      */
-    public Document toDocument() {
-        final Operations operations = new Operations(datastore, mapper.getEntityModel(type));
+    public abstract UpdateResult execute(UpdateOptions options);
 
-        for (UpdateOperator update : updates) {
-            PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), true);
-            operations.add(update.operator(), update.toTarget(pathTarget));
-        }
-        return operations.toDocument();
+    public UpdateResult execute() {
+        return execute(new UpdateOptions());
     }
 
-    @Override
-    public String toString() {
-        return toDocument().toString();
+    public Mapper getMapper() {
+        return mapper;
+    }
+
+    public Class<T> getType() {
+        return type;
     }
 
     protected MongoCollection<T> getCollection() {
@@ -102,11 +93,7 @@ public abstract class UpdateBase<T> {
         return query;
     }
 
-    /**
-     * @return the updates
-     * @morphia.internal
-     */
-    protected List<UpdateOperator> getUpdates() {
+    protected List<O> getUpdates() {
         return updates;
     }
 }

@@ -17,10 +17,12 @@ import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
+import dev.morphia.aggregation.experimental.stages.Set;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
+import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 
@@ -28,6 +30,7 @@ import dev.morphia.query.internal.MorphiaCursor;
  * @param <T> The initial type of the aggregation.  Used for collection name resolution.
  * @since 2.0
  */
+@MorphiaExperimental
 public interface Aggregation<T> {
     /**
      * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
@@ -310,6 +313,21 @@ public interface Aggregation<T> {
     Aggregation<T> sample(long sample);
 
     /**
+     * Adds new fields to documents. $set outputs documents that contain all existing fields from the input documents and newly added
+     * fields.
+     * <p>
+     * The $set stage is an alias for $addFields.
+     * <p>
+     * Both stages are equivalent to a $project stage that explicitly specifies all existing fields in the input documents and adds the
+     * new fields.
+     *
+     * @param set the stage to add
+     * @return this
+     * @since 2.3
+     */
+    Aggregation<T> set(Set set);
+
+    /**
      * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
      * added fields.
      * <p>
@@ -319,6 +337,7 @@ public interface Aggregation<T> {
      * @param fields the stage definition
      * @return this
      * @aggregation.expression $set
+     * @deprecated use {@link #addFields(AddFields)}
      */
     default Aggregation<T> set(AddFields fields) {
         return addFields(fields);
