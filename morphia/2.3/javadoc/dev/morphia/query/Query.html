@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":50,"i1":6,"i2":6,"i3":50,"i4":18,"i5":6,"i6":6,"i7":6,"i8":50,"i9":50,"i10":18,"i11":18,"i12":6,"i13":50,"i14":18,"i15":50,"i16":50,"i17":50,"i18":18,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":18,"i25":6,"i26":38,"i27":38,"i28":6,"i29":50,"i30":50,"i31":50,"i32":38,"i33":38,"i34":18,"i35":18,"i36":6,"i37":6,"i38":50,"i39":18};
+var data = {"i0":50,"i1":6,"i2":6,"i3":50,"i4":18,"i5":6,"i6":6,"i7":6,"i8":50,"i9":50,"i10":18,"i11":18,"i12":6,"i13":50,"i14":18,"i15":50,"i16":50,"i17":50,"i18":18,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":18,"i25":6,"i26":38,"i27":38,"i28":6,"i29":50,"i30":50,"i31":50,"i32":38,"i33":38,"i34":18,"i35":18,"i36":6,"i37":6,"i38":6,"i39":50,"i40":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -645,6 +645,14 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i37" class="rowColor">
+<td class="colFirst"><code><a href="PipelineUpdate.html" title="class in dev.morphia.query">PipelineUpdate</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.aggregation.experimental.stages.Stage,dev.morphia.aggregation.experimental.stages.Stage...)">update</a></span>​(<a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>&nbsp;first,
+      <a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>...&nbsp;updates)</code></th>
+<td class="colLast">
+<div class="block">Creates an update operation based on this query</div>
+</td>
+</tr>
+<tr id="i38" class="altColor">
 <td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
       <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
@@ -652,14 +660,14 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 <div class="block">Creates an update operation based on this query</div>
 </td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i39" class="rowColor">
 <td class="colFirst"><code>default <a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>&nbsp;</div>
 </td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i40" class="altColor">
 <td class="colFirst"><code>default <a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(java.util.List)">update</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&gt;&nbsp;updates)</code></th>
 <td class="colLast">
@@ -1445,7 +1453,7 @@ default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</
 <a id="update(dev.morphia.query.UpdateOperations)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
@@ -1460,6 +1468,26 @@ default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="update(dev.morphia.aggregation.experimental.stages.Stage,dev.morphia.aggregation.experimental.stages.Stage...)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>update</h4>
+<pre class="methodSignature"><a href="PipelineUpdate.html" title="class in dev.morphia.query">PipelineUpdate</a>&nbsp;update​(<a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>&nbsp;first,
+                      <a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>...&nbsp;updates)</pre>
+<div class="block">Creates an update operation based on this query</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>first</code> - the first and required update</dd>
+<dd><code>updates</code> - lists the set of updates to apply</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the update operation</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+</dl>
 </li>
 </ul>
 </li>

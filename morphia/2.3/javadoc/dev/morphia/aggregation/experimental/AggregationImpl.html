@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -595,27 +595,34 @@ implements <a href="Aggregation.html" title="interface in dev.morphia.aggregatio
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#set(dev.morphia.aggregation.experimental.stages.Set)">set</a></span>​(<a href="stages/Set.html" title="class in dev.morphia.aggregation.experimental.stages">Set</a>&nbsp;set)</code></th>
+<td class="colLast">
+<div class="block">Adds new fields to documents.</div>
+</td>
+</tr>
+<tr id="i27" class="rowColor">
+<td class="colFirst"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#skip(long)">skip</a></span>​(long&nbsp;skip)</code></th>
 <td class="colLast">
 <div class="block">Skips over the specified number of documents that pass into the stage and passes the remaining documents to the next stage in the
  pipeline.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(dev.morphia.aggregation.experimental.stages.Sort)">sort</a></span>​(<a href="stages/Sort.html" title="class in dev.morphia.aggregation.experimental.stages">Sort</a>&nbsp;sort)</code></th>
 <td class="colLast">
 <div class="block">Sorts all input documents and returns them to the pipeline in sorted order.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByCount(dev.morphia.aggregation.experimental.expressions.impls.Expression)">sortByCount</a></span>​(<a href="expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;sort)</code></th>
 <td class="colLast">
 <div class="block">Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unionWith(java.lang.Class,dev.morphia.aggregation.experimental.stages.Stage,dev.morphia.aggregation.experimental.stages.Stage...)">unionWith</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type,
          <a href="stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>&nbsp;first,
@@ -624,7 +631,7 @@ implements <a href="Aggregation.html" title="interface in dev.morphia.aggregatio
 <div class="block">Performs a union of two collections; i.e.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unionWith(java.lang.String,dev.morphia.aggregation.experimental.stages.Stage,dev.morphia.aggregation.experimental.stages.Stage...)">unionWith</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
          <a href="stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>&nbsp;first,
@@ -633,14 +640,14 @@ implements <a href="Aggregation.html" title="interface in dev.morphia.aggregatio
 <div class="block">Performs a union of two collections; i.e.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unset(dev.morphia.aggregation.experimental.stages.Unset)">unset</a></span>​(<a href="stages/Unset.html" title="class in dev.morphia.aggregation.experimental.stages">Unset</a>&nbsp;unset)</code></th>
 <td class="colLast">
 <div class="block">Removes/excludes fields from documents.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unwind(dev.morphia.aggregation.experimental.stages.Unwind)">unwind</a></span>​(<a href="stages/Unwind.html" title="class in dev.morphia.aggregation.experimental.stages">Unwind</a>&nbsp;unwind)</code></th>
 <td class="colLast">
@@ -722,6 +729,31 @@ implements <a href="Aggregation.html" title="interface in dev.morphia.aggregatio
 <dd><code><a href="Aggregation.html#addFields(dev.morphia.aggregation.experimental.stages.AddFields)">addFields</a></code>&nbsp;in interface&nbsp;<code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>fields</code> - the stage definition</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="set(dev.morphia.aggregation.experimental.stages.Set)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>set</h4>
+<pre class="methodSignature">public&nbsp;<a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;set​(<a href="stages/Set.html" title="class in dev.morphia.aggregation.experimental.stages">Set</a>&nbsp;set)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Aggregation.html#set(dev.morphia.aggregation.experimental.stages.Set)">Aggregation</a></code></span></div>
+<div class="block">Adds new fields to documents. $set outputs documents that contain all existing fields from the input documents and newly added
+ fields.
+ <p>
+ The $set stage is an alias for $addFields.
+ </p><p>
+ Both stages are equivalent to a $project stage that explicitly specifies all existing fields in the input documents and adds the
+ new fields.</p></div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Aggregation.html#set(dev.morphia.aggregation.experimental.stages.Set)">set</a></code>&nbsp;in interface&nbsp;<code><a href="Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>set</code> - the stage to add</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this</dd>
 </dl>
