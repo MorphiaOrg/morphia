@@ -7,11 +7,14 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
+import dev.morphia.ModifyOptions;
+import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.annotations.Entity;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
@@ -35,6 +38,7 @@ import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.query.CriteriaJoin.AND;
 import static dev.morphia.query.UpdateBase.coalesce;
 import static java.lang.String.format;
+import static java.util.List.of;
 
 
 /**
@@ -280,6 +284,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    public T modify(ModifyOptions options, UpdateOperator... updates) {
+        return new Modify<>(datastore, getCollection(), this, clazz, of(updates))
+            .execute(options);
+    }
+
+    @Override
     public T first() {
         return first(new FindOptions());
     }
@@ -358,8 +368,15 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public PipelineUpdate<T> update(Stage first, Stage... updates) {
-        return new PipelineUpdate<>(datastore, getCollection(), this, clazz, coalesce(first, updates));
+    public UpdateResult update(UpdateOptions options, Stage... updates) {
+        return new PipelineUpdate<>(datastore, getCollection(), this, clazz, of(updates))
+            .execute(options);
+    }
+
+    @Override
+    public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
+        return new Update<>(datastore, getCollection(), this, clazz, of(updates))
+            .execute(options);
     }
 
     /**

@@ -3,9 +3,13 @@ package dev.morphia.query;
 
 import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
 import dev.morphia.DeleteOptions;
+import dev.morphia.ModifyOptions;
+import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -309,8 +313,25 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @param first   the first and required update operator
      * @param updates lists the set of updates to apply
      * @return the modify operation
+     * @deprecated consider {@link #modify(ModifyOptions, UpdateOperator...)} instead.  In the next major version, this return type will
+     * match the other's return type such that this will be the terminal call for a modify.  The only change needed then will be to
+     * remove the {@link Modify#execute()} call.
      */
+    @Deprecated(since = "2.3", forRemoval = true)
     Modify<T> modify(UpdateOperator first, UpdateOperator... updates);
+
+    /**
+     * Create a modify operation based on this query
+     *
+     * @param updates lists the set of updates to apply
+     * @param options the options to apply
+     * @return the modify operation
+     * @since 2.3
+     */
+    @Nullable
+    default T modify(ModifyOptions options, UpdateOperator... updates) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Execute the query and get the results.
@@ -425,6 +446,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the document form of this query
      * @morphia.internal
      */
+    @MorphiaInternal
     Document toDocument();
 
     /**
@@ -432,7 +454,9 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      *
      * @param updates lists the set of updates to apply
      * @return the update operation
+     * @deprecated use {@link #update(UpdateOperator, UpdateOperator...)} instead
      */
+    @Deprecated(forRemoval = true)
     default Update<T> update(List<UpdateOperator> updates) {
         if (updates.isEmpty()) {
             throw new IllegalArgumentException(Sofia.atLeastOneUpdateRequired());
@@ -448,7 +472,12 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @param first   the first and required update operator
      * @param updates lists the set of updates to apply
      * @return the update operation
+     * @see #update(UpdateOptions, UpdateOperator...)
+     * @deprecated use {@link #update(UpdateOptions, UpdateOperator...)} instead.  In the next major version, this return type will match
+     * the other's return type such that this will be the terminal call for an update.  The only change needed then will be to remove the
+     * {@link Update#execute()} call.
      */
+    @Deprecated(forRemoval = true)
     Update<T> update(UpdateOperator first, UpdateOperator... updates);
 
     /**
@@ -456,7 +485,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the Updates instance
      * @morphia.internal
      * @since 2.0
-     * @deprecated
+     * @deprecated use {@link #update(UpdateOperator, UpdateOperator...)}
      */
     @Deprecated(since = "2.0", forRemoval = true)
     default Update<T> update(UpdateOperations<T> operations) {
@@ -466,10 +495,35 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     /**
      * Creates an update operation based on this query
      *
-     * @param first   the first and required update
      * @param updates lists the set of updates to apply
      * @return the update operation
      * @since 2.3
      */
-    PipelineUpdate update(Stage first, Stage... updates);
+    default UpdateResult update(Stage... updates) {
+        return update(new UpdateOptions(), updates);
+    }
+
+    /**
+     * Creates an update operation based on this query
+     *
+     * @param updates lists the set of updates to apply
+     * @param options the options to apply
+     * @return the update operation
+     * @since 2.3
+     */
+    default UpdateResult update(UpdateOptions options, Stage... updates) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Creates an update operation based on this query
+     *
+     * @param updates lists the set of updates to apply
+     * @param options the options to apply
+     * @return the update operation
+     * @since 2.3
+     */
+    default UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
+        throw new UnsupportedOperationException();
+    }
 }

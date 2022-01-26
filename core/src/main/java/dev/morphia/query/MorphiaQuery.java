@@ -7,10 +7,13 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
+import dev.morphia.ModifyOptions;
+import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.Mapper;
@@ -40,6 +43,7 @@ import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.query.UpdateBase.coalesce;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 /**
  * @param <T> the type
@@ -220,8 +224,13 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        List<UpdateOperator> operators = coalesce(first, updates);
-        return new Modify<>(datastore, getCollection(), this, getEntityClass(), operators);
+        return new Modify<>(datastore, getCollection(), this, getEntityClass(), coalesce(first, updates));
+    }
+
+    @Override
+    public T modify(ModifyOptions options, UpdateOperator... updates) {
+        return new Modify<>(datastore, getCollection(), this, getEntityClass(), List.of(updates))
+            .execute(options);
     }
 
     @Override
@@ -277,8 +286,15 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public PipelineUpdate update(Stage first, Stage... updates) {
-        return new PipelineUpdate<>(datastore, getCollection(), this, type, coalesce(first, updates));
+    public UpdateResult update(UpdateOptions options, Stage... updates) {
+        return new PipelineUpdate<>(datastore, getCollection(), this, type, asList(updates))
+            .execute(options);
+    }
+
+    @Override
+    public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
+        return new Update<>(datastore, getCollection(), this, type, asList(updates))
+            .execute(options);
     }
 
     @Override

@@ -201,6 +201,12 @@
           "ignore": true,
           "code": "java.method.addedToInterface",
           "new": "method dev.morphia.query.PipelineUpdate dev.morphia.query.Query<T>::update(dev.morphia.aggregation.experimental.stages.Stage, dev.morphia.aggregation.experimental.stages.Stage[])"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method org.bson.Document dev.morphia.query.Query<T>::toDocument()",
+          "justification": "internal method"
         }
       ]
     }

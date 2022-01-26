@@ -90,7 +90,6 @@ import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
 import static dev.morphia.query.experimental.updates.UpdateOperators.xor;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -904,8 +903,7 @@ public class TestUpdateOperations extends TestBase {
 
         assertThrows(IllegalArgumentException.class, () -> {
             getDs().find(Stuff1.class)
-                   .update(emptyList())
-                   .execute();
+                   .update();
         });
     }
 
@@ -1039,8 +1037,7 @@ public class TestUpdateOperations extends TestBase {
         query
             .update(set()
                 .field("test3", literal(98))
-                .field("modified", NOW))
-            .execute();
+                .field("modified", NOW));
 
         assertEquals(query.first().test3, 98);
         //        });
