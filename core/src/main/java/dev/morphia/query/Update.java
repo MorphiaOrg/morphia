@@ -14,7 +14,9 @@ import java.util.List;
  * Defines an update operation
  *
  * @param <T>
+ * @deprecated
  */
+@Deprecated(since = "2.3")
 public class Update<T> extends UpdateBase<T> {
     @SuppressWarnings("rawtypes")
     Update(Datastore datastore, MongoCollection<T> collection,

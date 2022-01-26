@@ -14,7 +14,9 @@ import java.util.List;
  * Represents a modify operation
  *
  * @param <T> the entity type
+ * @deprecated
  */
+@Deprecated(since = "2.3")
 public class Modify<T> extends UpdateBase<T> {
 
     @SuppressWarnings("rawtypes")
