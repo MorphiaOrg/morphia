@@ -287,7 +287,7 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public UpdateResult update(UpdateOptions options, Stage... updates) {
-        return new PipelineUpdate<>(datastore, getCollection(), this, type, asList(updates))
+        return new PipelineUpdate<>(datastore, getCollection(), this, asList(updates))
             .execute(options);
     }
 

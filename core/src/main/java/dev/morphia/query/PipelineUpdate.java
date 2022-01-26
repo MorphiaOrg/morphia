@@ -20,18 +20,16 @@ import java.util.List;
  *
  * @param <T>
  */
-public class PipelineUpdate<T> {
+class PipelineUpdate<T> {
     private final Query<T> query;
     private final MongoCollection<T> collection;
-    private final Class<T> type;
     private final List<Stage> updates = new ArrayList<>();
     private final Datastore datastore;
 
-    PipelineUpdate(Datastore datastore, MongoCollection<T> collection, Query<T> query, Class<T> type, List<Stage> updates) {
+    PipelineUpdate(Datastore datastore, MongoCollection<T> collection, Query<T> query, List<Stage> updates) {
         this.datastore = datastore;
         this.collection = collection;
         this.query = query;
-        this.type = type;
         this.updates.addAll(updates);
     }
 

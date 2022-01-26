@@ -369,7 +369,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public UpdateResult update(UpdateOptions options, Stage... updates) {
-        return new PipelineUpdate<>(datastore, getCollection(), this, clazz, of(updates))
+        return new PipelineUpdate<>(datastore, getCollection(), this, of(updates))
             .execute(options);
     }
 
