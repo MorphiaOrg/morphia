@@ -242,8 +242,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":42,"i1":42};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -356,8 +356,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code>T</code> - the entity type</dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">Modify&lt;T&gt;</span>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.3")
+public class <span class="typeNameLabel">Modify&lt;T&gt;</span>
 extends <a href="UpdateBase.html" title="class in dev.morphia.query">UpdateBase</a>&lt;T&gt;</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Represents a modify operation</div>
 </li>
 </ul>
@@ -373,7 +375,7 @@ extends <a href="UpdateBase.html" title="class in dev.morphia.query">UpdateBase<
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -383,6 +385,7 @@ extends <a href="UpdateBase.html" title="class in dev.morphia.query">UpdateBase<
 <td class="colFirst"><code><a href="Modify.html" title="type parameter in Modify">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute()">execute</a></span>()</code></th>
 <td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Performs the operation</div>
 </td>
 </tr>
@@ -390,6 +393,7 @@ extends <a href="UpdateBase.html" title="class in dev.morphia.query">UpdateBase<
 <td class="colFirst"><code><a href="Modify.html" title="type parameter in Modify">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute(dev.morphia.ModifyOptions)">execute</a></span>​(<a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Performs the operation</div>
 </td>
 </tr>
@@ -432,6 +436,7 @@ extends <a href="UpdateBase.html" title="class in dev.morphia.query">UpdateBase<
 <h4>execute</h4>
 <pre class="methodSignature">@Nullable
 public&nbsp;<a href="Modify.html" title="type parameter in Modify">T</a>&nbsp;execute()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Performs the operation</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -447,6 +452,7 @@ public&nbsp;<a href="Modify.html" title="type parameter in Modify">T</a>&nbsp;ex
 <h4>execute</h4>
 <pre class="methodSignature">@Nullable
 public&nbsp;<a href="Modify.html" title="type parameter in Modify">T</a>&nbsp;execute​(<a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&nbsp;options)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Performs the operation</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
