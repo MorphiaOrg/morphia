@@ -6544,11 +6544,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyModelBuilder.html#modifiers(int)">modifiers(int)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">modify(ModifyOptions, UpdateOperator...)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">modify(ModifyOptions, UpdateOperator...)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
+<dd>
+<div class="block">Create a modify operation based on this query</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">modify(UpdateOperator, UpdateOperator...)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">modify(UpdateOperator, UpdateOperator...)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
-<div class="block">Create a modify operation based on this query</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">consider <a href="dev/morphia/query/Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.modify(ModifyOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will
+ match the other's return type such that this will be the terminal call for a modify.  The only change needed then will be to
+ remove the <a href="dev/morphia/query/Modify.html#execute()"><code>Modify.execute()</code></a> call.</div>
+</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#modify(dev.morphia.query.UpdateOperations)">modify(UpdateOperations&lt;T&gt;)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
 <dd>
@@ -9834,9 +9844,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/references/ReferenceProxy.html#unwrap()">unwrap()</a></span> - Method in class dev.morphia.mapping.codec.references.<a href="dev/morphia/mapping/codec/references/ReferenceProxy.html" title="class in dev.morphia.mapping.codec.references">ReferenceProxy</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#update(dev.morphia.aggregation.experimental.stages.Stage,dev.morphia.aggregation.experimental.stages.Stage...)">update(Stage, Stage...)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#update(dev.morphia.aggregation.experimental.stages.Stage,dev.morphia.aggregation.experimental.stages.Stage...)">update(Stage, Stage...)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#update(dev.morphia.aggregation.experimental.stages.Stage...)">update(Stage...)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
 <div class="block">Creates an update operation based on this query</div>
 </dd>
@@ -9844,7 +9852,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update(UpdateOperator, UpdateOperator...)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
-<div class="block">Creates an update operation based on this query</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will match
+ the other's return type such that this will be the terminal call for an update.  The only change needed then will be to remove the
+ <a href="dev/morphia/query/Update.html#execute()"><code>Update.execute()</code></a> call.</div>
+</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update(Query&lt;T&gt;, UpdateOperations&lt;T&gt;)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
@@ -9865,7 +9877,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#update(dev.morphia.query.UpdateOperations)">update(UpdateOperations&lt;T&gt;)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>&nbsp;</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a></div>
+</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.experimental.stages.Stage...)">update(UpdateOptions, Stage...)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.experimental.stages.Stage...)">update(UpdateOptions, Stage...)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
+<dd>
+<div class="block">Creates an update operation based on this query</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">update(UpdateOptions, UpdateOperator...)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">update(UpdateOptions, UpdateOperator...)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
+<dd>
+<div class="block">Creates an update operation based on this query</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#update(java.util.List)">update(List&lt;UpdateOperator&gt;)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
 <dd>
@@ -9873,7 +9899,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#update(java.util.List)">update(List&lt;UpdateOperator&gt;)</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
-<div class="block">Creates an update operation based on this query</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
+</div>
 </dd>
 <dt><a href="dev/morphia/query/Update.html" title="class in dev.morphia.query"><span class="typeNameLink">Update</span></a>&lt;<a href="dev/morphia/query/Update.html" title="type parameter in Update">T</a>&gt; - Class in <a href="dev/morphia/query/package-summary.html">dev.morphia.query</a></dt>
 <dd>
