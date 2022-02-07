@@ -2516,6 +2516,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody>
 </table>
 <table class="useSummary">
+<caption><span>Methods in <a href="../package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a> that return types with arguments of type <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Accumulator.</span><code><span class="memberNameLink"><a href="../Accumulator.html#getValue()">getValue</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
 <caption><span>Methods in <a href="../package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a> with parameters of type <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
@@ -2967,6 +2982,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceWith.</span><code><span class="memberNameLink"><a href="../../../stages/ReplaceWith.html#getValue()">getValue</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SetWindowFields.Output.</span><code><span class="memberNameLink"><a href="../../../stages/SetWindowFields.Output.html#operator()">operator</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SetWindowFields.</span><code><span class="memberNameLink"><a href="../../../stages/SetWindowFields.html#partition()">partition</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 <table class="useSummary">
@@ -3121,6 +3146,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="../../../stages/SetWindowFields.Output.html" title="class in dev.morphia.aggregation.experimental.stages">SetWindowFields.Output</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SetWindowFields.Output.</span><code><span class="memberNameLink"><a href="../../../stages/SetWindowFields.Output.html#operator(dev.morphia.aggregation.experimental.expressions.impls.Expression)">operator</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;operator)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../stages/AutoBucket.html" title="class in dev.morphia.aggregation.experimental.stages">AutoBucket</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AutoBucket.</span><code><span class="memberNameLink"><a href="../../../stages/AutoBucket.html#outputField(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression)">outputField</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
            <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
@@ -3128,12 +3158,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Adds a field to the document that specifies the fields to include in the output documents in addition to the _id field.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../stages/Bucket.html" title="class in dev.morphia.aggregation.experimental.stages">Bucket</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Bucket.</span><code><span class="memberNameLink"><a href="../../../stages/Bucket.html#outputField(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression)">outputField</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
            <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Adds a field to the document that specifies the fields to include in the output documents in addition to the _id field.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../../../stages/SetWindowFields.html" title="class in dev.morphia.aggregation.experimental.stages">SetWindowFields</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">SetWindowFields.</span><code><span class="memberNameLink"><a href="../../../stages/SetWindowFields.html#partitionBy(dev.morphia.aggregation.experimental.expressions.impls.Expression)">partitionBy</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;partition)</code></th>
+<td class="colLast">
+<div class="block">Defines the expression to use to partition the data.</div>
 </td>
 </tr>
 <tr class="rowColor">
