@@ -33,7 +33,6 @@ import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType.Builder;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
-import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatcher.Junction;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.bson.BsonReader;
@@ -45,6 +44,8 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -58,9 +59,6 @@ import java.util.stream.Collectors;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static java.lang.String.format;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 
 /**
  * @morphia.internal
@@ -226,18 +224,8 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return fetch(decode);
     }
 
-    @Override
-    public Object encode(Object value) {
-        try {
-            DocumentWriter writer = new DocumentWriter(mapper);
-            document(writer, () -> {
-                writer.writeName("ref");
-                encode(writer, value, EncoderContext.builder().build());
-            });
-            return writer.getDocument().get("ref");
-        } catch (ReferenceException e) {
-            return value;
-        }
+    private static TypeCache.SimpleKey getCacheKey(Class<?> type) {
+        return new TypeCache.SimpleKey(type, Arrays.asList(type.getInterfaces()));
     }
 
     @Override
@@ -287,13 +275,27 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         }
     }
 
+    @Override
+    public Object encode(@Nullable Object value) {
+        try {
+            DocumentWriter writer = new DocumentWriter(mapper);
+            document(writer, () -> {
+                writer.writeName("ref");
+                encode(writer, value, EncoderContext.builder().build());
+            });
+            return writer.getDocument().get("ref");
+        } catch (ReferenceException e) {
+            return value;
+        }
+    }
+
     private <T> T createProxy(MorphiaReference<?> reference) {
         ReferenceProxy referenceProxy = new ReferenceProxy(reference);
         PropertyModel propertyModel = getPropertyModel();
         try {
             Class<?> type = propertyModel.getType();
             // Get or create proxy class
-            Class<T> proxyClass = (Class<T>) typeCache.findOrInsert(type.getClassLoader(), getCacheKey(type), () -> makeProxy(reference), typeCache);
+            Class<T> proxyClass = (Class<T>) typeCache.findOrInsert(type.getClassLoader(), getCacheKey(type), () -> makeProxy(), typeCache);
             //... instantiate it
             final T proxy = proxyClass.getDeclaredConstructor().newInstance();
             // .. and set the invocation handler
@@ -305,14 +307,14 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             throw new MappingException(e.getMessage(), e);
         }
     }
-    
-    private <T> Class<T> makeProxy(final MorphiaReference<?> reference)  {
+
+    private <T> Class<T> makeProxy() {
         PropertyModel propertyModel = getPropertyModel();
         Class<?> type = propertyModel.getType();
         Builder<?> builder = new ByteBuddy()
             .subclass(type)
             .implement(MorphiaProxy.class)
-        .name(format("%s$%s$$ReferenceProxy", propertyModel.getEntityModel().getName(), propertyModel.getName()));
+            .name(format("%s$%s$$ReferenceProxy", propertyModel.getEntityModel().getName(), propertyModel.getName()));
 
         Junction<ByteCodeElement> matcher = ElementMatchers.isDeclaredBy(type);
         if (!type.isInterface()) {
@@ -324,17 +326,12 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         }
 
         return (Class<T>) builder
-                .invokable(matcher.or(ElementMatchers.isDeclaredBy(MorphiaProxy.class)))
-                .intercept(InvocationHandlerAdapter.toField(FIELD_INVOCATION_HANDLER))
-                .defineField(FIELD_INVOCATION_HANDLER, InvocationHandler.class, Visibility.PRIVATE)
-                .make()
-                .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
-                .getLoaded();
-        }
-
-    private static TypeCache.SimpleKey getCacheKey(final Class<?> type)
-    {
-        return new TypeCache.SimpleKey(type, Arrays.asList(type.getInterfaces()));
+            .invokable(matcher.or(ElementMatchers.isDeclaredBy(MorphiaProxy.class)))
+            .intercept(InvocationHandlerAdapter.toField(FIELD_INVOCATION_HANDLER))
+            .defineField(FIELD_INVOCATION_HANDLER, InvocationHandler.class, Visibility.PRIVATE)
+            .make()
+            .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
+            .getLoaded();
     }
 
     @Nullable
@@ -382,6 +379,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                : new ListReference<>(mapped);
     }
 
+    @SuppressWarnings("rawtypes")
     MorphiaReference<?> readMap(Map<Object, Object> value) {
         final Map<Object, Object> ids = new LinkedHashMap<>();
         Class<?> keyType = getTypeData().getTypeParameters().get(0).getType();
