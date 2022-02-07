@@ -218,8 +218,6 @@ public class CodecStructureTest extends TestBase {
                .get(Sample.class)
                .encode(writer, Sample.sample(15L), EncoderContext.builder().build());
         Document actual = writer.getDocument();
-        assertEquals(writer.getDocsLevel(), 0);
-        assertEquals(writer.getArraysLevel(), 0);
         assertEquals(((Document) actual.get("$sample")).getLong("size").longValue(), 15L);
     }
 
@@ -230,8 +228,6 @@ public class CodecStructureTest extends TestBase {
                .get(Skip.class)
                .encode(writer, Skip.skip(15L), EncoderContext.builder().build());
         Document actual = writer.getDocument();
-        assertEquals(writer.getDocsLevel(), 0);
-        assertEquals(writer.getArraysLevel(), 0);
         assertEquals(actual.getLong("$skip").longValue(), 15L);
     }
 
@@ -242,8 +238,6 @@ public class CodecStructureTest extends TestBase {
                         .get(value.getClass()))
             .encode(writer, value, EncoderContext.builder().build());
         Document actual = writer.getDocument();
-        assertEquals(writer.getDocsLevel(), 0);
-        assertEquals(writer.getArraysLevel(), 0);
 
         assertDocumentEquals(actual, expected);
     }

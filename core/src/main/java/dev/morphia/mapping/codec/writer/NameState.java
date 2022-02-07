@@ -1,32 +1,32 @@
 package dev.morphia.mapping.codec.writer;
 
-import org.bson.Document;
+import com.mongodb.lang.Nullable;
+
+import static dev.morphia.mapping.codec.writer.PendingValue.SLUG;
+import static java.lang.String.format;
 
 class NameState extends WriteState {
     private final String name;
-    private final Document document;
-    private WriteState value;
+    private ValueState value = SLUG;
 
-    NameState(DocumentWriter writer, String name, Document document) {
-        super(writer);
+    NameState(DocumentWriter writer, String name, WriteState previous) {
+        super(writer, previous);
         this.name = name;
-        this.document = document;
-        if (!document.containsKey(name)) {
-            document.put(name, this);
-        }
+    }
 
+    public String name() {
+        return name;
     }
 
     @Override
     public String toString() {
-        return value == null
-               ? "<<pending>>"
-               : value.toString();
+        return format("%s: %s", name, value);
     }
 
-    //    void apply(Object value) {
-    //        previous().applyValue(name, value);
-    //    }
+    @Nullable
+    public Object value() {
+        return value.value();
+    }
 
     @Override
     protected String state() {
@@ -35,30 +35,24 @@ class NameState extends WriteState {
 
     @Override
     WriteState array() {
-        value = new ArrayState(getWriter());
-        document.put(name, ((ArrayState) value).getList());
+        value = new ArrayState(getWriter(), this);
         return value;
     }
 
     @Override
     WriteState document() {
-        if (document.get(name) instanceof Document) {
-            value = new DocumentState(getWriter(), (Document) document.get(name));
-        } else {
-            value = new DocumentState(getWriter());
-            document.put(name, ((DocumentState) value).getDocument());
-        }
+        value = new DocumentState(getWriter(), this);
         return value;
     }
 
     @Override
-    DocumentState previous() {
-        return super.previous();
+    void done() {
+        end();
     }
 
     @Override
     void value(Object value) {
-        document.put(name, value);
-        end();
+        this.value = new SingleValue(getWriter(), value, this);
+        this.value.end();
     }
 }

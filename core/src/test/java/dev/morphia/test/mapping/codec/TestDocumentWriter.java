@@ -8,33 +8,25 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static java.util.Arrays.asList;
+import static java.util.List.of;
 
 public class TestDocumentWriter extends TestBase {
-    private int docs = 0;
-    private int arrays = 0;
-
     @Test
     public void arrays() {
         DocumentWriter writer = new DocumentWriter(getMapper());
 
         document(writer, () -> {
-            check(writer, 1, 0);
             array(writer, "stuff", () -> {
-                check(writer, 1, 1);
                 writer.writeString("hello");
                 writer.writeInt32(42);
             });
-            check(writer, 1, 0);
             writer.writeName("next");
             writer.writeString("something simple");
         });
 
-        check(writer, 0, 0);
         Assert.assertEquals(writer.getDocument(), new Document("stuff", asList("hello", 42))
                                                       .append("next", "something simple"));
     }
@@ -44,18 +36,14 @@ public class TestDocumentWriter extends TestBase {
         DocumentWriter writer = new DocumentWriter(getMapper());
 
         document(writer, () -> {
-            check(writer, 1, 0);
             array(writer, "stuff", () -> {
-                check(writer, 1, 1);
                 document(writer, () -> {
                     writer.writeInt32("doc", 42);
                 });
             });
-            check(writer, 1, 0);
         });
 
-        check(writer, 0, 0);
-        Assert.assertEquals(writer.getDocument(), new Document("stuff", asList(new Document("doc", 42))));
+        Assert.assertEquals(writer.getDocument(), new Document("stuff", of(new Document("doc", 42))));
     }
 
     @Test
@@ -71,7 +59,6 @@ public class TestDocumentWriter extends TestBase {
                     expected.put("entry " + j, j);
                 }
             });
-            check(writer, 0, 0);
             Assert.assertEquals(expected, writer.getDocument());
         }
     }
@@ -94,19 +81,19 @@ public class TestDocumentWriter extends TestBase {
     public void nestedArrays() {
         DocumentWriter writer = new DocumentWriter(getMapper());
 
-        startDoc(writer);
-        startArray(writer, "top");
-        startArray(writer);
-        writer.writeInt32(1);
-        writer.writeInt32(2);
-        writer.writeInt32(3);
-        startDoc(writer);
-        writer.writeString("nested", "string");
-        endDoc(writer);
-        endArray(writer);
-        endArray(writer);
-        endDoc(writer);
-        Document top = new Document("top", List.of(List.of(1, 2, 3, new Document("nested", "string"))));
+        document(writer, () -> {
+            array(writer, "top", () -> {
+                array(writer, () -> {
+                    writer.writeInt32(1);
+                    writer.writeInt32(2);
+                    writer.writeInt32(3);
+                    document(writer, () -> {
+                        writer.writeString("nested", "string");
+                    });
+                });
+            });
+        });
+        Document top = new Document("top", of(of(1, 2, 3, new Document("nested", "string"))));
         Assert.assertEquals(top, writer.getDocument());
     }
 
@@ -155,39 +142,7 @@ public class TestDocumentWriter extends TestBase {
             document(writer, () -> writer.writeInt32("nested", 42));
         });
 
-        check(writer, 0, 0);
         Assert.assertEquals(writer.getDocument(), new Document("subdoc", new Document("nested", 42)));
 
     }
-
-    private void check(DocumentWriter writer, int docs, int arrays) {
-        Assert.assertEquals(docs, writer.getDocsLevel());
-        Assert.assertEquals(arrays, writer.getArraysLevel());
-    }
-
-    private void endArray(DocumentWriter writer) {
-        writer.writeEndArray();
-        Assert.assertEquals(--arrays, writer.getArraysLevel());
-    }
-
-    private void endDoc(DocumentWriter writer) {
-        writer.writeEndDocument();
-        Assert.assertEquals(--docs, writer.getDocsLevel());
-    }
-
-    private void startArray(DocumentWriter writer) {
-        writer.writeStartArray();
-        Assert.assertEquals(++arrays, writer.getArraysLevel());
-    }
-
-    private void startArray(DocumentWriter writer, String name) {
-        writer.writeStartArray(name);
-        Assert.assertEquals(++arrays, writer.getArraysLevel());
-    }
-
-    private void startDoc(DocumentWriter writer) {
-        writer.writeStartDocument();
-        Assert.assertEquals(++docs, writer.getDocsLevel());
-    }
-
 }

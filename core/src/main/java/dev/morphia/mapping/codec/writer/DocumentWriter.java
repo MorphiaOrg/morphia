@@ -1,7 +1,6 @@
 package dev.morphia.mapping.codec.writer;
 
 import dev.morphia.mapping.Mapper;
-import dev.morphia.sofia.Sofia;
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
 import org.bson.BsonMaxKey;
@@ -31,8 +30,6 @@ import java.time.LocalDateTime;
 public class DocumentWriter implements BsonWriter {
     private final RootState root;
     private WriteState state;
-    private int arraysLevel;
-    private int docsLevel;
     private final Mapper mapper;
 
     /**
@@ -78,36 +75,10 @@ public class DocumentWriter implements BsonWriter {
     }
 
     /**
-     * @return a number
-     * @morphia.internal
-     */
-    public int getArraysLevel() {
-        return arraysLevel;
-    }
-
-    /**
-     * @return a number
-     * @morphia.internal
-     */
-    public int getDocsLevel() {
-        return docsLevel;
-    }
-
-    /**
      * @return the root, or output, of this writer.  usually a Document.
      */
     public Document getDocument() {
-        if (arraysLevel != 0 || docsLevel != 0) {
-            throw new IllegalStateException(Sofia.unbalancedOpens(arraysLevel, docsLevel, state));
-        }
         return root.getDocument();
-    }
-
-    public void previous() {
-        state(state.previous());
-        if (state() instanceof NameState) {
-            previous();
-        }
     }
 
     public WriteState state() {
@@ -167,13 +138,11 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeEndArray() {
-        arraysLevel--;
         state.end();
     }
 
     @Override
     public void writeEndDocument() {
-        docsLevel--;
         state.end();
     }
 
@@ -293,13 +262,11 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeStartArray() {
-        arraysLevel++;
         state.array();
     }
 
     @Override
     public void writeStartDocument() {
-        docsLevel++;
         state.document();
     }
 
@@ -312,7 +279,6 @@ public class DocumentWriter implements BsonWriter {
     @Override
     public void writeStartDocument(String name) {
         state.name(name).document();
-        docsLevel++;
     }
 
     @Override
@@ -362,10 +328,8 @@ public class DocumentWriter implements BsonWriter {
         return root.toString();
     }
 
-    WriteState state(WriteState state) {
-        final WriteState previous = this.state;
+    void state(WriteState state) {
         this.state = state;
-        return previous;
     }
 
 }

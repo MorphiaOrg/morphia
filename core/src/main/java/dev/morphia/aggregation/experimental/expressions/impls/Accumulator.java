@@ -3,8 +3,8 @@ package dev.morphia.aggregation.experimental.expressions.impls;
 import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
@@ -16,7 +16,6 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expre
  * @since 2.0
  */
 public class Accumulator extends Expression {
-    private final List<Expression> expressions = new ArrayList<>();
 
     /**
      * @param operation
@@ -24,23 +23,29 @@ public class Accumulator extends Expression {
      * @morphia.internal
      */
     public Accumulator(String operation, List<Expression> values) {
-        super(operation);
-        expressions.addAll(values);
+        super(operation, values);
     }
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             writer.writeName(getOperation());
-            if (expressions.size() > 1) {
+            if (getValue().size() > 1) {
                 writer.writeStartArray();
             }
-            for (Expression expression : expressions) {
+            for (Expression expression : getValue()) {
                 expression(datastore, writer, expression, encoderContext);
             }
-            if (expressions.size() > 1) {
+            if (getValue().size() > 1) {
                 writer.writeEndArray();
             }
         });
+    }
+
+    @NotNull
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Expression> getValue() {
+        return (List<Expression>) super.getValue();
     }
 }

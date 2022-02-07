@@ -18,6 +18,7 @@ import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import dev.morphia.aggregation.experimental.stages.Set;
+import dev.morphia.aggregation.experimental.stages.SetWindowFields;
 import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.aggregation.experimental.stages.Stage;
 import dev.morphia.aggregation.experimental.stages.Unset;
@@ -42,6 +43,7 @@ public interface Aggregation<T> {
      * @param fields the stage definition
      * @return this
      * @aggregation.expression $addFields
+     * @mongodb.server.release 3.4
      */
     Aggregation<T> addFields(AddFields fields);
 
@@ -56,6 +58,7 @@ public interface Aggregation<T> {
      * @param bucket the bucket definition
      * @return this
      * @aggregation.expression $bucketAuto
+     * @mongodb.server.release 3.4
      */
     Aggregation<T> autoBucket(AutoBucket bucket);
 
@@ -71,6 +74,7 @@ public interface Aggregation<T> {
      * @param bucket the bucket definition
      * @return this
      * @aggregation.expression $bucket
+     * @mongodb.server.release 3.4
      */
     Aggregation<T> bucket(Bucket bucket);
 
@@ -89,6 +93,7 @@ public interface Aggregation<T> {
      * @param name the field name for the resulting count value
      * @return this
      * @aggregation.expression $count
+     * @mongodb.server.release 3.4
      */
     Aggregation<T> count(String name);
 
@@ -108,6 +113,7 @@ public interface Aggregation<T> {
      * @param currentOp the configuration
      * @return this
      * @aggregation.expression $currentOp
+     * @mongodb.server.release 3.6
      */
     Aggregation<T> currentOp(CurrentOp currentOp);
 
@@ -144,6 +150,7 @@ public interface Aggregation<T> {
      * @param facet the facet definition
      * @return this
      * @aggregation.expression $facet
+     * @mongodb.server.release 3.4
      */
     Aggregation<T> facet(Facet facet);
 
@@ -182,6 +189,7 @@ public interface Aggregation<T> {
      *
      * @return this
      * @aggregation.expression $indexStats
+     * @mongodb.server.release 3.2
      */
     Aggregation<T> indexStats();
 
@@ -202,6 +210,7 @@ public interface Aggregation<T> {
      * @param lookup the lookup definition
      * @return this
      * @aggregation.expression $lookup
+     * @mongodb.server.release 3.6
      */
     Aggregation<T> lookup(Lookup lookup);
 
@@ -221,6 +230,7 @@ public interface Aggregation<T> {
      * @param merge the merge definition
      * @param <M>   the output collection type
      * @aggregation.expression $merge
+     * @mongodb.server.release 4.2
      */
     <M> void merge(Merge<M> merge);
 
@@ -231,6 +241,7 @@ public interface Aggregation<T> {
      * @param options the options to apply
      * @param <M>     the output collection type
      * @aggregation.expression $merge
+     * @mongodb.server.release 3.4
      */
     <M> void merge(Merge<M> merge, AggregationOptions options);
 
@@ -258,6 +269,7 @@ public interface Aggregation<T> {
      *
      * @return this
      * @aggregation.expression $planCacheStats
+     * @mongodb.server.release 4.2
      */
     Aggregation<T> planCacheStats();
 
@@ -287,6 +299,7 @@ public interface Aggregation<T> {
      * @param root the new root definition
      * @return this
      * @aggregation.expression $replaceRoot
+     * @mongodb.server.release 3.4
      */
     Aggregation<T> replaceRoot(ReplaceRoot root);
 
@@ -300,6 +313,7 @@ public interface Aggregation<T> {
      * @param with the replacement definition
      * @return this
      * @aggregation.expression $replaceWith
+     * @mongodb.server.release 4.2
      */
     Aggregation<T> replaceWith(ReplaceWith with);
 
@@ -309,6 +323,7 @@ public interface Aggregation<T> {
      * @param sample the sample definition
      * @return this
      * @aggregation.expression $sample
+     * @mongodb.server.release 3.2
      */
     Aggregation<T> sample(long sample);
 
@@ -324,6 +339,8 @@ public interface Aggregation<T> {
      * @param set the stage to add
      * @return this
      * @since 2.3
+     * @aggregation.expression $set
+     * @mongodb.server.release 4.2
      */
     Aggregation<T> set(Set set);
 
@@ -342,6 +359,17 @@ public interface Aggregation<T> {
     default Aggregation<T> set(AddFields fields) {
         return addFields(fields);
     }
+
+    /**
+     * @param fields
+     * @return this
+     * @mongodb.server.release 5.0
+     * @morphia.experimental
+     * @aggregation.expression $setWindowFields
+     * @since 2.3
+     */
+    @MorphiaExperimental
+    Aggregation<T> setWindowFields(SetWindowFields fields);
 
     /**
      * Skips over the specified number of documents that pass into the stage and passes the remaining documents to the next stage in the
@@ -373,6 +401,7 @@ public interface Aggregation<T> {
      * @param sort the sort definition
      * @return this
      * @aggregation.expression $sortByCount
+     * @mongodb.server.release 3.4
      */
     Aggregation<T> sortByCount(Expression sort);
 
@@ -385,6 +414,7 @@ public interface Aggregation<T> {
      * @param others the other pipeline stages
      * @return this
      * @aggregation.expression $unionWith
+     * @mongodb.server.release 4.4
      * @since 2.1
      */
     Aggregation<T> unionWith(Class<?> type, Stage first, Stage... others);
@@ -398,6 +428,7 @@ public interface Aggregation<T> {
      * @param others     the other pipeline stages
      * @return this
      * @aggregation.expression $unionWith
+     * @mongodb.server.release 4.4
      * @since 2.1
      */
     Aggregation<T> unionWith(String collection, Stage first, Stage... others);
@@ -408,6 +439,7 @@ public interface Aggregation<T> {
      * @param unset the unset definition
      * @return this
      * @aggregation.expression $unset
+     * @mongodb.server.release 4.2
      */
     Aggregation<T> unset(Unset unset);
 

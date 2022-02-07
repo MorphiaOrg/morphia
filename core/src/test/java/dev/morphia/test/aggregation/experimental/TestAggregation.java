@@ -31,6 +31,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.query.MorphiaCursor;
+import dev.morphia.query.Sort;
 import dev.morphia.query.Type;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.aggregation.experimental.model.Author;
@@ -66,6 +67,8 @@ import static dev.morphia.aggregation.experimental.expressions.SystemVariables.P
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;
 import static dev.morphia.aggregation.experimental.stages.ReplaceWith.replaceWith;
+import static dev.morphia.aggregation.experimental.stages.SetWindowFields.Output.output;
+import static dev.morphia.aggregation.experimental.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.aggregation.experimental.stages.Sort.sort;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
@@ -589,6 +592,47 @@ public class TestAggregation extends TestBase {
         assertEquals(docAgg.next(),
             parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}"));
     }
+
+    @Test
+    public void testSetWindowFields() {
+        checkMinServerVersion(5.0);
+        insert("cakeSales", List.of(
+            parse("{ _id: 0, type: 'chocolate', orderDate: ISODate('2020-05-18T14:10:30Z'), state: 'CA', price: 13, quantity: 120 }"),
+            parse("{ _id: 1, type: 'chocolate', orderDate: ISODate('2021-03-20T11:30:05Z'), state: 'WA', price: 14, quantity: 140 }"),
+            parse("{ _id: 2, type: 'vanilla', orderDate: ISODate('2021-01-11T06:31:15Z'), state: 'CA', price: 12, quantity: 145 }"),
+            parse("{ _id: 3, type: 'vanilla', orderDate: ISODate('2020-02-08T13:13:23Z'), state: 'WA', price: 13, quantity: 104 }"),
+            parse("{ _id: 4, type: 'strawberry', orderDate: ISODate('2019-05-18T16:09:01Z'), state: 'CA', price: 41, quantity: 162 }"),
+            parse("{ _id: 5, type: 'strawberry', orderDate: ISODate('2019-01-08T06:12:03Z'), state: 'WA', price: 43, quantity: 134 }")));
+
+        List<Document> actual = getDs().aggregate("cakeSales")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("state"))
+                                           .sortBy(Sort.ascending("orderDate"))
+                                           .output(output("cumulativeQuantityForState")
+                                               .operator(sum(field("quantity")))
+                                               .window()
+                                               .documents("unbounded", "current")))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
+                  "'quantity' : 162, 'cumulativeQuantityForState' : 162 }"),
+            parse("{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
+                  "'quantity' : 120, 'cumulativeQuantityForState' : 282 }"),
+            parse("{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
+                  "'quantity' : 145, 'cumulativeQuantityForState' : 427 }"),
+            parse("{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
+                  "'quantity' : 134, 'cumulativeQuantityForState' : 134 }"),
+            parse("{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
+                  "'quantity' : 104, 'cumulativeQuantityForState' : 238 }"),
+            parse("{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
+                  "'quantity' : 140, 'cumulativeQuantityForState' : 378 }")
+                                         );
+
+        assertListEquals(actual, expected);
+    }
+
 
     @Test
     public void testRedact() {
