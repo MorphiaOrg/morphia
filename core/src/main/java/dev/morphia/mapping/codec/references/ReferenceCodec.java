@@ -25,7 +25,10 @@ import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.QueryException;
 import dev.morphia.sofia.Sofia;
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.TypeCache;
+import net.bytebuddy.TypeCache.Sort;
 import net.bytebuddy.description.ByteCodeElement;
+import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType.Builder;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
@@ -40,6 +43,8 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -62,6 +67,15 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
     private final Mapper mapper;
+
+    /**
+     * Name of instance field that holds the invocation handler of the proxy object.
+     */
+    private static final String FIELD_INVOCATION_HANDLER = "handler";
+    /**
+     * Type-cache for proxy classes generated w/ Byte Buddy.
+     */
+    private final TypeCache<TypeCache.SimpleKey> typeCache = new TypeCache.WithInlineExpunction<>(Sort.SOFT);
 
     /**
      * Creates a codec
@@ -170,6 +184,10 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return fetch(decode);
     }
 
+    private static TypeCache.SimpleKey getCacheKey(Class<?> type) {
+        return new TypeCache.SimpleKey(type, Arrays.asList(type.getInterfaces()));
+    }
+
     @Override
     public Object encode(Object value) {
         try {
@@ -232,32 +250,15 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         PropertyModel propertyModel = getPropertyModel();
         try {
             Class<?> type = propertyModel.getType();
-            Builder<?> builder = new ByteBuddy()
-                .subclass(type)
-                .implement(MorphiaProxy.class)
-                .name(format("%s$%s$$ReferenceProxy", propertyModel.getEntityModel().getName(), propertyModel.getName(),
-                    type.getName()));
-
-            Junction<ByteCodeElement> matcher = ElementMatchers.isDeclaredBy(type);
-            if (!type.isInterface()) {
-                type = type.getSuperclass();
-                while (type != null && !type.equals(Object.class)) {
-                    matcher = matcher.or(ElementMatchers.isDeclaredBy(type));
-                    type = type.getSuperclass();
-                }
-            }
-
-            return (T) builder
-                .invokable(matcher.or(ElementMatchers.isDeclaredBy(MorphiaProxy.class)))
-                .intercept(InvocationHandlerAdapter.of(referenceProxy))
-
-                .make()
-
-                .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
-                .getLoaded()
-
-                .getDeclaredConstructor()
-                .newInstance();
+            // Get or create proxy class
+            Class<T> proxyClass = (Class<T>) typeCache.findOrInsert(type.getClassLoader(), getCacheKey(type), () -> makeProxy(), typeCache);
+            //... instantiate it
+            final T proxy = proxyClass.getDeclaredConstructor().newInstance();
+            // .. and set the invocation handler
+            final Field field = proxyClass.getDeclaredField(FIELD_INVOCATION_HANDLER);
+            field.setAccessible(true);
+            field.set(proxy, referenceProxy);
+            return proxy;
         } catch (ReflectiveOperationException | IllegalArgumentException e) {
             throw new MappingException(e.getMessage(), e);
         }
@@ -299,6 +300,32 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             idValue = new DBRef(valueCollectionName, idValue);
         }
         return idValue;
+    }
+
+    private <T> Class<T> makeProxy() {
+        PropertyModel propertyModel = getPropertyModel();
+        Class<?> type = propertyModel.getType();
+        Builder<?> builder = new ByteBuddy()
+            .subclass(type)
+            .implement(MorphiaProxy.class)
+            .name(format("%s$%s$$ReferenceProxy", propertyModel.getEntityModel().getName(), propertyModel.getName()));
+
+        Junction<ByteCodeElement> matcher = ElementMatchers.isDeclaredBy(type);
+        if (!type.isInterface()) {
+            type = type.getSuperclass();
+            while (type != null && !type.equals(Object.class)) {
+                matcher = matcher.or(ElementMatchers.isDeclaredBy(type));
+                type = type.getSuperclass();
+            }
+        }
+
+        return (Class<T>) builder
+            .invokable(matcher.or(ElementMatchers.isDeclaredBy(MorphiaProxy.class)))
+            .intercept(InvocationHandlerAdapter.toField(FIELD_INVOCATION_HANDLER))
+            .defineField(FIELD_INVOCATION_HANDLER, InvocationHandler.class, Visibility.PRIVATE)
+            .make()
+            .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
+            .getLoaded();
     }
 
     @Nullable
