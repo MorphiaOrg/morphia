@@ -3,7 +3,6 @@ package dev.morphia.aggregation.experimental.expressions.impls;
 import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -30,19 +29,23 @@ public class Accumulator extends Expression {
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
             writer.writeName(getOperation());
-            if (getValue().size() > 1) {
-                writer.writeStartArray();
-            }
-            for (Expression expression : getValue()) {
-                expression(datastore, writer, expression, encoderContext);
-            }
-            if (getValue().size() > 1) {
-                writer.writeEndArray();
+            List<Expression> value = getValue();
+            if (value != null) {
+                if (value.size() > 1) {
+                    writer.writeStartArray();
+                }
+                for (Expression expression : value) {
+                    expression(datastore, writer, expression, encoderContext);
+                }
+                if (value.size() > 1) {
+                    writer.writeEndArray();
+                }
+            } else {
+                writer.writeNull();
             }
         });
     }
 
-    @NotNull
     @Override
     @SuppressWarnings("unchecked")
     public List<Expression> getValue() {

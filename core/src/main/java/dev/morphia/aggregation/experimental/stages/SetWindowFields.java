@@ -33,7 +33,7 @@ public class SetWindowFields extends Stage {
     }
 
     /**
-     * @return
+     * @return the outputs
      * @morphia.internal
      */
     @MorphiaInternal
@@ -42,7 +42,7 @@ public class SetWindowFields extends Stage {
     }
 
     /**
-     * @return
+     * @return the partition
      * @morphia.internal
      */
     @Nullable
@@ -51,6 +51,12 @@ public class SetWindowFields extends Stage {
         return partition;
     }
 
+    /**
+     * Defines the expression to use to partition the data.
+     *
+     * @param partition the expression
+     * @return this
+     */
     public SetWindowFields partitionBy(Expression partition) {
         this.partition = partition;
         return this;
@@ -62,7 +68,7 @@ public class SetWindowFields extends Stage {
     }
 
     /**
-     * @return
+     * @return the sort values
      * @morphia.internal
      */
     @Nullable
@@ -97,7 +103,7 @@ public class SetWindowFields extends Stage {
         }
 
         /**
-         * @return
+         * @return the name
          * @morphia.internal
          */
         @MorphiaInternal
@@ -106,7 +112,7 @@ public class SetWindowFields extends Stage {
         }
 
         /**
-         * @return
+         * @return the operator
          * @morphia.internal
          */
         @Nullable
@@ -126,7 +132,7 @@ public class SetWindowFields extends Stage {
         }
 
         /**
-         * @return
+         * @return the window
          * @morphia.internal
          */
         @Nullable
@@ -152,7 +158,7 @@ public class SetWindowFields extends Stage {
         }
 
         /**
-         * @return
+         * @return the documents
          * @morphia.internal
          */
         @Nullable
@@ -173,7 +179,7 @@ public class SetWindowFields extends Stage {
         }
 
         /**
-         * @return
+         * @return the range
          * @morphia.internal
          */
         @Nullable
@@ -183,7 +189,7 @@ public class SetWindowFields extends Stage {
         }
 
         /**
-         * @return
+         * @return the unit
          * @morphia.internal
          */
         @Nullable
