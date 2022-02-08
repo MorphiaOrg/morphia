@@ -1,9 +1,11 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields.Output;
+import dev.morphia.aggregation.experimental.stages.SetWindowFields.Window;
 import dev.morphia.query.Sort;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -18,8 +20,13 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expre
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
+
+    private final Codec<Object> objectCodec;
+
     public SetWindowFieldsCodec(Datastore datastore) {
         super(datastore);
+        objectCodec = getDatastore().getCodecRegistry()
+                                    .get(Object.class);
     }
 
     @Override
@@ -44,53 +51,58 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
                 });
             }
             document(writer, "output", () -> {
-                Codec<Object> objectCodec = getDatastore().getCodecRegistry()
-                                                          .get(Object.class);
                 for (Output output : value.outputs()) {
                     document(writer, output.name(), () -> {
-                        Expression operator = output.operator();
-                        if (operator != null) {
-                            writer.writeName(operator.getOperation());
-                            Object value1 = operator.getValue();
-                            if (value1 instanceof List) {
-                                List list = (List) value1;
-                                if (list.size() == 1) {
-                                    value(getDatastore(), writer, list.get(0), encoderContext);
-                                } else {
-                                    array(writer, () -> {
-                                        for (Object o : list) {
-                                            value(getDatastore(), writer, o, encoderContext);
-                                        }
-                                    });
-                                }
-                            } else {
-                                value(getDatastore(), writer, value1, encoderContext);
-                            }
-                        }
-                        if (output.windowDef() != null) {
-                            document(writer, "window", () -> {
-                                if (output.windowDef().documents() != null) {
-                                    array(writer, "documents", () -> {
-                                        for (Object document : output.windowDef().documents()) {
-                                            objectCodec.encode(writer, document, encoderContext);
-                                        }
-                                    });
-                                }
-                                if (output.windowDef().range() != null) {
-                                    array(writer, "range", () -> {
-                                        for (Object document : output.windowDef().range()) {
-                                            objectCodec.encode(writer, document, encoderContext);
-                                        }
-                                    });
-                                }
-                                if (output.windowDef().unit() != null) {
-                                    writer.writeString("unit", output.windowDef().unit().name().toLowerCase(Locale.ROOT));
-                                }
-                            });
-                        }
+                        operator(writer, encoderContext, output.operator());
+                        window(writer, output, encoderContext);
                     });
                 }
             });
         });
+    }
+
+    private void documents(BsonWriter writer, @Nullable List<Object> list, String documents,
+                           EncoderContext encoderContext) {
+        if (list != null) {
+            array(writer, documents, () -> {
+                for (Object document : list) {
+                    objectCodec.encode(writer, document, encoderContext);
+                }
+            });
+        }
+    }
+
+    private void operator(BsonWriter writer, EncoderContext encoderContext, Expression operator) {
+        if (operator != null) {
+            writer.writeName(operator.getOperation());
+            Object value1 = operator.getValue();
+            if (value1 instanceof List) {
+                List list = (List) value1;
+                if (list.size() == 1) {
+                    value(getDatastore(), writer, list.get(0), encoderContext);
+                } else {
+                    array(writer, () -> {
+                        for (Object o : list) {
+                            value(getDatastore(), writer, o, encoderContext);
+                        }
+                    });
+                }
+            } else {
+                value(getDatastore(), writer, value1, encoderContext);
+            }
+        }
+    }
+
+    private void window(BsonWriter writer, Output output, EncoderContext encoderContext) {
+        Window window = output.windowDef();
+        if (window != null) {
+            document(writer, "window", () -> {
+                documents(writer, window.documents(), "documents", encoderContext);
+                documents(writer, window.range(), "range", encoderContext);
+                if (window.unit() != null) {
+                    writer.writeString("unit", window.unit().name().toLowerCase(Locale.ROOT));
+                }
+            });
+        }
     }
 }

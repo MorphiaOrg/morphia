@@ -17,7 +17,6 @@ import static java.util.Arrays.asList;
  * @since 2.0
  */
 public class MathExpression extends Expression {
-    private final List<Expression> operands;
 
     /**
      * @param operation
@@ -25,8 +24,7 @@ public class MathExpression extends Expression {
      * @morphia.internal
      */
     public MathExpression(String operation, List<Expression> operands) {
-        super(operation);
-        this.operands = operands;
+        super(operation, operands);
     }
 
     /**
@@ -35,13 +33,13 @@ public class MathExpression extends Expression {
      * @morphia.internal
      */
     public MathExpression(String operation, Expression operand) {
-        super(operation);
-        this.operands = asList(operand);
+        super(operation, asList(operand));
     }
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> {
+            final List<Expression> operands = (List<Expression>) getValue();
             writer.writeName(getOperation());
             if (operands.size() > 1) {
                 writer.writeStartArray();

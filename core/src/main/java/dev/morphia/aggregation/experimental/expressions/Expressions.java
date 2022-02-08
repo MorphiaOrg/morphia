@@ -5,6 +5,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.LiteralExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.MetaExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,7 @@ public final class Expressions {
      * @return a list of them all
      * @morphia.internal
      */
+    @MorphiaInternal
     public static <T> List<T> toList(T first, T... additional) {
         List<T> expressions = new ArrayList<>();
         expressions.add(first);

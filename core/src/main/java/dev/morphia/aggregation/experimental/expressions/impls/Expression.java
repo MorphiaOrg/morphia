@@ -31,7 +31,7 @@ public class Expression {
      * @param value     the value
      * @morphia.internal
      */
-    public Expression(String operation, @Nullable Object value) {
+    public Expression(String operation, Object value) {
         this.operation = operation;
         this.value = value;
     }

@@ -10,15 +10,14 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 public class ArrayLiteral extends ArrayExpression {
-    private final List<Expression> values;
 
     public ArrayLiteral(Expression... values) {
-        super("unused", null);
-        this.values = asList(values);
+        super("unused", asList(values));
     }
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        List values = (List) getValue();
         Codec codec = datastore.getCodecRegistry().get(values.getClass());
         encoderContext.encodeWithChildContext(codec, writer, values);
     }

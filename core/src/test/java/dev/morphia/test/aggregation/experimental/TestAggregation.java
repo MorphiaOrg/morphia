@@ -56,10 +56,12 @@ import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.ifNull;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.literal;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
+import static dev.morphia.aggregation.experimental.expressions.MathExpressions.covariancePop;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.DESCEND;
@@ -556,10 +558,43 @@ public class TestAggregation extends TestBase {
         List<Document> stats = getDs().aggregate(Order.class)
                                       .planCacheStats()
                                       .execute(Document.class, new AggregationOptions()
-                                                                   .readConcern(ReadConcern.LOCAL))
+                                          .readConcern(ReadConcern.LOCAL))
                                       .toList();
 
         assertNotNull(stats);
+    }
+
+    @Test
+    public void testCovariancePop() {
+        checkMinServerVersion(5.0);
+        cakeSales();
+
+        List<Document> actual = getDs().aggregate("cakeSales")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("state"))
+                                           .sortBy(Sort.ascending("orderDate"))
+                                           .output(output("covariancePopForState")
+                                               .operator(covariancePop(year(field("orderDate")), field("quantity")))
+                                               .window()
+                                               .documents("unbounded", "current")))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
+                  "'quantity' : 162, 'covariancePopForState' : 0.0 }"),
+            parse("{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
+                  "'quantity' : 120, 'covariancePopForState' : -10.5 }"),
+            parse("{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
+                  "'quantity' : 145, 'covariancePopForState' : -5.666666666666671 }"),
+            parse("{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
+                  "'quantity' : 134, 'covariancePopForState' : 0.0 }"),
+            parse("{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
+                  "'quantity' : 104, 'covariancePopForState' : -7.5 }"),
+            parse("{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
+                  "'quantity' : 140, 'covariancePopForState' : 2.0 }"));
+
+        assertListEquals(actual, expected);
     }
 
     @Test
@@ -596,13 +631,7 @@ public class TestAggregation extends TestBase {
     @Test
     public void testSetWindowFields() {
         checkMinServerVersion(5.0);
-        insert("cakeSales", List.of(
-            parse("{ _id: 0, type: 'chocolate', orderDate: ISODate('2020-05-18T14:10:30Z'), state: 'CA', price: 13, quantity: 120 }"),
-            parse("{ _id: 1, type: 'chocolate', orderDate: ISODate('2021-03-20T11:30:05Z'), state: 'WA', price: 14, quantity: 140 }"),
-            parse("{ _id: 2, type: 'vanilla', orderDate: ISODate('2021-01-11T06:31:15Z'), state: 'CA', price: 12, quantity: 145 }"),
-            parse("{ _id: 3, type: 'vanilla', orderDate: ISODate('2020-02-08T13:13:23Z'), state: 'WA', price: 13, quantity: 104 }"),
-            parse("{ _id: 4, type: 'strawberry', orderDate: ISODate('2019-05-18T16:09:01Z'), state: 'CA', price: 41, quantity: 162 }"),
-            parse("{ _id: 5, type: 'strawberry', orderDate: ISODate('2019-01-08T06:12:03Z'), state: 'WA', price: 43, quantity: 134 }")));
+        cakeSales();
 
         List<Document> actual = getDs().aggregate("cakeSales")
                                        .setWindowFields(setWindowFields()
@@ -631,6 +660,16 @@ public class TestAggregation extends TestBase {
                                          );
 
         assertListEquals(actual, expected);
+    }
+
+    private void cakeSales() {
+        insert("cakeSales", List.of(
+            parse("{ _id: 0, type: 'chocolate', orderDate: ISODate('2020-05-18T14:10:30Z'), state: 'CA', price: 13, quantity: 120 }"),
+            parse("{ _id: 1, type: 'chocolate', orderDate: ISODate('2021-03-20T11:30:05Z'), state: 'WA', price: 14, quantity: 140 }"),
+            parse("{ _id: 2, type: 'vanilla', orderDate: ISODate('2021-01-11T06:31:15Z'), state: 'CA', price: 12, quantity: 145 }"),
+            parse("{ _id: 3, type: 'vanilla', orderDate: ISODate('2020-02-08T13:13:23Z'), state: 'WA', price: 13, quantity: 104 }"),
+            parse("{ _id: 4, type: 'strawberry', orderDate: ISODate('2019-05-18T16:09:01Z'), state: 'CA', price: 41, quantity: 162 }"),
+            parse("{ _id: 5, type: 'strawberry', orderDate: ISODate('2019-01-08T06:12:03Z'), state: 'WA', price: 43, quantity: 134 }")));
     }
 
 
