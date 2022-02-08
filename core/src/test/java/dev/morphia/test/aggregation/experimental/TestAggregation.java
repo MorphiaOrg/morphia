@@ -62,6 +62,7 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.liter
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.covariancePop;
+import static dev.morphia.aggregation.experimental.expressions.MathExpressions.covarianceSamp;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.DESCEND;
@@ -93,11 +94,11 @@ public class TestAggregation extends TestBase {
             parse("{ '_id' : 2, 'item' : 'jkl', 'price' : 20, 'fee' : 1, date: ISODate('2014-03-01T09:00:00Z') }"),
             parse("{ '_id' : 3, 'item' : 'xyz', 'price' : 5,  'fee' : 0, date: ISODate('2014-03-15T09:00:00Z') }")));
         Aggregation<Sales> pipeline = getDs()
-                                          .aggregate(Sales.class)
-                                          .project(Projection.project()
-                                                             .include("item")
-                                                             .include("total",
-                                                                 add(field("price"), field("fee"))));
+            .aggregate(Sales.class)
+            .project(Projection.project()
+                               .include("item")
+                               .include("total",
+                                   add(field("price"), field("fee"))));
 
         List<Document> list = pipeline.execute(Document.class).toList();
         List<Document> expected = asList(
@@ -202,8 +203,8 @@ public class TestAggregation extends TestBase {
         getDs().save(asList(new User("john doe", LocalDate.now()), new User("John Doe", LocalDate.now())));
 
         Aggregation<User> pipeline = getDs()
-                                         .aggregate(User.class)
-                                         .match(eq("name", "john doe"));
+            .aggregate(User.class)
+            .match(eq("name", "john doe"));
         assertEquals(count(pipeline.execute(User.class)), 1);
 
         assertEquals(count(pipeline.execute(User.class,
@@ -243,6 +244,72 @@ public class TestAggregation extends TestBase {
                                  .execute(Document.class)
                                  .next();
         assertEquals(scores, parse("{ \"passing_scores\" : 4 }"));
+    }
+
+    @Test
+    public void testCovariancePop() {
+        checkMinServerVersion(5.0);
+        cakeSales();
+
+        List<Document> actual = getDs().aggregate("cakeSales")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("state"))
+                                           .sortBy(Sort.ascending("orderDate"))
+                                           .output(output("covariancePopForState")
+                                               .operator(covariancePop(year(field("orderDate")), field("quantity")))
+                                               .window()
+                                               .documents("unbounded", "current")))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
+                  "'quantity' : 162, 'covariancePopForState' : 0.0 }"),
+            parse("{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
+                  "'quantity' : 120, 'covariancePopForState' : -10.5 }"),
+            parse("{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
+                  "'quantity' : 145, 'covariancePopForState' : -5.666666666666671 }"),
+            parse("{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
+                  "'quantity' : 134, 'covariancePopForState' : 0.0 }"),
+            parse("{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
+                  "'quantity' : 104, 'covariancePopForState' : -7.5 }"),
+            parse("{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
+                  "'quantity' : 140, 'covariancePopForState' : 2.0 }"));
+
+        assertListEquals(actual, expected);
+    }
+
+    @Test
+    public void testCovarianceSamp() {
+        checkMinServerVersion(5.0);
+        cakeSales();
+
+        List<Document> actual = getDs().aggregate("cakeSales")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("state"))
+                                           .sortBy(Sort.ascending("orderDate"))
+                                           .output(output("covarianceSampForState")
+                                               .operator(covarianceSamp(year(field("orderDate")), field("quantity")))
+                                               .window()
+                                               .documents("unbounded", "current")))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
+                  "'quantity' : 162, 'covarianceSampForState' : null }"),
+            parse("{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
+                  "'quantity' : 120, 'covarianceSampForState' : -21.0 }"),
+            parse("{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
+                  "'quantity' : 145, 'covarianceSampForState' : -8.500000000000007 }"),
+            parse("{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
+                  "'quantity' : 134, 'covarianceSampForState' : null }"),
+            parse("{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
+                  "'quantity' : 104, 'covarianceSampForState' : -15.0 }"),
+            parse("{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
+                  "'quantity' : 140, 'covarianceSampForState' : 3.0 }"));
+
+        assertListEquals(actual, expected);
     }
 
     @Test
@@ -392,9 +459,9 @@ public class TestAggregation extends TestBase {
 
         List<Order> lookups = getDs().aggregate(Order.class)
                                      .lookup(lookup(Inventory.class)
-                                                 .localField("item")
-                                                 .foreignField("sku")
-                                                 .as("inventoryDocs"))
+                                         .localField("item")
+                                         .foreignField("sku")
+                                         .as("inventoryDocs"))
                                      .sort(sort().ascending("_id"))
                                      .execute(Order.class)
                                      .toList();
@@ -408,16 +475,16 @@ public class TestAggregation extends TestBase {
     public void testLookupWithPipeline() {
         // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
         insert("orders", List.of(
-                parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }"),
-                parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }"),
-                parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }")));
+            parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }"),
+            parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }"),
+            parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }")));
 
         insert("warehouses", List.of(
-                parse("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },"),
-                parse("{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }"),
-                parse("{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }"),
-                parse("{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }"),
-                parse("{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }")));
+            parse("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },"),
+            parse("{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }"),
+            parse("{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }"),
+            parse("{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }"),
+            parse("{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }")));
 
         List<Document> actual = getDs().aggregate("orders")
                                        .lookup(Lookup.lookup("warehouses")
@@ -444,9 +511,13 @@ public class TestAggregation extends TestBase {
                                        .toList();
 
         List<Document> expected = List.of(
-                parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 120 }, { 'warehouse' : 'B', 'instock' : 60 } ] }"),
-                parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }"),
-                parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }"));
+            parse(
+                "{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 120 }, { " +
+                "'warehouse' : 'B', 'instock' : 60 } ] }"),
+            parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }"),
+            parse(
+                "{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] " +
+                "}"));
 
         assertDocumentEquals(actual, expected);
     }
@@ -469,8 +540,8 @@ public class TestAggregation extends TestBase {
 
         getDs().aggregate(Salary.class)
                .group(Group.group(id()
-                                      .field("fiscal_year")
-                                      .field("dept"))
+                               .field("fiscal_year")
+                               .field("dept"))
                            .field("salaries", sum(field("salary"))))
                .merge(Merge.into("budgets")
                            .on("_id")
@@ -496,9 +567,9 @@ public class TestAggregation extends TestBase {
             new User("George", LocalDate.now()),
             new User("Ringo", LocalDate.now())));
         Aggregation<User> pipeline = getDs()
-                                         .aggregate(User.class)
-                                         .group(Group.group()
-                                                     .field("count", sum(value(1))));
+            .aggregate(User.class)
+            .group(Group.group()
+                        .field("count", sum(value(1))));
 
         assertEquals(pipeline.execute(Document.class).next().getInteger("count"), Integer.valueOf(4));
     }
@@ -521,7 +592,7 @@ public class TestAggregation extends TestBase {
         getDs().aggregate(Book.class)
                .group(Group.group(id("author"))
                            .field("books", push()
-                                               .single(field("title"))))
+                               .single(field("title"))))
                .out(Out.to("different"));
         assertEquals(getDatabase().getCollection("different").countDocuments(), 2);
     }
@@ -541,14 +612,14 @@ public class TestAggregation extends TestBase {
 
         assertNotNull(orders.createIndex(new Document("item", 1)));
         assertNotNull(orders.createIndex(new Document("item", 1)
-                                             .append("quantity", 1)));
+            .append("quantity", 1)));
         assertNotNull(orders.createIndex(new Document("item", 1)
-                                             .append("price", 1),
+                .append("price", 1),
             new IndexOptions()
                 .partialFilterExpression(new Document("price", new Document("$gte", 10)))));
         assertNotNull(orders.createIndex(new Document("quantity", 1)));
         assertNotNull(orders.createIndex(new Document("quantity", 1)
-                                             .append("type", 1)));
+            .append("type", 1)));
 
         orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('10') } }"));
         orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('5') } }"));
@@ -562,39 +633,6 @@ public class TestAggregation extends TestBase {
                                       .toList();
 
         assertNotNull(stats);
-    }
-
-    @Test
-    public void testCovariancePop() {
-        checkMinServerVersion(5.0);
-        cakeSales();
-
-        List<Document> actual = getDs().aggregate("cakeSales")
-                                       .setWindowFields(setWindowFields()
-                                           .partitionBy(field("state"))
-                                           .sortBy(Sort.ascending("orderDate"))
-                                           .output(output("covariancePopForState")
-                                               .operator(covariancePop(year(field("orderDate")), field("quantity")))
-                                               .window()
-                                               .documents("unbounded", "current")))
-                                       .execute(Document.class)
-                                       .toList();
-
-        List<Document> expected = List.of(
-            parse("{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
-                  "'quantity' : 162, 'covariancePopForState' : 0.0 }"),
-            parse("{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
-                  "'quantity' : 120, 'covariancePopForState' : -10.5 }"),
-            parse("{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
-                  "'quantity' : 145, 'covariancePopForState' : -5.666666666666671 }"),
-            parse("{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
-                  "'quantity' : 134, 'covariancePopForState' : 0.0 }"),
-            parse("{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
-                  "'quantity' : 104, 'covariancePopForState' : -7.5 }"),
-            parse("{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
-                  "'quantity' : 140, 'covariancePopForState' : 2.0 }"));
-
-        assertListEquals(actual, expected);
     }
 
     @Test
@@ -627,51 +665,6 @@ public class TestAggregation extends TestBase {
         assertEquals(docAgg.next(),
             parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}"));
     }
-
-    @Test
-    public void testSetWindowFields() {
-        checkMinServerVersion(5.0);
-        cakeSales();
-
-        List<Document> actual = getDs().aggregate("cakeSales")
-                                       .setWindowFields(setWindowFields()
-                                           .partitionBy(field("state"))
-                                           .sortBy(Sort.ascending("orderDate"))
-                                           .output(output("cumulativeQuantityForState")
-                                               .operator(sum(field("quantity")))
-                                               .window()
-                                               .documents("unbounded", "current")))
-                                       .execute(Document.class)
-                                       .toList();
-
-        List<Document> expected = List.of(
-            parse("{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
-                  "'quantity' : 162, 'cumulativeQuantityForState' : 162 }"),
-            parse("{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
-                  "'quantity' : 120, 'cumulativeQuantityForState' : 282 }"),
-            parse("{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
-                  "'quantity' : 145, 'cumulativeQuantityForState' : 427 }"),
-            parse("{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
-                  "'quantity' : 134, 'cumulativeQuantityForState' : 134 }"),
-            parse("{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
-                  "'quantity' : 104, 'cumulativeQuantityForState' : 238 }"),
-            parse("{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
-                  "'quantity' : 140, 'cumulativeQuantityForState' : 378 }")
-                                         );
-
-        assertListEquals(actual, expected);
-    }
-
-    private void cakeSales() {
-        insert("cakeSales", List.of(
-            parse("{ _id: 0, type: 'chocolate', orderDate: ISODate('2020-05-18T14:10:30Z'), state: 'CA', price: 13, quantity: 120 }"),
-            parse("{ _id: 1, type: 'chocolate', orderDate: ISODate('2021-03-20T11:30:05Z'), state: 'WA', price: 14, quantity: 140 }"),
-            parse("{ _id: 2, type: 'vanilla', orderDate: ISODate('2021-01-11T06:31:15Z'), state: 'CA', price: 12, quantity: 145 }"),
-            parse("{ _id: 3, type: 'vanilla', orderDate: ISODate('2020-02-08T13:13:23Z'), state: 'WA', price: 13, quantity: 104 }"),
-            parse("{ _id: 4, type: 'strawberry', orderDate: ISODate('2019-05-18T16:09:01Z'), state: 'CA', price: 41, quantity: 162 }"),
-            parse("{ _id: 5, type: 'strawberry', orderDate: ISODate('2019-01-08T06:12:03Z'), state: 'WA', price: 43, quantity: 134 }")));
-    }
-
 
     @Test
     public void testRedact() {
@@ -734,16 +727,16 @@ public class TestAggregation extends TestBase {
                             .map(d -> (Document) d.get("name"))
                             .collect(toList());
         expected.add(new Document("_id", 4)
-                         .append("missingName", true));
+            .append("missingName", true));
         assertDocumentEquals(actual, expected);
 
         actual = getDs().aggregate(Author.class)
                         .replaceRoot(ReplaceRoot.replaceRoot(mergeObjects()
-                                                                 .add(Expressions.of()
-                                                                                 .field("_id", field("_id"))
-                                                                                 .field("first", value(""))
-                                                                                 .field("last", value("")))
-                                                                 .add(field("name"))))
+                            .add(Expressions.of()
+                                            .field("_id", field("_id"))
+                                            .field("first", value(""))
+                                            .field("last", value("")))
+                            .add(field("name"))))
                         .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
@@ -751,8 +744,8 @@ public class TestAggregation extends TestBase {
                             .peek(d -> d.putAll((Document) d.remove("name")))
                             .collect(toList());
         expected.add(new Document("_id", 4)
-                         .append("first", "")
-                         .append("last", ""));
+            .append("first", "")
+            .append("last", ""));
         assertDocumentEquals(actual, expected);
     }
 
@@ -791,16 +784,16 @@ public class TestAggregation extends TestBase {
                             .map(d -> (Document) d.get("name"))
                             .collect(toList());
         expected.add(new Document("_id", 4)
-                         .append("missingName", true));
+            .append("missingName", true));
         assertDocumentEquals(actual, expected);
 
         actual = getDs().aggregate(Author.class)
                         .replaceWith(replaceWith(mergeObjects()
-                                                     .add(Expressions.of()
-                                                                     .field("_id", field("_id"))
-                                                                     .field("first", value(""))
-                                                                     .field("last", value("")))
-                                                     .add(field("name"))))
+                            .add(Expressions.of()
+                                            .field("_id", field("_id"))
+                                            .field("first", value(""))
+                                            .field("last", value("")))
+                            .add(field("name"))))
                         .execute(Document.class)
                         .toList();
         expected = documents.subList(0, 3)
@@ -808,8 +801,8 @@ public class TestAggregation extends TestBase {
                             .peek(d -> d.putAll((Document) d.remove("name")))
                             .collect(toList());
         expected.add(new Document("_id", 4)
-                         .append("first", "")
-                         .append("last", ""));
+            .append("first", "")
+            .append("last", ""));
         assertDocumentEquals(actual, expected);
     }
 
@@ -837,8 +830,8 @@ public class TestAggregation extends TestBase {
             new User("George", LocalDate.now()),
             new User("Ringo", LocalDate.now())));
         Aggregation<User> pipeline = getDs()
-                                         .aggregate(User.class)
-                                         .sample(3);
+            .aggregate(User.class)
+            .sample(3);
 
         assertEquals(pipeline.execute(User.class).toList().size(), 3);
     }
@@ -869,6 +862,40 @@ public class TestAggregation extends TestBase {
                   + "'totalQuiz' : 16, 'totalScore' : 40 }"));
 
         assertEquals(result, list);
+    }
+
+    @Test
+    public void testSetWindowFields() {
+        checkMinServerVersion(5.0);
+        cakeSales();
+
+        List<Document> actual = getDs().aggregate("cakeSales")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("state"))
+                                           .sortBy(Sort.ascending("orderDate"))
+                                           .output(output("cumulativeQuantityForState")
+                                               .operator(sum(field("quantity")))
+                                               .window()
+                                               .documents("unbounded", "current")))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = List.of(
+            parse("{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
+                  "'quantity' : 162, 'cumulativeQuantityForState' : 162 }"),
+            parse("{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
+                  "'quantity' : 120, 'cumulativeQuantityForState' : 282 }"),
+            parse("{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
+                  "'quantity' : 145, 'cumulativeQuantityForState' : 427 }"),
+            parse("{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
+                  "'quantity' : 134, 'cumulativeQuantityForState' : 134 }"),
+            parse("{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
+                  "'quantity' : 104, 'cumulativeQuantityForState' : 238 }"),
+            parse("{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
+                  "'quantity' : 140, 'cumulativeQuantityForState' : 378 }")
+                                         );
+
+        assertListEquals(actual, expected);
     }
 
     @Test
@@ -987,6 +1014,16 @@ public class TestAggregation extends TestBase {
 
         assertEquals(documents, copies);
 
+    }
+
+    private void cakeSales() {
+        insert("cakeSales", List.of(
+            parse("{ _id: 0, type: 'chocolate', orderDate: ISODate('2020-05-18T14:10:30Z'), state: 'CA', price: 13, quantity: 120 }"),
+            parse("{ _id: 1, type: 'chocolate', orderDate: ISODate('2021-03-20T11:30:05Z'), state: 'WA', price: 14, quantity: 140 }"),
+            parse("{ _id: 2, type: 'vanilla', orderDate: ISODate('2021-01-11T06:31:15Z'), state: 'CA', price: 12, quantity: 145 }"),
+            parse("{ _id: 3, type: 'vanilla', orderDate: ISODate('2020-02-08T13:13:23Z'), state: 'WA', price: 13, quantity: 104 }"),
+            parse("{ _id: 4, type: 'strawberry', orderDate: ISODate('2019-05-18T16:09:01Z'), state: 'CA', price: 41, quantity: 162 }"),
+            parse("{ _id: 5, type: 'strawberry', orderDate: ISODate('2019-01-08T06:12:03Z'), state: 'WA', price: 43, quantity: 134 }")));
     }
 
     private void compare(int id, List<Document> expected, List<Document> actual) {

@@ -75,6 +75,23 @@ public final class MathExpressions {
     }
 
     /**
+     * Returns the sample covariance of two numeric expressions that are evaluated using documents in the $setWindowFields stage window.
+     * <p>
+     * $covarianceSamp is only available in the $setWindowFields stage.
+     *
+     * @param first  the first expression to evaluate
+     * @param second the second expression to evaluate
+     * @return the new expression
+     * @mongodb.server.release 5.0
+     * @aggregation.expression $covarianceSamp
+     * @see dev.morphia.aggregation.experimental.Aggregation#setWindowFields(SetWindowFields)
+     * @since 2.3
+     */
+    public static Expression covarianceSamp(Expression first, Expression second) {
+        return new MathExpression("$covarianceSamp", List.of(first, second));
+    }
+
+    /**
      * Returns the result of dividing the first number by the second. Accepts two argument expressions.
      *
      * @param numerator the numerator
