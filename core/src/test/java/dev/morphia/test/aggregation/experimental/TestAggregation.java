@@ -23,7 +23,6 @@ import dev.morphia.aggregation.experimental.stages.Out;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
-import dev.morphia.aggregation.experimental.stages.Set;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
@@ -42,11 +41,14 @@ import dev.morphia.test.aggregation.experimental.model.Sales;
 import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
@@ -63,6 +65,7 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.value
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.covariancePop;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.covarianceSamp;
+import static dev.morphia.aggregation.experimental.expressions.MathExpressions.expMovingAvg;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.DESCEND;
@@ -70,6 +73,7 @@ import static dev.morphia.aggregation.experimental.expressions.SystemVariables.P
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;
 import static dev.morphia.aggregation.experimental.stages.ReplaceWith.replaceWith;
+import static dev.morphia.aggregation.experimental.stages.Set.set;
 import static dev.morphia.aggregation.experimental.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.experimental.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.aggregation.experimental.stages.Sort.sort;
@@ -295,19 +299,62 @@ public class TestAggregation extends TestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = List.of(
-            parse("{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
-                  "'quantity' : 162, 'covarianceSampForState' : null }"),
-            parse("{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
-                  "'quantity' : 120, 'covarianceSampForState' : -21.0 }"),
-            parse("{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
-                  "'quantity' : 145, 'covarianceSampForState' : -8.500000000000007 }"),
-            parse("{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
-                  "'quantity' : 134, 'covarianceSampForState' : null }"),
-            parse("{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
-                  "'quantity' : 104, 'covarianceSampForState' : -15.0 }"),
-            parse("{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
-                  "'quantity' : 140, 'covarianceSampForState' : 3.0 }"));
+        List<Document> expected = parseDocs(
+            "{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
+            "'quantity' : 162, 'covarianceSampForState' : null }",
+            "{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
+            "'quantity' : 120, 'covarianceSampForState' : -21.0 }",
+            "{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
+            "'quantity' : 145, 'covarianceSampForState' : -8.500000000000007 }",
+            "{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
+            "'quantity' : 134, 'covarianceSampForState' : null }",
+            "{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
+            "'quantity' : 104, 'covarianceSampForState' : -15.0 }",
+            "{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
+            "'quantity' : 140, 'covarianceSampForState' : 3.0 }");
+
+        assertListEquals(actual, expected);
+    }
+
+    @Test
+    public void testExpMovingAverage() {
+        checkMinServerVersion(5.0);
+
+        insert("stockPrices", parseDocs(
+            "{_id: ObjectId('60d11fef833dfeadc8e6286b'), stock: 'ABC', date: ISODate('2020-05-18T20:00:00Z'), price: 13.0 }",
+            "{_id: ObjectId('60d11fef833dfeadc8e6286c'), stock: 'ABC', date: ISODate('2020-05-19T20:00:00Z'), price: 15.4 }",
+            "{_id: ObjectId('60d11fef833dfeadc8e6286d'), stock: 'ABC', date: ISODate('2020-05-20T20:00:00Z'), price: 12.0 }",
+            "{_id: ObjectId('60d11fef833dfeadc8e6286e'), stock: 'ABC', date: ISODate('2020-05-21T20:00:00Z'), price: 11.7 }",
+            "{_id: ObjectId('60d11fef833dfeadc8e6286f'), stock: 'DEF', date: ISODate('2020-05-18T20:00:00Z'), price: 82.0 }",
+            "{_id: ObjectId('60d11fef833dfeadc8e62870'), stock: 'DEF', date: ISODate('2020-05-19T20:00:00Z'), price: 94.0 }",
+            "{_id: ObjectId('60d11fef833dfeadc8e62871'), stock: 'DEF', date: ISODate('2020-05-20T20:00:00Z'), price: 112.0 }",
+            "{_id: ObjectId('60d11fef833dfeadc8e62872'), stock: 'DEF', date: ISODate('2020-05-21T20:00:00Z'), price: 97.3 }"));
+
+        List<Document> actual = getDs().aggregate("stockPrices")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("stock"))
+                                           .sortBy(Sort.ascending("date"))
+                                           .output(output("expMovingAvgForStock")
+                                               .operator(expMovingAvg(field("price"), 2))))
+                                       .execute(Document.class)
+                                       .toList();
+        List<Document> expected = parseDocs(
+            "{ '_id' : ObjectId('60d11fef833dfeadc8e6286b'), 'stock' : 'ABC', 'date' : ISODate('2020-05-18T20:00:00Z'), 'price'" +
+            " : 13.0, 'expMovingAvgForStock' : 13.0 }",
+            "{ '_id' : ObjectId('60d11fef833dfeadc8e6286c'), 'stock' : 'ABC', 'date' : ISODate('2020-05-19T20:00:00Z'), 'price'" +
+            " : 15.4, 'expMovingAvgForStock' : 14.6 }",
+            "{ '_id' : ObjectId('60d11fef833dfeadc8e6286d'), 'stock' : 'ABC', 'date' : ISODate('2020-05-20T20:00:00Z'), 'price'" +
+            " : 12.0, 'expMovingAvgForStock' : 12.866666666666667 }",
+            "{ '_id' : ObjectId('60d11fef833dfeadc8e6286e'), 'stock' : 'ABC', 'date' : ISODate('2020-05-21T20:00:00Z'), 'price'" +
+            " : 11.7, 'expMovingAvgForStock' : 12.088888888888889 }",
+            "{ '_id' : ObjectId('60d11fef833dfeadc8e6286f'), 'stock' : 'DEF', 'date' : ISODate('2020-05-18T20:00:00Z'), 'price'" +
+            " : 82.0, 'expMovingAvgForStock' : 82.0 }",
+            "{ '_id' : ObjectId('60d11fef833dfeadc8e62870'), 'stock' : 'DEF', 'date' : ISODate('2020-05-19T20:00:00Z'), 'price'" +
+            " : 94.0, 'expMovingAvgForStock' : 90.0 }",
+            "{ '_id' : ObjectId('60d11fef833dfeadc8e62871'), 'stock' : 'DEF', 'date' : ISODate('2020-05-20T20:00:00Z'), 'price'" +
+            " : 112.0, 'expMovingAvgForStock' : 104.66666666666667 }",
+            "{ '_id' : ObjectId('60d11fef833dfeadc8e62872'), 'stock' : 'DEF', 'date' : ISODate('2020-05-21T20:00:00Z'), 'price'" +
+            " : 97.3, 'expMovingAvgForStock' : 99.75555555555556 }");
 
         assertListEquals(actual, expected);
     }
@@ -315,22 +362,22 @@ public class TestAggregation extends TestBase {
     @Test
     public void testFacet() {
 
-        insert("artwork", List.of(
-            parse("{'_id': 1, 'title': 'The Pillars of Society', 'artist': 'Grosz', 'year': 1926, 'price': NumberDecimal('199.99'),"
-                  + " 'tags': [ 'painting', 'satire', 'Expressionism', 'caricature' ] }"),
-            parse("{'_id': 2, 'title': 'Melancholy III', 'artist': 'Munch', 'year': 1902, 'price': NumberDecimal('280.00'),"
-                  + " 'tags': [ 'woodcut', 'Expressionism' ] }"),
-            parse("{'_id': 3, 'title': 'Dancer', 'artist': 'Miro', 'year': 1925, 'price': NumberDecimal('76.04'),"
-                  + " 'tags': [ 'oil', 'Surrealism', 'painting' ] }"),
-            parse("{'_id': 4, 'title': 'The Great Wave off Kanagawa', 'artist': 'Hokusai', 'price': NumberDecimal('167.30'),"
-                  + " 'tags': [ 'woodblock', 'ukiyo-e' ] }"),
-            parse("{'_id': 5, 'title': 'The Persistence of Memory', 'artist': 'Dali', 'year': 1931, 'price': NumberDecimal('483.00'),"
-                  + " 'tags': [ 'Surrealism', 'painting', 'oil' ] }"),
-            parse("{'_id': 6, 'title': 'Composition VII', 'artist': 'Kandinsky', 'year': 1913, 'price': NumberDecimal('385.00'), "
-                  + "'tags': [ 'oil', 'painting', 'abstract' ] }"),
-            parse("{'_id': 7, 'title': 'The Scream', 'artist': 'Munch', 'year': 1893, 'tags': [ 'Expressionism', 'painting', 'oil' ] }"),
-            parse("{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42'),"
-                  + " 'tags': [ 'abstract', 'painting' ] }")));
+        insert("artwork", parseDocs(
+            "{'_id': 1, 'title': 'The Pillars of Society', 'artist': 'Grosz', 'year': 1926, 'price': NumberDecimal('199.99'),"
+            + " 'tags': [ 'painting', 'satire', 'Expressionism', 'caricature' ] }",
+            "{'_id': 2, 'title': 'Melancholy III', 'artist': 'Munch', 'year': 1902, 'price': NumberDecimal('280.00'),"
+            + " 'tags': [ 'woodcut', 'Expressionism' ] }",
+            "{'_id': 3, 'title': 'Dancer', 'artist': 'Miro', 'year': 1925, 'price': NumberDecimal('76.04'),"
+            + " 'tags': [ 'oil', 'Surrealism', 'painting' ] }",
+            "{'_id': 4, 'title': 'The Great Wave off Kanagawa', 'artist': 'Hokusai', 'price': NumberDecimal('167.30'),"
+            + " 'tags': [ 'woodblock', 'ukiyo-e' ] }",
+            "{'_id': 5, 'title': 'The Persistence of Memory', 'artist': 'Dali', 'year': 1931, 'price': NumberDecimal('483.00'),"
+            + " 'tags': [ 'Surrealism', 'painting', 'oil' ] }",
+            "{'_id': 6, 'title': 'Composition VII', 'artist': 'Kandinsky', 'year': 1913, 'price': NumberDecimal('385.00'), "
+            + "'tags': [ 'oil', 'painting', 'abstract' ] }",
+            "{'_id': 7, 'title': 'The Scream', 'artist': 'Munch', 'year': 1893, 'tags': [ 'Expressionism', 'painting', 'oil' ] }",
+            "{'_id': 8, 'title': 'Blue Flower', 'artist': 'O\\'Keefe', 'year': 1918, 'price': NumberDecimal('118.42'),"
+            + " 'tags': [ 'abstract', 'painting' ] }"));
 
         Document result = getDs().aggregate(Artwork.class)
                                  .facet(Facet.facet()
@@ -384,12 +431,12 @@ public class TestAggregation extends TestBase {
 
     @Test
     public void testGraphLookup() {
-        List<Document> list = List.of(parse("{ '_id' : 1, 'name' : 'Dev' }"),
-            parse("{ '_id' : 2, 'name' : 'Eliot', 'reportsTo' : 'Dev' }"),
-            parse("{ '_id' : 3, 'name' : 'Ron', 'reportsTo' : 'Eliot' }"),
-            parse("{ '_id' : 4, 'name' : 'Andrew', 'reportsTo' : 'Eliot' }"),
-            parse("{ '_id' : 5, 'name' : 'Asya', 'reportsTo' : 'Ron' }"),
-            parse("{ '_id' : 6, 'name' : 'Dan', 'reportsTo' : 'Andrew' }"));
+        List<Document> list = parseDocs("{ '_id' : 1, 'name' : 'Dev' }",
+            "{ '_id' : 2, 'name' : 'Eliot', 'reportsTo' : 'Dev' }",
+            "{ '_id' : 3, 'name' : 'Ron', 'reportsTo' : 'Eliot' }",
+            "{ '_id' : 4, 'name' : 'Andrew', 'reportsTo' : 'Eliot' }",
+            "{ '_id' : 5, 'name' : 'Asya', 'reportsTo' : 'Ron' }",
+            "{ '_id' : 6, 'name' : 'Dan', 'reportsTo' : 'Andrew' }");
 
         insert("employees", list);
 
@@ -402,16 +449,62 @@ public class TestAggregation extends TestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = List.of(parse("{'_id': 1, 'name': 'Dev', 'reportingHierarchy': []}"),
-            parse("{'_id': 2, 'name': 'Eliot', 'reportsTo': 'Dev', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'}]}"),
-            parse("{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                  + "'Eliot', 'reportsTo': 'Dev'}]}"),
-            parse("{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                  + "'Eliot', 'reportsTo': 'Dev'}]}"),
-            parse("{'_id': 5, 'name': 'Asya', 'reportsTo': 'Ron', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                  + "'Eliot', 'reportsTo': 'Dev'},{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot'}]}"),
-            parse("{'_id': 6, 'name': 'Dan', 'reportsTo': 'Andrew', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                  + "'Eliot', 'reportsTo': 'Dev'},{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot'}]}"));
+        List<Document> expected = parseDocs("{'_id': 1, 'name': 'Dev', 'reportingHierarchy': []}",
+            "{'_id': 2, 'name': 'Eliot', 'reportsTo': 'Dev', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'}]}",
+            "{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
+            + "'Eliot', 'reportsTo': 'Dev'}]}",
+            "{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
+            + "'Eliot', 'reportsTo': 'Dev'}]}",
+            "{'_id': 5, 'name': 'Asya', 'reportsTo': 'Ron', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
+            + "'Eliot', 'reportsTo': 'Dev'},{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot'}]}",
+            "{'_id': 6, 'name': 'Dan', 'reportsTo': 'Andrew', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
+            + "'Eliot', 'reportsTo': 'Dev'},{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot'}]}");
+
+        assertDocumentEquals(actual, expected);
+    }
+
+    @Test
+    public void testLookupWithPipeline() {
+        // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
+        insert("orders", parseDocs("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }",
+            "{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }",
+            "{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }"));
+
+        insert("warehouses", parseDocs("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },",
+            "{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }",
+            "{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }",
+            "{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }",
+            "{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }"));
+
+        List<Document> actual = getDs().aggregate("orders")
+                                       .lookup(Lookup.lookup("warehouses")
+                                                     .let("order_item", field("item"))
+                                                     .let("order_qty", field("ordered"))
+                                                     .as("stockdata")
+                                                     .pipeline(
+                                                         Match.match(
+                                                             expr(
+                                                                 Expressions.of().field(
+                                                                     "$and",
+                                                                     array(Expressions.of()
+                                                                                      .field("$eq",
+                                                                                          array(field("stock"), field("$order_item"))),
+                                                                         Expressions.of()
+                                                                                    .field("$gte",
+                                                                                        array(field("instock"), field("$order_qty"))))
+
+                                                                                       ))),
+                                                         Projection.project()
+                                                                   .exclude("stock_item")
+                                                                   .exclude("_id")))
+                                       .execute(Document.class, new AggregationOptions().readConcern(ReadConcern.LOCAL))
+                                       .toList();
+
+        List<Document> expected = parseDocs(
+            "{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2, 'stockdata' : [ { 'warehouse' : 'A', 'instock'" +
+            " : 120 }, { 'warehouse' : 'B', 'instock' : 60 } ] }",
+            "{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }",
+            "{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }");
 
         assertDocumentEquals(actual, expected);
     }
@@ -472,71 +565,20 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
-    public void testLookupWithPipeline() {
-        // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
-        insert("orders", List.of(
-            parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }"),
-            parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }"),
-            parse("{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }")));
-
-        insert("warehouses", List.of(
-            parse("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },"),
-            parse("{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }"),
-            parse("{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }"),
-            parse("{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }"),
-            parse("{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }")));
-
-        List<Document> actual = getDs().aggregate("orders")
-                                       .lookup(Lookup.lookup("warehouses")
-                                                     .let("order_item", field("item"))
-                                                     .let("order_qty", field("ordered"))
-                                                     .as("stockdata")
-                                                     .pipeline(
-                                                         Match.match(
-                                                             expr(
-                                                                 Expressions.of().field(
-                                                                     "$and",
-                                                                     array(Expressions.of()
-                                                                                      .field("$eq",
-                                                                                          array(field("stock"), field("$order_item"))),
-                                                                         Expressions.of()
-                                                                                    .field("$gte",
-                                                                                        array(field("instock"), field("$order_qty"))))
-
-                                                                                       ))),
-                                                         Projection.project()
-                                                                   .exclude("stock_item")
-                                                                   .exclude("_id")))
-                                       .execute(Document.class, new AggregationOptions().readConcern(ReadConcern.LOCAL))
-                                       .toList();
-
-        List<Document> expected = List.of(
-            parse(
-                "{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 120 }, { " +
-                "'warehouse' : 'B', 'instock' : 60 } ] }"),
-            parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }"),
-            parse(
-                "{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] " +
-                "}"));
-
-        assertDocumentEquals(actual, expected);
-    }
-
-    @Test
     public void testMerge() {
         checkMinServerVersion(4.2);
 
-        insert("salaries", List.of(
-            parse("{ '_id' : 1, employee: 'Ant', dept: 'A', salary: 100000, fiscal_year: 2017 }"),
-            parse("{ '_id' : 2, employee: 'Bee', dept: 'A', salary: 120000, fiscal_year: 2017 }"),
-            parse("{ '_id' : 3, employee: 'Cat', dept: 'Z', salary: 115000, fiscal_year: 2017 }"),
-            parse("{ '_id' : 4, employee: 'Ant', dept: 'A', salary: 115000, fiscal_year: 2018 }"),
-            parse("{ '_id' : 5, employee: 'Bee', dept: 'Z', salary: 145000, fiscal_year: 2018 }"),
-            parse("{ '_id' : 6, employee: 'Cat', dept: 'Z', salary: 135000, fiscal_year: 2018 }"),
-            parse("{ '_id' : 7, employee: 'Gecko', dept: 'A', salary: 100000, fiscal_year: 2018 }"),
-            parse("{ '_id' : 8, employee: 'Ant', dept: 'A', salary: 125000, fiscal_year: 2019 }"),
-            parse("{ '_id' : 9, employee: 'Bee', dept: 'Z', salary: 160000, fiscal_year: 2019 }"),
-            parse("{ '_id' : 10, employee: 'Cat', dept: 'Z', salary: 150000, fiscal_year: 2019 }")));
+        insert("salaries", parseDocs(
+            "{ '_id' : 1, employee: 'Ant', dept: 'A', salary: 100000, fiscal_year: 2017 }",
+            "{ '_id' : 2, employee: 'Bee', dept: 'A', salary: 120000, fiscal_year: 2017 }",
+            "{ '_id' : 3, employee: 'Cat', dept: 'Z', salary: 115000, fiscal_year: 2017 }",
+            "{ '_id' : 4, employee: 'Ant', dept: 'A', salary: 115000, fiscal_year: 2018 }",
+            "{ '_id' : 5, employee: 'Bee', dept: 'Z', salary: 145000, fiscal_year: 2018 }",
+            "{ '_id' : 6, employee: 'Cat', dept: 'Z', salary: 135000, fiscal_year: 2018 }",
+            "{ '_id' : 7, employee: 'Gecko', dept: 'A', salary: 100000, fiscal_year: 2018 }",
+            "{ '_id' : 8, employee: 'Ant', dept: 'A', salary: 125000, fiscal_year: 2019 }",
+            "{ '_id' : 9, employee: 'Bee', dept: 'Z', salary: 160000, fiscal_year: 2019 }",
+            "{ '_id' : 10, employee: 'Cat', dept: 'Z', salary: 150000, fiscal_year: 2019 }"));
 
         getDs().aggregate(Salary.class)
                .group(Group.group(id()
@@ -549,15 +591,53 @@ public class TestAggregation extends TestBase {
                            .whenNotMatched(WhenNotMatched.INSERT));
         List<Document> actual = getDs().find("budgets", Document.class).iterator().toList();
 
-        List<Document> expected = List.of(
-            parse("{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'A' }, 'salaries' : 220000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'Z' }, 'salaries' : 115000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'A' }, 'salaries' : 215000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'Z' }, 'salaries' : 280000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'A' }, 'salaries' : 125000 }"),
-            parse("{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'Z' }, 'salaries' : 310000 }"));
+        List<Document> expected = parseDocs(
+            "{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'A' }, 'salaries' : 220000 }",
+            "{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'Z' }, 'salaries' : 115000 }",
+            "{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'A' }, 'salaries' : 215000 }",
+            "{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'Z' }, 'salaries' : 280000 }",
+            "{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'A' }, 'salaries' : 125000 }",
+            "{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'Z' }, 'salaries' : 310000 }");
 
         assertDocumentEquals(actual, expected);
+    }
+
+    @Test
+    public void testPlanCacheStats() {
+        checkMinServerVersion(4.2);
+        List<Document> list = parseDocs(
+            "{ '_id' : 1, 'item' : 'abc', 'price' : NumberDecimal('12'), 'quantity' : 2, 'type': 'apparel' }",
+            "{ '_id' : 2, 'item' : 'jkl', 'price' : NumberDecimal('20'), 'quantity' : 1, 'type': 'electronics' }",
+            "{ '_id' : 3, 'item' : 'abc', 'price' : NumberDecimal('10'), 'quantity' : 5, 'type': 'apparel' }",
+            "{ '_id' : 4, 'item' : 'abc', 'price' : NumberDecimal('8'), 'quantity' : 10, 'type': 'apparel' }",
+            "{ '_id' : 5, 'item' : 'jkl', 'price' : NumberDecimal('15'), 'quantity' : 15, 'type': 'electronics' }");
+
+        MongoCollection<Document> orders = getDatabase().getCollection("orders");
+        insert("orders", list);
+
+        assertNotNull(orders.createIndex(new Document("item", 1)));
+        assertNotNull(orders.createIndex(new Document("item", 1)
+            .append("quantity", 1)));
+        assertNotNull(orders.createIndex(new Document("item", 1)
+                .append("price", 1),
+            new IndexOptions()
+                .partialFilterExpression(new Document("price", new Document("$gte", 10)))));
+        assertNotNull(orders.createIndex(new Document("quantity", 1)));
+        assertNotNull(orders.createIndex(new Document("quantity", 1)
+            .append("type", 1)));
+
+        orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('10') } }"));
+        orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('5') } }"));
+        orders.find(parse(" { quantity: { $gte: 20 } } "));
+        orders.find(parse(" { quantity: { $gte: 5 }, type: 'apparel' } "));
+
+        List<Document> stats = getDs().aggregate(Order.class)
+                                      .planCacheStats()
+                                      .execute(Document.class, new AggregationOptions()
+                                          .readConcern(ReadConcern.LOCAL))
+                                      .toList();
+
+        assertNotNull(stats);
     }
 
     @Test
@@ -598,41 +678,59 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
-    public void testPlanCacheStats() {
-        checkMinServerVersion(4.2);
-        List<Document> list = List.of(
-            parse("{ '_id' : 1, 'item' : 'abc', 'price' : NumberDecimal('12'), 'quantity' : 2, 'type': 'apparel' }"),
-            parse("{ '_id' : 2, 'item' : 'jkl', 'price' : NumberDecimal('20'), 'quantity' : 1, 'type': 'electronics' }"),
-            parse("{ '_id' : 3, 'item' : 'abc', 'price' : NumberDecimal('10'), 'quantity' : 5, 'type': 'apparel' }"),
-            parse("{ '_id' : 4, 'item' : 'abc', 'price' : NumberDecimal('8'), 'quantity' : 10, 'type': 'apparel' }"),
-            parse("{ '_id' : 5, 'item' : 'jkl', 'price' : NumberDecimal('15'), 'quantity' : 15, 'type': 'electronics' }"));
+    public void testReplaceRoot() {
+        List<Document> documents = parseDocs(
+            "{'_id': 1, 'name': {'first': 'John', 'last': 'Backus'}}",
+            "{'_id': 2, 'name': {'first': 'John', 'last': 'McCarthy'}}",
+            "{'_id': 3, 'name': {'first': 'Grace', 'last': 'Hopper'}}",
+            "{'_id': 4, 'firstname': 'Ole-Johan', 'lastname': 'Dahl'}");
 
-        MongoCollection<Document> orders = getDatabase().getCollection("orders");
-        insert("orders", list);
+        insert("authors", documents);
 
-        assertNotNull(orders.createIndex(new Document("item", 1)));
-        assertNotNull(orders.createIndex(new Document("item", 1)
-            .append("quantity", 1)));
-        assertNotNull(orders.createIndex(new Document("item", 1)
-                .append("price", 1),
-            new IndexOptions()
-                .partialFilterExpression(new Document("price", new Document("$gte", 10)))));
-        assertNotNull(orders.createIndex(new Document("quantity", 1)));
-        assertNotNull(orders.createIndex(new Document("quantity", 1)
-            .append("type", 1)));
+        List<Document> actual = getDs().aggregate(Author.class)
+                                       .match(exists("name"),
+                                           type("name", Type.ARRAY).not(),
+                                           type("name", Type.OBJECT))
+                                       .replaceRoot(ReplaceRoot.replaceRoot(field("name")))
+                                       .execute(Document.class)
+                                       .toList();
+        List<Document> expected = documents.subList(0, 3)
+                                           .stream()
+                                           .map(d -> (Document) d.get("name"))
+                                           .collect(toList());
+        assertDocumentEquals(actual, expected);
 
-        orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('10') } }"));
-        orders.find(parse(" { item: 'abc', price: { $gte: NumberDecimal('5') } }"));
-        orders.find(parse(" { quantity: { $gte: 20 } } "));
-        orders.find(parse(" { quantity: { $gte: 5 }, type: 'apparel' } "));
+        actual = getDs().aggregate(Author.class)
+                        .replaceRoot(ReplaceRoot.replaceRoot(ifNull().target(field("name"))
+                                                                     .field("_id", field("_id"))
+                                                                     .field("missingName", value(true))))
+                        .execute(Document.class)
+                        .toList();
+        expected = documents.subList(0, 3)
+                            .stream()
+                            .map(d -> (Document) d.get("name"))
+                            .collect(toList());
+        expected.add(new Document("_id", 4)
+            .append("missingName", true));
+        assertDocumentEquals(actual, expected);
 
-        List<Document> stats = getDs().aggregate(Order.class)
-                                      .planCacheStats()
-                                      .execute(Document.class, new AggregationOptions()
-                                          .readConcern(ReadConcern.LOCAL))
-                                      .toList();
-
-        assertNotNull(stats);
+        actual = getDs().aggregate(Author.class)
+                        .replaceRoot(ReplaceRoot.replaceRoot(mergeObjects()
+                            .add(Expressions.of()
+                                            .field("_id", field("_id"))
+                                            .field("first", value(""))
+                                            .field("last", value("")))
+                            .add(field("name"))))
+                        .execute(Document.class)
+                        .toList();
+        expected = documents.subList(0, 3)
+                            .stream()
+                            .peek(d -> d.putAll((Document) d.remove("name")))
+                            .collect(toList());
+        expected.add(new Document("_id", 4)
+            .append("first", "")
+            .append("last", ""));
+        assertDocumentEquals(actual, expected);
     }
 
     @Test
@@ -694,69 +792,13 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
-    public void testReplaceRoot() {
-        List<Document> documents = List.of(
-            parse("{'_id': 1, 'name': {'first': 'John', 'last': 'Backus'}}"),
-            parse("{'_id': 2, 'name': {'first': 'John', 'last': 'McCarthy'}}"),
-            parse("{'_id': 3, 'name': {'first': 'Grace', 'last': 'Hopper'}}"),
-            parse("{'_id': 4, 'firstname': 'Ole-Johan', 'lastname': 'Dahl'}"));
-
-        insert("authors", documents);
-
-        List<Document> actual = getDs().aggregate(Author.class)
-                                       .match(exists("name"),
-                                           type("name", Type.ARRAY).not(),
-                                           type("name", Type.OBJECT))
-                                       .replaceRoot(ReplaceRoot.replaceRoot(field("name")))
-                                       .execute(Document.class)
-                                       .toList();
-        List<Document> expected = documents.subList(0, 3)
-                                           .stream()
-                                           .map(d -> (Document) d.get("name"))
-                                           .collect(toList());
-        assertDocumentEquals(actual, expected);
-
-        actual = getDs().aggregate(Author.class)
-                        .replaceRoot(ReplaceRoot.replaceRoot(ifNull().target(field("name"))
-                                                                     .field("_id", field("_id"))
-                                                                     .field("missingName", value(true))))
-                        .execute(Document.class)
-                        .toList();
-        expected = documents.subList(0, 3)
-                            .stream()
-                            .map(d -> (Document) d.get("name"))
-                            .collect(toList());
-        expected.add(new Document("_id", 4)
-            .append("missingName", true));
-        assertDocumentEquals(actual, expected);
-
-        actual = getDs().aggregate(Author.class)
-                        .replaceRoot(ReplaceRoot.replaceRoot(mergeObjects()
-                            .add(Expressions.of()
-                                            .field("_id", field("_id"))
-                                            .field("first", value(""))
-                                            .field("last", value("")))
-                            .add(field("name"))))
-                        .execute(Document.class)
-                        .toList();
-        expected = documents.subList(0, 3)
-                            .stream()
-                            .peek(d -> d.putAll((Document) d.remove("name")))
-                            .collect(toList());
-        expected.add(new Document("_id", 4)
-            .append("first", "")
-            .append("last", ""));
-        assertDocumentEquals(actual, expected);
-    }
-
-    @Test
     public void testReplaceWith() {
         checkMinServerVersion(4.2);
-        List<Document> documents = List.of(
-            parse("{'_id': 1, 'name': {'first': 'John', 'last': 'Backus'}}"),
-            parse("{'_id': 2, 'name': {'first': 'John', 'last': 'McCarthy'}}"),
-            parse("{'_id': 3, 'name': {'first': 'Grace', 'last': 'Hopper'}}"),
-            parse("{'_id': 4, 'firstname': 'Ole-Johan', 'lastname': 'Dahl'}"));
+        List<Document> documents = parseDocs(
+            "{'_id': 1, 'name': {'first': 'John', 'last': 'Backus'}}",
+            "{'_id': 2, 'name': {'first': 'John', 'last': 'McCarthy'}}",
+            "{'_id': 3, 'name': {'first': 'Grace', 'last': 'Hopper'}}",
+            "{'_id': 4, 'firstname': 'Ole-Johan', 'lastname': 'Dahl'}");
 
         insert("authors", documents);
 
@@ -807,6 +849,35 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
+    public void testSet() {
+        checkMinServerVersion(4.2);
+        List<Document> list = parseDocs(
+            "{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }",
+            "{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }");
+
+        insert("scores", list);
+
+        List<Document> result = getDs().aggregate(Score.class)
+                                       .set(AddFields.addFields()
+                                                     .field("totalHomework", sum(field("homework")))
+                                                     .field("totalQuiz", sum(field("quiz"))))
+                                       .set(set()
+                                           .field("totalScore", add(field("totalHomework"),
+                                               field("totalQuiz"), field("extraCredit"))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        list = parseDocs(
+            "{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"
+            + " 'totalQuiz' : 18, 'totalScore' : 43 }",
+            "{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
+            + "'totalQuiz' : 16, 'totalScore' : 40 }");
+
+        assertEquals(result, list);
+    }
+
+    @Test
     public void testResultTypes() {
         getMapper().map(Martian.class);
 
@@ -837,34 +908,6 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
-    public void testSet() {
-        checkMinServerVersion(4.2);
-        List<Document> list = List.of(
-            parse("{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }"),
-            parse("{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }"));
-
-        insert("scores", list);
-
-        List<Document> result = getDs().aggregate(Score.class)
-                                       .set(AddFields.addFields()
-                                                     .field("totalHomework", sum(field("homework")))
-                                                     .field("totalQuiz", sum(field("quiz"))))
-                                       .set(Set.set()
-                                               .field("totalScore", add(field("totalHomework"),
-                                                   field("totalQuiz"), field("extraCredit"))))
-                                       .execute(Document.class)
-                                       .toList();
-
-        list = List.of(
-            parse("{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"
-                  + " 'totalQuiz' : 18, 'totalScore' : 43 }"),
-            parse("{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
-                  + "'totalQuiz' : 16, 'totalScore' : 40 }"));
-
-        assertEquals(result, list);
-    }
-
-    @Test
     public void testSetWindowFields() {
         checkMinServerVersion(5.0);
         cakeSales();
@@ -880,20 +923,19 @@ public class TestAggregation extends TestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = List.of(
-            parse("{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
-                  "'quantity' : 162, 'cumulativeQuantityForState' : 162 }"),
-            parse("{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
-                  "'quantity' : 120, 'cumulativeQuantityForState' : 282 }"),
-            parse("{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
-                  "'quantity' : 145, 'cumulativeQuantityForState' : 427 }"),
-            parse("{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
-                  "'quantity' : 134, 'cumulativeQuantityForState' : 134 }"),
-            parse("{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
-                  "'quantity' : 104, 'cumulativeQuantityForState' : 238 }"),
-            parse("{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
-                  "'quantity' : 140, 'cumulativeQuantityForState' : 378 }")
-                                         );
+        List<Document> expected = parseDocs(
+            "{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
+            "'quantity' : 162, 'cumulativeQuantityForState' : 162 }",
+            "{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
+            "'quantity' : 120, 'cumulativeQuantityForState' : 282 }",
+            "{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
+            "'quantity' : 145, 'cumulativeQuantityForState' : 427 }",
+            "{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
+            "'quantity' : 134, 'cumulativeQuantityForState' : 134 }",
+            "{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
+            "'quantity' : 104, 'cumulativeQuantityForState' : 238 }",
+            "{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
+            "'quantity' : 140, 'cumulativeQuantityForState' : 378 }");
 
         assertListEquals(actual, expected);
     }
@@ -901,51 +943,51 @@ public class TestAggregation extends TestBase {
     @Test
     public void testUnionWith() {
         checkMinServerVersion(4.4);
-        insert("sales2019q1", List.of(
-            parse("{ store: 'A', item: 'Chocolates', quantity: 150 }"),
-            parse("{ store: 'B', item: 'Chocolates', quantity: 50 }"),
-            parse("{ store: 'A', item: 'Cookies', quantity: 100 }"),
-            parse("{ store: 'B', item: 'Cookies', quantity: 120 }"),
-            parse("{ store: 'A', item: 'Pie', quantity: 10 }"),
-            parse("{ store: 'B', item: 'Pie', quantity: 5 }")));
+        insert("sales2019q1", parseDocs(
+            "{ store: 'A', item: 'Chocolates', quantity: 150 }",
+            "{ store: 'B', item: 'Chocolates', quantity: 50 }",
+            "{ store: 'A', item: 'Cookies', quantity: 100 }",
+            "{ store: 'B', item: 'Cookies', quantity: 120 }",
+            "{ store: 'A', item: 'Pie', quantity: 10 }",
+            "{ store: 'B', item: 'Pie', quantity: 5 }"));
 
-        insert("sales2019q2", List.of(
-            parse("{ store: 'A', item: 'Cheese', quantity: 30 }"),
-            parse("{ store: 'B', item: 'Cheese', quantity: 50 }"),
-            parse("{ store: 'A', item: 'Chocolates', quantity: 125 }"),
-            parse("{ store: 'B', item: 'Chocolates', quantity: 150 }"),
-            parse("{ store: 'A', item: 'Cookies', quantity: 200 }"),
-            parse("{ store: 'B', item: 'Cookies', quantity: 100 }"),
-            parse("{ store: 'B', item: 'Nuts', quantity: 100 }"),
-            parse("{ store: 'A', item: 'Pie', quantity: 30 }"),
-            parse("{ store: 'B', item: 'Pie', quantity: 25 }")));
+        insert("sales2019q2", parseDocs(
+            "{ store: 'A', item: 'Cheese', quantity: 30 }",
+            "{ store: 'B', item: 'Cheese', quantity: 50 }",
+            "{ store: 'A', item: 'Chocolates', quantity: 125 }",
+            "{ store: 'B', item: 'Chocolates', quantity: 150 }",
+            "{ store: 'A', item: 'Cookies', quantity: 200 }",
+            "{ store: 'B', item: 'Cookies', quantity: 100 }",
+            "{ store: 'B', item: 'Nuts', quantity: 100 }",
+            "{ store: 'A', item: 'Pie', quantity: 30 }",
+            "{ store: 'B', item: 'Pie', quantity: 25 }"));
 
-        insert("sales2019q3", List.of(
-            parse("{ store: 'A', item: 'Cheese', quantity: 50 }"),
-            parse("{ store: 'B', item: 'Cheese', quantity: 20 }"),
-            parse("{ store: 'A', item: 'Chocolates', quantity: 125 }"),
-            parse("{ store: 'B', item: 'Chocolates', quantity: 150 }"),
-            parse("{ store: 'A', item: 'Cookies', quantity: 200 }"),
-            parse("{ store: 'B', item: 'Cookies', quantity: 100 }"),
-            parse("{ store: 'A', item: 'Nuts', quantity: 80 }"),
-            parse("{ store: 'B', item: 'Nuts', quantity: 30 }"),
-            parse("{ store: 'A', item: 'Pie', quantity: 50 }"),
-            parse("{ store: 'B', item: 'Pie', quantity: 75 }")));
+        insert("sales2019q3", parseDocs(
+            "{ store: 'A', item: 'Cheese', quantity: 50 }",
+            "{ store: 'B', item: 'Cheese', quantity: 20 }",
+            "{ store: 'A', item: 'Chocolates', quantity: 125 }",
+            "{ store: 'B', item: 'Chocolates', quantity: 150 }",
+            "{ store: 'A', item: 'Cookies', quantity: 200 }",
+            "{ store: 'B', item: 'Cookies', quantity: 100 }",
+            "{ store: 'A', item: 'Nuts', quantity: 80 }",
+            "{ store: 'B', item: 'Nuts', quantity: 30 }",
+            "{ store: 'A', item: 'Pie', quantity: 50 }",
+            "{ store: 'B', item: 'Pie', quantity: 75 }"));
 
-        insert("sales2019q4", List.of(
-            parse("{ store: 'A', item: 'Cheese', quantity: 100, }"),
-            parse("{ store: 'B', item: 'Cheese', quantity: 100}"),
-            parse("{ store: 'A', item: 'Chocolates', quantity: 200 }"),
-            parse("{ store: 'B', item: 'Chocolates', quantity: 300 }"),
-            parse("{ store: 'A', item: 'Cookies', quantity: 500 }"),
-            parse("{ store: 'B', item: 'Cookies', quantity: 400 }"),
-            parse("{ store: 'A', item: 'Nuts', quantity: 100 }"),
-            parse("{ store: 'B', item: 'Nuts', quantity: 200 }"),
-            parse("{ store: 'A', item: 'Pie', quantity: 100 }"),
-            parse("{ store: 'B', item: 'Pie', quantity: 100 }")));
+        insert("sales2019q4", parseDocs(
+            "{ store: 'A', item: 'Cheese', quantity: 100, }",
+            "{ store: 'B', item: 'Cheese', quantity: 100}",
+            "{ store: 'A', item: 'Chocolates', quantity: 200 }",
+            "{ store: 'B', item: 'Chocolates', quantity: 300 }",
+            "{ store: 'A', item: 'Cookies', quantity: 500 }",
+            "{ store: 'B', item: 'Cookies', quantity: 400 }",
+            "{ store: 'A', item: 'Nuts', quantity: 100 }",
+            "{ store: 'B', item: 'Nuts', quantity: 200 }",
+            "{ store: 'A', item: 'Pie', quantity: 100 }",
+            "{ store: 'B', item: 'Pie', quantity: 100 }"));
 
         List<Document> actual = getDs().aggregate("sales2019q1")
-                                       .set(AddFields.addFields().field("_id", literal("2019Q1")))
+                                       .set(set().field("_id", literal("2019Q1")))
                                        .unionWith("sales2019q2", AddFields.addFields().field("_id", literal("2019Q2")))
                                        .unionWith("sales2019q3", AddFields.addFields().field("_id", literal("2019Q3")))
                                        .unionWith("sales2019q4", AddFields.addFields().field("_id", literal("2019Q4")))
@@ -953,42 +995,42 @@ public class TestAggregation extends TestBase {
                                        .execute(Document.class)
                                        .toList();
 
-        List<Document> expected = List.of(
-            parse("{ '_id' : '2019Q1', 'store' : 'A', 'item' : 'Chocolates', 'quantity' : 150 }"),
-            parse("{ '_id' : '2019Q1', 'store' : 'A', 'item' : 'Cookies', 'quantity' : 100 }"),
-            parse("{ '_id' : '2019Q1', 'store' : 'A', 'item' : 'Pie', 'quantity' : 10 }"),
-            parse("{ '_id' : '2019Q1', 'store' : 'B', 'item' : 'Chocolates', 'quantity' : 50 }"),
-            parse("{ '_id' : '2019Q1', 'store' : 'B', 'item' : 'Cookies', 'quantity' : 120 }"),
-            parse("{ '_id' : '2019Q1', 'store' : 'B', 'item' : 'Pie', 'quantity' : 5 }"),
-            parse("{ '_id' : '2019Q2', 'store' : 'A', 'item' : 'Cheese', 'quantity' : 30 }"),
-            parse("{ '_id' : '2019Q2', 'store' : 'A', 'item' : 'Chocolates', 'quantity' : 125 }"),
-            parse("{ '_id' : '2019Q2', 'store' : 'A', 'item' : 'Cookies', 'quantity' : 200 }"),
-            parse("{ '_id' : '2019Q2', 'store' : 'A', 'item' : 'Pie', 'quantity' : 30 }"),
-            parse("{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Cheese', 'quantity' : 50 }"),
-            parse("{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Chocolates', 'quantity' : 150 }"),
-            parse("{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Cookies', 'quantity' : 100 }"),
-            parse("{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Nuts', 'quantity' : 100 }"),
-            parse("{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Pie', 'quantity' : 25 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Cheese', 'quantity' : 50 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Chocolates', 'quantity' : 125 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Cookies', 'quantity' : 200 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Nuts', 'quantity' : 80 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Pie', 'quantity' : 50 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Cheese', 'quantity' : 20 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Chocolates', 'quantity' : 150 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Cookies', 'quantity' : 100 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Nuts', 'quantity' : 30 }"),
-            parse("{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Pie', 'quantity' : 75 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Cheese', 'quantity' : 100 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Chocolates', 'quantity' : 200 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Cookies', 'quantity' : 500 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Nuts', 'quantity' : 100 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Pie', 'quantity' : 100 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Cheese', 'quantity' : 100 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Chocolates', 'quantity' : 300 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Cookies', 'quantity' : 400 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Nuts', 'quantity' : 200 }"),
-            parse("{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Pie', 'quantity' : 100 }"));
+        List<Document> expected = parseDocs(
+            "{ '_id' : '2019Q1', 'store' : 'A', 'item' : 'Chocolates', 'quantity' : 150 }",
+            "{ '_id' : '2019Q1', 'store' : 'A', 'item' : 'Cookies', 'quantity' : 100 }",
+            "{ '_id' : '2019Q1', 'store' : 'A', 'item' : 'Pie', 'quantity' : 10 }",
+            "{ '_id' : '2019Q1', 'store' : 'B', 'item' : 'Chocolates', 'quantity' : 50 }",
+            "{ '_id' : '2019Q1', 'store' : 'B', 'item' : 'Cookies', 'quantity' : 120 }",
+            "{ '_id' : '2019Q1', 'store' : 'B', 'item' : 'Pie', 'quantity' : 5 }",
+            "{ '_id' : '2019Q2', 'store' : 'A', 'item' : 'Cheese', 'quantity' : 30 }",
+            "{ '_id' : '2019Q2', 'store' : 'A', 'item' : 'Chocolates', 'quantity' : 125 }",
+            "{ '_id' : '2019Q2', 'store' : 'A', 'item' : 'Cookies', 'quantity' : 200 }",
+            "{ '_id' : '2019Q2', 'store' : 'A', 'item' : 'Pie', 'quantity' : 30 }",
+            "{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Cheese', 'quantity' : 50 }",
+            "{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Chocolates', 'quantity' : 150 }",
+            "{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Cookies', 'quantity' : 100 }",
+            "{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Nuts', 'quantity' : 100 }",
+            "{ '_id' : '2019Q2', 'store' : 'B', 'item' : 'Pie', 'quantity' : 25 }",
+            "{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Cheese', 'quantity' : 50 }",
+            "{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Chocolates', 'quantity' : 125 }",
+            "{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Cookies', 'quantity' : 200 }",
+            "{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Nuts', 'quantity' : 80 }",
+            "{ '_id' : '2019Q3', 'store' : 'A', 'item' : 'Pie', 'quantity' : 50 }",
+            "{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Cheese', 'quantity' : 20 }",
+            "{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Chocolates', 'quantity' : 150 }",
+            "{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Cookies', 'quantity' : 100 }",
+            "{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Nuts', 'quantity' : 30 }",
+            "{ '_id' : '2019Q3', 'store' : 'B', 'item' : 'Pie', 'quantity' : 75 }",
+            "{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Cheese', 'quantity' : 100 }",
+            "{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Chocolates', 'quantity' : 200 }",
+            "{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Cookies', 'quantity' : 500 }",
+            "{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Nuts', 'quantity' : 100 }",
+            "{ '_id' : '2019Q4', 'store' : 'A', 'item' : 'Pie', 'quantity' : 100 }",
+            "{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Cheese', 'quantity' : 100 }",
+            "{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Chocolates', 'quantity' : 300 }",
+            "{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Cookies', 'quantity' : 400 }",
+            "{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Nuts', 'quantity' : 200 }",
+            "{ '_id' : '2019Q4', 'store' : 'B', 'item' : 'Pie', 'quantity' : 100 }");
 
         assertListEquals(actual, expected);
     }
@@ -996,11 +1038,11 @@ public class TestAggregation extends TestBase {
     @Test
     public void testUnset() {
         checkMinServerVersion(4.2);
-        List<Document> documents = List.of(
-            parse("{'_id': 1, title: 'Antelope Antics', isbn: '0001122223334', author: {last:'An', first: 'Auntie' }, copies: "
-                  + "[ {warehouse: 'A', qty: 5 }, {warehouse: 'B', qty: 15 } ] }"),
-            parse("{'_id': 2, title: 'Bees Babble', isbn: '999999999333', author: {last:'Bumble', first: 'Bee' }, copies: [ "
-                  + "{warehouse: 'A', qty: 2 }, {warehouse: 'B', qty: 5 } ] }"));
+        List<Document> documents = parseDocs(
+            "{'_id': 1, title: 'Antelope Antics', isbn: '0001122223334', author: {last:'An', first: 'Auntie' }, copies: "
+            + "[ {warehouse: 'A', qty: 5 }, {warehouse: 'B', qty: 15 } ] }",
+            "{'_id': 2, title: 'Bees Babble', isbn: '999999999333', author: {last:'Bumble', first: 'Bee' }, copies: [ "
+            + "{warehouse: 'A', qty: 2 }, {warehouse: 'B', qty: 5 } ] }");
         insert("books", documents);
 
         for (Document document : documents) {
@@ -1017,13 +1059,19 @@ public class TestAggregation extends TestBase {
     }
 
     private void cakeSales() {
-        insert("cakeSales", List.of(
-            parse("{ _id: 0, type: 'chocolate', orderDate: ISODate('2020-05-18T14:10:30Z'), state: 'CA', price: 13, quantity: 120 }"),
-            parse("{ _id: 1, type: 'chocolate', orderDate: ISODate('2021-03-20T11:30:05Z'), state: 'WA', price: 14, quantity: 140 }"),
-            parse("{ _id: 2, type: 'vanilla', orderDate: ISODate('2021-01-11T06:31:15Z'), state: 'CA', price: 12, quantity: 145 }"),
-            parse("{ _id: 3, type: 'vanilla', orderDate: ISODate('2020-02-08T13:13:23Z'), state: 'WA', price: 13, quantity: 104 }"),
-            parse("{ _id: 4, type: 'strawberry', orderDate: ISODate('2019-05-18T16:09:01Z'), state: 'CA', price: 41, quantity: 162 }"),
-            parse("{ _id: 5, type: 'strawberry', orderDate: ISODate('2019-01-08T06:12:03Z'), state: 'WA', price: 43, quantity: 134 }")));
+        insert("cakeSales", parseDocs(
+            "{ _id: 0, type: 'chocolate', orderDate: ISODate('2020-05-18T14:10:30Z'), state: 'CA', price: 13, quantity: 120 }",
+            "{ _id: 1, type: 'chocolate', orderDate: ISODate('2021-03-20T11:30:05Z'), state: 'WA', price: 14, quantity: 140 }",
+            "{ _id: 2, type: 'vanilla', orderDate: ISODate('2021-01-11T06:31:15Z'), state: 'CA', price: 12, quantity: 145 }",
+            "{ _id: 3, type: 'vanilla', orderDate: ISODate('2020-02-08T13:13:23Z'), state: 'WA', price: 13, quantity: 104 }",
+            "{ _id: 4, type: 'strawberry', orderDate: ISODate('2019-05-18T16:09:01Z'), state: 'CA', price: 41, quantity: 162 }",
+            "{ _id: 5, type: 'strawberry', orderDate: ISODate('2019-01-08T06:12:03Z'), state: 'WA', price: 43, quantity: 134 }"));
+    }
+
+    @NotNull
+    private List<Document> parseDocs(String... strings) {
+        return Arrays.stream(strings).map(Document::parse)
+                     .collect(Collectors.toList());
     }
 
     private void compare(int id, List<Document> expected, List<Document> actual) {

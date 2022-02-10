@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.aggregation.experimental.expressions.impls.ExpMovingAvg;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields;
@@ -89,6 +90,25 @@ public final class MathExpressions {
      */
     public static Expression covarianceSamp(Expression first, Expression second) {
         return new MathExpression("$covarianceSamp", List.of(first, second));
+    }
+
+    /**
+     * Returns the exponential moving average of numeric expressions applied to documents in a partition defined in the $setWindowFields
+     * stage.
+     * <p>
+     * $expMovingAvg is only available in the $setWindowFields stage.
+     *
+     * @param input Specifies the expression to evaluate. Non-numeric expressions are ignored.
+     * @param n     An integer that specifies the number of historical documents that have a significant mathematical weight in the
+     *              exponential moving average calculation, with the most recent documents contributing the most weight.
+     * @return the new expression
+     * @mongodb.server.release 5.0
+     * @aggregation.expression expMovingAvg
+     * @see dev.morphia.aggregation.experimental.Aggregation#setWindowFields(SetWindowFields)
+     * @since 2.3
+     */
+    public static Expression expMovingAvg(Expression input, int n) {
+        return new ExpMovingAvg(input, n);
     }
 
     /**

@@ -5,6 +5,7 @@ import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields.Output;
+import dev.morphia.aggregation.experimental.stages.SetWindowFields.Unit;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields.Window;
 import dev.morphia.query.Sort;
 import org.bson.BsonWriter;
@@ -17,7 +18,6 @@ import java.util.Locale;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
 
@@ -35,7 +35,6 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void encodeStage(BsonWriter writer, SetWindowFields value, EncoderContext encoderContext) {
         document(writer, () -> {
             if (value.partition() != null) {
@@ -72,12 +71,15 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
         }
     }
 
-    private void operator(BsonWriter writer, EncoderContext encoderContext, Expression operator) {
+    @SuppressWarnings("rawtypes")
+    private void operator(BsonWriter writer, EncoderContext encoderContext, @Nullable Expression operator) {
         if (operator != null) {
+            expression(getDatastore(), writer, operator, encoderContext);
+/*
             writer.writeName(operator.getOperation());
-            Object value1 = operator.getValue();
-            if (value1 instanceof List) {
-                List list = (List) value1;
+            Object operatorValue = operator.getValue();
+            if (operatorValue instanceof List) {
+                List list = (List) operatorValue;
                 if (list.size() == 1) {
                     value(getDatastore(), writer, list.get(0), encoderContext);
                 } else {
@@ -88,8 +90,9 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
                     });
                 }
             } else {
-                value(getDatastore(), writer, value1, encoderContext);
+                value(getDatastore(), writer, operatorValue, encoderContext);
             }
+*/
         }
     }
 
@@ -99,8 +102,9 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
             document(writer, "window", () -> {
                 documents(writer, window.documents(), "documents", encoderContext);
                 documents(writer, window.range(), "range", encoderContext);
-                if (window.unit() != null) {
-                    writer.writeString("unit", window.unit().name().toLowerCase(Locale.ROOT));
+                Unit unit = window.unit();
+                if (unit != null) {
+                    writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
                 }
             });
         }
