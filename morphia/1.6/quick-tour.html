@@ -248,13 +248,13 @@ There are several variations of mapping that can be done and they can be called 
 <h2 id="_mapping_options"><a class="anchor" href="#_mapping_options"></a>Mapping Options</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Once you have an instance of Morphia, you can configure various mapping options via the <code>MappingOptions</code> class.
+<p>Once you have an instance of Morphia, you can configure various mapping options via the <code>MapperOptions</code> class.
 While it&#8217;s possible to specify the <code>Mapper</code> when creating an instance of Morphia, most users will use the default mapper.
 In either case, the <code>Mapper</code> can be fetched using the <code>getMapper()</code> method on the <code>Morphia</code> instance.
 The two most common elements to configure are <code>storeEmpties</code> and
 <code>storeNulls</code>.
 By default Morphia will not store empty <code>List</code> or <code>Map</code> values nor will it store null values in to MongoDB. If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
-There are a few other options to configure on <code>MappingOptions</code>, but we&#8217;ll not be covering them here.</p>
+There are a few other options to configure on <code>MapperOptions</code>, but we&#8217;ll not be covering them here.</p>
 </div>
 </div>
 </div>
