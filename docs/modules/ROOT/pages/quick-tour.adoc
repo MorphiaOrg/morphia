@@ -40,13 +40,13 @@ There are several variations of mapping that can be done and they can be called 
 
 == Mapping Options
 
-Once you have an instance of Morphia, you can configure various mapping options via the `MappingOptions` class.
+Once you have an instance of Morphia, you can configure various mapping options via the `MapperOptions` class.
 While it's possible to specify the `Mapper` when creating an instance of Morphia, most users will use the default mapper.
 In either case, the `Mapper` can be fetched using the `getMapper()` method on the `Morphia` instance.
 The two most common elements to configure are `storeEmpties` and
 `storeNulls`.
 By default Morphia will not store empty `List` or `Map` values nor will it store null values in to MongoDB. If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
-There are a few other options to configure on `MappingOptions`, but we'll not be covering them here.
+There are a few other options to configure on `MapperOptions`, but we'll not be covering them here.
 
 == Mapping Classes
 
