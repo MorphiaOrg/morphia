@@ -35,7 +35,7 @@ This method can be called multiple times to cover all your entities wherever the
 
 == Mapping Options
 
-You can configure various mapping options via the `MappingOptions` class.
+You can configure various mapping options via the `MapperOptions` class.
 There are a number of items to configure here but for now we 'll just cover two.
 For a discussion of the remainder, please see the :xref:configuration.adoc[configuration guide].
 The two most common elements to configure are probably `storeEmpties` and `storeNulls`.
@@ -43,7 +43,7 @@ By default Morphia will not store empty `List` or
 `Map` values nor will it store null values in to MongoDB.
 If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
 There are a few other options to configure on
-`MappingOptions`, but we'll not be covering them here.
+`MapperOptions`, but we'll not be covering them here.
 
 == Mapping Classes
 
