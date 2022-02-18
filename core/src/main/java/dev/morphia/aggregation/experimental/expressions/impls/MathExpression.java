@@ -7,7 +7,6 @@ import org.bson.codecs.EncoderContext;
 import java.util.List;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
-import static java.util.Arrays.asList;
 
 /**
  * Base class for the math expressions
@@ -23,7 +22,7 @@ public class MathExpression extends Expression {
      * @morphia.internal
      */
     public MathExpression(String operation, List<Expression> operands) {
-        super(operation, operands);
+        super(operation, new ExpressionList(operands));
     }
 
     /**
@@ -32,12 +31,12 @@ public class MathExpression extends Expression {
      * @morphia.internal
      */
     public MathExpression(String operation, Expression operand) {
-        super(operation, asList(operand));
+        super(operation, new ExpressionList(operand));
     }
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        final List<Expression> operands = (List<Expression>) getValue();
+        final List<Expression> operands = getValue().getValues();
         writer.writeName(getOperation());
         if (operands.size() > 1) {
             writer.writeStartArray();
@@ -52,5 +51,10 @@ public class MathExpression extends Expression {
         if (operands.size() > 1) {
             writer.writeEndArray();
         }
+    }
+
+    @Override
+    public ExpressionList getValue() {
+        return (ExpressionList) super.getValue();
     }
 }

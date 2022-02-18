@@ -26,8 +26,8 @@ public class UnwindCodec extends StageCodec<Unwind> {
         } else {
             document(writer, () -> {
                 expression(getDatastore(), writer, "path", value.getPath(), encoderContext);
-                value(getDatastore(), writer, "includeArrayIndex", value.getIncludeArrayIndex(), encoderContext);
-                value(getDatastore(), writer, "preserveNullAndEmptyArrays", value.getPreserveNullAndEmptyArrays(), encoderContext);
+                value(writer, "includeArrayIndex", value.getIncludeArrayIndex());
+                value(writer, "preserveNullAndEmptyArrays", value.getPreserveNullAndEmptyArrays());
             });
         }
     }

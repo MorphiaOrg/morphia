@@ -24,7 +24,7 @@ public class BucketCodec extends StageCodec<Bucket> {
     protected void encodeStage(BsonWriter writer, Bucket value, EncoderContext encoderContext) {
         document(writer, () -> {
             expression(getDatastore(), writer, "groupBy", value.getGroupBy(), encoderContext);
-            value(getDatastore(), writer, "boundaries", value.getBoundaries(), encoderContext);
+            expression(getDatastore(), writer, "boundaries", value.getBoundaries(), encoderContext);
             value(getDatastore(), writer, "default", value.getDefaultValue(), encoderContext);
             DocumentExpression output = value.getOutput();
             if (output != null) {

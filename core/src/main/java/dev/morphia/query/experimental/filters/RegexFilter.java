@@ -30,7 +30,7 @@ public class RegexFilter extends Filter {
             writer.writeStartDocument("$not");
         }
         value(datastore, writer, "$regex", new BsonRegularExpression(regex), context);
-        value(datastore, writer, "$options", options, context);
+        value(writer, "$options", options);
         if (isNot()) {
             writer.writeEndDocument();
         }

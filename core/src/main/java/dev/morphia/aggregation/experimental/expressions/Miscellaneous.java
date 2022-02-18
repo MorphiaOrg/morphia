@@ -1,12 +1,11 @@
 package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
 /**
  * Defines miscellaneous operators for aggregations.
@@ -25,15 +24,7 @@ public final class Miscellaneous {
      * @since 2.2
      */
     public static Expression rand() {
-        return new Expression("$rand") {
-            @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
-                document(writer, () -> {
-                    document(writer, getOperation(), () -> {
-                    });
-                });
-            }
-        };
+        return new Expression("$rand", new DocumentExpression());
     }
 
     /**

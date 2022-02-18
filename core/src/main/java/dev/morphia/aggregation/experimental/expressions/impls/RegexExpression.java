@@ -26,7 +26,7 @@ public class RegexExpression extends Expression {
         document(writer, getOperation(), () -> {
             expression(datastore, writer, "input", input, encoderContext);
             value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);
-            value(datastore, writer, "options", options, encoderContext);
+            value(writer, "options", options);
         });
     }
 

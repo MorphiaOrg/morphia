@@ -1,12 +1,10 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-
-import java.util.List;
-
-import static java.util.Arrays.asList;
+import dev.morphia.aggregation.experimental.expressions.impls.ExpressionList;
 
 /**
  * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
@@ -21,7 +19,7 @@ import static java.util.Arrays.asList;
  */
 public class Bucket extends Stage {
     private Expression groupBy;
-    private List<Expression> boundaries;
+    private ExpressionList boundaries;
     private Object defaultValue;
     private DocumentExpression output;
 
@@ -60,7 +58,7 @@ public class Bucket extends Stage {
      * @return this
      */
     public Bucket boundaries(Expression... boundaries) {
-        this.boundaries = asList(boundaries);
+        this.boundaries = new ExpressionList(boundaries);
         return this;
     }
 
@@ -83,7 +81,7 @@ public class Bucket extends Stage {
      * @return the boundaries
      * @morphia.internal
      */
-    public List<Expression> getBoundaries() {
+    public ExpressionList getBoundaries() {
         return boundaries;
     }
 
@@ -107,6 +105,7 @@ public class Bucket extends Stage {
      * @return the output document
      * @morphia.internal
      */
+    @Nullable
     public DocumentExpression getOutput() {
         return output;
     }

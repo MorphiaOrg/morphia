@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import com.mongodb.client.model.geojson.Point;
+import com.mongodb.lang.Nullable;
 import dev.morphia.query.experimental.filters.Filter;
 
 /**
@@ -131,6 +132,7 @@ public class GeoNear extends Stage {
      * @return the query
      * @morphia.internal
      */
+    @Nullable
     public Filter[] getFilters() {
         return filters;
     }

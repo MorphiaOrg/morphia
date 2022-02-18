@@ -4,6 +4,7 @@ import com.mongodb.client.model.BucketGranularity;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
 
 /**
  * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket boundaries
@@ -17,9 +18,9 @@ import dev.morphia.aggregation.experimental.expressions.impls.Expression;
  */
 public class AutoBucket extends Stage {
     private Expression groupBy;
-    private Integer buckets;
+    private ValueExpression buckets;
     private DocumentExpression output;
-    private BucketGranularity granularity;
+    private ValueExpression granularity;
 
     protected AutoBucket() {
         super("$bucketAuto");
@@ -53,7 +54,7 @@ public class AutoBucket extends Stage {
      * @return this
      */
     public AutoBucket buckets(Integer buckets) {
-        this.buckets = buckets;
+        this.buckets = new ValueExpression(buckets);
         return this;
     }
 
@@ -61,7 +62,7 @@ public class AutoBucket extends Stage {
      * @return the number of buckets
      * @morphia.internal
      */
-    public Integer getBuckets() {
+    public ValueExpression getBuckets() {
         return buckets;
     }
 
@@ -69,7 +70,7 @@ public class AutoBucket extends Stage {
      * @return the granularity
      * @morphia.internal
      */
-    public BucketGranularity getGranularity() {
+    public ValueExpression getGranularity() {
         return granularity;
     }
 
@@ -99,7 +100,7 @@ public class AutoBucket extends Stage {
      * @return this
      */
     public AutoBucket granularity(BucketGranularity granularity) {
-        this.granularity = granularity;
+        this.granularity = new ValueExpression(granularity);
         return this;
     }
 

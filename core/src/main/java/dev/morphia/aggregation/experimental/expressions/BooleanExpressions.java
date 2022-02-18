@@ -2,13 +2,11 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.ExpressionList;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import java.util.List;
-
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.toList;
+import static dev.morphia.aggregation.experimental.expressions.impls.ExpressionList.coalesce;
 
 /**
  * Defines helper methods for the boolean expressions
@@ -30,10 +28,11 @@ public final class BooleanExpressions {
      * @aggregation.expression $and
      */
     public static Expression and(Expression first, Expression... additional) {
-        return new Expression("$and", toList(first, additional)) {
+        return new Expression("$and", coalesce(first, additional)) {
             @Override
             public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                array(datastore, writer, getOperation(), (List<Expression>) getValue(), encoderContext);
+                writer.writeName(getOperation());
+                getValue().encode(datastore, writer, encoderContext);
             }
         };
     }
@@ -47,7 +46,7 @@ public final class BooleanExpressions {
      * @aggregation.expression $not
      */
     public static Expression not(Expression value) {
-        return new Expression("$not", List.of(value));
+        return new Expression("$not", new ExpressionList(value));
     }
 
     /**
@@ -59,7 +58,7 @@ public final class BooleanExpressions {
      * @aggregation.expression $or
      */
     public static Expression or(Expression first, Expression... additional) {
-        return new Expression("$or", toList(first, additional));
+        return new Expression("$or", coalesce(first, additional));
     }
 
 }

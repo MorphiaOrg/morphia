@@ -21,14 +21,15 @@ public class Accumulator extends Expression {
      * @morphia.internal
      */
     public Accumulator(String operation, List<Expression> values) {
-        super(operation, values);
+        super(operation, new ExpressionList(values));
     }
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeName(getOperation());
-        List<Expression> list = getValue();
-        if (list != null) {
+        ExpressionList values = getValue();
+        if (values != null) {
+            List<Expression> list = values.getValues();
             if (list.size() > 1) {
                 writer.writeStartArray();
             }
@@ -44,8 +45,7 @@ public class Accumulator extends Expression {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<Expression> getValue() {
-        return (List<Expression>) super.getValue();
+    public ExpressionList getValue() {
+        return (ExpressionList) super.getValue();
     }
 }

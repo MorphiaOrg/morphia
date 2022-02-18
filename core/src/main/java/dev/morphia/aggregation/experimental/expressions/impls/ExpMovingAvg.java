@@ -33,7 +33,7 @@ public class ExpMovingAvg extends Expression {
             writer.writeName("input");
             expression(datastore, writer, input, encoderContext);
             if (n != null) {
-                value(datastore, writer, "N", n, encoderContext);
+                value(writer, "N", n);
             } else {
                 value(datastore, writer, "alpha", alpha, encoderContext);
             }

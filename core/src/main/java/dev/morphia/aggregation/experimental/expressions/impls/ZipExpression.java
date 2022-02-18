@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -8,11 +9,10 @@ import java.util.List;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class ZipExpression extends Expression {
     private final List<Expression> inputs;
-    private Boolean useLongestLength;
+    private ValueExpression useLongestLength;
     private Expression defaults;
 
     /**
@@ -44,8 +44,8 @@ public class ZipExpression extends Expression {
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, getOperation(), () -> {
             array(datastore, writer, "inputs", inputs, encoderContext);
-            value(datastore, writer, "useLongestLength", useLongestLength, encoderContext);
-            value(datastore, writer, "defaults", defaults, encoderContext);
+            ExpressionHelper.expression(datastore, writer, "useLongestLength", useLongestLength, encoderContext);
+            ExpressionHelper.expression(datastore, writer, "defaults", defaults, encoderContext);
         });
     }
 
@@ -57,7 +57,7 @@ public class ZipExpression extends Expression {
      * @return this
      */
     public ZipExpression useLongestLength(Boolean useLongestLength) {
-        this.useLongestLength = useLongestLength;
+        this.useLongestLength = new ValueExpression(useLongestLength);
         return this;
     }
 }

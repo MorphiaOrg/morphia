@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -54,7 +55,7 @@ public class MergeCodec extends StageCodec<Merge> {
             if (variables != null) {
                 document(writer, "let", () -> {
                     for (Entry<String, Expression> entry : variables.entrySet()) {
-                        value(getDatastore(), writer, entry.getKey(), entry.getValue(), encoderContext);
+                        expression(getDatastore(), writer, entry.getKey(), entry.getValue(), encoderContext);
                     }
                 });
             }

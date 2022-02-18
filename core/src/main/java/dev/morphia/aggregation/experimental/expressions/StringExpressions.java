@@ -5,6 +5,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.IndexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.RegexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ReplaceExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.TrimExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -222,7 +223,7 @@ public final class StringExpressions {
      * @aggregation.expression $substrBytes
      */
     public static Expression substrBytes(Expression input, int start, int length) {
-        return new Expression("$substrBytes", asList(input, start, length));
+        return new Expression("$substrBytes", asList(input, new ValueExpression(start), new ValueExpression(length)));
     }
 
     /**
@@ -236,7 +237,7 @@ public final class StringExpressions {
      * @aggregation.expression $substrCP
      */
     public static Expression substrCP(Expression input, int start, int length) {
-        return new Expression("$substrCP", asList(input, start, length));
+        return new Expression("$substrCP", asList(input, new ValueExpression(start), new ValueExpression(length)));
     }
 
     /**

@@ -1,12 +1,12 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 /**
  * Returns a document that contains the constituent parts of a given BSON Date value as individual properties. The properties returned
@@ -18,7 +18,7 @@ public class DateToParts extends Expression {
     private final Expression date;
     private Expression timeZone;
 
-    private Boolean iso8601;
+    private ValueExpression iso8601;
 
     public DateToParts(Expression date) {
         super("$dateToParts");
@@ -30,7 +30,7 @@ public class DateToParts extends Expression {
         document(writer, getOperation(), () -> {
             expression(datastore, writer, "date", date, encoderContext);
             expression(datastore, writer, "timezone", timeZone, encoderContext);
-            value(datastore, writer, "iso8601", iso8601, encoderContext);
+            ExpressionHelper.expression(datastore, writer, "iso8601", iso8601, encoderContext);
         });
     }
 
@@ -42,7 +42,7 @@ public class DateToParts extends Expression {
      * @return this
      */
     public DateToParts iso8601(boolean iso8601) {
-        this.iso8601 = iso8601;
+        this.iso8601 = new ValueExpression(iso8601);
         return this;
     }
 

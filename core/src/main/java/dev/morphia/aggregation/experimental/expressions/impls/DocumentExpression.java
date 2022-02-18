@@ -6,7 +6,7 @@ import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
-public class DocumentExpression extends Expression implements FieldHolder<DocumentExpression> {
+public class DocumentExpression extends Expression implements SingleValuedExpression, FieldHolder<DocumentExpression> {
     private final Fields<DocumentExpression> fields = Fields.on(this);
 
     public DocumentExpression() {

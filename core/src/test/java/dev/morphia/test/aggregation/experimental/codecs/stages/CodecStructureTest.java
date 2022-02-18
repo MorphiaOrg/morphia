@@ -243,8 +243,6 @@ public class CodecStructureTest extends TestBase {
 
         assertDocumentEquals(actual, expected);
     }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
     private void evaluate(Document expected, Expression value) {
         DocumentWriter writer = new DocumentWriter(getMapper());
         document(writer, () -> {

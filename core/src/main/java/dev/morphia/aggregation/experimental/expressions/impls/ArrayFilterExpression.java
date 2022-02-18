@@ -1,17 +1,17 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
 
 public class ArrayFilterExpression extends Expression {
     private final Expression array;
     private final Expression conditional;
-    private String as;
+    private ValueExpression as;
 
     public ArrayFilterExpression(Expression array, Expression conditional) {
         super("$filter");
@@ -20,7 +20,7 @@ public class ArrayFilterExpression extends Expression {
     }
 
     public ArrayFilterExpression as(String as) {
-        this.as = as;
+        this.as = new ValueExpression(as);
         return this;
     }
 
@@ -29,7 +29,7 @@ public class ArrayFilterExpression extends Expression {
         document(writer, getOperation(), () -> {
             wrapExpression(datastore, writer, "input", array, encoderContext);
             wrapExpression(datastore, writer, "cond", conditional, encoderContext);
-            value(datastore, writer, "as", as, encoderContext);
+            ExpressionHelper.expression(datastore, writer, "as", as, encoderContext);
         });
     }
 }

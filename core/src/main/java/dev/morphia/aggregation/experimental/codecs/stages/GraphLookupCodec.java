@@ -24,16 +24,16 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
     protected void encodeStage(BsonWriter writer, GraphLookup value, EncoderContext encoderContext) {
         document(writer, () -> {
             if (value.getFrom() != null) {
-                value(getDatastore(), writer, "from", value.getFrom(), encoderContext);
+                value(writer, "from", value.getFrom());
             } else {
                 writer.writeString("from", getDatastore().getMapper().getEntityModel(value.getFromType()).getCollectionName());
             }
             expression(getDatastore(), writer, "startWith", value.getStartWith(), encoderContext);
-            value(getDatastore(), writer, "connectFromField", value.getConnectFromField(), encoderContext);
-            value(getDatastore(), writer, "connectToField", value.getConnectToField(), encoderContext);
-            value(getDatastore(), writer, "as", value.getAs(), encoderContext);
-            value(getDatastore(), writer, "maxDepth", value.getMaxDepth(), encoderContext);
-            value(getDatastore(), writer, "depthField", value.getDepthField(), encoderContext);
+            value(writer, "connectFromField", value.getConnectFromField());
+            value(writer, "connectToField", value.getConnectToField());
+            value(writer, "as", value.getAs());
+            value(writer, "maxDepth", value.getMaxDepth());
+            value(writer, "depthField", value.getDepthField());
             Filter[] restriction = value.getRestriction();
             if (restriction != null) {
                 document(writer, "restrictSearchWithMatch", () -> {

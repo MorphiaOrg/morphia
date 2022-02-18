@@ -1,10 +1,9 @@
 package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 public class MetaExpression extends Expression {
 
@@ -14,6 +13,6 @@ public class MetaExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        value(datastore, writer, getOperation(), "textScore", encoderContext);
+        ExpressionHelper.expression(datastore, writer, getOperation(), new ValueExpression("textScore"), encoderContext);
     }
 }

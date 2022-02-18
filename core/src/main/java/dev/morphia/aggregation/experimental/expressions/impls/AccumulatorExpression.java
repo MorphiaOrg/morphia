@@ -6,8 +6,8 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 /**
  * @since 2.1
@@ -36,13 +36,13 @@ public class AccumulatorExpression extends Expression {
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
             document(writer, getOperation(), () -> {
-                value(datastore, writer, "init", initFunction, encoderContext);
-                value(datastore, writer, "initArgs", initArgs, encoderContext);
-                value(datastore, writer, "accumulate", accumulateFunction, encoderContext);
-                value(datastore, writer, "accumulateArgs", accumulateArgs, encoderContext);
-                value(datastore, writer, "merge", mergeFunction, encoderContext);
-                value(datastore, writer, "finalize", finalizeFunction, encoderContext);
-                value(datastore, writer, "lang", lang, encoderContext);
+                writer.writeString("init", initFunction);
+                array(datastore, writer, "initArgs", initArgs, encoderContext);
+                writer.writeString("accumulate", accumulateFunction);
+                array(datastore, writer, "accumulateArgs", accumulateArgs, encoderContext);
+                writer.writeString("merge", mergeFunction);
+                writer.writeString("finalize", finalizeFunction);
+                writer.writeString("lang", lang);
             });
     }
 

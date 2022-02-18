@@ -37,7 +37,7 @@ public class UnionWithCodec extends StageCodec<UnionWith> {
                                              : getDatastore().getMapper().getEntityModel(unionWith.getCollectionType()).getCollectionName();
 
         document(writer, () -> {
-            value(getDatastore(), writer, "coll", collectionName, encoderContext);
+            value(writer, "coll", collectionName);
             value(getDatastore(), writer, "pipeline", unionWith.getStages(), encoderContext);
         });
     }

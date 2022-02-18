@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.ExpressionList;
 
 import java.util.List;
 
@@ -78,7 +79,7 @@ public final class TrigonometryExpressions {
      * @aggregation.expression $atan2
      */
     public static Expression atan2(Expression yValue, Expression xValue) {
-        return new Expression("$atan2", List.of(yValue, xValue));
+        return new Expression("$atan2", new ExpressionList(List.of(yValue, xValue)));
     }
 
     /**

@@ -24,9 +24,9 @@ public class GeoNearCodec extends StageCodec<GeoNear> {
         document(writer, () -> {
             value(getDatastore(), writer, "near", value.getPoint(), encoderContext);
             value(getDatastore(), writer, "near", value.getCoordinates(), encoderContext);
-            value(getDatastore(), writer, "key", value.getKey(), encoderContext);
-            value(getDatastore(), writer, "distanceField", value.getDistanceField(), encoderContext);
-            value(getDatastore(), writer, "spherical", value.getSpherical(), encoderContext);
+            value(writer, "key", value.getKey());
+            value(writer, "distanceField", value.getDistanceField());
+            value(writer, "spherical", value.getSpherical());
             value(getDatastore(), writer, "maxDistance", value.getMaxDistance(), encoderContext);
             value(getDatastore(), writer, "minDistance", value.getMinDistance(), encoderContext);
             Filter[] filters = value.getFilters();
@@ -38,7 +38,7 @@ public class GeoNearCodec extends StageCodec<GeoNear> {
                 });
             }
             value(getDatastore(), writer, "distanceMultiplier", value.getDistanceMultiplier(), encoderContext);
-            value(getDatastore(), writer, "includeLocs", value.getIncludeLocs(), encoderContext);
+            value(writer, "includeLocs", value.getIncludeLocs());
         });
     }
 }

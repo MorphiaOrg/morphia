@@ -2,13 +2,13 @@ package dev.morphia.aggregation.experimental.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import java.util.List;
 import java.util.StringJoiner;
-
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 /**
  * Base class for all the expression types.
@@ -18,7 +18,7 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value
  */
 public class Expression {
     private final String operation;
-    private final Object value;
+    private final Expression value;
 
     protected Expression(String operation) {
         this.operation = operation;
@@ -30,9 +30,19 @@ public class Expression {
      * @param value     the value
      * @morphia.internal
      */
-    public Expression(String operation, Object value) {
+    public Expression(String operation, Expression value) {
         this.operation = operation;
         this.value = value;
+    }
+
+    /**
+     * @param operation the expression name
+     * @param value     the value
+     * @morphia.internal
+     */
+    public Expression(String operation, List<Expression> value) {
+        this.operation = operation;
+        this.value = new ExpressionList(value);
     }
 
     /**
@@ -43,7 +53,7 @@ public class Expression {
      */
     @MorphiaInternal
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        value(datastore, writer, operation, value, encoderContext);
+        ExpressionHelper.expression(datastore, writer, operation, value, encoderContext);
     }
 
     /**
@@ -59,7 +69,7 @@ public class Expression {
      * @morphia.internal
      */
     @Nullable
-    public Object getValue() {
+    public Expression getValue() {
         return value;
     }
 
