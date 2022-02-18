@@ -14,6 +14,9 @@ public class ArrayLiteral extends ArrayExpression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        getValue().encode(datastore, writer, encoderContext);
+        Expression value = getValue();
+        if (value != null) {
+            value.encode(datastore, writer, encoderContext);
+        }
     }
 }

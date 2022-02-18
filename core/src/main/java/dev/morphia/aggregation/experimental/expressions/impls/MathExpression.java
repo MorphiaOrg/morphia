@@ -36,20 +36,23 @@ public class MathExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        final List<Expression> operands = getValue().getValues();
-        writer.writeName(getOperation());
-        if (operands.size() > 1) {
-            writer.writeStartArray();
-        }
-        for (Expression operand : operands) {
-            if (operand != null) {
-                wrapExpression(datastore, writer, operand, encoderContext);
-            } else {
-                writer.writeNull();
+        ExpressionList value = getValue();
+        if (value != null) {
+            final List<Expression> operands = value.getValues();
+            writer.writeName(getOperation());
+            if (operands.size() > 1) {
+                writer.writeStartArray();
             }
-        }
-        if (operands.size() > 1) {
-            writer.writeEndArray();
+            for (Expression operand : operands) {
+                if (operand != null) {
+                    wrapExpression(datastore, writer, operand, encoderContext);
+                } else {
+                    writer.writeNull();
+                }
+            }
+            if (operands.size() > 1) {
+                writer.writeEndArray();
+            }
         }
     }
 

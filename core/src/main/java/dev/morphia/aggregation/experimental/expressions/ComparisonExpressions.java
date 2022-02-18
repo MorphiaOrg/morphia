@@ -1,10 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.ExpressionList;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
@@ -55,13 +52,7 @@ public final class ComparisonExpressions {
      * @aggregation.expression $gt
      */
     public static Expression gt(Expression first, Expression second) {
-        return new Expression("$gt", new ExpressionList(first, second)) {
-            @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                writer.writeName(getOperation());
-                getValue().encode(datastore, writer, encoderContext);
-            }
-        };
+        return new Expression("$gt", new ExpressionList(first, second));
     }
 
     /**

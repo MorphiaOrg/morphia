@@ -1,10 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.ExpressionList;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.expressions.impls.ExpressionList.coalesce;
 
@@ -28,13 +25,7 @@ public final class BooleanExpressions {
      * @aggregation.expression $and
      */
     public static Expression and(Expression first, Expression... additional) {
-        return new Expression("$and", coalesce(first, additional)) {
-            @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                writer.writeName(getOperation());
-                getValue().encode(datastore, writer, encoderContext);
-            }
-        };
+        return new Expression("$and", coalesce(first, additional));
     }
 
     /**
