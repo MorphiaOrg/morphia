@@ -131,6 +131,7 @@ public class Group extends Stage {
      * @return the fields
      * @morphia.internal
      */
+    @Nullable
     public Fields<Group> getFields() {
         return fields;
     }

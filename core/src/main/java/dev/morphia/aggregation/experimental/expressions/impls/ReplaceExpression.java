@@ -5,7 +5,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
 
 /**
  * Defines expressions for $replaceAll and $replaceOne
@@ -36,12 +36,10 @@ public class ReplaceExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                value(datastore, writer, "input", input, encoderContext);
-                value(datastore, writer, "find", find, encoderContext);
-                value(datastore, writer, "replacement", replacement, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            wrapExpression(datastore, writer, "input", input, encoderContext);
+            wrapExpression(datastore, writer, "find", find, encoderContext);
+            wrapExpression(datastore, writer, "replacement", replacement, encoderContext);
         });
     }
 }

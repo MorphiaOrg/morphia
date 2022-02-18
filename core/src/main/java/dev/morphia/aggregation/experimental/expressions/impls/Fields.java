@@ -7,7 +7,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 
 public class Fields<T> {
@@ -37,7 +37,7 @@ public class Fields<T> {
 
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         for (PipelineField field : fields) {
-            expression(datastore, writer, field.getName(), field.getValue(), encoderContext);
+            wrapExpression(datastore, writer, field.getName(), field.getValue(), encoderContext);
         }
     }
 

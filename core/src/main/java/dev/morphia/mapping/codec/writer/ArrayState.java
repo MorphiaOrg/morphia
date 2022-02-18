@@ -1,5 +1,7 @@
 package dev.morphia.mapping.codec.writer;
 
+import org.bson.Document;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -25,7 +27,7 @@ class ArrayState extends ValueState<List<Object>> {
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner(", ", "[", finished ? "]" : "");
-        list.forEach(v -> joiner.add(String.valueOf(v)));
+        list.forEach(v -> joiner.add(v instanceof Document ? ((Document) v).toJson() : String.valueOf(v)));
         if (substate != null) {
             joiner.add(substate.toString());
         }

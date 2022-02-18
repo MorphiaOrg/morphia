@@ -23,12 +23,10 @@ public class RegexExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                expression(datastore, writer, "input", input, encoderContext);
-                value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);
-                value(datastore, writer, "options", options, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            expression(datastore, writer, "input", input, encoderContext);
+            value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);
+            value(datastore, writer, "options", options, encoderContext);
         });
     }
 

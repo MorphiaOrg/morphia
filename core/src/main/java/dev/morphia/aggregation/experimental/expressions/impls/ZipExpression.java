@@ -6,6 +6,7 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
@@ -41,12 +42,10 @@ public class ZipExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                value(datastore, writer, "inputs", inputs, encoderContext);
-                value(datastore, writer, "useLongestLength", useLongestLength, encoderContext);
-                value(datastore, writer, "defaults", defaults, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            array(datastore, writer, "inputs", inputs, encoderContext);
+            value(datastore, writer, "useLongestLength", useLongestLength, encoderContext);
+            value(datastore, writer, "defaults", defaults, encoderContext);
         });
     }
 

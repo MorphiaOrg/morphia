@@ -26,11 +26,9 @@ public class IsoDates extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                expression(datastore, writer, "date", date, encoderContext);
-                expression(datastore, writer, "timezone", timezone, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            expression(datastore, writer, "date", date, encoderContext);
+            expression(datastore, writer, "timezone", timezone, encoderContext);
         });
     }
 

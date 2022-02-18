@@ -32,12 +32,10 @@ public class FunctionExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                value(datastore, writer, "body", body, encoderContext);
-                value(datastore, writer, "args", args, encoderContext);
-                value(datastore, writer, "lang", lang, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            value(datastore, writer, "body", body, encoderContext);
+            value(datastore, writer, "args", args, encoderContext);
+            value(datastore, writer, "lang", lang, encoderContext);
         });
     }
 }

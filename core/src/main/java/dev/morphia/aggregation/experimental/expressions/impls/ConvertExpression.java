@@ -22,13 +22,11 @@ public class ConvertExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                expression(datastore, writer, "input", input, encoderContext);
-                value(datastore, writer, "to", to.getName(), encoderContext);
-                expression(datastore, writer, "onError", onError, encoderContext);
-                expression(datastore, writer, "onNull", onNull, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            expression(datastore, writer, "input", input, encoderContext);
+            value(datastore, writer, "to", to.getName(), encoderContext);
+            expression(datastore, writer, "onError", onError, encoderContext);
+            expression(datastore, writer, "onNull", onNull, encoderContext);
         });
     }
 

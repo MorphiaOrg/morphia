@@ -5,7 +5,6 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
@@ -31,15 +30,12 @@ public class ArrayIndexExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            array(writer, getOperation(), () -> {
-                expression(datastore, writer, array, encoderContext);
-                expression(datastore, writer, search, encoderContext);
-                value(datastore, writer, start, encoderContext);
-                value(datastore, writer, end, encoderContext);
-            });
+        array(writer, getOperation(), () -> {
+            expression(datastore, writer, array, encoderContext);
+            expression(datastore, writer, search, encoderContext);
+            value(datastore, writer, start, encoderContext);
+            value(datastore, writer, end, encoderContext);
         });
-
     }
 
     /**

@@ -7,6 +7,7 @@ import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
 
 public class LetExpression extends Expression {
     private final Expression in;
@@ -19,11 +20,9 @@ public class LetExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                expression(datastore, writer, "vars", variables, encoderContext);
-                expression(datastore, writer, "in", in, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            expression(datastore, writer, "vars", variables, encoderContext);
+            wrapExpression(datastore, writer, "in", in, encoderContext);
         });
     }
 

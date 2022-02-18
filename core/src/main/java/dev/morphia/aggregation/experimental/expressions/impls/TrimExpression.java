@@ -23,11 +23,9 @@ public class TrimExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                expression(datastore, writer, "input", input, encoderContext);
-                expression(datastore, writer, "chars", chars, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            expression(datastore, writer, "input", input, encoderContext);
+            expression(datastore, writer, "chars", chars, encoderContext);
         });
     }
 }

@@ -52,20 +52,18 @@ public class DateFromParts extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                expression(datastore, writer, "year", year, encoderContext);
-                expression(datastore, writer, "month", month, encoderContext);
-                expression(datastore, writer, "day", day, encoderContext);
-                expression(datastore, writer, "hour", hour, encoderContext);
-                expression(datastore, writer, "minute", minute, encoderContext);
-                expression(datastore, writer, "second", second, encoderContext);
-                expression(datastore, writer, "millisecond", millisecond, encoderContext);
-                expression(datastore, writer, "isoWeekYear", isoWeekYear, encoderContext);
-                expression(datastore, writer, "isoWeek", isoWeek, encoderContext);
-                expression(datastore, writer, "isoDayOfWeek", isoDayOfWeek, encoderContext);
-                expression(datastore, writer, "timezone", timezone, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            expression(datastore, writer, "year", year, encoderContext);
+            expression(datastore, writer, "month", month, encoderContext);
+            expression(datastore, writer, "day", day, encoderContext);
+            expression(datastore, writer, "hour", hour, encoderContext);
+            expression(datastore, writer, "minute", minute, encoderContext);
+            expression(datastore, writer, "second", second, encoderContext);
+            expression(datastore, writer, "millisecond", millisecond, encoderContext);
+            expression(datastore, writer, "isoWeekYear", isoWeekYear, encoderContext);
+            expression(datastore, writer, "isoWeek", isoWeek, encoderContext);
+            expression(datastore, writer, "isoDayOfWeek", isoDayOfWeek, encoderContext);
+            expression(datastore, writer, "timezone", timezone, encoderContext);
         });
     }
 

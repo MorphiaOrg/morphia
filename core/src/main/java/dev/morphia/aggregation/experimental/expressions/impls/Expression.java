@@ -8,7 +8,6 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.StringJoiner;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 /**
@@ -44,7 +43,7 @@ public class Expression {
      */
     @MorphiaInternal
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> value(datastore, writer, operation, value, encoderContext));
+        value(datastore, writer, operation, value, encoderContext);
     }
 
     /**

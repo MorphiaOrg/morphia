@@ -8,6 +8,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
 
 public class GroupCodec extends StageCodec<Group> {
 
@@ -30,7 +31,10 @@ public class GroupCodec extends StageCodec<Group> {
                     id.getDocument().encode(getDatastore(), writer, encoderContext);
                 } else {
                     if (id.getField() != null) {
-                        id.getField().encode(getDatastore(), writer, encoderContext);
+                        wrapExpression(getDatastore(), writer, id.getField(), encoderContext);
+                        //                        document(writer, () -> {
+                        //                            id.getField().encode(getDatastore(), writer, encoderContext);
+                        //                        });
                     }
                 }
             } else {

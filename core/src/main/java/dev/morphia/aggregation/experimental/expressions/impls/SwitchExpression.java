@@ -10,6 +10,7 @@ import java.util.List;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
 
 /**
  * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression
@@ -54,18 +55,16 @@ public class SwitchExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                array(writer, "branches", () -> {
-                    for (Pair branch : branches) {
-                        document(writer, () -> {
-                            expression(datastore, writer, "case", branch.caseExpression, encoderContext);
-                            expression(datastore, writer, "then", branch.then, encoderContext);
-                        });
-                    }
-                });
-                expression(datastore, writer, "default", defaultCase, encoderContext);
+        document(writer, getOperation(), () -> {
+            array(writer, "branches", () -> {
+                for (Pair branch : branches) {
+                    document(writer, () -> {
+                        wrapExpression(datastore, writer, "case", branch.caseExpression, encoderContext);
+                        wrapExpression(datastore, writer, "then", branch.then, encoderContext);
+                    });
+                }
             });
+            expression(datastore, writer, "default", defaultCase, encoderContext);
         });
     }
 

@@ -1,10 +1,15 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IfNull;
 import dev.morphia.aggregation.experimental.expressions.impls.SwitchExpression;
+import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
 import java.util.List;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 
 /**
  * Defines helper methods for the conditional expressions
@@ -26,7 +31,12 @@ public class ConditionalExpressions {
      * @aggregation.expression $cond
      */
     public static Expression condition(Expression condition, Expression then, Expression otherwise) {
-        return new Expression("$cond", List.of(condition, then, otherwise));
+        return new Expression("$cond", List.of(condition, then, otherwise)) {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                array(datastore, writer, getOperation(), (List<Expression>) getValue(), encoderContext);
+            }
+        };
     }
 
     /**

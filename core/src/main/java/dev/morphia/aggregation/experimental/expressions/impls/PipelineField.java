@@ -4,6 +4,8 @@ import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static java.lang.String.format;
+
 /**
  * @morphia.internal
  */
@@ -27,5 +29,10 @@ public class PipelineField {
 
     public Expression getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return format("PipelineField{name='%s', value=%s}", name, value);
     }
 }

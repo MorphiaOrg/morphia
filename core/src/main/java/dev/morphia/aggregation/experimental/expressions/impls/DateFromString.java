@@ -30,14 +30,12 @@ public class DateFromString extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                expression(datastore, writer, "dateString", dateString, encoderContext);
-                expression(datastore, writer, "format", format, encoderContext);
-                expression(datastore, writer, "timezone", timeZone, encoderContext);
-                expression(datastore, writer, "onError", onError, encoderContext);
-                expression(datastore, writer, "onNull", onNull, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            expression(datastore, writer, "dateString", dateString, encoderContext);
+            expression(datastore, writer, "format", format, encoderContext);
+            expression(datastore, writer, "timezone", timeZone, encoderContext);
+            expression(datastore, writer, "onError", onError, encoderContext);
+            expression(datastore, writer, "onNull", onNull, encoderContext);
         });
     }
 

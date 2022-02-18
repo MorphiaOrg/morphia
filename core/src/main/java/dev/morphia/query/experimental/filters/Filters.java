@@ -13,6 +13,7 @@ import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
@@ -250,7 +251,7 @@ public final class Filters {
                 writer.writeName("$expr");
                 Expression value = getValue();
                 if (value != null) {
-                    value.encode(datastore, writer, context);
+                    wrapExpression(datastore, writer, value, context);
                 } else {
                     writer.writeNull();
                 }

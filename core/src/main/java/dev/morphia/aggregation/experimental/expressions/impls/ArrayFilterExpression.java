@@ -5,8 +5,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
 
 public class ArrayFilterExpression extends Expression {
     private final Expression array;
@@ -26,12 +26,10 @@ public class ArrayFilterExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                expression(datastore, writer, "input", array, encoderContext);
-                expression(datastore, writer, "cond", conditional, encoderContext);
-                value(datastore, writer, "as", as, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            wrapExpression(datastore, writer, "input", array, encoderContext);
+            wrapExpression(datastore, writer, "cond", conditional, encoderContext);
+            value(datastore, writer, "as", as, encoderContext);
         });
     }
 }

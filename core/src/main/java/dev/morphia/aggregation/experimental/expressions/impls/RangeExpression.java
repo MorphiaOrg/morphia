@@ -5,7 +5,6 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
 public class RangeExpression extends Expression {
     private final int start;
@@ -20,14 +19,12 @@ public class RangeExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            array(writer, getOperation(), () -> {
-                writer.writeInt32(start);
-                writer.writeInt32(end);
-                if (step != null) {
-                    writer.writeInt32(step);
-                }
-            });
+        array(writer, getOperation(), () -> {
+            writer.writeInt32(start);
+            writer.writeInt32(end);
+            if (step != null) {
+                writer.writeInt32(step);
+            }
         });
     }
 

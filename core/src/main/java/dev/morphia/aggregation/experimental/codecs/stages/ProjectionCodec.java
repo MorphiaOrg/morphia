@@ -7,7 +7,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
 
 public class ProjectionCodec extends StageCodec<Projection> {
 
@@ -24,7 +24,7 @@ public class ProjectionCodec extends StageCodec<Projection> {
     protected void encodeStage(BsonWriter writer, Projection projection, EncoderContext encoderContext) {
         document(writer, () -> {
             for (PipelineField field : projection.getFields()) {
-                value(getDatastore(), writer, field.getName(), field.getValue(), encoderContext);
+                wrapExpression(getDatastore(), writer, field.getName(), field.getValue(), encoderContext);
             }
         });
     }

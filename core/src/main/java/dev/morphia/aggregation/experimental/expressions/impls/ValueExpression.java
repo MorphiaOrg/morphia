@@ -20,4 +20,9 @@ public class ValueExpression extends Expression {
             writer.writeNull();
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("ValueExpression{value=%s}", getValue());
+    }
 }

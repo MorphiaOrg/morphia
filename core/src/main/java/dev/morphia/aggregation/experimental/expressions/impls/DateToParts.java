@@ -27,12 +27,10 @@ public class DateToParts extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
-            document(writer, getOperation(), () -> {
-                expression(datastore, writer, "date", date, encoderContext);
-                expression(datastore, writer, "timezone", timeZone, encoderContext);
-                value(datastore, writer, "iso8601", iso8601, encoderContext);
-            });
+        document(writer, getOperation(), () -> {
+            expression(datastore, writer, "date", date, encoderContext);
+            expression(datastore, writer, "timezone", timeZone, encoderContext);
+            value(datastore, writer, "iso8601", iso8601, encoderContext);
         });
     }
 

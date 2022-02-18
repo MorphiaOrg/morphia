@@ -2,12 +2,13 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 
 /**
  * Defines helper methods for the object expressions
@@ -54,9 +55,8 @@ public final class ObjectExpressions {
         }
 
         @Override
-        @MorphiaInternal
         public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-            super.encode(datastore, writer, encoderContext);
+            array(datastore, writer, getOperation(), (List<Expression>) getValue(), encoderContext);
         }
     }
 }

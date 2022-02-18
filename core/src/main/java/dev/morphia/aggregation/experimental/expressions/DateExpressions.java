@@ -11,8 +11,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
 
 /**
  * Defines helper methods for the date expressions
@@ -237,7 +236,7 @@ public final class DateExpressions {
         @Override
         @MorphiaInternal
         public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-            document(writer, () -> expression(datastore, writer, getOperation(), (Expression) getValue(), encoderContext));
+            value(datastore, writer, getOperation(), getValue(), encoderContext);
         }
     }
 }

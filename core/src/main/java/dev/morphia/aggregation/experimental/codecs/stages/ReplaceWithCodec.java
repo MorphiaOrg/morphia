@@ -6,6 +6,8 @@ import dev.morphia.aggregation.experimental.stages.ReplaceWith;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.wrapExpression;
+
 public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
     public ReplaceWithCodec(Datastore datastore) {
         super(datastore);
@@ -20,7 +22,7 @@ public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
     protected void encodeStage(BsonWriter writer, ReplaceWith replace, EncoderContext encoderContext) {
         Expression value = replace.getValue();
         if (value != null) {
-            value.encode(getDatastore(), writer, encoderContext);
+            wrapExpression(getDatastore(), writer, value, encoderContext);
         } else {
             replace.getDocument().encode(getDatastore(), writer, encoderContext);
         }

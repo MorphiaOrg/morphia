@@ -1,18 +1,17 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
 import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.User;
 import org.bson.Document;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.testng.annotations.BeforeMethod;
 
 import java.time.LocalDate;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static org.testng.Assert.assertEquals;
 
 
@@ -27,9 +26,10 @@ public class ExpressionsTestBase extends TestBase {
     protected void assertAndCheckDocShape(String expectedString, Expression value, Object expectedValue) {
         Document expected = Document.parse(expectedString);
         DocumentWriter writer = new DocumentWriter(getMapper());
-        ((Codec) getDs().getCodecRegistry()
-                        .get(MathExpression.class))
-            .encode(writer, value, EncoderContext.builder().build());
+        document(writer, () -> {
+            value.encode(getDs(), writer, EncoderContext.builder().build());
+        });
+
         Document actual = writer.getDocument();
         assertDocumentEquals(actual, expected);
 

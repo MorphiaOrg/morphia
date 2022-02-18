@@ -35,7 +35,6 @@ public class AccumulatorExpression extends Expression {
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> {
             document(writer, getOperation(), () -> {
                 value(datastore, writer, "init", initFunction, encoderContext);
                 value(datastore, writer, "initArgs", initArgs, encoderContext);
@@ -45,7 +44,6 @@ public class AccumulatorExpression extends Expression {
                 value(datastore, writer, "finalize", finalizeFunction, encoderContext);
                 value(datastore, writer, "lang", lang, encoderContext);
             });
-        });
     }
 
     /**

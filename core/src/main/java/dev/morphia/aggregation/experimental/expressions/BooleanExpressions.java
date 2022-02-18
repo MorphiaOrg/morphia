@@ -1,9 +1,13 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.toList;
 
 /**
@@ -26,7 +30,12 @@ public final class BooleanExpressions {
      * @aggregation.expression $and
      */
     public static Expression and(Expression first, Expression... additional) {
-        return new Expression("$and", toList(first, additional));
+        return new Expression("$and", toList(first, additional)) {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                array(datastore, writer, getOperation(), (List<Expression>) getValue(), encoderContext);
+            }
+        };
     }
 
     /**
