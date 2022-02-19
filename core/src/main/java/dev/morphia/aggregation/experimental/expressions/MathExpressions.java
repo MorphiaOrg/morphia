@@ -103,7 +103,7 @@ public final class MathExpressions {
      *              exponential moving average calculation, with the most recent documents contributing the most weight.
      * @return the new expression
      * @mongodb.server.release 5.0
-     * @aggregation.expression expMovingAvg
+     * @aggregation.expression $expMovingAvg
      * @see dev.morphia.aggregation.experimental.Aggregation#setWindowFields(SetWindowFields)
      * @since 2.3
      */
