@@ -223,10 +223,10 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="Accumulator.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../../../../2.2/javadoc/dev/morphia/aggregation/experimental/expressions/impls/Accumulator.html">2.2</a>
-    <a class="version" href="../../../../../../../../2.1/javadoc/dev/morphia/aggregation/experimental/expressions/impls/Accumulator.html">2.1</a>
-    <a class="version" href="../../../../../../../../2.0/javadoc/dev/morphia/aggregation/experimental/expressions/impls/Accumulator.html">2.0</a>
+    <a class="version is-current" href="ExpMovingAvg.html">2.3-SNAPSHOT</a>
+    <a class="version is-missing" href="../../../../../../../../2.2/index.html">2.2</a>
+    <a class="version is-missing" href="../../../../../../../../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../../../../../../../../2.0/index.html">2.0</a>
     <a class="version is-missing" href="../../../../../../../../1.6/index.html">1.6</a>
   </div>
 </div>
@@ -236,13 +236,13 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="Accumulator (Morphia)";
+            parent.document.title="ExpMovingAvg (Morphia)";
         }
     }
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
+var data = {"i0":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -269,7 +269,7 @@ loadScripts(document, 'script');</script>
 <li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/Accumulator.html">Use</a></li>
+<li><a href="class-use/ExpMovingAvg.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../../index-all.html">Index</a></li>
@@ -332,7 +332,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <main role="main">
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></div>
-<h2 title="Class Accumulator" class="title">Class Accumulator</h2>
+<h2 title="Class ExpMovingAvg" class="title">Class ExpMovingAvg</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -342,7 +342,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">dev.morphia.aggregation.experimental.expressions.impls.Expression</a></li>
 <li>
 <ul class="inheritance">
-<li>dev.morphia.aggregation.experimental.expressions.impls.Accumulator</li>
+<li>dev.morphia.aggregation.experimental.expressions.impls.ExpMovingAvg</li>
 </ul>
 </li>
 </ul>
@@ -352,13 +352,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public class <span class="typeNameLabel">Accumulator</span>
+<pre>public class <span class="typeNameLabel">ExpMovingAvg</span>
 extends <a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></pre>
-<div class="block">Base class for the accumulator expression types.</div>
-<dl>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.0</dd>
-</dl>
 </li>
 </ul>
 </div>
@@ -379,8 +374,13 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.util.List)">Accumulator</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
-           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;values)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression,double)">ExpMovingAvg</a></span>​(<a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
+            double&nbsp;alpha)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">ExpMovingAvg</a></span>​(<a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
+            int&nbsp;n)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -408,18 +408,13 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValue()">getValue</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 </tbody></table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.dev.morphia.aggregation.experimental.expressions.impls.Expression">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;dev.morphia.aggregation.experimental.expressions.impls.<a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></h3>
-<code><a href="Expression.html#getOperation()">getOperation</a>, <a href="Expression.html#toString()">toString</a></code></li>
+<code><a href="Expression.html#getOperation()">getOperation</a>, <a href="Expression.html#getValue()">getValue</a>, <a href="Expression.html#toString()">toString</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -444,19 +439,24 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(java.lang.String,java.util.List)">
+<a id="<init>(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>ExpMovingAvg</h4>
+<pre>public&nbsp;ExpMovingAvg​(<a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
+                    int&nbsp;n)</pre>
+</li>
+</ul>
+<a id="<init>(dev.morphia.aggregation.experimental.expressions.impls.Expression,double)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>Accumulator</h4>
-<pre>public&nbsp;Accumulator​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
-                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;values)</pre>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>operation</code> - </dd>
-<dd><code>values</code> - </dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+<h4>ExpMovingAvg</h4>
+<pre>public&nbsp;ExpMovingAvg​(<a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
+                    double&nbsp;alpha)</pre>
 </li>
 </ul>
 </li>
@@ -472,7 +472,7 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <a id="encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>encode</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;encode​(<a href="../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
@@ -485,21 +485,6 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <dd><code>datastore</code> - the datastore</dd>
 <dd><code>writer</code> - the writer</dd>
 <dd><code>encoderContext</code> - the context</dd>
-</dl>
-</li>
-</ul>
-<a id="getValue()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getValue</h4>
-<pre class="methodSignature">public&nbsp;<a href="ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a>&nbsp;getValue()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="Expression.html#getValue()">getValue</a></code>&nbsp;in class&nbsp;<code><a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the value</dd>
 </dl>
 </li>
 </ul>
@@ -526,7 +511,7 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/Accumulator.html">Use</a></li>
+<li><a href="class-use/ExpMovingAvg.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../../index-all.html">Index</a></li>

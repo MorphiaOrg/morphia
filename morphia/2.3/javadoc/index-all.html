@@ -401,6 +401,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/Validation.html#action()">action()</a></span> - Method in annotation type dev.morphia.annotations.<a href="dev/morphia/annotations/Validation.html" title="annotation in dev.morphia.annotations">Validation</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html#add(dev.morphia.aggregation.experimental.expressions.impls.Expression)">add(Expression)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/ObjectExpressions.MergeObjects.html#add(dev.morphia.aggregation.experimental.expressions.impls.Expression)">add(Expression)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.<a href="dev/morphia/aggregation/experimental/expressions/ObjectExpressions.MergeObjects.html" title="class in dev.morphia.aggregation.experimental.expressions">ObjectExpressions.MergeObjects</a></dt>
 <dd>
 <div class="block">Adds an expression to be merged</div>
@@ -804,6 +806,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Creates an array of the given expressions.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#array(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,java.util.List,org.bson.codecs.EncoderContext)">array(Datastore, BsonWriter, String, List&lt;Expression&gt;, EncoderContext)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#array(org.bson.BsonWriter,java.lang.Runnable)">array(BsonWriter, Runnable)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#array(org.bson.BsonWriter,java.lang.String,java.lang.Runnable)">array(BsonWriter, String, Runnable)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
@@ -814,7 +818,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Base class for the array expressions</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayExpression.html#%3Cinit%3E(java.lang.String,java.lang.Object)">ArrayExpression(String, Object)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ArrayExpression</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayExpression.html#%3Cinit%3E(java.lang.String,java.util.List)">ArrayExpression(String, List&lt;Expression&gt;)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ArrayExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/experimental/expressions/ArrayExpressions.html" title="class in dev.morphia.aggregation.experimental.expressions"><span class="typeNameLink">ArrayExpressions</span></a> - Class in <a href="dev/morphia/aggregation/experimental/expressions/package-summary.html">dev.morphia.aggregation.experimental.expressions</a></dt>
 <dd>
@@ -1460,6 +1464,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns 0 if the two values are equivalent, 1 if the first value is greater than the second, and -1 if the first value is less than
  the second.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html#coalesce(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">coalesce(Expression, Expression...)</a></span> - Static method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/AggregationOptions.html#collation()">collation()</a></span> - Method in class dev.morphia.aggregation.experimental.<a href="dev/morphia/aggregation/experimental/AggregationOptions.html" title="class in dev.morphia.aggregation.experimental">AggregationOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/IndexOptions.html#collation()">collation()</a></span> - Method in annotation type dev.morphia.annotations.<a href="dev/morphia/annotations/IndexOptions.html" title="annotation in dev.morphia.annotations">IndexOptions</a></dt>
@@ -1821,6 +1827,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#%3Cinit%3E()">CountOptions()</a></span> - Constructor for class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/MathExpressions.html#covariancePop(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">covariancePop(Expression, Expression)</a></span> - Static method in class dev.morphia.aggregation.experimental.expressions.<a href="dev/morphia/aggregation/experimental/expressions/MathExpressions.html" title="class in dev.morphia.aggregation.experimental.expressions">MathExpressions</a></dt>
+<dd>
+<div class="block">Returns the population covariance of two numeric expressions that are evaluated using documents in the $setWindowFields stage window.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/MathExpressions.html#covarianceSamp(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">covarianceSamp(Expression, Expression)</a></span> - Static method in class dev.morphia.aggregation.experimental.expressions.<a href="dev/morphia/aggregation/experimental/expressions/MathExpressions.html" title="class in dev.morphia.aggregation.experimental.expressions">MathExpressions</a></dt>
+<dd>
+<div class="block">Returns the sample covariance of two numeric expressions that are evaluated using documents in the $setWindowFields stage window.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/UnsafeAllocator.html#create()">create()</a></span> - Static method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/UnsafeAllocator.html" title="class in dev.morphia.mapping.experimental">UnsafeAllocator</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/InstanceCreatorFactory.html#create()">create()</a></span> - Method in interface dev.morphia.mapping.<a href="dev/morphia/mapping/InstanceCreatorFactory.html" title="interface in dev.morphia.mapping">InstanceCreatorFactory</a></dt>
@@ -2681,8 +2695,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/AccumulatorExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/AccumulatorExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">AccumulatorExpression</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ArrayExpression</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayFilterExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayFilterExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ArrayFilterExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayIndexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ArrayIndexExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ArrayIndexExpression</a></dt>
@@ -2701,7 +2713,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DocumentExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DocumentExpression</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpMovingAvg.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpMovingAvg.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpMovingAvg</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/Fields.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/Fields.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Fields</a></dt>
 <dd>&nbsp;</dd>
@@ -2714,8 +2730,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/IsoDates.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/IsoDates.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IsoDates</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/LetExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/LetExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">LetExpression</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/LiteralExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/LiteralExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">LiteralExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/MapExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/MapExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">MapExpression</a></dt>
 <dd>&nbsp;</dd>
@@ -3205,6 +3219,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Provides information on the query plan.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/MathExpressions.html#expMovingAvg(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">expMovingAvg(Expression, int)</a></span> - Static method in class dev.morphia.aggregation.experimental.expressions.<a href="dev/morphia/aggregation/experimental/expressions/MathExpressions.html" title="class in dev.morphia.aggregation.experimental.expressions">MathExpressions</a></dt>
+<dd>
+<div class="block">Returns the exponential moving average of numeric expressions applied to documents in a partition defined in the $setWindowFields
+ stage.</div>
+</dd>
+<dt><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpMovingAvg.html" title="class in dev.morphia.aggregation.experimental.expressions.impls"><span class="typeNameLink">ExpMovingAvg</span></a> - Class in <a href="dev/morphia/aggregation/experimental/expressions/impls/package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpMovingAvg.html#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression,double)">ExpMovingAvg(Expression, double)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpMovingAvg.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpMovingAvg</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpMovingAvg.html#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">ExpMovingAvg(Expression, int)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpMovingAvg.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpMovingAvg</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/experimental/filters/Filters.html#expr(dev.morphia.aggregation.experimental.expressions.impls.Expression)">expr(Expression)</a></span> - Static method in class dev.morphia.query.experimental.filters.<a href="dev/morphia/query/experimental/filters/Filters.html" title="class in dev.morphia.query.experimental.filters">Filters</a></dt>
 <dd>
 <div class="block">Allows use of aggregation expressions within the query language.</div>
@@ -3224,13 +3249,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html#%3Cinit%3E(java.lang.String)">Expression(String)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html#%3Cinit%3E(java.lang.String,java.lang.Object)">Expression(String, Object)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html#%3Cinit%3E(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression)">Expression(String, Expression)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html#%3Cinit%3E(java.lang.String,java.util.List)">Expression(String, List&lt;Expression&gt;)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/experimental/codecs/ExpressionCodec.html" title="class in dev.morphia.aggregation.experimental.codecs"><span class="typeNameLink">ExpressionCodec</span></a>&lt;<a href="dev/morphia/aggregation/experimental/codecs/ExpressionCodec.html" title="type parameter in ExpressionCodec">T</a> extends <a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt; - Class in <a href="dev/morphia/aggregation/experimental/codecs/package-summary.html">dev.morphia.aggregation.experimental.codecs</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ExpressionCodec(Datastore)</a></span> - Constructor for class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionCodec.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs"><span class="typeNameLink">ExpressionHelper</span></a> - Class in <a href="dev/morphia/aggregation/experimental/codecs/package-summary.html">dev.morphia.aggregation.experimental.codecs</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls"><span class="typeNameLink">ExpressionList</span></a> - Class in <a href="dev/morphia/aggregation/experimental/expressions/impls/package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></dt>
+<dd>
+<div class="block">Wraps a list of expressions as an Expression so we can generically deal with all values as Expressions</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression...)">ExpressionList(Expression...)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html#%3Cinit%3E(java.util.List)">ExpressionList(List&lt;Expression&gt;)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/experimental/expressions/Expressions.html" title="class in dev.morphia.aggregation.experimental.expressions"><span class="typeNameLink">Expressions</span></a> - Class in <a href="dev/morphia/aggregation/experimental/expressions/package-summary.html">dev.morphia.aggregation.experimental.expressions</a></dt>
 <dd>
@@ -4715,6 +4750,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html#getValue()">getValue()</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html#getValue()">getValue()</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/MathExpression.html#getValue()">getValue()</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/MathExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">MathExpression</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/PipelineField.html#getValue()">getValue()</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/PipelineField.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">PipelineField</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/stages/ReplaceRoot.html#getValue()">getValue()</a></span> - Method in class dev.morphia.aggregation.experimental.stages.<a href="dev/morphia/aggregation/experimental/stages/ReplaceRoot.html" title="class in dev.morphia.aggregation.experimental.stages">ReplaceRoot</a></dt>
@@ -4731,6 +4770,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Gets the value of the property mapped on the instance given.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html#getValues()">getValues()</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/stages/Lookup.html#getVariables()">getVariables()</a></span> - Method in class dev.morphia.aggregation.experimental.stages.<a href="dev/morphia/aggregation/experimental/stages/Lookup.html" title="class in dev.morphia.aggregation.experimental.stages">Lookup</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/stages/Merge.html#getVariables()">getVariables()</a></span> - Method in class dev.morphia.aggregation.experimental.stages.<a href="dev/morphia/aggregation/experimental/stages/Merge.html" title="class in dev.morphia.aggregation.experimental.stages">Merge</a></dt>
@@ -8937,6 +8978,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/writer/SingleValue.html#%3Cinit%3E(dev.morphia.mapping.codec.writer.DocumentWriter,java.lang.Object,dev.morphia.mapping.codec.writer.WriteState)">SingleValue(DocumentWriter, Object, WriteState)</a></span> - Constructor for class dev.morphia.mapping.codec.writer.<a href="dev/morphia/mapping/codec/writer/SingleValue.html" title="class in dev.morphia.mapping.codec.writer">SingleValue</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="dev/morphia/aggregation/experimental/expressions/impls/SingleValuedExpression.html" title="interface in dev.morphia.aggregation.experimental.expressions.impls"><span class="typeNameLink">SingleValuedExpression</span></a> - Interface in <a href="dev/morphia/aggregation/experimental/expressions/impls/package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/TrigonometryExpressions.html#sinh(dev.morphia.aggregation.experimental.expressions.impls.Expression)">sinh(Expression)</a></span> - Static method in class dev.morphia.aggregation.experimental.expressions.<a href="dev/morphia/aggregation/experimental/expressions/TrigonometryExpressions.html" title="class in dev.morphia.aggregation.experimental.expressions">TrigonometryExpressions</a></dt>
 <dd>
 <div class="block">Returns the hyperbolic sine of a value that is measured in radians.</div>
@@ -9560,6 +9603,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 &nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html#toString()">toString()</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/PipelineField.html#toString()">toString()</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/PipelineField.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">PipelineField</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ValueExpression.html#toString()">toString()</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ValueExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ValueExpression</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/Projection.html#toString()">toString()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/Projection.html" title="class in dev.morphia.aggregation">Projection</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -10172,6 +10219,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/experimental/builders/NameBuilder.html#value(java.lang.String)">value(String)</a></span> - Method in class dev.morphia.annotations.experimental.builders.<a href="dev/morphia/annotations/experimental/builders/NameBuilder.html" title="class in dev.morphia.annotations.experimental.builders">NameBuilder</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#value(org.bson.BsonWriter,java.lang.String,java.lang.Boolean)">value(BsonWriter, String, Boolean)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#value(org.bson.BsonWriter,java.lang.String,java.lang.Double)">value(BsonWriter, String, Double)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#value(org.bson.BsonWriter,java.lang.String,java.lang.Integer)">value(BsonWriter, String, Integer)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#value(org.bson.BsonWriter,java.lang.String,java.lang.Long)">value(BsonWriter, String, Long)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#value(org.bson.BsonWriter,java.lang.String,java.lang.String)">value(BsonWriter, String, String)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/experimental/expressions/impls/ValueExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls"><span class="typeNameLink">ValueExpression</span></a> - Class in <a href="dev/morphia/aggregation/experimental/expressions/impls/package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/ValueExpression.html#%3Cinit%3E(java.lang.Object)">ValueExpression(Object)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/ValueExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ValueExpression</a></dt>
@@ -10574,6 +10631,10 @@ the order they are declared.</div>
 <dd>
 <div class="block">Wraps an value in a MorphiaReference to storing on an entity</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,dev.morphia.aggregation.experimental.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression(Datastore, BsonWriter, Expression, EncoderContext)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression(Datastore, BsonWriter, String, Expression, EncoderContext)</a></span> - Static method in class dev.morphia.aggregation.experimental.codecs.<a href="dev/morphia/aggregation/experimental/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.experimental.codecs">ExpressionHelper</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/writer/DocumentWriter.html#writeBinaryData(java.lang.String,org.bson.BsonBinary)">writeBinaryData(String, BsonBinary)</a></span> - Method in class dev.morphia.mapping.codec.writer.<a href="dev/morphia/mapping/codec/writer/DocumentWriter.html" title="class in dev.morphia.mapping.codec.writer">DocumentWriter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/writer/DocumentWriter.html#writeBinaryData(org.bson.BsonBinary)">writeBinaryData(BsonBinary)</a></span> - Method in class dev.morphia.mapping.codec.writer.<a href="dev/morphia/mapping/codec/writer/DocumentWriter.html" title="class in dev.morphia.mapping.codec.writer">DocumentWriter</a></dt>

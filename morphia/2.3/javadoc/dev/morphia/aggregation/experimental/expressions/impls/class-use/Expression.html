@@ -424,6 +424,42 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
           org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../../../codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,dev.morphia.aggregation.experimental.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression</a></span>​(<a href="../../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+              org.bson.BsonWriter&nbsp;writer,
+              <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression,
+              org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../../../codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression</a></span>​(<a href="../../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+              org.bson.BsonWriter&nbsp;writer,
+              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+              <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression,
+              org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Method parameters in <a href="../../../codecs/package-summary.html">dev.morphia.aggregation.experimental.codecs</a> with type arguments of type <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../../../codecs/ExpressionHelper.html#array(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,java.util.List,org.bson.codecs.EncoderContext)">array</a></span>​(<a href="../../../../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+     org.bson.BsonWriter&nbsp;writer,
+     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;list,
+     org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -714,6 +750,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#covariancePop(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">covariancePop</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
+             <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
+<td class="colLast">
+<div class="block">Returns the population covariance of two numeric expressions that are evaluated using documents in the $setWindowFields stage window.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#covarianceSamp(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">covarianceSamp</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
+              <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
+<td class="colLast">
+<div class="block">Returns the sample covariance of two numeric expressions that are evaluated using documents in the $setWindowFields stage window.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#degreesToRadians(dev.morphia.aggregation.experimental.expressions.impls.Expression)">degreesToRadians</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Converts a value from degrees to radians.</div>
@@ -752,26 +804,35 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#expMovingAvg(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">expMovingAvg</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
+            int&nbsp;n)</code></th>
+<td class="colLast">
+<div class="block">Returns the exponential moving average of numeric expressions applied to documents in a partition defined in the $setWindowFields
+ stage.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Expressions.</span><code><span class="memberNameLink"><a href="../../Expressions.html#field(java.lang.String)">field</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">
 <div class="block">Creates a field expression for the given value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#first(dev.morphia.aggregation.experimental.expressions.impls.Expression)">first</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns a value from the first document for each group.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#floor(dev.morphia.aggregation.experimental.expressions.impls.Expression)">floor</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the largest integer less than or equal to the specified number.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#function(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">function</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;body,
         <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;args)</code></th>
@@ -779,7 +840,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Defines a custom aggregation function or expression in JavaScript.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#gt(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">gt</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -789,7 +850,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  true when the first value is greater than the second value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#gte(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">gte</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -799,7 +860,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  true when the first value is greater than or equivalent to the second value.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#in(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">in</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;search,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
@@ -807,7 +868,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a boolean indicating whether a specified value is in an array.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#indexOfArray(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">indexOfArray</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array,
             <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;search)</code></th>
@@ -815,14 +876,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Searches an array for an occurrence of a specified value and returns the array index of the first occurernce.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#isArray(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isArray</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
 <td class="colLast">
 <div class="block">Determines if the operand is an array.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#isNumber(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isNumber</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
@@ -830,28 +891,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  numeric BSON types.</a></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#last(dev.morphia.aggregation.experimental.expressions.impls.Expression)">last</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns a value from the last document for each group.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Expressions.</span><code><span class="memberNameLink"><a href="../../Expressions.html#literal(java.lang.Object)">literal</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns a value without parsing.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#ln(dev.morphia.aggregation.experimental.expressions.impls.Expression)">ln</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Calculates the natural log of a number.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#log(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">log</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;number,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;base)</code></th>
@@ -859,14 +920,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Calculates the log of a number in the specified base.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#log10(dev.morphia.aggregation.experimental.expressions.impls.Expression)">log10</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Calculates the log base 10 of a number.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#lt(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">lt</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -874,7 +935,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns true if the first value is less than the second.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#lte(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">lte</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -884,28 +945,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  true when the first value is less than or equivalent to the second value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#max(dev.morphia.aggregation.experimental.expressions.impls.Expression)">max</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the highest expression value for each group.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Expressions.</span><code><span class="memberNameLink"><a href="../../Expressions.html#meta()">meta</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the metadata associated with a document in a pipeline operations, e.g.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#min(dev.morphia.aggregation.experimental.expressions.impls.Expression)">min</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the lowest expression value for each group.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#mod(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">mod</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;dividend,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;divisor)</code></th>
@@ -913,7 +974,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the remainder of the first number divided by the second.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#multiply(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">multiply</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
         <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -921,7 +982,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Multiplies numbers together and returns the result.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#ne(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">ne</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -929,21 +990,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns true if the values are not equivalent.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">BooleanExpressions.</span><code><span class="memberNameLink"><a href="../../BooleanExpressions.html#not(dev.morphia.aggregation.experimental.expressions.impls.Expression)">not</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Evaluates a boolean and returns the opposite boolean value; i.e.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#objectToArray(dev.morphia.aggregation.experimental.expressions.impls.Expression)">objectToArray</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
 <td class="colLast">
 <div class="block">Converts a document to an array of documents representing key-value pairs.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">BooleanExpressions.</span><code><span class="memberNameLink"><a href="../../BooleanExpressions.html#or(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">or</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -951,7 +1012,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Evaluates one or more expressions and returns true if any of the expressions are true.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#pow(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">pow</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;number,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;exponent)</code></th>
@@ -959,28 +1020,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Raises a number to the specified exponent.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#push(dev.morphia.aggregation.experimental.expressions.impls.Expression)">push</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns an array of expression values for each group.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#radiansToDegrees(dev.morphia.aggregation.experimental.expressions.impls.Expression)">radiansToDegrees</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Converts a value from radians to degrees.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Miscellaneous.</span><code><span class="memberNameLink"><a href="../../Miscellaneous.html#rand()">rand</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns a random float between 0 and 1.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#reduce(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">reduce</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
       <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;initial,
@@ -989,7 +1050,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Applies an expression to each element in an array and combines them into a single value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#replaceAll(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">replaceAll</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
           <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;find,
@@ -998,7 +1059,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Replaces all instances of a search string in an input string with a replacement string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#replaceOne(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">replaceOne</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
           <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;find,
@@ -1007,14 +1068,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Replaces the first instance of a search string in an input string with a replacement string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#reverseArray(dev.morphia.aggregation.experimental.expressions.impls.Expression)">reverseArray</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
 <td class="colLast">
 <div class="block">Returns an array with the elements in reverse order.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#round(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">round</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;number,
      <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;place)</code></th>
@@ -1022,7 +1083,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Rounds a number to to a whole integer or to a specified decimal place.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setDifference(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">setDifference</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
              <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1030,7 +1091,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a set with elements that appear in the first set but not in the second set; i.e.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setEquals(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">setEquals</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
          <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1038,7 +1099,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns true if the input sets have the same distinct elements.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setIntersection(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">setIntersection</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
                <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1046,7 +1107,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a set with elements that appear in all of the input sets.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setIsSubset(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">setIsSubset</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
            <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1054,7 +1115,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns true if all elements of the first set appear in the second set, including when the first set equals the second set; i.e.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setUnion(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">setUnion</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
         <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1062,28 +1123,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a set with elements that appear in any of the input sets.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#sin(dev.morphia.aggregation.experimental.expressions.impls.Expression)">sin</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the sine of a value that is measured in radians.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#sinh(dev.morphia.aggregation.experimental.expressions.impls.Expression)">sinh</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the hyperbolic sine of a value that is measured in radians.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#size(dev.morphia.aggregation.experimental.expressions.impls.Expression)">size</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
 <td class="colLast">
 <div class="block">Counts and returns the total number of items in an array.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#slice(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">slice</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array,
      int&nbsp;size)</code></th>
@@ -1091,7 +1152,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a subset of an array.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#split(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">split</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
      <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;delimiter)</code></th>
@@ -1099,14 +1160,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Splits a string into substrings based on a delimiter.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#sqrt(dev.morphia.aggregation.experimental.expressions.impls.Expression)">sqrt</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Calculates the square root.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#stdDevPop(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">stdDevPop</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value,
          <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1114,7 +1175,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the population standard deviation of the input values.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#stdDevSamp(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">stdDevSamp</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value,
           <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1122,7 +1183,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the sample standard deviation of the input values.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#strcasecmp(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">strcasecmp</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
           <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1131,21 +1192,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  second, and -1 if the first string is less than the second.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#strLenBytes(dev.morphia.aggregation.experimental.expressions.impls.Expression)">strLenBytes</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Returns the number of UTF-8 encoded bytes in a string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#strLenCP(dev.morphia.aggregation.experimental.expressions.impls.Expression)">strLenCP</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Returns the number of UTF-8 code points in a string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#substr(dev.morphia.aggregation.experimental.expressions.impls.Expression,int,int)">substr</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
       int&nbsp;start,
@@ -1156,7 +1217,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#substrBytes(dev.morphia.aggregation.experimental.expressions.impls.Expression,int,int)">substrBytes</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
            int&nbsp;start,
@@ -1165,7 +1226,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the substring of a string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#substrCP(dev.morphia.aggregation.experimental.expressions.impls.Expression,int,int)">substrCP</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
         int&nbsp;start,
@@ -1174,7 +1235,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the substring of a string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#subtract(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">subtract</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;minuend,
         <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;subtrahend)</code></th>
@@ -1182,7 +1243,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the result of subtracting the second value from the first.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#sum(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">sum</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1190,98 +1251,98 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Calculates and returns the sum of numeric values.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#tan(dev.morphia.aggregation.experimental.expressions.impls.Expression)">tan</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the tangent of a value that is measured in radians.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#tanh(dev.morphia.aggregation.experimental.expressions.impls.Expression)">tanh</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the hyperbolic tangent of a value that is measured in radians.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toBool(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toBool</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a boolean.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toDate(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toDate</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a Date.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toDecimal(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toDecimal</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a Decimal128.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toDouble(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toDouble</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a double.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toInt(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toInt</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to an integer.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toLong(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toLong</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a long.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#toLower(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toLower</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts a string to lowercase.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toObjectId(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toObjectId</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to an ObjectId.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#toString(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toString</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toString(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toString</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#toUpper(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toUpper</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts a string to uppercase.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#trunc(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">trunc</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;number,
      <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;place)</code></th>
@@ -1289,14 +1350,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Truncates a number to a whole integer or to a specified decimal place.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#type(dev.morphia.aggregation.experimental.expressions.impls.Expression)">type</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Return the BSON data type of the field.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Expressions.</span><code><span class="memberNameLink"><a href="../../Expressions.html#value(java.lang.Object)">value</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
@@ -1517,6 +1578,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#covariancePop(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">covariancePop</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
+             <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
+<td class="colLast">
+<div class="block">Returns the population covariance of two numeric expressions that are evaluated using documents in the $setWindowFields stage window.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#covarianceSamp(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">covarianceSamp</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
+              <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
+<td class="colLast">
+<div class="block">Returns the sample covariance of two numeric expressions that are evaluated using documents in the $setWindowFields stage window.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../DateToParts.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateToParts</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#dateToParts(dev.morphia.aggregation.experimental.expressions.impls.Expression)">dateToParts</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;date)</code></th>
 <td class="colLast">
@@ -1583,6 +1660,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#expMovingAvg(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">expMovingAvg</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
+            int&nbsp;n)</code></th>
+<td class="colLast">
+<div class="block">Returns the exponential moving average of numeric expressions applied to documents in a partition defined in the $setWindowFields
+ stage.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../ArrayFilterExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ArrayFilterExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#filter(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">filter</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array,
       <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;conditional)</code></th>
@@ -1590,21 +1676,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Selects a subset of the array to return an array with only the elements that match the filter condition.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#first(dev.morphia.aggregation.experimental.expressions.impls.Expression)">first</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns a value from the first document for each group.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#floor(dev.morphia.aggregation.experimental.expressions.impls.Expression)">floor</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the largest integer less than or equal to the specified number.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#function(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">function</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;body,
         <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;args)</code></th>
@@ -1612,7 +1698,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Defines a custom aggregation function or expression in JavaScript.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#gt(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">gt</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1622,7 +1708,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  true when the first value is greater than the second value.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#gte(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">gte</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1632,14 +1718,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  true when the first value is greater than or equivalent to the second value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#hour(dev.morphia.aggregation.experimental.expressions.impls.Expression)">hour</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the hour for a date as a number between 0 and 23.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#in(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">in</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;search,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
@@ -1647,7 +1733,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a boolean indicating whether a specified value is in an array.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#indexOfArray(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">indexOfArray</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array,
             <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;search)</code></th>
@@ -1655,7 +1741,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Searches an array for an occurrence of a specified value and returns the array index of the first occurernce.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../IndexExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IndexExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#indexOfBytes(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">indexOfBytes</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;string,
             <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;substring)</code></th>
@@ -1663,7 +1749,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Searches a string for an occurence of a substring and returns the UTF-8 byte index of the first occurence.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../IndexExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IndexExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#indexOfCP(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">indexOfCP</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;string,
          <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;substring)</code></th>
@@ -1671,14 +1757,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Searches a string for an occurence of a substring and returns the UTF-8 code point index of the first occurence.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#isArray(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isArray</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
 <td class="colLast">
 <div class="block">Determines if the operand is an array.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#isNumber(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isNumber</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
@@ -1686,49 +1772,49 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  numeric BSON types.</a></div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../IsoDates.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IsoDates</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#isoDayOfWeek(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isoDayOfWeek</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the weekday number in ISO 8601 format, ranging from 1 (for Monday) to 7 (for Sunday).</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../IsoDates.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IsoDates</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#isoWeek(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isoWeek</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the week number in ISO 8601 format, ranging from 1 to 53.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../IsoDates.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IsoDates</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#isoWeekYear(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isoWeekYear</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the year number in ISO 8601 format.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#last(dev.morphia.aggregation.experimental.expressions.impls.Expression)">last</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns a value from the last document for each group.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../LetExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">LetExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">VariableExpressions.</span><code><span class="memberNameLink"><a href="../../VariableExpressions.html#let(dev.morphia.aggregation.experimental.expressions.impls.Expression)">let</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;in)</code></th>
 <td class="colLast">
 <div class="block">Binds variables for use in the specified expression, and returns the result of the expression.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#ln(dev.morphia.aggregation.experimental.expressions.impls.Expression)">ln</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Calculates the natural log of a number.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#log(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">log</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;number,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;base)</code></th>
@@ -1736,14 +1822,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Calculates the log of a number in the specified base.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#log10(dev.morphia.aggregation.experimental.expressions.impls.Expression)">log10</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Calculates the log base 10 of a number.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#lt(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">lt</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1751,7 +1837,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns true if the first value is less than the second.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#lte(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">lte</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1761,14 +1847,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  true when the first value is less than or equivalent to the second value.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../TrimExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">TrimExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#ltrim(dev.morphia.aggregation.experimental.expressions.impls.Expression)">ltrim</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Removes whitespace or the specified characters from the beginning of a string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../MapExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">MapExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#map(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">map</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;in)</code></th>
@@ -1776,35 +1862,35 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Applies a subexpression to each element of an array and returns the array of resulting values in order.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#max(dev.morphia.aggregation.experimental.expressions.impls.Expression)">max</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the highest expression value for each group.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#milliseconds(dev.morphia.aggregation.experimental.expressions.impls.Expression)">milliseconds</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the milliseconds of a date as a number between 0 and 999.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#min(dev.morphia.aggregation.experimental.expressions.impls.Expression)">min</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the lowest expression value for each group.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#minute(dev.morphia.aggregation.experimental.expressions.impls.Expression)">minute</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the minute for a date as a number between 0 and 59.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#mod(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">mod</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;dividend,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;divisor)</code></th>
@@ -1812,14 +1898,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the remainder of the first number divided by the second.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#month(dev.morphia.aggregation.experimental.expressions.impls.Expression)">month</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the month for a date as a number between 1 (January) and 12 (December).</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#multiply(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">multiply</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
         <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1827,7 +1913,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Multiplies numbers together and returns the result.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ComparisonExpressions.</span><code><span class="memberNameLink"><a href="../../ComparisonExpressions.html#ne(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">ne</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1835,21 +1921,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns true if the values are not equivalent.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">BooleanExpressions.</span><code><span class="memberNameLink"><a href="../../BooleanExpressions.html#not(dev.morphia.aggregation.experimental.expressions.impls.Expression)">not</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Evaluates a boolean and returns the opposite boolean value; i.e.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#objectToArray(dev.morphia.aggregation.experimental.expressions.impls.Expression)">objectToArray</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
 <td class="colLast">
 <div class="block">Converts a document to an array of documents representing key-value pairs.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">BooleanExpressions.</span><code><span class="memberNameLink"><a href="../../BooleanExpressions.html#or(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">or</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
   <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1857,7 +1943,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Evaluates one or more expressions and returns true if any of the expressions are true.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#pow(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">pow</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;number,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;exponent)</code></th>
@@ -1865,21 +1951,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Raises a number to the specified exponent.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#push(dev.morphia.aggregation.experimental.expressions.impls.Expression)">push</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns an array of expression values for each group.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#radiansToDegrees(dev.morphia.aggregation.experimental.expressions.impls.Expression)">radiansToDegrees</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Converts a value from radians to degrees.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#reduce(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">reduce</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
       <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;initial,
@@ -1888,28 +1974,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Applies an expression to each element in an array and combines them into a single value.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../RegexExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">RegexExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#regexFind(dev.morphia.aggregation.experimental.expressions.impls.Expression)">regexFind</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Applies a regular expression (regex) to a string and returns information on the first matched substring.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../RegexExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">RegexExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#regexFindAll(dev.morphia.aggregation.experimental.expressions.impls.Expression)">regexFindAll</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Applies a regular expression (regex) to a string and returns information on the all matched substrings.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../RegexExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">RegexExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#regexMatch(dev.morphia.aggregation.experimental.expressions.impls.Expression)">regexMatch</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Applies a regular expression (regex) to a string and returns a boolean that indicates if a match is found or not.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#replaceAll(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">replaceAll</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
           <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;find,
@@ -1918,7 +2004,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Replaces all instances of a search string in an input string with a replacement string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#replaceOne(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">replaceOne</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
           <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;find,
@@ -1927,14 +2013,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Replaces the first instance of a search string in an input string with a replacement string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#reverseArray(dev.morphia.aggregation.experimental.expressions.impls.Expression)">reverseArray</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
 <td class="colLast">
 <div class="block">Returns an array with the elements in reverse order.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#round(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">round</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;number,
      <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;place)</code></th>
@@ -1942,21 +2028,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Rounds a number to to a whole integer or to a specified decimal place.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../TrimExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">TrimExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#rtrim(dev.morphia.aggregation.experimental.expressions.impls.Expression)">rtrim</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Removes whitespace or the specified characters from the end of a string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#second(dev.morphia.aggregation.experimental.expressions.impls.Expression)">second</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the seconds for a date as a number between 0 and 60 (leap seconds).</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setDifference(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">setDifference</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
              <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1964,7 +2050,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a set with elements that appear in the first set but not in the second set; i.e.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setEquals(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">setEquals</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
          <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1972,7 +2058,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns true if the input sets have the same distinct elements.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setIntersection(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">setIntersection</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
                <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1980,7 +2066,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a set with elements that appear in all of the input sets.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setIsSubset(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">setIsSubset</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
            <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -1988,7 +2074,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns true if all elements of the first set appear in the second set, including when the first set equals the second set; i.e.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetExpressions.</span><code><span class="memberNameLink"><a href="../../SetExpressions.html#setUnion(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">setUnion</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
         <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -1996,28 +2082,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a set with elements that appear in any of the input sets.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#sin(dev.morphia.aggregation.experimental.expressions.impls.Expression)">sin</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the sine of a value that is measured in radians.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#sinh(dev.morphia.aggregation.experimental.expressions.impls.Expression)">sinh</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the hyperbolic sine of a value that is measured in radians.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#size(dev.morphia.aggregation.experimental.expressions.impls.Expression)">size</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array)</code></th>
 <td class="colLast">
 <div class="block">Counts and returns the total number of items in an array.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#slice(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">slice</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;array,
      int&nbsp;size)</code></th>
@@ -2025,7 +2111,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns a subset of an array.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#split(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">split</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
      <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;delimiter)</code></th>
@@ -2033,14 +2119,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Splits a string into substrings based on a delimiter.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#sqrt(dev.morphia.aggregation.experimental.expressions.impls.Expression)">sqrt</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Calculates the square root.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#stdDevPop(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">stdDevPop</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value,
          <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -2048,7 +2134,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the population standard deviation of the input values.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#stdDevSamp(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">stdDevSamp</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value,
           <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -2056,7 +2142,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the sample standard deviation of the input values.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#strcasecmp(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">strcasecmp</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
           <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;second)</code></th>
@@ -2065,21 +2151,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  second, and -1 if the first string is less than the second.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#strLenBytes(dev.morphia.aggregation.experimental.expressions.impls.Expression)">strLenBytes</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Returns the number of UTF-8 encoded bytes in a string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#strLenCP(dev.morphia.aggregation.experimental.expressions.impls.Expression)">strLenCP</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Returns the number of UTF-8 code points in a string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#substr(dev.morphia.aggregation.experimental.expressions.impls.Expression,int,int)">substr</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
       int&nbsp;start,
@@ -2090,7 +2176,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#substrBytes(dev.morphia.aggregation.experimental.expressions.impls.Expression,int,int)">substrBytes</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
            int&nbsp;start,
@@ -2099,7 +2185,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the substring of a string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#substrCP(dev.morphia.aggregation.experimental.expressions.impls.Expression,int,int)">substrCP</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
         int&nbsp;start,
@@ -2108,7 +2194,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the substring of a string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#subtract(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">subtract</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;minuend,
         <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;subtrahend)</code></th>
@@ -2116,7 +2202,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns the result of subtracting the second value from the first.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../AccumulatorExpressions.html#sum(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">sum</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -2124,112 +2210,112 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Calculates and returns the sum of numeric values.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#tan(dev.morphia.aggregation.experimental.expressions.impls.Expression)">tan</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the tangent of a value that is measured in radians.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrigonometryExpressions.</span><code><span class="memberNameLink"><a href="../../TrigonometryExpressions.html#tanh(dev.morphia.aggregation.experimental.expressions.impls.Expression)">tanh</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the hyperbolic tangent of a value that is measured in radians.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toBool(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toBool</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a boolean.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#toDate(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toDate</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Converts a value to a date.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toDate(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toDate</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a Date.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toDecimal(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toDecimal</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a Decimal128.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toDouble(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toDouble</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a double.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toInt(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toInt</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to an integer.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toLong(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toLong</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a long.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#toLower(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toLower</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts a string to lowercase.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toObjectId(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toObjectId</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to an ObjectId.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#toString(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toString</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a string.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#toString(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toString</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts value to a string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#toUpper(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toUpper</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Converts a string to uppercase.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../TrimExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">TrimExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">StringExpressions.</span><code><span class="memberNameLink"><a href="../../StringExpressions.html#trim(dev.morphia.aggregation.experimental.expressions.impls.Expression)">trim</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Removes whitespace or the specified characters from the beginning and end of a string.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpressions.</span><code><span class="memberNameLink"><a href="../../MathExpressions.html#trunc(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">trunc</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;number,
      <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;place)</code></th>
@@ -2237,14 +2323,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Truncates a number to a whole integer or to a specified decimal place.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TypeExpressions.</span><code><span class="memberNameLink"><a href="../../TypeExpressions.html#type(dev.morphia.aggregation.experimental.expressions.impls.Expression)">type</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Return the BSON data type of the field.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#week(dev.morphia.aggregation.experimental.expressions.impls.Expression)">week</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
@@ -2252,14 +2338,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  (leap year).</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static <a href="../../DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#year(dev.morphia.aggregation.experimental.expressions.impls.Expression)">year</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the year for a date as a number (e.g.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../ZipExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ZipExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../ArrayExpressions.html#zip(dev.morphia.aggregation.experimental.expressions.impls.Expression...)">zip</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;arrays)</code></th>
 <td class="colLast">
@@ -2382,6 +2468,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DocumentExpression</a></span></code></th>
 <td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../ExpMovingAvg.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpMovingAvg</a></span></code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></span></code></th>
+<td class="colLast">
+<div class="block">Wraps a list of expressions as an Expression so we can generically deal with all values as Expressions</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
@@ -2510,6 +2608,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Expression.</span><code><span class="memberNameLink"><a href="../Expression.html#getValue()">getValue</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionList.</span><code><span class="memberNameLink"><a href="../ExpressionList.html#getValue()">getValue</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">PipelineField.</span><code><span class="memberNameLink"><a href="../PipelineField.html#getValue()">getValue</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -2525,7 +2633,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Accumulator.</span><code><span class="memberNameLink"><a href="../Accumulator.html#getValue()">getValue</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionList.</span><code><span class="memberNameLink"><a href="../ExpressionList.html#getValues()">getValues</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -2539,12 +2647,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody><tbody>
 <tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionList.</span><code><span class="memberNameLink"><a href="../ExpressionList.html#add(dev.morphia.aggregation.experimental.expressions.impls.Expression)">add</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../Fields.html" title="type parameter in Fields">T</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Fields.</span><code><span class="memberNameLink"><a href="../Fields.html#add(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression)">add</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
    <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../SwitchExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">SwitchExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SwitchExpression.</span><code><span class="memberNameLink"><a href="../SwitchExpression.html#branch(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">branch</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;caseExpression,
       <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;then)</code></th>
@@ -2552,9 +2665,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Adds a new branch to the switch</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../TrimExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">TrimExpression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrimExpression.</span><code><span class="memberNameLink"><a href="../TrimExpression.html#chars(dev.morphia.aggregation.experimental.expressions.impls.Expression)">chars</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;chars)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static <a href="../ExpressionList.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ExpressionList</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionList.</span><code><span class="memberNameLink"><a href="../ExpressionList.html#coalesce(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">coalesce</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;first,
+        <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;values)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -2824,6 +2943,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../ExpMovingAvg.html#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression,double)">ExpMovingAvg</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
+            double&nbsp;alpha)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../ExpMovingAvg.html#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">ExpMovingAvg</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
+            int&nbsp;n)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../Expression.html#%3Cinit%3E(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression)">Expression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
+          <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../ExpressionList.html#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression...)">ExpressionList</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;values)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../IndexExpression.html#%3Cinit%3E(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression)">IndexExpression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
                <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;string,
                <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;substring)</code></th>
@@ -2905,18 +3043,32 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../ArrayExpression.html#%3Cinit%3E(java.lang.String,java.util.List)">ArrayExpression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
+               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;value)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../Expression.html#%3Cinit%3E(java.lang.String,java.util.List)">Expression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
+          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;value)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../ExpressionList.html#%3Cinit%3E(java.util.List)">ExpressionList</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;values)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../FunctionExpression.html#%3Cinit%3E(java.lang.String,java.util.List)">FunctionExpression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;body,
                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;args)</code></th>
 <td class="colLast">
 <div class="block">Creates the new expression</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../MathExpression.html#%3Cinit%3E(java.lang.String,java.util.List)">MathExpression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;operands)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../ZipExpression.html#%3Cinit%3E(java.util.List)">ZipExpression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;inputs)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -3004,15 +3156,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Bucket.</span><code><span class="memberNameLink"><a href="../../../stages/Bucket.html#getBoundaries()">getBoundaries</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Unset.</span><code><span class="memberNameLink"><a href="../../../stages/Unset.html#getFields()">getFields</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Merge.</span><code><span class="memberNameLink"><a href="../../../stages/Merge.html#getVariables()">getVariables</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
