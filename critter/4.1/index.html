@@ -169,19 +169,19 @@ each model object.  To use it, you simply need to add a plugin to your maven pom
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
     &lt;groupId&gt;dev.morphia.critter&lt;/groupId&gt;
     &lt;artifactId&gt;critter-maven&lt;/artifactId&gt;
-    &lt;version&gt;4.1.0&lt;/version&gt;
+    &lt;version&gt;4.1.1&lt;/version&gt;
     &lt;executions&gt;
         &lt;execution&gt;
             &lt;id&gt;critter&lt;/id&gt;
             &lt;goals&gt;
                 &lt;goal&gt;generate&lt;/goal&gt;
             &lt;/goals&gt;
-            &lt;configuration&gt;
-                &lt;force&gt;false&lt;/force&gt;
-                &lt;criteriaPackage&gt;com.bob.bar&lt;/criteriaPackage&gt;
-            &lt;/configuration&gt;
         &lt;/execution&gt;
     &lt;/executions&gt;
+    &lt;configuration&gt;
+        &lt;force&gt;false&lt;/force&gt;
+        &lt;criteriaPackage&gt;com.bob.bar&lt;/criteriaPackage&gt;
+    &lt;/configuration&gt;
 &lt;/plugin&gt;</code></pre>
 </div>
 </div>
@@ -195,7 +195,7 @@ project.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">plugins {
-    id("dev.morphia.critter") version "4.1.0"
+    id("dev.morphia.critter") version "4.1.1"
 }
 
 
