@@ -164,12 +164,12 @@ public class Filter {
         return pathTarget;
     }
 
-    protected void writeNamedValue(@Nullable String name, @Nullable Object named, Mapper mapper, BsonWriter writer,
+    protected void writeNamedValue(@Nullable String name, @Nullable Object value, Mapper mapper, BsonWriter writer,
                                    EncoderContext encoderContext) {
         writer.writeName(name);
-        if (named != null) {
-            Codec codec = mapper.getCodecRegistry().get(named.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, named);
+        if (value != null) {
+            Codec codec = mapper.getCodecRegistry().get(value.getClass());
+            encoderContext.encodeWithChildContext(codec, writer, value);
         } else {
             writer.writeNull();
         }

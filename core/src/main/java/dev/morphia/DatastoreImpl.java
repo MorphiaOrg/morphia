@@ -99,7 +99,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Aggregation<T> aggregate(Class<T> source) {
-        return new AggregationImpl(this, mapper.getCollection(source));
+        return new AggregationImpl(this, source, mapper.getCollection(source));
     }
 
     @Override

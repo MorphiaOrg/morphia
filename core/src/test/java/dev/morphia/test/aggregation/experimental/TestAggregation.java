@@ -349,7 +349,7 @@ public class TestAggregation extends TestBase {
         getDs().ensureIndexes();
         Document stats = getDs().aggregate(Author.class)
                                 .indexStats()
-                                .match(eq("name", "books_1"))
+                                //                                .match(eq("name", "books_1"))
                                 .execute(Document.class)
                                 .next();
 
