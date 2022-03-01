@@ -62,7 +62,6 @@ import java.util.Map.Entry;
 import java.util.ServiceLoader;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
-import static java.lang.String.format;
 import static org.bson.Document.parse;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
@@ -128,7 +127,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Aggregation<T> aggregate(Class<T> source) {
-        return new AggregationImpl(this, getCollection(source));
+        return new AggregationImpl(this, source, getCollection(source));
     }
 
     @Override
@@ -151,7 +150,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> DeleteResult delete(T entity, DeleteOptions options) {
         if (entity instanceof Class<?>) {
-            throw new MappingException(format(Sofia.deleteWithClass(entity.getClass().getName())));
+            throw new MappingException(Sofia.deleteWithClass(entity.getClass().getName()));
         }
         Object id = mapper.getId(entity);
         return id != null
@@ -514,6 +513,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @morphia.internal
      * @since 2.3
      */
+    @MorphiaInternal
     public Document toDocument(Object entity) {
         final Class<?> type = mapper.getEntityModel(entity.getClass()).getType();
 
@@ -614,7 +614,6 @@ public class DatastoreImpl implements AdvancedDatastore {
                     throw new VersionMismatchException(entity.getClass(), id);
                 }
             }
-
         } catch (MongoWriteException e) {
             if (info.versioned) {
                 info.rollbackVersion(entity);

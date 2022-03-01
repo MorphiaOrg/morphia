@@ -44,13 +44,13 @@ import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,6 +61,7 @@ import java.util.stream.Collectors;
  */
 public class AggregationImpl<T> implements Aggregation<T> {
     private final Datastore datastore;
+    private final Class<?> source;
     private final MongoCollection<T> collection;
     private final List<Stage> stages = new ArrayList<>();
 
@@ -71,45 +72,65 @@ public class AggregationImpl<T> implements Aggregation<T> {
      * @param collection the source collection
      * @morphia.internal
      */
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public AggregationImpl(Datastore datastore, MongoCollection<T> collection) {
         this.datastore = datastore;
+        this.collection = collection;
+        this.source = null;
+    }
+
+    /**
+     * Creates an instance.
+     *
+     * @param datastore  the datastore
+     * @param source     the source type
+     * @param collection the source collection
+     * @morphia.internal
+     */
+    public AggregationImpl(Datastore datastore, Class<T> source, MongoCollection<T> collection) {
+        this.datastore = datastore;
+        this.source = source;
         this.collection = collection;
     }
 
     @Override
     public Aggregation<T> addFields(AddFields fields) {
-        stages.add(fields);
+        addStage(fields);
         return this;
     }
 
     @Override
     public Aggregation<T> autoBucket(AutoBucket bucket) {
-        stages.add(bucket);
+        addStage(bucket);
         return this;
     }
 
     @Override
     public Aggregation<T> bucket(Bucket bucket) {
-        stages.add(bucket);
+        addStage(bucket);
         return this;
     }
 
     @Override
     public Aggregation<T> collStats(CollectionStats stats) {
-        stages.add(stats);
+        addStage(stats);
         return this;
     }
 
     @Override
     public Aggregation<T> count(String name) {
-        stages.add(new Count(name));
+        addStage(new Count(name));
         return this;
     }
 
     @Override
     public Aggregation<T> currentOp(CurrentOp currentOp) {
-        stages.add(currentOp);
+        addStage(currentOp);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> facet(Facet facet) {
+        addStage(facet);
         return this;
     }
 
@@ -135,63 +156,62 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> facet(Facet facet) {
-        stages.add(facet);
-        return this;
-    }
-
-    @Override
     public Aggregation<T> geoNear(GeoNear near) {
-        stages.add(near);
+        addStage(near);
         return this;
     }
 
     @Override
     public Aggregation<T> graphLookup(GraphLookup lookup) {
-        stages.add(lookup);
+        addStage(lookup);
         return this;
     }
 
     @Override
     public Aggregation<T> group(Group group) {
-        stages.add(group);
+        addStage(group);
         return this;
     }
 
     @Override
     public Aggregation<T> indexStats() {
-        stages.add(IndexStats.indexStats());
+        addStage(IndexStats.indexStats());
         return this;
     }
 
     @Override
     public Aggregation<T> limit(long limit) {
-        stages.add(Limit.limit(limit));
+        addStage(Limit.limit(limit));
         return this;
     }
 
     @Override
     public Aggregation<T> lookup(Lookup lookup) {
-        stages.add(lookup);
+        addStage(lookup);
         return this;
     }
 
     @Override
     public Aggregation<T> match(Filter... filters) {
-        stages.add(Match.match(filters));
+        if (stages.isEmpty()) {
+            Arrays.stream(filters)
+                  .filter(f -> f.getName().equals("$eq"))
+                  .forEach(f -> f.entityType(source));
+        }
+        addStage(Match.match(filters));
         return this;
     }
 
     @Override
     public <M> void merge(Merge<M> merge) {
-        stages.add(merge);
+        addStage(merge);
         collection.aggregate(getDocuments())
                   .toCollection();
     }
 
     @Override
     public <M> void merge(Merge<M> merge, AggregationOptions options) {
-        stages.add(merge);
+        addStage(merge);
         Class<?> type = merge.getType();
         type = type != null ? type : Document.class;
         options.apply(getDocuments(), collection, type)
@@ -200,14 +220,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public <O> void out(Out<O> out) {
-        stages.add(out);
+        addStage(out);
         collection.aggregate(getDocuments())
                   .toCollection();
     }
 
     @Override
     public <O> void out(Out<O> out, AggregationOptions options) {
-        stages.add(out);
+        addStage(out);
         Class<?> type = out.getType();
         type = type != null ? type : Document.class;
         options.apply(getDocuments(), collection, type).toCollection();
@@ -215,92 +235,97 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public Aggregation<T> planCacheStats() {
-        stages.add(PlanCacheStats.planCacheStats());
+        addStage(PlanCacheStats.planCacheStats());
         return this;
     }
 
     @Override
     public Aggregation<T> project(Projection projection) {
-        stages.add(projection);
+        addStage(projection);
         return this;
     }
 
     @Override
     public Aggregation<T> redact(Redact redact) {
-        stages.add(redact);
+        addStage(redact);
         return this;
     }
 
     @Override
     public Aggregation<T> replaceRoot(ReplaceRoot root) {
-        stages.add(root);
+        addStage(root);
         return this;
     }
 
     @Override
     public Aggregation<T> replaceWith(ReplaceWith with) {
-        stages.add(with);
+        addStage(with);
         return this;
     }
 
     @Override
     public Aggregation<T> sample(long sample) {
-        stages.add(Sample.sample(sample));
+        addStage(Sample.sample(sample));
         return this;
     }
 
     @Override
     public Aggregation<T> set(Set set) {
-        stages.add(set);
+        addStage(set);
         return this;
     }
 
     @Override
     public Aggregation<T> setWindowFields(SetWindowFields fields) {
-        stages.add(fields);
+        addStage(fields);
         return this;
     }
 
     @Override
     public Aggregation<T> skip(long skip) {
-        stages.add(Skip.skip(skip));
+        addStage(Skip.skip(skip));
         return this;
     }
 
     @Override
     public Aggregation<T> sort(Sort sort) {
-        stages.add(sort);
+        addStage(sort);
         return this;
     }
 
     @Override
     public Aggregation<T> sortByCount(Expression sort) {
-        stages.add(SortByCount.sortByCount(sort));
+        addStage(SortByCount.sortByCount(sort));
         return this;
     }
 
     @Override
     public Aggregation<T> unionWith(Class<?> type, Stage first, Stage... others) {
-        stages.add(new UnionWith(type, Expressions.toList(first, others)));
+        addStage(new UnionWith(type, Expressions.toList(first, others)));
         return this;
     }
 
     @Override
     public Aggregation<T> unionWith(String collection, Stage first, Stage... others) {
-        stages.add(new UnionWith(collection, Expressions.toList(first, others)));
+        addStage(new UnionWith(collection, Expressions.toList(first, others)));
         return this;
     }
 
     @Override
     public Aggregation<T> unset(Unset unset) {
-        stages.add(unset);
+        addStage(unset);
         return this;
     }
 
     @Override
     public Aggregation<T> unwind(Unwind unwind) {
-        stages.add(unwind);
+        addStage(unwind);
         return this;
+    }
+
+    private void addStage(Stage stage) {
+        stage.aggregation(this);
+        stages.add(stage);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

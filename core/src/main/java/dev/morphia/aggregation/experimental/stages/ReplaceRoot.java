@@ -81,7 +81,7 @@ public class ReplaceRoot extends Stage {
      */
     public ReplaceRoot field(String name, Expression expression) {
         if (value != null) {
-            throw new AggregationException(Sofia.mixedModesNotAllowed(getStageName()));
+            throw new AggregationException(Sofia.mixedModesNotAllowed(stageName()));
         }
         if (document == null) {
             document = Expressions.of();

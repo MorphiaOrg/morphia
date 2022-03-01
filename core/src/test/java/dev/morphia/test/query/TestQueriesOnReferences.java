@@ -6,7 +6,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -50,22 +49,14 @@ public class TestQueriesOnReferences extends TestBase {
         e2_input.setReference(e1_input);
         getDs().save(e2_input);
 
-        Runnable test = () -> {
-            getDs().getMapper().map(Entity1.class, Entity2.class);
+        var e1 = getDs().find(Entity1.class).first();
+        var e2 = getDs().find(Entity2.class).filter(Filters.eq("reference", e1)).first();
+        var e2_i = getDs().find(Entity2.class).filter(Filters.eq("reference", e1.getId())).first();
 
-            var e1 = getDs().find(Entity1.class).first();
-            var e2 = getDs().find(Entity2.class).filter(Filters.eq("reference", e1)).first();
-            var e2_i = getDs().find(Entity2.class).filter(Filters.eq("reference", e1.getId())).first();
-
-            assertNotNull(e1, "e1");
-            assertNotNull(e2, "e2");
-            assertNotNull(e2_i, "e2_1");
-            assertEquals(e2.getId(), e2_i.getId());
-        };
-
-        test.run();
-
-        withOptions(MapperOptions.DEFAULT, test);
+        assertNotNull(e1, "e1");
+        assertNotNull(e2, "e2");
+        assertNotNull(e2_i, "e2_1");
+        assertEquals(e2.getId(), e2_i.getId());
     }
 
     @Test
@@ -77,15 +68,48 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         assertNotNull(getDs().find(ContainsPic.class)
-                             .filter(exists("pic")).iterator(new FindOptions()
-                .projection().include("pic")
-                .limit(1))
+                             .filter(exists("pic"))
+                             .iterator(new FindOptions()
+                                 .projection()
+                                 .include("pic")
+                                 .limit(1))
                              .tryNext());
         assertNull(getDs().find(ContainsPic.class)
-                          .filter(exists("pic").not()).iterator(new FindOptions()
-                .projection().include("pic")
-                .limit(1))
+                          .filter(exists("pic").not())
+                          .iterator(new FindOptions()
+                              .projection()
+                              .include("pic")
+                              .limit(1))
                           .tryNext());
+    }
+
+    @Test
+    public void testMatchOnAReference() {
+        getDs().getMapper().map(Entity1.class, Entity2.class);
+
+        getDs().ensureIndexes();
+
+        var e1_input = new Entity1();
+        getDs().save(e1_input);
+
+        var e2_input = new Entity2();
+        e2_input.setReference(e1_input);
+        getDs().save(e2_input);
+
+        var e1 = getDs().find(Entity1.class).first();
+        var e2 = getDs().aggregate(Entity2.class)
+                        .match(Filters.eq("reference", e1))
+                        .execute(Entity2.class)
+                        .tryNext();
+        var e2_i = getDs().aggregate(Entity2.class)
+                          .match(Filters.eq("reference", e1.getId()))
+                          .execute(Entity2.class)
+                          .tryNext();
+
+        assertNotNull(e1, "e1");
+        assertNotNull(e2, "e2");
+        assertNotNull(e2_i, "e2_1");
+        assertEquals(e2.getId(), e2_i.getId());
     }
 
     @Test(expectedExceptions = ReferenceException.class)
