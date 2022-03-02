@@ -145,6 +145,23 @@
     ]
   },
   "method": {
+    "added": [
+      {
+        "classQualifiedName": "dev.morphia.aggregation.experimental.AggregationImpl",
+        "methodName": "<init>",
+        "justification": "internal method"
+      },
+      {
+        "classQualifiedName": "dev.morphia.aggregation.experimental.stages.Stage",
+        "methodName": "stageName",
+        "justification": "internal method"
+      },
+      {
+        "classQualifiedName": "dev.morphia.aggregation.experimental.stages.Stage",
+        "methodName": "aggregation",
+        "justification": "internal method"
+      }
+    ],
     "abstractMethodAdded": [
       {
         "class": "com.mongodb.*",
