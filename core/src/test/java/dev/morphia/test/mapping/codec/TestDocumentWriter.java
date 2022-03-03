@@ -8,11 +8,10 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static java.util.Arrays.asList;
+import static java.util.List.of;
 
 public class TestDocumentWriter extends TestBase {
     private int docs = 0;
@@ -77,36 +76,22 @@ public class TestDocumentWriter extends TestBase {
     }
 
     @Test
-    public void duplicateKeys() {
-        DocumentWriter writer = new DocumentWriter(getMapper());
-        document(writer, () -> {
-            document(writer, "id", () -> writer.writeInt32("first", 1));
-            document(writer, "id", () -> writer.writeInt32("second", 2));
-        });
-
-        Document document = (Document) writer.getDocument().get("id");
-
-        Assert.assertTrue(document.containsKey("first"), document.toString());
-        Assert.assertTrue(document.containsKey("second"), document.toString());
-    }
-
-    @Test
     public void nestedArrays() {
         DocumentWriter writer = new DocumentWriter(getMapper());
 
-        startDoc(writer);
-        startArray(writer, "top");
-        startArray(writer);
-        writer.writeInt32(1);
-        writer.writeInt32(2);
-        writer.writeInt32(3);
-        startDoc(writer);
-        writer.writeString("nested", "string");
-        endDoc(writer);
-        endArray(writer);
-        endArray(writer);
-        endDoc(writer);
-        Document top = new Document("top", List.of(List.of(1, 2, 3, new Document("nested", "string"))));
+        document(writer, () -> {
+            array(writer, "top", () -> {
+                array(writer, () -> {
+                    writer.writeInt32(1);
+                    writer.writeInt32(2);
+                    writer.writeInt32(3);
+                    document(writer, () -> {
+                        writer.writeString("nested", "string");
+                    });
+                });
+            });
+        });
+        Document top = new Document("top", of(of(1, 2, 3, new Document("nested", "string"))));
         Assert.assertEquals(top, writer.getDocument());
     }
 

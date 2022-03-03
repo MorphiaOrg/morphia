@@ -1,6 +1,12 @@
 package dev.morphia.mapping.codec.writer;
 
+import com.mongodb.lang.Nullable;
 import org.bson.Document;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.List.of;
 
 class NameState extends WriteState {
     private final String name;
@@ -10,11 +16,31 @@ class NameState extends WriteState {
     NameState(DocumentWriter writer, String name, Document document) {
         super(writer);
         this.name = name;
-        this.document = document;
         if (!document.containsKey(name)) {
+            this.document = document;
             document.put(name, this);
+        } else {
+            this.document = andTogether(document, name, this);
         }
 
+    }
+
+    @SuppressWarnings("unchecked")
+    private Document andTogether(Document doc, String key, @Nullable Object additional) {
+        if (additional != null) {
+            Document newSubdoc = new Document(key, additional);
+            var extant = doc.remove(key);
+            List<Document> and = (List<Document>) doc.get("$and");
+            if (and != null) {
+                and.add(newSubdoc);
+            } else {
+                and = new ArrayList<>();
+                and.addAll(of(new Document(key, extant), newSubdoc));
+                doc.put("$and", and);
+                return newSubdoc;
+            }
+        }
+        return doc;
     }
 
     @Override
@@ -23,10 +49,6 @@ class NameState extends WriteState {
                ? "<<pending>>"
                : value.toString();
     }
-
-    //    void apply(Object value) {
-    //        previous().applyValue(name, value);
-    //    }
 
     @Override
     protected String state() {
