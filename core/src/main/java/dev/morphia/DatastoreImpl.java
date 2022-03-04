@@ -501,7 +501,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             } else {
                 ReplaceOptions updateOptions = new ReplaceOptions()
                     .bypassDocumentValidation(options.getBypassDocumentValidation())
-                    .upsert(true);
+                    .upsert(!info.versioned);
                 Document filter = new Document("_id", id);
                 if (info.versioned) {
                     filter.put(info.versionProperty.getMappedName(), info.oldVersion);
@@ -518,7 +518,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         } catch (MongoWriteException e) {
             if (info.versioned) {
                 info.rollbackVersion(entity);
-                throw new VersionMismatchException(entity.getClass(), id);
             }
             throw e;
         }
