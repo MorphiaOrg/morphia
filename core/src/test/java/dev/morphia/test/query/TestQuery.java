@@ -59,6 +59,7 @@ import static dev.morphia.query.Sort.naturalDescending;
 import static dev.morphia.query.experimental.filters.Filters.and;
 import static dev.morphia.query.experimental.filters.Filters.elemMatch;
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.filters.Filters.exists;
 import static dev.morphia.query.experimental.filters.Filters.gt;
 import static dev.morphia.query.experimental.filters.Filters.gte;
 import static dev.morphia.query.experimental.filters.Filters.in;
@@ -792,11 +793,35 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void testMultipleFilters() {
+        var newQ = getDs().find(User.class).disableValidation();
+        newQ.filter(
+            or(
+                exists("status").not(),
+                eq("status", 0)));
+
+        newQ
+            .filter(
+                or(
+                    exists("belongsToContentId").not(),
+                    and(
+                        exists("belongsToContentId"),
+                        eq("showAtGuideLevel", Boolean.TRUE))));
+
+        var newDoc = newQ.toDocument();
+        List<?> $and = (List<?>) newDoc.get("$and");
+        assertEquals($and.size(), 2);
+        assertDocumentEquals(newDoc, Document.parse("{\"$and\": [{\"$or\": [{\"status\": {\"$exists\": false}}, {\"status\": 0}]}, " +
+                                                    "{\"$or\": [{\"belongsToContentId\": {\"$exists\": false}}, {\"$and\": " +
+                                                    "[{\"belongsToContentId\": {\"$exists\": true}}, {\"showAtGuideLevel\": true}]}]}]}"));
+    }
+
+    @Test
     public void testNaturalSortAscending() {
         getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         List<Rectangle> results = getDs().find(Rectangle.class).iterator(new FindOptions()
-                                                                             .sort(naturalAscending()))
+                                             .sort(naturalAscending()))
                                          .toList();
 
         assertEquals(results.size(), 4);

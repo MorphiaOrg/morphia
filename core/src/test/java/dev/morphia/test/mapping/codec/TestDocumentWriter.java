@@ -64,20 +64,6 @@ public class TestDocumentWriter extends TestBase {
     }
 
     @Test
-    public void duplicateKeys() {
-        DocumentWriter writer = new DocumentWriter(getMapper());
-        document(writer, () -> {
-            document(writer, "id", () -> writer.writeInt32("first", 1));
-            document(writer, "id", () -> writer.writeInt32("second", 2));
-        });
-
-        Document document = (Document) writer.getDocument().get("id");
-
-        Assert.assertTrue(document.containsKey("first"), document.toString());
-        Assert.assertTrue(document.containsKey("second"), document.toString());
-    }
-
-    @Test
     public void nestedArrays() {
         DocumentWriter writer = new DocumentWriter(getMapper());
 
