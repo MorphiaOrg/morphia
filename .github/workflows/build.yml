@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 11, 15 ]
+        java: [ 11, 17 ]
         mongo: [ 4.4.4, 4.2.13, 4.0.23, 3.6.23 ]
         driver: [ 4.2.2, 4.1.0, 4.0.0 ]
     name: "Tests on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
