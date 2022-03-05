@@ -58,7 +58,7 @@ jobs:
         run: mvn -Pquality --file core/pom.xml
   Snapshots:
     name: Publish Snapshot Artifacts
-    if: "github.repository == 'MorphiaOrg/morphia'" && github.event_name == 'push'"
+    if: "github.repository == 'MorphiaOrg/morphia' && github.event_name == 'push'"
     needs:
       - Morphia
       - Quality
