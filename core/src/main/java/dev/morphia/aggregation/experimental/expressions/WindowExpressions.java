@@ -92,6 +92,25 @@ public final class WindowExpressions {
     }
 
     /**
+     * Returns the position of a document (known as the document number) in the $setWindowFields stage partition.
+     *
+     * @return the new expression
+     * @aggregation.expression $documentNumber
+     * @mongodb.server.release 5.0
+     * @see dev.morphia.aggregation.experimental.Aggregation#setWindowFields(SetWindowFields)
+     * @since 2.3
+     */
+    public static Expression documentNumber() {
+        return new Expression("$documentNumber") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                });
+            }
+        };
+    }
+
+    /**
      * Returns the exponential moving average of numeric expressions applied to documents in a partition defined in the $setWindowFields
      * stage.
      * <p>

@@ -83,6 +83,7 @@ import static dev.morphia.aggregation.experimental.expressions.WindowExpressions
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.covarianceSamp;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.denseRank;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.derivative;
+import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.documentNumber;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.expMovingAvg;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.shift;
 import static dev.morphia.aggregation.experimental.stages.Group.group;
@@ -94,6 +95,7 @@ import static dev.morphia.aggregation.experimental.stages.Set.set;
 import static dev.morphia.aggregation.experimental.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.experimental.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.aggregation.experimental.stages.Sort.sort;
+import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static dev.morphia.query.experimental.filters.Filters.exists;
 import static dev.morphia.query.experimental.filters.Filters.expr;
@@ -454,7 +456,7 @@ public class TestAggregation extends TestBase {
         List<Document> actual = getDs().aggregate("cakeSales")
                                        .setWindowFields(setWindowFields()
                                            .partitionBy(field("state"))
-                                           .sortBy(Sort.descending("quantity"))
+                                           .sortBy(descending("quantity"))
                                            .output(output("denseRankQuantityForState")
                                                .operator(denseRank())))
                                        .execute(Document.class)
@@ -473,6 +475,72 @@ public class TestAggregation extends TestBase {
             ": 134, 'denseRankQuantityForState' : 2 }",
             "{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, 'quantity' : " +
             "104, 'denseRankQuantityForState' : 3 }");
+        assertListEquals(actual, expected);
+    }
+
+    @Test
+    public void testDerivative() {
+        checkMinServerVersion(5.0);
+
+        insert("deliveryFleet", parseDocs(
+            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:10:30Z' ), miles: 1295.1 }",
+            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:11:00Z' ), miles: 1295.63 }",
+            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:11:30Z' ), miles: 1296.25 }",
+            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:12:00Z' ), miles: 1296.76 }",
+            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:10:30Z' ), miles: 10234.1 }",
+            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:11:00Z' ), miles: 10234.33 }",
+            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:11:30Z' ), miles: 10234.73 }",
+            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:12:00Z' ), miles: 10235.13 }"));
+
+        List<Document> actual = getDs().aggregate("deliveryFleet")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("truckID"))
+                                           .sortBy(Sort.ascending("timeStamp"))
+                                           .output(output("truckAverageSpeed")
+                                               .operator(derivative(field("miles"))
+                                                   .unit(HOUR))
+                                               .window()
+                                               .range(-30, 0, SECOND)))
+                                       .match(gt("truckAverageSpeed", 50))
+                                       .project(project()
+                                           .suppressId())
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = parseDocs(
+            "{'truckID':'1','timeStamp':ISODate('2020-05-18T14:11:00Z'),'miles':1295.63,'truckAverageSpeed':63.60000000002401}",
+            "{'truckID':'1','timeStamp':ISODate('2020-05-18T14:11:30Z'),'miles':1296.25,'truckAverageSpeed':74.3999999999869}",
+            "{'truckID':'1','timeStamp':ISODate('2020-05-18T14:12:00Z'),'miles':1296.76,'truckAverageSpeed':61.199999999998916}");
+        assertListEquals(actual, expected);
+    }
+
+    @Test
+    public void testDocumentNumber() {
+        checkMinServerVersion(5.0);
+        cakeSales();
+
+        List<Document> actual = getDs().aggregate("cakeSales")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("state"))
+                                           .sortBy(descending("quantity"))
+                                           .output(output("documentNumberForState")
+                                               .operator(documentNumber())))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = parseDocs(
+            "{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, 'quantity' " +
+            ": 162, 'documentNumberForState' : 1 }",
+            "{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, 'quantity' : " +
+            "145, 'documentNumberForState' : 2 }",
+            "{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, 'quantity' :" +
+            " 120, 'documentNumberForState' : 3 }",
+            "{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, 'quantity' :" +
+            " 140, 'documentNumberForState' : 1 }",
+            "{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, 'quantity' " +
+            ": 134, 'documentNumberForState' : 2 }",
+            "{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, 'quantity' : " +
+            "104, 'documentNumberForState' : 3 }");
         assertListEquals(actual, expected);
     }
 
@@ -1109,7 +1177,7 @@ public class TestAggregation extends TestBase {
         List<Document> actual = getDs().aggregate("cakeSales")
                                        .setWindowFields(setWindowFields()
                                            .partitionBy(field("state"))
-                                           .sortBy(Sort.descending("quantity"))
+                                           .sortBy(descending("quantity"))
                                            .output(output("shiftQuantityForState")
                                                .operator(shift(field("quantity"), 1, value("Not available")))))
                                        .execute(Document.class)
@@ -1129,42 +1197,6 @@ public class TestAggregation extends TestBase {
             "{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, 'quantity' : " +
             "104, 'shiftQuantityForState' : 'Not available' }");
 
-        assertListEquals(actual, expected);
-    }
-
-    @Test
-    public void testDerivative() {
-        checkMinServerVersion(5.0);
-
-        insert("deliveryFleet", parseDocs(
-            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:10:30Z' ), miles: 1295.1 }",
-            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:11:00Z' ), miles: 1295.63 }",
-            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:11:30Z' ), miles: 1296.25 }",
-            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:12:00Z' ), miles: 1296.76 }",
-            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:10:30Z' ), miles: 10234.1 }",
-            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:11:00Z' ), miles: 10234.33 }",
-            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:11:30Z' ), miles: 10234.73 }",
-            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:12:00Z' ), miles: 10235.13 }"));
-
-        List<Document> actual = getDs().aggregate("deliveryFleet")
-                                       .setWindowFields(setWindowFields()
-                                           .partitionBy(field("truckID"))
-                                           .sortBy(Sort.ascending("timeStamp"))
-                                           .output(output("truckAverageSpeed")
-                                               .operator(derivative(field("miles"))
-                                                   .unit(HOUR))
-                                               .window()
-                                               .range(-30, 0, SECOND)))
-                                       .match(gt("truckAverageSpeed", 50))
-                                       .project(project()
-                                           .suppressId())
-                                       .execute(Document.class)
-                                       .toList();
-
-        List<Document> expected = parseDocs(
-            "{'truckID':'1','timeStamp':ISODate('2020-05-18T14:11:00Z'),'miles':1295.63,'truckAverageSpeed':63.60000000002401}",
-            "{'truckID':'1','timeStamp':ISODate('2020-05-18T14:11:30Z'),'miles':1296.25,'truckAverageSpeed':74.3999999999869}",
-            "{'truckID':'1','timeStamp':ISODate('2020-05-18T14:12:00Z'),'miles':1296.76,'truckAverageSpeed':61.199999999998916}");
         assertListEquals(actual, expected);
     }
 

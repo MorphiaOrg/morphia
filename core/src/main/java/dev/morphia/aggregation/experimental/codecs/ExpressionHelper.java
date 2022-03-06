@@ -187,7 +187,6 @@ public final class ExpressionHelper {
             } else {
                 document(writer, () -> {
                     expression.encode(datastore, writer, encoderContext);
-                    //                    wrapExpression(datastore, writer, expression, encoderContext);
                 });
             }
         }
