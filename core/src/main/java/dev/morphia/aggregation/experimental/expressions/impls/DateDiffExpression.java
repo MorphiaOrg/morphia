@@ -5,28 +5,30 @@ import dev.morphia.aggregation.experimental.expressions.TimeUnit;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import java.time.DayOfWeek;
 import java.util.Locale;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 /**
- * Increments a Date object by a specified number of time units.
+ * Returns the difference between two dates.
  *
  * @mongodb.server.release 5.0
- * @aggregation.expression $dateAdd
+ * @aggregation.expression $dateDiff
  * @since 2.3
  */
-public class DateAddExpression extends Expression {
+public class DateDiffExpression extends Expression {
     private final Expression startDate;
-    private final long amount;
+    private final Expression endDate;
     private final TimeUnit unit;
     private Expression timezone;
+    private DayOfWeek startOfWeek;
 
-    public DateAddExpression(Expression startDate, long amount, TimeUnit unit) {
-        super("$dateAdd");
+    public DateDiffExpression(Expression startDate, Expression endDate, TimeUnit unit) {
+        super("$dateDiff");
         this.startDate = startDate;
-        this.amount = amount;
+        this.endDate = endDate;
         this.unit = unit;
     }
 
@@ -34,10 +36,18 @@ public class DateAddExpression extends Expression {
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, getOperation(), () -> {
             expression(datastore, writer, "startDate", startDate, encoderContext);
+            expression(datastore, writer, "endDate", endDate, encoderContext);
             writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
-            writer.writeInt64("amount", amount);
             expression(datastore, writer, "timezone", timezone, encoderContext);
+            if (startOfWeek != null) {
+                writer.writeString("startOfWeek", startOfWeek.name().toLowerCase(Locale.ROOT));
+            }
         });
+    }
+
+    public DateDiffExpression startOfWeek(DayOfWeek startOfWeek) {
+        this.startOfWeek = startOfWeek;
+        return this;
     }
 
     /**
@@ -45,10 +55,9 @@ public class DateAddExpression extends Expression {
      * an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      *
      * @param timezone the timezone expression
-     * @return this
      * @since 2.3
      */
-    public DateAddExpression timezone(Expression timezone) {
+    public DateDiffExpression timezone(Expression timezone) {
         this.timezone = timezone;
         return this;
     }

@@ -51,6 +51,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
+import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.array;
@@ -59,6 +60,7 @@ import static dev.morphia.aggregation.experimental.expressions.ComparisonExpress
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.ifNull;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateAdd;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateDiff;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.literal;
@@ -67,11 +69,13 @@ import static dev.morphia.aggregation.experimental.expressions.MathExpressions.a
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.covariancePop;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.covarianceSamp;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.expMovingAvg;
+import static dev.morphia.aggregation.experimental.expressions.MathExpressions.trunc;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.DESCEND;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.PRUNE;
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.DAY;
+import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;
 import static dev.morphia.aggregation.experimental.stages.Projection.project;
@@ -341,6 +345,27 @@ public class TestAggregation extends TestBase {
             "'expectedDeliveryDate' : ISODate('2021-03-01T00:00:00Z') }");
 
         assertListEquals(actual, expected);
+    }
+
+    @Test
+    public void testDateDiff() {
+        insert("orders", parseDocs(
+            "{ _id: 1, custId: 456, purchased: ISODate('2020-12-31'), delivered: ISODate('2021-01-05') }",
+            "{ _id: 2, custId: 457, purchased: ISODate('2021-02-28'), delivered: ISODate('2021-03-07') }",
+            "{ _id: 3, custId: 458, purchased: ISODate('2021-02-16'), delivered: ISODate('2021-02-18') }"));
+
+        Document actual = getDs().aggregate("orders")
+                                 .group(group()
+                                     .field("averageTime", avg(dateDiff(field("purchased"), field("delivered"), DAY))))
+                                 .project(project()
+                                     .suppressId()
+                                     .include("numDays", trunc(field("averageTime"), literal(1))))
+                                 .execute(Document.class)
+                                 .next();
+
+        Document expected = new Document("numDays", 4.6D);
+
+        assertEquals(actual, expected);
     }
 
     @Test

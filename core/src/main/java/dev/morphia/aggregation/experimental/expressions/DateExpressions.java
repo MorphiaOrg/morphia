@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.expressions;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
 import dev.morphia.aggregation.experimental.expressions.impls.DateAddExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.DateDiffExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromString;
 import dev.morphia.aggregation.experimental.expressions.impls.DateToParts;
@@ -37,6 +38,23 @@ public final class DateExpressions {
      */
     public static DateAddExpression dateAdd(Expression startDate, long amount, TimeUnit unit) {
         return new DateAddExpression(startDate, amount, unit);
+    }
+
+    /**
+     * Returns the difference between two dates.
+     *
+     * @param startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a
+     *                  Date, a Timestamp, or an ObjectID.
+     * @param endDate   The beginning date, in UTC, for the addition operation. The endDate can be any expression that resolves to a
+     *                  Date, a Timestamp, or an ObjectID.
+     * @param unit      The unit used to measure the amount of time added to the startDate.
+     * @return the new expression
+     * @aggregation.expression $dateDiff
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static DateDiffExpression dateDiff(Expression startDate, Expression endDate, TimeUnit unit) {
+        return new DateDiffExpression(startDate, endDate, unit);
     }
 
     /**
