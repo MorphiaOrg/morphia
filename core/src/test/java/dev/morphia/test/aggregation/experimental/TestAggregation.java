@@ -325,6 +325,8 @@ public class TestAggregation extends TestBase {
 
     @Test
     public void testDateAdd() {
+        checkMinServerVersion(5.0);
+
         insert("shipping", parseDocs(
             "{ '_id' : ObjectId('603dd4b2044b995ad331c0b2'), custId: 456, purchaseDate: ISODate('2020-12-31') }",
             "{ '_id' : ObjectId('603dd4b2044b995ad331c0b3'), custId: 457, purchaseDate: ISODate('2021-02-28') }",
@@ -349,6 +351,8 @@ public class TestAggregation extends TestBase {
 
     @Test
     public void testDateDiff() {
+        checkMinServerVersion(5.0);
+
         insert("orders", parseDocs(
             "{ _id: 1, custId: 456, purchased: ISODate('2020-12-31'), delivered: ISODate('2021-01-05') }",
             "{ _id: 2, custId: 457, purchased: ISODate('2021-02-28'), delivered: ISODate('2021-03-07') }",
