@@ -12,32 +12,47 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 /**
- * Returns the difference between two dates.
+ * Truncates a date.
  *
  * @mongodb.server.release 5.0
- * @aggregation.expression $dateDiff
+ * @aggregation.expression $dateTrunc
  * @since 2.3
  */
-public class DateDiffExpression extends Expression {
-    private final Expression startDate;
-    private final Expression endDate;
+public class DateTruncExpression extends Expression {
+    private final Expression date;
     private final TimeUnit unit;
     private Expression timezone;
     private DayOfWeek startOfWeek;
+    private Long binSize;
 
-    public DateDiffExpression(Expression startDate, Expression endDate, TimeUnit unit) {
-        super("$dateDiff");
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public DateTruncExpression(Expression date, TimeUnit unit) {
+        super("$dateTrunc");
+        this.date = date;
         this.unit = unit;
+    }
+
+    /**
+     * The numeric time value, specified as an expression that must resolve to a positive non-zero number. Defaults to 1.
+     * <p>
+     * Together, binSize and unit specify the time period used in the $dateTrunc calculation.
+     *
+     * @param binSize the size to use
+     * @return this
+     * @since 2.3
+     */
+    public DateTruncExpression binSize(long binSize) {
+        this.binSize = binSize;
+        return this;
     }
 
     @Override
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, getOperation(), () -> {
-            expression(datastore, writer, "startDate", startDate, encoderContext);
-            expression(datastore, writer, "endDate", endDate, encoderContext);
+            expression(datastore, writer, "date", date, encoderContext);
             writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
+            if (binSize != null) {
+                writer.writeInt64("binSize", binSize);
+            }
             expression(datastore, writer, "timezone", timezone, encoderContext);
             if (startOfWeek != null) {
                 writer.writeString("startOfWeek", startOfWeek.name().toLowerCase(Locale.ROOT));
@@ -51,7 +66,7 @@ public class DateDiffExpression extends Expression {
      * @param startOfWeek the start of the week
      * @return this
      */
-    public DateDiffExpression startOfWeek(DayOfWeek startOfWeek) {
+    public DateTruncExpression startOfWeek(DayOfWeek startOfWeek) {
         this.startOfWeek = startOfWeek;
         return this;
     }
@@ -61,9 +76,10 @@ public class DateDiffExpression extends Expression {
      * an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      *
      * @param timezone the timezone expression
+     * @return this
      * @since 2.3
      */
-    public DateDiffExpression timezone(Expression timezone) {
+    public DateTruncExpression timezone(Expression timezone) {
         this.timezone = timezone;
         return this;
     }

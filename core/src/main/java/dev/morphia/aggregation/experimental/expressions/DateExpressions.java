@@ -8,6 +8,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.DateFromParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromString;
 import dev.morphia.aggregation.experimental.expressions.impls.DateToParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateToString;
+import dev.morphia.aggregation.experimental.expressions.impls.DateTruncExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IsoDates;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -71,6 +72,21 @@ public final class DateExpressions {
      */
     public static DateDiffExpression dateDiff(Expression startDate, Expression endDate, TimeUnit unit) {
         return new DateDiffExpression(startDate, endDate, unit);
+    }
+
+    /**
+     * Truncates a date.
+     *
+     * @param date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an
+     *             ObjectID.
+     * @param unit The unit used to measure the amount of time added to the startDate.
+     * @return the new expression
+     * @aggregation.expression $dateTrunc
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static DateTruncExpression dateTrunc(Expression date, TimeUnit unit) {
+        return new DateTruncExpression(date, unit);
     }
 
     /**
