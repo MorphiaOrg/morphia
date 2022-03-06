@@ -1027,6 +1027,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns the size of a given string or binary data value’s content in bytes.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html#binSize(long)">binSize(long)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></dt>
+<dd>
+<div class="block">The numeric time value, specified as an expression that must resolve to a positive non-zero number.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/experimental/filters/Filters.html#bitsAllClear(java.lang.String,int)">bitsAllClear(String, int)</a></span> - Static method in class dev.morphia.query.experimental.filters.<a href="dev/morphia/query/experimental/filters/Filters.html" title="class in dev.morphia.query.experimental.filters">Filters</a></dt>
 <dd>
 <div class="block">Matches numeric or binary values in which a set of bit positions all have a value of 0.</div>
@@ -2175,6 +2179,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateToString.html#%3Cinit%3E()">DateToString()</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateToString.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateToString</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/DateExpressions.html#dateTrunc(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.TimeUnit)">dateTrunc(Expression, TimeUnit)</a></span> - Static method in class dev.morphia.aggregation.experimental.expressions.<a href="dev/morphia/aggregation/experimental/expressions/DateExpressions.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions</a></dt>
+<dd>
+<div class="block">Truncates a date.</div>
+</dd>
+<dt><a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls"><span class="typeNameLink">DateTruncExpression</span></a> - Class in <a href="dev/morphia/aggregation/experimental/expressions/impls/package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></dt>
+<dd>
+<div class="block">Truncates a date.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.TimeUnit)">DateTruncExpression(Expression, TimeUnit)</a></span> - Constructor for class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateFromParts.html#day(int)">day(int)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateFromParts.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateFromParts</a></dt>
 <dd>
 <div class="block">Optional.</div>
@@ -2744,6 +2758,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateToParts.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateToParts.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateToParts</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateToString.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateToString.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateToString</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DocumentExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode(Datastore, BsonWriter, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DocumentExpression</a></dt>
 <dd>&nbsp;</dd>
@@ -9257,7 +9273,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">The starting index</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateDiffExpression.html#startOfWeek(java.time.DayOfWeek)">startOfWeek(DayOfWeek)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The start of the week.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html#startOfWeek(java.time.DayOfWeek)">startOfWeek(DayOfWeek)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></dt>
+<dd>
+<div class="block">The start of the week.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/Datastore.html#startSession()">startSession()</a></span> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
 <div class="block">Starts a new session on the server.</div>
@@ -9507,6 +9529,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateToParts.html#timezone(dev.morphia.aggregation.experimental.expressions.impls.Expression)">timezone(Expression)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateToParts.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateToParts</a></dt>
 <dd>
 <div class="block">The optional timezone to use to format the date.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html#timezone(dev.morphia.aggregation.experimental.expressions.impls.Expression)">timezone(Expression)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></dt>
+<dd>
+<div class="block">The timezone to carry out the operation.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/experimental/expressions/impls/IsoDates.html#timezone(dev.morphia.aggregation.experimental.expressions.impls.Expression)">timezone(Expression)</a></span> - Method in class dev.morphia.aggregation.experimental.expressions.impls.<a href="dev/morphia/aggregation/experimental/expressions/impls/IsoDates.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IsoDates</a></dt>
 <dd>

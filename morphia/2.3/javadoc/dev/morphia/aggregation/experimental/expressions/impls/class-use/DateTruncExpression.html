@@ -223,7 +223,7 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="DateDiffExpression.html">2.3-SNAPSHOT</a>
+    <a class="version is-current" href="DateTruncExpression.html">2.3-SNAPSHOT</a>
     <a class="version is-missing" href="../../../../../../../../../2.2/index.html">2.2</a>
     <a class="version is-missing" href="../../../../../../../../../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../../../../../../../../../2.0/index.html">2.0</a>
@@ -236,7 +236,7 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="Uses of Class dev.morphia.aggregation.experimental.expressions.impls.DateDiffExpression (Morphia)";
+            parent.document.title="Uses of Class dev.morphia.aggregation.experimental.expressions.impls.DateTruncExpression (Morphia)";
         }
     }
     catch(err) {
@@ -262,7 +262,7 @@ loadScripts(document, 'script');</script>
 <ul class="navList" title="Navigation">
 <li><a href="../../../../../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Class</a></li>
+<li><a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../../../../../deprecated-list.html">Deprecated</a></li>
@@ -309,13 +309,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </header>
 <main role="main">
 <div class="header">
-<h2 title="Uses of Class dev.morphia.aggregation.experimental.expressions.impls.DateDiffExpression" class="title">Uses of Class<br>dev.morphia.aggregation.experimental.expressions.impls.DateDiffExpression</h2>
+<h2 title="Uses of Class dev.morphia.aggregation.experimental.expressions.impls.DateTruncExpression" class="title">Uses of Class<br>dev.morphia.aggregation.experimental.expressions.impls.DateTruncExpression</h2>
 </div>
 <div class="classUseContainer">
 <ul class="blockList">
 <li class="blockList">
 <table class="useSummary">
-<caption><span>Packages that use <a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Packages that use <a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Package</th>
 <th class="colLast" scope="col">Description</th>
@@ -338,9 +338,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <section role="region"><a id="dev.morphia.aggregation.experimental.expressions">
 <!--   -->
 </a>
-<h3>Uses of <a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a> in <a href="../../package-summary.html">dev.morphia.aggregation.experimental.expressions</a></h3>
+<h3>Uses of <a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a> in <a href="../../package-summary.html">dev.morphia.aggregation.experimental.expressions</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../../package-summary.html">dev.morphia.aggregation.experimental.expressions</a> that return <a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../../package-summary.html">dev.morphia.aggregation.experimental.expressions</a> that return <a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -348,12 +348,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<td class="colFirst"><code>static <a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#dateDiff(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.TimeUnit)">dateDiff</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;startDate,
-        <a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;endDate,
-        <a href="../../TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</code></th>
+<td class="colFirst"><code>static <a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.</span><code><span class="memberNameLink"><a href="../../DateExpressions.html#dateTrunc(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.TimeUnit)">dateTrunc</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;date,
+         <a href="../../TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</code></th>
 <td class="colLast">
-<div class="block">Returns the difference between two dates.</div>
+<div class="block">Truncates a date.</div>
 </td>
 </tr>
 </tbody>
@@ -364,9 +363,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <section role="region"><a id="dev.morphia.aggregation.experimental.expressions.impls">
 <!--   -->
 </a>
-<h3>Uses of <a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a> in <a href="../package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></h3>
+<h3>Uses of <a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a> in <a href="../package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a> that return <a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a> that return <a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -374,15 +373,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateDiffExpression.</span><code><span class="memberNameLink"><a href="../DateDiffExpression.html#startOfWeek(java.time.DayOfWeek)">startOfWeek</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/DayOfWeek.html?is-external=true" title="class or interface in java.time" class="externalLink">DayOfWeek</a>&nbsp;startOfWeek)</code></th>
+<td class="colFirst"><code><a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateTruncExpression.</span><code><span class="memberNameLink"><a href="../DateTruncExpression.html#binSize(long)">binSize</a></span>​(long&nbsp;binSize)</code></th>
+<td class="colLast">
+<div class="block">The numeric time value, specified as an expression that must resolve to a positive non-zero number.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateTruncExpression.</span><code><span class="memberNameLink"><a href="../DateTruncExpression.html#startOfWeek(java.time.DayOfWeek)">startOfWeek</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/DayOfWeek.html?is-external=true" title="class or interface in java.time" class="externalLink">DayOfWeek</a>&nbsp;startOfWeek)</code></th>
 <td class="colLast">
 <div class="block">The start of the week.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateDiffExpression.</span><code><span class="memberNameLink"><a href="../DateDiffExpression.html#timezone(dev.morphia.aggregation.experimental.expressions.impls.Expression)">timezone</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;timezone)</code></th>
+<tr class="altColor">
+<td class="colFirst"><code><a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateTruncExpression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateTruncExpression.</span><code><span class="memberNameLink"><a href="../DateTruncExpression.html#timezone(dev.morphia.aggregation.experimental.expressions.impls.Expression)">timezone</a></span>​(<a href="../Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;timezone)</code></th>
 <td class="colLast">
 <div class="block">The timezone to carry out the operation.</div>
 </td>
@@ -409,7 +415,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="navList" title="Navigation">
 <li><a href="../../../../../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Class</a></li>
+<li><a href="../DateTruncExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../../../../../deprecated-list.html">Deprecated</a></li>
