@@ -2,7 +2,7 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
-import dev.morphia.aggregation.experimental.expressions.impls.DateAddExpression;
+import dev.morphia.aggregation.experimental.expressions.impls.DateDeltaExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.DateDiffExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromString;
@@ -36,8 +36,24 @@ public final class DateExpressions {
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static DateAddExpression dateAdd(Expression startDate, long amount, TimeUnit unit) {
-        return new DateAddExpression(startDate, amount, unit);
+    public static DateDeltaExpression dateAdd(Expression startDate, long amount, TimeUnit unit) {
+        return new DateDeltaExpression("$dateAdd", startDate, amount, unit);
+    }
+
+    /**
+     * Decrements a Date object by a specified number of time units.
+     *
+     * @param startDate The beginning date, in UTC, for the subtraction operation. The startDate can be any expression that resolves to a
+     *                  Date, a Timestamp, or an ObjectID.
+     * @param amount    The number of units subtracted to the startDate.
+     * @param unit      The unit used to measure the amount of time subtracted to the startDate.
+     * @return the new expression
+     * @aggregation.expression $dateSubtract
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static DateDeltaExpression dateSubtract(Expression startDate, long amount, TimeUnit unit) {
+        return new DateDeltaExpression("$dateSubtract", startDate, amount, unit);
     }
 
     /**

@@ -11,20 +11,26 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 /**
- * Increments a Date object by a specified number of time units.
+ * Changes a Date object by a specified number of time units.
  *
  * @mongodb.server.release 5.0
- * @aggregation.expression $dateAdd
  * @since 2.3
  */
-public class DateAddExpression extends Expression {
+public class DateDeltaExpression extends Expression {
     private final Expression startDate;
     private final long amount;
     private final TimeUnit unit;
     private Expression timezone;
 
-    public DateAddExpression(Expression startDate, long amount, TimeUnit unit) {
-        super("$dateAdd");
+    /**
+     * @param operator
+     * @param startDate
+     * @param amount
+     * @param unit
+     * @morphia.internal
+     */
+    public DateDeltaExpression(String operator, Expression startDate, long amount, TimeUnit unit) {
+        super(operator);
         this.startDate = startDate;
         this.amount = amount;
         this.unit = unit;
@@ -48,7 +54,7 @@ public class DateAddExpression extends Expression {
      * @return this
      * @since 2.3
      */
-    public DateAddExpression timezone(Expression timezone) {
+    public DateDeltaExpression timezone(Expression timezone) {
         this.timezone = timezone;
         return this;
     }
