@@ -2,10 +2,10 @@ package dev.morphia.aggregation.experimental.codecs.stages;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.experimental.expressions.TimeUnit;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields.Output;
-import dev.morphia.aggregation.experimental.stages.SetWindowFields.Unit;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields.Window;
 import dev.morphia.query.Sort;
 import org.bson.BsonWriter;
@@ -102,7 +102,7 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
             document(writer, "window", () -> {
                 documents(writer, window.documents(), "documents", encoderContext);
                 documents(writer, window.range(), "range", encoderContext);
-                Unit unit = window.unit();
+                TimeUnit unit = window.unit();
                 if (unit != null) {
                     writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
                 }

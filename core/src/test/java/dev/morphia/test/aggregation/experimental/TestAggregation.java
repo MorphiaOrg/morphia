@@ -20,7 +20,6 @@ import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.aggregation.experimental.stages.Match;
 import dev.morphia.aggregation.experimental.stages.Merge;
 import dev.morphia.aggregation.experimental.stages.Out;
-import dev.morphia.aggregation.experimental.stages.Projection;
 import dev.morphia.aggregation.experimental.stages.Redact;
 import dev.morphia.aggregation.experimental.stages.ReplaceRoot;
 import dev.morphia.aggregation.experimental.stages.SortByCount;
@@ -45,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -58,6 +58,7 @@ import static dev.morphia.aggregation.experimental.expressions.ArrayExpressions.
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.ifNull;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dateAdd;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.literal;
@@ -70,8 +71,10 @@ import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.DESCEND;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.PRUNE;
+import static dev.morphia.aggregation.experimental.expressions.TimeUnit.DAY;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;
+import static dev.morphia.aggregation.experimental.stages.Projection.project;
 import static dev.morphia.aggregation.experimental.stages.ReplaceWith.replaceWith;
 import static dev.morphia.aggregation.experimental.stages.Set.set;
 import static dev.morphia.aggregation.experimental.stages.SetWindowFields.Output.output;
@@ -99,10 +102,10 @@ public class TestAggregation extends TestBase {
             parse("{ '_id' : 3, 'item' : 'xyz', 'price' : 5,  'fee' : 0, date: ISODate('2014-03-15T09:00:00Z') }")));
         Aggregation<Sales> pipeline = getDs()
             .aggregate(Sales.class)
-            .project(Projection.project()
-                               .include("item")
-                               .include("total",
-                                   add(field("price"), field("fee"))));
+            .project(project()
+                .include("item")
+                .include("total",
+                    add(field("price"), field("fee"))));
 
         List<Document> list = pipeline.execute(Document.class).toList();
         List<Document> expected = asList(
@@ -317,6 +320,30 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
+    public void testDateAdd() {
+        insert("shipping", parseDocs(
+            "{ '_id' : ObjectId('603dd4b2044b995ad331c0b2'), custId: 456, purchaseDate: ISODate('2020-12-31') }",
+            "{ '_id' : ObjectId('603dd4b2044b995ad331c0b3'), custId: 457, purchaseDate: ISODate('2021-02-28') }",
+            "{ '_id' : ObjectId('603dd4b2044b995ad331c0b4'), custId: 458, purchaseDate: ISODate('2021-02-26') }"));
+
+        getDs().aggregate("shipping")
+               .project(project()
+                   .include("expectedDeliveryDate", dateAdd(field("purchaseDate"), 3, DAY)))
+               .merge(Merge.into("shipping"));
+
+        List<Document> actual = getDatabase().getCollection("shipping").find().into(new ArrayList<>());
+        List<Document> expected = parseDocs(
+            "{ '_id' : ObjectId('603dd4b2044b995ad331c0b2'), 'custId' : 456, 'purchaseDate' : ISODate('2020-12-31T00:00:00Z'), " +
+            "'expectedDeliveryDate' : ISODate('2021-01-03T00:00:00Z') }",
+            "{ '_id' : ObjectId('603dd4b2044b995ad331c0b3'), 'custId' : 457, 'purchaseDate' : ISODate('2021-02-28T00:00:00Z'), " +
+            "'expectedDeliveryDate' : ISODate('2021-03-03T00:00:00Z') }",
+            "{ '_id' : ObjectId('603dd4b2044b995ad331c0b4'), 'custId' : 458, 'purchaseDate' : ISODate('2021-02-26T00:00:00Z'), " +
+            "'expectedDeliveryDate' : ISODate('2021-03-01T00:00:00Z') }");
+
+        assertListEquals(actual, expected);
+    }
+
+    @Test
     public void testExpMovingAverage() {
         checkMinServerVersion(5.0);
 
@@ -464,52 +491,6 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
-    public void testLookupWithPipeline() {
-        // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
-        insert("orders", parseDocs("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }",
-            "{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }",
-            "{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }"));
-
-        insert("warehouses", parseDocs("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },",
-            "{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }",
-            "{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }",
-            "{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }",
-            "{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }"));
-
-        List<Document> actual = getDs().aggregate("orders")
-                                       .lookup(Lookup.lookup("warehouses")
-                                                     .let("order_item", field("item"))
-                                                     .let("order_qty", field("ordered"))
-                                                     .as("stockdata")
-                                                     .pipeline(
-                                                         Match.match(
-                                                             expr(
-                                                                 Expressions.of().field(
-                                                                     "$and",
-                                                                     array(Expressions.of()
-                                                                                      .field("$eq",
-                                                                                          array(field("stock"), field("$order_item"))),
-                                                                         Expressions.of()
-                                                                                    .field("$gte",
-                                                                                        array(field("instock"), field("$order_qty"))))
-
-                                                                                       ))),
-                                                         Projection.project()
-                                                                   .exclude("stock_item")
-                                                                   .exclude("_id")))
-                                       .execute(Document.class, new AggregationOptions().readConcern(ReadConcern.LOCAL))
-                                       .toList();
-
-        List<Document> expected = parseDocs(
-            "{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2, 'stockdata' : [ { 'warehouse' : 'A', 'instock'" +
-            " : 120 }, { 'warehouse' : 'B', 'instock' : 60 } ] }",
-            "{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }",
-            "{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }");
-
-        assertDocumentEquals(actual, expected);
-    }
-
-    @Test
     public void testIndexStats() {
         getDs().getMapper().map(Author.class);
         getDs().ensureIndexes();
@@ -565,6 +546,52 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
+    public void testLookupWithPipeline() {
+        // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
+        insert("orders", parseDocs("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2 }",
+            "{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1 }",
+            "{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60 }"));
+
+        insert("warehouses", parseDocs("{ '_id' : 1, 'stock_item' : 'almonds', warehouse: 'A', 'instock' : 120 },",
+            "{ '_id' : 2, 'stock_item' : 'pecans', warehouse: 'A', 'instock' : 80 }",
+            "{ '_id' : 3, 'stock_item' : 'almonds', warehouse: 'B', 'instock' : 60 }",
+            "{ '_id' : 4, 'stock_item' : 'cookies', warehouse: 'B', 'instock' : 40 }",
+            "{ '_id' : 5, 'stock_item' : 'cookies', warehouse: 'A', 'instock' : 80 }"));
+
+        List<Document> actual = getDs().aggregate("orders")
+                                       .lookup(Lookup.lookup("warehouses")
+                                                     .let("order_item", field("item"))
+                                                     .let("order_qty", field("ordered"))
+                                                     .as("stockdata")
+                                                     .pipeline(
+                                                         Match.match(
+                                                             expr(
+                                                                 Expressions.of().field(
+                                                                     "$and",
+                                                                     array(Expressions.of()
+                                                                                      .field("$eq",
+                                                                                          array(field("stock"), field("$order_item"))),
+                                                                         Expressions.of()
+                                                                                    .field("$gte",
+                                                                                        array(field("instock"), field("$order_qty"))))
+
+                                                                                       ))),
+                                                         project()
+                                                             .exclude("stock_item")
+                                                             .exclude("_id")))
+                                       .execute(Document.class, new AggregationOptions().readConcern(ReadConcern.LOCAL))
+                                       .toList();
+
+        List<Document> expected = parseDocs(
+            "{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'ordered' : 2, 'stockdata' : [ { 'warehouse' : 'A', 'instock'" +
+            " : 120 }, { 'warehouse' : 'B', 'instock' : 60 } ] }",
+            "{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'ordered' : 1, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }",
+            "{ '_id' : 3, 'item' : 'cookies', 'price' : 10, 'ordered' : 60, 'stockdata' : [ { 'warehouse' : 'A', 'instock' : 80 } ] }");
+
+        assertDocumentEquals(actual, expected);
+    }
+
+    @Test
     public void testMerge() {
         checkMinServerVersion(4.2);
 
@@ -600,6 +627,43 @@ public class TestAggregation extends TestBase {
             "{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'Z' }, 'salaries' : 310000 }");
 
         assertDocumentEquals(actual, expected);
+    }
+
+    @Test
+    public void testNullGroupId() {
+        getDs().save(asList(new User("John", LocalDate.now()),
+            new User("Paul", LocalDate.now()),
+            new User("George", LocalDate.now()),
+            new User("Ringo", LocalDate.now())));
+        Aggregation<User> pipeline = getDs()
+            .aggregate(User.class)
+            .group(Group.group()
+                        .field("count", sum(value(1))));
+
+        assertEquals(pipeline.execute(Document.class).next().getInteger("count"), Integer.valueOf(4));
+    }
+
+    @Test
+    public void testOut() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2),
+            new Book("Divine Comedy", "Dante", 1),
+            new Book("Eclogues", "Dante", 2),
+            new Book("The Odyssey", "Homer", 10),
+            new Book("Iliad", "Homer", 10)));
+
+        getDs().aggregate(Book.class)
+               .group(Group.group(id("author"))
+                           .field("books", push()
+                               .single(field("title"))))
+               .out(Out.to(Author.class));
+        assertEquals(getDs().getCollection(Author.class).countDocuments(), 2);
+
+        getDs().aggregate(Book.class)
+               .group(Group.group(id("author"))
+                           .field("books", push()
+                               .single(field("title"))))
+               .out(Out.to("different"));
+        assertEquals(getDatabase().getCollection("different").countDocuments(), 2);
     }
 
     @Test
@@ -641,40 +705,61 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
-    public void testNullGroupId() {
-        getDs().save(asList(new User("John", LocalDate.now()),
-            new User("Paul", LocalDate.now()),
-            new User("George", LocalDate.now()),
-            new User("Ringo", LocalDate.now())));
-        Aggregation<User> pipeline = getDs()
-            .aggregate(User.class)
-            .group(Group.group()
-                        .field("count", sum(value(1))));
+    public void testProjection() {
 
-        assertEquals(pipeline.execute(Document.class).next().getInteger("count"), Integer.valueOf(4));
+        insert("books", List.of(
+            parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5,\n"
+                  + "  lastModified: '2016-07-28'}")));
+        Aggregation<Book> pipeline = getDs().aggregate(Book.class)
+                                            .project(project()
+                                                .include("title")
+                                                .include("author"));
+        MorphiaCursor<ProjectedBook> aggregate = pipeline.execute(ProjectedBook.class);
+        assertEquals(aggregate.next(), new ProjectedBook(1, "abc123", "zzz", "aaa"));
+
+        pipeline = getDs().aggregate(Book.class)
+                          .project(project()
+                              .suppressId()
+                              .include("title")
+                              .include("author"));
+        aggregate = pipeline.execute(ProjectedBook.class);
+
+        assertEquals(aggregate.next(), new ProjectedBook(null, "abc123", "zzz", "aaa"));
+
+        pipeline = getDs().aggregate(Book.class)
+                          .project(project()
+                              .exclude("lastModified"));
+        final MorphiaCursor<Document> docAgg = pipeline.execute(Document.class);
+
+        assertEquals(docAgg.next(),
+            parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}"));
     }
 
     @Test
-    public void testOut() {
-        getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
+    public void testRedact() {
+        Document document = parse(
+            "{ _id: 1, title: '123 Department Report', tags: [ 'G', 'STLW' ],year: 2014, subsections: [{ subtitle: 'Section 1: Overview',"
+            + " tags: [ 'SI', 'G' ],content:  'Section 1: This is the content of section 1.' },{ subtitle: 'Section 2: Analysis', tags: "
+            + "[ 'STLW' ], content: 'Section 2: This is the content of section 2.' },{ subtitle: 'Section 3: Budgeting', tags: [ 'TK' ],"
+            + "content: { text: 'Section 3: This is the content of section3.', tags: [ 'HCS' ]} }]}");
 
-        getDs().aggregate(Book.class)
-               .group(Group.group(id("author"))
-                           .field("books", push()
-                               .single(field("title"))))
-               .out(Out.to(Author.class));
-        assertEquals(getDs().getCollection(Author.class).countDocuments(), 2);
+        getDatabase().getCollection("forecasts").insertOne(document);
 
-        getDs().aggregate(Book.class)
-               .group(Group.group(id("author"))
-                           .field("books", push()
-                               .single(field("title"))))
-               .out(Out.to("different"));
-        assertEquals(getDatabase().getCollection("different").countDocuments(), 2);
+        Document actual = getDs().aggregate("forecasts")
+                                 .match(eq("year", 2014))
+                                 .redact(Redact.redact(
+                                     condition(
+                                         gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))),
+                                             value(0)),
+                                         DESCEND, PRUNE)))
+                                 .execute(Document.class)
+                                 .next();
+        Document expected = parse("{ '_id' : 1, 'title' : '123 Department Report', 'tags' : [ 'G', 'STLW' ],'year' : 2014, 'subsections' :"
+                                  + " [{ 'subtitle' : 'Section 1: Overview', 'tags' : [ 'SI', 'G' ],'content' : 'Section 1: This is the "
+                                  + "content of section 1.' },{ 'subtitle' : 'Section 2: Analysis', 'tags' : [ 'STLW' ],'content' : "
+                                  + "'Section 2: This is the content of section 2.' }]}");
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -731,64 +816,6 @@ public class TestAggregation extends TestBase {
             .append("first", "")
             .append("last", ""));
         assertDocumentEquals(actual, expected);
-    }
-
-    @Test
-    public void testProjection() {
-
-        insert("books", List.of(
-            parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5,\n"
-                  + "  lastModified: '2016-07-28'}")));
-        Aggregation<Book> pipeline = getDs().aggregate(Book.class)
-                                            .project(Projection.project()
-                                                               .include("title")
-                                                               .include("author"));
-        MorphiaCursor<ProjectedBook> aggregate = pipeline.execute(ProjectedBook.class);
-        assertEquals(aggregate.next(), new ProjectedBook(1, "abc123", "zzz", "aaa"));
-
-        pipeline = getDs().aggregate(Book.class)
-                          .project(Projection.project()
-                                             .suppressId()
-                                             .include("title")
-                                             .include("author"));
-        aggregate = pipeline.execute(ProjectedBook.class);
-
-        assertEquals(aggregate.next(), new ProjectedBook(null, "abc123", "zzz", "aaa"));
-
-        pipeline = getDs().aggregate(Book.class)
-                          .project(Projection.project()
-                                             .exclude("lastModified"));
-        final MorphiaCursor<Document> docAgg = pipeline.execute(Document.class);
-
-        assertEquals(docAgg.next(),
-            parse("{'_id' : 1, title: 'abc123', isbn: '0001122223334', author: { last: 'zzz', first: 'aaa' }, copies: 5}"));
-    }
-
-    @Test
-    public void testRedact() {
-        Document document = parse(
-            "{ _id: 1, title: '123 Department Report', tags: [ 'G', 'STLW' ],year: 2014, subsections: [{ subtitle: 'Section 1: Overview',"
-            + " tags: [ 'SI', 'G' ],content:  'Section 1: This is the content of section 1.' },{ subtitle: 'Section 2: Analysis', tags: "
-            + "[ 'STLW' ], content: 'Section 2: This is the content of section 2.' },{ subtitle: 'Section 3: Budgeting', tags: [ 'TK' ],"
-            + "content: { text: 'Section 3: This is the content of section3.', tags: [ 'HCS' ]} }]}");
-
-        getDatabase().getCollection("forecasts").insertOne(document);
-
-        Document actual = getDs().aggregate("forecasts")
-                                 .match(eq("year", 2014))
-                                 .redact(Redact.redact(
-                                     condition(
-                                         gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))),
-                                             value(0)),
-                                         DESCEND, PRUNE)))
-                                 .execute(Document.class)
-                                 .next();
-        Document expected = parse("{ '_id' : 1, 'title' : '123 Department Report', 'tags' : [ 'G', 'STLW' ],'year' : 2014, 'subsections' :"
-                                  + " [{ 'subtitle' : 'Section 1: Overview', 'tags' : [ 'SI', 'G' ],'content' : 'Section 1: This is the "
-                                  + "content of section 1.' },{ 'subtitle' : 'Section 2: Analysis', 'tags' : [ 'STLW' ],'content' : "
-                                  + "'Section 2: This is the content of section 2.' }]}");
-
-        assertEquals(expected, actual);
     }
 
     @Test
@@ -849,35 +876,6 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
-    @SuppressWarnings("deprecation")
-    public void testSet() {
-        checkMinServerVersion(4.2);
-        List<Document> list = parseDocs(
-            "{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }",
-            "{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }");
-
-        insert("scores", list);
-
-        List<Document> result = getDs().aggregate(Score.class)
-                                       .set(AddFields.addFields()
-                                                     .field("totalHomework", sum(field("homework")))
-                                                     .field("totalQuiz", sum(field("quiz"))))
-                                       .set(set()
-                                           .field("totalScore", add(field("totalHomework"),
-                                               field("totalQuiz"), field("extraCredit"))))
-                                       .execute(Document.class)
-                                       .toList();
-
-        list = parseDocs(
-            "{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"
-            + " 'totalQuiz' : 18, 'totalScore' : 43 }",
-            "{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
-            + "'totalQuiz' : 16, 'totalScore' : 40 }");
-
-        assertEquals(result, list);
-    }
-
-    @Test
     public void testResultTypes() {
         getMapper().map(Martian.class);
 
@@ -905,6 +903,35 @@ public class TestAggregation extends TestBase {
             .sample(3);
 
         assertEquals(pipeline.execute(User.class).toList().size(), 3);
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    public void testSet() {
+        checkMinServerVersion(4.2);
+        List<Document> list = parseDocs(
+            "{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }",
+            "{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }");
+
+        insert("scores", list);
+
+        List<Document> result = getDs().aggregate(Score.class)
+                                       .set(AddFields.addFields()
+                                                     .field("totalHomework", sum(field("homework")))
+                                                     .field("totalQuiz", sum(field("quiz"))))
+                                       .set(set()
+                                           .field("totalScore", add(field("totalHomework"),
+                                               field("totalQuiz"), field("extraCredit"))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        list = parseDocs(
+            "{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"
+            + " 'totalQuiz' : 18, 'totalScore' : 43 }",
+            "{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
+            + "'totalQuiz' : 16, 'totalScore' : 40 }");
+
+        assertEquals(result, list);
     }
 
     @Test
@@ -1068,12 +1095,6 @@ public class TestAggregation extends TestBase {
             "{ _id: 5, type: 'strawberry', orderDate: ISODate('2019-01-08T06:12:03Z'), state: 'WA', price: 43, quantity: 134 }"));
     }
 
-    @NotNull
-    private List<Document> parseDocs(String... strings) {
-        return Arrays.stream(strings).map(Document::parse)
-                     .collect(Collectors.toList());
-    }
-
     private void compare(int id, List<Document> expected, List<Document> actual) {
         assertEquals(find(id, actual), find(id, expected));
     }
@@ -1081,6 +1102,12 @@ public class TestAggregation extends TestBase {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     private Document find(int id, List<Document> documents) {
         return documents.stream().filter(d -> d.getInteger("_id").equals(id)).findFirst().get();
+    }
+
+    @NotNull
+    private List<Document> parseDocs(String... strings) {
+        return Arrays.stream(strings).map(Document::parse)
+                     .collect(Collectors.toList());
     }
 
     @Entity(useDiscriminator = false)

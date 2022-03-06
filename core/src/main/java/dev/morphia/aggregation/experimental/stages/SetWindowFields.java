@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.aggregation.experimental.expressions.TimeUnit;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.Sort;
@@ -77,18 +78,6 @@ public class SetWindowFields extends Stage {
         return sorts;
     }
 
-    public enum Unit {
-        YEAR,
-        QUARTER,
-        MONTH,
-        WEEK,
-        DAY,
-        HOUR,
-        MINUTE,
-        SECOND,
-        MILLISECOND
-    }
-
     public static class Output {
         private final String name;
         private Expression operator;
@@ -146,7 +135,7 @@ public class SetWindowFields extends Stage {
         private final Output output;
         private List<Object> documents;
         private List<Object> range;
-        private Unit unit;
+        private TimeUnit unit;
 
         private Window(Output output) {
             this.output = output;
@@ -167,7 +156,7 @@ public class SetWindowFields extends Stage {
             return documents;
         }
 
-        public Output range(Object lower, Object upper, Unit unit) {
+        public Output range(Object lower, Object upper, TimeUnit unit) {
             range = List.of(lower, upper);
             this.unit = unit;
             return output;
@@ -194,7 +183,7 @@ public class SetWindowFields extends Stage {
          */
         @Nullable
         @MorphiaInternal
-        public Unit unit() {
+        public TimeUnit unit() {
             return unit;
         }
     }

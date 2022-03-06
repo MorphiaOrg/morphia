@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
+import dev.morphia.aggregation.experimental.expressions.impls.DateAddExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromParts;
 import dev.morphia.aggregation.experimental.expressions.impls.DateFromString;
 import dev.morphia.aggregation.experimental.expressions.impls.DateToParts;
@@ -20,6 +21,22 @@ import org.bson.codecs.EncoderContext;
  */
 public final class DateExpressions {
     private DateExpressions() {
+    }
+
+    /**
+     * Increments a Date object by a specified number of time units.
+     *
+     * @param startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a
+     *                  Date, a Timestamp, or an ObjectID.
+     * @param amount    The number of units added to the startDate.
+     * @param unit      The unit used to measure the amount of time added to the startDate.
+     * @return the new expression
+     * @aggregation.expression $dateAdd
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static DateAddExpression dateAdd(Expression startDate, long amount, TimeUnit unit) {
+        return new DateAddExpression(startDate, amount, unit);
     }
 
     /**
