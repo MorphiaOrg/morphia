@@ -81,6 +81,7 @@ import static dev.morphia.aggregation.experimental.expressions.SystemVariables.P
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.DAY;
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.HOUR;
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.WEEK;
+import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.shift;
 import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;
@@ -380,34 +381,6 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
-    public void testDateTrunc() {
-        checkMinServerVersion(5.0);
-
-        cakeSales();
-
-        List<Document> actual = getDs().aggregate("cakeSales")
-                                       .project(project()
-                                           .include("orderDate")
-                                           .include("truncatedOrderDate", dateTrunc(field("orderDate"), WEEK)
-                                               .binSize(2)
-                                               .timezone(value("America/Los_Angeles"))
-                                               .startOfWeek(MONDAY)))
-                                       .execute(Document.class)
-                                       .toList();
-
-
-        List<Document> expected = parseDocs(
-            "{ _id: 0, orderDate: ISODate('2020-05-18T14:10:30.000Z'), truncatedOrderDate: ISODate('2020-05-11T07:00:00.000Z') }",
-            "{ _id: 1, orderDate: ISODate('2021-03-20T11:30:05.000Z'), truncatedOrderDate: ISODate('2021-03-15T07:00:00.000Z') }",
-            "{ _id: 2, orderDate: ISODate('2021-01-11T06:31:15.000Z'), truncatedOrderDate: ISODate('2021-01-04T08:00:00.000Z') }",
-            "{ _id: 3, orderDate: ISODate('2020-02-08T13:13:23.000Z'), truncatedOrderDate: ISODate('2020-02-03T08:00:00.000Z') }",
-            "{ _id: 4, orderDate: ISODate('2019-05-18T16:09:01.000Z'), truncatedOrderDate: ISODate('2019-05-13T07:00:00.000Z') }",
-            "{ _id: 5, orderDate: ISODate('2019-01-08T06:12:03.000Z'), truncatedOrderDate: ISODate('2019-01-07T08:00:00.000Z') }");
-
-        assertListEquals(actual, expected);
-    }
-
-    @Test
     public void testDateSubtract() {
         checkMinServerVersion(5.0);
 
@@ -437,6 +410,34 @@ public class TestAggregation extends TestBase {
                 "'logoutTime' : ISODate('2021-01-31T08:00:00Z') }",
                 "{ '_id' : 4, 'custId' : 459, 'login' : ISODate('2021-02-14T20:14:00Z'), 'logout' : ISODate('2021-02-17T16:05:00Z') }",
                 "{ '_id' : 5, 'custId' : 460, 'login' : ISODate('2021-02-26T02:44:00Z'), 'logout' : ISODate('2021-02-18T14:13:00Z') }");
+
+        assertListEquals(actual, expected);
+    }
+
+    @Test
+    public void testDateTrunc() {
+        checkMinServerVersion(5.0);
+
+        cakeSales();
+
+        List<Document> actual = getDs().aggregate("cakeSales")
+                                       .project(project()
+                                           .include("orderDate")
+                                           .include("truncatedOrderDate", dateTrunc(field("orderDate"), WEEK)
+                                               .binSize(2)
+                                               .timezone(value("America/Los_Angeles"))
+                                               .startOfWeek(MONDAY)))
+                                       .execute(Document.class)
+                                       .toList();
+
+
+        List<Document> expected = parseDocs(
+            "{ _id: 0, orderDate: ISODate('2020-05-18T14:10:30.000Z'), truncatedOrderDate: ISODate('2020-05-11T07:00:00.000Z') }",
+            "{ _id: 1, orderDate: ISODate('2021-03-20T11:30:05.000Z'), truncatedOrderDate: ISODate('2021-03-15T07:00:00.000Z') }",
+            "{ _id: 2, orderDate: ISODate('2021-01-11T06:31:15.000Z'), truncatedOrderDate: ISODate('2021-01-04T08:00:00.000Z') }",
+            "{ _id: 3, orderDate: ISODate('2020-02-08T13:13:23.000Z'), truncatedOrderDate: ISODate('2020-02-03T08:00:00.000Z') }",
+            "{ _id: 4, orderDate: ISODate('2019-05-18T16:09:01.000Z'), truncatedOrderDate: ISODate('2019-05-13T07:00:00.000Z') }",
+            "{ _id: 5, orderDate: ISODate('2019-01-08T06:12:03.000Z'), truncatedOrderDate: ISODate('2019-01-07T08:00:00.000Z') }");
 
         assertListEquals(actual, expected);
     }
@@ -1061,6 +1062,38 @@ public class TestAggregation extends TestBase {
             "'quantity' : 104, 'cumulativeQuantityForState' : 238 }",
             "{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
             "'quantity' : 140, 'cumulativeQuantityForState' : 378 }");
+
+        assertListEquals(actual, expected);
+    }
+
+    @Test
+    public void testShift() {
+        checkMinServerVersion(5.0);
+
+        cakeSales();
+
+        List<Document> actual = getDs().aggregate("cakeSales")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("state"))
+                                           .sortBy(Sort.descending("quantity"))
+                                           .output(output("shiftQuantityForState")
+                                               .operator(shift(field("quantity"), 1, value("Not available")))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = parseDocs(
+            "{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, 'quantity' " +
+            ": 162, 'shiftQuantityForState' : 145 }",
+            "{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, 'quantity' : " +
+            "145, 'shiftQuantityForState' : 120 }",
+            "{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, 'quantity' :" +
+            " 120, 'shiftQuantityForState' : 'Not available' }",
+            "{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, 'quantity' :" +
+            " 140, 'shiftQuantityForState' : 134 }",
+            "{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, 'quantity' " +
+            ": 134, 'shiftQuantityForState' : 104 }",
+            "{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, 'quantity' : " +
+            "104, 'shiftQuantityForState' : 'Not available' }");
 
         assertListEquals(actual, expected);
     }
