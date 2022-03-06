@@ -77,10 +77,12 @@ import static dev.morphia.aggregation.experimental.expressions.SystemVariables.D
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.PRUNE;
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.DAY;
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.HOUR;
+import static dev.morphia.aggregation.experimental.expressions.TimeUnit.SECOND;
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.WEEK;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.covariancePop;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.covarianceSamp;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.denseRank;
+import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.derivative;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.expMovingAvg;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.shift;
 import static dev.morphia.aggregation.experimental.stages.Group.group;
@@ -1127,6 +1129,42 @@ public class TestAggregation extends TestBase {
             "{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, 'quantity' : " +
             "104, 'shiftQuantityForState' : 'Not available' }");
 
+        assertListEquals(actual, expected);
+    }
+
+    @Test
+    public void testDerivative() {
+        checkMinServerVersion(5.0);
+
+        insert("deliveryFleet", parseDocs(
+            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:10:30Z' ), miles: 1295.1 }",
+            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:11:00Z' ), miles: 1295.63 }",
+            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:11:30Z' ), miles: 1296.25 }",
+            "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:12:00Z' ), miles: 1296.76 }",
+            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:10:30Z' ), miles: 10234.1 }",
+            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:11:00Z' ), miles: 10234.33 }",
+            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:11:30Z' ), miles: 10234.73 }",
+            "{ truckID: '2', timeStamp: ISODate( '2020-05-18T14:12:00Z' ), miles: 10235.13 }"));
+
+        List<Document> actual = getDs().aggregate("deliveryFleet")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("truckID"))
+                                           .sortBy(Sort.ascending("timeStamp"))
+                                           .output(output("truckAverageSpeed")
+                                               .operator(derivative(field("miles"))
+                                                   .unit(HOUR))
+                                               .window()
+                                               .range(-30, 0, SECOND)))
+                                       .match(gt("truckAverageSpeed", 50))
+                                       .project(project()
+                                           .suppressId())
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = parseDocs(
+            "{'truckID':'1','timeStamp':ISODate('2020-05-18T14:11:00Z'),'miles':1295.63,'truckAverageSpeed':63.60000000002401}",
+            "{'truckID':'1','timeStamp':ISODate('2020-05-18T14:11:30Z'),'miles':1296.25,'truckAverageSpeed':74.3999999999869}",
+            "{'truckID':'1','timeStamp':ISODate('2020-05-18T14:12:00Z'),'miles':1296.76,'truckAverageSpeed':61.199999999998916}");
         assertListEquals(actual, expected);
     }
 

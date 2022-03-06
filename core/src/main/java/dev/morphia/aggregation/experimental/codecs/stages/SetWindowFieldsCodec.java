@@ -75,24 +75,6 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
     private void operator(BsonWriter writer, EncoderContext encoderContext, @Nullable Expression operator) {
         if (operator != null) {
             expression(getDatastore(), writer, operator, encoderContext);
-/*
-            writer.writeName(operator.getOperation());
-            Object operatorValue = operator.getValue();
-            if (operatorValue instanceof List) {
-                List list = (List) operatorValue;
-                if (list.size() == 1) {
-                    value(getDatastore(), writer, list.get(0), encoderContext);
-                } else {
-                    array(writer, () -> {
-                        for (Object o : list) {
-                            value(getDatastore(), writer, o, encoderContext);
-                        }
-                    });
-                }
-            } else {
-                value(getDatastore(), writer, operatorValue, encoderContext);
-            }
-*/
         }
     }
 

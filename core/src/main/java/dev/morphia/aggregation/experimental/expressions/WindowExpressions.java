@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.expressions;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Accumulator;
+import dev.morphia.aggregation.experimental.expressions.impls.DerivativeExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ExpMovingAvg;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
@@ -75,6 +76,19 @@ public final class WindowExpressions {
                 });
             }
         };
+    }
+
+    /**
+     * Returns the average rate of change within the specified window.
+     *
+     * @param input Specifies the expression to evaluate. The expression must evaluate to a number.
+     * @return the new expression
+     * @aggregation.expression $derivative
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static DerivativeExpression derivative(Expression input) {
+        return new DerivativeExpression(input);
     }
 
     /**
