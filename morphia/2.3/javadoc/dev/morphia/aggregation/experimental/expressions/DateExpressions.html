@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -400,118 +400,145 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static <a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDeltaExpression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateAdd(dev.morphia.aggregation.experimental.expressions.impls.Expression,long,dev.morphia.aggregation.experimental.expressions.TimeUnit)">dateAdd</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;startDate,
+       long&nbsp;amount,
+       <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</code></th>
+<td class="colLast">
+<div class="block">Increments a Date object by a specified number of time units.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static <a href="impls/DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateDiff(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.TimeUnit)">dateDiff</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;startDate,
+        <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;endDate,
+        <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</code></th>
+<td class="colLast">
+<div class="block">Returns the difference between two dates.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="impls/DateFromParts.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateFromParts</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateFromParts()">dateFromParts</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Constructs and returns a Date object given the date’s constituent properties.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/DateFromString.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateFromString</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateFromString()">dateFromString</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Converts a date/time string to a date object.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static <a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDeltaExpression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateSubtract(dev.morphia.aggregation.experimental.expressions.impls.Expression,long,dev.morphia.aggregation.experimental.expressions.TimeUnit)">dateSubtract</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;startDate,
+            long&nbsp;amount,
+            <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</code></th>
+<td class="colLast">
+<div class="block">Decrements a Date object by a specified number of time units.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/DateToParts.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateToParts</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateToParts(dev.morphia.aggregation.experimental.expressions.impls.Expression)">dateToParts</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;date)</code></th>
 <td class="colLast">
 <div class="block">Constructs and returns a Date object given the date’s constituent properties.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="impls/DateToString.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateToString</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateToString()">dateToString</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the date as a formatted string.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dayOfMonth(dev.morphia.aggregation.experimental.expressions.impls.Expression)">dayOfMonth</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the day of the month for a date as a number between 1 and 31.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dayOfWeek(dev.morphia.aggregation.experimental.expressions.impls.Expression)">dayOfWeek</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the day of the week for a date as a number between 1 (Sunday) and 7 (Saturday).</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dayOfYear(dev.morphia.aggregation.experimental.expressions.impls.Expression)">dayOfYear</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the day of the year for a date as a number between 1 and 366 (leap year).</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hour(dev.morphia.aggregation.experimental.expressions.impls.Expression)">hour</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the hour for a date as a number between 0 and 23.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IsoDates</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isoDayOfWeek(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isoDayOfWeek</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the weekday number in ISO 8601 format, ranging from 1 (for Monday) to 7 (for Sunday).</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IsoDates</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isoWeek(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isoWeek</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the week number in ISO 8601 format, ranging from 1 to 53.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">IsoDates</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isoWeekYear(dev.morphia.aggregation.experimental.expressions.impls.Expression)">isoWeekYear</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the year number in ISO 8601 format.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#milliseconds(dev.morphia.aggregation.experimental.expressions.impls.Expression)">milliseconds</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the milliseconds of a date as a number between 0 and 999.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#minute(dev.morphia.aggregation.experimental.expressions.impls.Expression)">minute</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the minute for a date as a number between 0 and 59.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#month(dev.morphia.aggregation.experimental.expressions.impls.Expression)">month</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the month for a date as a number between 1 (January) and 12 (December).</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#second(dev.morphia.aggregation.experimental.expressions.impls.Expression)">second</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the seconds for a date as a number between 0 and 60 (leap seconds).</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDate(dev.morphia.aggregation.experimental.expressions.impls.Expression)">toDate</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Converts a value to a date.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#week(dev.morphia.aggregation.experimental.expressions.impls.Expression)">week</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
@@ -519,7 +546,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  (leap year).</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.experimental.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#year(dev.morphia.aggregation.experimental.expressions.impls.Expression)">year</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
@@ -550,6 +577,76 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="dateAdd(dev.morphia.aggregation.experimental.expressions.impls.Expression,long,dev.morphia.aggregation.experimental.expressions.TimeUnit)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>dateAdd</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDeltaExpression</a>&nbsp;dateAdd​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;startDate,
+                                          long&nbsp;amount,
+                                          <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</pre>
+<div class="block">Increments a Date object by a specified number of time units.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>startDate</code> - The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a
+                  Date, a Timestamp, or an ObjectID.</dd>
+<dd><code>amount</code> - The number of units added to the startDate.</dd>
+<dd><code>unit</code> - The unit used to measure the amount of time added to the startDate.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateAdd">Aggregration Expression:  $dateAdd</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="dateSubtract(dev.morphia.aggregation.experimental.expressions.impls.Expression,long,dev.morphia.aggregation.experimental.expressions.TimeUnit)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>dateSubtract</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDeltaExpression</a>&nbsp;dateSubtract​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;startDate,
+                                               long&nbsp;amount,
+                                               <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</pre>
+<div class="block">Decrements a Date object by a specified number of time units.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>startDate</code> - The beginning date, in UTC, for the subtraction operation. The startDate can be any expression that resolves to a
+                  Date, a Timestamp, or an ObjectID.</dd>
+<dd><code>amount</code> - The number of units subtracted to the startDate.</dd>
+<dd><code>unit</code> - The unit used to measure the amount of time subtracted to the startDate.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateSubtract">Aggregration Expression:  $dateSubtract</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="dateDiff(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.TimeUnit)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>dateDiff</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/DateDiffExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DateDiffExpression</a>&nbsp;dateDiff​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;startDate,
+                                          <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;endDate,
+                                          <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</pre>
+<div class="block">Returns the difference between two dates.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>startDate</code> - The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a
+                  Date, a Timestamp, or an ObjectID.</dd>
+<dd><code>endDate</code> - The beginning date, in UTC, for the addition operation. The endDate can be any expression that resolves to a
+                  Date, a Timestamp, or an ObjectID.</dd>
+<dd><code>unit</code> - The unit used to measure the amount of time added to the startDate.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateDiff">Aggregration Expression:  $dateDiff</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
+</dl></dl></li>
+</ul>
 <a id="dateFromParts()">
 <!--   -->
 </a>
