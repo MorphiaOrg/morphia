@@ -1,15 +1,19 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.Accumulator;
 import dev.morphia.aggregation.experimental.expressions.impls.ExpMovingAvg;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ShiftExpression;
 import dev.morphia.aggregation.experimental.stages.SetWindowFields;
+import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static java.util.Arrays.asList;
 
 /**
@@ -53,6 +57,24 @@ public final class WindowExpressions {
      */
     public static Expression covarianceSamp(Expression first, Expression second) {
         return new MathExpression("$covarianceSamp", List.of(first, second));
+    }
+
+    /**
+     * Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.
+     *
+     * @return the expression
+     * @mongodb.server.release 5.0
+     * @aggregation.expression $denseRank
+     * @since 2.3
+     */
+    public static Expression denseRank() {
+        return new Expression("$denseRank") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                });
+            }
+        };
     }
 
     /**

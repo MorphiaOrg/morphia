@@ -20,7 +20,7 @@ public class Expression {
     private final String operation;
     private final Expression value;
 
-    protected Expression(String operation) {
+    public Expression(String operation) {
         this.operation = operation;
         this.value = null;
     }
