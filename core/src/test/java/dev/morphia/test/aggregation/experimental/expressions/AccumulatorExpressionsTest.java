@@ -18,14 +18,14 @@ import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpres
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.last;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.min;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.stdDevPop;
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.stdDevSamp;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.dayOfYear;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.multiply;
+import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.stdDevPop;
+import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.stdDevSamp;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
 import static java.util.List.of;
 import static org.bson.Document.parse;

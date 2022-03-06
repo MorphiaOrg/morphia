@@ -148,36 +148,6 @@ public final class AccumulatorExpressions {
     }
 
     /**
-     * Returns the population standard deviation of the input values.
-     *
-     * @param value      the value
-     * @param additional any subsequent expressions to include in the expression
-     * @return the new expression
-     * @aggregation.expression $stdDevPop
-     */
-    public static Expression stdDevPop(Expression value, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>();
-        expressions.add(value);
-        expressions.addAll(asList(additional));
-        return new Accumulator("$stdDevPop", expressions);
-    }
-
-    /**
-     * Returns the sample standard deviation of the input values.
-     *
-     * @param value      the value
-     * @param additional any subsequent expressions to include in the expression
-     * @return the new expression
-     * @aggregation.expression $stdDevSamp
-     */
-    public static Expression stdDevSamp(Expression value, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>();
-        expressions.add(value);
-        expressions.addAll(asList(additional));
-        return new Accumulator("$stdDevSamp", expressions);
-    }
-
-    /**
      * Calculates and returns the sum of numeric values. $sum ignores non-numeric values.
      *
      * @param first      the first expression to sum

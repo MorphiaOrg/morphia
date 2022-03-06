@@ -70,9 +70,6 @@ import static dev.morphia.aggregation.experimental.expressions.Expressions.field
 import static dev.morphia.aggregation.experimental.expressions.Expressions.literal;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
-import static dev.morphia.aggregation.experimental.expressions.MathExpressions.covariancePop;
-import static dev.morphia.aggregation.experimental.expressions.MathExpressions.covarianceSamp;
-import static dev.morphia.aggregation.experimental.expressions.MathExpressions.expMovingAvg;
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.trunc;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
@@ -81,6 +78,9 @@ import static dev.morphia.aggregation.experimental.expressions.SystemVariables.P
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.DAY;
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.HOUR;
 import static dev.morphia.aggregation.experimental.expressions.TimeUnit.WEEK;
+import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.covariancePop;
+import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.covarianceSamp;
+import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.expMovingAvg;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.shift;
 import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;

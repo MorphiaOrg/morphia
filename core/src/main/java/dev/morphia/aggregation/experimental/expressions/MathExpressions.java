@@ -1,9 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.expressions.impls.ExpMovingAvg;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.MathExpression;
-import dev.morphia.aggregation.experimental.stages.SetWindowFields;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,59 +54,6 @@ public final class MathExpressions {
      */
     public static Expression ceil(Expression value) {
         return new MathExpression("$ceil", value);
-    }
-
-    /**
-     * Returns the population covariance of two numeric expressions that are evaluated using documents in the $setWindowFields stage window.
-     * <p>
-     * $covariancePop is only available in the $setWindowFields stage.
-     *
-     * @param first  the first expression to evaluate
-     * @param second the second expression to evaluate
-     * @return the new expression
-     * @mongodb.server.release 5.0
-     * @aggregation.expression $covariancePop
-     * @see dev.morphia.aggregation.experimental.Aggregation#setWindowFields(SetWindowFields)
-     * @since 2.3
-     */
-    public static Expression covariancePop(Expression first, Expression second) {
-        return new MathExpression("$covariancePop", List.of(first, second));
-    }
-
-    /**
-     * Returns the sample covariance of two numeric expressions that are evaluated using documents in the $setWindowFields stage window.
-     * <p>
-     * $covarianceSamp is only available in the $setWindowFields stage.
-     *
-     * @param first  the first expression to evaluate
-     * @param second the second expression to evaluate
-     * @return the new expression
-     * @mongodb.server.release 5.0
-     * @aggregation.expression $covarianceSamp
-     * @see dev.morphia.aggregation.experimental.Aggregation#setWindowFields(SetWindowFields)
-     * @since 2.3
-     */
-    public static Expression covarianceSamp(Expression first, Expression second) {
-        return new MathExpression("$covarianceSamp", List.of(first, second));
-    }
-
-    /**
-     * Returns the exponential moving average of numeric expressions applied to documents in a partition defined in the $setWindowFields
-     * stage.
-     * <p>
-     * $expMovingAvg is only available in the $setWindowFields stage.
-     *
-     * @param input Specifies the expression to evaluate. Non-numeric expressions are ignored.
-     * @param n     An integer that specifies the number of historical documents that have a significant mathematical weight in the
-     *              exponential moving average calculation, with the most recent documents contributing the most weight.
-     * @return the new expression
-     * @mongodb.server.release 5.0
-     * @aggregation.expression $expMovingAvg
-     * @see dev.morphia.aggregation.experimental.Aggregation#setWindowFields(SetWindowFields)
-     * @since 2.3
-     */
-    public static Expression expMovingAvg(Expression input, int n) {
-        return new ExpMovingAvg(input, n);
     }
 
     /**
