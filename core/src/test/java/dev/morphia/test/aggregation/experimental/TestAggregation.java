@@ -87,6 +87,7 @@ import static dev.morphia.aggregation.experimental.expressions.WindowExpressions
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.documentNumber;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.expMovingAvg;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.integral;
+import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.rank;
 import static dev.morphia.aggregation.experimental.expressions.WindowExpressions.shift;
 import static dev.morphia.aggregation.experimental.stages.Group.group;
 import static dev.morphia.aggregation.experimental.stages.Group.id;
@@ -698,6 +699,36 @@ public class TestAggregation extends TestBase {
             "{ _id: 4, item: 'leather boots', qty: 300, 'literal_price': 249.99 }");
         assertListEquals(actual, expected);
 
+    }
+
+    @Test
+    public void testRank() {
+        checkMinServerVersion(5.0);
+        cakeSales();
+
+        List<Document> actual = getDs().aggregate("cakeSales")
+                                       .setWindowFields(setWindowFields()
+                                           .partitionBy(field("state"))
+                                           .sortBy(descending("quantity"))
+                                           .output(output("rankQuantityForState")
+                                               .operator(rank())))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = parseDocs(
+            "{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, 'quantity' " +
+            ": 162, 'rankQuantityForState' : 1 }",
+            "{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, 'quantity' : " +
+            "145, 'rankQuantityForState' : 2 }",
+            "{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, 'quantity' :" +
+            " 120, 'rankQuantityForState' : 3 }",
+            "{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, 'quantity' :" +
+            " 140, 'rankQuantityForState' : 1 }",
+            "{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, 'quantity' " +
+            ": 134, 'rankQuantityForState' : 2 }",
+            "{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, 'quantity' : " +
+            "104, 'rankQuantityForState' : 3 }");
+        assertListEquals(actual, expected);
     }
 
     @Test

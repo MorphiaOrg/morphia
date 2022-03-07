@@ -144,6 +144,24 @@ public final class WindowExpressions {
     }
 
     /**
+     * Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.
+     *
+     * @return the new expression
+     * @aggregation.expression $rank
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static Expression rank() {
+        return new Expression("$rank") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                });
+            }
+        };
+    }
+
+    /**
      * Returns the value from an expression applied to a document in a specified position relative to the current document in the
      * $setWindowFields stage partition.
      *
