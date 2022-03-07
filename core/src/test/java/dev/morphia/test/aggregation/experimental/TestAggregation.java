@@ -516,46 +516,6 @@ public class TestAggregation extends TestBase {
     }
 
     @Test
-    public void testGetField() {
-        checkMinServerVersion(5.0);
-
-        insert("inventory", parseDocs(
-            "{ '_id' : 1, 'item' : 'sweatshirt', 'price.usd': 45.99, qty: 300 }",
-            "{ '_id' : 2, 'item' : 'winter coat', 'price.usd': 499.99, qty: 200 }",
-            "{ '_id' : 3, 'item' : 'sun dress', 'price.usd': 199.99, qty: 250 }",
-            "{ '_id' : 4, 'item' : 'leather boots', 'price.usd': 249.99, qty: 300 }",
-            "{ '_id' : 5, 'item' : 'bow tie', 'price.usd': 9.99, qty: 180 }"));
-
-        List<Document> actual = getDs().aggregate("inventory")
-                                       .match(expr(gt(getField("price.usd"), value(200))))
-                                       .execute(Document.class)
-                                       .toList();
-
-        List<Document> expected = parseDocs(
-            "{ _id: 2, item: 'winter coat', qty: 200, 'price.usd': 499.99 }",
-            "{ _id: 4, item: 'leather boots', qty: 300, 'price.usd': 249.99 }");
-        assertListEquals(actual, expected);
-
-        insert("inventory", parseDocs(
-            "{ '_id' : 1, 'item' : 'sweatshirt', '$price': 45.99, qty: 300 }",
-            "{ '_id' : 2, 'item' : 'winter coat', '$price': 499.99, qty: 200 }",
-            "{ '_id' : 3, 'item' : 'sun dress', '$price': 199.99, qty: 250 }",
-            "{ '_id' : 4, 'item' : 'leather boots', '$price': 249.99, qty: 300 }",
-            "{ '_id' : 5, 'item' : 'bow tie', '$price': 9.99, qty: 180 }"));
-
-        actual = getDs().aggregate("inventory")
-                        .match(expr(gt(getField(literal("$price")), value(200))))
-                        .execute(Document.class)
-                        .toList();
-
-        expected = parseDocs(
-            "{ _id: 2, item: 'winter coat', qty: 200, '$price': 499.99 }",
-            "{ _id: 4, item: 'leather boots', qty: 300, '$price': 249.99 }");
-        assertListEquals(actual, expected);
-
-    }
-
-    @Test
     public void testDocumentNumber() {
         checkMinServerVersion(5.0);
         cakeSales();
@@ -696,6 +656,46 @@ public class TestAggregation extends TestBase {
                                   + "}");
 
         assertDocumentEquals(result, document);
+    }
+
+    @Test
+    public void testGetField() {
+        checkMinServerVersion(5.0);
+
+        insert("inventory", parseDocs(
+            "{ '_id' : 1, 'item' : 'sweatshirt', 'price.usd': 45.99, qty: 300 }",
+            "{ '_id' : 2, 'item' : 'winter coat', 'price.usd': 499.99, qty: 200 }",
+            "{ '_id' : 3, 'item' : 'sun dress', 'price.usd': 199.99, qty: 250 }",
+            "{ '_id' : 4, 'item' : 'leather boots', 'price.usd': 249.99, qty: 300 }",
+            "{ '_id' : 5, 'item' : 'bow tie', 'price.usd': 9.99, qty: 180 }"));
+
+        List<Document> actual = getDs().aggregate("inventory")
+                                       .match(expr(gt(getField("price.usd"), value(200))))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = parseDocs(
+            "{ _id: 2, item: 'winter coat', qty: 200, 'price.usd': 499.99 }",
+            "{ _id: 4, item: 'leather boots', qty: 300, 'price.usd': 249.99 }");
+        assertListEquals(actual, expected);
+
+        insert("inventory", parseDocs(
+            "{ '_id' : 1, 'item' : 'sweatshirt', '$price': 45.99, qty: 300 }",
+            "{ '_id' : 2, 'item' : 'winter coat', '$price': 499.99, qty: 200 }",
+            "{ '_id' : 3, 'item' : 'sun dress', '$price': 199.99, qty: 250 }",
+            "{ '_id' : 4, 'item' : 'leather boots', '$price': 249.99, qty: 300 }",
+            "{ '_id' : 5, 'item' : 'bow tie', '$price': 9.99, qty: 180 }"));
+
+        actual = getDs().aggregate("inventory")
+                        .match(expr(gt(getField(literal("$price")), value(200))))
+                        .execute(Document.class)
+                        .toList();
+
+        expected = parseDocs(
+            "{ _id: 2, item: 'winter coat', qty: 200, '$price': 499.99 }",
+            "{ _id: 4, item: 'leather boots', qty: 300, '$price': 249.99 }");
+        assertListEquals(actual, expected);
+
     }
 
     @Test
