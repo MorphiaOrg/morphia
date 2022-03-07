@@ -57,9 +57,9 @@ jobs:
           key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
           restore-keys: \${{ runner.os }}-m2
       - name: Install Plugins
-        run: mvn install -DskipTests --file pom.xml
+        run: mvn install revapi:update-versions -DskipTests --file pom.xml
       - name: Quality Checks
-        run: mvn -Pquality
+        run: mvn -f core/pom.xml -Pquality
   Snapshots:
     name: Publish Snapshot Artifacts
     if: "github.repository == 'MorphiaOrg/morphia' && github.ref == 'refs/heads/master' && github.event_name == 'push'"
