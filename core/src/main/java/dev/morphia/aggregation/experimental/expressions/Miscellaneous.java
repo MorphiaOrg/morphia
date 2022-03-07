@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.expressions;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.SetFieldExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
 import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
@@ -72,5 +73,41 @@ public final class Miscellaneous {
                 writeNamedValue(getName(), getValue(), datastore, writer, context);
             }
         };
+    }
+
+    /**
+     * Adds, updates, or removes a specified field in a document.
+     *
+     * @param field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to
+     *              a string constant.
+     * @param input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or
+     *              undefined.
+     * @param value The value that you want to assign to field. value can be any valid expression. Set to $$REMOVE to remove field from
+     *              the input document.
+     * @return the new expression
+     * @aggregation.expression $setField
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static Expression setField(String field, Object input, Expression value) {
+        return setField(new ValueExpression(field), input, value);
+    }
+
+    /**
+     * Adds, updates, or removes a specified field in a document.
+     *
+     * @param field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to
+     *              a string constant.
+     * @param input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or
+     *              undefined.
+     * @param value The value that you want to assign to field. value can be any valid expression. Set to $$REMOVE to remove field from
+     *              the input document.
+     * @return the new expression
+     * @aggregation.expression $setField
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static Expression setField(Expression field, Object input, Expression value) {
+        return new SetFieldExpression(field, input, value);
     }
 }
