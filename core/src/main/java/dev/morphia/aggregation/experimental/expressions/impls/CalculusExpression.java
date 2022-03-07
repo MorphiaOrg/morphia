@@ -2,6 +2,7 @@ package dev.morphia.aggregation.experimental.expressions.impls;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.TimeUnit;
+import dev.morphia.aggregation.experimental.expressions.WindowExpressions;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -11,18 +12,21 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.expression;
 
 /**
- * Returns the average rate of change within the specified window.
+ * Common type for $derivative and $integral
  *
  * @aggregation.expression $derivative
+ * @aggregation.expression $integral
  * @mongodb.server.release 5.0
+ * @see WindowExpressions#derivative(Expression)
+ * @see WindowExpressions#integral(Expression)
  * @since 2.3
  */
-public class DerivativeExpression extends Expression {
+public class CalculusExpression extends Expression {
     private final Expression input;
     private TimeUnit unit;
 
-    public DerivativeExpression(Expression input) {
-        super("$derivative");
+    public CalculusExpression(String operation, Expression input) {
+        super(operation);
         this.input = input;
     }
 
@@ -42,7 +46,7 @@ public class DerivativeExpression extends Expression {
      * @param unit the unit
      * @return this
      */
-    public DerivativeExpression unit(TimeUnit unit) {
+    public CalculusExpression unit(TimeUnit unit) {
         this.unit = unit;
         return this;
     }
