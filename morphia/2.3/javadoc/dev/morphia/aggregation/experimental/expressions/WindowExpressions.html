@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -429,6 +429,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#rank()">rank</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="impls/ShiftExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ShiftExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shift(dev.morphia.aggregation.experimental.expressions.impls.Expression,long,dev.morphia.aggregation.experimental.expressions.impls.Expression)">shift</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;output,
      long&nbsp;by,
@@ -438,7 +445,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  $setWindowFields stage partition.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stdDevPop(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">stdDevPop</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value,
          <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -446,7 +453,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Returns the population standard deviation of the input values.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stdDevSamp(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">stdDevSamp</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value,
           <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -621,6 +628,22 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/integral">Aggregration Expression:  $integral</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="rank()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>rank</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;rank()</pre>
+<div class="block">Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/rank">Aggregration Expression:  $rank</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
 </dl></dl></li>
 </ul>
 <a id="shift(dev.morphia.aggregation.experimental.expressions.impls.Expression,long,dev.morphia.aggregation.experimental.expressions.impls.Expression)">
