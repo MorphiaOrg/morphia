@@ -223,7 +223,7 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="DerivativeExpression.html">2.3-SNAPSHOT</a>
+    <a class="version is-current" href="CalculusExpression.html">2.3-SNAPSHOT</a>
     <a class="version is-missing" href="../../../../../../../../2.2/index.html">2.2</a>
     <a class="version is-missing" href="../../../../../../../../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../../../../../../../../2.0/index.html">2.0</a>
@@ -236,7 +236,7 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="DerivativeExpression (Morphia)";
+            parent.document.title="CalculusExpression (Morphia)";
         }
     }
     catch(err) {
@@ -269,7 +269,7 @@ loadScripts(document, 'script');</script>
 <li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/DerivativeExpression.html">Use</a></li>
+<li><a href="class-use/CalculusExpression.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../../index-all.html">Index</a></li>
@@ -332,7 +332,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <main role="main">
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></div>
-<h2 title="Class DerivativeExpression" class="title">Class DerivativeExpression</h2>
+<h2 title="Class CalculusExpression" class="title">Class CalculusExpression</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -342,7 +342,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">dev.morphia.aggregation.experimental.expressions.impls.Expression</a></li>
 <li>
 <ul class="inheritance">
-<li>dev.morphia.aggregation.experimental.expressions.impls.DerivativeExpression</li>
+<li>dev.morphia.aggregation.experimental.expressions.impls.CalculusExpression</li>
 </ul>
 </li>
 </ul>
@@ -352,12 +352,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public class <span class="typeNameLabel">DerivativeExpression</span>
+<pre>public class <span class="typeNameLabel">CalculusExpression</span>
 extends <a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></pre>
-<div class="block">Returns the average rate of change within the specified window.</div>
+<div class="block">Common type for $derivative and $integral</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../WindowExpressions.html#derivative(dev.morphia.aggregation.experimental.expressions.impls.Expression)"><code>WindowExpressions.derivative(Expression)</code></a>, 
+<a href="../WindowExpressions.html#integral(dev.morphia.aggregation.experimental.expressions.impls.Expression)"><code>WindowExpressions.integral(Expression)</code></a></dd>
 <dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
 </dl></li>
 </ul>
@@ -379,7 +382,8 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.aggregation.experimental.expressions.impls.Expression)">DerivativeExpression</a></span>​(<a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression)">CalculusExpression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
+                  <a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -408,7 +412,7 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="DerivativeExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DerivativeExpression</a></code></td>
+<td class="colFirst"><code><a href="CalculusExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">CalculusExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unit(dev.morphia.aggregation.experimental.expressions.TimeUnit)">unit</a></span>​(<a href="../TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</code></th>
 <td class="colLast">
 <div class="block">Sets the time unit for the expression</div>
@@ -445,13 +449,14 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.aggregation.experimental.expressions.impls.Expression)">
+<a id="<init>(java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>DerivativeExpression</h4>
-<pre>public&nbsp;DerivativeExpression​(<a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</pre>
+<h4>CalculusExpression</h4>
+<pre>public&nbsp;CalculusExpression​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
+                          <a href="Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</pre>
 </li>
 </ul>
 </li>
@@ -489,7 +494,7 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <ul class="blockListLast">
 <li class="blockList">
 <h4>unit</h4>
-<pre class="methodSignature">public&nbsp;<a href="DerivativeExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DerivativeExpression</a>&nbsp;unit​(<a href="../TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</pre>
+<pre class="methodSignature">public&nbsp;<a href="CalculusExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">CalculusExpression</a>&nbsp;unit​(<a href="../TimeUnit.html" title="enum in dev.morphia.aggregation.experimental.expressions">TimeUnit</a>&nbsp;unit)</pre>
 <div class="block">Sets the time unit for the expression</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -522,7 +527,7 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.experi
 <li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/DerivativeExpression.html">Use</a></li>
+<li><a href="class-use/CalculusExpression.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../../index-all.html">Index</a></li>

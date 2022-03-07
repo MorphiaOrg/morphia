@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -398,13 +398,20 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>static <a href="impls/DerivativeExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DerivativeExpression</a></code></td>
+<td class="colFirst"><code>static <a href="impls/CalculusExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">CalculusExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#derivative(dev.morphia.aggregation.experimental.expressions.impls.Expression)">derivative</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">
 <div class="block">Returns the average rate of change within the specified window.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#documentNumber()">documentNumber</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns the position of a document (known as the document number) in the $setWindowFields stage partition.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#expMovingAvg(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">expMovingAvg</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input,
             int&nbsp;n)</code></th>
@@ -413,7 +420,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  stage.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>static <a href="impls/CalculusExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">CalculusExpression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#integral(dev.morphia.aggregation.experimental.expressions.impls.Expression)">integral</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</code></th>
+<td class="colLast">
+<div class="block">Returns the approximation of the area under a curve, which is calculated using the trapezoidal rule where each set of adjacent
+ documents form a trapezoid using the:</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/ShiftExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">ShiftExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shift(dev.morphia.aggregation.experimental.expressions.impls.Expression,long,dev.morphia.aggregation.experimental.expressions.impls.Expression)">shift</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;output,
      long&nbsp;by,
@@ -423,7 +438,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  $setWindowFields stage partition.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stdDevPop(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">stdDevPop</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value,
          <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -431,7 +446,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Returns the population standard deviation of the input values.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#stdDevSamp(dev.morphia.aggregation.experimental.expressions.impls.Expression,dev.morphia.aggregation.experimental.expressions.impls.Expression...)">stdDevSamp</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;value,
           <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -533,7 +548,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>derivative</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/DerivativeExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">DerivativeExpression</a>&nbsp;derivative​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/CalculusExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">CalculusExpression</a>&nbsp;derivative​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</pre>
 <div class="block">Returns the average rate of change within the specified window.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -543,6 +558,24 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/derivative">Aggregration Expression:  $derivative</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="documentNumber()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>documentNumber</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;documentNumber()</pre>
+<div class="block">Returns the position of a document (known as the document number) in the $setWindowFields stage partition.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../Aggregation.html#setWindowFields(dev.morphia.aggregation.experimental.stages.SetWindowFields)"><code>Aggregation.setWindowFields(SetWindowFields)</code></a></dd>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/documentNumber">Aggregration Expression:  $documentNumber</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
 </dl></dl></li>
 </ul>
 <a id="expMovingAvg(dev.morphia.aggregation.experimental.expressions.impls.Expression,int)">
@@ -569,6 +602,25 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../Aggregation.html#setWindowFields(dev.morphia.aggregation.experimental.stages.SetWindowFields)"><code>Aggregation.setWindowFields(SetWindowFields)</code></a></dd>
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/expMovingAvg">Aggregration Expression:  $expMovingAvg</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="integral(dev.morphia.aggregation.experimental.expressions.impls.Expression)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>integral</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/CalculusExpression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">CalculusExpression</a>&nbsp;integral​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;input)</pre>
+<div class="block">Returns the approximation of the area under a curve, which is calculated using the trapezoidal rule where each set of adjacent
+ documents form a trapezoid using the:</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>input</code> - Specifies the expression to evaluate. The expression must evaluate to a number.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/integral">Aggregration Expression:  $integral</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
 </dl></dl></li>
 </ul>
 <a id="shift(dev.morphia.aggregation.experimental.expressions.impls.Expression,long,dev.morphia.aggregation.experimental.expressions.impls.Expression)">
