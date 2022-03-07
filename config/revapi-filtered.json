@@ -219,6 +219,12 @@
           "code": "java.method.returnTypeErasureChanged",
           "justification": "why is it suddenly caring about trans deps?!?",
           "oldArchive": "dev.morphia.morphia:morphia-core:jar:2.2.4"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.parameterTypeErasureChanged",
+          "justification": "why is it suddenly caring about trans deps?!?",
+          "oldArchive": "dev.morphia.morphia:morphia-core:jar:2.2.4"
         }
       ]
     }
