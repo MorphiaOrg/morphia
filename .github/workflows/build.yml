@@ -52,7 +52,7 @@ jobs:
         with:
           java-version: 11
           distribution: 'temurin'
-#          cache: 'maven'
+          cache: 'maven'
 
       - name: Quality Checks
         run: mvn install -Pquality

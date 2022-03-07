@@ -207,6 +207,12 @@
           "code": "java.method.removed",
           "old": "method org.bson.Document dev.morphia.query.Query<T>::toDocument()",
           "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.missing.oldSuperType",
+          "justification": "what does this even mean?",
+          "oldArchive": "dev.morphia.morphia:morphia-core:jar:2.2.4"
         }
       ]
     }
