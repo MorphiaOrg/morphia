@@ -12,6 +12,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.lang.NonNull;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
@@ -266,7 +267,7 @@ public abstract class TestBase {
     protected void insert(String collectionName, List<Document> list) {
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         collection.deleteMany(new Document());
-        collection.insertMany(list);
+        InsertManyResult insertManyResult = collection.insertMany(list);
     }
 
     /**

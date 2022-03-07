@@ -3,6 +3,7 @@ package dev.morphia.aggregation.experimental.expressions;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
 import dev.morphia.query.experimental.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -14,6 +15,34 @@ import org.bson.codecs.EncoderContext;
  */
 public final class Miscellaneous {
     private Miscellaneous() {
+    }
+
+    /**
+     * Returns the value of a specified field from a document. If you don't specify an object, $getField returns the value of the field
+     * from $$CURRENT.
+     *
+     * @param field the field name
+     * @return the new expression
+     * @aggregation.expression $getField
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static Expression getField(String field) {
+        return getField(new ValueExpression(field));
+    }
+
+    /**
+     * Returns the value of a specified field from a document. If you don't specify an object, $getField returns the value of the field
+     * from $$CURRENT.
+     *
+     * @param field the expression yielding the field name
+     * @return the new expression
+     * @aggregation.expression $getField
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static Expression getField(Expression field) {
+        return new Expression("$getField", field);
     }
 
     /**
