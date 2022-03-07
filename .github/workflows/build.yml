@@ -57,7 +57,7 @@ jobs:
           key: \${{ runner.os }}-m2-\${{ hashFiles('**/pom.xml') }}
           restore-keys: \${{ runner.os }}-m2
       - name: Install Plugins
-        run: mvn install revapi:update-versions -DskipTests --file pom.xml
+        run: mvn install -DskipTests --file pom.xml
       - name: Quality Checks
         run: mvn -f core/pom.xml -Pquality
   Snapshots:
