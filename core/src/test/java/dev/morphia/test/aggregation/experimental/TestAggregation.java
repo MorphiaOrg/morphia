@@ -73,6 +73,7 @@ import static dev.morphia.aggregation.experimental.expressions.MathExpressions.a
 import static dev.morphia.aggregation.experimental.expressions.MathExpressions.trunc;
 import static dev.morphia.aggregation.experimental.expressions.Miscellaneous.getField;
 import static dev.morphia.aggregation.experimental.expressions.Miscellaneous.setField;
+import static dev.morphia.aggregation.experimental.expressions.Miscellaneous.unsetField;
 import static dev.morphia.aggregation.experimental.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.experimental.expressions.SystemVariables.DESCEND;
@@ -1255,6 +1256,32 @@ public class TestAggregation extends TestBase {
             + "'totalQuiz' : 16, 'totalScore' : 40 }");
 
         assertEquals(result, list);
+    }
+
+    @Test
+    public void testUnsetField() {
+        checkMinServerVersion(5.0);
+        insert("inventory", parseDocs(
+            "{ '_id' : 1, 'item' : 'sweatshirt', 'price.usd': 45.99, qty: 300 }",
+            "{ '_id' : 2, 'item' : 'winter coat', 'price.usd': 499.99, qty: 200 }",
+            "{ '_id' : 3, 'item' : 'sun dress', 'price.usd': 199.99, qty: 250 }",
+            "{ '_id' : 4, 'item' : 'leather boots', 'price.usd': 249.99, qty: 300 }",
+            "{ '_id' : 5, 'item' : 'bow tie', 'price.usd': 9.99, qty: 180 }"));
+
+        List<Document> actual = getDs().aggregate("inventory")
+                                       .replaceWith(replaceWith(unsetField("price.usd", ROOT)))
+                                       .unset(Unset.unset("price"))
+                                       .execute(Document.class)
+                                       .toList();
+
+        List<Document> expected = parseDocs(
+            "{ _id: 1, item: 'sweatshirt', qty: 300 }",
+            "{ _id: 2, item: 'winter coat', qty: 200 }",
+            "{ _id: 3, item: 'sun dress', qty: 250, }",
+            "{ _id: 4, item: 'leather boots', qty: 300 }",
+            "{ _id: 5, item: 'bow tie', qty: 180 }");
+        assertListEquals(actual, expected);
+
     }
 
     @Test
