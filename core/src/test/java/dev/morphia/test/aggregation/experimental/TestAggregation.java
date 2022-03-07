@@ -689,13 +689,13 @@ public class TestAggregation extends TestBase {
             "{ '_id' : 5, 'item' : 'bow tie', '$price': 9.99, qty: 180 }"));
 
         actual = getDs().aggregate("inventory")
-                        .match(expr(gt(getField(literal("$price")), value(200))))
+                        .match(expr(gt(getField(literal("literal_price")), value(200))))
                         .execute(Document.class)
                         .toList();
 
         expected = parseDocs(
-            "{ _id: 2, item: 'winter coat', qty: 200, '$price': 499.99 }",
-            "{ _id: 4, item: 'leather boots', qty: 300, '$price': 249.99 }");
+            "{ _id: 2, item: 'winter coat', qty: 200, 'literal_price': 499.99 }",
+            "{ _id: 4, item: 'leather boots', qty: 300, 'literal_price': 249.99 }");
         assertListEquals(actual, expected);
 
     }
