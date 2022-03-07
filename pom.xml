@@ -64,12 +64,12 @@
             <dependency>
                 <groupId>org.mongodb</groupId>
                 <artifactId>mongodb-driver-sync</artifactId>
-                <version>4.2.2</version>
+                <version>${driver.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mongodb</groupId>
                 <artifactId>mongodb-driver-legacy</artifactId>
-                <version>4.2.2</version>
+                <version>${driver.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -177,6 +177,10 @@
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>3.0.0</version>
             </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
@@ -192,15 +196,6 @@
     </distributionManagement>
 
     <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-                <property>
-                    <name>!release</name>
-                </property>
-            </activation>
-        </profile>
         <profile>
             <id>publication</id>
             <activation>
