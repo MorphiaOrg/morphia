@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Tests and Style Checks
+name: Morphia Build
 
 on: [ push, pull_request, workflow_dispatch ]
 
@@ -11,8 +11,8 @@ jobs:
     strategy:
       matrix:
         java: [ 11, 17 ]
-        mongo: [ 4.4.4, 4.2.13, 4.0.23, 3.6.23 ]
-        driver: [ 4.2.2, 4.1.0, 4.0.0 ]
+        mongo: [ 5.0.6, 4.2.18 ]
+        driver: [ 4.5.0, 4.0.6 ]
     name: "Tests on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
     steps:
       - name: Checkout
@@ -52,10 +52,9 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Install Plugins
-        run: mvn install -DskipTests --file pom.xml
       - name: Quality Checks
-        run: mvn -Pquality --file core/pom.xml
+        run: mvn install -Pquality
+
   Snapshots:
     name: Publish Snapshot Artifacts
     if: "github.repository == 'MorphiaOrg/morphia' && github.event_name == 'push'"
