@@ -3,7 +3,16 @@
 
 name: Morphia Build
 
-on: [ push, pull_request, workflow_dispatch ]
+on:
+  push:
+    tags-ignore:
+      - r[0-9]*
+  pull_request:
+    tags-ignore:
+      - r[0-9]*
+  workflow_dispatch:
+    tags-ignore:
+      - r[0-9]*
 
 jobs:
   Morphia:
@@ -55,7 +64,7 @@ jobs:
           cache: 'maven'
 
       - name: Quality Checks
-        run: mvn install -Pquality
+        run: mvn install -Pquality -DskipTests
 
   Snapshots:
     name: Publish Snapshot Artifacts
