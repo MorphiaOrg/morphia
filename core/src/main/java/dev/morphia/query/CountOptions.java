@@ -21,6 +21,7 @@ import com.mongodb.ReadPreference;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
+import dev.morphia.AlternateCollection;
 import dev.morphia.internal.SessionConfigurable;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -33,10 +34,12 @@ import java.util.concurrent.TimeUnit;
  * @mongodb.driver.manual reference/command/count/ Count
  * @since 1.3
  */
-public class CountOptions extends com.mongodb.client.model.CountOptions implements SessionConfigurable<CountOptions> {
+public class CountOptions extends com.mongodb.client.model.CountOptions implements SessionConfigurable<CountOptions>,
+                                                                                       AlternateCollection<CountOptions> {
     private ReadPreference readPreference;
     private ReadConcern readConcern;
     private ClientSession clientSession;
+    private String collection;
 
     @Override
     public CountOptions clientSession(ClientSession clientSession) {
@@ -47,6 +50,17 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
     @Override
     public ClientSession clientSession() {
         return clientSession;
+    }
+
+    @Override
+    public CountOptions collection(String collection) {
+        this.collection = collection;
+        return this;
+    }
+
+    @Override
+    public String collection() {
+        return collection;
     }
 
     /**

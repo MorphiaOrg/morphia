@@ -5,6 +5,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
 import com.mongodb.lang.Nullable;
+import dev.morphia.AlternateCollection;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.Document;
@@ -16,9 +17,11 @@ import java.util.concurrent.TimeUnit;
  * Defines options to use for find and delete operations
  */
 public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements SessionConfigurable<FindAndDeleteOptions>,
-                                                                                 WriteConfigurable<FindAndDeleteOptions> {
+                                                                                 WriteConfigurable<FindAndDeleteOptions>,
+                                                                                 AlternateCollection<FindAndDeleteOptions> {
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
+    private String collection;
 
     @Override
     public FindAndDeleteOptions clientSession(ClientSession clientSession) {
@@ -29,6 +32,17 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Ses
     @Override
     public ClientSession clientSession() {
         return clientSession;
+    }
+
+    @Override
+    public FindAndDeleteOptions collection(String collection) {
+        this.collection = collection;
+        return this;
+    }
+
+    @Override
+    public String collection() {
+        return collection;
     }
 
     /**

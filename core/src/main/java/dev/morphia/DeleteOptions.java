@@ -31,11 +31,12 @@ import org.bson.conversions.Bson;
  * @mongodb.driver.manual tutorial/remove-documents/ Remove Documents
  * @since 1.3
  */
-public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions implements SessionConfigurable<DeleteOptions>,
-                                                                                               WriteConfigurable<DeleteOptions> {
+public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
+    implements SessionConfigurable<DeleteOptions>, WriteConfigurable<DeleteOptions>, AlternateCollection<DeleteOptions> {
     private boolean multi;
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
+    private String collection;
 
     /**
      * Creates a new options instance
@@ -52,6 +53,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
         this.multi = that.multi;
         this.writeConcern = that.writeConcern;
         this.clientSession = that.clientSession;
+        this.collection = that.collection;
     }
 
     @Override
@@ -69,6 +71,17 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions 
     public DeleteOptions collation(@Nullable Collation collation) {
         super.collation(collation);
         return this;
+    }
+
+    @Override
+    public DeleteOptions collection(String collection) {
+        this.collection = collection;
+        return this;
+    }
+
+    @Override
+    public String collection() {
+        return collection;
     }
 
     /**

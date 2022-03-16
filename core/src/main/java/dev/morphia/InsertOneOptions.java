@@ -27,11 +27,13 @@ import dev.morphia.internal.WriteConfigurable;
  *
  * @since 1.3
  */
-public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, WriteConfigurable<InsertOneOptions> {
+public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, WriteConfigurable<InsertOneOptions>,
+                                             AlternateCollection<InsertOneOptions> {
     private com.mongodb.client.model.InsertOneOptions options = new com.mongodb.client.model.InsertOneOptions();
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
     private boolean unset;
+    private String collection;
 
     /**
      * Creates a new options wrapper
@@ -63,14 +65,23 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
     }
 
     @Override
+    public InsertOneOptions clientSession(@Nullable ClientSession clientSession) {
+        this.clientSession = clientSession;
+        return this;
+    }
+
+    @Override
     public ClientSession clientSession() {
         return clientSession;
     }
 
-    @Override
-    public InsertOneOptions clientSession(@Nullable ClientSession clientSession) {
-        this.clientSession = clientSession;
+    public InsertOneOptions collection(@Nullable String collection) {
+        this.collection = collection;
         return this;
+    }
+
+    public String collection() {
+        return collection;
     }
 
     /**
@@ -84,15 +95,10 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
     }
 
     /**
-     * Applies the rules for storing null/empty values for fields no present in the object to be merged.
-     *
-     * @param unset true if the rules should be applied
-     * @return this
-     * @since 2.2
+     * @return the driver version of the options
      */
-    public InsertOneOptions unsetMissing(boolean unset) {
-        this.unset = unset;
-        return this;
+    public com.mongodb.client.model.InsertOneOptions getOptions() {
+        return options;
     }
 
     /**
@@ -103,6 +109,18 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
      */
     public boolean unsetMissing() {
         return unset;
+    }
+
+    /**
+     * Applies the rules for storing null/empty values for fields no present in the object to be merged.
+     *
+     * @param unset true if the rules should be applied
+     * @return this
+     * @since 2.2
+     */
+    public InsertOneOptions unsetMissing(boolean unset) {
+        this.unset = unset;
+        return this;
     }
 
     /**
@@ -124,12 +142,5 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
     @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
-    }
-
-    /**
-     * @return the driver version of the options
-     */
-    public com.mongodb.client.model.InsertOneOptions getOptions() {
-        return options;
     }
 }

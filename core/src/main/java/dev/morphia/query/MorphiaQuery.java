@@ -107,13 +107,15 @@ class MorphiaQuery<T> implements Query<T> {
     public long count(CountOptions options) {
         ClientSession session = datastore.findSession(options);
         Document query = getQueryDocument();
-        return session == null ? getCollection().countDocuments(query, options)
-                               : getCollection().countDocuments(session, query, options);
+        MongoCollection<T> collection = getCollection(options.collection());
+
+        return session == null ? collection.countDocuments(query, options)
+                               : collection.countDocuments(session, query, options);
     }
 
     @Override
     public DeleteResult delete(DeleteOptions options) {
-        MongoCollection<T> collection = options.prepare(getCollection());
+        MongoCollection<T> collection = getCollection(options.collection());
         ClientSession session = datastore.findSession(options);
         if (options.isMulti()) {
             return session == null
@@ -143,13 +145,14 @@ class MorphiaQuery<T> implements Query<T> {
         return tryInvoke(DriverVersion.v4_2_0,
             () -> {
                 return verbosity == null
-                       ? iterable(options, collection).explain()
-                       : iterable(options, collection).explain(verbosity);
+                       ? iterable(options, getCollection(options.collection())).explain()
+                       : iterable(options, getCollection(options.collection())).explain(verbosity);
             },
             () -> {
                 return new LinkedHashMap<>(datastore.getDatabase()
                                                     .runCommand(new Document("explain",
-                                                        new Document("find", getCollection().getNamespace().getCollectionName())
+                                                        new Document("find", getCollection(options.collection())
+                                                            .getNamespace().getCollectionName())
                                                             .append("filter", getQueryDocument()))));
             });
     }
@@ -198,7 +201,7 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public T findAndDelete(FindAndDeleteOptions options) {
-        MongoCollection<T> mongoCollection = options.prepare(getCollection());
+        MongoCollection<T> mongoCollection = options.prepare(getCollection(options.collection()));
         ClientSession session = datastore.findSession(options);
         return session == null
                ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
@@ -224,18 +227,18 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, getCollection(), this, getEntityClass(), coalesce(first, updates));
+        return new Modify<>(datastore, getCollection(null), this, getEntityClass(), coalesce(first, updates));
     }
 
     @Override
     public T modify(ModifyOptions options, UpdateOperator... updates) {
-        return new Modify<>(datastore, getCollection(), this, getEntityClass(), List.of(updates))
+        return new Modify<>(datastore, getCollection(options.collection()), this, getEntityClass(), List.of(updates))
             .execute(options);
     }
 
     @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, getCollection()));
+        return new MorphiaCursor<>(prepareCursor(options, getCollection(options.collection())));
     }
 
     @Override
@@ -277,23 +280,23 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     @Deprecated
     public Update<T> update(List<UpdateOperator> updates) {
-        return new Update<>(datastore, getCollection(), this, type, updates);
+        return new Update<>(datastore, getCollection(null), this, type, updates);
     }
 
     @Override
     public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, getCollection(), this, type, coalesce(first, updates));
+        return new Update<>(datastore, getCollection(null), this, type, coalesce(first, updates));
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, Stage... updates) {
-        return new PipelineUpdate<>(datastore, getCollection(), this, asList(updates))
+        return new PipelineUpdate<>(datastore, getCollection(options.collection()), this, asList(updates))
             .execute(options);
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
-        return new Update<>(datastore, getCollection(), this, type, asList(updates))
+        return new Update<>(datastore, getCollection(options.collection()), this, type, asList(updates))
             .execute(options);
     }
 
@@ -328,8 +331,12 @@ class MorphiaQuery<T> implements Query<T> {
      * @return the collection this query targets
      * @morphia.internal
      */
-    private MongoCollection<T> getCollection() {
-        return collection;
+    private MongoCollection<T> getCollection(@Nullable String alternate) {
+        return alternate == null
+               ? collection
+               : datastore
+                   .getDatabase()
+                   .getCollection(alternate, type);
     }
 
     private String getCollectionName() {

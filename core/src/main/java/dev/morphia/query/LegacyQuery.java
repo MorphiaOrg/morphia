@@ -51,7 +51,7 @@ import static java.util.List.of;
 public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
     private final DatastoreImpl datastore;
-    private final Class<T> clazz;
+    private final Class<T> type;
     private final String collectionName;
     private final MongoCollection<T> collection;
     private final EntityModel model;
@@ -67,29 +67,21 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * Creates a Query for the given type and collection
      *
      * @param datastore the Datastore to use
-     * @param clazz     the type to return
+     * @param type      the type to return
      */
-    protected LegacyQuery(Datastore datastore, @Nullable String collectionName, Class<T> clazz) {
-        this.clazz = clazz;
+    protected LegacyQuery(Datastore datastore, @Nullable String collectionName, Class<T> type) {
+        this.type = type;
         this.datastore = (DatastoreImpl) datastore;
-        model = datastore.getMapper().getEntityModel(clazz);
+        model = datastore.getMapper().getEntityModel(type);
         if (collectionName != null) {
-            this.collection = datastore.getDatabase().getCollection(collectionName, clazz);
+            this.collection = datastore.getDatabase().getCollection(collectionName, type);
             this.collectionName = collectionName;
         } else {
-            this.collection = datastore.getCollection(clazz);
+            this.collection = datastore.getCollection(type);
             this.collectionName = this.collection.getNamespace().getCollectionName();
         }
 
         compoundContainer = new CriteriaContainerImpl(datastore, this, AND);
-    }
-
-    /**
-     * @return the collection this query targets
-     * @morphia.internal
-     */
-    public MongoCollection<T> getCollection() {
-        return collection;
     }
 
     @Override
@@ -133,38 +125,16 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         throw new UnsupportedOperationException("this method is unused on a Query");
     }
 
-    /**
-     * @return the Mongo fields {@link Document}.
-     * @morphia.internal
-     */
-    @Nullable
-    public Document getFieldsObject() {
-        Projection projection = getOptions().getProjection();
-
-        return projection != null ? projection.map(datastore.getMapper(), clazz) : null;
+    @Override
+    public long count(CountOptions options) {
+        ClientSession session = datastore.findSession(options);
+        return session == null ? getCollection(options.collection()).countDocuments(getQueryDocument(), options)
+                               : getCollection(options.collection()).countDocuments(session, getQueryDocument(), options);
     }
 
     @Override
-    public String getLoggedQuery() {
-        if (lastOptions.isLogQuery()) {
-            String json = "{}";
-            Document first = datastore.getDatabase()
-                                      .getCollection("system.profile")
-                                      .find(new Document("command.comment", "logged query: " + lastOptions.getQueryLogId()),
-                                          Document.class)
-                                      .projection(new Document("command.filter", 1))
-                                      .first();
-            if (first != null) {
-                Document command = (Document) first.get("command");
-                Document filter = (Document) command.get("filter");
-                if (filter != null) {
-                    json = filter.toJson(datastore.getCodecRegistry().get(Document.class));
-                }
-            }
-            return json;
-        } else {
-            throw new IllegalStateException(Sofia.queryNotLogged());
-        }
+    public long count() {
+        return count(new CountOptions());
     }
 
     /**
@@ -180,29 +150,8 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public long count() {
-        return count(new CountOptions());
-    }
-
-    @Override
-    public long count(CountOptions options) {
-        ClientSession session = datastore.findSession(options);
-        return session == null ? getCollection().countDocuments(getQueryDocument(), options)
-                               : getCollection().countDocuments(session, getQueryDocument(), options);
-    }
-
-    @Override
-    public T findAndDelete(FindAndDeleteOptions options) {
-        MongoCollection<T> mongoCollection = options.prepare(getCollection());
-        ClientSession session = datastore.findSession(options);
-        return session == null
-               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
-               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
-    }
-
-    @Override
     public DeleteResult delete(DeleteOptions options) {
-        MongoCollection<T> collection = options.prepare(getCollection());
+        MongoCollection<T> collection = getCollection(options.collection());
         ClientSession session = datastore.findSession(options);
         if (options.isMulti()) {
             return session == null
@@ -213,6 +162,23 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                    ? collection.deleteOne(getQueryDocument(), options)
                    : collection.deleteOne(session, getQueryDocument(), options);
         }
+    }
+
+    @Override
+    public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
+        MongoCollection<T> collection = getCollection(options.collection());
+        return tryInvoke(DriverVersion.v4_2_0,
+            () -> {
+                return verbosity == null
+                       ? iterable(options, collection).explain()
+                       : iterable(options, collection).explain(verbosity);
+            },
+            () -> {
+                return new LinkedHashMap<>(datastore.getDatabase()
+                                                    .runCommand(new Document("explain",
+                                                        new Document("find", collection.getNamespace().getCollectionName())
+                                                            .append("filter", getQueryDocument()))));
+            });
     }
 
     @Override
@@ -242,19 +208,26 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
-        return tryInvoke(DriverVersion.v4_2_0,
-            () -> {
-                return verbosity == null
-                       ? iterable(options, collection).explain()
-                       : iterable(options, collection).explain(verbosity);
-            },
-            () -> {
-                return new LinkedHashMap<>(datastore.getDatabase()
-                                                    .runCommand(new Document("explain",
-                                                        new Document("find", getCollection().getNamespace().getCollectionName())
-                                                            .append("filter", getQueryDocument()))));
-            });
+    public String getLoggedQuery() {
+        if (lastOptions.isLogQuery()) {
+            String json = "{}";
+            Document first = datastore.getDatabase()
+                                      .getCollection("system.profile")
+                                      .find(new Document("command.comment", "logged query: " + lastOptions.getQueryLogId()),
+                                          Document.class)
+                                      .projection(new Document("command.filter", 1))
+                                      .first();
+            if (first != null) {
+                Document command = (Document) first.get("command");
+                Document filter = (Document) command.get("filter");
+                if (filter != null) {
+                    json = filter.toJson(datastore.getCodecRegistry().get(Document.class));
+                }
+            }
+            return json;
+        } else {
+            throw new IllegalStateException(Sofia.queryNotLogged());
+        }
     }
 
     @Override
@@ -279,14 +252,21 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
-    public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, getCollection(), this, clazz, coalesce(first, updates));
+    public T findAndDelete(FindAndDeleteOptions options) {
+        MongoCollection<T> mongoCollection = options.prepare(getCollection(options.collection()));
+        ClientSession session = datastore.findSession(options);
+        return session == null
+               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
+               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
     }
 
+    /**
+     * @return the entity {@link Class}.
+     * @morphia.internal
+     */
     @Override
-    public T modify(ModifyOptions options, UpdateOperator... updates) {
-        return new Modify<>(datastore, getCollection(), this, clazz, of(updates))
-            .execute(options);
+    public Class<T> getEntityClass() {
+        return type;
     }
 
     @Override
@@ -301,30 +281,20 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
     }
 
-    /**
-     * @return the entity {@link Class}.
-     * @morphia.internal
-     */
     @Override
-    public Class<T> getEntityClass() {
-        return clazz;
+    public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
+        return new Modify<>(datastore, getCollection(options.collection()), this, type, coalesce(first, updates));
+    }
+
+    @Override
+    public T modify(ModifyOptions options, UpdateOperator... updates) {
+        return new Modify<>(datastore, getCollection(options.collection()), this, type, of(updates))
+            .execute(options);
     }
 
     @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, getCollection()));
-    }
-
-    @Override
-    public MorphiaKeyCursor<T> keys() {
-        return keys(new FindOptions());
-    }
-
-    @Override
-    public Query<T> search(String search, String language) {
-        this.criteria("$text").equal(new Document("$search", search)
-            .append("$language", language));
-        return this;
+        return new MorphiaCursor<>(prepareCursor(options, getCollection(options.collection())));
     }
 
     @Override
@@ -335,13 +305,25 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
         return new MorphiaKeyCursor<>(prepareCursor(returnKey,
             datastore.getDatabase().getCollection(getCollectionName())), datastore,
-            clazz, getCollectionName());
+            type, getCollectionName());
+    }
+
+    @Override
+    public MorphiaKeyCursor<T> keys() {
+        return keys(new FindOptions());
     }
 
     @Override
     @Deprecated
     public Modify<T> modify(UpdateOperations<T> operations) {
-        return new Modify<>(datastore, getCollection(), this, clazz, (UpdateOpsImpl) operations);
+        return new Modify<>(datastore, getCollection(null), this, type, (UpdateOpsImpl) operations);
+    }
+
+    @Override
+    public Query<T> search(String search, String language) {
+        this.criteria("$text").equal(new Document("$search", search)
+            .append("$language", language));
+        return this;
     }
 
     @Override
@@ -359,24 +341,73 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     @Deprecated
     public Update<T> update(List<UpdateOperator> updates) {
-        return new Update<>(datastore, getCollection(), this, clazz, updates);
+        return new Update<>(datastore, getCollection(null), this, type, updates);
     }
 
     @Override
     public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, getCollection(), this, clazz, coalesce(first, updates));
+        return new Update<>(datastore, getCollection(null), this, type, coalesce(first, updates));
+    }
+
+    @Override
+    @Deprecated(since = "2.0", forRemoval = true)
+    public Update<T> update(UpdateOperations<T> operations) {
+        return new Update<>(datastore, getCollection(null), this, type, (UpdateOpsImpl<T>) operations);
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, Stage... updates) {
-        return new PipelineUpdate<>(datastore, getCollection(), this, of(updates))
+        return new PipelineUpdate<>(datastore, getCollection(options.collection()), this, of(updates))
             .execute(options);
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
-        return new Update<>(datastore, getCollection(), this, clazz, of(updates))
+        return new Update<>(datastore, getCollection(options.collection()), this, type, of(updates))
             .execute(options);
+    }
+
+    /**
+     * @return the Mongo fields {@link Document}.
+     * @morphia.internal
+     */
+    @Nullable
+    public Document getFieldsObject() {
+        Projection projection = getOptions().getProjection();
+
+        return projection != null ? projection.map(datastore.getMapper(), type) : null;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, validateName, validateType, baseQuery, getOptions(), compoundContainer, getCollectionName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof LegacyQuery)) {
+            return false;
+        }
+        final LegacyQuery<?> query = (LegacyQuery<?>) o;
+        return validateName == query.validateName
+               && validateType == query.validateType
+               && Objects.equals(type, query.type)
+               && Objects.equals(baseQuery, query.baseQuery)
+               && Objects.equals(getOptions(), query.getOptions())
+               && Objects.equals(compoundContainer, query.compoundContainer)
+               && Objects.equals(getCollectionName(), query.getCollectionName());
+    }
+
+    /**
+     * @return the Mongo sort {@link Document}.
+     * @morphia.internal
+     */
+    @Nullable
+    public Document getSort() {
+        return options != null ? options.getSort() : null;
     }
 
     /**
@@ -406,42 +437,16 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         return query;
     }
 
-    @Override
-    @Deprecated(since = "2.0", forRemoval = true)
-    public Update<T> update(UpdateOperations<T> operations) {
-        return new Update<>(datastore, getCollection(), this, clazz, (UpdateOpsImpl<T>) operations);
-    }
-
     /**
-     * @return the Mongo sort {@link Document}.
+     * @return the collection this query targets
      * @morphia.internal
      */
-    @Nullable
-    public Document getSort() {
-        return options != null ? options.getSort() : null;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(clazz, validateName, validateType, baseQuery, getOptions(), compoundContainer, getCollectionName());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof LegacyQuery)) {
-            return false;
-        }
-        final LegacyQuery<?> query = (LegacyQuery<?>) o;
-        return validateName == query.validateName
-               && validateType == query.validateType
-               && Objects.equals(clazz, query.clazz)
-               && Objects.equals(baseQuery, query.baseQuery)
-               && Objects.equals(getOptions(), query.getOptions())
-               && Objects.equals(compoundContainer, query.compoundContainer)
-               && Objects.equals(getCollectionName(), query.getCollectionName());
+    private MongoCollection<T> getCollection(@Nullable String alternate) {
+        return alternate == null
+               ? collection
+               : datastore
+                   .getDatabase()
+                   .getCollection(alternate, type);
     }
 
     @Override
@@ -515,7 +520,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
         try {
             return options
-                .apply(iterable(options, collection), datastore.getMapper(), clazz)
+                .apply(iterable(options, collection), datastore.getMapper(), type)
                 .iterator();
         } finally {
             if (options.isLogQuery()) {

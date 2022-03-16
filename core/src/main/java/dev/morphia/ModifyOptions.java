@@ -20,9 +20,11 @@ import java.util.concurrent.TimeUnit;
  * @since 2.0
  */
 public class ModifyOptions extends FindOneAndUpdateOptions implements SessionConfigurable<ModifyOptions>,
-                                                                          WriteConfigurable<ModifyOptions> {
+                                                                          WriteConfigurable<ModifyOptions>,
+                                                                          AlternateCollection<ModifyOptions> {
     private WriteConcern writeConcern;
     private ClientSession clientSession;
+    private String collection;
 
     @Override
     public ModifyOptions clientSession(ClientSession clientSession) {
@@ -33,6 +35,17 @@ public class ModifyOptions extends FindOneAndUpdateOptions implements SessionCon
     @Override
     public ClientSession clientSession() {
         return clientSession;
+    }
+
+    @Override
+    public ModifyOptions collection(String collection) {
+        this.collection = collection;
+        return this;
+    }
+
+    @Override
+    public String collection() {
+        return collection;
     }
 
     /**

@@ -62,6 +62,7 @@ import java.util.Map.Entry;
 import java.util.ServiceLoader;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static org.bson.Document.parse;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
@@ -342,7 +343,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         Update<T> update;
         if (!options.unsetMissing()) {
-            update = query.update(dev.morphia.query.experimental.updates.UpdateOperators.set(entity));
+            update = query.update(set(entity));
         } else {
             update = ((MergingEncoder<T>) new MergingEncoder(query,
                 (MorphiaCodec) codecRegistry.get(entity.getClass())))
@@ -408,8 +409,17 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
 
+        String alternate = options.collection();
+        if (grouped.size() > 1 && alternate != null) {
+            Sofia.logInsertManyAlternateCollection();
+        }
+
         for (Entry<MongoCollection, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = entry.getKey();
+            MongoCollection<T> collection = alternate == null
+                                            ? entry.getKey()
+                                            : (MongoCollection<T>) getDatabase().getCollection(
+                                                alternate, entry.getKey().getDocumentClass());
+
             ClientSession clientSession = options.clientSession();
             if (clientSession == null) {
                 collection.insertMany(entry.getValue(), options.getOptions());
@@ -421,6 +431,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         InsertOneOptions insertOneOptions = new InsertOneOptions()
             .bypassDocumentValidation(options.getBypassDocumentValidation())
             .clientSession(findSession(options))
+            .collection(alternate)
             .writeConcern(options.writeConcern());
         for (T entity : list) {
             save(entity, insertOneOptions);
@@ -586,6 +597,10 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private <T> void save(MongoCollection collection, T entity, InsertOneOptions options) {
         ClientSession clientSession = findSession(options);
+        String alternate = options.collection();
+        if (alternate != null) {
+            collection = getDatabase().getCollection(alternate, entity.getClass());
+        }
 
         Object id = mapper.findIdProperty(entity.getClass()).getValue(entity);
         VersionBumpInfo info = updateVersioning(entity);

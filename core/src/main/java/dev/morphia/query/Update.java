@@ -49,7 +49,14 @@ public class Update<T> extends UpdateBase<T> {
         final Document queryObject = getQuery().toDocument();
 
         ClientSession session = getDatastore().findSession(options);
-        MongoCollection<T> mongoCollection = options.prepare(getCollection());
+        String alternate = options.collection();
+        MongoCollection<T> mongoCollection = alternate == null
+                                             ? getCollection()
+                                             : getDatastore()
+                                                 .getDatabase()
+                                                 .getCollection(alternate,
+                                                     getCollection().getDocumentClass());
+
         if (options.isMulti()) {
             return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)
                                    : mongoCollection.updateMany(session, queryObject, updateOperations, options);

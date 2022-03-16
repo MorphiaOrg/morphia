@@ -225,6 +225,15 @@
           "code": "java.method.parameterTypeErasureChanged",
           "justification": "why is it suddenly caring about trans deps?!?",
           "oldArchive": "dev.morphia.morphia:morphia-core:jar:2.2.4"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.visibilityReduced",
+          "old": "method com.mongodb.client.MongoCollection<T> dev.morphia.query.LegacyQuery<T>::getCollection()",
+          "new": "method com.mongodb.client.MongoCollection<T> dev.morphia.query.LegacyQuery<T>::getCollection(java.lang.String)",
+          "oldVisibility": "public",
+          "newVisibility": "private",
+          "justification": "internal method"
         }
       ]
     }
