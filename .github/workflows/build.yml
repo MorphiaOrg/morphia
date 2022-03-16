@@ -55,7 +55,7 @@ jobs:
           cache: 'maven'
 
       - name: Quality Checks
-        run: mvn install -Pquality
+        run: mvn install -Pquality -DskipTests
 
   Snapshots:
     name: Publish Snapshot Artifacts
