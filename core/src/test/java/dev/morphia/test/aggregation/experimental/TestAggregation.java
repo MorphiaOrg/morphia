@@ -1261,6 +1261,7 @@ public class TestAggregation extends TestBase {
     @Test
     public void testUnsetField() {
         checkMinServerVersion(5.0);
+        checkMinDriverVersion(4.5);
         insert("inventory", parseDocs(
             "{ '_id' : 1, 'item' : 'sweatshirt', 'price.usd': 45.99, qty: 300 }",
             "{ '_id' : 2, 'item' : 'winter coat', 'price.usd': 499.99, qty: 200 }",
@@ -1281,7 +1282,6 @@ public class TestAggregation extends TestBase {
             "{ _id: 4, item: 'leather boots', qty: 300 }",
             "{ _id: 5, item: 'bow tie', qty: 180 }");
         assertListEquals(actual, expected);
-
     }
 
     @Test

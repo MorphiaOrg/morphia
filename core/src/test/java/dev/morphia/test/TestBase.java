@@ -180,6 +180,15 @@ public abstract class TestBase {
         checkMinServerVersion(Version.valueOf(version + ".0"));
     }
 
+    protected void checkMinDriverVersion(double version) {
+        checkMinDriverVersion(Version.valueOf(version + ".0"));
+    }
+
+    protected void checkMinDriverVersion(Version version) {
+        assumeTrue(driverIsAtLeastVersion(version),
+            String.format("Server should be at least %s but found %s", version, getServerVersion()));
+    }
+
     protected void checkMinServerVersion(Version version) {
         assumeTrue(serverIsAtLeastVersion(version),
             String.format("Server should be at least %s but found %s", version, getServerVersion()));
@@ -268,6 +277,16 @@ public abstract class TestBase {
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         collection.deleteMany(new Document());
         InsertManyResult insertManyResult = collection.insertMany(list);
+    }
+
+    /**
+     * @param version the minimum version allowed
+     * @return true if server is at least specified version
+     */
+    protected boolean driverIsAtLeastVersion(Version version) {
+        String property = System.getProperty("driver.version");
+        Version driverVersion = property != null ? Version.valueOf(property) : null;
+        return driverVersion == null || driverVersion.greaterThanOrEqualTo(version);
     }
 
     /**
