@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -353,12 +353,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code>, <code><a href="../internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
+<dd><code><a href="../AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code>, <code><a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code>, <code><a href="../internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">FindAndDeleteOptions</span>
 extends com.mongodb.client.model.FindOneAndDeleteOptions
-implements <a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;, <a href="../internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</pre>
+implements <a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;, <a href="../internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;, <a href="../AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</pre>
 <div class="block">Defines options to use for find and delete operations</div>
 </li>
 </ul>
@@ -421,47 +421,61 @@ implements <a href="../internal/SessionConfigurable.html" title="interface in de
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collection()">collection</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns the alternate collection to use for the operation.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collection(java.lang.String)">collection</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
+<td class="colLast">
+<div class="block">Sets the alternate collection to use for the operation.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(org.bson.conversions.Bson)">hint</a></span>​(org.bson.conversions.Bson&nbsp;hint)</code></th>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(org.bson.Document)">hint</a></span>​(org.bson.Document&nbsp;hint)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hintString(java.lang.String)">hintString</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;hint)</code></th>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>​(long&nbsp;maxTime,
        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#projection(org.bson.conversions.Bson)">projection</a></span>​(org.bson.conversions.Bson&nbsp;projection)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(org.bson.conversions.Bson)">sort</a></span>​(org.bson.conversions.Bson&nbsp;sort)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(org.bson.Document)">sort</a></span>​(org.bson.Document&nbsp;sort)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>com.mongodb.WriteConcern</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern()">writeConcern</a></span>()</code></th>
 <td class="colLast">
 <div class="block">The write concern to use.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>​(com.mongodb.WriteConcern&nbsp;writeConcern)</code></th>
 <td class="colLast">
@@ -558,6 +572,42 @@ implements <a href="../internal/SessionConfigurable.html" title="interface in de
 <dd><code><a href="../internal/SessionConfigurable.html#clientSession()">clientSession</a></code>&nbsp;in interface&nbsp;<code><a href="../internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the client session</dd>
+</dl>
+</li>
+</ul>
+<a id="collection(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>collection</h4>
+<pre class="methodSignature">public&nbsp;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&nbsp;collection​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../AlternateCollection.html#collection(java.lang.String)">AlternateCollection</a></code></span></div>
+<div class="block">Sets the alternate collection to use for the operation.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../AlternateCollection.html#collection(java.lang.String)">collection</a></code>&nbsp;in interface&nbsp;<code><a href="../AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>collection</code> - the name of the collection to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="collection()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>collection</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../AlternateCollection.html#collection()">AlternateCollection</a></code></span></div>
+<div class="block">Returns the alternate collection to use for the operation.  Might return null.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../AlternateCollection.html#collection()">collection</a></code>&nbsp;in interface&nbsp;<code><a href="../AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the collection name or null</dd>
 </dl>
 </li>
 </ul>

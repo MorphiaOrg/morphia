@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -348,12 +348,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code>, <code><a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code></dd>
+<dd><code><a href="AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code>, <code><a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code>, <code><a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">InsertOneOptions</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
-implements <a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;, <a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</pre>
+implements <a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;, <a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;, <a href="AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</pre>
 <div class="block">Options related to insertion of documents into MongoDB.  The setter methods return <code>this</code> so that a chaining style can be used.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -428,39 +428,53 @@ implements <a href="internal/SessionConfigurable.html" title="interface in dev.m
 </td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collection()">collection</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns the alternate collection to use for the operation.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collection(java.lang.String)">collection</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
+<td class="colLast">
+<div class="block">Sets the alternate collection to use for the operation.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBypassDocumentValidation()">getBypassDocumentValidation</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets the the bypass document level validation flag</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>com.mongodb.client.model.InsertOneOptions</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOptions()">getOptions</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unsetMissing()">unsetMissing</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Applies the rules for storing null/empty values for fields not present in the object to be merged.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unsetMissing(boolean)">unsetMissing</a></span>​(boolean&nbsp;unset)</code></th>
 <td class="colLast">
 <div class="block">Applies the rules for storing null/empty values for fields no present in the object to be merged.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>com.mongodb.WriteConcern</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern()">writeConcern</a></span>()</code></th>
 <td class="colLast">
 <div class="block">The write concern to use for the insertion.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>​(com.mongodb.WriteConcern&nbsp;writeConcern)</code></th>
 <td class="colLast">
@@ -550,23 +564,6 @@ implements <a href="internal/SessionConfigurable.html" title="interface in dev.m
 <dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/3.2">3.2</a></dd></dl>
 </dl></li>
 </ul>
-<a id="clientSession()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>clientSession</h4>
-<pre class="methodSignature">public&nbsp;com.mongodb.client.ClientSession&nbsp;clientSession()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="internal/SessionConfigurable.html#clientSession()">SessionConfigurable</a></code></span></div>
-<div class="block">The client session to use for the insertion.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="internal/SessionConfigurable.html#clientSession()">clientSession</a></code>&nbsp;in interface&nbsp;<code><a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the client session</dd>
-</dl>
-</li>
-</ul>
 <a id="clientSession(com.mongodb.client.ClientSession)">
 <!--   -->
 </a>
@@ -587,6 +584,60 @@ implements <a href="internal/SessionConfigurable.html" title="interface in dev.m
 </dl>
 </li>
 </ul>
+<a id="clientSession()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>clientSession</h4>
+<pre class="methodSignature">public&nbsp;com.mongodb.client.ClientSession&nbsp;clientSession()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="internal/SessionConfigurable.html#clientSession()">SessionConfigurable</a></code></span></div>
+<div class="block">The client session to use for the insertion.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="internal/SessionConfigurable.html#clientSession()">clientSession</a></code>&nbsp;in interface&nbsp;<code><a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the client session</dd>
+</dl>
+</li>
+</ul>
+<a id="collection(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>collection</h4>
+<pre class="methodSignature">public&nbsp;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;collection​(@Nullable
+                                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AlternateCollection.html#collection(java.lang.String)">AlternateCollection</a></code></span></div>
+<div class="block">Sets the alternate collection to use for the operation.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="AlternateCollection.html#collection(java.lang.String)">collection</a></code>&nbsp;in interface&nbsp;<code><a href="AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>collection</code> - the name of the collection to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="collection()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>collection</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AlternateCollection.html#collection()">AlternateCollection</a></code></span></div>
+<div class="block">Returns the alternate collection to use for the operation.  Might return null.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="AlternateCollection.html#collection()">collection</a></code>&nbsp;in interface&nbsp;<code><a href="AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the collection name or null</dd>
+</dl>
+</li>
+</ul>
 <a id="getBypassDocumentValidation()">
 <!--   -->
 </a>
@@ -599,6 +650,35 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the bypass document level validation flag</dd>
+</dl>
+</li>
+</ul>
+<a id="getOptions()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getOptions</h4>
+<pre class="methodSignature">public&nbsp;com.mongodb.client.model.InsertOneOptions&nbsp;getOptions()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the driver version of the options</dd>
+</dl>
+</li>
+</ul>
+<a id="unsetMissing()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>unsetMissing</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;unsetMissing()</pre>
+<div class="block">Applies the rules for storing null/empty values for fields not present in the object to be merged.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this true if the rules for storing null/empty values should be applied</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.2</dd>
 </dl>
 </li>
 </ul>
@@ -615,22 +695,6 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <dd><code>unset</code> - true if the rules should be applied</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.2</dd>
-</dl>
-</li>
-</ul>
-<a id="unsetMissing()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>unsetMissing</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;unsetMissing()</pre>
-<div class="block">Applies the rules for storing null/empty values for fields not present in the object to be merged.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>this true if the rules for storing null/empty values should be applied</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.2</dd>
 </dl>
@@ -658,7 +722,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <a id="writeConcern()">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>writeConcern</h4>
 <pre class="methodSignature">@Nullable
@@ -669,19 +733,6 @@ public&nbsp;com.mongodb.WriteConcern&nbsp;writeConcern()</pre>
 <dd><code><a href="internal/WriteConfigurable.html#writeConcern()">writeConcern</a></code>&nbsp;in interface&nbsp;<code><a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the write concern, or null if the default will be used.</dd>
-</dl>
-</li>
-</ul>
-<a id="getOptions()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getOptions</h4>
-<pre class="methodSignature">public&nbsp;com.mongodb.client.model.InsertOneOptions&nbsp;getOptions()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the driver version of the options</dd>
 </dl>
 </li>
 </ul>

@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -420,6 +420,22 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Adds, updates, or removes a specified field in a document.</div>
 </td>
 </tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unsetField(dev.morphia.aggregation.experimental.expressions.impls.Expression,java.lang.Object)">unsetField</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;field,
+          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;input)</code></th>
+<td class="colLast">
+<div class="block">Removes a specified field in a document.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unsetField(java.lang.String,java.lang.Object)">unsetField</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;input)</code></th>
+<td class="colLast">
+<div class="block">Removes a specified field in a document.</div>
+</td>
+</tr>
 </tbody></table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -545,7 +561,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <a id="setField(dev.morphia.aggregation.experimental.expressions.impls.Expression,java.lang.Object,dev.morphia.aggregation.experimental.expressions.impls.Expression)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setField</h4>
 <pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;setField​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;field,
@@ -565,6 +581,48 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/setField">Aggregration Expression:  $setField</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="unsetField(java.lang.String,java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>unsetField</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;unsetField​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+                                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;input)</pre>
+<div class="block">Removes a specified field in a document.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>field</code> - the field name</dd>
+<dd><code>input</code> - Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or
+              undefined.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/unsetField">Aggregration Expression:  $unsetField</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="unsetField(dev.morphia.aggregation.experimental.expressions.impls.Expression,java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>unsetField</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;unsetField​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;field,
+                                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;input)</pre>
+<div class="block">Removes a specified field in a document.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>field</code> - the expression yielding the field name</dd>
+<dd><code>input</code> - Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or
+              undefined.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/unsetField">Aggregration Expression:  $unsetField</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd></dl>
 </dl></dl></li>
 </ul>
 </li>

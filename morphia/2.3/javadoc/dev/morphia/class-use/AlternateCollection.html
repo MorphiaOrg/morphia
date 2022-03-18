@@ -223,10 +223,10 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="InsertOneOptions.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/class-use/InsertOneOptions.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/class-use/InsertOneOptions.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/class-use/InsertOneOptions.html">2.0</a>
+    <a class="version is-current" href="AlternateCollection.html">2.3-SNAPSHOT</a>
+    <a class="version is-missing" href="../../../../../2.2/index.html">2.2</a>
+    <a class="version is-missing" href="../../../../../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../../../../../2.0/index.html">2.0</a>
     <a class="version is-missing" href="../../../../../1.6/index.html">1.6</a>
   </div>
 </div>
@@ -236,7 +236,7 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="Uses of Class dev.morphia.InsertOneOptions (Morphia)";
+            parent.document.title="Uses of Interface dev.morphia.AlternateCollection (Morphia)";
         }
     }
     catch(err) {
@@ -262,7 +262,7 @@ loadScripts(document, 'script');</script>
 <ul class="navList" title="Navigation">
 <li><a href="../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../InsertOneOptions.html" title="class in dev.morphia">Class</a></li>
+<li><a href="../AlternateCollection.html" title="interface in dev.morphia">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../deprecated-list.html">Deprecated</a></li>
@@ -309,13 +309,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </header>
 <main role="main">
 <div class="header">
-<h2 title="Uses of Class dev.morphia.InsertOneOptions" class="title">Uses of Class<br>dev.morphia.InsertOneOptions</h2>
+<h2 title="Uses of Interface dev.morphia.AlternateCollection" class="title">Uses of Interface<br>dev.morphia.AlternateCollection</h2>
 </div>
 <div class="classUseContainer">
 <ul class="blockList">
 <li class="blockList">
 <table class="useSummary">
-<caption><span>Packages that use <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Packages that use <a href="../AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Package</th>
 <th class="colLast" scope="col">Description</th>
@@ -326,7 +326,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.experimental">dev.morphia.experimental</a></th>
+<th class="colFirst" scope="row"><a href="#dev.morphia.query">dev.morphia.query</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -338,145 +338,96 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <section role="region"><a id="dev.morphia">
 <!--   -->
 </a>
-<h3>Uses of <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a> in <a href="../package-summary.html">dev.morphia</a></h3>
+<h3>Uses of <a href="../AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a> in <a href="../package-summary.html">dev.morphia</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../package-summary.html">dev.morphia</a> that return <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="../package-summary.html">dev.morphia</a> that implement <a href="../AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
+<th class="colSecond" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#bypassDocumentValidation(java.lang.Boolean)">bypassDocumentValidation</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;bypassDocumentValidation)</code></th>
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></span></code></th>
 <td class="colLast">
-<div class="block">Sets whether to bypass document validation.</div>
+<div class="block">The options to apply when removing documents from the MongoCollection</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#clientSession(com.mongodb.client.ClientSession)">clientSession</a></span>​(com.mongodb.client.ClientSession&nbsp;clientSession)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#collection(java.lang.String)">collection</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#unsetMissing(boolean)">unsetMissing</a></span>​(boolean&nbsp;unset)</code></th>
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></span></code></th>
 <td class="colLast">
-<div class="block">Applies the rules for storing null/empty values for fields no present in the object to be merged.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="../ModifyOptions.html" title="class in dev.morphia"><code>ModifyOptions</code></a> instead</div>
+</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>​(com.mongodb.WriteConcern&nbsp;writeConcern)</code></th>
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></span></code></th>
 <td class="colLast">
-<div class="block">Set the write concern to use for the insert.</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary">
-<caption><span>Methods in <a href="../package-summary.html">dev.morphia</a> with parameters of type <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../Datastore.html#insert(T,dev.morphia.InsertOneOptions)">insert</a></span>​(T&nbsp;entity,
-      <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">
-<div class="block">Inserts an entity in to the mapped collection.</div>
+<div class="block">Options related to insertion of documents into MongoDB.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../DatastoreImpl.html#insert(T,dev.morphia.InsertOneOptions)">insert</a></span>​(T&nbsp;entity,
-      <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></span></code></th>
+<td class="colLast">
+<div class="block">Options related to insertion of documents into MongoDB.</div>
+</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../Datastore.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
-     <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></span></code></th>
 <td class="colLast">
-<div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
+<div class="block">Defines the options for a "find and modify" operation.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../DatastoreImpl.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
-     <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../Datastore.html#save(T,dev.morphia.InsertOneOptions)">save</a></span>​(T&nbsp;entity,
-    <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></span></code></th>
 <td class="colLast">
-<div class="block">Saves an entity (Object) and updates the @Id field</div>
+<div class="block">The options to apply when updating documents in the MongoCollection</div>
 </td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../DatastoreImpl.html#save(T,dev.morphia.InsertOneOptions)">save</a></span>​(T&nbsp;entity,
-    <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary">
-<caption><span>Constructors in <a href="../package-summary.html">dev.morphia</a> with parameters of type <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Constructor</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../InsertOneOptions.html#%3Cinit%3E(dev.morphia.InsertOneOptions)">InsertOneOptions</a></span>​(<a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;that)</code></th>
-<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 </section>
 </li>
 <li class="blockList">
-<section role="region"><a id="dev.morphia.experimental">
+<section role="region"><a id="dev.morphia.query">
 <!--   -->
 </a>
-<h3>Uses of <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a> in <a href="../experimental/package-summary.html">dev.morphia.experimental</a></h3>
+<h3>Uses of <a href="../AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a> in <a href="../query/package-summary.html">dev.morphia.query</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../experimental/package-summary.html">dev.morphia.experimental</a> with parameters of type <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Classes in <a href="../query/package-summary.html">dev.morphia.query</a> that implement <a href="../AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
+<th class="colSecond" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaSessionImpl.</span><code><span class="memberNameLink"><a href="../experimental/MorphiaSessionImpl.html#insert(T,dev.morphia.InsertOneOptions)">insert</a></span>​(T&nbsp;entity,
-      <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></span></code></th>
+<td class="colLast">
+<div class="block">The options for a count operation.</div>
+</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaSessionImpl.</span><code><span class="memberNameLink"><a href="../experimental/MorphiaSessionImpl.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
-     <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></span></code></th>
+<td class="colLast">
+<div class="block">Defines options to use for find and delete operations</div>
+</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaSessionImpl.</span><code><span class="memberNameLink"><a href="../experimental/MorphiaSessionImpl.html#save(T,dev.morphia.InsertOneOptions)">save</a></span>​(T&nbsp;entity,
-    <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></span></code></th>
+<td class="colLast">
+<div class="block">The options to apply to a find operation (also commonly referred to as a query).</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -500,7 +451,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="navList" title="Navigation">
 <li><a href="../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../InsertOneOptions.html" title="class in dev.morphia">Class</a></li>
+<li><a href="../AlternateCollection.html" title="interface in dev.morphia">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../deprecated-list.html">Deprecated</a></li>

@@ -223,11 +223,11 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="FindAndModifyOptions.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../2.2/javadoc/dev/morphia/FindAndModifyOptions.html">2.2</a>
-    <a class="version" href="../../../../2.1/javadoc/dev/morphia/FindAndModifyOptions.html">2.1</a>
-    <a class="version" href="../../../../2.0/javadoc/dev/morphia/FindAndModifyOptions.html">2.0</a>
-    <a class="version" href="../../../../1.6/javadoc/dev/morphia/FindAndModifyOptions.html">1.6</a>
+    <a class="version is-current" href="AlternateCollection.html">2.3-SNAPSHOT</a>
+    <a class="version is-missing" href="../../../../2.2/index.html">2.2</a>
+    <a class="version is-missing" href="../../../../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../../../../2.0/index.html">2.0</a>
+    <a class="version is-missing" href="../../../../1.6/index.html">1.6</a>
   </div>
 </div>
 </div>
@@ -236,14 +236,14 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="FindAndModifyOptions (Morphia)";
+            parent.document.title="AlternateCollection (Morphia)";
         }
     }
     catch(err) {
     }
 //-->
-var data = {"i0":42};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
+var data = {"i0":6,"i1":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -269,7 +269,7 @@ loadScripts(document, 'script');</script>
 <li><a href="../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/FindAndModifyOptions.html">Use</a></li>
+<li><a href="class-use/AlternateCollection.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../index-all.html">Index</a></li>
@@ -306,13 +306,13 @@ loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -332,76 +332,34 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <main role="main">
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia</a></div>
-<h2 title="Class FindAndModifyOptions" class="title">Class FindAndModifyOptions</h2>
+<h2 title="Interface AlternateCollection" class="title">Interface AlternateCollection&lt;T&gt;</h2>
 </div>
 <div class="contentContainer">
-<ul class="inheritance">
-<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
-<li>
-<ul class="inheritance">
-<li>com.mongodb.client.model.FindOneAndUpdateOptions</li>
-<li>
-<ul class="inheritance">
-<li><a href="ModifyOptions.html" title="class in dev.morphia">dev.morphia.ModifyOptions</a></li>
-<li>
-<ul class="inheritance">
-<li>dev.morphia.FindAndModifyOptions</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
 <dl>
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&gt;</code>, <code><a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&gt;</code>, <code><a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&gt;</code></dd>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the Options type</dd>
+</dl>
+<dl>
+<dt>All Known Implementing Classes:</dt>
+<dd><code><a href="query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></code>, <code><a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></code>, <code><a href="query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code>, <code><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code>, <code><a href="query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code>, <code><a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></code>, <code><a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code>, <code><a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></code>, <code><a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></code></dd>
 </dl>
 <hr>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-public final class <span class="typeNameLabel">FindAndModifyOptions</span>
-extends <a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="ModifyOptions.html" title="class in dev.morphia"><code>ModifyOptions</code></a> instead</div>
-</div>
-<div class="block">The options for find and modify operations.</div>
+<pre><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public interface <span class="typeNameLabel">AlternateCollection&lt;T&gt;</span></pre>
+<div class="block">Specifies that an Options class accepts an alternate collection specification.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>1.3</dd>
-</dl>
+<dd>2.3</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- ======== CONSTRUCTOR SUMMARY ======== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="constructor.summary">
-<!--   -->
-</a>
-<h3>Constructor Summary</h3>
-<table class="memberSummary">
-<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Constructor</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">FindAndModifyOptions</a></span>()</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
-&nbsp;</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-</section>
 <!-- ========== METHOD SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -410,48 +368,27 @@ extends <a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions<
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#returnNew(boolean)">returnNew</a></span>​(boolean&nbsp;returnNew)</code></th>
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collection()">collection</a></span>()</code></th>
 <td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+<div class="block">Returns the alternate collection to use for the operation.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="AlternateCollection.html" title="type parameter in AlternateCollection">T</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collection(java.lang.String)">collection</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
+<td class="colLast">
+<div class="block">Sets the alternate collection to use for the operation.</div>
 </td>
 </tr>
 </tbody></table>
-<ul class="blockList">
-<li class="blockList"><a id="methods.inherited.from.class.dev.morphia.ModifyOptions">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;dev.morphia.<a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></h3>
-<code><a href="ModifyOptions.html#arrayFilters(java.util.List)">arrayFilters</a>, <a href="ModifyOptions.html#bypassDocumentValidation(java.lang.Boolean)">bypassDocumentValidation</a>, <a href="ModifyOptions.html#clientSession()">clientSession</a>, <a href="ModifyOptions.html#clientSession(com.mongodb.client.ClientSession)">clientSession</a>, <a href="ModifyOptions.html#collation(com.mongodb.client.model.Collation)">collation</a>, <a href="ModifyOptions.html#collection()">collection</a>, <a href="ModifyOptions.html#collection(java.lang.String)">collection</a>, <a href="ModifyOptions.html#hint(org.bson.conversions.Bson)">hint</a>, <a href="ModifyOptions.html#hint(org.bson.Document)">hint</a>, <a href="ModifyOptions.html#hintString(java.lang.String)">hintString</a>, <a href="ModifyOptions.html#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a>, <a href="ModifyOptions.html#projection(org.bson.conversions.Bson)">projection</a>, <a href="ModifyOptions.html#returnDocument(com.mongodb.client.model.ReturnDocument)">returnDocument</a>, <a href="ModifyOptions.html#sort(org.bson.conversions.Bson)">sort</a>, <a href="ModifyOptions.html#upsert(boolean)">upsert</a>, <a href="ModifyOptions.html#writeConcern()">writeConcern</a>, <a href="ModifyOptions.html#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></code></li>
-</ul>
-<ul class="blockList">
-<li class="blockList"><a id="methods.inherited.from.class.com.mongodb.client.model.FindOneAndUpdateOptions">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;com.mongodb.client.model.FindOneAndUpdateOptions</h3>
-<code>getArrayFilters, getBypassDocumentValidation, getCollation, getHint, getHintString, getMaxTime, getProjection, getReturnDocument, getSort, isUpsert, toString</code></li>
-</ul>
-<ul class="blockList">
-<li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang" class="externalLink">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang" class="externalLink">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
-</ul>
-<ul class="blockList">
-<li class="blockList"><a id="methods.inherited.from.class.dev.morphia.internal.WriteConfigurable">
-<!--   -->
-</a>
-<h3>Methods inherited from interface&nbsp;dev.morphia.internal.<a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a></h3>
-<code><a href="internal/WriteConfigurable.html#getWriteConcern()">getWriteConcern</a>, <a href="internal/WriteConfigurable.html#prepare(com.mongodb.client.MongoCollection)">prepare</a></code></li>
-</ul>
 </li>
 </ul>
 </section>
@@ -461,26 +398,6 @@ extends <a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions<
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="constructor.detail">
-<!--   -->
-</a>
-<h3>Constructor Detail</h3>
-<a id="<init>()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>FindAndModifyOptions</h4>
-<pre>public&nbsp;FindAndModifyOptions()</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
-</li>
-</ul>
-</li>
-</ul>
-</section>
 <!-- ============ METHOD DETAIL ========== -->
 <section role="region">
 <ul class="blockList">
@@ -488,22 +405,39 @@ extends <a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions<
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="returnNew(boolean)">
+<a id="collection(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>collection</h4>
+<pre class="methodSignature"><a href="AlternateCollection.html" title="type parameter in AlternateCollection">T</a>&nbsp;collection​(@Nullable
+             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
+<div class="block">Sets the alternate collection to use for the operation.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>collection</code> - the name of the collection to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+</dl>
+</li>
+</ul>
+<a id="collection()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>returnNew</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;returnNew​(boolean&nbsp;returnNew)</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
-<div class="block">Sets the returnNew</div>
+<h4>collection</h4>
+<pre class="methodSignature">@Nullable
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection()</pre>
+<div class="block">Returns the alternate collection to use for the operation.  Might return null.</div>
 <dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>returnNew</code> - the returnNew</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>this</dd>
+<dd>the collection name or null</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
 </dl>
 </li>
 </ul>
@@ -530,7 +464,7 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <li><a href="../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/FindAndModifyOptions.html">Use</a></li>
+<li><a href="class-use/AlternateCollection.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../index-all.html">Index</a></li>
@@ -561,13 +495,13 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
+<li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>

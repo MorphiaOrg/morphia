@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":42,"i6":10,"i7":10,"i8":10,"i9":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":42,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -348,12 +348,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</code>, <code><a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</code></dd>
+<dd><code><a href="AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</code>, <code><a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</code>, <code><a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">InsertManyOptions</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
-implements <a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;, <a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</pre>
+implements <a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;, <a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;, <a href="AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</pre>
 <div class="block">Options related to insertion of documents into MongoDB.  The setter methods return <code>this</code> so that a chaining style can be used.</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
@@ -428,46 +428,60 @@ implements <a href="internal/SessionConfigurable.html" title="interface in dev.m
 </td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collection()">collection</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns the alternate collection to use for the operation.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collection(java.lang.String)">collection</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
+<td class="colLast">
+<div class="block">Sets the alternate collection to use for the operation.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getBypassDocumentValidation()">getBypassDocumentValidation</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets whether to bypass document validation, or null if unspecified.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>com.mongodb.client.model.InsertManyOptions</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOptions()">getOptions</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>com.mongodb.WriteConcern</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getWriteConcern()">getWriteConcern</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isOrdered()">isOrdered</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ordered(boolean)">ordered</a></span>​(boolean&nbsp;ordered)</code></th>
 <td class="colLast">
 <div class="block">Sets whether the server should insert the documents in the order provided.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>com.mongodb.WriteConcern</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern()">writeConcern</a></span>()</code></th>
 <td class="colLast">
 <div class="block">The write concern to use.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>​(com.mongodb.WriteConcern&nbsp;writeConcern)</code></th>
 <td class="colLast">
@@ -591,6 +605,44 @@ implements <a href="internal/SessionConfigurable.html" title="interface in dev.m
 </dl>
 </li>
 </ul>
+<a id="collection(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>collection</h4>
+<pre class="methodSignature">public&nbsp;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;collection​(@Nullable
+                                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AlternateCollection.html#collection(java.lang.String)">AlternateCollection</a></code></span></div>
+<div class="block">Sets the alternate collection to use for the operation.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="AlternateCollection.html#collection(java.lang.String)">collection</a></code>&nbsp;in interface&nbsp;<code><a href="AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>collection</code> - the name of the collection to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="collection()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>collection</h4>
+<pre class="methodSignature">@Nullable
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AlternateCollection.html#collection()">AlternateCollection</a></code></span></div>
+<div class="block">Returns the alternate collection to use for the operation.  Might return null.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="AlternateCollection.html#collection()">collection</a></code>&nbsp;in interface&nbsp;<code><a href="AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the collection name or null</dd>
+</dl>
+</li>
+</ul>
 <a id="getBypassDocumentValidation()">
 <!--   -->
 </a>
@@ -639,37 +691,6 @@ public&nbsp;com.mongodb.WriteConcern&nbsp;getWriteConcern()</pre>
 </dl>
 </li>
 </ul>
-<a id="isOrdered()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isOrdered</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;isOrdered()</pre>
-<div class="block">Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion. The default is true.
- If false, the server will attempt to insert all the documents regardless of an failures.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>whether the the documents should be inserted in order</dd>
-</dl>
-</li>
-</ul>
-<a id="ordered(boolean)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>ordered</h4>
-<pre class="methodSignature">public&nbsp;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;ordered​(boolean&nbsp;ordered)</pre>
-<div class="block">Sets whether the server should insert the documents in the order provided.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>ordered</code> - true if documents should be inserted in order</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>this</dd>
-</dl>
-</li>
-</ul>
 <a id="writeConcern(com.mongodb.WriteConcern)">
 <!--   -->
 </a>
@@ -693,7 +714,7 @@ public&nbsp;com.mongodb.WriteConcern&nbsp;getWriteConcern()</pre>
 <a id="writeConcern()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>writeConcern</h4>
 <pre class="methodSignature">@Nullable
@@ -705,6 +726,37 @@ public&nbsp;com.mongodb.WriteConcern&nbsp;writeConcern()</pre>
 <dd><code><a href="internal/WriteConfigurable.html#writeConcern()">writeConcern</a></code>&nbsp;in interface&nbsp;<code><a href="internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a>&lt;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&gt;</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the write concern, or null if the default will be used.</dd>
+</dl>
+</li>
+</ul>
+<a id="isOrdered()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isOrdered</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isOrdered()</pre>
+<div class="block">Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion. The default is true.
+ If false, the server will attempt to insert all the documents regardless of an failures.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>whether the the documents should be inserted in order</dd>
+</dl>
+</li>
+</ul>
+<a id="ordered(boolean)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>ordered</h4>
+<pre class="methodSignature">public&nbsp;<a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;ordered​(boolean&nbsp;ordered)</pre>
+<div class="block">Sets whether the server should insert the documents in the order provided.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ordered</code> - true if documents should be inserted in order</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
 </dl>
 </li>
 </ul>
