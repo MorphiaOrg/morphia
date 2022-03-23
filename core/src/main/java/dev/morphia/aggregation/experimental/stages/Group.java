@@ -14,12 +14,11 @@ import dev.morphia.sofia.Sofia;
  * @aggregation.expression $group
  */
 public class Group extends Stage {
-    private final GroupId id;
+    private GroupId id;
     private Fields<Group> fields;
 
     protected Group() {
         super("$group");
-        id = null;
     }
 
     protected Group(GroupId id) {
@@ -120,10 +119,17 @@ public class Group extends Stage {
      * @return this
      */
     public Group field(String name, Expression expression) {
-        if (fields == null) {
-            fields = Fields.on(this);
+        if (name.equals("_id")) {
+            if (id != null) {
+                throw new AggregationException(Sofia.groupIdAlreadyDefined());
+            }
+            id = id(expression);
+        } else {
+            if (fields == null) {
+                fields = Fields.on(this);
+            }
+            fields.add(name, expression);
         }
-        fields.add(name, expression);
         return this;
     }
 

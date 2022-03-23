@@ -9,6 +9,8 @@ import com.mongodb.client.model.CollationStrength;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
+import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.experimental.stages.Sort;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -53,6 +55,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Collation.builder;
+import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;
+import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.Sort.naturalAscending;
@@ -812,6 +816,12 @@ public class TestQuery extends TestBase {
         assertDocumentEquals(newDoc, Document.parse("{\"$and\": [{\"$or\": [{\"status\": {\"$exists\": false}}, {\"status\": 0}]}, " +
                                                     "{\"$or\": [{\"belongsToContentId\": {\"$exists\": false}}, {\"$and\": " +
                                                     "[{\"belongsToContentId\": {\"$exists\": true}}, {\"showAtGuideLevel\": true}]}]}]}"));
+
+        getDs().aggregate("booking")
+               .group(Group.group()
+                           .field("_id", year(field("booked"))))
+               .sort(Sort.sort().descending("_id"))
+               .execute(Document.class);
     }
 
     @Test
