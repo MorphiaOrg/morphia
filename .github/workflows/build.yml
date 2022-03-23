@@ -3,16 +3,7 @@
 
 name: Morphia Build
 
-on:
-  push:
-    tags-ignore:
-      - r[0-9]*
-  pull_request:
-    tags-ignore:
-      - r[0-9]*
-  workflow_dispatch:
-    tags-ignore:
-      - r[0-9]*
+on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
   Morphia:
@@ -62,11 +53,11 @@ jobs:
           cache: 'maven'
 
       - name: Quality Checks
-        run: mvn install -Pquality -DskipTests
+        run: mvn -f core/pom.xml install -Pquality -DskipTests
 
   Snapshots:
     name: Publish Snapshot Artifacts
-    if: "github.repository == 'MorphiaOrg/morphia' && github.event_name == 'push'"
+    if: "github.repository == 'MorphiaOrg/morphia' && github.ref == 'refs/heads/2.2.x' && github.event_name == 'push'"
     needs:
       - Morphia
       - Quality
