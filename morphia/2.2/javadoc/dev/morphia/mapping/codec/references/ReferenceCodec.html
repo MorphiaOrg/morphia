@@ -593,25 +593,6 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 </dl>
 </li>
 </ul>
-<a id="encode(java.lang.Object)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>encode</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;encode​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../pojo/PropertyHandler.html#encode(java.lang.Object)">PropertyHandler</a></code></span></div>
-<div class="block">Encodes the value</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../pojo/PropertyHandler.html#encode(java.lang.Object)">encode</a></code>&nbsp;in interface&nbsp;<code><a href="../pojo/PropertyHandler.html" title="interface in dev.morphia.mapping.codec.pojo">PropertyHandler</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>value</code> - the value</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the encoded value</dd>
-</dl>
-</li>
-</ul>
 <a id="encode(org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">
 <!--   -->
 </a>
@@ -630,13 +611,33 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <a id="getEncoderClass()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getEncoderClass</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;getEncoderClass()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getEncoderClass</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Encoder&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
+</dl>
+</li>
+</ul>
+<a id="encode(java.lang.Object)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>encode</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;encode​(@Nullable
+                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../pojo/PropertyHandler.html#encode(java.lang.Object)">PropertyHandler</a></code></span></div>
+<div class="block">Encodes the value</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../pojo/PropertyHandler.html#encode(java.lang.Object)">encode</a></code>&nbsp;in interface&nbsp;<code><a href="../pojo/PropertyHandler.html" title="interface in dev.morphia.mapping.codec.pojo">PropertyHandler</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>value</code> - the value</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the encoded value</dd>
 </dl>
 </li>
 </ul>
@@ -709,7 +710,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2021. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
 </footer>
 
 

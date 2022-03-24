@@ -310,7 +310,7 @@ This would result in a query that looks like this:</p>
 </div>
 <div class="paragraph">
 <p>The list of supported filter operations can be found in the
-<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/main/java/dev/morphia/query/FilterOperator.java">FilterOperator</a> class.</p>
+<a href="https://github.com/MorphiaOrg/morphia/tree/2.2.x/morphia/src/main/java/dev/morphia/query/FilterOperator.java">FilterOperator</a> class.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -435,7 +435,7 @@ For example, with the equal operator, you can use the canonical <code>$eq</code>
 <h3 id="_field"><a class="anchor" href="#_field"></a><code>field()</code></h3>
 <div class="paragraph">
 <p>For those who would prefer more compile time validation of their queries, there is <code>field()</code>.
-This method takes only the field name and returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/main/java/dev/morphia/query/FieldEnd.java">class</a> providing methods with which to define your filters.
+This method takes only the field name and returns an instance of a <a href="https://github.com/MorphiaOrg/morphia/tree/2.2.x/morphia/src/main/java/dev/morphia/query/FieldEnd.java">class</a> providing methods with which to define your filters.
 This approach is slightly more verbose but can be validated by the compiler to a much greater degree than
 <code>filter()</code> can be.
 To perform the same query as above, you&#8217;d write this:</p>
@@ -529,7 +529,7 @@ public static class Greeting {
 <p>The <code>$**</code> value tells MongoDB to create a text index on all the text fields in a document.
 A more targeted index can be created, if desired, by explicitly listing which fields to index.
 Once the index is defined, we can start querying against it like this
-<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/query/TestTextSearching.java">test</a> does:</p>
+<a href="https://github.com/MorphiaOrg/morphia/tree/2.2.x/morphia/src/test/java/dev/morphia/query/TestTextSearching.java">test</a> does:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -571,7 +571,7 @@ Listed below are some of the options for modifying the query results in differen
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/">Projections</a> allow you to return only a subset of the fields in a document.
 This is useful when you need to only return a smaller view of a larger object.
 Borrowing from the
-<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a>, this is an example of this feature in action:</p>
+<a href="https://github.com/MorphiaOrg/morphia/tree/2.2.x/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a>, this is an example of this feature in action:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -663,7 +663,7 @@ For example, to sort by age (youngest to oldest) and then income (highest to low
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/">capped collection</a> it&#8217;s possible to "tail" a query so that when new documents are added to the collection that match your query, they&#8217;ll be returned by the
 <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor">tailable cursor</a>.
 An example of this feature in action can be found in the
-<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
+<a href="https://github.com/MorphiaOrg/morphia/tree/2.2.x/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
 </div>
 <div class="listingblock">
 <div class="content">

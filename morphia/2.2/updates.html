@@ -371,7 +371,7 @@ In the server documentation, this is referred to as <a href="http://docs.mongodb
 In Morphia, this functionality is exposed through the <a href="javadoc/dev/morphia/query/Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator&#8230;&#8203;)#" class="page">Query#modify()</a>
 method.
 With this method, you can choose to return the updated entity in either the state before or after the update.
-The default is to return the entity in the <em>after</em> state.
+The default is to return the entity in the <em>before</em> state.
 This can be changed by passing in a <code>ModifyOptions</code> reference to the operation:</p>
 </div>
 <div class="listingblock">
@@ -380,7 +380,7 @@ This can be changed by passing in a <code>ModifyOptions</code> reference to the 
     .find(Hotel.class)
     .modify(UpdateOperators.set("address.city", "Ottawa"))
     execute(new ModifyOptions()
-        .returnDocument(ReturnDocument.BEFORE));</code></pre>
+        .returnDocument(ReturnDocument.AFTER));</code></pre>
 </div>
 </div>
 </div>
