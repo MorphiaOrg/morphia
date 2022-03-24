@@ -121,7 +121,7 @@ In the server documentation, this is referred to as {docsRef}/reference/method/d
 In Morphia, this functionality is exposed through the xref:javadoc:dev/morphia/query/Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator...)#[Query#modify()]
 method.
 With this method, you can choose to return the updated entity in either the state before or after the update.
-The default is to return the entity in the _after_ state.
+The default is to return the entity in the _before_ state.
 This can be changed by passing in a `ModifyOptions` reference to the operation:
 
 [source,java]
@@ -130,7 +130,7 @@ datastore
     .find(Hotel.class)
     .modify(UpdateOperators.set("address.city", "Ottawa"))
     execute(new ModifyOptions()
-        .returnDocument(ReturnDocument.BEFORE));
+        .returnDocument(ReturnDocument.AFTER));
 ----
 
 === Merges
