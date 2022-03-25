@@ -96,6 +96,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * @return the encoded value
      * @morphia.internal
      */
+    @Nullable
     public static Object encodeId(Mapper mapper, Datastore datastore, Object value, PropertyModel model) {
         Object idValue;
         MongoCollection<?> collection;
@@ -109,7 +110,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             collection = datastore.getDatabase().getCollection(collectionName, type);
         } else {
             idValue = mapper.getId(value);
-            if (idValue == null && !model.getAnnotation(Reference.class).ignoreMissing()) {
+            if (idValue == null && !getReferenceAnnotation(model).ignoreMissing()) {
                 if (!mapper.isMappable(value.getClass())) {
                     return value;
                 }
@@ -235,7 +236,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         if (idValue != null) {
             final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
             codec.encode(writer, idValue, encoderContext);
-        } else if (getPropertyModel().getAnnotation(Reference.class).ignoreMissing()) {
+        } else if (getReferenceAnnotation(getPropertyModel()).ignoreMissing()) {
             writer.writeNull();
         } else {
             throw new ReferenceException(Sofia.noIdForReference());
@@ -244,10 +245,10 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
 
     @Override
     public Class getEncoderClass() {
-        TypeData type = getTypeData();
-        List typeParameters = type.getTypeParameters();
+        TypeData<?> type = getTypeData();
+        List<?> typeParameters = type.getTypeParameters();
         if (!typeParameters.isEmpty()) {
-            type = (TypeData) typeParameters.get(typeParameters.size() - 1);
+            type = (TypeData<?>) typeParameters.get(typeParameters.size() - 1);
         }
         return type.getType();
     }
