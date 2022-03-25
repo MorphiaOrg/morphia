@@ -109,7 +109,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             collection = datastore.getDatabase().getCollection(collectionName, type);
         } else {
             idValue = mapper.getId(value);
-            if (idValue == null) {
+            if (idValue == null && !model.getAnnotation(Reference.class).ignoreMissing()) {
                 if (!mapper.isMappable(value.getClass())) {
                     return value;
                 }
@@ -235,6 +235,8 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         if (idValue != null) {
             final Codec codec = getDatastore().getMapper().getCodecRegistry().get(idValue.getClass());
             codec.encode(writer, idValue, encoderContext);
+        } else if (getPropertyModel().getAnnotation(Reference.class).ignoreMissing()) {
+            writer.writeNull();
         } else {
             throw new ReferenceException(Sofia.noIdForReference());
         }
@@ -250,6 +252,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return type.getType();
     }
 
+    @Nullable
     private Object collectIdValues(Object value) {
         if (value instanceof Collection) {
             List<Object> ids = new ArrayList<>(((Collection<?>) value).size());

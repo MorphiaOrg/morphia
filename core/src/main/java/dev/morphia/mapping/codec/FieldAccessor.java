@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.MappingException;
 import org.bson.codecs.pojo.PropertyAccessor;
 
@@ -26,9 +27,10 @@ public class FieldAccessor implements PropertyAccessor<Object> {
     }
 
     @Override
-    public Object get(Object instance) {
+    @Nullable
+    public Object get(@Nullable Object instance) {
         try {
-            return field.get(instance);
+            return instance != null ? field.get(instance) : null;
         } catch (IllegalAccessException e) {
             throw new MappingException(e.getMessage(), e);
         }
