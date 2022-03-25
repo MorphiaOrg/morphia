@@ -86,7 +86,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     public ReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
         super(datastore, propertyModel);
         mapper = datastore.getMapper();
-        annotation = propertyModel.getAnnotation(Reference.class);
+        annotation = getReferenceAnnotation(propertyModel);
     }
 
     /**
@@ -209,6 +209,8 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         if (idValue != null) {
             final Codec codec = getDatastore().getCodecRegistry().get(idValue.getClass());
             codec.encode(writer, idValue, encoderContext);
+        } else if (getReferenceAnnotation(getPropertyModel()).ignoreMissing()) {
+            writer.writeNull();
         } else {
             throw new ReferenceException(Sofia.noIdForReference());
         }
@@ -224,6 +226,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return type.getType();
     }
 
+    @Nullable
     private Object collectIdValues(Object value) {
         if (value instanceof Collection) {
             return ((Collection<?>) value).stream()
@@ -241,7 +244,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                          .map(o -> collectIdValues(o))
                          .collect(Collectors.toCollection(ArrayList::new));
         } else {
-            return encodeId(value, getPropertyModel());
+            return encodeId(value);
         }
     }
 
@@ -268,11 +271,11 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * Encodes a value
      *
      * @param value the value to encode
-     * @param model the mapped class of the field type
      * @return the encoded value
      * @morphia.internal
      */
-    private Object encodeId(Object value, PropertyModel model) {
+    @Nullable
+    private Object encodeId(Object value) {
         Object idValue;
         final String valueCollectionName;
         if (value instanceof Key) {
@@ -285,7 +288,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             valueCollectionName = collectionName;
         } else {
             idValue = mapper.getId(value);
-            if (idValue == null) {
+            if (idValue == null && !annotation.ignoreMissing()) {
                 if (!mapper.isMappable(value.getClass())) {
                     return value;
                 }
@@ -295,8 +298,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             valueCollectionName = mapper.getEntityModel(value.getClass()).getCollectionName();
         }
 
-        Reference annotation = model.getAnnotation(Reference.class);
-        if (annotation != null && !annotation.idOnly()) {
+        if (!annotation.idOnly()) {
             idValue = new DBRef(valueCollectionName, idValue);
         }
         return idValue;

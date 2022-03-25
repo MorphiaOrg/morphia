@@ -1,11 +1,15 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.codecs.Codec;
+
+import java.util.Objects;
 
 /**
  * Defines codecs for properties
@@ -57,5 +61,10 @@ public abstract class BaseReferenceCodec<T> implements Codec<T> {
             entityModel = mapper.getEntityModel(PropertyModel.normalize(getTypeData()));
         }
         return entityModel;
+    }
+
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+    protected static Reference getReferenceAnnotation(PropertyModel model) {
+        return Objects.requireNonNull(model.getAnnotation(Reference.class));
     }
 }
