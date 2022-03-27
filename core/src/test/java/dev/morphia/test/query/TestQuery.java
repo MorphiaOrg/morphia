@@ -75,6 +75,7 @@ import static dev.morphia.query.experimental.filters.Filters.regex;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
+import static java.util.List.of;
 import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
 import static org.bson.Document.parse;
@@ -90,6 +91,37 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({"unchecked", "unused"})
 public class TestQuery extends TestBase {
+
+    @Test
+    public void multiKeyValueQueries() {
+        getMapper().map(of(KeyValue.class));
+        getDs().ensureIndexes(KeyValue.class);
+        final KeyValue value = new KeyValue();
+        final List<Object> keys = Arrays.asList("key1", "key2");
+        value.key = keys;
+        getDs().save(value);
+
+        FindOptions options = new FindOptions().logQuery();
+        final Query<KeyValue> query = getDs().find(KeyValue.class)
+                                             .filter(in("key", keys));
+        query.iterator(options);
+        String loggedQuery = getDs().getLoggedQuery(options);
+        assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
+        assertEquals(query.iterator(new FindOptions().limit(1))
+                          .tryNext()
+                         .id, value.id);
+    }
+
+    @Test
+    public void testAlternateCollections() {
+        getDs().save(new Photo(of("i", "am", "keywords")));
+
+        getDs().getMapper().getCollection(Photo.class)
+               .renameCollection(new MongoNamespace(getDatabase().getName(), "alternate"));
+        assertEquals(getDs().find(Photo.class).count(), 0);
+
+        assertEquals(getDs().find("alternate", Photo.class).count(), 1);
+    }
 
     @Test
     public void genericMultiKeyValueQueries() {
@@ -113,23 +145,14 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void multiKeyValueQueries() {
-        getMapper().map(List.of(KeyValue.class));
-        getDs().ensureIndexes(KeyValue.class);
-        final KeyValue value = new KeyValue();
-        final List<Object> keys = Arrays.asList("key1", "key2");
-        value.key = keys;
-        getDs().save(value);
-
-        FindOptions options = new FindOptions().logQuery();
-        final Query<KeyValue> query = getDs().find(KeyValue.class)
-                                             .filter(in("key", keys));
-        query.iterator(options);
-        String loggedQuery = getDs().getLoggedQuery(options);
-        assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
-        assertEquals(query.iterator(new FindOptions().limit(1))
-                          .tryNext()
-                         .id, value.id);
+    public void testDups() {
+        List<UserModel> saved = of(new UserModel("first"), new UserModel("second"));
+        getDs().save(saved);
+        List<UserModel> users = getDs().find(UserModel.class)
+                                       .iterator(new FindOptions()
+                                           .sort(ascending("name")))
+                                       .toList();
+        assertListEquals(users, saved);
     }
 
     @Test
@@ -168,15 +191,41 @@ public class TestQuery extends TestBase {
         assertEquals(r1.getWidth(), 10, 0);
     }
 
-    @Test
-    public void testAlternateCollections() {
-        getDs().save(new Photo(List.of("i", "am", "keywords")));
+    @Entity
+    private static class UserModel {
+        @Id
+        public String id;
+        public String name;
+        // ... other attributes
 
-        getDs().getMapper().getCollection(Photo.class)
-               .renameCollection(new MongoNamespace(getDatabase().getName(), "alternate"));
-        assertEquals(getDs().find(Photo.class).count(), 0);
+        public UserModel(String name) {
+            this.name = name;
+        }
 
-        assertEquals(getDs().find("alternate", Photo.class).count(), 1);
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof UserModel)) {
+                return false;
+            }
+            UserModel userModel = (UserModel) o;
+            return Objects.equals(id, userModel.id) && Objects.equals(name, userModel.name);
+        }
+
+        @Override
+        public String toString() {
+            return "UserModel{" +
+                   "id='" + id + '\'' +
+                   ", name='" + name + '\'' +
+                   '}';
+        }
     }
 
     @Test

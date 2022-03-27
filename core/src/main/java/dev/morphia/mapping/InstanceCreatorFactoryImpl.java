@@ -39,8 +39,7 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
                             return new ConstructorCreator(model, constructor);
                         };
                     } catch (MappingException e1) {
-                        MorphiaInstanceCreator unsafeConstructorCreator = new UnsafeConstructorCreator(model);
-                        creator = () -> unsafeConstructorCreator;
+                        creator = () -> new UnsafeConstructorCreator(model);
                     }
                 }
             } else {
