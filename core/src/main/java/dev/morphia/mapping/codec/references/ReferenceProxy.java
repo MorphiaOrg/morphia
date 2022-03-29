@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.references;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
@@ -50,6 +51,7 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
         return (T) reference.get();
     }
 
+    @Nullable
     private Object invoke(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
         if (method.getDeclaringClass().isAssignableFrom(getClass())) {
             return method.invoke(this, args);
@@ -57,7 +59,11 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
             if (isFetched()) {
                 Object target = reference.get();
                 if (target == null) {
-                    throw new ReferenceException(Sofia.missingReferencedEntity(reference.getType()));
+                    if (!reference.ignoreMissing()) {
+                        throw new ReferenceException(Sofia.missingReferencedEntity(reference.getType()));
+                    } else {
+                        return null;
+                    }
                 }
                 return method.invoke(target, args);
             } else {
