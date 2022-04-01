@@ -2,6 +2,7 @@ package dev.morphia.aggregation.codecs.stages;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.UnionWith;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -21,6 +22,7 @@ public class UnionWithCodec extends StageCodec<UnionWith> {
      * @param datastore the datastore to use
      * @morphia.internal
      */
+    @MorphiaInternal
     public UnionWithCodec(Datastore datastore) {
         super(datastore);
     }

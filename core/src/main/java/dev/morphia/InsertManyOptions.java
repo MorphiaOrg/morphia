@@ -3,6 +3,7 @@ package dev.morphia;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 
@@ -29,6 +30,7 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
      * @morphia.internal
      * @since 2.0
      */
+    @MorphiaInternal
     public InsertManyOptions(InsertManyOptions that) {
         this.options = that.options;
         this.writeConcern = that.writeConcern;

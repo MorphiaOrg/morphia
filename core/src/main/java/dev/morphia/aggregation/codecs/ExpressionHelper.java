@@ -79,6 +79,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
+    @MorphiaInternal
     public static void expression(Datastore datastore, BsonWriter writer, String name, @Nullable Expression expression,
                                   EncoderContext encoderContext) {
         if (expression != null) {
@@ -94,6 +95,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
+    @MorphiaInternal
     public static void expression(Datastore datastore, BsonWriter writer, @Nullable Expression expression, EncoderContext encoderContext) {
         if (expression != null) {
             expression.encode(datastore, writer, encoderContext);
@@ -108,6 +110,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
+    @MorphiaInternal
     public static void value(Datastore datastore, BsonWriter writer, String name, @Nullable Object value, EncoderContext encoderContext) {
         if (value != null) {
             if (value instanceof List) {
@@ -163,6 +166,7 @@ public final class ExpressionHelper {
      * @param encoderContext
      * @morphia.internal
      */
+    @MorphiaInternal
     public static void value(Datastore datastore, BsonWriter writer, @Nullable Object value, EncoderContext encoderContext) {
         if (value != null) {
             Codec codec = datastore.getCodecRegistry().get(value.getClass());

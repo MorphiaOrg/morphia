@@ -39,6 +39,7 @@ import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.aggregation.stages.Unwind;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -60,6 +61,7 @@ import java.util.stream.Collectors;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class AggregationImpl<T> implements Aggregation<T> {
     private final Datastore datastore;
     private final Class<?> source;
@@ -73,6 +75,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
      * @param collection the source collection
      * @morphia.internal
      */
+    @MorphiaInternal
     @SuppressFBWarnings("EI_EXPOSE_REP2")
     public AggregationImpl(Datastore datastore, MongoCollection<T> collection) {
         this.datastore = datastore;
@@ -88,6 +91,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
      * @param collection the source collection
      * @morphia.internal
      */
+    @MorphiaInternal
     @SuppressFBWarnings("EI_EXPOSE_REP2")
     public AggregationImpl(Datastore datastore, Class<T> source, MongoCollection<T> collection) {
         this.datastore = datastore;

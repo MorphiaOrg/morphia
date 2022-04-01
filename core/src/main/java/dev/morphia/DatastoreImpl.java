@@ -113,7 +113,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @morphia.internal
      * @since 2.0
      */
-    public DatastoreImpl(DatastoreImpl datastore) {
+    protected DatastoreImpl(DatastoreImpl datastore) {
         this.database = datastore.database;
         this.mongoClient = datastore.mongoClient;
         this.mapper = datastore.mapper;

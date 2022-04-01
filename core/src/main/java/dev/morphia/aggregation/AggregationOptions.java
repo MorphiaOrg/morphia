@@ -8,6 +8,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
@@ -62,6 +63,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @return the updated collection
      * @morphia.internal
      */
+    @MorphiaInternal
     public <S, T> AggregateIterable<S> apply(List<Document> documents, MongoCollection<T> collection,
                                              Class<S> resultType) {
         MongoCollection<T> bound = collection;

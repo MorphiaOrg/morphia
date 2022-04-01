@@ -191,7 +191,9 @@ public interface Datastore {
      * @param type       the class to use for mapping the results
      * @param <T>        the type to query
      * @return the query
+     * @deprecated use {@link FindOptions#collection(String)} instead
      */
+    @Deprecated(forRemoval = true, since = "2.3")
     <T> Query<T> find(String collection, Class<T> type);
 
     /**
@@ -202,6 +204,7 @@ public interface Datastore {
      * @return the query
      * @morphia.internal
      */
+    @MorphiaInternal
     <T> Query<T> find(String collection);
 
     /**
@@ -281,6 +284,7 @@ public interface Datastore {
      * @since 2.0
      */
     @Nullable
+    @MorphiaInternal
     ClientSession findSession(SessionConfigurable<?> configurable);
 
     /**
@@ -298,6 +302,7 @@ public interface Datastore {
      * @morphia.internal
      * @since 2.3
      */
+    @MorphiaInternal
     <T> MongoCollection<T> getCollection(Class<T> type);
 
     /**
@@ -305,6 +310,7 @@ public interface Datastore {
      * @morphia.internal
      * @since 1.5
      */
+    @MorphiaInternal
     MongoDatabase getDatabase();
 
     /**
@@ -314,6 +320,7 @@ public interface Datastore {
      * @since 2.0
      * @deprecated Use {@link Query#getLoggedQuery()} instead
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true)
     String getLoggedQuery(FindOptions options);
 
@@ -322,6 +329,7 @@ public interface Datastore {
      * @morphia.internal
      * @since 1.5
      */
+    @MorphiaInternal
     Mapper getMapper();
 
     /**
