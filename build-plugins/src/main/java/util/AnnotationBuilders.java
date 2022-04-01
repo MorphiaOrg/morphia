@@ -120,7 +120,6 @@ public class AnnotationBuilders extends AbstractMojo {
         JavaDocSource<JavaClassSource> javaDoc = builder.getJavaDoc();
         javaDoc.addTagValue("@since", "2.3");
         javaDoc.addTagValue("@morphia.internal", "");
-        javaDoc.addTagValue("@morphia.experimental", "");
 
         MethodSource<JavaClassSource> constructor = builder.addMethod()
                                                            .setConstructor(true)

@@ -1,7 +1,5 @@
-package dev.morphia.annotations.experimental;
+package dev.morphia.annotations;
 
-import dev.morphia.annotations.CappedAt;
-import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.mapping.Mapper;
 

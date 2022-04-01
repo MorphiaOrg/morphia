@@ -1,8 +1,8 @@
 package dev.morphia.test.models.external;
 
 import dev.morphia.annotations.CappedAt;
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.experimental.ExternalEntity;
 
 @ExternalEntity(value = "extEnt",
     discriminator = "ext",

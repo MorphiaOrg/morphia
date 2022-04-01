@@ -2,10 +2,10 @@ package dev.morphia.mapping.conventions;
 
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IdField;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
-import dev.morphia.annotations.experimental.IdField;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;

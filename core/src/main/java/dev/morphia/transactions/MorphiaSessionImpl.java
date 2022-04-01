@@ -1,28 +1,83 @@
-package dev.morphia.experimental;
+package dev.morphia.transactions;
 
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.ServerAddress;
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.TransactionBody;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import com.mongodb.session.ServerSession;
 import dev.morphia.DatastoreImpl;
+import dev.morphia.DeleteOptions;
+import dev.morphia.InsertManyOptions;
+import dev.morphia.InsertOneOptions;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonDocument;
 import org.bson.BsonTimestamp;
 
+import java.util.List;
+
 /**
  * @morphia.internal
- * @morphia.experimental
+ * @since 2.0
  */
-public abstract class BaseMorphiaSession extends DatastoreImpl implements MorphiaSession {
+@MorphiaInternal
+public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession {
+
     private final ClientSession session;
 
-    BaseMorphiaSession(DatastoreImpl datastore,
-                       ClientSession session) {
+    /**
+     * Creates a new session.
+     *
+     * @param datastore the datastore
+     * @param session   the client session
+     */
+    public MorphiaSessionImpl(DatastoreImpl datastore, ClientSession session) {
         super(datastore);
         this.session = session;
+    }
+
+    @Override
+    public <T> DeleteResult delete(T entity, DeleteOptions options) {
+        return super.delete(entity, new DeleteOptions(options)
+            .clientSession(findSession(options)));
+    }
+
+    @Override
+    public <T> void insert(T entity, InsertOneOptions options) {
+        super.insert(entity, new InsertOneOptions(options)
+            .clientSession(findSession(options)));
+    }
+
+    @Override
+    public <T> void insert(List<T> entities, InsertManyOptions options) {
+        super.insert(entities, new InsertManyOptions(options)
+            .clientSession(findSession(options)));
+    }
+
+    @Override
+    public <T> T merge(T entity, InsertOneOptions options) {
+        return super.merge(entity, new InsertOneOptions(options)
+            .clientSession(findSession(options)));
+    }
+
+    @Override
+    public <T> List<T> save(List<T> entities, InsertManyOptions options) {
+        return super.save(entities, new InsertManyOptions(options)
+            .clientSession(findSession(options)));
+    }
+
+    @Override
+    public void commitTransaction() {
+        session.commitTransaction();
+    }
+
+    @Override
+    public <T> T save(T entity, InsertOneOptions options) {
+        return super.save(entity, new InsertOneOptions(options)
+            .clientSession(findSession(options)));
     }
 
     @Override
@@ -42,6 +97,17 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
+    public void notifyOperationInitiated(Object operation) {
+        session.notifyOperationInitiated(operation);
+    }
+
+    @Override
+    @Nullable
+    public BsonDocument getRecoveryToken() {
+        return session.getRecoveryToken();
+    }
+
+    @Override
     public TransactionOptions getTransactionOptions() {
         return session.getTransactionOptions();
     }
@@ -52,13 +118,13 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
-    public void startTransaction(TransactionOptions transactionOptions) {
-        session.startTransaction(transactionOptions);
+    public BsonTimestamp getSnapshotTimestamp() {
+        return session.getSnapshotTimestamp();
     }
 
     @Override
-    public void commitTransaction() {
-        session.commitTransaction();
+    public void startTransaction(TransactionOptions transactionOptions) {
+        session.startTransaction(transactionOptions);
     }
 
     @Override
@@ -76,9 +142,22 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
         return session.withTransaction(transactionBody, options);
     }
 
+    /**
+     * @return the session
+     */
+    @NonNull
+    public ClientSession getSession() {
+        return session;
+    }
+
     @Override
     public Object getTransactionContext() {
         return session.getTransactionContext();
+    }
+
+    @Override
+    public boolean isCausallyConsistent() {
+        return session.isCausallyConsistent();
     }
 
     @Override
@@ -92,27 +171,6 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
-    @Nullable
-    public BsonDocument getRecoveryToken() {
-        return session.getRecoveryToken();
-    }
-
-    @Override
-    public void notifyOperationInitiated(Object operation) {
-        session.notifyOperationInitiated(operation);
-    }
-
-    @Override
-    public void setSnapshotTimestamp(BsonTimestamp bsonTimestamp) {
-        session.setSnapshotTimestamp(bsonTimestamp);
-    }
-
-    @Override
-    public BsonTimestamp getSnapshotTimestamp() {
-        return session.getSnapshotTimestamp();
-    }
-
-    @Override
     public void setRecoveryToken(BsonDocument recoveryToken) {
         session.setRecoveryToken(recoveryToken);
     }
@@ -120,11 +178,6 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     @Override
     public ClientSessionOptions getOptions() {
         return session.getOptions();
-    }
-
-    @Override
-    public boolean isCausallyConsistent() {
-        return session.isCausallyConsistent();
     }
 
     @Override
@@ -153,6 +206,11 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     }
 
     @Override
+    public void setSnapshotTimestamp(BsonTimestamp bsonTimestamp) {
+        session.setSnapshotTimestamp(bsonTimestamp);
+    }
+
+    @Override
     public BsonDocument getClusterTime() {
         return session.getClusterTime();
     }
@@ -160,13 +218,5 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     @Override
     public void close() {
         session.close();
-    }
-
-    /**
-     * @return the session
-     */
-    @NonNull
-    public ClientSession getSession() {
-        return session;
     }
 }
