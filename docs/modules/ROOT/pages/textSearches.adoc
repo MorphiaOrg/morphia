@@ -60,4 +60,4 @@ datastore.find(Greeting.class)
 ----
 
 There are some optional parameters in addition to the language you can specify as part of your text search.
-Those parameters are documented on the xref:javadoc:dev/morphia/query/experimental/filters/TextSearchFilter.html#[TextSearchFilter] class.
+Those parameters are documented on the xref:javadoc:dev/morphia/query/filters/TextSearchFilter.html#[TextSearchFilter] class.

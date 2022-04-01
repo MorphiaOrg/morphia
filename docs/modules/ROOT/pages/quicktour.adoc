@@ -185,7 +185,7 @@ underpaid = datastore.createQuery(Employee.class)
 
 Morphia supports all the query filters defined in the Mongodb query language.
 You can find helper methods for all these filers on the
-xref:javadoc:dev/morphia/query/experimental/filters/Filters.html#[Filters class].
+xref:javadoc:dev/morphia/query/filters/Filters.html#[Filters class].
 The `filter()` method can take as many `Filter`
 references as you need to define your query.
 It can also be called multiple times as any subsequent calls are cumulative with the rest of the filters already defined.

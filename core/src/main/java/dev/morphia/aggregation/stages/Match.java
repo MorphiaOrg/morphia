@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.stages;
 
-import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.query.filters.Filter;
 
 /**
  * Limits the number of documents passed to the next stage in the pipeline.

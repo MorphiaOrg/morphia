@@ -2,7 +2,7 @@ package dev.morphia.aggregation.stages;
 
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.lang.Nullable;
-import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.query.filters.Filter;
 
 /**
  * Outputs documents in order of nearest to farthest from a specified point.

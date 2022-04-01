@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.mongodb.ClientSessionOptions.builder;
 import static com.mongodb.WriteConcern.MAJORITY;
-import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
+import static dev.morphia.query.updates.UpdateOperators.inc;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;

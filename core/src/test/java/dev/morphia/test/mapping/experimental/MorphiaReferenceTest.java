@@ -17,7 +17,7 @@ import java.util.Set;
 
 import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 

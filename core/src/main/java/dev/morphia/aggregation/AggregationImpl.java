@@ -42,7 +42,7 @@ import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
-import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.Document;

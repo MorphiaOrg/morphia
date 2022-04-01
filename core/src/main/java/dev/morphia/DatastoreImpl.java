@@ -61,8 +61,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceLoader;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
-import static dev.morphia.query.experimental.updates.UpdateOperators.set;
+import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.updates.UpdateOperators.set;
 import static org.bson.Document.parse;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 

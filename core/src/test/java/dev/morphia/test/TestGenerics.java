@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static dev.morphia.Morphia.createDatastore;
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;

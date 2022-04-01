@@ -1,7 +1,7 @@
 package dev.morphia.query;
 
 
-import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.query.updates.UpdateOperator;
 
 import java.util.List;
 

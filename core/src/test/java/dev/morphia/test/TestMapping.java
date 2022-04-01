@@ -68,8 +68,8 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import static dev.morphia.Morphia.createDatastore;
-import static dev.morphia.query.experimental.filters.Filters.eq;
-import static dev.morphia.query.experimental.filters.Filters.exists;
+import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.exists;
 import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;

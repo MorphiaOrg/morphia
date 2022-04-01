@@ -50,7 +50,6 @@ public class AnnotationBuilders extends AbstractMojo {
         generated = new File(project.getBasedir() + "/target/generated-sources/morphia-annotations/");
 
         files.addAll(find(project.getBasedir() + "/src/main/java/dev/morphia/annotations"));
-        files.addAll(find(project.getBasedir() + "/src/main/java/dev/morphia/annotations/experimental"));
         project.addCompileSourceRoot(generated.getAbsolutePath());
 
         for (File file : files) {

@@ -2,7 +2,7 @@ package dev.morphia.aggregation.codecs.stages;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Match;
-import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.query.filters.Filter;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 

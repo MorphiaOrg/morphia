@@ -2,7 +2,7 @@ package dev.morphia.aggregation.stages;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.query.filters.Filter;
 
 /**
  * Performs a recursive search on a collection, with options for restricting the search by recursion depth and query filter.

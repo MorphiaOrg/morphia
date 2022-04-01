@@ -7,7 +7,7 @@ import dev.morphia.test.models.TestEntity;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 
 @Test(groups = "references")
 public class TestReferencesInEmbedded extends TestBase {

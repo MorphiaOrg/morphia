@@ -22,7 +22,7 @@ import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.transactions.MorphiaSession;
 import dev.morphia.transactions.MorphiaTransaction;
 import org.bson.Document;

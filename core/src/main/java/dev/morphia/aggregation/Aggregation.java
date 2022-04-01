@@ -23,7 +23,7 @@ import dev.morphia.aggregation.stages.Sort;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.aggregation.stages.Unwind;
-import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 
 /**

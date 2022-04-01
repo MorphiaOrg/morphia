@@ -5,7 +5,7 @@
 This page describes the older approach to querying.
 While this older API is still supported, efforts should be made to update to the new API as outlined in the other xref:queries.adoc[querying] guide.
 This old API is active using the xref:configuration.adoc#_legacy[legacy configuration].
-The new API will attempt to redirect most calls to use the new xref:javadoc:dev/morphia/query/experimental/filters/Filters.html#[Filters] based approach.
+The new API will attempt to redirect most calls to use the new xref:javadoc:dev/morphia/query/filters/Filters.html#[Filters] based approach.
 
 Note that at this time complex queries using `and` or `or` clauses can not be correctly transparently translated and will require manual effort to update to the new API.
 ====

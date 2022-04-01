@@ -5,7 +5,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.query.updates.UpdateOperator;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 

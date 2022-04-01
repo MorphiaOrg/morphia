@@ -9,7 +9,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.experimental.filters.Filters;
+import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.query.TestLegacyQuery.ContainsPic;
 import dev.morphia.test.query.TestLegacyQuery.Pic;
@@ -18,8 +18,8 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
-import static dev.morphia.query.experimental.filters.Filters.exists;
+import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.exists;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;

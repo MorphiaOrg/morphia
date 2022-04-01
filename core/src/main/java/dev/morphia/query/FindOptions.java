@@ -26,6 +26,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 import dev.morphia.AlternateCollection;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.SessionConfigurable;
@@ -508,11 +509,12 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     }
 
     /**
-     * This is an experimental method.  It's implementation and presence are subject to change.
+     * This is an internal method.  It's implementation and presence are subject to change.
      *
      * @return this
      * @morphia.internal
      */
+    @MorphiaInternal
     public boolean isLogQuery() {
         return queryLogId != null;
     }

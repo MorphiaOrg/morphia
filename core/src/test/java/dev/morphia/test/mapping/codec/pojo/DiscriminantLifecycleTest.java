@@ -1,18 +1,17 @@
 package dev.morphia.test.mapping.codec.pojo;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.Transient;
+import dev.morphia.query.filters.Filters;
+import dev.morphia.test.TestBase;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.Transient;
-import dev.morphia.query.experimental.filters.Filters;
-import dev.morphia.test.TestBase;
 
 /**
  * asserts some common behaviour between entities with or without lifecycle
@@ -39,7 +38,7 @@ public class DiscriminantLifecycleTest extends TestBase {
     @Test(expectedExceptions = CodecConfigurationException.class, dataProvider = "classes")
     public void testWrongDiscriminator(Class<?> baseClass, Class<?> childClass) {
         Document entity = new Document("_t", "Nonsense");
-        ObjectId id = getDatabase().getCollection("entity").insertOne(entity).getInsertedId().asObjectId().getValue();;
+        ObjectId id = getDatabase().getCollection("entity").insertOne(entity).getInsertedId().asObjectId().getValue();
         getDs().find(baseClass).filter(Filters.eq("_id", id)).first();
     }
 

@@ -25,7 +25,7 @@ import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Sort.sort;
-import static dev.morphia.query.experimental.filters.Filters.gte;
+import static dev.morphia.query.filters.Filters.gte;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 

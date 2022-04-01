@@ -61,24 +61,6 @@
         },
         {
           "code": "java.method.parameterTypeChanged",
-          "package": "dev.morphia.query.experimental.filters",
-          "methodName": "writeUnnamedValue",
-          "justification": "implementation detail"
-        },
-        {
-          "code": "java.method.parameterTypeChanged",
-          "package": "dev.morphia.query.experimental.filters",
-          "methodName": "writeNamedValue",
-          "justification": "implementation detail"
-        },
-        {
-          "code": "java.method.parameterTypeChanged",
-          "package": "dev.morphia.query.experimental.filters",
-          "methodName": "getValue",
-          "justification": "implementation detail"
-        },
-        {
-          "code": "java.method.parameterTypeChanged",
           "methodName": "encode",
           "justification": "implementation detail"
         },
@@ -97,13 +79,7 @@
         {
           "ignore": true,
           "code": "java.method.removed",
-          "old": "method void dev.morphia.query.experimental.filters.NearFilter::applyOpts(java.util.Map)",
-          "justification": "internal method"
-        },
-        {
-          "ignore": true,
-          "code": "java.method.removed",
-          "package": "dev.morphia.aggregation.experimental.expressions",
+          "package": "dev.morphia.aggregation.expressions",
           "methodName": "encode",
           "justification": "internal method"
         },
@@ -152,25 +128,13 @@
         {
           "ignore": true,
           "code": "java.class.removed",
-          "package": "dev.morphia.annotations.experimental",
-          "justification": "hiding internal types"
-        },
-        {
-          "ignore": true,
-          "code": "java.class.removed",
           "package": "dev.morphia.mapping",
           "justification": "hiding internal types"
         },
         {
           "ignore": true,
           "code": "java.method.removed",
-          "package": "dev.morphia.query.experimental.filters",
-          "justification": "hiding internal types"
-        },
-        {
-          "ignore": true,
-          "code": "java.method.removed",
-          "package": "dev.morphia.aggregation.experimental.expressions.impls",
+          "package": "dev.morphia.aggregation.expressions.impls",
           "justification": "hiding internal types"
         },
         {
@@ -196,11 +160,6 @@
           "code": "java.annotation.added",
           "annotation": "@edu.umd.cs.findbugs.annotations.SuppressFBWarnings({\"EI_EXPOSE_REP2\"})",
           "justification": "spotbugs config"
-        },
-        {
-          "ignore": true,
-          "code": "java.method.addedToInterface",
-          "new": "method dev.morphia.query.PipelineUpdate dev.morphia.query.Query<T>::update(dev.morphia.aggregation.experimental.stages.Stage, dev.morphia.aggregation.experimental.stages.Stage[])"
         },
         {
           "ignore": true,

@@ -15,19 +15,11 @@ Query<Product> query = datastore.find(Product.class);
 The most significant method `filter(Filter...)`.
 This method takes a number of filters to apply to the query being built.
 The filters are added to any existing, previously defined filters so you needn't add them all at once.
-There are dozens of filters predefined in Morphia and can be found in the `dev.morphia.query.experimental.filters` package.
+There are dozens of filters predefined in Morphia and can be found in the `dev.morphia.query.filters` package.
 
-[NOTE]
-====
-The package is currently `experimental`.
-This done to signify that this API is a new one and might change based on user feedback prior to a final release.
-It is expected that the API will be largely the same in the final release and you are highly encouraged to try it out before then.
-If you encounter and bugs or usability issues, please file an
-https://github.com/MorphiaOrg/morphia/issues[issue]
-====
-
-The filters can be accessed via the xref:javadoc:dev/morphia/query/experimental/filters/Filters.html#[Filters] class.
-The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia's API. For example, to query for products whose prices is greater than or equal to 1000, you would write this:
+The filters can be accessed via the xref:javadoc:dev/morphia/query/filters/Filters.html#[Filters] class.
+The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia's API.
+For example, to query for products whose prices is greater than or equal to 1000, you would write this:
 
 [source,java]
 ----

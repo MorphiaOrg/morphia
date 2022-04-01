@@ -7,7 +7,7 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
-import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.query.updates.UpdateOperator;
 import org.bson.Document;
 
 import java.util.List;

@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.UUID;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 

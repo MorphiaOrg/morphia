@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 
 
 @SuppressWarnings("unchecked")
