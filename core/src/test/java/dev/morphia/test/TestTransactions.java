@@ -2,9 +2,9 @@ package dev.morphia.test;
 
 import com.mongodb.MongoQueryException;
 import com.mongodb.TransactionOptions;
-import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
+import dev.morphia.transactions.MorphiaSession;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
