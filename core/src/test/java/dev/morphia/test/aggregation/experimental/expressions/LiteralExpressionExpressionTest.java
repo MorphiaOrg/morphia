@@ -1,6 +1,6 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.expressions.Expressions;
+import dev.morphia.aggregation.expressions.Expressions;
 import org.testng.annotations.Test;
 
 public class LiteralExpressionExpressionTest extends ExpressionsTestBase {

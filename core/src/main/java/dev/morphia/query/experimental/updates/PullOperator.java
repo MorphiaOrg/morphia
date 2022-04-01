@@ -8,7 +8,7 @@ import dev.morphia.query.experimental.filters.Filter;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 /**
  * Defines an operator for $pull

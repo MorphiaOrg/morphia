@@ -234,6 +234,20 @@
           "oldVisibility": "public",
           "newVisibility": "private",
           "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method <T> dev.morphia.aggregation.experimental.Aggregation<T> dev.morphia.Datastore::aggregate(java.lang.Class<T>)",
+          "new": "method <T> dev.morphia.aggregation.Aggregation<T> dev.morphia.Datastore::aggregate(java.lang.Class<T>)",
+          "justification": "promotion of API out of experimental status"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method dev.morphia.aggregation.experimental.Aggregation<org.bson.Document> dev.morphia.Datastore::aggregate(java.lang.String)",
+          "new": "method dev.morphia.aggregation.Aggregation<org.bson.Document> dev.morphia.Datastore::aggregate(java.lang.String)",
+          "justification": "promotion of API out of experimental status"
         }
       ]
     }

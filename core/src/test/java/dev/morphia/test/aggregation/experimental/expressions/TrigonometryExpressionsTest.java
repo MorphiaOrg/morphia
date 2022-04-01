@@ -4,22 +4,22 @@ import com.github.zafarkhaja.semver.Version;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.acos;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.acosh;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.asin;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.asinh;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.atan;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.atan2;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.atanh;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.cos;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.cosh;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.degreesToRadians;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.radiansToDegrees;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.sin;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.sinh;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.tan;
-import static dev.morphia.aggregation.experimental.expressions.TrigonometryExpressions.tanh;
+import static dev.morphia.aggregation.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.acos;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.acosh;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.asin;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.asinh;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.atan;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.atan2;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.atanh;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.cos;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.cosh;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.degreesToRadians;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radiansToDegrees;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.sin;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.sinh;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tan;
+import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tanh;
 
 public class TrigonometryExpressionsTest extends ExpressionsTestBase {
     @BeforeMethod

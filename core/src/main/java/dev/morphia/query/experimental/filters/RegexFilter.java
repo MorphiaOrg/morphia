@@ -7,7 +7,7 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.regex.Pattern;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.value;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 /**
  * Defines a regular expression filter

@@ -1,15 +1,15 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
 import com.mongodb.client.MongoCollection;
-import dev.morphia.aggregation.experimental.stages.Group;
+import dev.morphia.aggregation.stages.Group;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.meta;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.expressions.Expressions.meta;
+import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.query.experimental.filters.Filters.text;
 import static org.bson.Document.parse;
 

@@ -7,7 +7,7 @@ import org.bson.codecs.EncoderContext;
 import java.util.Arrays;
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static java.lang.String.format;
 
 class LogicalFilter extends Filter {

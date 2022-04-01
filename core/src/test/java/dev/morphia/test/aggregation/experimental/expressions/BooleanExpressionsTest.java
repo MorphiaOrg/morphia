@@ -3,10 +3,10 @@ package dev.morphia.test.aggregation.experimental.expressions;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.and;
-import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.not;
-import static dev.morphia.aggregation.experimental.expressions.BooleanExpressions.or;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.BooleanExpressions.and;
+import static dev.morphia.aggregation.expressions.BooleanExpressions.not;
+import static dev.morphia.aggregation.expressions.BooleanExpressions.or;
+import static dev.morphia.aggregation.expressions.Expressions.value;
 
 public class BooleanExpressionsTest extends ExpressionsTestBase {
 

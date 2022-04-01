@@ -9,7 +9,7 @@ import org.bson.codecs.MapCodec;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 /**
  * Maps Map subtypes to/from the database.  This is mostly a pass-through to the driver codec except for the encoding, non-String types

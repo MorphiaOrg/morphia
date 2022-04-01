@@ -14,7 +14,7 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
-import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -38,7 +38,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 import static com.mongodb.CursorType.NonTailable;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.query.UpdateBase.coalesce;
 import static dev.morphia.query.experimental.filters.Filters.text;

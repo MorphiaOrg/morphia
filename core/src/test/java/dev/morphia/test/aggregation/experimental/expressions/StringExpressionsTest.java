@@ -1,36 +1,36 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.expressions.StringExpressions;
-import dev.morphia.aggregation.experimental.stages.AddFields;
-import dev.morphia.aggregation.experimental.stages.Projection;
+import dev.morphia.aggregation.expressions.StringExpressions;
+import dev.morphia.aggregation.stages.AddFields;
+import dev.morphia.aggregation.stages.Projection;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.literal;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.concat;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.indexOfBytes;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.indexOfCP;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.ltrim;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.regexFind;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.regexFindAll;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.regexMatch;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.replaceAll;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.replaceOne;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.rtrim;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.split;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.strLenBytes;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.strLenCP;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.strcasecmp;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.substrBytes;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.substrCP;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.toLower;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.toUpper;
-import static dev.morphia.aggregation.experimental.expressions.StringExpressions.trim;
+import static dev.morphia.aggregation.expressions.Expressions.field;
+import static dev.morphia.aggregation.expressions.Expressions.literal;
+import static dev.morphia.aggregation.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.StringExpressions.concat;
+import static dev.morphia.aggregation.expressions.StringExpressions.indexOfBytes;
+import static dev.morphia.aggregation.expressions.StringExpressions.indexOfCP;
+import static dev.morphia.aggregation.expressions.StringExpressions.ltrim;
+import static dev.morphia.aggregation.expressions.StringExpressions.regexFind;
+import static dev.morphia.aggregation.expressions.StringExpressions.regexFindAll;
+import static dev.morphia.aggregation.expressions.StringExpressions.regexMatch;
+import static dev.morphia.aggregation.expressions.StringExpressions.replaceAll;
+import static dev.morphia.aggregation.expressions.StringExpressions.replaceOne;
+import static dev.morphia.aggregation.expressions.StringExpressions.rtrim;
+import static dev.morphia.aggregation.expressions.StringExpressions.split;
+import static dev.morphia.aggregation.expressions.StringExpressions.strLenBytes;
+import static dev.morphia.aggregation.expressions.StringExpressions.strLenCP;
+import static dev.morphia.aggregation.expressions.StringExpressions.strcasecmp;
+import static dev.morphia.aggregation.expressions.StringExpressions.substrBytes;
+import static dev.morphia.aggregation.expressions.StringExpressions.substrCP;
+import static dev.morphia.aggregation.expressions.StringExpressions.toLower;
+import static dev.morphia.aggregation.expressions.StringExpressions.toUpper;
+import static dev.morphia.aggregation.expressions.StringExpressions.trim;
 import static org.bson.Document.parse;
 
 public class StringExpressionsTest extends ExpressionsTestBase {

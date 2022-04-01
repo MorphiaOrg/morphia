@@ -4,14 +4,14 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
-import static dev.morphia.aggregation.experimental.expressions.SetExpressions.allElementsTrue;
-import static dev.morphia.aggregation.experimental.expressions.SetExpressions.anyElementTrue;
-import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setDifference;
-import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setEquals;
-import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIntersection;
-import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setIsSubset;
-import static dev.morphia.aggregation.experimental.expressions.SetExpressions.setUnion;
+import static dev.morphia.aggregation.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.SetExpressions.allElementsTrue;
+import static dev.morphia.aggregation.expressions.SetExpressions.anyElementTrue;
+import static dev.morphia.aggregation.expressions.SetExpressions.setDifference;
+import static dev.morphia.aggregation.expressions.SetExpressions.setEquals;
+import static dev.morphia.aggregation.expressions.SetExpressions.setIntersection;
+import static dev.morphia.aggregation.expressions.SetExpressions.setIsSubset;
+import static dev.morphia.aggregation.expressions.SetExpressions.setUnion;
 import static java.util.Arrays.asList;
 
 public class SetExpressionsTest extends ExpressionsTestBase {

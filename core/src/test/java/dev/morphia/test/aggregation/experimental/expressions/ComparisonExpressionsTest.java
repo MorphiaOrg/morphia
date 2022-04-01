@@ -2,14 +2,14 @@ package dev.morphia.test.aggregation.experimental.expressions;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.cmp;
-import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.eq;
-import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
-import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gte;
-import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.lt;
-import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.lte;
-import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.ne;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.ComparisonExpressions.cmp;
+import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
+import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
+import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
+import static dev.morphia.aggregation.expressions.ComparisonExpressions.lt;
+import static dev.morphia.aggregation.expressions.ComparisonExpressions.lte;
+import static dev.morphia.aggregation.expressions.ComparisonExpressions.ne;
+import static dev.morphia.aggregation.expressions.Expressions.value;
 
 public class ComparisonExpressionsTest extends ExpressionsTestBase {
 

@@ -1,15 +1,15 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.expressions.SystemVariables;
-import dev.morphia.aggregation.experimental.stages.Projection;
+import dev.morphia.aggregation.expressions.SystemVariables;
+import dev.morphia.aggregation.stages.Projection;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.DataSizeExpressions.binarySize;
-import static dev.morphia.aggregation.experimental.expressions.DataSizeExpressions.bsonSize;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
+import static dev.morphia.aggregation.expressions.DataSizeExpressions.binarySize;
+import static dev.morphia.aggregation.expressions.DataSizeExpressions.bsonSize;
+import static dev.morphia.aggregation.expressions.Expressions.field;
 import static java.util.List.of;
 import static org.bson.Document.parse;
 

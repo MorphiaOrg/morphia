@@ -1,17 +1,17 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.stages.Projection;
+import dev.morphia.aggregation.stages.Projection;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
-import static dev.morphia.aggregation.experimental.expressions.MathExpressions.add;
-import static dev.morphia.aggregation.experimental.expressions.MathExpressions.multiply;
-import static dev.morphia.aggregation.experimental.expressions.VariableExpressions.let;
+import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
+import static dev.morphia.aggregation.expressions.Expressions.field;
+import static dev.morphia.aggregation.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.MathExpressions.add;
+import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
+import static dev.morphia.aggregation.expressions.VariableExpressions.let;
 import static org.bson.Document.parse;
 
 public class VariableExpressionsTest extends ExpressionsTestBase {
