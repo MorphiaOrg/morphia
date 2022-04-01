@@ -17,6 +17,7 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -48,6 +49,7 @@ import static java.util.List.of;
  * @morphia.internal
  */
 @SuppressWarnings("removal")
+@MorphiaInternal
 public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
     private final DatastoreImpl datastore;

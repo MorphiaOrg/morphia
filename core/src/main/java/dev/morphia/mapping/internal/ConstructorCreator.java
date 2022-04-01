@@ -6,12 +6,14 @@ import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
@@ -34,6 +36,7 @@ import static java.util.Arrays.stream;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 public class ConstructorCreator implements MorphiaInstanceCreator {
     private final Object[] parameters;
     private final Constructor<?> constructor;
@@ -46,6 +49,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
      * @param model       the model
      * @param constructor the constructor to use
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public ConstructorCreator(EntityModel model, Constructor<?> constructor) {
         this.model = model;
         this.constructor = constructor;

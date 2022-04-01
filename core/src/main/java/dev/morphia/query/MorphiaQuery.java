@@ -15,6 +15,7 @@ import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -49,6 +50,7 @@ import static java.util.Arrays.asList;
  * @param <T> the type
  * @morphia.internal
  */
+@MorphiaInternal
 class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final Datastore datastore;
