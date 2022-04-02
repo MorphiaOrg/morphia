@@ -242,8 +242,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":42,"i1":42,"i2":42,"i3":42};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -356,9 +356,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="../codec/pojo/PropertyHandler.html" title="interface in dev.morphia.mapping.codec.pojo">PropertyHandler</a></code>, <code>org.bson.codecs.Codec&lt;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&gt;</code>, <code>org.bson.codecs.Decoder&lt;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&gt;</code>, <code>org.bson.codecs.Encoder&lt;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&gt;</code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">MorphiaReferenceCodec</span>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.3")
+public class <span class="typeNameLabel">MorphiaReferenceCodec</span>
 extends <a href="../codec/BaseReferenceCodec.html" title="class in dev.morphia.mapping.codec">BaseReferenceCodec</a>&lt;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&gt;
 implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.morphia.mapping.codec.pojo">PropertyHandler</a></pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Defines a codec for MorphiaReference values</div>
 </li>
 </ul>
@@ -383,6 +386,7 @@ implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,dev.morphia.mapping.codec.pojo.PropertyModel)">MorphiaReferenceCodec</a></span>​(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                      <a href="../codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;propertyModel)</code></th>
 <td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Creates a codec</div>
 </td>
 </tr>
@@ -398,7 +402,7 @@ implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -408,12 +412,15 @@ implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.
 <td class="colFirst"><code><a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#decode(org.bson.BsonReader,org.bson.codecs.DecoderContext)">decode</a></span>​(org.bson.BsonReader&nbsp;reader,
       org.bson.codecs.DecoderContext&nbsp;decoderContext)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(java.lang.Object)">encode</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Encodes the value</div>
 </td>
 </tr>
@@ -422,12 +429,16 @@ implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(org.bson.BsonWriter,dev.morphia.mapping.experimental.MorphiaReference,org.bson.codecs.EncoderContext)">encode</a></span>​(org.bson.BsonWriter&nbsp;writer,
       <a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&nbsp;value,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoderClass()">getEncoderClass</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</td>
 </tr>
 </tbody></table>
 <ul class="blockList">
@@ -468,6 +479,7 @@ implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.
 <h4>MorphiaReferenceCodec</h4>
 <pre>public&nbsp;MorphiaReferenceCodec​(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                              <a href="../codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;propertyModel)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Creates a codec</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -494,6 +506,7 @@ implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.
 <h4>decode</h4>
 <pre class="methodSignature">public&nbsp;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&nbsp;decode​(org.bson.BsonReader&nbsp;reader,
                                org.bson.codecs.DecoderContext&nbsp;decoderContext)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>decode</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Decoder&lt;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&gt;</code></dd>
@@ -508,6 +521,7 @@ implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.
 <h4>encode</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;encode​(@Nullable
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../codec/pojo/PropertyHandler.html#encode(java.lang.Object)">PropertyHandler</a></code></span></div>
 <div class="block">Encodes the value</div>
 <dl>
@@ -529,6 +543,7 @@ implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.
 <pre class="methodSignature">public&nbsp;void&nbsp;encode​(org.bson.BsonWriter&nbsp;writer,
                    <a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&nbsp;value,
                    org.bson.codecs.EncoderContext&nbsp;encoderContext)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>encode</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Encoder&lt;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&gt;</code></dd>
@@ -542,6 +557,7 @@ implements <a href="../codec/pojo/PropertyHandler.html" title="interface in dev.
 <li class="blockList">
 <h4>getEncoderClass</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;getEncoderClass()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getEncoderClass</code>&nbsp;in interface&nbsp;<code>org.bson.codecs.Encoder&lt;<a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&gt;</code></dd>

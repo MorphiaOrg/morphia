@@ -242,8 +242,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":10,"i2":10,"i3":10};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":41,"i1":42,"i2":42,"i3":42};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -356,8 +356,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code>T</code> - </dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">SingleReference&lt;T&gt;</span>
+<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.3")
+public class <span class="typeNameLabel">SingleReference&lt;T&gt;</span>
 extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;T&gt;</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
@@ -383,7 +386,9 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
                <a href="../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                <a href="../codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;entityModel,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;id)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</td>
 </tr>
 </tbody></table>
 </li>
@@ -397,7 +402,7 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -411,23 +416,30 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;paramType,
       org.bson.Document&nbsp;document)</code></th>
 <td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Decodes a document in to an entity</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="SingleReference.html" title="type parameter in SingleReference">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get()">get</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getIds()">getIds</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="SingleReference.html" title="type parameter in SingleReference">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getType()">getType</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+&nbsp;</td>
 </tr>
 </tbody></table>
 <ul class="blockList">
@@ -470,6 +482,7 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
                        <a href="../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                        <a href="../codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;entityModel,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;id)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>datastore</code> - the datastore to use</dd>
@@ -500,6 +513,7 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
                                          <a href="../codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;mappedField,
                                          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;paramType,
                                          org.bson.Document&nbsp;document)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Decodes a document in to an entity</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -520,6 +534,7 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
 <li class="blockList">
 <h4>get</h4>
 <pre class="methodSignature">public&nbsp;<a href="SingleReference.html" title="type parameter in SingleReference">T</a>&nbsp;get()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="MorphiaReference.html#get()">get</a></code>&nbsp;in class&nbsp;<code><a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;<a href="SingleReference.html" title="type parameter in SingleReference">T</a>&gt;</code></dd>
@@ -535,6 +550,7 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
 <li class="blockList">
 <h4>getIds</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;getIds()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="MorphiaReference.html#getIds()">getIds</a></code>&nbsp;in class&nbsp;<code><a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;<a href="SingleReference.html" title="type parameter in SingleReference">T</a>&gt;</code></dd>
@@ -550,6 +566,7 @@ extends <a href="MorphiaReference.html" title="class in dev.morphia.mapping.expe
 <li class="blockList">
 <h4>getType</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="SingleReference.html" title="type parameter in SingleReference">T</a>&gt;&nbsp;getType()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="MorphiaReference.html#getType()">getType</a></code>&nbsp;in class&nbsp;<code><a href="MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;<a href="SingleReference.html" title="type parameter in SingleReference">T</a>&gt;</code></dd>
