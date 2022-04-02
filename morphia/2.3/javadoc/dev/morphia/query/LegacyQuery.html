@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":42,"i11":42,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":42,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":42,"i42":10,"i43":10,"i44":42};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":42,"i11":42,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":42,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":42,"i41":10,"i42":10,"i43":10,"i44":42};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -355,7 +355,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a></code>, <code><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code>, <code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code>, <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;T&gt;</code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">LegacyQuery&lt;T&gt;</span>
+<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public class <span class="typeNameLabel">LegacyQuery&lt;T&gt;</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>, <a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</pre>
 <div class="block">Implementation of Query</div>
@@ -596,25 +597,25 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">modify</a></span>​(<a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&nbsp;options,
-      <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)">modify</a></span>​(<a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&nbsp;options,
+      <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
 <td class="colLast">
 <div class="block">Create a modify operation based on this query</div>
 </td>
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">modify</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
-      <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.UpdateOperations)">modify</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;operations)</code></th>
 <td class="colLast">
-<div class="block">Create a modify operation based on this query</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </td>
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.UpdateOperations)">modify</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;operations)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">modify</a></span>​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
+      <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
 <td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+<div class="block">Create a modify operation based on this query</div>
 </td>
 </tr>
 <tr id="i32" class="altColor">
@@ -674,38 +675,38 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 </tr>
 <tr id="i40" class="altColor">
 <td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
-      <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
-<td class="colLast">
-<div class="block">Creates an update operation based on this query</div>
-</td>
-</tr>
-<tr id="i41" class="rowColor">
-<td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </td>
 </tr>
+<tr id="i41" class="rowColor">
+<td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">update</a></span>​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
+      <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
+<td class="colLast">
+<div class="block">Creates an update operation based on this query</div>
+</td>
+</tr>
 <tr id="i42" class="altColor">
 <td class="colFirst"><code>com.mongodb.client.result.UpdateResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.experimental.stages.Stage...)">update</a></span>​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
-      <a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>...&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.stages.Stage...)">update</a></span>​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
+      <a href="../aggregation/stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;updates)</code></th>
 <td class="colLast">
 <div class="block">Creates an update operation based on this query</div>
 </td>
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><code>com.mongodb.client.result.UpdateResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></span>​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
-      <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)">update</a></span>​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
+      <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
 <td class="colLast">
 <div class="block">Creates an update operation based on this query</div>
 </td>
 </tr>
 <tr id="i44" class="altColor">
 <td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(java.util.List)">update</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&gt;&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(java.util.List)">update</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&gt;&nbsp;updates)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </td>
@@ -730,7 +731,7 @@ implements <a href="CriteriaContainer.html" title="interface in dev.morphia.quer
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;dev.morphia.query.<a href="Query.html" title="interface in dev.morphia.query">Query</a></h3>
-<code><a href="Query.html#delete()">delete</a>, <a href="Query.html#explain()">explain</a>, <a href="Query.html#explain(dev.morphia.query.FindOptions)">explain</a>, <a href="Query.html#filter(dev.morphia.query.experimental.filters.Filter...)">filter</a>, <a href="Query.html#find()">find</a>, <a href="Query.html#find(dev.morphia.query.FindOptions)">find</a>, <a href="Query.html#findAndDelete()">findAndDelete</a>, <a href="Query.html#iterator()">iterator</a>, <a href="Query.html#stream()">stream</a>, <a href="Query.html#stream(dev.morphia.query.FindOptions)">stream</a>, <a href="Query.html#update(dev.morphia.aggregation.experimental.stages.Stage...)">update</a></code></li>
+<code><a href="Query.html#delete()">delete</a>, <a href="Query.html#explain()">explain</a>, <a href="Query.html#explain(dev.morphia.query.FindOptions)">explain</a>, <a href="Query.html#filter(dev.morphia.query.filters.Filter...)">filter</a>, <a href="Query.html#find()">find</a>, <a href="Query.html#find(dev.morphia.query.FindOptions)">find</a>, <a href="Query.html#findAndDelete()">findAndDelete</a>, <a href="Query.html#iterator()">iterator</a>, <a href="Query.html#stream()">stream</a>, <a href="Query.html#stream(dev.morphia.query.FindOptions)">stream</a>, <a href="Query.html#update(dev.morphia.aggregation.stages.Stage...)">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -1206,19 +1207,19 @@ public&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.qu
 </dl>
 </li>
 </ul>
-<a id="modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">
+<a id="modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>modify</h4>
-<pre class="methodSignature">public&nbsp;<a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;modify​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
-                        <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">Query</a></code></span></div>
+<pre class="methodSignature">public&nbsp;<a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;modify​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
+                        <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">Query</a></code></span></div>
 <div class="block">Create a modify operation based on this query</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">modify</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
+<dd><code><a href="Query.html#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">modify</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>first</code> - the first and required update operator</dd>
 <dd><code>updates</code> - lists the set of updates to apply</dd>
@@ -1227,19 +1228,19 @@ public&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.qu
 </dl>
 </li>
 </ul>
-<a id="modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">
+<a id="modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>modify</h4>
 <pre class="methodSignature">public&nbsp;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&nbsp;modify​(<a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&nbsp;options,
-                <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">Query</a></code></span></div>
+                <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)">Query</a></code></span></div>
 <div class="block">Create a modify operation based on this query</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">modify</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
+<dd><code><a href="Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)">modify</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>options</code> - the options to apply</dd>
 <dd><code>updates</code> - lists the set of updates to apply</dd>
@@ -1388,7 +1389,7 @@ public&nbsp;<a href="Modify.html" title="class in dev.morphia.query">Modify</a>&
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>
-public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;update​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&gt;&nbsp;updates)</pre>
+public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;update​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&gt;&nbsp;updates)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#update(java.util.List)">Query</a></code></span></div>
 <div class="block">Creates an update operation based on this query</div>
@@ -1402,26 +1403,26 @@ public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&
 </dl>
 </li>
 </ul>
-<a id="update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">
+<a id="update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>update</h4>
-<pre class="methodSignature">public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;update​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
-                        <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">Query</a></code></span></div>
+<pre class="methodSignature">public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;update​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
+                        <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">Query</a></code></span></div>
 <div class="block">Creates an update operation based on this query</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
+<dd><code><a href="Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">update</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>first</code> - the first and required update operator</dd>
 <dd><code>updates</code> - lists the set of updates to apply</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the update operation</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOptions, UpdateOperator...)</code></a></dd>
+<dd><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOptions, UpdateOperator...)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1445,19 +1446,19 @@ public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&
 </dl>
 </li>
 </ul>
-<a id="update(dev.morphia.UpdateOptions,dev.morphia.aggregation.experimental.stages.Stage...)">
+<a id="update(dev.morphia.UpdateOptions,dev.morphia.aggregation.stages.Stage...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature">public&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
-                                                     <a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>...&nbsp;updates)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.experimental.stages.Stage...)">Query</a></code></span></div>
+                                                     <a href="../aggregation/stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;updates)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.stages.Stage...)">Query</a></code></span></div>
 <div class="block">Creates an update operation based on this query</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.experimental.stages.Stage...)">update</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
+<dd><code><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.stages.Stage...)">update</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>options</code> - the options to apply</dd>
 <dd><code>updates</code> - lists the set of updates to apply</dd>
@@ -1466,19 +1467,19 @@ public&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&
 </dl>
 </li>
 </ul>
-<a id="update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">
+<a id="update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature">public&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
-                                                     <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">Query</a></code></span></div>
+                                                     <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)">Query</a></code></span></div>
 <div class="block">Creates an update operation based on this query</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
+<dd><code><a href="Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)">update</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>options</code> - the options to apply</dd>
 <dd><code>updates</code> - lists the set of updates to apply</dd>

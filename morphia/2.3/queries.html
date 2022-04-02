@@ -254,29 +254,12 @@ To create the <code>Query</code>, we invoke the following code:</p>
 <p>The most significant method <code>filter(Filter&#8230;&#8203;)</code>.
 This method takes a number of filters to apply to the query being built.
 The filters are added to any existing, previously defined filters so you needn&#8217;t add them all at once.
-There are dozens of filters predefined in Morphia and can be found in the <code>dev.morphia.query.experimental.filters</code> package.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>The package is currently <code>experimental</code>.
-This done to signify that this API is a new one and might change based on user feedback prior to a final release.
-It is expected that the API will be largely the same in the final release and you are highly encouraged to try it out before then.
-If you encounter and bugs or usability issues, please file an
-<a href="https://github.com/MorphiaOrg/morphia/issues">issue</a></p>
-</div>
-</td>
-</tr>
-</table>
+There are dozens of filters predefined in Morphia and can be found in the <code>dev.morphia.query.filters</code> package.</p>
 </div>
 <div class="paragraph">
-<p>The filters can be accessed via the <a href="javadoc/dev/morphia/query/experimental/filters/Filters.html" class="page">Filters</a> class.
-The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia&#8217;s API. For example, to query for products whose prices is greater than or equal to 1000, you would write this:</p>
+<p>The filters can be accessed via the <a href="javadoc/dev/morphia/query/filters/Filters.html" class="page">Filters</a> class.
+The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia&#8217;s API.
+For example, to query for products whose prices is greater than or equal to 1000, you would write this:</p>
 </div>
 <div class="listingblock">
 <div class="content">

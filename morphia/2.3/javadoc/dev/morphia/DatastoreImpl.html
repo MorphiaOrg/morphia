@@ -352,7 +352,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></code></dd>
+<dd><code><a href="transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></code></dd>
 </dl>
 <hr>
 <pre><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
@@ -382,7 +382,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>&nbsp;</code></td>
+<td class="colFirst"><code>protected </code></td>
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.DatastoreImpl)">DatastoreImpl</a></span>​(<a href="DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>&nbsp;datastore)</code></th>
 <td class="colLast">
 <div class="block">Copy constructor for a datastore</div>
@@ -414,14 +414,14 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="aggregation/experimental/Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;T&gt;</code></td>
+<td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.Class)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;source)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="aggregation/experimental/Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;org.bson.Document&gt;</code></td>
+<td class="colFirst"><code><a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;org.bson.Document&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.String)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
@@ -633,14 +633,14 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 </td>
 </tr>
 <tr id="i32" class="altColor">
-<td class="colFirst"><code><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></code></td>
+<td class="colFirst"><code><a href="transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession()">startSession</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
 </td>
 </tr>
 <tr id="i33" class="rowColor">
-<td class="colFirst"><code><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></code></td>
+<td class="colFirst"><code><a href="transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession(com.mongodb.ClientSessionOptions)">startSession</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
@@ -655,13 +655,13 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 </tr>
 <tr id="i35" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options,
-               <a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.MorphiaTransaction)">withTransaction</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options,
+               <a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></span>​(<a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;body)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(dev.morphia.transactions.MorphiaTransaction)">withTransaction</a></span>​(<a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;body)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -719,7 +719,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DatastoreImpl</h4>
-<pre>public&nbsp;DatastoreImpl​(<a href="DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>&nbsp;datastore)</pre>
+<pre>protected&nbsp;DatastoreImpl​(<a href="DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>&nbsp;datastore)</pre>
 <div class="block">Copy constructor for a datastore</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -745,7 +745,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <ul class="blockList">
 <li class="blockList">
 <h4>aggregate</h4>
-<pre class="methodSignature">public&nbsp;<a href="aggregation/experimental/Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;org.bson.Document&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source)</pre>
+<pre class="methodSignature">public&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;org.bson.Document&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#aggregate(java.lang.String)">Datastore</a></code></span></div>
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
 <dl>
@@ -764,7 +764,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <ul class="blockList">
 <li class="blockList">
 <h4>aggregate</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="aggregation/experimental/Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;T&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;source)</pre>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;source)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#aggregate(java.lang.Class)">Datastore</a></code></span></div>
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
 <dl>
@@ -1316,7 +1316,7 @@ public&nbsp;com.mongodb.client.ClientSession&nbsp;findSession​(<a href="intern
 <ul class="blockList">
 <li class="blockList">
 <h4>startSession</h4>
-<pre class="methodSignature">public&nbsp;<a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a>&nbsp;startSession()</pre>
+<pre class="methodSignature">public&nbsp;<a href="transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a>&nbsp;startSession()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#startSession()">Datastore</a></code></span></div>
 <div class="block">Starts a new session on the server.</div>
 <dl>
@@ -1333,7 +1333,7 @@ public&nbsp;com.mongodb.client.ClientSession&nbsp;findSession​(<a href="intern
 <ul class="blockList">
 <li class="blockList">
 <h4>startSession</h4>
-<pre class="methodSignature">public&nbsp;<a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a>&nbsp;startSession​(com.mongodb.ClientSessionOptions&nbsp;options)</pre>
+<pre class="methodSignature">public&nbsp;<a href="transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a>&nbsp;startSession​(com.mongodb.ClientSessionOptions&nbsp;options)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#startSession(com.mongodb.ClientSessionOptions)">Datastore</a></code></span></div>
 <div class="block">Starts a new session on the server.</div>
 <dl>
@@ -1346,16 +1346,16 @@ public&nbsp;com.mongodb.client.ClientSession&nbsp;findSession​(<a href="intern
 </dl>
 </li>
 </ul>
-<a id="withTransaction(dev.morphia.transactions.experimental.MorphiaTransaction)">
+<a id="withTransaction(dev.morphia.transactions.MorphiaTransaction)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>withTransaction</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;withTransaction​(<a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;body)</pre>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;withTransaction​(<a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;body)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#withTransaction(dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dd><code><a href="Datastore.html#withTransaction(dev.morphia.transactions.MorphiaTransaction)">withTransaction</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the return type</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1365,17 +1365,17 @@ public&nbsp;com.mongodb.client.ClientSession&nbsp;findSession​(<a href="intern
 </dl>
 </li>
 </ul>
-<a id="withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.experimental.MorphiaTransaction)">
+<a id="withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.MorphiaTransaction)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>withTransaction</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;withTransaction​(com.mongodb.ClientSessionOptions&nbsp;options,
-                             <a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</pre>
+                             <a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dd><code><a href="Datastore.html#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.MorphiaTransaction)">withTransaction</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the return type</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>

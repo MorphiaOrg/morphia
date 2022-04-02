@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":50,"i1":6,"i2":6,"i3":50,"i4":18,"i5":6,"i6":6,"i7":6,"i8":50,"i9":50,"i10":18,"i11":18,"i12":6,"i13":50,"i14":18,"i15":50,"i16":50,"i17":50,"i18":18,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":18,"i25":6,"i26":38,"i27":38,"i28":18,"i29":38,"i30":50,"i31":50,"i32":50,"i33":38,"i34":38,"i35":18,"i36":18,"i37":6,"i38":18,"i39":38,"i40":50,"i41":18,"i42":18,"i43":50};
+var data = {"i0":50,"i1":6,"i2":6,"i3":50,"i4":18,"i5":6,"i6":6,"i7":6,"i8":50,"i9":50,"i10":18,"i11":18,"i12":6,"i13":50,"i14":18,"i15":50,"i16":50,"i17":50,"i18":18,"i19":6,"i20":6,"i21":6,"i22":6,"i23":6,"i24":18,"i25":6,"i26":38,"i27":38,"i28":18,"i29":50,"i30":38,"i31":50,"i32":50,"i33":38,"i34":38,"i35":18,"i36":18,"i37":6,"i38":18,"i39":50,"i40":38,"i41":18,"i42":18,"i43":50};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -474,7 +474,7 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>default <a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filter(dev.morphia.query.experimental.filters.Filter...)">filter</a></span>​(<a href="experimental/filters/Filter.html" title="class in dev.morphia.query.experimental.filters">Filter</a>...&nbsp;filters)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filter(dev.morphia.query.filters.Filter...)">filter</a></span>​(<a href="filters/Filter.html" title="class in dev.morphia.query.filters">Filter</a>...&nbsp;filters)</code></th>
 <td class="colLast">
 <div class="block">Adds filters to this query.</div>
 </td>
@@ -485,7 +485,7 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#filter(dev.morphia.query.experimental.filters.Filter...)"><code>filter(Filter...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="#filter(dev.morphia.query.filters.Filter...)"><code>filter(Filter...)</code></a> instead</div>
 </div>
 </td>
 </tr>
@@ -577,27 +577,27 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code>default <a href="Query.html" title="type parameter in Query">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">modify</a></span>​(<a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&nbsp;options,
-      <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)">modify</a></span>​(<a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&nbsp;options,
+      <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
 <td class="colLast">
 <div class="block">Create a modify operation based on this query</div>
 </td>
 </tr>
 <tr id="i29" class="rowColor">
-<td class="colFirst"><code><a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">modify</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
-      <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">consider <a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>modify(ModifyOptions, UpdateOperator...)</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i30" class="altColor">
 <td class="colFirst"><code>default <a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.UpdateOperations)">modify</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>&nbsp;</div>
+</td>
+</tr>
+<tr id="i30" class="altColor">
+<td class="colFirst"><code><a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">modify</a></span>​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
+      <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">consider <a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>modify(ModifyOptions, UpdateOperator...)</code></a> instead.</div>
+</div>
 </td>
 </tr>
 <tr id="i31" class="rowColor">
@@ -621,7 +621,7 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#search(java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;text)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="experimental/filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
+<div class="deprecationComment">use <a href="filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
 </div>
 </td>
 </tr>
@@ -631,7 +631,7 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;language)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="experimental/filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
+<div class="deprecationComment">use <a href="filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
 </div>
 </td>
 </tr>
@@ -656,52 +656,52 @@ extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">
 </tr>
 <tr id="i38" class="altColor">
 <td class="colFirst"><code>default com.mongodb.client.result.UpdateResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.aggregation.experimental.stages.Stage...)">update</a></span>​(<a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>...&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.aggregation.stages.Stage...)">update</a></span>​(<a href="../aggregation/stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;updates)</code></th>
 <td class="colLast">
 <div class="block">Creates an update operation based on this query</div>
 </td>
 </tr>
 <tr id="i39" class="rowColor">
-<td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></span>​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
-      <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>update(UpdateOptions, UpdateOperator...)</code></a> instead.</div>
-</div>
-</td>
-</tr>
-<tr id="i40" class="altColor">
 <td class="colFirst"><code>default <a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a></div>
+<div class="deprecationComment">use <a href="#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a></div>
+</div>
+</td>
+</tr>
+<tr id="i40" class="altColor">
+<td class="colFirst"><code><a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">update</a></span>​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
+      <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOptions, UpdateOperator...)</code></a> instead.</div>
 </div>
 </td>
 </tr>
 <tr id="i41" class="rowColor">
 <td class="colFirst"><code>default com.mongodb.client.result.UpdateResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.experimental.stages.Stage...)">update</a></span>​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
-      <a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>...&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.UpdateOptions,dev.morphia.aggregation.stages.Stage...)">update</a></span>​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
+      <a href="../aggregation/stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;updates)</code></th>
 <td class="colLast">
 <div class="block">Creates an update operation based on this query</div>
 </td>
 </tr>
 <tr id="i42" class="altColor">
 <td class="colFirst"><code>default com.mongodb.client.result.UpdateResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">update</a></span>​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
-      <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)">update</a></span>​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
+      <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</code></th>
 <td class="colLast">
 <div class="block">Creates an update operation based on this query</div>
 </td>
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><code>default <a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(java.util.List)">update</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&gt;&nbsp;updates)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(java.util.List)">update</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&gt;&nbsp;updates)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </div>
 </td>
 </tr>
@@ -801,13 +801,13 @@ default&nbsp;<a href="FieldEnd.html" title="interface in dev.morphia.query">Fiel
 </dl>
 </li>
 </ul>
-<a id="filter(dev.morphia.query.experimental.filters.Filter...)">
+<a id="filter(dev.morphia.query.filters.Filter...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>filter</h4>
-<pre class="methodSignature">default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;filter​(<a href="experimental/filters/Filter.html" title="class in dev.morphia.query.experimental.filters">Filter</a>...&nbsp;filters)</pre>
+<pre class="methodSignature">default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;filter​(<a href="filters/Filter.html" title="class in dev.morphia.query.filters">Filter</a>...&nbsp;filters)</pre>
 <div class="block">Adds filters to this query.  This operation is cumulative.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1044,7 +1044,7 @@ default&nbsp;<a href="FieldEnd.html" title="interface in dev.morphia.query">Fiel
 default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;filter​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;condition,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#filter(dev.morphia.query.experimental.filters.Filter...)"><code>filter(Filter...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="#filter(dev.morphia.query.filters.Filter...)"><code>filter(Filter...)</code></a> instead</div>
 </div>
 <div class="block">Create a filter based on the specified condition and value. <p></p>
 
@@ -1217,7 +1217,7 @@ default&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.q
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
-<a id="modify(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">
+<a id="modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -1225,10 +1225,10 @@ default&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.q
 <h4>modify</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.3",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;modify​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
-                 <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
+<a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;modify​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
+                 <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">consider <a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>modify(ModifyOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will
+<div class="deprecationComment">consider <a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>modify(ModifyOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will
  match the other's return type such that this will be the terminal call for a modify.  The only change needed then will be to
  remove the <a href="Modify.html#execute()"><code>Modify.execute()</code></a> call.</div>
 </div>
@@ -1242,7 +1242,7 @@ default&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.q
 </dl>
 </li>
 </ul>
-<a id="modify(dev.morphia.ModifyOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">
+<a id="modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -1250,7 +1250,7 @@ default&nbsp;<a href="internal/MorphiaCursor.html" title="class in dev.morphia.q
 <h4>modify</h4>
 <pre class="methodSignature">@Nullable
 default&nbsp;<a href="Query.html" title="type parameter in Query">T</a>&nbsp;modify​(<a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a>&nbsp;options,
-                 <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
+                 <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
 <div class="block">Create a modify operation based on this query</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1392,7 +1392,7 @@ default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
 <a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;search​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;text)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="experimental/filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
+<div class="deprecationComment">use <a href="filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
 </div>
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 <dl>
@@ -1414,7 +1414,7 @@ default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</
 <a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;search​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;text,
                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;language)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="experimental/filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
+<div class="deprecationComment">use <a href="filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
 </div>
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 <dl>
@@ -1483,9 +1483,9 @@ org.bson.Document&nbsp;toDocument()</pre>
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;update​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&gt;&nbsp;updates)</pre>
+default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;update​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&gt;&nbsp;updates)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </div>
 <div class="block">Creates an update operation based on this query</div>
 <dl>
@@ -1496,17 +1496,17 @@ default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>
 </dl>
 </li>
 </ul>
-<a id="update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)">
+<a id="update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;update​(<a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>&nbsp;first,
-                 <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
+<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;update​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
+                 <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>update(UpdateOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will match
+<div class="deprecationComment">use <a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will match
  the other's return type such that this will be the terminal call for an update.  The only change needed then will be to remove the
  <a href="Update.html#execute()"><code>Update.execute()</code></a> call.</div>
 </div>
@@ -1518,7 +1518,7 @@ default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the update operation</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>update(UpdateOptions, UpdateOperator...)</code></a></dd>
+<dd><a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOptions, UpdateOperator...)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1532,7 +1532,7 @@ default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
 default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;update​(<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;operations)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a></div>
+<div class="deprecationComment">use <a href="#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a></div>
 </div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1544,13 +1544,13 @@ default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
-<a id="update(dev.morphia.aggregation.experimental.stages.Stage...)">
+<a id="update(dev.morphia.aggregation.stages.Stage...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>update</h4>
-<pre class="methodSignature">default&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update​(<a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>...&nbsp;updates)</pre>
+<pre class="methodSignature">default&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update​(<a href="../aggregation/stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;updates)</pre>
 <div class="block">Creates an update operation based on this query</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1562,14 +1562,14 @@ default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>
 </dl>
 </li>
 </ul>
-<a id="update(dev.morphia.UpdateOptions,dev.morphia.aggregation.experimental.stages.Stage...)">
+<a id="update(dev.morphia.UpdateOptions,dev.morphia.aggregation.stages.Stage...)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature">default&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
-                                                      <a href="../aggregation/experimental/stages/Stage.html" title="class in dev.morphia.aggregation.experimental.stages">Stage</a>...&nbsp;updates)</pre>
+                                                      <a href="../aggregation/stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;updates)</pre>
 <div class="block">Creates an update operation based on this query</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1582,14 +1582,14 @@ default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>
 </dl>
 </li>
 </ul>
-<a id="update(dev.morphia.UpdateOptions,dev.morphia.query.experimental.updates.UpdateOperator...)">
+<a id="update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature">default&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update​(<a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options,
-                                                      <a href="experimental/updates/UpdateOperator.html" title="class in dev.morphia.query.experimental.updates">UpdateOperator</a>...&nbsp;updates)</pre>
+                                                      <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
 <div class="block">Creates an update operation based on this query</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

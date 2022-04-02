@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":38,"i3":50,"i4":50,"i5":50,"i6":50,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":50,"i17":50,"i18":50,"i19":50,"i20":6,"i21":6,"i22":6,"i23":6,"i24":38,"i25":6,"i26":18,"i27":18,"i28":6,"i29":6,"i30":6,"i31":6,"i32":50,"i33":6,"i34":6,"i35":6,"i36":50,"i37":50,"i38":18,"i39":6,"i40":18,"i41":6,"i42":50,"i43":6,"i44":6,"i45":50,"i46":50,"i47":6,"i48":6};
+var data = {"i0":6,"i1":6,"i2":38,"i3":50,"i4":50,"i5":50,"i6":50,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":38,"i16":50,"i17":50,"i18":50,"i19":50,"i20":6,"i21":6,"i22":6,"i23":6,"i24":38,"i25":6,"i26":18,"i27":18,"i28":6,"i29":6,"i30":6,"i31":6,"i32":50,"i33":6,"i34":6,"i35":6,"i36":50,"i37":50,"i38":18,"i39":6,"i40":18,"i41":6,"i42":50,"i43":6,"i44":6,"i45":50,"i46":50,"i47":6,"i48":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -340,11 +340,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Known Subinterfaces:</dt>
-<dd><code><a href="AdvancedDatastore.html" title="interface in dev.morphia">AdvancedDatastore</a></code>, <code><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></code></dd>
+<dd><code><a href="AdvancedDatastore.html" title="interface in dev.morphia">AdvancedDatastore</a></code>, <code><a href="transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a></code></dd>
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></code>, <code><a href="DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></code>, <code><a href="experimental/MorphiaSessionImpl.html" title="class in dev.morphia.experimental">MorphiaSessionImpl</a></code></dd>
+<dd><code><a href="DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></code>, <code><a href="transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></code></dd>
 </dl>
 <hr>
 <pre>public interface <span class="typeNameLabel">Datastore</span></pre>
@@ -370,14 +370,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="aggregation/experimental/Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;T&gt;</code></td>
+<td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.Class)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;source)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="aggregation/experimental/Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;org.bson.Document&gt;</code></td>
+<td class="colFirst"><code><a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;org.bson.Document&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.String)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
@@ -406,7 +406,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createUpdateOperations(java.lang.Class)">createUpdateOperations</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </div>
 </td>
 </tr>
@@ -491,7 +491,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.String,java.lang.Class)">find</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</code></th>
 <td class="colLast">
-<div class="block">Find all instances by type from an alternate collection</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="query/FindOptions.html#collection(java.lang.String)"><code>FindOptions.collection(String)</code></a> instead</div>
+</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
@@ -704,14 +706,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i43" class="rowColor">
-<td class="colFirst"><code><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></code></td>
+<td class="colFirst"><code><a href="transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession()">startSession</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
 </td>
 </tr>
 <tr id="i44" class="altColor">
-<td class="colFirst"><code><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></code></td>
+<td class="colFirst"><code><a href="transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession(com.mongodb.ClientSessionOptions)">startSession</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
@@ -723,7 +725,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
       <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead.</div>
+<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead.</div>
 </div>
 </td>
 </tr>
@@ -734,19 +736,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
       <a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </div>
 </td>
 </tr>
 <tr id="i47" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options,
-               <a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.MorphiaTransaction)">withTransaction</a></span>​(com.mongodb.ClientSessionOptions&nbsp;options,
+               <a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i48" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(dev.morphia.transactions.experimental.MorphiaTransaction)">withTransaction</a></span>​(<a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(dev.morphia.transactions.MorphiaTransaction)">withTransaction</a></span>​(<a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -772,7 +774,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>aggregate</h4>
-<pre class="methodSignature"><a href="aggregation/experimental/Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;org.bson.Document&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source)</pre>
+<pre class="methodSignature"><a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;org.bson.Document&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source)</pre>
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -781,7 +783,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>the aggregation pipeline</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</dl>
 </li>
 </ul>
 <a id="aggregate(java.lang.Class)">
@@ -790,7 +792,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>aggregate</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="aggregation/experimental/Aggregation.html" title="interface in dev.morphia.aggregation.experimental">Aggregation</a>&lt;T&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;source)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;source)</pre>
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -801,7 +803,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>the aggregation pipeline</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</dl>
 </li>
 </ul>
 <a id="createAggregation(java.lang.Class)">
@@ -858,7 +860,7 @@ default&nbsp;&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.m
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
 default&nbsp;&lt;T&gt;&nbsp;<a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;createUpdateOperations​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </div>
 <div class="block">The builder for all update operations</div>
 <dl>
@@ -1049,8 +1051,13 @@ default&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.result.DeleteResult&nbsp;delete�
 <ul class="blockList">
 <li class="blockList">
 <h4>find</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
+<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.3")
+&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="query/FindOptions.html#collection(java.lang.String)"><code>FindOptions.collection(String)</code></a> instead</div>
+</div>
 <div class="block">Find all instances by type from an alternate collection</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1069,7 +1076,8 @@ default&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.result.DeleteResult&nbsp;delete�
 <ul class="blockList">
 <li class="blockList">
 <h4>find</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
+<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
 <div class="block">Find all instances by type in a different collection than what is mapped on the class given.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1194,6 +1202,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" t
 <li class="blockList">
 <h4>findSession</h4>
 <pre class="methodSignature">@Nullable
+<a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
 com.mongodb.client.ClientSession&nbsp;findSession​(<a href="internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;?&gt;&nbsp;configurable)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1227,7 +1236,8 @@ org.bson.codecs.configuration.CodecRegistry&nbsp;getCodecRegistry()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getCollection</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.client.MongoCollection&lt;T&gt;&nbsp;getCollection​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</pre>
+<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+&lt;T&gt;&nbsp;com.mongodb.client.MongoCollection&lt;T&gt;&nbsp;getCollection​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</pre>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the class type</dd>
@@ -1246,7 +1256,8 @@ org.bson.codecs.configuration.CodecRegistry&nbsp;getCodecRegistry()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getDatabase</h4>
-<pre class="methodSignature">com.mongodb.client.MongoDatabase&nbsp;getDatabase()</pre>
+<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+com.mongodb.client.MongoDatabase&nbsp;getDatabase()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the MongoDatabase used by this DataStore</dd>
@@ -1261,7 +1272,8 @@ org.bson.codecs.configuration.CodecRegistry&nbsp;getCodecRegistry()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getLoggedQuery</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getLoggedQuery​(<a href="query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">Use <a href="query/Query.html#getLoggedQuery()"><code>Query.getLoggedQuery()</code></a> instead</div>
@@ -1282,7 +1294,8 @@ org.bson.codecs.configuration.CodecRegistry&nbsp;getCodecRegistry()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getMapper</h4>
-<pre class="methodSignature"><a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;getMapper()</pre>
+<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;getMapper()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the Mapper used by this Datastore</dd>
@@ -1305,7 +1318,7 @@ default&nbsp;com.mongodb.client.ClientSession&nbsp;getSession()</pre>
 <dd>the session</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</dl>
 </li>
 </ul>
 <a id="insert(java.lang.Object)">
@@ -1493,7 +1506,7 @@ default&nbsp;&lt;T&gt;&nbsp;void&nbsp;merge​(T&nbsp;entity,
 <dd><code>entity</code> - the entity to refresh</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</dl>
 </li>
 </ul>
 <a id="save(java.lang.Iterable)">
@@ -1659,14 +1672,14 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;save​(T&nbsp;entity,
 <ul class="blockList">
 <li class="blockList">
 <h4>startSession</h4>
-<pre class="methodSignature"><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a>&nbsp;startSession()</pre>
+<pre class="methodSignature"><a href="transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a>&nbsp;startSession()</pre>
 <div class="block">Starts a new session on the server.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new session reference</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</dl>
 </li>
 </ul>
 <a id="startSession(com.mongodb.ClientSessionOptions)">
@@ -1675,7 +1688,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;save​(T&nbsp;entity,
 <ul class="blockList">
 <li class="blockList">
 <h4>startSession</h4>
-<pre class="methodSignature"><a href="experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a>&nbsp;startSession​(com.mongodb.ClientSessionOptions&nbsp;options)</pre>
+<pre class="methodSignature"><a href="transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a>&nbsp;startSession​(com.mongodb.ClientSessionOptions&nbsp;options)</pre>
 <div class="block">Starts a new session on the server.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1684,7 +1697,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;save​(T&nbsp;entity,
 <dd>the new session reference</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</dl>
 </li>
 </ul>
 <a id="update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">
@@ -1699,7 +1712,7 @@ default&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update�
                                                           <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
                                                           <a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </div>
 <div class="block">Updates all entities found with the operations; this is an atomic operation per entity</div>
 <dl>
@@ -1727,7 +1740,7 @@ default&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update�
 default&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                                                           <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead.  Please note the default has changed from multi-
+<div class="deprecationComment">use <a href="query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead.  Please note the default has changed from multi-
  to single-document updates.</div>
 </div>
 <div class="block">Updates all entities found with the operations; this is an atomic operation per entity</div>
@@ -1742,13 +1755,13 @@ default&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update�
 </dl>
 </li>
 </ul>
-<a id="withTransaction(dev.morphia.transactions.experimental.MorphiaTransaction)">
+<a id="withTransaction(dev.morphia.transactions.MorphiaTransaction)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>withTransaction</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;withTransaction​(<a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;withTransaction​(<a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</pre>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the return type</dd>
@@ -1758,17 +1771,17 @@ default&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update�
 <dd>the return value</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</dl>
 </li>
 </ul>
-<a id="withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.experimental.MorphiaTransaction)">
+<a id="withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.MorphiaTransaction)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>withTransaction</h4>
 <pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;withTransaction​(com.mongodb.ClientSessionOptions&nbsp;options,
-                      <a href="transactions/experimental/MorphiaTransaction.html" title="interface in dev.morphia.transactions.experimental">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</pre>
+                      <a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</pre>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the return type</dd>
@@ -1779,7 +1792,7 @@ default&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.result.UpdateResult&nbsp;update�
 <dd>the return value</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div></dl>
+</dl>
 </li>
 </ul>
 </li>

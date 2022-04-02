@@ -330,27 +330,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.experimental">dev.morphia.aggregation.experimental</a></th>
+<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.codecs">dev.morphia.aggregation.codecs</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.experimental.codecs">dev.morphia.aggregation.experimental.codecs</a></th>
+<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.codecs.stages">dev.morphia.aggregation.codecs.stages</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.experimental.codecs.stages">dev.morphia.aggregation.experimental.codecs.stages</a></th>
+<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.expressions">dev.morphia.aggregation.expressions</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.experimental.expressions">dev.morphia.aggregation.experimental.expressions</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.experimental.expressions.impls">dev.morphia.aggregation.experimental.expressions.impls</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.experimental">dev.morphia.experimental</a></th>
+<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.expressions.impls">dev.morphia.aggregation.expressions.impls</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -378,11 +370,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.query.experimental.filters">dev.morphia.query.experimental.filters</a></th>
+<th class="colFirst" scope="row"><a href="#dev.morphia.query.filters">dev.morphia.query.filters</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#dev.morphia.query.internal">dev.morphia.query.internal</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<th class="colFirst" scope="row"><a href="#dev.morphia.transactions">dev.morphia.transactions</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -524,6 +520,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody><tbody>
 <tr class="altColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/AggregationImpl.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.client.MongoCollection)">AggregationImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+               com.mongodb.client.MongoCollection&lt;<a href="../aggregation/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</code></th>
+<td class="colLast">
+<div class="block">Creates an instance.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/AggregationImpl.html#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class,com.mongodb.client.MongoCollection)">AggregationImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="../aggregation/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;source,
+               com.mongodb.client.MongoCollection&lt;<a href="../aggregation/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</code></th>
+<td class="colLast">
+<div class="block">Creates an instance.</div>
+</td>
+</tr>
+<tr class="altColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/AggregationPipelineImpl.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.client.MongoCollection,java.lang.Class)">AggregationPipelineImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                        com.mongodb.client.MongoCollection&nbsp;collection,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;source)</code></th>
@@ -537,43 +548,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </section>
 </li>
 <li class="blockList">
-<section role="region"><a id="dev.morphia.aggregation.experimental">
+<section role="region"><a id="dev.morphia.aggregation.codecs">
 <!--   -->
 </a>
-<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../aggregation/experimental/package-summary.html">dev.morphia.aggregation.experimental</a></h3>
+<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../aggregation/codecs/package-summary.html">dev.morphia.aggregation.codecs</a></h3>
 <table class="useSummary">
-<caption><span>Constructors in <a href="../aggregation/experimental/package-summary.html">dev.morphia.aggregation.experimental</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Constructor</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/AggregationImpl.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.client.MongoCollection)">AggregationImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-               com.mongodb.client.MongoCollection&lt;<a href="../aggregation/experimental/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</code></th>
-<td class="colLast">
-<div class="block">Creates an instance.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/AggregationImpl.html#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class,com.mongodb.client.MongoCollection)">AggregationImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="../aggregation/experimental/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;source,
-               com.mongodb.client.MongoCollection&lt;<a href="../aggregation/experimental/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</code></th>
-<td class="colLast">
-<div class="block">Creates an instance.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="dev.morphia.aggregation.experimental.codecs">
-<!--   -->
-</a>
-<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../aggregation/experimental/codecs/package-summary.html">dev.morphia.aggregation.experimental.codecs</a></h3>
-<table class="useSummary">
-<caption><span>Methods in <a href="../aggregation/experimental/codecs/package-summary.html">dev.morphia.aggregation.experimental.codecs</a> that return <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../aggregation/codecs/package-summary.html">dev.morphia.aggregation.codecs</a> that return <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -582,13 +562,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionCodec.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/ExpressionCodec.html#getDatastore()">getDatastore</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionCodec.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionCodec.html#getDatastore()">getDatastore</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 <table class="useSummary">
-<caption><span>Methods in <a href="../aggregation/experimental/codecs/package-summary.html">dev.morphia.aggregation.experimental.codecs</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../aggregation/codecs/package-summary.html">dev.morphia.aggregation.codecs</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -597,33 +577,33 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/ExpressionHelper.html#array(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,java.util.List,org.bson.codecs.EncoderContext)">array</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#array(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,java.util.List,org.bson.codecs.EncoderContext)">array</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
      org.bson.BsonWriter&nbsp;writer,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&gt;&nbsp;list,
+     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&gt;&nbsp;list,
      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/ExpressionHelper.html#expression(dev.morphia.Datastore,org.bson.BsonWriter,dev.morphia.aggregation.experimental.expressions.impls.Expression,org.bson.codecs.EncoderContext)">expression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#expression(dev.morphia.Datastore,org.bson.BsonWriter,dev.morphia.aggregation.expressions.impls.Expression,org.bson.codecs.EncoderContext)">expression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
           org.bson.BsonWriter&nbsp;writer,
-          <a href="../aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression,
+          <a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression,
           org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/ExpressionHelper.html#expression(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression,org.bson.codecs.EncoderContext)">expression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#expression(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,dev.morphia.aggregation.expressions.impls.Expression,org.bson.codecs.EncoderContext)">expression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
           org.bson.BsonWriter&nbsp;writer,
           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-          <a href="../aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression,
+          <a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression,
           org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/ExpressionHelper.html#value(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">value</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#value(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">value</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
      org.bson.BsonWriter&nbsp;writer,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
@@ -631,7 +611,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/ExpressionHelper.html#value(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,java.lang.Object,org.bson.codecs.EncoderContext)">value</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#value(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,java.lang.Object,org.bson.codecs.EncoderContext)">value</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
      org.bson.BsonWriter&nbsp;writer,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
@@ -640,36 +620,36 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,dev.morphia.aggregation.experimental.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,dev.morphia.aggregation.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
               org.bson.BsonWriter&nbsp;writer,
-              <a href="../aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression,
+              <a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression,
               org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,dev.morphia.aggregation.experimental.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,dev.morphia.aggregation.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
               org.bson.BsonWriter&nbsp;writer,
               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-              <a href="../aggregation/experimental/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.experimental.expressions.impls">Expression</a>&nbsp;expression,
+              <a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression,
               org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 <table class="useSummary">
-<caption><span>Constructors in <a href="../aggregation/experimental/codecs/package-summary.html">dev.morphia.aggregation.experimental.codecs</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Constructors in <a href="../aggregation/codecs/package-summary.html">dev.morphia.aggregation.codecs</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/AggregationCodecProvider.html#%3Cinit%3E(dev.morphia.Datastore)">AggregationCodecProvider</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/AggregationCodecProvider.html#%3Cinit%3E(dev.morphia.Datastore)">AggregationCodecProvider</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/ExpressionCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ExpressionCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ExpressionCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -677,12 +657,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </section>
 </li>
 <li class="blockList">
-<section role="region"><a id="dev.morphia.aggregation.experimental.codecs.stages">
+<section role="region"><a id="dev.morphia.aggregation.codecs.stages">
 <!--   -->
 </a>
-<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../aggregation/experimental/codecs/stages/package-summary.html">dev.morphia.aggregation.experimental.codecs.stages</a></h3>
+<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../aggregation/codecs/stages/package-summary.html">dev.morphia.aggregation.codecs.stages</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../aggregation/experimental/codecs/stages/package-summary.html">dev.morphia.aggregation.experimental.codecs.stages</a> that return <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../aggregation/codecs/stages/package-summary.html">dev.morphia.aggregation.codecs.stages</a> that return <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -691,142 +671,142 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">StageCodec.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/StageCodec.html#getDatastore()">getDatastore</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">StageCodec.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/StageCodec.html#getDatastore()">getDatastore</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 <table class="useSummary">
-<caption><span>Constructors in <a href="../aggregation/experimental/codecs/stages/package-summary.html">dev.morphia.aggregation.experimental.codecs.stages</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Constructors in <a href="../aggregation/codecs/stages/package-summary.html">dev.morphia.aggregation.codecs.stages</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/AddFieldsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">AddFieldsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/AddFieldsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">AddFieldsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/AutoBucketCodec.html#%3Cinit%3E(dev.morphia.Datastore)">AutoBucketCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/AutoBucketCodec.html#%3Cinit%3E(dev.morphia.Datastore)">AutoBucketCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/BucketCodec.html#%3Cinit%3E(dev.morphia.Datastore)">BucketCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/BucketCodec.html#%3Cinit%3E(dev.morphia.Datastore)">BucketCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/CollectionStatsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">CollectionStatsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/CollectionStatsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">CollectionStatsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/CountCodec.html#%3Cinit%3E(dev.morphia.Datastore)">CountCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/CountCodec.html#%3Cinit%3E(dev.morphia.Datastore)">CountCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/CurrentOpCodec.html#%3Cinit%3E(dev.morphia.Datastore)">CurrentOpCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/CurrentOpCodec.html#%3Cinit%3E(dev.morphia.Datastore)">CurrentOpCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/FacetCodec.html#%3Cinit%3E(dev.morphia.Datastore)">FacetCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/FacetCodec.html#%3Cinit%3E(dev.morphia.Datastore)">FacetCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/GeoNearCodec.html#%3Cinit%3E(dev.morphia.Datastore)">GeoNearCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/GeoNearCodec.html#%3Cinit%3E(dev.morphia.Datastore)">GeoNearCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/GraphLookupCodec.html#%3Cinit%3E(dev.morphia.Datastore)">GraphLookupCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/GraphLookupCodec.html#%3Cinit%3E(dev.morphia.Datastore)">GraphLookupCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/GroupCodec.html#%3Cinit%3E(dev.morphia.Datastore)">GroupCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/GroupCodec.html#%3Cinit%3E(dev.morphia.Datastore)">GroupCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/IndexStatsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">IndexStatsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/IndexStatsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">IndexStatsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/LimitCodec.html#%3Cinit%3E(dev.morphia.Datastore)">LimitCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/LimitCodec.html#%3Cinit%3E(dev.morphia.Datastore)">LimitCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/LookupCodec.html#%3Cinit%3E(dev.morphia.Datastore)">LookupCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/LookupCodec.html#%3Cinit%3E(dev.morphia.Datastore)">LookupCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/MatchCodec.html#%3Cinit%3E(dev.morphia.Datastore)">MatchCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/MatchCodec.html#%3Cinit%3E(dev.morphia.Datastore)">MatchCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/MergeCodec.html#%3Cinit%3E(dev.morphia.Datastore)">MergeCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/MergeCodec.html#%3Cinit%3E(dev.morphia.Datastore)">MergeCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/OutCodec.html#%3Cinit%3E(dev.morphia.Datastore)">OutCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/OutCodec.html#%3Cinit%3E(dev.morphia.Datastore)">OutCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/PlanCacheStatsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">PlanCacheStatsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/PlanCacheStatsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">PlanCacheStatsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/ProjectionCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ProjectionCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/ProjectionCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ProjectionCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/RedactCodec.html#%3Cinit%3E(dev.morphia.Datastore)">RedactCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/RedactCodec.html#%3Cinit%3E(dev.morphia.Datastore)">RedactCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/ReplaceRootCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ReplaceRootCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/ReplaceRootCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ReplaceRootCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/ReplaceWithCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ReplaceWithCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/ReplaceWithCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ReplaceWithCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/SampleCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SampleCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/SampleCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SampleCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/SetStageCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SetStageCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/SetStageCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SetStageCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/SetWindowFieldsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SetWindowFieldsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/SetWindowFieldsCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SetWindowFieldsCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/SkipCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SkipCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/SkipCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SkipCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/SortByCountCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SortByCountCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/SortByCountCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SortByCountCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/SortCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SortCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/SortCodec.html#%3Cinit%3E(dev.morphia.Datastore)">SortCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/StageCodec.html#%3Cinit%3E(dev.morphia.Datastore)">StageCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/StageCodec.html#%3Cinit%3E(dev.morphia.Datastore)">StageCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/UnionWithCodec.html#%3Cinit%3E(dev.morphia.Datastore)">UnionWithCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/UnionWithCodec.html#%3Cinit%3E(dev.morphia.Datastore)">UnionWithCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">
 <div class="block">Creates the codec</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/UnsetCodec.html#%3Cinit%3E(dev.morphia.Datastore)">UnsetCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/UnsetCodec.html#%3Cinit%3E(dev.morphia.Datastore)">UnsetCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/experimental/codecs/stages/UnwindCodec.html#%3Cinit%3E(dev.morphia.Datastore)">UnwindCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/codecs/stages/UnwindCodec.html#%3Cinit%3E(dev.morphia.Datastore)">UnwindCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -834,12 +814,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </section>
 </li>
 <li class="blockList">
-<section role="region"><a id="dev.morphia.aggregation.experimental.expressions">
+<section role="region"><a id="dev.morphia.aggregation.expressions">
 <!--   -->
 </a>
-<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../aggregation/experimental/expressions/package-summary.html">dev.morphia.aggregation.experimental.expressions</a></h3>
+<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../aggregation/expressions/package-summary.html">dev.morphia.aggregation.expressions</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../aggregation/experimental/expressions/package-summary.html">dev.morphia.aggregation.experimental.expressions</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../aggregation/expressions/package-summary.html">dev.morphia.aggregation.expressions</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -848,14 +828,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.DateExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/DateExpressions.DateExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.DateExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/DateExpressions.DateExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ObjectExpressions.MergeObjects.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/ObjectExpressions.MergeObjects.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ObjectExpressions.MergeObjects.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/ObjectExpressions.MergeObjects.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -865,12 +845,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </section>
 </li>
 <li class="blockList">
-<section role="region"><a id="dev.morphia.aggregation.experimental.expressions.impls">
+<section role="region"><a id="dev.morphia.aggregation.expressions.impls">
 <!--   -->
 </a>
-<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../aggregation/experimental/expressions/impls/package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a></h3>
+<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../aggregation/expressions/impls/package-summary.html">dev.morphia.aggregation.expressions.impls</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../aggregation/experimental/expressions/impls/package-summary.html">dev.morphia.aggregation.experimental.expressions.impls</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../aggregation/expressions/impls/package-summary.html">dev.morphia.aggregation.expressions.impls</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -879,112 +859,112 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Accumulator.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/Accumulator.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Accumulator.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/Accumulator.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/AccumulatorExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/AccumulatorExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ArrayFilterExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ArrayFilterExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ArrayFilterExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ArrayFilterExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ArrayIndexExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ArrayIndexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ArrayIndexExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ArrayIndexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ArrayLiteral.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ArrayLiteral.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ArrayLiteral.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ArrayLiteral.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CalculusExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/CalculusExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">CalculusExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/CalculusExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ConvertExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ConvertExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ConvertExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ConvertExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateDeltaExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/DateDeltaExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateDeltaExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateDeltaExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateDiffExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/DateDiffExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateDiffExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateDiffExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateFromParts.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/DateFromParts.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateFromParts.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateFromParts.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateFromString.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/DateFromString.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateFromString.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateFromString.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateToParts.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/DateToParts.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateToParts.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateToParts.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateToString.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/DateToString.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateToString.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateToString.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DateTruncExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/DateTruncExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DateTruncExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateTruncExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DocumentExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/DocumentExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DocumentExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DocumentExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DocumentExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/DocumentExpression.html#encode(java.lang.String,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DocumentExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DocumentExpression.html#encode(java.lang.String,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
       <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
@@ -992,228 +972,184 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpMovingAvg.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ExpMovingAvg.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpMovingAvg.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ExpMovingAvg.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Expression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/Expression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Expression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/Expression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionList.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ExpressionList.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionList.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ExpressionList.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Fields.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/Fields.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Fields.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/Fields.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">FunctionExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/FunctionExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">FunctionExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/FunctionExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">IfNull.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/IfNull.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">IfNull.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/IfNull.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">IndexExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/IndexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">IndexExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/IndexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">IsoDates.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/IsoDates.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">IsoDates.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/IsoDates.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LetExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/LetExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">LetExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/LetExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MapExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/MapExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">MapExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/MapExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MathExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/MathExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">MathExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/MathExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MetaExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/MetaExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">MetaExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/MetaExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineField.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/PipelineField.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">PipelineField.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/PipelineField.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Push.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/Push.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Push.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/Push.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">RangeExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/RangeExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">RangeExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/RangeExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ReduceExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ReduceExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ReduceExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ReduceExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">RegexExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/RegexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">RegexExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/RegexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ReplaceExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ReplaceExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">SetFieldExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/SetFieldExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">SetFieldExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/SetFieldExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ShiftExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ShiftExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ShiftExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ShiftExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">SliceExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/SliceExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">SliceExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/SliceExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">SwitchExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/SwitchExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">SwitchExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/SwitchExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">TrimExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/TrimExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">TrimExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/TrimExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UnsetFieldExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/UnsetFieldExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UnsetFieldExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/UnsetFieldExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ValueExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ValueExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ValueExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ValueExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ZipExpression.</span><code><span class="memberNameLink"><a href="../aggregation/experimental/expressions/impls/ZipExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">ZipExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ZipExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="dev.morphia.experimental">
-<!--   -->
-</a>
-<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../experimental/package-summary.html">dev.morphia.experimental</a></h3>
-<table class="useSummary">
-<caption><span>Subinterfaces of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../experimental/package-summary.html">dev.morphia.experimental</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Interface</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code>interface&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../experimental/MorphiaSession.html" title="interface in dev.morphia.experimental">MorphiaSession</a></span></code></th>
-<td class="colLast">
-<div class="block">Wraps a ClientSession reference for convenient use of MongoDB's multidocument transaction support.</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary">
-<caption><span>Classes in <a href="../experimental/package-summary.html">dev.morphia.experimental</a> that implement <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Class</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../experimental/BaseMorphiaSession.html" title="class in dev.morphia.experimental">BaseMorphiaSession</a></span></code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../experimental/MorphiaSessionImpl.html" title="class in dev.morphia.experimental">MorphiaSessionImpl</a></span></code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -1673,12 +1609,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </section>
 </li>
 <li class="blockList">
-<section role="region"><a id="dev.morphia.query.experimental.filters">
+<section role="region"><a id="dev.morphia.query.filters">
 <!--   -->
 </a>
-<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../query/experimental/filters/package-summary.html">dev.morphia.query.experimental.filters</a></h3>
+<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../query/filters/package-summary.html">dev.morphia.query.filters</a></h3>
 <table class="useSummary">
-<caption><span>Methods in <a href="../query/experimental/filters/package-summary.html">dev.morphia.query.experimental.filters</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
+<caption><span>Methods in <a href="../query/filters/package-summary.html">dev.morphia.query.filters</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
@@ -1687,54 +1623,54 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/experimental/filters/Filter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/filters/Filter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">GeoIntersectsFilter.</span><code><span class="memberNameLink"><a href="../query/experimental/filters/GeoIntersectsFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">GeoIntersectsFilter.</span><code><span class="memberNameLink"><a href="../query/filters/GeoIntersectsFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">GeoWithinFilter.</span><code><span class="memberNameLink"><a href="../query/experimental/filters/GeoWithinFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">GeoWithinFilter.</span><code><span class="memberNameLink"><a href="../query/filters/GeoWithinFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">NearFilter.</span><code><span class="memberNameLink"><a href="../query/experimental/filters/NearFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">NearFilter.</span><code><span class="memberNameLink"><a href="../query/filters/NearFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">RegexFilter.</span><code><span class="memberNameLink"><a href="../query/experimental/filters/RegexFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">RegexFilter.</span><code><span class="memberNameLink"><a href="../query/filters/RegexFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">TextSearchFilter.</span><code><span class="memberNameLink"><a href="../query/experimental/filters/TextSearchFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">TextSearchFilter.</span><code><span class="memberNameLink"><a href="../query/filters/TextSearchFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       org.bson.BsonWriter&nbsp;writer,
       org.bson.codecs.EncoderContext&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/experimental/filters/Filter.html#getValue(dev.morphia.Datastore)">getValue</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/filters/Filter.html#getValue(dev.morphia.Datastore)">getValue</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/experimental/filters/Filter.html#writeNamedValue(java.lang.String,java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeNamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/filters/Filter.html#writeNamedValue(java.lang.String,java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeNamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
                <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                org.bson.BsonWriter&nbsp;writer,
@@ -1743,7 +1679,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/experimental/filters/Filter.html#writeUnnamedValue(java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeUnnamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/filters/Filter.html#writeUnnamedValue(java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeUnnamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
                  <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                  org.bson.BsonWriter&nbsp;writer,
                  org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
@@ -1774,6 +1710,45 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Create</div>
 </td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
+<section role="region"><a id="dev.morphia.transactions">
+<!--   -->
+</a>
+<h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../transactions/package-summary.html">dev.morphia.transactions</a></h3>
+<table class="useSummary">
+<caption><span>Subinterfaces of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../transactions/package-summary.html">dev.morphia.transactions</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Interface</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code>interface&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../transactions/MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a></span></code></th>
+<td class="colLast">
+<div class="block">Wraps a ClientSession reference for convenient use of MongoDB's multidocument transaction support.</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="useSummary">
+<caption><span>Classes in <a href="../transactions/package-summary.html">dev.morphia.transactions</a> that implement <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Class</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code>class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></span></code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
 </table>

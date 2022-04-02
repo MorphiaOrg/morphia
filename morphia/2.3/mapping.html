@@ -308,7 +308,7 @@ That is, every field must be represented in the constructor signature.</p>
 Here, there is a bit of flexibility.
 The argument name can match either the field name as found in the source or the mapped name as determined by any <code>@Property</code> annotation.
 While this is likely to be the most common case as it is the simplest, for various this won&#8217;t always be possible or preferable.
-If a constructor argument name can&#8217;t mirror the field name, using the <a href="#javadoc:dev/morphia/annotations/Name.html" class="page unresolved">@Name</a> annotation, an explict name can be given so that the argument can be properly matched to a field.</p>
+If a constructor argument name can&#8217;t mirror the field name, using the <a href="javadoc/dev/morphia/annotations/Name.html" class="page">@Name</a> annotation, an explict name can be given so that the argument can be properly matched to a field.</p>
 </li>
 </ol>
 </div>
@@ -345,7 +345,7 @@ For maven users, it&#8217;s as simple as adding one line to the Kotlin maven plu
 <p>Sometimes persisted types come from external libraries whose source is either unavailable or simply can&#8217;t be modified.
 Using these types would be impossible give then annotation requirements as stated above.
 Morphia 2.3 introduces a new experimental API that loosens these restrictions a bit.
-Using <a href="javadoc/dev/morphia/annotations/experimental/ExternalEntity.html" class="page">@ExternalEntity</a> these external types can be mapped using a proxy type.</p>
+Using <a href="javadoc/dev/morphia/annotations/ExternalEntity.html" class="page">@ExternalEntity</a> these external types can be mapped using a proxy type.</p>
 </div>
 <div class="paragraph">
 <p>Consider the following two types.

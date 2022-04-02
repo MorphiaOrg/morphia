@@ -397,7 +397,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#find(java.lang.String,java.lang.Class)">find</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</code></th>
 <td class="colLast">
-<div class="block">Find all instances by type from an alternate collection</div>
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="../FindOptions.html#collection(java.lang.String)"><code>FindOptions.collection(String)</code></a> instead</div>
+</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -517,7 +519,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="../Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a> instead.</div>
+<div class="deprecationComment">use <a href="../Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a> instead.</div>
 </div>
 </td>
 </tr>
@@ -528,7 +530,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
       <a href="../../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="../Query.html#update(dev.morphia.query.experimental.updates.UpdateOperator,dev.morphia.query.experimental.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="../Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </div>
 </td>
 </tr>
@@ -738,7 +740,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>default <a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#filter(dev.morphia.query.experimental.filters.Filter...)">filter</a></span>​(<a href="../experimental/filters/Filter.html" title="class in dev.morphia.query.experimental.filters">Filter</a>...&nbsp;filters)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#filter(dev.morphia.query.filters.Filter...)">filter</a></span>​(<a href="../filters/Filter.html" title="class in dev.morphia.query.filters">Filter</a>...&nbsp;filters)</code></th>
 <td class="colLast">
 <div class="block">Adds filters to this query.</div>
 </td>
@@ -749,7 +751,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="../Query.html#filter(dev.morphia.query.experimental.filters.Filter...)"><code>filter(Filter...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="../Query.html#filter(dev.morphia.query.filters.Filter...)"><code>filter(Filter...)</code></a> instead</div>
 </div>
 </td>
 </tr>
@@ -788,7 +790,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">Query.</span><code><span class="memberNameLink"><a href="../Query.html#search(java.lang.String)">search</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;text)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="../experimental/filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
+<div class="deprecationComment">use <a href="../filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
 </div>
 </td>
 </tr>
@@ -798,7 +800,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;language)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="../experimental/filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
+<div class="deprecationComment">use <a href="../filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
 </div>
 </td>
 </tr>
@@ -839,7 +841,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">FieldEnd.</span><code><span class="memberNameLink"><a href="../FieldEnd.html#elemMatch(dev.morphia.query.Query)">elemMatch</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;?&gt;&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="../experimental/filters/Filters.html#elemMatch(java.lang.String,dev.morphia.query.experimental.filters.Filter...)"><code>Filters.elemMatch(String, Filter...)</code></a> instead</div>
+<div class="deprecationComment">use <a href="../filters/Filters.html#elemMatch(java.lang.String,dev.morphia.query.filters.Filter...)"><code>Filters.elemMatch(String, Filter...)</code></a> instead</div>
 </div>
 </td>
 </tr>
