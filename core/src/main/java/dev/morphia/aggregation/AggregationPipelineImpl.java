@@ -255,14 +255,6 @@ public class AggregationPipelineImpl implements AggregationPipeline {
         return this;
     }
 
-    /**
-     * @return the stages
-     * @morphia.internal
-     */
-    public List<Document> getStages() {
-        return stages;
-    }
-
     @Override
     public String toString() {
         return stages.toString();

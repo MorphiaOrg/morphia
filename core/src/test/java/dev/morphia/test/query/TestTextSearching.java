@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static dev.morphia.query.Sort.ascending;
-import static dev.morphia.query.experimental.filters.Filters.text;
+import static dev.morphia.query.filters.Filters.text;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 

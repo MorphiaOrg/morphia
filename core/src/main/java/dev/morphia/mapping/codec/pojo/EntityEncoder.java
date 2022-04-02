@@ -11,7 +11,7 @@ import org.bson.types.ObjectId;
 import java.util.Collection;
 import java.util.Map;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 /**
  * @param <T> the entity type

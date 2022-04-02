@@ -1,6 +1,6 @@
 package dev.morphia.mapping.validation.classrules;
 
-import dev.morphia.annotations.experimental.ExternalEntity;
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.validation.ClassConstraint;

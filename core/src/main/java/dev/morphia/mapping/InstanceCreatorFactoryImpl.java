@@ -2,7 +2,8 @@ package dev.morphia.mapping;
 
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.experimental.ConstructorCreator;
+import dev.morphia.mapping.internal.ConstructorCreator;
+import dev.morphia.mapping.internal.UnsafeConstructorCreator;
 import dev.morphia.sofia.Sofia;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.slf4j.Logger;
@@ -47,9 +48,7 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
                             Constructor<?> full = ConstructorCreator.getFullConstructor(model);
                             creator = () -> new ConstructorCreator(model, full);
                         } catch (MappingException ignored) {
-                            //                            MorphiaInstanceCreator unsafeConstructorCreator = new UnsafeConstructorCreator
-                            //                            (model);
-                            //                            creator = () -> unsafeConstructorCreator;
+                            creator = () -> (MorphiaInstanceCreator) new UnsafeConstructorCreator(model);
                         }
                     }
                 }

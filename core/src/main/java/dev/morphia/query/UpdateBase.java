@@ -3,9 +3,10 @@ package dev.morphia.query;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.query.updates.UpdateOperator;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 
@@ -93,6 +94,7 @@ public abstract class UpdateBase<T> {
      * @return the updates
      * @morphia.internal
      */
+    @MorphiaInternal
     protected List<UpdateOperator> getUpdates() {
         return updates;
     }

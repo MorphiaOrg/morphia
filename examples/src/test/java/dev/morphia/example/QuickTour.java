@@ -18,9 +18,9 @@ import org.bson.types.ObjectId;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.query.experimental.filters.Filters.gt;
-import static dev.morphia.query.experimental.filters.Filters.lte;
-import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
+import static dev.morphia.query.filters.Filters.gt;
+import static dev.morphia.query.filters.Filters.lte;
+import static dev.morphia.query.updates.UpdateOperators.inc;
 import static org.testng.Assert.assertEquals;
 
 /**

@@ -14,16 +14,14 @@ import com.mongodb.client.model.ValidationOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
-import dev.morphia.aggregation.experimental.Aggregation;
-import dev.morphia.aggregation.experimental.AggregationImpl;
-import dev.morphia.aggregation.experimental.codecs.AggregationCodecProvider;
+import dev.morphia.aggregation.Aggregation;
+import dev.morphia.aggregation.AggregationImpl;
+import dev.morphia.aggregation.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.IndexHelper;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.experimental.MorphiaSession;
-import dev.morphia.experimental.MorphiaSessionImpl;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -44,7 +42,9 @@ import dev.morphia.query.QueryFactory;
 import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
 import dev.morphia.sofia.Sofia;
-import dev.morphia.transactions.experimental.MorphiaTransaction;
+import dev.morphia.transactions.MorphiaSession;
+import dev.morphia.transactions.MorphiaSessionImpl;
+import dev.morphia.transactions.MorphiaTransaction;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -61,8 +61,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceLoader;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
-import static dev.morphia.query.experimental.updates.UpdateOperators.set;
+import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.updates.UpdateOperators.set;
 import static org.bson.Document.parse;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
@@ -113,7 +113,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @morphia.internal
      * @since 2.0
      */
-    public DatastoreImpl(DatastoreImpl datastore) {
+    protected DatastoreImpl(DatastoreImpl datastore) {
         this.database = datastore.database;
         this.mongoClient = datastore.mongoClient;
         this.mapper = datastore.mapper;

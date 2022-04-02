@@ -9,8 +9,8 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 @SuppressWarnings("removal")
 class ShapeCodec implements Codec<dev.morphia.query.Shape> {

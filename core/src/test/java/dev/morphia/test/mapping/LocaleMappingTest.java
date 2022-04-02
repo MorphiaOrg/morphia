@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;
 
 public class LocaleMappingTest extends TestBase {

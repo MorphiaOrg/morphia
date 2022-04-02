@@ -14,16 +14,17 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
-import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.stages.Stage;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
-import dev.morphia.query.experimental.filters.Filter;
-import dev.morphia.query.experimental.filters.Filters;
-import dev.morphia.query.experimental.filters.NearFilter;
-import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.query.filters.Filter;
+import dev.morphia.query.filters.Filters;
+import dev.morphia.query.filters.NearFilter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
+import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
@@ -38,10 +39,10 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 import static com.mongodb.CursorType.NonTailable;
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.query.UpdateBase.coalesce;
-import static dev.morphia.query.experimental.filters.Filters.text;
+import static dev.morphia.query.filters.Filters.text;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
@@ -49,6 +50,7 @@ import static java.util.Arrays.asList;
  * @param <T> the type
  * @morphia.internal
  */
+@MorphiaInternal
 class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final Datastore datastore;

@@ -63,15 +63,23 @@ underway to mitigate as much of that as possible but it might not be 100% effect
 Options classes with the driver's Options.  In other cases, this will mean return types from methods will change.  The hope is that such
  changes will result in a cleaner, more future-proof API.  These changes do not come without some breakage.  Efforts are being made to 
  mitigate much of that but, again, will not be 100% effective.
-* **Removal of modules**.  As of 2.0 there will only be the core module.  Modules such as `entityscanner-plug` and `logging-slf4j` have 
-not seen any updates or apparent use in quite some time.  The entity scanner code was only ever half implemented and the logging code is 
-vestigial at best.  2.0 will leverage slf4j directly internally and users can choose whatever logging implementation they would like.  
-Any dependence on `dev.morphia.logging.Logger` will need to be updated after 2.0.  Steps should be taken now to migrate away from these 
-types now.  
+* **Removal of modules**. As of 2.0 there will only be the core module. Modules such as `entityscanner-plug` and `logging-slf4j` have
+  not seen any updates or apparent use in quite some time. The entity scanner code was only ever half implemented and the logging code is
+  vestigial at best. 2.0 will leverage slf4j directly internally and users can choose whatever logging implementation they would like.  
+Any dependence on `dev.morphia.logging.Logger` will need to be updated after 2.0. Steps should be taken now to migrate away from these types
+  now.
 
 # 2.1.0
 
-* **Aggregation updates**.  It's a little early to speculate too much about what 2.1.0 will need but there's a sizable back log of 
-aggregation updates to complete.  The current aggregation API was a mild experiment but was sadly not communicated as such as well as it
- should have been.  The updates will will include both new features and, hopefully, and improved more usable API.  This might come in 
- the form of a parallel, experimental API that evolves and eventually replaces the current API.
+* **Aggregation updates**. It's a little early to speculate too much about what 2.1.0 will need but there's a sizable back log of
+  aggregation updates to complete. The current aggregation API was a mild experiment but was sadly not communicated as such as well as it
+  should have been. The updates will will include both new features and, hopefully, and improved more usable API. This might come in the
+  form of a parallel, experimental API that evolves and eventually replaces the current API.
+
+# 2.3.0
+
+* The various API marked as `experimental` will be promoted out of those experimental packages. This will be a source level break.  
+  While those are generally to be avoided, doing it in this way is by far the simplest means of promoting them out of experimental status.
+  Updating import statements will be the only changes necessary.
+* The validation extension will be resurrected.
+* Full featured support for mapping of external types will be added.

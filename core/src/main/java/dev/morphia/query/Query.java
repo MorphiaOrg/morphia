@@ -8,12 +8,13 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
-import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.query.experimental.filters.Filter;
-import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.query.filters.Filter;
+import dev.morphia.query.filters.Filters;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
+import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
@@ -403,7 +404,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @param text the text to search for
      * @return the Query to enable chaining of commands
      * @mongodb.driver.manual reference/operator/query/text/ $text
-     * @deprecated use {@link dev.morphia.query.experimental.filters.Filters#text(String)} instead
+     * @deprecated use {@link Filters#text(String)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     Query<T> search(String text);
@@ -415,7 +416,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @param language the language to use during the search
      * @return the Query to enable chaining of commands
      * @mongodb.driver.manual reference/operator/query/text/ $text
-     * @deprecated use {@link dev.morphia.query.experimental.filters.Filters#text(String)} instead
+     * @deprecated use {@link Filters#text(String)} instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     Query<T> search(String text, String language);

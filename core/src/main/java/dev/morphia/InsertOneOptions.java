@@ -19,6 +19,7 @@ package dev.morphia;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 
@@ -46,6 +47,7 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
      * @morphia.internal
      * @since 2.0
      */
+    @MorphiaInternal
     public InsertOneOptions(InsertOneOptions that) {
         this.options = that.options;
         this.writeConcern = that.writeConcern;

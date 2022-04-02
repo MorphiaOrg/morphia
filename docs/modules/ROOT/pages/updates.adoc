@@ -2,7 +2,7 @@
 
 Updates in 2.0, are issued using a `Query` instance . These update operations are executed on the server without fetching any documents across the wire.
 Update operations are defined using a set of functions as defined on
-xref:javadoc:dev/morphia/query/experimental/updates/UpdateOperators.html#[UpdateOperators].
+xref:javadoc:dev/morphia/query/updates/UpdateOperators.html#[UpdateOperators].
 In our examples, we'll be using the following model:
 
 [source,java]
@@ -118,7 +118,7 @@ Using this class, you can get specific numbers from the update operation as well
 
 There are times when a document needs to be updated and also fetched from the database.
 In the server documentation, this is referred to as {docsRef}/reference/method/db.collection.findAndModify/[`findAndModify`].
-In Morphia, this functionality is exposed through the xref:javadoc:dev/morphia/query/Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator...)#[Query#modify()]
+In Morphia, this functionality is exposed through the xref:javadoc:dev/morphia/query/Query.html#modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator...)#[Query#modify()]
 method.
 With this method, you can choose to return the updated entity in either the state before or after the update.
 The default is to return the entity in the _before_ state.

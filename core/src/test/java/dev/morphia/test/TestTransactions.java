@@ -2,9 +2,9 @@ package dev.morphia.test;
 
 import com.mongodb.MongoQueryException;
 import com.mongodb.TransactionOptions;
-import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
+import dev.morphia.transactions.MorphiaSession;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static com.mongodb.ClientSessionOptions.builder;
 import static com.mongodb.WriteConcern.MAJORITY;
-import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
+import static dev.morphia.query.updates.UpdateOperators.inc;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;

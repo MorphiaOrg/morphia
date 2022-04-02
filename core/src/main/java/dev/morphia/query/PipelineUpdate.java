@@ -5,7 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
-import dev.morphia.aggregation.experimental.stages.Stage;
+import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;

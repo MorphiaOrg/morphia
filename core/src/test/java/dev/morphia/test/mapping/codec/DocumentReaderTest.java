@@ -21,7 +21,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;

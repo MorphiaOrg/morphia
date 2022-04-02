@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
 
 public class TestLifecycles extends TestBase {

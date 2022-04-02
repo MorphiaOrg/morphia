@@ -1,10 +1,10 @@
 package dev.morphia.query;
 
 import dev.morphia.Datastore;
-import dev.morphia.query.experimental.filters.Filters;
-import dev.morphia.query.experimental.updates.PopOperator;
-import dev.morphia.query.experimental.updates.PushOperator;
-import dev.morphia.query.experimental.updates.UpdateOperators;
+import dev.morphia.query.filters.Filters;
+import dev.morphia.query.updates.PopOperator;
+import dev.morphia.query.updates.PushOperator;
+import dev.morphia.query.updates.UpdateOperators;
 import org.bson.Document;
 
 import java.util.ArrayList;

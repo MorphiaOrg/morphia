@@ -20,6 +20,7 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.Document;
@@ -49,6 +50,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
      * @morphia.internal
      * @since 2.0
      */
+    @MorphiaInternal
     public DeleteOptions(DeleteOptions that) {
         this.multi = that.multi;
         this.writeConcern = that.writeConcern;

@@ -1,8 +1,8 @@
 package dev.morphia.test.aggregation;
 
 import com.mongodb.client.MongoCursor;
-import dev.morphia.aggregation.experimental.Aggregation;
-import dev.morphia.aggregation.experimental.expressions.Expressions;
+import dev.morphia.aggregation.Aggregation;
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
@@ -16,16 +16,16 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.avg;
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.first;
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.last;
-import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
-import static dev.morphia.aggregation.experimental.stages.Group.group;
-import static dev.morphia.aggregation.experimental.stages.Group.id;
-import static dev.morphia.aggregation.experimental.stages.Projection.project;
-import static dev.morphia.aggregation.experimental.stages.Sort.sort;
-import static dev.morphia.query.experimental.filters.Filters.gte;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.last;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.expressions.Expressions.field;
+import static dev.morphia.aggregation.stages.Group.group;
+import static dev.morphia.aggregation.stages.Group.id;
+import static dev.morphia.aggregation.stages.Projection.project;
+import static dev.morphia.aggregation.stages.Sort.sort;
+import static dev.morphia.query.filters.Filters.gte;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 

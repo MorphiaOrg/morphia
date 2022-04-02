@@ -14,10 +14,10 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
-import static dev.morphia.query.experimental.filters.Filters.lt;
-import static dev.morphia.query.experimental.updates.UpdateOperators.inc;
-import static dev.morphia.query.experimental.updates.UpdateOperators.set;
+import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.lt;
+import static dev.morphia.query.updates.UpdateOperators.inc;
+import static dev.morphia.query.updates.UpdateOperators.set;
 import static java.lang.String.format;
 import static java.util.Collections.singletonMap;
 import static org.testng.Assert.assertEquals;

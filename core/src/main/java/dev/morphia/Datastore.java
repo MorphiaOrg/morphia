@@ -10,21 +10,21 @@ import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
-import dev.morphia.aggregation.experimental.Aggregation;
+import dev.morphia.aggregation.Aggregation;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.experimental.MorphiaSession;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
-import dev.morphia.query.experimental.updates.UpdateOperator;
-import dev.morphia.transactions.experimental.MorphiaTransaction;
+import dev.morphia.query.updates.UpdateOperator;
+import dev.morphia.transactions.MorphiaSession;
+import dev.morphia.transactions.MorphiaTransaction;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 
@@ -42,7 +42,6 @@ public interface Datastore {
      *
      * @param source The collection aggregation against
      * @return the aggregation pipeline
-     * @morphia.experimental
      * @since 2.0
      */
     Aggregation<Document> aggregate(String source);
@@ -53,7 +52,6 @@ public interface Datastore {
      * @param source The class to create aggregation against
      * @param <T>    the source type
      * @return the aggregation pipeline
-     * @morphia.experimental
      * @since 2.0
      */
     <T> Aggregation<T> aggregate(Class<T> source);
@@ -193,7 +191,9 @@ public interface Datastore {
      * @param type       the class to use for mapping the results
      * @param <T>        the type to query
      * @return the query
+     * @deprecated use {@link FindOptions#collection(String)} instead
      */
+    @Deprecated(forRemoval = true, since = "2.3")
     <T> Query<T> find(String collection, Class<T> type);
 
     /**
@@ -204,6 +204,7 @@ public interface Datastore {
      * @return the query
      * @morphia.internal
      */
+    @MorphiaInternal
     <T> Query<T> find(String collection);
 
     /**
@@ -283,6 +284,7 @@ public interface Datastore {
      * @since 2.0
      */
     @Nullable
+    @MorphiaInternal
     ClientSession findSession(SessionConfigurable<?> configurable);
 
     /**
@@ -300,6 +302,7 @@ public interface Datastore {
      * @morphia.internal
      * @since 2.3
      */
+    @MorphiaInternal
     <T> MongoCollection<T> getCollection(Class<T> type);
 
     /**
@@ -307,6 +310,7 @@ public interface Datastore {
      * @morphia.internal
      * @since 1.5
      */
+    @MorphiaInternal
     MongoDatabase getDatabase();
 
     /**
@@ -316,6 +320,7 @@ public interface Datastore {
      * @since 2.0
      * @deprecated Use {@link Query#getLoggedQuery()} instead
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true)
     String getLoggedQuery(FindOptions options);
 
@@ -324,13 +329,13 @@ public interface Datastore {
      * @morphia.internal
      * @since 1.5
      */
+    @MorphiaInternal
     Mapper getMapper();
 
     /**
      * Returns the session this datastore is attached to or null if none is attached.
      *
      * @return the session
-     * @morphia.experimental
      * @since 2.0
      */
     @Nullable
@@ -425,7 +430,6 @@ public interface Datastore {
      *
      * @param entity the entity to refresh
      * @param <T>    the entity type
-     * @morphia.experimental
      * @since 2.0
      */
     <T> void refresh(T entity);
@@ -524,7 +528,6 @@ public interface Datastore {
      * Starts a new session on the server.
      *
      * @return the new session reference
-     * @morphia.experimental
      * @since 2.0
      */
     MorphiaSession startSession();
@@ -534,7 +537,6 @@ public interface Datastore {
      *
      * @param options the options to apply
      * @return the new session reference
-     * @morphia.experimental
      * @since 2.0
      */
     MorphiaSession startSession(ClientSessionOptions options);
@@ -579,7 +581,6 @@ public interface Datastore {
      * @param transaction the transaction wrapper
      * @param <T>         the return type
      * @return the return value
-     * @morphia.experimental
      * @since 2.0
      */
     <T> T withTransaction(MorphiaTransaction<T> transaction);
@@ -589,7 +590,6 @@ public interface Datastore {
      * @param options     the session options to apply
      * @param transaction the transaction wrapper
      * @return the return value
-     * @morphia.experimental
      * @since 2.0
      */
     <T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction);

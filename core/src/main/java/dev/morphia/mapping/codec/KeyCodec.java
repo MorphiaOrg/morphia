@@ -14,7 +14,7 @@ import org.bson.codecs.EncoderContext;
 
 import java.util.Iterator;
 
-import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 /**
  * Defines the codec for Key types

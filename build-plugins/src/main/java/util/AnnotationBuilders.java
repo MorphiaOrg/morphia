@@ -50,7 +50,6 @@ public class AnnotationBuilders extends AbstractMojo {
         generated = new File(project.getBasedir() + "/target/generated-sources/morphia-annotations/");
 
         files.addAll(find(project.getBasedir() + "/src/main/java/dev/morphia/annotations"));
-        files.addAll(find(project.getBasedir() + "/src/main/java/dev/morphia/annotations/experimental"));
         project.addCompileSourceRoot(generated.getAbsolutePath());
 
         for (File file : files) {
@@ -120,7 +119,6 @@ public class AnnotationBuilders extends AbstractMojo {
         JavaDocSource<JavaClassSource> javaDoc = builder.getJavaDoc();
         javaDoc.addTagValue("@since", "2.3");
         javaDoc.addTagValue("@morphia.internal", "");
-        javaDoc.addTagValue("@morphia.experimental", "");
 
         MethodSource<JavaClassSource> constructor = builder.addMethod()
                                                            .setConstructor(true)

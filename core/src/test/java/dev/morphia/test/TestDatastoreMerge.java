@@ -24,7 +24,7 @@ import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 
 public class TestDatastoreMerge extends TestBase {
 

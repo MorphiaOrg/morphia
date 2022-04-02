@@ -19,7 +19,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static dev.morphia.query.experimental.filters.Filters.in;
+import static dev.morphia.query.filters.Filters.in;
 import static java.util.Arrays.asList;
 
 /**

@@ -9,7 +9,7 @@ import org.bson.types.ObjectId;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 

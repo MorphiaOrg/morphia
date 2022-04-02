@@ -32,9 +32,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
-import static dev.morphia.query.experimental.filters.Filters.lte;
-import static dev.morphia.query.experimental.filters.Filters.ne;
+import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.lte;
+import static dev.morphia.query.filters.Filters.ne;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class Java8EntityTest extends TestBase {

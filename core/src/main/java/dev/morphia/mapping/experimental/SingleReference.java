@@ -14,7 +14,7 @@ import org.bson.Document;
 
 import java.util.List;
 
-import static dev.morphia.query.experimental.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.eq;
 
 /**
  * @param <T>

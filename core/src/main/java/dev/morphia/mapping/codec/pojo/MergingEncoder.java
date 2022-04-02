@@ -5,14 +5,14 @@ import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.Query;
 import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
-import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.query.updates.UpdateOperator;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import java.util.Map.Entry;
 
-import static dev.morphia.query.experimental.updates.UpdateOperators.set;
-import static dev.morphia.query.experimental.updates.UpdateOperators.unset;
+import static dev.morphia.query.updates.UpdateOperators.set;
+import static dev.morphia.query.updates.UpdateOperators.unset;
 
 /**
  * @param <T> the entity type

@@ -11,7 +11,7 @@ import java.util.List;
  * Defines a projection for use in aggregation
  *
  * @aggregation.expression $project
- * @deprecated use {@link dev.morphia.aggregation.experimental.stages.Projection} instead
+ * @deprecated use {@link dev.morphia.aggregation.stages.Projection} instead
  */
 @Deprecated(since = "2.0", forRemoval = true)
 public final class Projection {

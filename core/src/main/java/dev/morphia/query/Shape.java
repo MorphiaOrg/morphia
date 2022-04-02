@@ -2,12 +2,13 @@ package dev.morphia.query;
 
 
 import com.mongodb.client.model.geojson.Point;
+import dev.morphia.query.filters.Filters;
 
 /**
  * This encapsulates the data necessary to define a shape for queries.
- * @deprecated use the driver provide facilities instead.
  *
- * @see dev.morphia.query.experimental.filters.Filters
+ * @see Filters
+ * @deprecated use the driver provide facilities instead.
  */
 @Deprecated(since = "2.0", forRemoval = true)
 public class Shape {

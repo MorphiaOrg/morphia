@@ -3,8 +3,8 @@ package dev.morphia.query;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
-import dev.morphia.query.experimental.filters.Filter;
-import dev.morphia.query.experimental.filters.Filters;
+import dev.morphia.query.filters.Filter;
+import dev.morphia.query.filters.Filters;
 
 /**
  * Represents a document field in a query and presents the operations available to querying against that field.
