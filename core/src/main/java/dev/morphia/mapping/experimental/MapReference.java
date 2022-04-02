@@ -24,6 +24,7 @@ import static dev.morphia.query.filters.Filters.in;
  * @morphia.internal
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
+@Deprecated(forRemoval = true, since = "2.3")
 public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private Map<String, Object> ids;
     private Map<Object, T> values;

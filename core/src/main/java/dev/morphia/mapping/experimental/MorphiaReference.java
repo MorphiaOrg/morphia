@@ -16,9 +16,12 @@ import java.util.StringJoiner;
  *
  * @param <T>
  * @since 1.5
+ * @deprecated use @{@link dev.morphia.annotations.Reference} instead.  See issue
+ * <a href="https://github.com/MorphiaOrg/morphia/issues/1864">1864</a> for more.
  */
 @SuppressWarnings("unchecked")
 @Handler(MorphiaReferenceCodec.class)
+@Deprecated(forRemoval = true, since = "2.3")
 public abstract class MorphiaReference<T> {
     private Datastore datastore;
     private Mapper mapper;

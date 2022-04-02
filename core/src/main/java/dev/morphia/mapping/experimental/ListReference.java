@@ -11,6 +11,7 @@ import java.util.List;
  * @param <T>
  * @morphia.internal
  */
+@Deprecated(forRemoval = true, since = "2.3")
 public class ListReference<T> extends CollectionReference<List<T>> {
     private List<T> values;
 

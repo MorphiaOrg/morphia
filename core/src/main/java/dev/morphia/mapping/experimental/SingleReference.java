@@ -21,6 +21,7 @@ import static dev.morphia.query.filters.Filters.eq;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
+@Deprecated(forRemoval = true, since = "2.3")
 public class SingleReference<T> extends MorphiaReference<T> {
     private EntityModel entityModel;
     private Object id;

@@ -27,6 +27,7 @@ import static java.util.Arrays.asList;
  * @morphia.internal
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
+@Deprecated(forRemoval = true, since = "2.3")
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
     private EntityModel entityModel;
     private List ids;

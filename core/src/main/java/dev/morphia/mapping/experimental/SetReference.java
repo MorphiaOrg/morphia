@@ -13,6 +13,7 @@ import java.util.Set;
  * @morphia.internal
  */
 @SuppressWarnings("unchecked")
+@Deprecated(forRemoval = true, since = "2.3")
 public class SetReference<T> extends CollectionReference<Set<T>> {
     private Set<T> values;
 
