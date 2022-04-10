@@ -50,6 +50,7 @@ public class MapperOptions {
     private final UuidRepresentation uuidRepresentation;
     private final QueryFactory queryFactory;
     private final boolean enablePolymorphicQueries;
+    private final boolean makePrimary;
     private ClassLoader classLoader;
 
     private MapperOptions(Builder builder) {
@@ -62,6 +63,7 @@ public class MapperOptions {
         discriminator = builder.discriminator();
         discriminatorKey = builder.discriminatorKey();
         enablePolymorphicQueries = builder.enablePolymorphicQueries();
+        makePrimary = builder.makePrimary();
         propertyDiscovery = builder.propertyDiscovery();
         propertyNaming = builder.propertyNaming();
         ignoreFinals = builder.ignoreFinals();
@@ -206,6 +208,13 @@ public class MapperOptions {
     }
 
     /**
+     * @return true if the client's codec registry will be checked first
+     */
+    public boolean isMakePrimary() {
+        return makePrimary;
+    }
+
+    /**
      * @return true if Morphia should ignore final fields
      */
     public boolean isIgnoreFinals() {
@@ -252,6 +261,7 @@ public class MapperOptions {
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
         private boolean enablePolymorphicQueries;
+        private boolean makePrimary;
         private ClassLoader classLoader;
         private DateStorage dateStorage = DateStorage.UTC;
         private String discriminatorKey = "_t";
@@ -275,8 +285,8 @@ public class MapperOptions {
             mapSubPackages = original.mapSubPackages;
             storeEmpties = original.storeEmpties;
             storeNulls = original.storeNulls;
-
             enablePolymorphicQueries = original.enablePolymorphicQueries;
+            makePrimary = original.makePrimary;
             discriminatorKey = original.discriminatorKey;
             discriminator = original.discriminator;
             collectionNaming = original.collectionNaming;
@@ -424,6 +434,16 @@ public class MapperOptions {
         public Builder enablePolymorphicQueries(boolean enablePolymorphicQueries) {
             assertNotLocked();
             this.enablePolymorphicQueries = enablePolymorphicQueries;
+            return this;
+        }
+
+        /**
+         * @param makePrimary if true then codecs in the client's codec registry will be checked for class matches first.
+         * @return this
+         */
+        public Builder makePrimary(boolean makePrimary) {
+            assertNotLocked();
+            this.makePrimary = makePrimary;
             return this;
         }
 
@@ -579,6 +599,10 @@ public class MapperOptions {
 
         private boolean enablePolymorphicQueries() {
             return enablePolymorphicQueries;
+        }
+
+        private boolean makePrimary () {
+            return makePrimary;
         }
 
         private boolean ignoreFinals() {

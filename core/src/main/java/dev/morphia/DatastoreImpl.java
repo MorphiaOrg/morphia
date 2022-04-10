@@ -94,15 +94,27 @@ public class DatastoreImpl implements AdvancedDatastore {
         morphiaCodecProviders.add(new MorphiaCodecProvider(this));
 
         CodecRegistry codecRegistry = database.getCodecRegistry();
-        List<CodecProvider> providers = new ArrayList<>(List.of(new MorphiaTypesCodecProvider(this),
+        List<CodecProvider> providers = new ArrayList<>();
+
+        // call the database's codec registry first
+        if (mapper.getOptions().isMakePrimary()) {
+            providers.add(codecRegistry);
+        }
+
+        providers.addAll(List.of(
+            new MorphiaTypesCodecProvider(this),
             new PrimitiveCodecRegistry(codecRegistry),
             new EnumCodecProvider(),
             new AggregationCodecProvider(this)));
 
         providers.addAll(morphiaCodecProviders);
-        providers.add(codecRegistry);
-        this.codecRegistry = fromProviders(providers);
 
+        // allow the database's codec registry to be shadowed by the defaults
+        if (!mapper.getOptions().isMakePrimary()) {
+            providers.add(codecRegistry);
+        }
+
+        this.codecRegistry = fromProviders(providers);
         this.database = database.withCodecRegistry(this.codecRegistry);
     }
 
