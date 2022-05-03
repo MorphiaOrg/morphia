@@ -1,5 +1,13 @@
 package dev.morphia.example;
 
+import com.antwerkz.bottlerocket.clusters.MongoCluster;
+import com.antwerkz.bottlerocket.clusters.ReplicaSet;
+import com.antwerkz.bottlerocket.clusters.SingleNode;
+import com.antwerkz.bottlerocket.configuration.types.Verbosity;
+import com.github.zafarkhaja.semver.Version;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoClientSettings.Builder;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
@@ -13,8 +21,14 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.Query;
+import org.apache.commons.io.FileUtils;
 import org.bson.types.ObjectId;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +40,53 @@ import static org.testng.Assert.assertEquals;
 /**
  * This class is used in the Quick Tour documentation and is used to demonstrate various Morphia features.
  */
-public final class QuickTour {
-    private QuickTour() {
+public class QuickTour {
+    private static MongoClient mongoClient;
+    private static MongoCluster cluster;
+
+    @BeforeClass
+    public static void setupDb() {
+        String mongodb = System.getenv("MONGODB");
+        Builder builder = MongoClientSettings.builder();
+
+        if (mongodb != null) {
+            File mongodbRoot = new File("target/mongo");
+            try {
+                FileUtils.deleteDirectory(mongodbRoot);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+            Version version = Version.valueOf(mongodb);
+            cluster = version.lessThan(Version.valueOf("4.0.0"))
+                      ? new SingleNode(mongodbRoot, "morphia_test", version)
+                      : new ReplicaSet(mongodbRoot, "morphia_test", version);
+
+            cluster.configure(c -> {
+                c.systemLog(s -> {
+                    s.setTraceAllExceptions(true);
+                    s.setVerbosity(Verbosity.FIVE);
+                    return null;
+                });
+                return null;
+            });
+            cluster.clean();
+            cluster.start();
+            mongoClient = cluster.getClient(builder);
+        } else {
+            mongoClient = MongoClients.create(builder.build());
+        }
     }
 
-    public static void main(String[] args) {
-        final Datastore datastore = Morphia.createDatastore(MongoClients.create(), "morphia_example");
+    @AfterClass
+    public static void stopDb() {
+        if (cluster != null) {
+            cluster.shutdown();
+        }
+    }
+
+    @Test
+    public void demo() {
+        final Datastore datastore = Morphia.createDatastore(mongoClient, "morphia_example");
 
         // tell morphia where to find your classes
         // can be called multiple times with different packages or classes
