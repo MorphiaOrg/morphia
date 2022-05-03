@@ -40,7 +40,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * This class is used in the Quick Tour documentation and is used to demonstrate various Morphia features.
  */
-public class QuickTour {
+public class QuickTourTest {
     private static MongoClient mongoClient;
     private static MongoCluster cluster;
 
