@@ -1,4 +1,4 @@
-package dev.morphia.mapping.codec.pojo.experimental;
+package dev.morphia.mapping;
 
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaExperimental;
@@ -10,12 +10,13 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import java.util.List;
 
 /**
- * Defines an import to allow for the external definition and import of model and codec definitions.
+ * Defines an importer to allow for the external definition and import of model and codec definitions.
  * <p>
  * NOTE:  This interface is marked as an internal interface but is intended for use in more advanced scenarios.  While this API should
  * remain relatively stable over time, breaking changes might happen occasionally.
  *
  * @morphia.internal
+ * @morphia.experimental
  * @since 2.3
  */
 @MorphiaInternal

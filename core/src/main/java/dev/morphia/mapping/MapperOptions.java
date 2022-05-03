@@ -3,7 +3,6 @@ package dev.morphia.mapping;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.codec.pojo.experimental.EntityModelImporter;
 import dev.morphia.mapping.conventions.ConfigureProperties;
 import dev.morphia.mapping.conventions.FieldDiscovery;
 import dev.morphia.mapping.conventions.MethodDiscovery;

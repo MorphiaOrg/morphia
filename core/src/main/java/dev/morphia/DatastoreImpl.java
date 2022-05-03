@@ -33,7 +33,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.MergingEncoder;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.mapping.codec.pojo.experimental.EntityModelImporter;
+import dev.morphia.mapping.EntityModelImporter;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.FindOptions;
