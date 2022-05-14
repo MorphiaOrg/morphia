@@ -31,8 +31,6 @@ public class ExpressionsTestBase extends TestBase {
                             .get(MathExpression.class))
             .encode(writer, value, EncoderContext.builder().build());
         Document actual = writer.getDocument();
-        assertEquals(writer.getDocsLevel(), 0);
-        assertEquals(writer.getArraysLevel(), 0);
         assertDocumentEquals(actual, expected);
 
         Document test = getDs().aggregate(User.class)

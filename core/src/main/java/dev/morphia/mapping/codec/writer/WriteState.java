@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.writer;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
@@ -10,9 +11,15 @@ abstract class WriteState {
     private final DocumentWriter writer;
     private final WriteState previous;
 
-    WriteState(DocumentWriter writer) {
+    WriteState() {
+        writer = null;
+        previous = null;
+    }
+
+    WriteState(DocumentWriter writer, @Nullable WriteState previous) {
         this.writer = writer;
-        this.previous = writer.state(this);
+        this.previous = previous;
+        writer.state(this);
     }
 
     protected abstract String state();
@@ -38,15 +45,21 @@ abstract class WriteState {
     }
 
     WriteState array() {
-        return new ArrayState(getWriter());
+        throw new IllegalStateException(Sofia.cantStartArray(state()) + ". writer: " + getWriter());
     }
 
     WriteState document() {
-        return new DocumentState(getWriter());
+        throw new IllegalStateException(Sofia.cantStartDocument(state()) + ". writer: " + getWriter());
     }
 
-    final void end() {
-        getWriter().previous();
+    void done() {
+    }
+
+    void end() {
+        getWriter().state(previous);
+        if (previous != null) {
+            previous.done();
+        }
     }
 
     DocumentWriter getWriter() {
@@ -54,15 +67,10 @@ abstract class WriteState {
     }
 
     WriteState name(String name) {
-        throw new UnsupportedOperationException();
-        //        return new NameState(getWriter(), name, document);
-    }
-
-    <P extends WriteState> P previous() {
-        return (P) previous;
+        throw new IllegalStateException(Sofia.notInValidState("name", state()) + "  writer:  " + getWriter());
     }
 
     void value(Object value) {
-        throw new IllegalStateException(Sofia.notInValidState("value", state()));
+        throw new IllegalStateException(Sofia.notInValidState("value", state()) + "  writer:  " + getWriter());
     }
 }

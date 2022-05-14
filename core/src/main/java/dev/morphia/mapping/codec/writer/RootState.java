@@ -1,29 +1,29 @@
 package dev.morphia.mapping.codec.writer;
 
-import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 class RootState extends WriteState {
 
-    private final Document document;
+    private Document seed;
     private DocumentState documentState;
 
     RootState(DocumentWriter writer) {
-        super(writer);
-        document = null;
+        super(writer, null);
     }
 
     RootState(DocumentWriter writer, Document seed) {
-        super(writer);
-        document = seed;
+        super(writer, null);
+        this.seed = seed;
     }
 
-    //    @Override
-    //    void apply(Object value) {
-    //    }
-
     public Document getDocument() {
-        return documentState.getDocument();
+        Document document = new Document();
+        if (seed != null) {
+            document.putAll(seed);
+        }
+        document.putAll(documentState.value());
+
+        return document;
     }
 
     @Override
@@ -40,12 +40,11 @@ class RootState extends WriteState {
 
     @Override
     WriteState document() {
-        documentState = new DocumentState(getWriter(), document);
+        documentState = new DocumentState(getWriter(), this);
         return documentState;
     }
 
     @Override
-    WriteState previous() {
-        throw new IllegalStateException(Sofia.alreadyAtRoot());
+    void done() {
     }
 }
