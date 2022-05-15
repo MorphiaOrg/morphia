@@ -31,6 +31,7 @@ import dev.morphia.test.models.CurrentStatus;
 import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.Grade;
 import dev.morphia.test.models.Hotel;
+import dev.morphia.test.models.Population;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.TestEntity;
 import org.bson.Document;
@@ -57,17 +58,19 @@ import static org.testng.Assert.assertTrue;
 public class TestDatastore extends TestBase {
     @Test
     public void testBulkInsert() {
-
-        MongoCollection collection = getMapper().getCollection(TestEntity.class);
+        MongoCollection testEntity = getMapper().getCollection(TestEntity.class);
+        MongoCollection population = getMapper().getCollection(Population.class);
         this.getDs().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
             new InsertManyOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
-        assertEquals(collection.countDocuments(), 5);
+        assertEquals(testEntity.countDocuments(), 5);
 
-        collection.drop();
-        this.getDs().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
+        testEntity.drop();
+        population.drop();
+        this.getDs().insert(asList(new TestEntity(), new TestEntity(), new Population(), new Population(), new Population()),
             new InsertManyOptions()
                 .writeConcern(WriteConcern.ACKNOWLEDGED));
-        assertEquals(collection.countDocuments(), 5);
+        assertEquals(testEntity.countDocuments(), 2);
+        assertEquals(population.countDocuments(), 3);
     }
 
     @Test

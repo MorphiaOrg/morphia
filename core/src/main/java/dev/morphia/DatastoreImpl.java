@@ -350,7 +350,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             return List.of();
         }
 
-        Map<MongoCollection, List<T>> grouped = new LinkedHashMap<>();
+        Map<Class<?>, List<T>> grouped = new LinkedHashMap<>();
         List<T> list = new ArrayList<>();
         for (T entity : entities) {
             Class<?> type = entity.getClass();
@@ -359,13 +359,13 @@ public class DatastoreImpl implements AdvancedDatastore {
             if (getMapper().getId(entity) != null || model.getVersionProperty() != null) {
                 list.add(entity);
             } else {
-                grouped.computeIfAbsent(mapper.getCollection(type), c -> new ArrayList<>())
+                grouped.computeIfAbsent(type, c -> new ArrayList<>())
                        .add(entity);
             }
         }
 
-        for (Entry<MongoCollection, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = entry.getKey();
+        for (Entry<Class<?>, List<T>> entry : grouped.entrySet()) {
+            MongoCollection<T> collection = (MongoCollection<T>) mapper.getCollection(entry.getKey());
             ClientSession clientSession = options.clientSession();
             if (clientSession == null) {
                 collection.insertMany(entry.getValue(), options.getOptions());
