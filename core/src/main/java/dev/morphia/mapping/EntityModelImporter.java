@@ -3,7 +3,6 @@ package dev.morphia.mapping;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
