@@ -960,7 +960,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.Builder.html#autoImportModels(boolean)">autoImportModels(boolean)</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></dt>
 <dd>
-<div class="block">This feature automatically discovers and uses <a href="dev/morphia/mapping/codec/pojo/experimental/EntityModelImporter.html" title="interface in dev.morphia.mapping.codec.pojo.experimental"><code>EntityModelImporter</code></a> instances to allow for external definition of class
+<div class="block">This feature automatically discovers and uses <a href="dev/morphia/mapping/EntityModelImporter.html" title="interface in dev.morphia.mapping"><code>EntityModelImporter</code></a> instances to allow for external definition of class
  models.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/internal/MorphiaKeyCursor.html#available()">available()</a></span> - Method in class dev.morphia.query.internal.<a href="dev/morphia/query/internal/MorphiaKeyCursor.html" title="class in dev.morphia.query.internal">MorphiaKeyCursor</a></dt>
@@ -2482,8 +2482,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/mapping/codec/pojo/package-summary.html">dev.morphia.mapping.codec.pojo</a> - package dev.morphia.mapping.codec.pojo</dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/mapping/codec/pojo/experimental/package-summary.html">dev.morphia.mapping.codec.pojo.experimental</a> - package dev.morphia.mapping.codec.pojo.experimental</dt>
-<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/mapping/codec/reader/package-summary.html">dev.morphia.mapping.codec.reader</a> - package dev.morphia.mapping.codec.reader</dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/mapping/codec/references/package-summary.html">dev.morphia.mapping.codec.references</a> - package dev.morphia.mapping.codec.references</dt>
@@ -3105,9 +3103,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Create a builder</div>
 </dd>
-<dt><a href="dev/morphia/mapping/codec/pojo/experimental/EntityModelImporter.html" title="interface in dev.morphia.mapping.codec.pojo.experimental"><span class="typeNameLink">EntityModelImporter</span></a> - Interface in <a href="dev/morphia/mapping/codec/pojo/experimental/package-summary.html">dev.morphia.mapping.codec.pojo.experimental</a></dt>
+<dt><a href="dev/morphia/mapping/EntityModelImporter.html" title="interface in dev.morphia.mapping"><span class="typeNameLink">EntityModelImporter</span></a> - Interface in <a href="dev/morphia/mapping/package-summary.html">dev.morphia.mapping</a></dt>
 <dd>
-<div class="block">Defines an import to allow for the external definition and import of model and codec definitions.</div>
+<div class="block">Defines an importer to allow for the external definition and import of model and codec definitions.</div>
 </dd>
 <dt><a href="dev/morphia/mapping/validation/classrules/EntityOrEmbed.html" title="class in dev.morphia.mapping.validation.classrules"><span class="typeNameLink">EntityOrEmbed</span></a> - Class in <a href="dev/morphia/mapping/validation/classrules/package-summary.html">dev.morphia.mapping.validation.classrules</a></dt>
 <dd>
@@ -4024,7 +4022,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/EntityDecoder.html#getCodecFromDocument(org.bson.BsonReader,boolean,java.lang.String,org.bson.codecs.configuration.CodecRegistry,dev.morphia.mapping.DiscriminatorLookup,org.bson.codecs.Codec)">getCodecFromDocument(BsonReader, boolean, String, CodecRegistry, DiscriminatorLookup, Codec&lt;T&gt;)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/experimental/EntityModelImporter.html#getCodecProvider(dev.morphia.Datastore)">getCodecProvider(Datastore)</a></span> - Method in interface dev.morphia.mapping.codec.pojo.experimental.<a href="dev/morphia/mapping/codec/pojo/experimental/EntityModelImporter.html" title="interface in dev.morphia.mapping.codec.pojo.experimental">EntityModelImporter</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/EntityModelImporter.html#getCodecProvider(dev.morphia.Datastore)">getCodecProvider(Datastore)</a></span> - Method in interface dev.morphia.mapping.<a href="dev/morphia/mapping/EntityModelImporter.html" title="interface in dev.morphia.mapping">EntityModelImporter</a></dt>
 <dd>
 <div class="block">Returns the codec provider responsible for creating the codecs for the <a href="dev/morphia/mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo"><code>EntityModel</code></a>s returned by this importer.</div>
 </dd>
@@ -4584,7 +4582,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/GeoNear.html#getMinDistance()">getMinDistance()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/GeoNear.html" title="class in dev.morphia.aggregation.stages">GeoNear</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/experimental/EntityModelImporter.html#getModels(dev.morphia.mapping.Mapper)">getModels(Mapper)</a></span> - Method in interface dev.morphia.mapping.codec.pojo.experimental.<a href="dev/morphia/mapping/codec/pojo/experimental/EntityModelImporter.html" title="interface in dev.morphia.mapping.codec.pojo.experimental">EntityModelImporter</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/EntityModelImporter.html#getModels(dev.morphia.mapping.Mapper)">getModels(Mapper)</a></span> - Method in interface dev.morphia.mapping.<a href="dev/morphia/mapping/EntityModelImporter.html" title="interface in dev.morphia.mapping">EntityModelImporter</a></dt>
 <dd>
 <div class="block">Returns the models to be introduced by this importer.</div>
 </dd>
