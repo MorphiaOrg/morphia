@@ -23,6 +23,7 @@ import dev.morphia.annotations.IndexHelper;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.SessionConfigurable;
+import dev.morphia.mapping.EntityModelImporter;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.EnumCodecProvider;
@@ -33,7 +34,6 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.MergingEncoder;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.mapping.EntityModelImporter;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.FindOptions;
@@ -395,7 +395,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             return List.of();
         }
 
-        Map<MongoCollection, List<T>> grouped = new LinkedHashMap<>();
+        Map<Class<?>, List<T>> grouped = new LinkedHashMap<>();
         List<T> list = new ArrayList<>();
         for (T entity : entities) {
             Class<?> type = entity.getClass();
@@ -404,7 +404,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             if (getMapper().getId(entity) != null || model.getVersionProperty() != null) {
                 list.add(entity);
             } else {
-                grouped.computeIfAbsent(getCollection(type), c -> new ArrayList<>())
+                grouped.computeIfAbsent(type, c -> new ArrayList<>())
                        .add(entity);
             }
         }
@@ -414,11 +414,10 @@ public class DatastoreImpl implements AdvancedDatastore {
             Sofia.logInsertManyAlternateCollection();
         }
 
-        for (Entry<MongoCollection, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = alternate == null
-                                            ? entry.getKey()
-                                            : (MongoCollection<T>) getDatabase().getCollection(
-                                                alternate, entry.getKey().getDocumentClass());
+        for (Entry<Class<?>, List<T>> entry : grouped.entrySet()) {
+            MongoCollection<T> collection = ((MongoCollection<T>) (alternate == null
+                                                                   ? getCollection(entry.getKey())
+                                                                   : getDatabase().getCollection(alternate, entry.getKey())));
 
             ClientSession clientSession = options.clientSession();
             if (clientSession == null) {
