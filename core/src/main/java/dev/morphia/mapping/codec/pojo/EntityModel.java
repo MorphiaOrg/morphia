@@ -357,7 +357,12 @@ public class EntityModel {
         return getType().isInterface();
     }
 
-    protected boolean useDiscriminator() {
+    /**
+     * @return true if the discriminator should be used
+     * @morphia.internal
+     * @since 2.2.7
+     */
+    public boolean useDiscriminator() {
         return discriminatorEnabled;
     }
 

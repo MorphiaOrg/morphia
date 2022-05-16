@@ -36,7 +36,7 @@ public class PullOperator extends UpdateOperator {
                         .encode(mapper, writer, EncoderContext.builder().build());
                 });
 
-                return new Document(field(), writer.getDocument());
+                return new Document(pathTarget.getTarget().getMappedName(), writer.getDocument());
             }
         };
     }

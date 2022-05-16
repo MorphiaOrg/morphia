@@ -23,10 +23,6 @@ public class TestTransactions extends TestBase {
     public void before() {
         checkMinServerVersion(4.0);
         assumeTrue(isReplicaSet(), "These tests require a replica set");
-        getDs().save(new Rectangle(1, 1));
-        getDs().find(Rectangle.class).findAndDelete();
-        getDs().save(new User("", LocalDate.now()));
-        getDs().find(User.class).findAndDelete();
     }
 
     @Test

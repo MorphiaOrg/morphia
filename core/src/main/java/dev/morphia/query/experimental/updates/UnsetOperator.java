@@ -23,7 +23,7 @@ public class UnsetOperator extends UpdateOperator {
         return new OperationTarget(pathTarget, "") {
             @Override
             public Object encode(Mapper mapper) {
-                return new Document(field(), "");
+                return new Document(pathTarget.getTarget().getMappedName(), "");
             }
         };
     }

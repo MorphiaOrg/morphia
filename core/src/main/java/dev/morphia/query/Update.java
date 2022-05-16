@@ -6,6 +6,7 @@ import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import org.bson.Document;
 
@@ -44,6 +45,12 @@ public class Update<T> extends UpdateBase<T> {
     public UpdateResult execute(UpdateOptions options) {
         Document updateOperations = toDocument();
         final Document queryObject = getQuery().toDocument();
+        if (options.isUpsert()) {
+            EntityModel entityModel = getDatastore().getMapper().getEntityModel(getQuery().getEntityClass());
+            if (entityModel.useDiscriminator()) {
+                queryObject.put(entityModel.getDiscriminatorKey(), entityModel.getDiscriminator());
+            }
+        }
 
         ClientSession session = getDatastore().findSession(options);
         MongoCollection<T> mongoCollection = options.prepare(getCollection());
