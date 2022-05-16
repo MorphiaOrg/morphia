@@ -2,6 +2,7 @@ package dev.morphia.query.experimental.updates;
 
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.OperationTarget;
 import org.bson.Document;
 
@@ -23,7 +24,8 @@ public class UnsetOperator extends UpdateOperator {
         return new OperationTarget(pathTarget, "") {
             @Override
             public Object encode(Mapper mapper) {
-                return new Document(pathTarget.getTarget().getMappedName(), "");
+                PropertyModel target = pathTarget.getTarget();
+                return new Document(target != null ? target.getMappedName() : field(), "");
             }
         };
     }
