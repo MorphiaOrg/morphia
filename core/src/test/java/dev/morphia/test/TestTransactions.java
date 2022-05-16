@@ -23,6 +23,11 @@ public class TestTransactions extends TestBase {
     public void before() {
         checkMinServerVersion(4.0);
         assumeTrue(isReplicaSet(), "These tests require a replica set");
+        // These are here to create these collections which can't be done in a multi-doc transaction
+        getDs().save(new Rectangle(1, 1));
+        getDs().find(Rectangle.class).findAndDelete();
+        getDs().save(new User("", LocalDate.now()));
+        getDs().find(User.class).findAndDelete();
     }
 
     @Test
