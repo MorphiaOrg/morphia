@@ -2,6 +2,7 @@ package dev.morphia.query.updates;
 
 import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.filters.Filter;
@@ -35,7 +36,8 @@ public class PullOperator extends UpdateOperator {
                     ((Filter) getValue()).encode(datastore, writer, EncoderContext.builder().build());
                 });
 
-                return new Document(field(), writer.getDocument());
+                PropertyModel target = pathTarget.getTarget();
+                return new Document(target != null ? target.getMappedName() : field(), writer.getDocument());
             }
         };
     }

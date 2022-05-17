@@ -2,6 +2,7 @@ package dev.morphia.test.models;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Property;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import org.bson.types.ObjectId;
 
@@ -15,6 +16,7 @@ import static java.util.Arrays.asList;
 public final class Book {
     @Id
     public ObjectId id;
+    @Property("name")
     public String title;
     public MorphiaReference<Author> author;
     public Integer copies;
