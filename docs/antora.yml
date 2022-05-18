@@ -7,5 +7,5 @@ nav:
 
 asciidoc:
   attributes:
-    version: 2.2.6
+    version: 2.2.7
     srcRef: https://github.com/MorphiaOrg/morphia/tree/2.2.x
