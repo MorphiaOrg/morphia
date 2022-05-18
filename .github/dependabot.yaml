@@ -5,3 +5,8 @@ updates:
     open-pull-requests-limit: 0
     schedule:
       interval: daily
+    target-branch:
+      - master
+      - 2.2.x
+      - 2.1.x
+      - 2.0.x
