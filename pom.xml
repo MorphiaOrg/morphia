@@ -32,7 +32,7 @@
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
         <bottlerocket.version>0.31.0</bottlerocket.version>
-        <dokka.version>1.6.10</dokka.version>
+        <dokka.version>1.6.21</dokka.version>
         <driver.version>4.5.0</driver.version>
         <json.assert.version>1.5.0</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
