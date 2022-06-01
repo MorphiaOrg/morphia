@@ -11,8 +11,8 @@ jobs:
     strategy:
       matrix:
         java: [ 11, 17 ]
-        mongo: [ 5.0.6, 4.2.18 ]
-        driver: [ 4.5.0, 4.0.6 ]
+        mongo: [ 5.0.9, 4.2.20 ]
+        driver: [ 4.6.0, 4.0.6 ]
     name: "Tests on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
     steps:
       - name: Checkout
