@@ -254,7 +254,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         try {
             Class<?> type = propertyModel.getType();
             // Get or create proxy class
-            Class<T> proxyClass = (Class<T>) typeCache.findOrInsert(type.getClassLoader(), getCacheKey(type), () -> makeProxy(), typeCache);
+            Class<T> proxyClass = (Class<T>) typeCache.findOrInsert(type.getClassLoader(), getCacheKey(type), this::makeProxy, typeCache);
             //... instantiate it
             final T proxy = proxyClass.getDeclaredConstructor().newInstance();
             // .. and set the invocation handler

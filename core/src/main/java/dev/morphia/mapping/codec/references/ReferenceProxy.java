@@ -25,7 +25,7 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
         if (method.getName().equals("isFetched")) {
             return isFetched();
         } else if (method.getAnnotation(IdGetter.class) != null) {

@@ -89,7 +89,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public AggregationPipeline bucket(String field, List<?> boundaries, BucketOptions options) {
         if (boundaries.size() < 2) {
-            throw new RuntimeException("Boundaries list should be present and has at least 2 elements");
+            throw new IllegalArgumentException("Boundaries list should be present and have at least 2 elements");
         }
         Document document = options.toDocument();
         document.put("groupBy", "$" + field);
@@ -107,7 +107,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     public AggregationPipeline bucketAuto(String field, int bucketCount, BucketAutoOptions options) {
 
         if (bucketCount < 1) {
-            throw new RuntimeException("bucket count should be more than 0");
+            throw new IllegalArgumentException("bucket count should be more than 0");
         }
         Document document = options.toDocument();
         document.put("groupBy", "$" + field);
