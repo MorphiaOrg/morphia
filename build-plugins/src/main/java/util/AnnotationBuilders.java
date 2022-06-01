@@ -160,12 +160,20 @@ public class AnnotationBuilders extends AbstractMojo {
                              .setBody(format("return %s;", name))
                              .addAnnotation(Override.class);
 
+            String parameterType = parameterType(element);
+            boolean varargs = false;
+            if (parameterType.endsWith("[]")) {
+                parameterType = parameterType.substring(0, parameterType.length() - 2);
+                varargs = true;
+            }
             builder.addMethod()
                    .setPublic()
                    .setName(name)
                    .setReturnType(builder.getName())
-                   .setBody(format("annotation.%s = %s; return this;", name, name))
-                   .addParameter(parameterType(element), name);
+                   .setBody(
+                       format("annotation.%s = %s; return this;", name,
+                           name))
+                   .addParameter(parameterType, name).setVarArgs(varargs);
         }
 
         for (Import anImport : source.getImports()) {
@@ -176,7 +184,7 @@ public class AnnotationBuilders extends AbstractMojo {
     }
 
     private String parameterType(AnnotationElementSource element) {
-        return element.getType().toString().replace("[]", "...");
+        return element.getType().toString();
     }
 
     private void equals(JavaClassSource annotation, List<AnnotationElementSource> elements) {
