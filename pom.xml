@@ -43,7 +43,7 @@
         <roaster.version>2.23.2.Final</roaster.version>
         <slf4j.version>1.7.36</slf4j.version>
         <sofia.version>0.23</sofia.version>
-        <surefire.version>3.0.0-M5</surefire.version>
+        <surefire.version>3.0.0-M6</surefire.version>
         <testng.version>7.5</testng.version>
         <zt.exec.version>1.12</zt.exec.version>
 
