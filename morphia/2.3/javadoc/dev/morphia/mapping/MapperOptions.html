@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":42,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":9};
+var data = {"i0":10,"i1":9,"i2":9,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":42,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -347,9 +347,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public class <span class="typeNameLabel">MapperOptions</span>
+<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public class <span class="typeNameLabel">MapperOptions</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block">Options to control mapping behavior.</div>
+<dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </div>
@@ -424,48 +426,53 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#builder()">builder</a></span>()</code></th>
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#autoImportModels()">autoImportModels</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#builder(dev.morphia.mapping.MapperOptions)">builder</a></span>​(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;original)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#builder()">builder</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#builder(dev.morphia.mapping.MapperOptions)">builder</a></span>​(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;original)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClassLoader()">getClassLoader</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Returns the classloader used, in theory, when loading the entity types.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCollectionNaming()">getCollectionNaming</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="conventions/MorphiaConvention.html" title="interface in dev.morphia.mapping.conventions">MorphiaConvention</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getConventions()">getConventions</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="DateStorage.html" title="enum in dev.morphia.mapping">DateStorage</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDateStorage()">getDateStorage</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="DiscriminatorFunction.html" title="class in dev.morphia.mapping">DiscriminatorFunction</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDiscriminator()">getDiscriminator</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDiscriminatorKey()">getDiscriminatorKey</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFieldNaming()">getFieldNaming</a></span>()</code></th>
 <td class="colLast">
@@ -474,24 +481,19 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPropertyNaming()">getPropertyNaming</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getQueryFactory()">getQueryFactory</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
-<td class="colFirst"><code>org.bson.UuidRepresentation</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getUuidRepresentation()">getUuidRepresentation</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 <tr id="i12" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isAutoImportModels()">isAutoImportModels</a></span>()</code></th>
+<td class="colFirst"><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/UuidRepresentation.html?is-external=true" title="class or interface in org.bson" class="externalLink">UuidRepresentation</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getUuidRepresentation()">getUuidRepresentation</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i13" class="rowColor">
@@ -613,33 +615,35 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
+<a id="autoImportModels()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>autoImportModels</h4>
+<pre class="methodSignature"><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public&nbsp;boolean&nbsp;autoImportModels()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if <a href="EntityModelImporter.html" title="interface in dev.morphia.mapping"><code>EntityModelImporter</code></a> instances should be loaded</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
 <a id="getClassLoader()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getClassLoader</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;getClassLoader()</pre>
+<pre class="methodSignature"><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html?is-external=true" title="class or interface in java.lang" class="externalLink">ClassLoader</a>&nbsp;getClassLoader()</pre>
 <div class="block">Returns the classloader used, in theory, when loading the entity types.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the classloader</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
-</li>
-</ul>
-<a id="isAutoImportModels()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isAutoImportModels</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;isAutoImportModels()</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if <a href="EntityModelImporter.html" title="interface in dev.morphia.mapping"><code>EntityModelImporter</code></a> instances should be loaded</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.3</dd>
-</dl>
 </li>
 </ul>
 <a id="getCollectionNaming()">
@@ -766,7 +770,7 @@ public&nbsp;<a href="NamingStrategy.html" title="class in dev.morphia.mapping">N
 <ul class="blockList">
 <li class="blockList">
 <h4>getUuidRepresentation</h4>
-<pre class="methodSignature">public&nbsp;org.bson.UuidRepresentation&nbsp;getUuidRepresentation()</pre>
+<pre class="methodSignature">public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/UuidRepresentation.html?is-external=true" title="class or interface in org.bson" class="externalLink">UuidRepresentation</a>&nbsp;getUuidRepresentation()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the UUID representation to use in the driver</dd>

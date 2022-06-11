@@ -360,12 +360,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;</code></dd>
 </dl>
 <hr>
-<pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
+<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
 public class <span class="typeNameLabel">UpdateOpsImpl&lt;T&gt;</span>
 extends <a href="UpdateBase.html" title="class in dev.morphia.query">UpdateBase</a>&lt;T&gt;
 implements <a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+<dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </div>
@@ -386,7 +388,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class)">UpdateOpsImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.DatastoreImpl,java.lang.Class)">UpdateOpsImpl</a></span>​(<a href="../DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>&nbsp;datastore,
              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -473,7 +475,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code>org.bson.Document</code></td>
+<td class="colFirst"><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getOps()">getOps</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -614,7 +616,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOps(org.bson.Document)">setOps</a></span>​(org.bson.Document&nbsp;ops)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOps(org.bson.Document)">setOps</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;ops)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Sets the operations for this UpdateOpsImpl</div>
@@ -659,13 +661,13 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.Datastore,java.lang.Class)">
+<a id="<init>(dev.morphia.DatastoreImpl,java.lang.Class)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>UpdateOpsImpl</h4>
-<pre>public&nbsp;UpdateOpsImpl​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<pre>public&nbsp;UpdateOpsImpl​(<a href="../DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>&nbsp;datastore,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;type)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Creates an UpdateOpsImpl for the type given.</div>
@@ -1163,7 +1165,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>getOps</h4>
-<pre class="methodSignature">public&nbsp;org.bson.Document&nbsp;getOps()</pre>
+<pre class="methodSignature">public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;getOps()</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -1177,7 +1179,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>setOps</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setOps​(org.bson.Document&nbsp;ops)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;setOps​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;ops)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Sets the operations for this UpdateOpsImpl</div>
 <dl>

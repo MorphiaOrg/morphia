@@ -242,8 +242,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":18,"i3":6,"i4":6};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
+var data = {"i0":50,"i1":50,"i2":18,"i3":6,"i4":6,"i5":6,"i6":6};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -343,11 +343,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code>T</code> - the type being defined</dd>
 </dl>
 <dl>
+<dt>All Superinterfaces:</dt>
+<dd><code><a href="CollectionConfiguration.html" title="interface in dev.morphia.internal">CollectionConfiguration</a></code></dd>
+</dl>
+<dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code>, <code><a href="../query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></dd>
+<dd><code><a href="../aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code>, <code><a href="../query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></code>, <code><a href="../query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></dd>
 </dl>
 <hr>
-<pre>public interface <span class="typeNameLabel">ReadConfigurable&lt;T&gt;</span></pre>
+<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public interface <span class="typeNameLabel">ReadConfigurable&lt;T&gt;</span>
+extends <a href="CollectionConfiguration.html" title="interface in dev.morphia.internal">CollectionConfiguration</a></pre>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
@@ -366,39 +372,53 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>com.mongodb.ReadConcern</code></td>
+<td class="colFirst"><code>default <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadConcern</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getReadConcern()">getReadConcern</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>default <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadPreference.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadPreference</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getReadPreference()">getReadPreference</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>default &lt;C&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;C&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prepare(com.mongodb.client.MongoCollection)">prepare</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;C&gt;&nbsp;collection)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadConcern</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readConcern()">readConcern</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Gets the read concern</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>com.mongodb.ReadPreference</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getReadPreference()">getReadPreference</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i2" class="altColor">
-<td class="colFirst"><code>default &lt;C&gt;&nbsp;com.mongodb.client.MongoCollection&lt;C&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prepare(com.mongodb.client.MongoCollection)">prepare</a></span>​(com.mongodb.client.MongoCollection&lt;C&gt;&nbsp;collection)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="ReadConfigurable.html" title="type parameter in ReadConfigurable">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readConcern(com.mongodb.ReadConcern)">readConcern</a></span>​(com.mongodb.ReadConcern&nbsp;readConcern)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readConcern(com.mongodb.ReadConcern)">readConcern</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadConcern</a>&nbsp;readConcern)</code></th>
 <td class="colLast">
 <div class="block">Sets the read concern to apply</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadPreference.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadPreference</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readPreference()">readPreference</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="ReadConfigurable.html" title="type parameter in ReadConfigurable">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readPreference(com.mongodb.ReadPreference)">readPreference</a></span>​(com.mongodb.ReadPreference&nbsp;readPreference)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readPreference(com.mongodb.ReadPreference)">readPreference</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadPreference.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadPreference</a>&nbsp;readPreference)</code></th>
 <td class="colLast">
 <div class="block">Sets the read preference to apply</div>
 </td>
@@ -426,8 +446,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>getReadConcern</h4>
-<pre class="methodSignature">@Nullable
-com.mongodb.ReadConcern&nbsp;getReadConcern()</pre>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.3")
+default&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadConcern</a>&nbsp;getReadConcern()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Gets the read concern</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -441,8 +464,11 @@ com.mongodb.ReadConcern&nbsp;getReadConcern()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getReadPreference</h4>
-<pre class="methodSignature">@Nullable
-com.mongodb.ReadPreference&nbsp;getReadPreference()</pre>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.3")
+default&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadPreference.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadPreference</a>&nbsp;getReadPreference()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the read preference</dd>
@@ -455,7 +481,36 @@ com.mongodb.ReadPreference&nbsp;getReadPreference()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>prepare</h4>
-<pre class="methodSignature">default&nbsp;&lt;C&gt;&nbsp;com.mongodb.client.MongoCollection&lt;C&gt;&nbsp;prepare​(com.mongodb.client.MongoCollection&lt;C&gt;&nbsp;collection)</pre>
+<pre class="methodSignature">default&nbsp;&lt;C&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;C&gt;&nbsp;prepare​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;C&gt;&nbsp;collection)</pre>
+</li>
+</ul>
+<a id="readConcern()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>readConcern</h4>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadConcern</a>&nbsp;readConcern()</pre>
+<div class="block">Gets the read concern</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the read concern</dd>
+</dl>
+</li>
+</ul>
+<a id="readPreference()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>readPreference</h4>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadPreference.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadPreference</a>&nbsp;readPreference()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the read preference</dd>
+</dl>
 </li>
 </ul>
 <a id="readConcern(com.mongodb.ReadConcern)">
@@ -464,7 +519,7 @@ com.mongodb.ReadPreference&nbsp;getReadPreference()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>readConcern</h4>
-<pre class="methodSignature"><a href="ReadConfigurable.html" title="type parameter in ReadConfigurable">T</a>&nbsp;readConcern​(com.mongodb.ReadConcern&nbsp;readConcern)</pre>
+<pre class="methodSignature"><a href="ReadConfigurable.html" title="type parameter in ReadConfigurable">T</a>&nbsp;readConcern​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadConcern</a>&nbsp;readConcern)</pre>
 <div class="block">Sets the read concern to apply</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -480,7 +535,7 @@ com.mongodb.ReadPreference&nbsp;getReadPreference()</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>readPreference</h4>
-<pre class="methodSignature"><a href="ReadConfigurable.html" title="type parameter in ReadConfigurable">T</a>&nbsp;readPreference​(com.mongodb.ReadPreference&nbsp;readPreference)</pre>
+<pre class="methodSignature"><a href="ReadConfigurable.html" title="type parameter in ReadConfigurable">T</a>&nbsp;readPreference​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ReadPreference.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ReadPreference</a>&nbsp;readPreference)</pre>
 <div class="block">Sets the read preference to apply</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":50,"i1":18,"i2":6,"i3":6};
+var data = {"i0":18,"i1":50,"i2":6,"i3":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -339,11 +339,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <dl>
+<dt>All Superinterfaces:</dt>
+<dd><code><a href="CollectionConfiguration.html" title="interface in dev.morphia.internal">CollectionConfiguration</a></code></dd>
+</dl>
+<dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="../aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code>, <code><a href="../DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></code>, <code><a href="../query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code>, <code><a href="../FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code>, <code><a href="../InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></code>, <code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code>, <code><a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></code>, <code><a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></code></dd>
+<dd><code><a href="../aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code>, <code><a href="../DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></code>, <code><a href="../query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></code>, <code><a href="../FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code>, <code><a href="../InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></code>, <code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code>, <code><a href="../InsertOptions.html" title="class in dev.morphia">InsertOptions</a></code>, <code><a href="../ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></code>, <code><a href="../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></code></dd>
 </dl>
 <hr>
-<pre>public interface <span class="typeNameLabel">WriteConfigurable&lt;T&gt;</span></pre>
+<pre>public interface <span class="typeNameLabel">WriteConfigurable&lt;T&gt;</span>
+extends <a href="CollectionConfiguration.html" title="interface in dev.morphia.internal">CollectionConfiguration</a></pre>
 </li>
 </ul>
 </div>
@@ -365,23 +370,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>default com.mongodb.WriteConcern</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getWriteConcern()">getWriteConcern</a></span>()</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#writeConcern()"><code>writeConcern()</code></a> instead</div>
-</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>default &lt;C&gt;&nbsp;com.mongodb.client.MongoCollection&lt;C&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prepare(com.mongodb.client.MongoCollection)">prepare</a></span>​(com.mongodb.client.MongoCollection&lt;C&gt;&nbsp;collection)</code></th>
+<td class="colFirst"><code>default &lt;C&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;C&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#configure(com.mongodb.client.MongoCollection)">configure</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;C&gt;&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block">Applies the options to the collection</div>
 </td>
 </tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>default <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">WriteConcern</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getWriteConcern()">getWriteConcern</a></span>()</code></th>
+<td class="colLast">
+<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</td>
+</tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>com.mongodb.WriteConcern</code></td>
+<td class="colFirst"><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">WriteConcern</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern()">writeConcern</a></span>()</code></th>
 <td class="colLast">
 <div class="block">The write concern to use.</div>
@@ -389,7 +392,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="WriteConfigurable.html" title="type parameter in WriteConfigurable">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>​(com.mongodb.WriteConcern&nbsp;writeConcern)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">WriteConcern</a>&nbsp;writeConcern)</code></th>
 <td class="colLast">
 <div class="block">Set the write concern to use.</div>
 </td>
@@ -411,33 +414,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="getWriteConcern()">
+<a id="configure(com.mongodb.client.MongoCollection)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getWriteConcern</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-@Nullable
-default&nbsp;com.mongodb.WriteConcern&nbsp;getWriteConcern()</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#writeConcern()"><code>writeConcern()</code></a> instead</div>
-</div>
-<div class="block">The write concern to use.  By default the write concern configured for the MongoCollection instance will be used.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the write concern, or null if the default will be used.</dd>
-</dl>
-</li>
-</ul>
-<a id="prepare(com.mongodb.client.MongoCollection)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>prepare</h4>
-<pre class="methodSignature">default&nbsp;&lt;C&gt;&nbsp;com.mongodb.client.MongoCollection&lt;C&gt;&nbsp;prepare​(com.mongodb.client.MongoCollection&lt;C&gt;&nbsp;collection)</pre>
+<h4>configure</h4>
+<pre class="methodSignature">default&nbsp;&lt;C&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;C&gt;&nbsp;configure​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;C&gt;&nbsp;collection)</pre>
 <div class="block">Applies the options to the collection</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -451,14 +434,27 @@ default&nbsp;com.mongodb.WriteConcern&nbsp;getWriteConcern()</pre>
 </dl>
 </li>
 </ul>
+<a id="getWriteConcern()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getWriteConcern</h4>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
+default&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">WriteConcern</a>&nbsp;getWriteConcern()</pre>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</li>
+</ul>
 <a id="writeConcern(com.mongodb.WriteConcern)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>writeConcern</h4>
-<pre class="methodSignature"><a href="WriteConfigurable.html" title="type parameter in WriteConfigurable">T</a>&nbsp;writeConcern​(@Nullable
-               com.mongodb.WriteConcern&nbsp;writeConcern)</pre>
+<pre class="methodSignature"><a href="WriteConfigurable.html" title="type parameter in WriteConfigurable">T</a>&nbsp;writeConcern​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+               <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">WriteConcern</a>&nbsp;writeConcern)</pre>
 <div class="block">Set the write concern to use.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -474,8 +470,8 @@ default&nbsp;com.mongodb.WriteConcern&nbsp;getWriteConcern()</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>writeConcern</h4>
-<pre class="methodSignature">@Nullable
-com.mongodb.WriteConcern&nbsp;writeConcern()</pre>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">WriteConcern</a>&nbsp;writeConcern()</pre>
 <div class="block">The write concern to use.  By default the write concern configured for the MongoCollection instance will be used.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

@@ -351,7 +351,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyModelBuilder.html#accessor(org.bson.codecs.pojo.PropertyAccessor)">accessor(PropertyAccessor&lt;? super Object&gt;)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></dt>
 <dd>
-<div class="block">Sets the <code>PropertyAccessor</code></div>
+<div class="block">Sets the <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html?is-external=true" title="class or interface in org.bson.codecs.pojo" class="externalLink"><code>PropertyAccessor</code></a></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/Accumulator.html#accumulator(java.lang.String,java.lang.Object)">accumulator(String, Object)</a></span> - Static method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/Accumulator.html" title="class in dev.morphia.aggregation">Accumulator</a></dt>
 <dd>
@@ -581,7 +581,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/Datastore.html#aggregate(java.lang.Class)">aggregate(Class&lt;T&gt;)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
-<div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/DBCollection.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>DBCollection</code></a>)</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/DatastoreImpl.html#aggregate(java.lang.Class)">aggregate(Class&lt;T&gt;)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></dt>
 <dd>&nbsp;</dd>
@@ -589,7 +589,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Executes the pipeline and aggregates the output in to the type mapped by the target type using
- the default options as defined in <code>AggregationOptions</code>.</div>
+ the default options as defined in <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/AggregationOptions.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>AggregationOptions</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationPipelineImpl.html#aggregate(java.lang.Class)">aggregate(Class&lt;U&gt;)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationPipelineImpl.html" title="class in dev.morphia.aggregation">AggregationPipelineImpl</a></dt>
 <dd>
@@ -615,7 +615,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 &nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/Datastore.html#aggregate(java.lang.String)">aggregate(String)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
-<div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/DBCollection.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>DBCollection</code></a>)</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/DatastoreImpl.html#aggregate(java.lang.String)">aggregate(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></dt>
 <dd>&nbsp;</dd>
@@ -692,7 +692,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Returns true if no element of a set evaluates to false, otherwise, returns false.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#allowDiskUse()">allowDiskUse()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#allowDiskUse(boolean)">allowDiskUse(boolean)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>
 <div class="block">Enables writing to temporary files.</div>
@@ -713,10 +715,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/Collation.html#alternate()">alternate()</a></span> - Method in annotation type dev.morphia.annotations.<a href="dev/morphia/annotations/Collation.html" title="annotation in dev.morphia.annotations">Collation</a></dt>
 <dd>
 <div class="block">Controls whether spaces and punctuation are considered base characters</div>
-</dd>
-<dt><a href="dev/morphia/AlternateCollection.html" title="interface in dev.morphia"><span class="typeNameLink">AlternateCollection</span></a>&lt;<a href="dev/morphia/AlternateCollection.html" title="type parameter in AlternateCollection">T</a>&gt; - Interface in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
-<dd>
-<div class="block">Specifies that an Options class accepts an alternate collection specification.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyModelBuilder.html#alternateName(java.lang.String)">alternateName(String)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></dt>
 <dd>
@@ -849,7 +847,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/impls/ArrayFilterExpression.html#%3Cinit%3E(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">ArrayFilterExpression(Expression, Expression)</a></span> - Constructor for class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/ArrayFilterExpression.html" title="class in dev.morphia.aggregation.expressions.impls">ArrayFilterExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#arrayFilters(java.util.List)">arrayFilters(List&lt;? extends Bson&gt;)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#arrayFilters(java.util.List)">arrayFilters(List&lt;? extends Bson&gt;)</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/ArrayIndexExpression.html" title="class in dev.morphia.aggregation.expressions.impls"><span class="typeNameLink">ArrayIndexExpression</span></a> - Class in <a href="dev/morphia/aggregation/expressions/impls/package-summary.html">dev.morphia.aggregation.expressions.impls</a></dt>
@@ -958,6 +955,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/AutoBucketCodec.html#%3Cinit%3E(dev.morphia.Datastore)">AutoBucketCodec(Datastore)</a></span> - Constructor for class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/AutoBucketCodec.html" title="class in dev.morphia.aggregation.codecs.stages">AutoBucketCodec</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#autoImportModels()">autoImportModels()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.Builder.html#autoImportModels(boolean)">autoImportModels(boolean)</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></dt>
 <dd>
 <div class="block">This feature automatically discovers and uses <a href="dev/morphia/mapping/EntityModelImporter.html" title="interface in dev.morphia.mapping"><code>EntityModelImporter</code></a> instances to allow for external definition of class
@@ -1012,7 +1011,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Creates a codec</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#batchSize()">batchSize()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#batchSize(int)">batchSize(int)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>
 <div class="block">Sets the batch size for fetching results.</div>
@@ -1244,6 +1245,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.Builder.html#%3Cinit%3E(dev.morphia.mapping.MapperOptions)">Builder(MapperOptions)</a></span> - Constructor for class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#bypassDocumentValidation()">bypassDocumentValidation()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#bypassDocumentValidation()">bypassDocumentValidation()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
+<dd>
+<div class="block">Gets whether to bypass document validation, or null if unspecified.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#bypassDocumentValidation()">bypassDocumentValidation()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#bypassDocumentValidation(boolean)">bypassDocumentValidation(boolean)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>
@@ -1263,7 +1272,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Sets whether to bypass document validation.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#bypassDocumentValidation(java.lang.Boolean)">bypassDocumentValidation(Boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#bypassDocumentValidation(java.lang.Boolean)">bypassDocumentValidation(Boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/mapping/codec/ByteWrapperArrayCodec.html" title="class in dev.morphia.mapping.codec"><span class="typeNameLink">ByteWrapperArrayCodec</span></a> - Class in <a href="dev/morphia/mapping/codec/package-summary.html">dev.morphia.mapping.codec</a></dt>
@@ -1413,7 +1421,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">The client session to use for the insertion.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#clientSession()">clientSession()</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The client session to use for the insertion.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#clientSession()">clientSession()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#clientSession()">clientSession()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
@@ -1439,7 +1449,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Set the client session to use for the insert.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#clientSession(com.mongodb.client.ClientSession)">clientSession(ClientSession)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Set the client session to use for the insert.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#clientSession(com.mongodb.client.ClientSession)">clientSession(ClientSession)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#clientSession(com.mongodb.client.ClientSession)">clientSession(ClientSession)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
@@ -1475,7 +1487,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/impls/ExpressionList.html#coalesce(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression...)">coalesce(Expression, Expression...)</a></span> - Static method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/ExpressionList.html" title="class in dev.morphia.aggregation.expressions.impls">ExpressionList</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#collation()">collation()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/IndexOptions.html#collation()">collation()</a></span> - Method in annotation type dev.morphia.annotations.<a href="dev/morphia/annotations/IndexOptions.html" title="annotation in dev.morphia.annotations">IndexOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#collation(com.mongodb.client.model.Collation)">collation(Collation)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
@@ -1485,7 +1499,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#collation(com.mongodb.client.model.Collation)">collation(Collation)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#collation(com.mongodb.client.model.Collation)">collation(Collation)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#collation(com.mongodb.client.model.Collation)">collation(Collation)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#collation(com.mongodb.client.model.Collation)">collation(Collation)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
@@ -1500,18 +1513,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Defines the collation options for an index</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/AlternateCollection.html#collection()">collection()</a></span> - Method in interface dev.morphia.<a href="dev/morphia/AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a></dt>
-<dd>
-<div class="block">Returns the alternate collection to use for the operation.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#collection()">collection()</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#collection()">collection()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#collection()">collection()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/internal/CollectionConfigurable.html#collection()">collection()</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/CollectionConfigurable.html" title="interface in dev.morphia.internal">CollectionConfigurable</a></dt>
+<dd>
+<div class="block">Returns the alternate collection to use for the operation.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#collection()">collection()</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Returns the alternate collection to use for the operation.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#collection()">collection()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#collection()">collection()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
@@ -1520,18 +1535,22 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#collection()">collection()</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/AlternateCollection.html#collection(java.lang.String)">collection(String)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/AlternateCollection.html" title="interface in dev.morphia">AlternateCollection</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#collection(java.lang.String)">collection(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
 <dd>
 <div class="block">Sets the alternate collection to use for the operation.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#collection(java.lang.String)">collection(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#collection(java.lang.String)">collection(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#collection(java.lang.String)">collection(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/internal/CollectionConfigurable.html#collection(java.lang.String)">collection(String)</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/CollectionConfigurable.html" title="interface in dev.morphia.internal">CollectionConfigurable</a></dt>
+<dd>
+<div class="block">Sets the alternate collection to use for the operation.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#collection(java.lang.String)">collection(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Sets the alternate collection to use for the operation.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#collection(java.lang.String)">collection(String)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#collection(java.lang.String)">collection(String)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
@@ -1545,6 +1564,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">A codec for Collection type</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/CollectionCodec.html#%3Cinit%3E(java.lang.Class,org.bson.codecs.Codec)">CollectionCodec(Class&lt;Collection&lt;T&gt;&gt;, Codec&lt;T&gt;)</a></span> - Constructor for class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/CollectionCodec.html" title="class in dev.morphia.mapping.codec">CollectionCodec</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/internal/CollectionConfigurable.html" title="interface in dev.morphia.internal"><span class="typeNameLink">CollectionConfigurable</span></a>&lt;<a href="dev/morphia/internal/CollectionConfigurable.html" title="type parameter in CollectionConfigurable">T</a>&gt; - Interface in <a href="dev/morphia/internal/package-summary.html">dev.morphia.internal</a></dt>
+<dd>
+<div class="block">Specifies that an Options class accepts an alternate collection specification.</div>
+</dd>
+<dt><a href="dev/morphia/internal/CollectionConfiguration.html" title="interface in dev.morphia.internal"><span class="typeNameLink">CollectionConfiguration</span></a> - Interface in <a href="dev/morphia/internal/package-summary.html">dev.morphia.internal</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.Builder.html#collectionNaming(dev.morphia.mapping.NamingStrategy)">collectionNaming(NamingStrategy)</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></dt>
 <dd>
@@ -1582,14 +1607,41 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationImpl.html#collStats(dev.morphia.aggregation.stages.CollectionStats)">collStats(CollectionStats)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationImpl.html" title="class in dev.morphia.aggregation">AggregationImpl</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#comment(java.lang.String)">comment(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#comment(java.lang.String)">comment(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#comment(java.lang.String)">comment(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#comment(java.lang.String)">comment(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#comment(java.lang.String)">comment(String)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#comment(java.lang.String)">comment(String)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#comment(java.lang.String)">comment(String)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
 <dd>
 <div class="block">Sets the comment to log with the query</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#comment(java.lang.String)">comment(String)</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/filters/Filters.html#comment(java.lang.String,java.lang.Object)">comment(String, Object)</a></span> - Static method in class dev.morphia.query.filters.<a href="dev/morphia/query/filters/Filters.html" title="class in dev.morphia.query.filters">Filters</a></dt>
 <dd>
 <div class="block">Adds a comment to a query predicate.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#comment(org.bson.BsonValue)">comment(BsonValue)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#comment(org.bson.BsonValue)">comment(BsonValue)</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#comment(org.bson.BsonValue)">comment(BsonValue)</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#comment(org.bson.BsonValue)">comment(BsonValue)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#comment(org.bson.BsonValue)">comment(BsonValue)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#comment(org.bson.BsonValue)">comment(BsonValue)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#comment(org.bson.BsonValue)">comment(BsonValue)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
+<dd>
+<div class="block">Sets the comment to log with the query</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#comment(org.bson.BsonValue)">comment(BsonValue)</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/transactions/MorphiaSessionImpl.html#commitTransaction()">commitTransaction()</a></span> - Method in class dev.morphia.transactions.<a href="dev/morphia/transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/Key.html#compareTo(dev.morphia.Key)">compareTo(Key&lt;T&gt;)</a></span> - Method in class dev.morphia.<a href="dev/morphia/Key.html" title="class in dev.morphia">Key</a></dt>
@@ -1623,6 +1675,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><a href="dev/morphia/aggregation/expressions/ConditionalExpressions.html" title="class in dev.morphia.aggregation.expressions"><span class="typeNameLink">ConditionalExpressions</span></a> - Class in <a href="dev/morphia/aggregation/expressions/package-summary.html">dev.morphia.aggregation.expressions</a></dt>
 <dd>
 <div class="block">Defines helper methods for the conditional expressions</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/internal/WriteConfigurable.html#configure(com.mongodb.client.MongoCollection)">configure(MongoCollection&lt;C&gt;)</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a></dt>
+<dd>
+<div class="block">Applies the options to the collection</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/DatastoreImpl.html#configureCollection(dev.morphia.internal.CollectionConfiguration,com.mongodb.client.MongoCollection)">configureCollection(CollectionConfiguration, MongoCollection&lt;T&gt;)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></dt>
+<dd>
+<div class="block">Applies configuration options to the collection</div>
 </dd>
 <dt><a href="dev/morphia/mapping/conventions/ConfigureProperties.html" title="class in dev.morphia.mapping.conventions"><span class="typeNameLink">ConfigureProperties</span></a> - Class in <a href="dev/morphia/mapping/conventions/package-summary.html">dev.morphia.mapping.conventions</a></dt>
 <dd>
@@ -1995,6 +2055,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/DatastoreImpl.html#createUpdateOperations(java.lang.Class)">createUpdateOperations(Class&lt;T&gt;)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/AdvancedDatastore.html#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">createUpdateOperations(Class&lt;T&gt;, DBObject)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/AdvancedDatastore.html" title="interface in dev.morphia">AdvancedDatastore</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -2090,6 +2152,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/CurrentOpCodec.html#%3Cinit%3E(dev.morphia.Datastore)">CurrentOpCodec(Datastore)</a></span> - Constructor for class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/CurrentOpCodec.html" title="class in dev.morphia.aggregation.codecs.stages">CurrentOpCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/reader/DocumentReader.html#currentState()">currentState()</a></span> - Method in class dev.morphia.mapping.codec.reader.<a href="dev/morphia/mapping/codec/reader/DocumentReader.html" title="class in dev.morphia.mapping.codec.reader">DocumentReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#cursorType()">cursorType()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#cursorType(com.mongodb.CursorType)">cursorType(CursorType)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
 <dd>
@@ -3933,10 +3997,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#getAllowDiskUse()">getAllowDiskUse()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getAllowDiskUse()">getAllowDiskUse()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/EntityModel.html#getAnnotation(java.lang.Class)">getAnnotation(Class&lt;A&gt;)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/EntityModelBuilder.html#getAnnotation(java.lang.Class)">getAnnotation(Class&lt;A&gt;)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/EntityModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">EntityModelBuilder</a></dt>
@@ -3963,28 +4027,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Lookup.html#getAs()">getAs()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Lookup.html" title="class in dev.morphia.aggregation.stages">Lookup</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#getBatchSize()">getBatchSize()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getBatchSize()">getBatchSize()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Bucket.html#getBoundaries()">getBoundaries()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Bucket.html" title="class in dev.morphia.aggregation.stages">Bucket</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/AutoBucket.html#getBuckets()">getBuckets()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/AutoBucket.html" title="class in dev.morphia.aggregation.stages">AutoBucket</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#getBypassDocumentValidation()">getBypassDocumentValidation()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#getBypassDocumentValidation()">getBypassDocumentValidation()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
 <dd>
-<div class="block">Gets whether to bypass document validation, or null if unspecified.</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#getBypassDocumentValidation()">getBypassDocumentValidation()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
 <dd>
-<div class="block">Gets the the bypass document level validation flag</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOptions.html#getBypassDocumentValidation()">getBypassDocumentValidation()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOptions.html" title="class in dev.morphia">InsertOptions</a></dt>
 <dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">Gets whether to bypass document validation, or null if unspecified.</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Shape.Center.html#getCenter()">getCenter()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/Shape.Center.html" title="class in dev.morphia.query">Shape.Center</a></dt>
 <dd>
@@ -4034,10 +4095,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/MorphiaCodecProvider.html#getCodecs()">getCodecs()</a></span> - Method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/MorphiaCodecProvider.html" title="class in dev.morphia.mapping.codec">MorphiaCodecProvider</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#getCollation()">getCollation()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getCollation()">getCollation()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Merge.html#getCollection()">getCollection()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Out.html#getCollection()">getCollection()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Out.html" title="class in dev.morphia.aggregation.stages">Out</a></dt>
@@ -4063,7 +4124,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/UnionWith.html#getCollectionType()">getCollectionType()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/UnionWith.html" title="class in dev.morphia.aggregation.stages">UnionWith</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getComment()">getComment()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/GraphLookup.html#getConnectFromField()">getConnectFromField()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/GraphLookup.html" title="class in dev.morphia.aggregation.stages">GraphLookup</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/GraphLookup.html#getConnectToField()">getConnectToField()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/GraphLookup.html" title="class in dev.morphia.aggregation.stages">GraphLookup</a></dt>
@@ -4108,7 +4171,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/reader/DocumentReader.html#getCurrentName()">getCurrentName()</a></span> - Method in class dev.morphia.mapping.codec.reader.<a href="dev/morphia/mapping/codec/reader/DocumentReader.html" title="class in dev.morphia.mapping.codec.reader">DocumentReader</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getCursorType()">getCursorType()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Merge.html#getDatabase()">getDatabase()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/Datastore.html#getDatabase()">getDatabase()</a></span> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
@@ -4409,7 +4474,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Bucket.html#getGroupBy()">getGroupBy()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Bucket.html" title="class in dev.morphia.aggregation.stages">Bucket</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getHint()">getHint()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/CollectionStats.html#getHistogram()">getHistogram()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/CollectionStats.html" title="class in dev.morphia.aggregation.stages">CollectionStats</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Group.html#getId()">getId()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Group.html" title="class in dev.morphia.aggregation.stages">Group</a></dt>
@@ -4508,7 +4575,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/query/ArraySlice.html#getLimit()">getLimit()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/ArraySlice.html" title="class in dev.morphia.query">ArraySlice</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getLimit()">getLimit()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyModel.html#getLoadNames()">getLoadNames()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Lookup.html#getLocalField()">getLocalField()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Lookup.html" title="class in dev.morphia.aggregation.stages">Lookup</a></dt>
@@ -4549,9 +4618,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/reader/DocumentReader.html#getMark()">getMark()</a></span> - Method in class dev.morphia.mapping.codec.reader.<a href="dev/morphia/mapping/codec/reader/DocumentReader.html" title="class in dev.morphia.mapping.codec.reader">DocumentReader</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getMax()">getMax()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getMaxAwaitTime(java.util.concurrent.TimeUnit)">getMaxAwaitTime(TimeUnit)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/GraphLookup.html#getMaxDepth()">getMaxDepth()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/GraphLookup.html" title="class in dev.morphia.aggregation.stages">GraphLookup</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/GeoNear.html#getMaxDistance()">getMaxDistance()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/GeoNear.html" title="class in dev.morphia.aggregation">GeoNear</a></dt>
@@ -4566,16 +4639,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">The num option provides the same function as the limit option.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">getMaxTime(TimeUnit)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">getMaxTime(TimeUnit)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">getMaxTime(TimeUnit)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#getMaxTimeMS()">getMaxTimeMS()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getMin()">getMin()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/GeoNear.html#getMinDistance()">getMinDistance()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/GeoNear.html" title="class in dev.morphia.aggregation.stages">GeoNear</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/EntityModelImporter.html#getModels(dev.morphia.mapping.Mapper)">getModels(Mapper)</a></span> - Method in interface dev.morphia.mapping.<a href="dev/morphia/mapping/EntityModelImporter.html" title="interface in dev.morphia.mapping">EntityModelImporter</a></dt>
@@ -4633,9 +4708,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#getOptions()">getOptions()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#getOptions()">getOptions()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/Mapper.html#getOptions()">getOptions()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/transactions/MorphiaSessionImpl.html#getOptions()">getOptions()</a></span> - Method in class dev.morphia.transactions.<a href="dev/morphia/transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></dt>
@@ -4708,25 +4787,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#getQueryFactory()">getQueryFactory()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getQueryLogId()">getQueryLogId()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Shape.Center.html#getRadius()">getRadius()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/Shape.Center.html" title="class in dev.morphia.query">Shape.Center</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#getReadConcern()">getReadConcern()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/internal/ReadConfigurable.html#getReadConcern()">getReadConcern()</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a></dt>
 <dd>
-<div class="block">Gets the read concern</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getReadConcern()">getReadConcern()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#getReadPreference()">getReadPreference()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/internal/ReadConfigurable.html#getReadPreference()">getReadPreference()</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getReadPreference()">getReadPreference()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/transactions/MorphiaSessionImpl.html#getRecoveryToken()">getRecoveryToken()</a></span> - Method in class dev.morphia.transactions.<a href="dev/morphia/transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/BaseReferenceCodec.html#getReferenceAnnotation(dev.morphia.mapping.codec.pojo.PropertyModel)">getReferenceAnnotation(PropertyModel)</a></span> - Static method in class dev.morphia.mapping.codec.<a href="dev/morphia/mapping/codec/BaseReferenceCodec.html" title="class in dev.morphia.mapping.codec">BaseReferenceCodec</a></dt>
@@ -4770,11 +4845,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/query/ArraySlice.html#getSkip()">getSkip()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/ArraySlice.html" title="class in dev.morphia.query">ArraySlice</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getSkip()">getSkip()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/transactions/MorphiaSessionImpl.html#getSnapshotTimestamp()">getSnapshotTimestamp()</a></span> - Method in class dev.morphia.transactions.<a href="dev/morphia/transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#getSort()">getSort()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#getSort()">getSort()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Sort.html#getSorts()">getSorts()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Sort.html" title="class in dev.morphia.aggregation.stages">Sort</a></dt>
@@ -4918,20 +4997,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Merge.html#getWhenNotMatched()">getWhenNotMatched()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#getWriteConcern()">getWriteConcern()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
-</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/InsertOptions.html#getWriteConcern()">getWriteConcern()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOptions.html" title="class in dev.morphia">InsertOptions</a></dt>
-<dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">The write concern to use for the insertion.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/internal/WriteConfigurable.html#getWriteConcern()">getWriteConcern()</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a></dt>
 <dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="dev/morphia/internal/WriteConfigurable.html#writeConcern()"><code>WriteConfigurable.writeConcern()</code></a> instead</div>
-</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/Mapper.html#getWriteConcern(java.lang.Class)">getWriteConcern(Class)</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a></dt>
 <dd>
@@ -5258,7 +5326,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#hint()">hint()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#hint(com.mongodb.DBObject)">hint(DBObject)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -5724,8 +5794,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Determines if the operand is an array.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#isAutoImportModels()">isAutoImportModels()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#isCacheClassLookups()">isCacheClassLookups()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/transactions/MorphiaSessionImpl.html#isCausallyConsistent()">isCausallyConsistent()</a></span> - Method in class dev.morphia.transactions.<a href="dev/morphia/transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></dt>
@@ -5767,13 +5835,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#isMapSubPackages()">isMapSubPackages()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#isMulti()">isMulti()</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#isMulti()">isMulti()</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyModel.html#isMultipleValues()">isMultipleValues()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#isNoCursorTimeout()">isNoCursorTimeout()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FieldEndImpl.html#isNot()">isNot()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FieldEndImpl.html" title="class in dev.morphia.query">FieldEndImpl</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -5808,15 +5882,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Day of week (Monday 1 - Sunday 7).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#isOplogReplay()">isOplogReplay()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#isOrdered()">isOrdered()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
 <dd>
-<div class="block">Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion.</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOptions.html#isOrdered()">isOrdered()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOptions.html" title="class in dev.morphia">InsertOptions</a></dt>
 <dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion.</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/impls/DateFromParts.html#isoWeek(int)">isoWeek(int)</a></span> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/DateFromParts.html" title="class in dev.morphia.aggregation.expressions.impls">DateFromParts</a></dt>
 <dd>
@@ -5843,7 +5918,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">ISO Week Date Year.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#isPartial()">isPartial()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyModel.html#isReference()">isReference()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/experimental/MorphiaReference.html#isResolved()">isResolved()</a></span> - Method in class dev.morphia.mapping.experimental.<a href="dev/morphia/mapping/experimental/MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a></dt>
@@ -5851,13 +5928,17 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#isReturnKey()">isReturnKey()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyModel.html#isScalarValue()">isScalarValue()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyModel.html#isSet()">isSet()</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#isShowRecordId()">isShowRecordId()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#isStoreEmpties()">isStoreEmpties()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.html#isStoreNulls()">isStoreNulls()</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a></dt>
@@ -6071,6 +6152,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Merge.html#let(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)">let(String, Expression)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a></dt>
 <dd>
 <div class="block">Specifies a variable accessible for use in the whenMatched pipeline</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#let(org.bson.conversions.Bson)">let(Bson)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#let(org.bson.conversions.Bson)">let(Bson)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#let(org.bson.conversions.Bson)">let(Bson)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#let(org.bson.conversions.Bson)">let(Bson)</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#let(org.bson.Document)">let(Document)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
+<dd>
+<div class="block">Add top-level variables to the operation.</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/LetExpression.html" title="class in dev.morphia.aggregation.expressions.impls"><span class="typeNameLink">LetExpression</span></a> - Class in <a href="dev/morphia/aggregation/expressions/impls/package-summary.html">dev.morphia.aggregation.expressions.impls</a></dt>
 <dd>&nbsp;</dd>
@@ -6503,7 +6593,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Specifies a maximum distance to limit the results of $near and $nearSphere queries.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#maxTime(long,java.util.concurrent.TimeUnit)">maxTime(long, TimeUnit)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#maxTime(long,java.util.concurrent.TimeUnit)">maxTime(long, TimeUnit)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#maxTime(long,java.util.concurrent.TimeUnit)">maxTime(long, TimeUnit)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
@@ -6512,8 +6601,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Sets the max time</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#maxTimeMS()">maxTimeMS()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#maxTime(java.util.concurrent.TimeUnit)">maxTime(TimeUnit)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#maxTimeMS()">maxTimeMS()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#maxTimeMS(long)">maxTimeMS(long)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>
 <div class="block">Specifies a time limit in milliseconds for processing operations on a cursor.</div>
@@ -6946,6 +7039,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Multiplies the value of the field by the specified amount.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#multi()">multi()</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#multi()">multi()</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/DeleteOptions.html#multi(boolean)">multi(boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#multi(boolean)">multi(boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
@@ -7531,6 +7628,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/Text.html#options()">options()</a></span> - Method in annotation type dev.morphia.annotations.<a href="dev/morphia/annotations/Text.html" title="annotation in dev.morphia.annotations">Text</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertManyOptions.html#options()">options()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#options()">options()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/PushOptions.html#options()">options()</a></span> - Static method in class dev.morphia.query.<a href="dev/morphia/query/PushOptions.html" title="class in dev.morphia.query">PushOptions</a></dt>
 <dd>
 <div class="block">Helper method to create a PushOptions instance</div>
@@ -7601,7 +7702,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Places the output of the aggregation in the collection mapped by the target type using the default options as defined in
- <code>AggregationOptions</code>.</div>
+ <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/AggregationOptions.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>AggregationOptions</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationPipelineImpl.html#out(java.lang.Class)">out(Class&lt;U&gt;)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationPipelineImpl.html" title="class in dev.morphia.aggregation">AggregationPipelineImpl</a></dt>
 <dd>
@@ -7620,7 +7721,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Places the output of the aggregation in the collection mapped by the target type using the default options as defined in
- <code>AggregationOptions</code>.</div>
+ <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/AggregationOptions.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>AggregationOptions</code></a>.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationPipelineImpl.html#out(java.lang.String,java.lang.Class)">out(String, Class&lt;U&gt;)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationPipelineImpl.html" title="class in dev.morphia.aggregation">AggregationPipelineImpl</a></dt>
 <dd>
@@ -7904,14 +8005,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Called before the data has been loaded from the datastore.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#prepare(com.mongodb.client.MongoCollection)">prepare(MongoCollection&lt;C&gt;)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/internal/ReadConfigurable.html#prepare(com.mongodb.client.MongoCollection)">prepare(MongoCollection&lt;C&gt;)</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/internal/WriteConfigurable.html#prepare(com.mongodb.client.MongoCollection)">prepare(MongoCollection&lt;C&gt;)</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a></dt>
-<dd>
-<div class="block">Applies the options to the collection</div>
-</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/internal/CollectionConfigurable.html#prepare(com.mongodb.client.MongoCollection,com.mongodb.client.MongoDatabase)">prepare(MongoCollection&lt;T&gt;, MongoDatabase)</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/CollectionConfigurable.html" title="interface in dev.morphia.internal">CollectionConfigurable</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">prePersist(Object, Document, Datastore)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">prePersist(Object, Document, Mapper)</a></span> - Method in interface dev.morphia.<a href="dev/morphia/EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></dt>
@@ -7986,7 +8083,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Creates a projection on a field and renames it</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#projection(org.bson.conversions.Bson)">projection(Bson)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#projection(org.bson.conversions.Bson)">projection(Bson)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/Projection.html" title="class in dev.morphia.aggregation"><span class="typeNameLink">Projection</span></a> - Class in <a href="dev/morphia/aggregation/package-summary.html">dev.morphia.aggregation</a></dt>
@@ -8216,6 +8312,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">A factory for <a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a>ies.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#queryLogId()">queryLogId()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a id="I:R">
 <!--   -->
@@ -8284,10 +8382,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#readConcern()">readConcern()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/internal/ReadConfigurable.html#readConcern()">readConcern()</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a></dt>
+<dd>
+<div class="block">Gets the read concern</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#readConcern()">readConcern()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>
 <div class="block">Returns the readConcern</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#readConcern()">readConcern()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#readConcern(com.mongodb.ReadConcern)">readConcern(ReadConcern)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>
 <div class="block">Specifies the read concern.</div>
@@ -8362,10 +8466,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#readPreference()">readPreference()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/internal/ReadConfigurable.html#readPreference()">readPreference()</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/ReadConfigurable.html" title="interface in dev.morphia.internal">ReadConfigurable</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/CountOptions.html#readPreference()">readPreference()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a></dt>
 <dd>
 <div class="block">Returns the readPreference</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#readPreference()">readPreference()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationOptions.html#readPreference(com.mongodb.ReadPreference)">readPreference(ReadPreference)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>
 <div class="block">Sets the read preference to use</div>
@@ -8680,7 +8788,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#returnDocument(com.mongodb.client.model.ReturnDocument)">returnDocument(ReturnDocument)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#returnKey(boolean)">returnKey(boolean)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
 <dd>
 <div class="block">Sets if only the key value should be returned</div>
@@ -8830,7 +8937,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/codec/pojo/PropertyModelBuilder.html#serialization(dev.morphia.mapping.codec.MorphiaPropertySerialization)">serialization(MorphiaPropertySerialization)</a></span> - Method in class dev.morphia.mapping.codec.pojo.<a href="dev/morphia/mapping/codec/pojo/PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></dt>
 <dd>
-<div class="block">Sets the <code>PropertySerialization</code> checker</div>
+<div class="block">Sets the <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/pojo/PropertySerialization.html?is-external=true" title="class or interface in org.bson.codecs.pojo" class="externalLink"><code>PropertySerialization</code></a> checker</div>
 </dd>
 <dt><a href="dev/morphia/internal/SessionConfigurable.html" title="interface in dev.morphia.internal"><span class="typeNameLink">SessionConfigurable</span></a>&lt;<a href="dev/morphia/internal/SessionConfigurable.html" title="type parameter in SessionConfigurable">T</a> extends <a href="dev/morphia/internal/SessionConfigurable.html" title="interface in dev.morphia.internal">SessionConfigurable</a>&lt;<a href="dev/morphia/internal/SessionConfigurable.html" title="type parameter in SessionConfigurable">T</a>&gt;&gt; - Interface in <a href="dev/morphia/internal/package-summary.html">dev.morphia.internal</a></dt>
 <dd>
@@ -9258,6 +9365,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Creates a sort stage.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/FindOptions.html#sort()">sort()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/PushOptions.html#sort(int)">sort(int)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/PushOptions.html" title="class in dev.morphia.query">PushOptions</a></dt>
 <dd>
 <div class="block">Sets the sort value for the update</div>
@@ -9298,7 +9409,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Sets the sort value for the update</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#sort(org.bson.conversions.Bson)">sort(Bson)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#sort(org.bson.conversions.Bson)">sort(Bson)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/FindAndDeleteOptions.html#sort(org.bson.Document)">sort(Document)</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
@@ -10123,7 +10233,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#unsetMissing()">unsetMissing()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
 <dd>
-<div class="block">Applies the rules for storing null/empty values for fields not present in the object to be merged.</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#unsetMissing(boolean)">unsetMissing(boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
 <dd>
@@ -10279,7 +10389,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </dd>
-<dt><span class="memberNameLink"><a href="dev/morphia/query/UpdateOpsImpl.html#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class)">UpdateOpsImpl(Datastore, Class&lt;T&gt;)</a></span> - Constructor for class dev.morphia.query.<a href="dev/morphia/query/UpdateOpsImpl.html" title="class in dev.morphia.query">UpdateOpsImpl</a></dt>
+<dt><span class="memberNameLink"><a href="dev/morphia/query/UpdateOpsImpl.html#%3Cinit%3E(dev.morphia.DatastoreImpl,java.lang.Class)">UpdateOpsImpl(DatastoreImpl, Class&lt;T&gt;)</a></span> - Constructor for class dev.morphia.query.<a href="dev/morphia/query/UpdateOpsImpl.html" title="class in dev.morphia.query">UpdateOpsImpl</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates an UpdateOpsImpl for the type given.</div>
@@ -10299,7 +10409,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Defines the update operations available</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/ModifyOptions.html#upsert(boolean)">upsert(boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/UpdateOptions.html#upsert(boolean)">upsert(boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/mapping/codec/URICodec.html" title="class in dev.morphia.mapping.codec"><span class="typeNameLink">URICodec</span></a> - Class in <a href="dev/morphia/mapping/codec/package-summary.html">dev.morphia.mapping.codec</a></dt>
@@ -10863,6 +10972,11 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOneOptions.html#writeConcern()">writeConcern()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
 <dd>
+<div class="block">The write concern to use for the insertion.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/InsertOptions.html#writeConcern()">writeConcern()</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOptions.html" title="class in dev.morphia">InsertOptions</a></dt>
+<dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">The write concern to use for the insertion.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/internal/WriteConfigurable.html#writeConcern()">writeConcern()</a></span> - Method in interface dev.morphia.internal.<a href="dev/morphia/internal/WriteConfigurable.html" title="interface in dev.morphia.internal">WriteConfigurable</a></dt>

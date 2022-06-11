@@ -435,7 +435,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#createDatastore(com.mongodb.client.MongoClient,java.lang.String)">createDatastore</a></span>​(com.mongodb.client.MongoClient&nbsp;mongoClient,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#createDatastore(com.mongodb.client.MongoClient,java.lang.String)">createDatastore</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoClient.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoClient</a>&nbsp;mongoClient,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;dbName)</code></th>
 <td class="colLast">
 <div class="block">It is best to use a Mongo singleton instance here.</div>
@@ -443,7 +443,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#createDatastore(com.mongodb.client.MongoClient,java.lang.String,dev.morphia.mapping.MapperOptions)">createDatastore</a></span>​(com.mongodb.client.MongoClient&nbsp;mongoClient,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#createDatastore(com.mongodb.client.MongoClient,java.lang.String,dev.morphia.mapping.MapperOptions)">createDatastore</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoClient.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoClient</a>&nbsp;mongoClient,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;dbName,
                <a href="../mapping/MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -478,28 +478,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EntityInterceptor.</span><code><span class="memberNameLink"><a href="../EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">postLoad</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
-        org.bson.Document&nbsp;document,
+        <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;document,
         <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EntityInterceptor.</span><code><span class="memberNameLink"><a href="../EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">postPersist</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
-           org.bson.Document&nbsp;document,
+           <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;document,
            <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EntityInterceptor.</span><code><span class="memberNameLink"><a href="../EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">preLoad</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
-       org.bson.Document&nbsp;document,
+       <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;document,
        <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>default void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EntityInterceptor.</span><code><span class="memberNameLink"><a href="../EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)">prePersist</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;ent,
-          org.bson.Document&nbsp;document,
+          <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;document,
           <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -521,7 +521,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/AggregationImpl.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.client.MongoCollection)">AggregationImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-               com.mongodb.client.MongoCollection&lt;<a href="../aggregation/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</code></th>
+               <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;<a href="../aggregation/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block">Creates an instance.</div>
 </td>
@@ -529,14 +529,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/AggregationImpl.html#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class,com.mongodb.client.MongoCollection)">AggregationImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="../aggregation/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;source,
-               com.mongodb.client.MongoCollection&lt;<a href="../aggregation/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</code></th>
+               <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;<a href="../aggregation/AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block">Creates an instance.</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../aggregation/AggregationPipelineImpl.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.client.MongoCollection,java.lang.Class)">AggregationPipelineImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-                       com.mongodb.client.MongoCollection&nbsp;collection,
+                       <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&nbsp;collection,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;source)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -578,61 +578,61 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#array(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,java.util.List,org.bson.codecs.EncoderContext)">array</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-     org.bson.BsonWriter&nbsp;writer,
+     <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&gt;&nbsp;list,
-     org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+     <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#expression(dev.morphia.Datastore,org.bson.BsonWriter,dev.morphia.aggregation.expressions.impls.Expression,org.bson.codecs.EncoderContext)">expression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-          org.bson.BsonWriter&nbsp;writer,
+          <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
           <a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression,
-          org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+          <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#expression(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,dev.morphia.aggregation.expressions.impls.Expression,org.bson.codecs.EncoderContext)">expression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-          org.bson.BsonWriter&nbsp;writer,
+          <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
           <a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression,
-          org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+          <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#value(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.Object,org.bson.codecs.EncoderContext)">value</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-     org.bson.BsonWriter&nbsp;writer,
+     <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
-     org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+     <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#value(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,java.lang.Object,org.bson.codecs.EncoderContext)">value</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-     org.bson.BsonWriter&nbsp;writer,
+     <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
-     org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+     <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,dev.morphia.aggregation.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-              org.bson.BsonWriter&nbsp;writer,
+              <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
               <a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression,
-              org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+              <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../aggregation/codecs/ExpressionHelper.html#wrapExpression(dev.morphia.Datastore,org.bson.BsonWriter,java.lang.String,dev.morphia.aggregation.expressions.impls.Expression,org.bson.codecs.EncoderContext)">wrapExpression</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-              org.bson.BsonWriter&nbsp;writer,
+              <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
               <a href="../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression,
-              org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+              <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -829,15 +829,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateExpressions.DateExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/DateExpressions.DateExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ObjectExpressions.MergeObjects.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/ObjectExpressions.MergeObjects.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -860,296 +860,296 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Accumulator.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/Accumulator.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/AccumulatorExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayFilterExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ArrayFilterExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayIndexExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ArrayIndexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ArrayLiteral.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ArrayLiteral.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">CalculusExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/CalculusExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ConvertExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ConvertExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateDeltaExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateDeltaExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateDiffExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateDiffExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateFromParts.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateFromParts.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateFromString.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateFromString.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateToParts.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateToParts.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateToString.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateToString.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DateTruncExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DateTruncExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DocumentExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DocumentExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DocumentExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/DocumentExpression.html#encode(java.lang.String,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
       <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExpMovingAvg.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ExpMovingAvg.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Expression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/Expression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionList.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ExpressionList.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Fields.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/Fields.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">FunctionExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/FunctionExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">IfNull.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/IfNull.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">IndexExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/IndexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">IsoDates.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/IsoDates.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">LetExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/LetExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MapExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/MapExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MathExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/MathExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">MetaExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/MetaExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">PipelineField.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/PipelineField.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Push.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/Push.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">RangeExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/RangeExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ReduceExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ReduceExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">RegexExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/RegexExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ReplaceExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetFieldExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/SetFieldExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ShiftExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ShiftExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SliceExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/SliceExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SwitchExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/SwitchExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TrimExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/TrimExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">UnsetFieldExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/UnsetFieldExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ValueExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ValueExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ZipExpression.</span><code><span class="memberNameLink"><a href="../aggregation/expressions/impls/ZipExpression.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -1279,14 +1279,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">EntityModel.</span><code><span class="memberNameLink"><a href="../mapping/codec/pojo/EntityModel.html#callLifecycleMethods(java.lang.Class,java.lang.Object,org.bson.Document,dev.morphia.Datastore)">callLifecycleMethods</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;event,
                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;entity,
-                    org.bson.Document&nbsp;document,
+                    <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;document,
                     <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">
 <div class="block">Invokes any lifecycle methods</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>org.bson.codecs.Codec&lt;?&gt;</code></td>
+<td class="colFirst"><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/Codec.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">Codec</a>&lt;?&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModel.</span><code><span class="memberNameLink"><a href="../mapping/codec/pojo/PropertyModel.html#specializeCodec(dev.morphia.Datastore)">specializeCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -1302,9 +1302,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../mapping/codec/pojo/MorphiaCodec.html#%3Cinit%3E(dev.morphia.Datastore,dev.morphia.mapping.codec.pojo.EntityModel,java.util.List,dev.morphia.mapping.DiscriminatorLookup,org.bson.codecs.configuration.CodecRegistry)">MorphiaCodec</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
             <a href="../mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;org.bson.codecs.pojo.PropertyCodecProvider&gt;&nbsp;propertyCodecProviders,
+            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/pojo/PropertyCodecProvider.html?is-external=true" title="class or interface in org.bson.codecs.pojo" class="externalLink">PropertyCodecProvider</a>&gt;&nbsp;propertyCodecProviders,
             <a href="../mapping/DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a>&nbsp;discriminatorLookup,
-            org.bson.codecs.configuration.CodecRegistry&nbsp;registry)</code></th>
+            <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/configuration/CodecRegistry.html?is-external=true" title="class or interface in org.bson.codecs.configuration" class="externalLink">CodecRegistry</a>&nbsp;registry)</code></th>
 <td class="colLast">
 <div class="block">Creates a new codec</div>
 </td>
@@ -1330,7 +1330,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>static <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">ReferenceCodec.</span><code><span class="memberNameLink"><a href="../mapping/codec/references/ReferenceCodec.html#processId(dev.morphia.Datastore,java.lang.Object,org.bson.codecs.DecoderContext)">processId</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;decode,
-         org.bson.codecs.DecoderContext&nbsp;decoderContext)</code></th>
+         <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/DecoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">DecoderContext</a>&nbsp;decoderContext)</code></th>
 <td class="colLast">
 <div class="block">Decodes an ID value</div>
 </td>
@@ -1390,7 +1390,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">MapReference.</span><code><span class="memberNameLink"><a href="../mapping/experimental/MapReference.html#decode(dev.morphia.Datastore,dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.PropertyModel,org.bson.Document)">decode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
       <a href="../mapping/codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;property,
-      org.bson.Document&nbsp;document)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;document)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Decodes a document in to entities</div>
@@ -1402,7 +1402,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
       <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
       <a href="../mapping/codec/pojo/PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&nbsp;mappedField,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;paramType,
-      org.bson.Document&nbsp;document)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;document)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Decodes a document in to an entity</div>
@@ -1492,11 +1492,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQuery.</span><code><span class="memberNameLink"><a href="../query/LegacyQuery.html#getDatastore()">getDatastore</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>protected <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateBase.</span><code><span class="memberNameLink"><a href="../query/UpdateBase.html#getDatastore()">getDatastore</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 </tbody>
 </table>
 <table class="useSummary">
@@ -1511,7 +1506,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DefaultQueryFactory.</span><code><span class="memberNameLink"><a href="../query/DefaultQueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,org.bson.Document)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type,
-           org.bson.Document&nbsp;query)</code></th>
+           <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;query)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -1525,7 +1520,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">LegacyQueryFactory.</span><code><span class="memberNameLink"><a href="../query/LegacyQueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,org.bson.Document)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type,
-           org.bson.Document&nbsp;seed)</code></th>
+           <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;seed)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -1554,7 +1549,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../query/QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,org.bson.Document)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type,
-           org.bson.Document&nbsp;query)</code></th>
+           <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block">Creates and returns a <a href="../query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> for the given arguments.</div>
 </td>
@@ -1611,14 +1606,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Creates a Query for the given type and collection</div>
 </td>
 </tr>
-<tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/UpdateOpsImpl.html#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class)">UpdateOpsImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="../query/UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;type)</code></th>
-<td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
-<div class="block">Creates an UpdateOpsImpl for the type given.</div>
-</td>
-</tr>
 </tbody>
 </table>
 </section>
@@ -1639,43 +1626,43 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/filters/Filter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;context)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">GeoIntersectsFilter.</span><code><span class="memberNameLink"><a href="../query/filters/GeoIntersectsFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;context)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">GeoWithinFilter.</span><code><span class="memberNameLink"><a href="../query/filters/GeoWithinFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;context)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">NearFilter.</span><code><span class="memberNameLink"><a href="../query/filters/NearFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;context)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">RegexFilter.</span><code><span class="memberNameLink"><a href="../query/filters/RegexFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;context)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">TextSearchFilter.</span><code><span class="memberNameLink"><a href="../query/filters/TextSearchFilter.html#encode(dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-      org.bson.BsonWriter&nbsp;writer,
-      org.bson.codecs.EncoderContext&nbsp;context)</code></th>
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;context)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -1688,16 +1675,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/filters/Filter.html#writeNamedValue(java.lang.String,java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeNamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
                <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-               org.bson.BsonWriter&nbsp;writer,
-               org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+               <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+               <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Filter.</span><code><span class="memberNameLink"><a href="../query/filters/Filter.html#writeUnnamedValue(java.lang.Object,dev.morphia.Datastore,org.bson.BsonWriter,org.bson.codecs.EncoderContext)">writeUnnamedValue</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
                  <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-                 org.bson.BsonWriter&nbsp;writer,
-                 org.bson.codecs.EncoderContext&nbsp;encoderContext)</code></th>
+                 <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+                 <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -1717,7 +1704,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/internal/MorphiaKeyCursor.html#%3Cinit%3E(com.mongodb.client.MongoCursor,dev.morphia.Datastore,java.lang.Class,java.lang.String)">MorphiaKeyCursor</a></span>​(com.mongodb.client.MongoCursor&lt;org.bson.Document&gt;&nbsp;cursor,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/internal/MorphiaKeyCursor.html#%3Cinit%3E(com.mongodb.client.MongoCursor,dev.morphia.Datastore,java.lang.Class,java.lang.String)">MorphiaKeyCursor</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCursor.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCursor</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&gt;&nbsp;cursor,
                 <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="../query/internal/MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;&nbsp;clazz,
                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
