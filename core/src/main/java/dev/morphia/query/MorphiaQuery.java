@@ -17,7 +17,6 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
@@ -33,14 +32,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.query.UpdateBase.coalesce;
 import static dev.morphia.query.filters.Filters.text;
 import static java.lang.String.format;
@@ -145,19 +142,9 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
-        return tryInvoke(DriverVersion.v4_2_0,
-            () -> {
-                return verbosity == null
-                       ? iterable(options, datastore.configureCollection(options, collection)).explain()
-                       : iterable(options, datastore.configureCollection(options, collection)).explain(verbosity);
-            },
-            () -> {
-                return new LinkedHashMap<>(datastore.getDatabase()
-                                                    .runCommand(new Document("explain",
-                                                        new Document("find", datastore.configureCollection(options, collection)
-                                                                                      .getNamespace().getCollectionName())
-                                                            .append("filter", getQueryDocument()))));
-            });
+        return verbosity == null
+               ? iterable(options, collection).explain()
+               : iterable(options, collection).explain(verbosity);
     }
 
     @Override
@@ -241,7 +228,7 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, datastore.configureCollection(options, collection)));
+        return new MorphiaCursor<>(prepareCursor(options, collection));
     }
 
     @Override
