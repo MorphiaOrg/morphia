@@ -130,8 +130,8 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public long count(CountOptions options) {
         ClientSession session = datastore.findSession(options);
-        return session == null ? getCollection(options.collection()).countDocuments(getQueryDocument(), options)
-                               : getCollection(options.collection()).countDocuments(session, getQueryDocument(), options);
+        return session == null ? datastore.configureCollection(options, collection).countDocuments(getQueryDocument(), options)
+                               : datastore.configureCollection(options, collection).countDocuments(session, getQueryDocument(), options);
     }
 
     @Override
@@ -153,9 +153,9 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public DeleteResult delete(DeleteOptions options) {
-        MongoCollection<T> collection = getCollection(options.collection());
         ClientSession session = datastore.findSession(options);
-        if (options.isMulti()) {
+        MongoCollection<T> collection = datastore.configureCollection(options, this.collection);
+        if (options.multi()) {
             return session == null
                    ? collection.deleteMany(getQueryDocument(), options)
                    : collection.deleteMany(session, getQueryDocument(), options);
@@ -168,7 +168,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
-        MongoCollection<T> collection = getCollection(options.collection());
+        MongoCollection<T> collection = datastore.configureCollection(options, this.collection);
         return tryInvoke(DriverVersion.v4_2_0,
             () -> {
                 return verbosity == null
@@ -215,7 +215,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
             String json = "{}";
             Document first = datastore.getDatabase()
                                       .getCollection("system.profile")
-                                      .find(new Document("command.comment", "logged query: " + lastOptions.getQueryLogId()),
+                                      .find(new Document("command.comment", "logged query: " + lastOptions.queryLogId()),
                                           Document.class)
                                       .projection(new Document("command.filter", 1))
                                       .first();
@@ -255,8 +255,8 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T findAndDelete(FindAndDeleteOptions options) {
-        MongoCollection<T> mongoCollection = options.prepare(getCollection(options.collection()));
         ClientSession session = datastore.findSession(options);
+        MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
         return session == null
                ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
                : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
@@ -285,18 +285,18 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, getCollection(options.collection()), this, type, coalesce(first, updates));
+        return new Modify<>(datastore, datastore.configureCollection(options, collection), this, type, coalesce(first, updates));
     }
 
     @Override
     public T modify(ModifyOptions options, UpdateOperator... updates) {
-        return new Modify<>(datastore, getCollection(options.collection()), this, type, of(updates))
-            .execute(options);
+        return new Modify<>(datastore, datastore.configureCollection(options, collection), this, type, of(updates))
+                   .execute(options);
     }
 
     @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, getCollection(options.collection())));
+        return new MorphiaCursor<>(prepareCursor(options, datastore.configureCollection(options, collection)));
     }
 
     @Override
@@ -318,7 +318,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     @Deprecated
     public Modify<T> modify(UpdateOperations<T> operations) {
-        return new Modify<>(datastore, getCollection(null), this, type, (UpdateOpsImpl) operations);
+        return new Modify<>(datastore, collection, this, type, (UpdateOpsImpl) operations);
     }
 
     @Override
@@ -343,30 +343,30 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     @Deprecated
     public Update<T> update(List<UpdateOperator> updates) {
-        return new Update<>(datastore, getCollection(null), this, type, updates);
+        return new Update<>(datastore, collection, this, type, updates);
     }
 
     @Override
     public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, getCollection(null), this, type, coalesce(first, updates));
+        return new Update<>(datastore, collection, this, type, coalesce(first, updates));
     }
 
     @Override
     @Deprecated(since = "2.0", forRemoval = true)
     public Update<T> update(UpdateOperations<T> operations) {
-        return new Update<>(datastore, getCollection(null), this, type, (UpdateOpsImpl<T>) operations);
+        return new Update<>(datastore, collection, this, type, (UpdateOpsImpl<T>) operations);
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, Stage... updates) {
-        return new PipelineUpdate<>(datastore, getCollection(options.collection()), this, of(updates))
-            .execute(options);
+        return new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, of(updates))
+                   .execute(options);
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
-        return new Update<>(datastore, getCollection(options.collection()), this, type, of(updates))
-            .execute(options);
+        return new Update<>(datastore, datastore.configureCollection(options, collection), this, type, of(updates))
+                   .execute(options);
     }
 
     /**
@@ -409,7 +409,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      */
     @Nullable
     public Document getSort() {
-        return options != null ? options.getSort() : null;
+        return options != null ? options.sort() : null;
     }
 
     /**
@@ -437,18 +437,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                 new Document("$in", values));
         }
         return query;
-    }
-
-    /**
-     * @return the collection this query targets
-     * @morphia.internal
-     */
-    private MongoCollection<T> getCollection(@Nullable String alternate) {
-        return alternate == null
-               ? collection
-               : datastore
-                   .getDatabase()
-                   .getCollection(alternate, type);
     }
 
     @Override
@@ -501,17 +489,16 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
             LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query.toJson(), options));
         }
 
-        if ((options.getCursorType() != null && options.getCursorType() != NonTailable)
-            && (options.getSort() != null)) {
+        if ((options.cursorType() != null && options.cursorType() != NonTailable)
+            && (options.sort() != null)) {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
         ClientSession clientSession = datastore.findSession(options);
 
-        FindIterable<E> iterable = clientSession != null
-                                   ? collection.find(clientSession, query)
-                                   : collection.find(query);
-        return iterable;
+        return clientSession != null
+               ? collection.find(clientSession, query)
+               : collection.find(query);
     }
 
     private <E> MongoCursor<E> prepareCursor(FindOptions options, MongoCollection<E> collection) {

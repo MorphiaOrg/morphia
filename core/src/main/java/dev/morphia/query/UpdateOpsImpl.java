@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.PopOperator;
 import dev.morphia.query.updates.PushOperator;
@@ -15,7 +16,9 @@ import static java.util.Collections.emptyList;
 
 /**
  * @param <T> the type to update
+ * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<T> {
@@ -27,7 +30,7 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
      * @param datastore the datastore to use
      * @param type      the type to update
      */
-    public UpdateOpsImpl(Datastore datastore, Class<T> type) {
+    public UpdateOpsImpl(DatastoreImpl datastore, Class<T> type) {
         super(datastore, null, null, type, emptyList());
     }
 

@@ -20,9 +20,12 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.query.filters.Filter;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -38,7 +41,7 @@ import java.util.List;
  * @since 1.3
  */
 public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
-    implements SessionConfigurable<UpdateOptions>, WriteConfigurable<UpdateOptions>, AlternateCollection<UpdateOptions> {
+    implements SessionConfigurable<UpdateOptions>, WriteConfigurable<UpdateOptions>, CollectionConfigurable<UpdateOptions> {
     private WriteConcern writeConcern;
     private boolean multi;
     private ClientSession clientSession;
@@ -90,21 +93,48 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     }
 
     /**
+     * @param comment the comment
+     * @return this
+     * @see com.mongodb.client.model.InsertOneOptions#comment(String)
+     * @since 2.3
+     */
+    public UpdateOptions comment(String comment) {
+        super.comment(comment);
+        return this;
+    }
+
+    /**
+     * @param comment the comment
+     * @return this
+     * @see com.mongodb.client.model.InsertOneOptions#comment(BsonValue)
+     * @since 2.3
+     */
+    public UpdateOptions comment(BsonValue comment) {
+        super.comment(comment);
+        return this;
+    }
+
+    /**
+     * @return this
+     * @see com.mongodb.client.model.UpdateOptions#let(Bson)
+     * @since 2.3
+     */
+    @Override
+    public UpdateOptions let(Bson variables) {
+        super.let(variables);
+        return this;
+    }
+
+    /**
      * @param hint the hint to apply
      * @return this
      * @see #hint(Bson)
+     * @see com.mongodb.client.model.UpdateOptions#hint(Bson)
      * @since 2.2
      */
     public UpdateOptions hint(Document hint) {
         super.hint(hint);
         return this;
-    }
-
-    /**
-     * @return true if the update should affect all entities
-     */
-    public boolean isMulti() {
-        return multi;
     }
 
     /**
@@ -141,6 +171,24 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
         super.arrayFilters(arrayFilters);
         return this;
     }
+
+    /**
+     * @return true if the update should affect all entities
+     */
+    @Deprecated(forRemoval = true, since = "2.3")
+    public boolean isMulti() {
+        return multi;
+    }
+
+    /**
+     * @return true if the update should affect all entities
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public boolean multi() {
+        return multi;
+    }
+
 
     /**
      * {@inheritDoc}

@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.conventions.ConfigureProperties;
 import dev.morphia.mapping.conventions.FieldDiscovery;
 import dev.morphia.mapping.conventions.MethodDiscovery;
@@ -28,7 +29,10 @@ import static org.bson.UuidRepresentation.STANDARD;
 
 /**
  * Options to control mapping behavior.
+ *
+ * @morphia.internal
  */
+@MorphiaInternal
 public class MapperOptions {
     public static final MapperOptions DEFAULT = MapperOptions.builder().build();
     private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
@@ -100,24 +104,27 @@ public class MapperOptions {
     }
 
     /**
+     * @return true if {@link EntityModelImporter} instances should be loaded
+     * @morphia.internal
+     * @since 2.3
+     */
+    @MorphiaInternal
+    public boolean autoImportModels() {
+        return autoImportModels;
+    }
+
+    /**
      * Returns the classloader used, in theory, when loading the entity types.
      *
      * @return the classloader
      * @morphia.internal
      */
+    @MorphiaInternal
     public ClassLoader getClassLoader() {
         if (classLoader == null) {
             classLoader = Thread.currentThread().getContextClassLoader();
         }
         return classLoader;
-    }
-
-    /**
-     * @return true if {@link EntityModelImporter} instances should be loaded
-     * @since 2.3
-     */
-    public boolean isAutoImportModels() {
-        return autoImportModels;
     }
 
     /**

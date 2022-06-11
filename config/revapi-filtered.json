@@ -371,6 +371,31 @@
           "code": "java.method.removed",
           "old": "method <T> dev.morphia.query.Query<T> dev.morphia.Datastore::find(java.lang.String)",
           "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "methodName": "getWriteConcern",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "methodName": "getReadConcern",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "methodName": "getReadPreference",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChangedCovariantly",
+          "old": "method dev.morphia.Datastore dev.morphia.query.UpdateBase<T>::getDatastore()",
+          "new": "method dev.morphia.DatastoreImpl dev.morphia.query.UpdateBase<T>::getDatastore()",
+          "justification": "internal method"
         }
       ]
     }

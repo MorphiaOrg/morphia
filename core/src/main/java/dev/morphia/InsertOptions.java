@@ -17,6 +17,7 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
+import dev.morphia.internal.WriteConfigurable;
 
 /**
  * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.
@@ -25,40 +26,20 @@ import com.mongodb.WriteConcern;
  * @deprecated use {@link dev.morphia.InsertOneOptions} or {@link dev.morphia.InsertManyOptions} instead
  */
 @Deprecated(since = "2.0", forRemoval = true)
-public class InsertOptions {
+public class InsertOptions implements WriteConfigurable {
     private WriteConcern writeConcern;
     private boolean ordered = true;
     private Boolean bypassDocumentValidation;
 
     InsertOneOptions toInsertOneOptions() {
         return new InsertOneOptions()
-            .bypassDocumentValidation(bypassDocumentValidation);
+                   .bypassDocumentValidation(bypassDocumentValidation);
     }
 
     InsertManyOptions toInsertManyOptions() {
         return new InsertManyOptions()
-            .bypassDocumentValidation(bypassDocumentValidation)
-            .ordered(ordered);
-    }
-
-    /**
-     * Set the write concern to use for the insert.
-     *
-     * @param writeConcern the write concern
-     * @return this
-     */
-    public InsertOptions writeConcern(WriteConcern writeConcern) {
-        this.writeConcern = writeConcern;
-        return this;
-    }
-
-    /**
-     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
-     *
-     * @return the write concern, or null if the default will be used.
-     */
-    public WriteConcern getWriteConcern() {
-        return writeConcern;
+                   .bypassDocumentValidation(bypassDocumentValidation)
+                   .ordered(ordered);
     }
 
     /**
@@ -67,8 +48,32 @@ public class InsertOptions {
      * @return whether to bypass document validation, or null if unspecified.
      * @mongodb.server.release 3.2
      */
+    @Deprecated(forRemoval = true, since = "2.3")
     public Boolean getBypassDocumentValidation() {
         return bypassDocumentValidation;
+    }
+
+    /**
+     * Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion. The default is true.
+     * If false, the server will attempt to insert all the documents regardless of an failures.
+     *
+     * @return whether the documents should be inserted in order
+     */
+    @Deprecated(forRemoval = true, since = "2.3")
+    public boolean isOrdered() {
+        return ordered;
+    }
+
+    /**
+     * Set the write concern to use for the insert.
+     *
+     * @param writeConcern the write concern
+     * @return this
+     */
+    @Override
+    public InsertOptions writeConcern(WriteConcern writeConcern) {
+        this.writeConcern = writeConcern;
+        return this;
     }
 
     /**
@@ -95,12 +100,12 @@ public class InsertOptions {
     }
 
     /**
-     * Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion. The default is true.
-     * If false, the server will attempt to insert all the documents regardless of an failures.
+     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
      *
-     * @return whether the the documents should be inserted in order
+     * @return the write concern, or null if the default will be used.
      */
-    public boolean isOrdered() {
-        return ordered;
+    @Override
+    public WriteConcern writeConcern() {
+        return writeConcern;
     }
 }

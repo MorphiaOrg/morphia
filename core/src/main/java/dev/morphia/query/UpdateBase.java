@@ -2,7 +2,7 @@ package dev.morphia.query;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
@@ -26,9 +26,9 @@ public abstract class UpdateBase<T> {
     private final Mapper mapper;
     private final Class<T> type;
     private final List<UpdateOperator> updates = new ArrayList<>();
-    private final Datastore datastore;
+    private final DatastoreImpl datastore;
 
-    UpdateBase(Datastore datastore,
+    UpdateBase(DatastoreImpl datastore,
                @Nullable MongoCollection<T> collection,
                @Nullable Query<T> query,
                Class<T> type,
@@ -82,7 +82,7 @@ public abstract class UpdateBase<T> {
         return collection;
     }
 
-    protected Datastore getDatastore() {
+    protected DatastoreImpl getDatastore() {
         return datastore;
     }
 

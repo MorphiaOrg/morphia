@@ -3,7 +3,7 @@ package dev.morphia.query;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.UpdateOptions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.updates.UpdateOperator;
@@ -20,12 +20,12 @@ import java.util.List;
 @Deprecated(since = "2.3")
 public class Update<T> extends UpdateBase<T> {
     @SuppressWarnings("rawtypes")
-    Update(Datastore datastore, MongoCollection<T> collection,
+    Update(DatastoreImpl datastore, MongoCollection<T> collection,
            Query<T> query, Class<T> type, UpdateOpsImpl operations) {
         super(datastore, collection, query, type, operations.getUpdates());
     }
 
-    Update(Datastore datastore, MongoCollection<T> collection,
+    Update(DatastoreImpl datastore, MongoCollection<T> collection,
            Query<T> query, Class<T> type, List<UpdateOperator> updates) {
         super(datastore, collection, query, type, updates);
     }
@@ -64,7 +64,7 @@ public class Update<T> extends UpdateBase<T> {
                                                    .getCollection(alternate,
                                                        getCollection().getDocumentClass());
 
-        if (options.isMulti()) {
+        if (options.multi()) {
             return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)
                                    : mongoCollection.updateMany(session, queryObject, updateOperations, options);
 

@@ -108,12 +108,16 @@ public class OptionsTest {
         return types;
     }
 
+    private boolean getter(Method method) {
+        return method.getName().startsWith("get") || method.getName().startsWith("is");
+    }
+
     private void scan(Class<?> driverType, Class<?> morphiaType, boolean subclass, List<Class<?>> localFields) {
         try {
             Method[] methods = driverType.getDeclaredMethods();
             Assert.assertEquals(driverType.equals(morphiaType.getSuperclass()), subclass, "Options class should be a subclass");
             for (Method method : methods) {
-                if (method.getAnnotation(Deprecated.class) == null && !method.getName().equals("builder")) {
+                if (method.getAnnotation(Deprecated.class) == null && !method.getName().equals("builder") && !getter(method)) {
                     checkOverride(driverType, morphiaType, method);
                 }
             }

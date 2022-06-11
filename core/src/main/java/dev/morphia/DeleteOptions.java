@@ -21,8 +21,10 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -33,7 +35,7 @@ import org.bson.conversions.Bson;
  * @since 1.3
  */
 public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
-    implements SessionConfigurable<DeleteOptions>, WriteConfigurable<DeleteOptions>, AlternateCollection<DeleteOptions> {
+    implements SessionConfigurable<DeleteOptions>, WriteConfigurable<DeleteOptions>, CollectionConfigurable<DeleteOptions> {
     private boolean multi;
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private ClientSession clientSession;
@@ -75,6 +77,12 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return this
+     * @since 2.3
+     */
     @Override
     public DeleteOptions collection(String collection) {
         this.collection = collection;
@@ -92,6 +100,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
      * @return this
      * @since 2.2
      */
+    @Override
     public DeleteOptions hint(@Nullable Bson hint) {
         super.hint(hint);
         return this;
@@ -103,8 +112,27 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
      * @return this
      * @since 2.2
      */
+    @Override
     public DeleteOptions hintString(@Nullable String hint) {
         super.hintString(hint);
+        return this;
+    }
+
+    @Override
+    public DeleteOptions comment(String comment) {
+        super.comment(comment);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return this
+     * @since 2.3
+     */
+    @Override
+    public DeleteOptions comment(BsonValue comment) {
+        super.comment(comment);
         return this;
     }
 
@@ -120,9 +148,31 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @return this
+     * @since 2.3
+     */
+    @Override
+    public DeleteOptions let(Bson variables) {
+        super.let(variables);
+        return this;
+    }
+
+    /**
      * @return is this delete for multiple documents
      */
+    @Deprecated(forRemoval = true, since = "2.3")
     public boolean isMulti() {
+        return multi;
+    }
+
+    /**
+     * @return is this delete for multiple documents
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public boolean multi() {
         return multi;
     }
 

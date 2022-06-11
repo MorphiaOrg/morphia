@@ -34,6 +34,7 @@
         <bottlerocket.version>0.31.0</bottlerocket.version>
         <dokka.version>1.6.21</dokka.version>
         <driver.version>4.6.0</driver.version>
+        <driver.minor.version>4.6</driver.minor.version>
         <json.assert.version>1.5.0</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.6.21</kotlin.version>

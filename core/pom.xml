@@ -115,6 +115,11 @@
                     <excludePackageNames>dev.morphia.sofia,dev.morphia.annotations.builders</excludePackageNames>
                     <doclint>none</doclint>
                     <doctitle>Morphia ${project.version}</doctitle>
+                    <links>
+                        <link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs/mongodb-driver-core</link>
+                        <link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs/bson</link>
+                        <link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs/mongodb-driver-sync</link>
+                    </links>
                     <windowtitle>Morphia</windowtitle>
                     <tagletArtifacts>
                         <tagletArtifact>

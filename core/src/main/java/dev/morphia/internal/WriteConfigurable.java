@@ -4,18 +4,7 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
 
-public interface WriteConfigurable<T> {
-    /**
-     * The write concern to use.  By default the write concern configured for the MongoCollection instance will be used.
-     *
-     * @return the write concern, or null if the default will be used.
-     * @deprecated use {@link #writeConcern()} instead
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    @Nullable
-    default WriteConcern getWriteConcern() {
-        return writeConcern();
-    }
+public interface WriteConfigurable<T> extends CollectionConfiguration {
 
     /**
      * Applies the options to the collection
@@ -25,11 +14,17 @@ public interface WriteConfigurable<T> {
      * @return either the passed collection or the updated collection
      * @since 2.0
      */
-    default <C> MongoCollection<C> prepare(MongoCollection<C> collection) {
+    default <C> MongoCollection<C> configure(MongoCollection<C> collection) {
         WriteConcern writeConcern = writeConcern();
         return writeConcern == null
                ? collection
                : collection.withWriteConcern(writeConcern);
+    }
+
+    @Nullable
+    @Deprecated(since = "2.0", forRemoval = true)
+    default WriteConcern getWriteConcern() {
+        return writeConcern();
     }
 
     /**

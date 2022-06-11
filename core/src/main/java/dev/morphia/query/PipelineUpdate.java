@@ -3,7 +3,7 @@ package dev.morphia.query;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -24,9 +24,9 @@ class PipelineUpdate<T> {
     private final Query<T> query;
     private final MongoCollection<T> collection;
     private final List<Stage> updates = new ArrayList<>();
-    private final Datastore datastore;
+    private final DatastoreImpl datastore;
 
-    PipelineUpdate(Datastore datastore, MongoCollection<T> collection, Query<T> query, List<Stage> updates) {
+    PipelineUpdate(DatastoreImpl datastore, MongoCollection<T> collection, Query<T> query, List<Stage> updates) {
         this.datastore = datastore;
         this.collection = collection;
         this.query = query;
@@ -53,8 +53,8 @@ class PipelineUpdate<T> {
         final Document queryObject = query.toDocument();
 
         ClientSession session = datastore.findSession(options);
-        MongoCollection<T> mongoCollection = options.prepare(collection);
-        if (options.isMulti()) {
+        MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
+        if (options.multi()) {
             return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)
                                    : mongoCollection.updateMany(session, queryObject, updateOperations, options);
         } else {

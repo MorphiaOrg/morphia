@@ -91,7 +91,7 @@ public interface Datastore {
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> dev.morphia.query.UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
-        return new dev.morphia.query.UpdateOpsImpl<>(this, clazz);
+        throw new UnsupportedOperationException("This should be overridden but it's also deprecated.");
     }
 
     /**
@@ -236,7 +236,7 @@ public interface Datastore {
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query, FindAndModifyOptions options) {
         return query.findAndDelete(new FindAndDeleteOptions()
-            .writeConcern(options.getWriteConcern())
+                                       .writeConcern(options.writeConcern())
             .collation(options.getCollation())
             .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
             .sort(options.getSort())

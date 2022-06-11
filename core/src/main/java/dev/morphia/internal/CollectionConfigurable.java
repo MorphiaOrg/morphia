@@ -1,5 +1,7 @@
-package dev.morphia;
+package dev.morphia.internal;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
@@ -11,7 +13,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * @since 2.3
  */
 @MorphiaInternal
-public interface AlternateCollection<T> {
+public interface CollectionConfigurable<T> extends CollectionConfiguration {
     /**
      * Sets the alternate collection to use for the operation.
      *
@@ -30,4 +32,12 @@ public interface AlternateCollection<T> {
     @Nullable
     String collection();
 
+    default <T> MongoCollection<T> prepare(MongoCollection<T> collection, MongoDatabase database) {
+        String alternateName = collection();
+        if (alternateName != null) {
+            collection = database.getCollection(alternateName, collection.getDocumentClass());
+        }
+
+        return collection;
+    }
 }

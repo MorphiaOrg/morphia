@@ -6,8 +6,9 @@ import com.mongodb.lang.Nullable;
 /**
  * Marks an options class as having a configurable ClientSession
  *
- * @since 2.0
+ * @param <T> the type of the SessionConfigurable
  * @morphia.internal
+ * @since 2.0
  */
 public interface SessionConfigurable<T extends SessionConfigurable<T>> {
     /**
