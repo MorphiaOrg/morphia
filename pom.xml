@@ -37,7 +37,7 @@
         <driver.minor.version>4.6</driver.minor.version>
         <json.assert.version>1.5.0</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
-        <kotlin.version>1.6.21</kotlin.version>
+        <kotlin.version>1.7.0</kotlin.version>
         <maven.version>3.8.5</maven.version>
         <revapi.maven.plugin.version>0.14.6</revapi.maven.plugin.version>
         <revapi.java.version>0.26.1</revapi.java.version>
