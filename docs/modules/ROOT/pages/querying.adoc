@@ -25,11 +25,12 @@ The package is currently `experimental`.
 This done to signify that this API is a new one and might change based on user feedback prior to a final release.
 It is expected that the API will be largely the same in the final release and you are highly encouraged to try it out before then.
 If you encounter and bugs or usability issues, please file an
-[issue](https://github.com/MorphiaOrg/morphia/issues)
+https://github.com/MorphiaOrg/morphia/issues[issue]
 ====
 
 The filters can be accessed via the xref:javadoc:dev/morphia/query/experimental/filters/Filters.html#[Filters] class.
-The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia's API. For example, to query for products whose prices is greater than or equal to 1000, you would write this:
+The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia's API.
+For example, to query for products whose prices is greater than or equal to 1000, you would write this:
 
 [source,java]
 ----
