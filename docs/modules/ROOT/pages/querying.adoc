@@ -25,7 +25,7 @@ The package is currently `experimental`.
 This done to signify that this API is a new one and might change based on user feedback prior to a final release.
 It is expected that the API will be largely the same in the final release and you are highly encouraged to try it out before then.
 If you encounter and bugs or usability issues, please file an
-[issue](https://github.com/MorphiaOrg/morphia/issues)
+https://github.com/MorphiaOrg/morphia/issues[issue]
 ====
 
 The filters can be accessed via the xref:javadoc:dev/morphia/query/experimental/filters/Filters.html#[Filters] class.

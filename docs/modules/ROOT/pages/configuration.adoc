@@ -18,11 +18,11 @@ As of 2.0, the naming strategies supported out of the box are:
 
 1. `identity` This is the legacy behavior Morphia has always used.
 2. `lower` This is simply the lower case form of the `identity` strategy.
-3. `snake` This transforms element names in to their [snake case](https://en.wikipedia.org/wiki/Snake_case) versions.
+3. `snake` This transforms element names in to their https://en.wikipedia.org/wiki/Snake_case[snake case] versions.
 For those coming from a Python background or who work with Python developers regularly, this should look familiar.
-4. `camel` This transforms element names in to their [camel case](https://en.wikipedia.org/wiki/Camel_case) versions.
+4. `camel` This transforms element names in to their https://en.wikipedia.org/wiki/Camel_case[camel case] versions.
 This is the form most java developers will be familiar with.
-5. `kebab` This transforms element names in to their [kebab case](https://en.wikipedia.org/wiki/Kebab_case) versions.
+5. `kebab` This transforms element names in to their https://en.wikipedia.org/wiki/Kebab_case[kebab case] versions.
 This looks exactly like the `snake case` but with `-` instead of `_` so that it looks like it's on a kebab skewer.
 
 These strategies can all be access via the `NamingStrategy` class via their named methods.
