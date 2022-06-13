@@ -18,11 +18,11 @@ As of 2.0, the naming strategies supported out of the box are:
 
 1. `identity` This is the legacy behavior Morphia has always used.
 2. `lower` This is simply the lower case form of the `identity` strategy.
-3. `snake` This transforms element names in to their [snake case](https://en.wikipedia.org/wiki/Snake_case) versions.
+3. `snake` This transforms element names in to their https://en.wikipedia.org/wiki/Snake_case[snake case] versions.
 For those coming from a Python background or who work with Python developers regularly, this should look familiar.
-4. `camel` This transforms element names in to their [camel case](https://en.wikipedia.org/wiki/Camel_case) versions.
+4. `camel` This transforms element names in to their https://en.wikipedia.org/wiki/Camel_case[camel case] versions.
 This is the form most java developers will be familiar with.
-5. `kebab` This transforms element names in to their [kebab case](https://en.wikipedia.org/wiki/Kebab_case) versions.
+5. `kebab` This transforms element names in to their https://en.wikipedia.org/wiki/Kebab_case[kebab case] versions.
 This looks exactly like the `snake case` but with `-` instead of `_` so that it looks like it's on a kebab skewer.
 
 These strategies can all be access via the `NamingStrategy` class via their named methods.
@@ -47,6 +47,21 @@ The choices here are simpler:
 
  These call all be accessed via their named methods on `DiscriminatorFunction` and just like the `NamingStrategy` cases if the provided
   options are not sufficient, you can implement your own by subclassing `DiscriminatorFunction` and implementing your own function.
+
+=== User-defined Codecs
+
+Morphia makes heavy use of the driver's `Codec` infrastructure.
+All of the persistence of your entities is handled by Morphia defined and configured codecs.
+Morphia also makes use of driver-defined codecs with a select number of replacements more attuned to Morphia's needs.
+This is typically sufficient for users' needs.
+However, there are invariably times when more control is needed.
+
+Starting 2.3, you can provide your own `CodecProvider` to customize how Morphia handles the types you're interested.
+It's not advised to write custom codecs for your entities (why mark them as entities at that point?) but if you're comfortable taking that on, then it is, of course, your prerogative.
+You can register your custom `CodecProvider` implementation via the `MapperOptions.Builder#codecProvider()`
+method.
+For details on how to write a `Codec` and a `CodecProvider`, please see {docsRef}/drivers/java/sync/current/fundamentals/data-formats/codecs/[these docs].
+Using your custom `CodecProvider`, you can supply as many `Codec` implementations as you need.
 
 === Old versus New
 
