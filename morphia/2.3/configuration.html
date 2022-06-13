@@ -338,7 +338,7 @@ However, there are invariably times when more control is needed.</p>
 <p>Starting with 2.3, you can provide your own <code>CodecProvider</code> to customize how Morphia handles the types you&#8217;re interested.
 It&#8217;s not advised to write custom codecs for your entities (why mark them as entities at that point?) but if you&#8217;re comfortable taking that on, then it is, of course, your prerogative.
 You can register your custom <code>CodecProvider</code> implementation via the
-<a href="javadoc/dev/morphia/mapping/MapperOptions.Builder.html#codecProvider()" class="page">MapperOptions.Builder#codecProvider()</a>
+<a href="javadoc/dev/morphia/mapping/MapperOptions.Builder.html#codecProvider()" class="page">MapperOptions.Builder#codecProvider(org.bson.codecs.configuration.CodecProvider)</a>
 method.
 For details on how to write a <code>Codec</code> and a <code>CodecProvider</code>, please consult
 <a href="https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/data-formats/codecs/">the driver&#8217;s documentation</a>.
