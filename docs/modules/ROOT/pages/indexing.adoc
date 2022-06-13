@@ -155,7 +155,7 @@ Specify `true` to create a unique index.
 
 *Optional*
 
-New in MongoDB 3.2, [partial indexes](https://docs.mongodb.com/v3.2/core/index-partial/) only index the documents in a collection that meet a specified filter expression thereby reducing storage and maintenance costs.
+New in MongoDB 3.2, https://docs.mongodb.com/v3.2/core/index-partial/[partial indexes] only index the documents in a collection that meet a specified filter expression thereby reducing storage and maintenance costs.
 A partial filter is defined using a query as shown here:
 
 [source,java]
