@@ -274,15 +274,15 @@ As of 2.0, the naming strategies supported out of the box are:</p>
 <p><code>lower</code> This is simply the lower case form of the <code>identity</code> strategy.</p>
 </li>
 <li>
-<p><code>snake</code> This transforms element names in to their [snake case](<a href="https://en.wikipedia.org/wiki/Snake_case" class="bare">https://en.wikipedia.org/wiki/Snake_case</a>) versions.
+<p><code>snake</code> This transforms element names in to their <a href="https://en.wikipedia.org/wiki/Snake_case">snake case</a> versions.
 For those coming from a Python background or who work with Python developers regularly, this should look familiar.</p>
 </li>
 <li>
-<p><code>camel</code> This transforms element names in to their [camel case](<a href="https://en.wikipedia.org/wiki/Camel_case" class="bare">https://en.wikipedia.org/wiki/Camel_case</a>) versions.
+<p><code>camel</code> This transforms element names in to their <a href="https://en.wikipedia.org/wiki/Camel_case">camel case</a> versions.
 This is the form most java developers will be familiar with.</p>
 </li>
 <li>
-<p><code>kebab</code> This transforms element names in to their [kebab case](<a href="https://en.wikipedia.org/wiki/Kebab_case" class="bare">https://en.wikipedia.org/wiki/Kebab_case</a>) versions.
+<p><code>kebab</code> This transforms element names in to their <a href="https://en.wikipedia.org/wiki/Kebab_case">kebab case</a> versions.
 This looks exactly like the <code>snake case</code> but with <code>-</code> instead of <code>_</code> so that it looks like it&#8217;s on a kebab skewer.</p>
 </li>
 </ol>
@@ -323,6 +323,24 @@ The choices here are simpler:</p>
 </div>
 </li>
 </ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_defined_codecs"><a class="anchor" href="#_user_defined_codecs"></a>User-defined Codecs</h3>
+<div class="paragraph">
+<p>Morphia makes heavy use of the driver&#8217;s <code>Codec</code> infrastructure.
+All of the persistence of your entities is handled by Morphia defined and configured codecs.
+Morphia also makes use of driver-defined codecs with a select number of replacements more attuned to Morphia&#8217;s needs.
+This is typically sufficient for users' needs.
+However, there are invariably times when more control is needed.</p>
+</div>
+<div class="paragraph">
+<p>Starting 2.3, you can provide your own <code>CodecProvider</code> to customize how Morphia handles the types you&#8217;re interested.
+It&#8217;s not advised to write custom codecs for your entities (why mark them as entities at that point?) but if you&#8217;re comfortable taking that on, then it is, of course, your prerogative.
+You can register your custom <code>CodecProvider</code> implementation via the <code>MapperOptions.Builder#codecProvider()</code>
+method.
+For details on how to write a <code>Codec</code> and a <code>CodecProvider</code>, please see <a href="http://docs.mongodb.org/manual/drivers/java/sync/current/fundamentals/data-formats/codecs/">these docs</a>.
+Using your custom <code>CodecProvider</code>, you can supply as many <code>Codec</code> implementations as you need.</p>
 </div>
 </div>
 <div class="sect2">
