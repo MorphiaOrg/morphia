@@ -329,17 +329,19 @@ The choices here are simpler:</p>
 <h3 id="_user_defined_codecs"><a class="anchor" href="#_user_defined_codecs"></a>User-defined Codecs</h3>
 <div class="paragraph">
 <p>Morphia makes heavy use of the driver&#8217;s <code>Codec</code> infrastructure.
-All of the persistence of your entities is handled by Morphia defined and configured codecs.
+All of the persistence of your entities is handled by Morphia-defined and -configured codecs.
 Morphia also makes use of driver-defined codecs with a select number of replacements more attuned to Morphia&#8217;s needs.
 This is typically sufficient for users' needs.
 However, there are invariably times when more control is needed.</p>
 </div>
 <div class="paragraph">
-<p>Starting 2.3, you can provide your own <code>CodecProvider</code> to customize how Morphia handles the types you&#8217;re interested.
+<p>Starting with 2.3, you can provide your own <code>CodecProvider</code> to customize how Morphia handles the types you&#8217;re interested.
 It&#8217;s not advised to write custom codecs for your entities (why mark them as entities at that point?) but if you&#8217;re comfortable taking that on, then it is, of course, your prerogative.
-You can register your custom <code>CodecProvider</code> implementation via the <code>MapperOptions.Builder#codecProvider()</code>
+You can register your custom <code>CodecProvider</code> implementation via the
+<a href="javadoc/dev/morphia/mapping/MapperOptions.Builder.html#codecProvider()" class="page">MapperOptions.Builder#codecProvider()</a>
 method.
-For details on how to write a <code>Codec</code> and a <code>CodecProvider</code>, please see <a href="http://docs.mongodb.org/manual/drivers/java/sync/current/fundamentals/data-formats/codecs/">these docs</a>.
+For details on how to write a <code>Codec</code> and a <code>CodecProvider</code>, please consult
+<a href="https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/data-formats/codecs/">the driver&#8217;s documentation</a>.
 Using your custom <code>CodecProvider</code>, you can supply as many <code>Codec</code> implementations as you need.</p>
 </div>
 </div>
