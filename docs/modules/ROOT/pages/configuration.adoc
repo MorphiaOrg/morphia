@@ -51,16 +51,18 @@ The choices here are simpler:
 === User-defined Codecs
 
 Morphia makes heavy use of the driver's `Codec` infrastructure.
-All of the persistence of your entities is handled by Morphia defined and configured codecs.
+All of the persistence of your entities is handled by Morphia-defined and -configured codecs.
 Morphia also makes use of driver-defined codecs with a select number of replacements more attuned to Morphia's needs.
 This is typically sufficient for users' needs.
 However, there are invariably times when more control is needed.
 
-Starting 2.3, you can provide your own `CodecProvider` to customize how Morphia handles the types you're interested.
+Starting with 2.3, you can provide your own `CodecProvider` to customize how Morphia handles the types you're interested.
 It's not advised to write custom codecs for your entities (why mark them as entities at that point?) but if you're comfortable taking that on, then it is, of course, your prerogative.
-You can register your custom `CodecProvider` implementation via the `MapperOptions.Builder#codecProvider()`
+You can register your custom `CodecProvider` implementation via the
+xref:javadoc:dev/morphia/mapping/MapperOptions.Builder.html#codecProvider()[MapperOptions.Builder#codecProvider()]
 method.
-For details on how to write a `Codec` and a `CodecProvider`, please see {docsRef}/drivers/java/sync/current/fundamentals/data-formats/codecs/[these docs].
+For details on how to write a `Codec` and a `CodecProvider`, please consult
+https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/data-formats/codecs/[the driver's documentation].
 Using your custom `CodecProvider`, you can supply as many `Codec` implementations as you need.
 
 === Old versus New
