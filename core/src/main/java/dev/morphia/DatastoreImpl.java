@@ -99,7 +99,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         morphiaCodecProviders.add(new MorphiaCodecProvider(this));
 
         CodecRegistry codecRegistry = database.getCodecRegistry();
-        List<CodecProvider> providers = new ArrayList<>(List.of(new MorphiaTypesCodecProvider(this),
+        List<CodecProvider> providers = new ArrayList<>();
+        if (mapper.getOptions().codecProvider() != null) {
+            providers.add(mapper.getOptions().codecProvider());
+        }
+
+        providers.addAll(List.of(new MorphiaTypesCodecProvider(this),
             new PrimitiveCodecRegistry(codecRegistry),
             new EnumCodecProvider(),
             new AggregationCodecProvider(this)));
@@ -241,9 +246,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     @Nullable
     public ClientSession findSession(SessionConfigurable<?> configurable) {
-        return configurable.clientSession() != null
-               ? configurable.clientSession()
-               : getSession();
+        ClientSession clientSession = configurable.clientSession();
+        return clientSession != null ? clientSession : getSession();
     }
 
     @Override
@@ -259,7 +263,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         MongoCollection<T> collection = getDatabase().getCollection(collectionName, type);
 
         Entity annotation = entityModel.getEntityAnnotation();
-        if (annotation != null && WriteConcern.valueOf(annotation.concern()) != null) {
+        if (annotation != null && !annotation.concern().equals("")) {
             collection = collection.withWriteConcern(WriteConcern.valueOf(annotation.concern()));
         }
         return collection;
@@ -525,9 +529,6 @@ public class DatastoreImpl implements AdvancedDatastore {
      */
     public void enableValidation(EntityModel model, Validation validation) {
         String collectionName = model.getCollectionName();
-        if (collectionName == null) {
-            throw new MappingException(Sofia.notTopLevelType());
-        }
         try {
             getDatabase().runCommand(new Document("collMod", collectionName)
                                          .append("validator", parse(validation.value()))

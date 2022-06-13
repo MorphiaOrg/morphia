@@ -1,8 +1,10 @@
 package dev.morphia.mapping;
 
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
+import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.conventions.ConfigureProperties;
 import dev.morphia.mapping.conventions.FieldDiscovery;
@@ -15,6 +17,7 @@ import dev.morphia.query.QueryFactory;
 import dev.morphia.sofia.Sofia;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.UuidRepresentation;
+import org.bson.codecs.configuration.CodecProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +37,8 @@ import static org.bson.UuidRepresentation.STANDARD;
  */
 @MorphiaInternal
 public class MapperOptions {
-    public static final MapperOptions DEFAULT = MapperOptions.builder().build();
     private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
-
+    public static final MapperOptions DEFAULT = MapperOptions.builder().build();
     private final boolean autoImportModels;
     private final boolean ignoreFinals;
     private final boolean storeNulls;
@@ -53,12 +55,19 @@ public class MapperOptions {
     private final UuidRepresentation uuidRepresentation;
     private final QueryFactory queryFactory;
     private final boolean enablePolymorphicQueries;
-    private ClassLoader classLoader;
+    private final ClassLoader classLoader;
+    private final CodecProvider codecProvider;
 
     private MapperOptions(Builder builder) {
         autoImportModels = builder.autoImportModels;
         cacheClassLookups = builder.cacheClassLookups;
-        classLoader = builder.classLoader;
+        if (builder.classLoader != null) {
+            classLoader = builder.classLoader;
+        } else {
+            classLoader = Thread.currentThread().getContextClassLoader();
+        }
+
+        codecProvider = builder.codecProvider;
         collectionNaming = builder.collectionNaming;
         conventions = builder.conventions();
         dateStorage = builder.dateStorage();
@@ -114,6 +123,17 @@ public class MapperOptions {
     }
 
     /**
+     * @return the configured CodecProvider
+     * @see CodecProvider
+     * @since 2.3
+     */
+    @Nullable
+    @MorphiaInternal
+    public CodecProvider codecProvider() {
+        return codecProvider;
+    }
+
+    /**
      * Returns the classloader used, in theory, when loading the entity types.
      *
      * @return the classloader
@@ -121,9 +141,6 @@ public class MapperOptions {
      */
     @MorphiaInternal
     public ClassLoader getClassLoader() {
-        if (classLoader == null) {
-            classLoader = Thread.currentThread().getContextClassLoader();
-        }
         return classLoader;
     }
 
@@ -259,6 +276,7 @@ public class MapperOptions {
         private boolean mapSubPackages;
         private boolean enablePolymorphicQueries;
         private ClassLoader classLoader;
+        private CodecProvider codecProvider;
         private DateStorage dateStorage = DateStorage.UTC;
         private String discriminatorKey = "_t";
         private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName();
@@ -276,6 +294,7 @@ public class MapperOptions {
             autoImportModels = original.autoImportModels;
             cacheClassLookups = original.cacheClassLookups;
             classLoader = original.getClassLoader();
+            codecProvider = original.codecProvider;
             dateStorage = original.dateStorage;
             ignoreFinals = original.ignoreFinals;
             mapSubPackages = original.mapSubPackages;
@@ -307,16 +326,6 @@ public class MapperOptions {
         }
 
         /**
-         * @return the new options instance
-         */
-        public MapperOptions build() {
-            if (options == null) {
-                options = new MapperOptions(this);
-            }
-            return options;
-        }
-
-        /**
          * This feature automatically discovers and uses {@link EntityModelImporter} instances to allow for external definition of class
          * models.  This feature defaults to true.
          *
@@ -326,6 +335,18 @@ public class MapperOptions {
         public Builder autoImportModels(boolean autoImportModels) {
             this.autoImportModels = autoImportModels;
             return this;
+        }
+
+        /**
+         * @return the new options instance
+         */
+        public MapperOptions build() {
+            if (options == null) {
+                options = new MapperOptions(this);
+            } else {
+                LOG.warn(Sofia.buildAlreadyCalled());
+            }
+            return options;
         }
 
         /**
@@ -346,6 +367,20 @@ public class MapperOptions {
         public Builder classLoader(ClassLoader classLoader) {
             assertNotLocked();
             this.classLoader = classLoader;
+            return this;
+        }
+
+        /**
+         * Sets a provider for user defined codecs to used by Morphia
+         *
+         * @param codecProvider the provider to user
+         * @return this
+         * @morphia.experimental
+         * @since 2.3
+         */
+        @MorphiaExperimental
+        public Builder codecProvider(CodecProvider codecProvider) {
+            this.codecProvider = codecProvider;
             return this;
         }
 

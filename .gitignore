@@ -69,3 +69,4 @@ fabric.properties
 Changes-*.md
 /config/revapi.json
 github.properties
+test-output/
