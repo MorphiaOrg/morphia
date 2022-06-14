@@ -67,6 +67,7 @@ import static dev.morphia.query.filters.Filters.lt;
 import static dev.morphia.query.filters.Filters.ne;
 import static dev.morphia.query.filters.Filters.or;
 import static dev.morphia.query.filters.Filters.regex;
+import static java.time.LocalDate.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
@@ -85,6 +86,16 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({"unchecked", "unused"})
 public class TestQuery extends TestBase {
+    @Test
+    public void testNativeQuery() {
+        dev.morphia.test.models.User user = getDs().save(new dev.morphia.test.models.User("Malcolm 'Mal' Reynolds", now()));
+
+        assertEquals(getDs().find(dev.morphia.test.models.User.class, new Document("_id", user.getId())).first(),
+            user);
+
+        assertEquals(getDs().find(dev.morphia.test.models.User.class, new Document()).filter(eq("id", user.getId())).first(),
+            user);
+    }
 
     @Test
     public void genericMultiKeyValueQueries() {

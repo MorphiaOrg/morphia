@@ -5,7 +5,9 @@ import dev.morphia.Datastore;
 import org.bson.Document;
 
 /**
- * A factory for {@link Query}ies.
+ * A factory for queries.
+ *
+ * @see Query
  */
 public interface QueryFactory {
 

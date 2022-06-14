@@ -7,6 +7,7 @@ import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -73,6 +74,24 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, likes, age, id, joined);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
+        User user = (User) o;
+        return age == user.age && Objects.equals(name, user.name) && Objects.equals(likes, user.likes) &&
+               Objects.equals(id, user.id) && Objects.equals(joined, user.joined);
     }
 
     @Override

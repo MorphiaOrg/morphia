@@ -233,6 +233,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> Query<T> find(Class<T> type, Document nativeQuery) {
+        return queryFactory.createQuery(this, type, nativeQuery);
+    }
+
+    @Override
     public <T> Query<T> find(String collection, Class<T> type) {
         return queryFactory.createQuery(this, collection, type);
     }

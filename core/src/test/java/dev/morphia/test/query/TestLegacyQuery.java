@@ -51,6 +51,7 @@ import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.Sort.naturalAscending;
 import static dev.morphia.query.Sort.naturalDescending;
+import static java.time.LocalDate.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
@@ -71,6 +72,19 @@ import static org.testng.Assert.fail;
 public class TestLegacyQuery extends TestBase {
     public TestLegacyQuery() {
         super(MapperOptions.legacy().build());
+    }
+
+    @Test
+    public void testNativeQuery() {
+        User user = getDs().save(new User("Malcolm 'Mal' Reynolds", now()));
+
+        assertEquals(getDs().find(User.class, new Document("_id", user.getId())).first(),
+            user);
+
+        assertEquals(getDs().find(User.class, new Document())
+                            .field("id").equal(user.getId())
+                            .first(),
+            user);
     }
 
     @Test

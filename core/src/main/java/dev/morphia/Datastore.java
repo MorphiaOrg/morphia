@@ -15,6 +15,7 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
+import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
@@ -176,13 +177,27 @@ public interface Datastore {
     <T> void ensureIndexes(Class<T> clazz);
 
     /**
-     * Find all instances by type
+     * Find instances of a type
      *
      * @param type the class to use for mapping the results
      * @param <T>  the type to query
      * @return the query
      */
     <T> Query<T> find(Class<T> type);
+
+    /**
+     * Find instances of a type using a native query.  This method is intended as an aid when copying queries from external sources such
+     * as the shell or Compass whose structure is already in json form.
+     *
+     * @param type        the class to use for mapping the results
+     * @param nativeQuery the full query structure to use for this Query
+     * @param <T>         the type to query
+     * @return the query
+     * @morphia.experimental
+     * @since 2.3
+     */
+    @MorphiaExperimental
+    <T> Query<T> find(Class<T> type, Document nativeQuery);
 
     /**
      * Find all instances by type from an alternate collection
