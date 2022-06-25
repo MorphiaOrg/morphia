@@ -13,6 +13,7 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.ValidationOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
@@ -55,7 +56,6 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,7 +155,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @return the configured collection
      * @morphia.internal
      */
-    @NotNull
+    @NonNull
     @MorphiaInternal
     public <T> MongoCollection<T> configureCollection(CollectionConfiguration options, MongoCollection<T> collection) {
         if (options instanceof CollectionConfigurable) {

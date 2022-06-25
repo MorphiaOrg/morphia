@@ -1,7 +1,6 @@
 package dev.morphia;
 
 import com.mongodb.ClientSessionOptions;
-import com.mongodb.DBCollection;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
@@ -39,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings({"UnusedReturnValue", "unused", "removal"})
 public interface Datastore {
     /**
-     * Returns a new query bound to the kind (a specific {@link DBCollection})
+     * Returns a new query bound to the kind (a specific {@link MongoCollection})
      *
      * @param source The collection aggregation against
      * @return the aggregation pipeline
@@ -48,7 +47,7 @@ public interface Datastore {
     Aggregation<Document> aggregate(String source);
 
     /**
-     * Returns a new query bound to the kind (a specific {@link DBCollection})
+     * Returns a new query bound to the kind (a specific {@link MongoCollection})
      *
      * @param source The class to create aggregation against
      * @param <T>    the source type
@@ -58,7 +57,7 @@ public interface Datastore {
     <T> Aggregation<T> aggregate(Class<T> source);
 
     /**
-     * Returns a new query bound to the kind (a specific {@link DBCollection})
+     * Returns a new query bound to the kind (a specific {@link MongoCollection})
      *
      * @param source The class to create aggregation against
      * @return the aggregation pipeline
@@ -69,7 +68,7 @@ public interface Datastore {
     dev.morphia.aggregation.AggregationPipeline createAggregation(Class<?> source);
 
     /**
-     * Returns a new query bound to the collection (a specific {@link DBCollection})
+     * Returns a new query bound to the collection (a specific {@link MongoCollection})
      *
      * @param type The collection to query
      * @param <T>  the type of the query
