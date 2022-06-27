@@ -36,7 +36,7 @@ jobs:
         java: [ 11, 17, 18 ]
         mongo: [ 6.0.0-rc11, 5.0.9, 4.2.20 ]
         driver: [ 4.6.1, 4.7.0-beta0 ]
-    name: "Tests on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
+    name: "Test on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
