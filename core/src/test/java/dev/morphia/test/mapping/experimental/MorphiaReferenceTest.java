@@ -128,7 +128,7 @@ public class MorphiaReferenceTest extends TestBase {
         }
 
         assertTrue(loaded.list.isResolved());
-        assertEquals(list, loaded.getList());
+        assertListEquals(list, loaded.getList());
         for (Book book1 : list) {
             assertTrue(list.contains(book1), "Looking for " + book1 + " in " + list);
         }
