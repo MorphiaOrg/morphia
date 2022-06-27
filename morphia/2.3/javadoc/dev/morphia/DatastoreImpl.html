@@ -417,18 +417,18 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.Class)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;source)</code></th>
 <td class="colLast">
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/DBCollection.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>DBCollection</code></a>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink"><code>MongoCollection</code></a>)</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.String)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source)</code></th>
 <td class="colLast">
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/DBCollection.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>DBCollection</code></a>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink"><code>MongoCollection</code></a>)</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;@NotNull <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;</code></td>
+<td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#configureCollection(dev.morphia.internal.CollectionConfiguration,com.mongodb.client.MongoCollection)">configureCollection</a></span>​(<a href="internal/CollectionConfiguration.html" title="interface in dev.morphia.internal">CollectionConfiguration</a>&nbsp;options,
                    <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;collection)</code></th>
 <td class="colLast">
@@ -439,7 +439,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <td class="colFirst"><code><a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createAggregation(java.lang.Class)">createAggregation</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;source)</code></th>
 <td class="colLast">
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/DBCollection.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>DBCollection</code></a>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink"><code>MongoCollection</code></a>)</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -770,7 +770,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <h4>aggregate</h4>
 <pre class="methodSignature">public&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;source)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#aggregate(java.lang.String)">Datastore</a></code></span></div>
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/DBCollection.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>DBCollection</code></a>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink"><code>MongoCollection</code></a>)</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Datastore.html#aggregate(java.lang.String)">aggregate</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
@@ -789,7 +789,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <h4>aggregate</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;source)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#aggregate(java.lang.Class)">Datastore</a></code></span></div>
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/DBCollection.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>DBCollection</code></a>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink"><code>MongoCollection</code></a>)</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Datastore.html#aggregate(java.lang.Class)">aggregate</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
@@ -810,7 +810,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <h4>createAggregation</h4>
 <pre class="methodSignature">public&nbsp;<a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;createAggregation​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;source)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#createAggregation(java.lang.Class)">Datastore</a></code></span></div>
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/DBCollection.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>DBCollection</code></a>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink"><code>MongoCollection</code></a>)</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Datastore.html#createAggregation(java.lang.Class)">createAggregation</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
@@ -827,10 +827,10 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <ul class="blockList">
 <li class="blockList">
 <h4>configureCollection</h4>
-<pre class="methodSignature">@NotNull
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/NonNull.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@NonNull</a>
 <a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
-public&nbsp;&lt;T&gt;&nbsp;@NotNull <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;configureCollection​(<a href="internal/CollectionConfiguration.html" title="interface in dev.morphia.internal">CollectionConfiguration</a>&nbsp;options,
-                                                           <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;collection)</pre>
+public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;configureCollection​(<a href="internal/CollectionConfiguration.html" title="interface in dev.morphia.internal">CollectionConfiguration</a>&nbsp;options,
+                                                  <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;collection)</pre>
 <div class="block">Applies configuration options to the collection</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
