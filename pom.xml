@@ -35,7 +35,7 @@
         <dokka.version>1.7.0</dokka.version>
         <driver.version>4.6.1</driver.version>
         <driver.minor.version>4.6</driver.minor.version>
-        <json.assert.version>1.5.0</json.assert.version>
+        <json.assert.version>1.5.1</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.7.0</kotlin.version>
         <maven.version>3.8.6</maven.version>
