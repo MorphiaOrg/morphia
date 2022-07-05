@@ -158,7 +158,7 @@
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.147</version>
+            <version>4.8.148</version>
         </dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>
