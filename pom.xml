@@ -39,7 +39,7 @@
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.7.10</kotlin.version>
         <maven.version>3.8.6</maven.version>
-        <revapi.maven.plugin.version>0.14.6</revapi.maven.plugin.version>
+        <revapi.maven.plugin.version>0.14.7</revapi.maven.plugin.version>
         <revapi.java.version>0.27.0</revapi.java.version>
         <roaster.version>2.25.0.Final</roaster.version>
         <slf4j.version>1.7.36</slf4j.version>
