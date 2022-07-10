@@ -249,12 +249,11 @@ public interface Datastore {
     @Nullable
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query, FindAndModifyOptions options) {
-        return query.findAndDelete(new FindAndDeleteOptions()
-                                       .writeConcern(options.writeConcern())
-            .collation(options.getCollation())
-            .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
-            .sort(options.getSort())
-            .projection(options.getProjection()));
+        return query.findAndDelete(new FindAndDeleteOptions().writeConcern(options.writeConcern())
+                                                             .collation(options.getCollation())
+                                                             .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
+                                                             .sort(options.getSort())
+                                                             .projection(options.getProjection()));
     }
 
     /**
@@ -287,8 +286,7 @@ public interface Datastore {
     @Nullable
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
-        return query.modify(operations).execute(new ModifyOptions()
-            .returnDocument(ReturnDocument.AFTER));
+        return query.modify(operations).execute(new ModifyOptions().returnDocument(ReturnDocument.AFTER));
     }
 
     /**
@@ -363,7 +361,9 @@ public interface Datastore {
      * @param entity the entity to insert
      * @param <T>    the type of the entity
      */
-    <T> void insert(T entity);
+    default <T> void insert(T entity) {
+        insert(entity, new InsertOneOptions());
+    }
 
     /**
      * Inserts an entity in to the mapped collection.
@@ -447,6 +447,52 @@ public interface Datastore {
      * @since 2.0
      */
     <T> void refresh(T entity);
+
+    /**
+     * Replaces a document in the database
+     *
+     * @param entity the entity to replace
+     * @param <T>    the type of the entity
+     * @return the replaced entity
+     * @since 2.3
+     */
+    default <T> T replace(T entity) {
+        return replace(entity, new ReplaceOptions());
+    }
+
+    /**
+     * Replaces a document in the database
+     *
+     * @param entity  the entity to replace
+     * @param options the options to apply to the replace operation
+     * @param <T>     the type of the entity
+     * @return the replaced entity
+     * @since 2.3
+     */
+    <T> T replace(T entity, ReplaceOptions options);
+
+    /**
+     * Replaces a list of documents in the database
+     *
+     * @param entities the entities to replace
+     * @param <T>      the type of the entity
+     * @return the saved entities
+     * @since 2.3
+     */
+    default <T> List<T> replace(List<T> entities) {
+        return replace(entities, new ReplaceOptions());
+    }
+
+    /**
+     * Replaces a list of documents in the database
+     *
+     * @param entities the entities to replace
+     * @param <T>      the type of the entity
+     * @param options  the options to apply to the replace operation
+     * @return the saved entities
+     * @since 2.3
+     */
+    <T> List<T> replace(List<T> entities, ReplaceOptions options);
 
     /**
      * Saves the entities (Objects) and updates the @Id field
@@ -585,10 +631,9 @@ public interface Datastore {
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> UpdateResult update(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
-        return query.update(operations).execute(new UpdateOptions()
-            .upsert(false)
-            .multi(true)
-            .writeConcern(getMapper().getWriteConcern(query.getEntityClass())));
+        return query.update(operations)
+                    .execute(
+                        new UpdateOptions().upsert(false).multi(true).writeConcern(getMapper().getWriteConcern(query.getEntityClass())));
     }
 
     /**

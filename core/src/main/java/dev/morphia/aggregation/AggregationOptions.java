@@ -271,4 +271,21 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     public WriteConcern writeConcern() {
         return writeConcern;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("AggregationOptions{");
+        sb.append("allowDiskUse=").append(allowDiskUse);
+        sb.append(", batchSize=").append(batchSize);
+        sb.append(", bypassDocumentValidation=").append(bypassDocumentValidation);
+        sb.append(", collation=").append(collation);
+        sb.append(", maxTimeMS=").append(maxTimeMS);
+        sb.append(", clientSession=").append(clientSession);
+        sb.append(", readPreference=").append(readPreference);
+        sb.append(", readConcern=").append(readConcern);
+        sb.append(", writeConcern=").append(writeConcern);
+        sb.append(", hint=").append(hint);
+        sb.append('}');
+        return sb.toString();
+    }
 }

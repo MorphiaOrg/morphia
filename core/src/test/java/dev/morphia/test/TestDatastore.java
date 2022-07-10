@@ -10,6 +10,7 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
+import dev.morphia.MissingIdException;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
@@ -547,6 +548,40 @@ public class TestDatastore extends TestBase {
         this.getDs().insert(new TestEntity(), new InsertOneOptions()
                                                   .writeConcern(WriteConcern.ACKNOWLEDGED));
         assertEquals(collection.countDocuments(), 2);
+    }
+
+    @Test
+    public void testReplace() {
+        User bob = new User("bob", LocalDate.now());
+        User linda = new User("linda", LocalDate.now());
+
+        assertThrows(MissingIdException.class, () -> {
+            this.getDs().replace(bob);
+        });
+
+        assertThrows(MissingIdException.class, () -> {
+            this.getDs().replace(List.of(bob, linda));
+        });
+
+        this.getDs().insert(bob);
+        assertEquals(getDs().find(User.class).count(), 1);
+        this.getDs().insert(linda);
+
+        bob.setLikes(List.of("burgers"));
+        getDs().replace(bob);
+        assertEquals(getDs().find(User.class).first().getLikes(), List.of("burgers"));
+
+        bob.setLikes(List.of("burgers", "linda"));
+        linda.setLikes(List.of("bob", "tina", "gene", "louise"));
+        getDs().replace(List.of(bob, linda));
+
+        for (User user : getDs().find(User.class)) {
+            if (user.name.equals("bob")) {
+                assertEquals(user.getLikes(), List.of("burgers", "linda"));
+            } else {
+                assertEquals(user.getLikes(), List.of("bob", "tina", "gene", "louise"));
+            }
+        }
     }
 
     @Test
