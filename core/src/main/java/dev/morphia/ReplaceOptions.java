@@ -54,8 +54,9 @@ public class ReplaceOptions extends com.mongodb.client.model.ReplaceOptions impl
         hint(that.getHint());
         hintString(this.getHintString());
         comment(this.getComment());
-        if (that.getLet() != null) {
-            let(that.getLet());
+        Bson let = that.getLet();
+        if (let != null) {
+            let(let);
         }
 
         this.writeConcern = that.writeConcern;

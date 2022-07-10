@@ -396,6 +396,18 @@
           "old": "method dev.morphia.Datastore dev.morphia.query.UpdateBase<T>::getDatastore()",
           "new": "method dev.morphia.DatastoreImpl dev.morphia.query.UpdateBase<T>::getDatastore()",
           "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.addedToInterface",
+          "new": "method <T> T dev.morphia.Datastore::replace(T, dev.morphia.ReplaceOptions)",
+          "justification": "new feature"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.addedToInterface",
+          "new": "method <T> java.util.List<T> dev.morphia.Datastore::replace(java.util.List<T>, dev.morphia.ReplaceOptions)",
+          "justification": "new feature"
         }
       ]
     }
