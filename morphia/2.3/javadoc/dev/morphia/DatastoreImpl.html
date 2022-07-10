@@ -582,27 +582,20 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T)">insert</a></span>​(T&nbsp;entity)</code></th>
-<td class="colLast">
-<div class="block">Inserts an entity in to the mapped collection.</div>
-</td>
-</tr>
-<tr id="i26" class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T,dev.morphia.InsertOneOptions)">insert</a></span>​(T&nbsp;entity,
       <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Inserts an entity in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T)">merge</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
      <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -610,7 +603,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(java.lang.String,T)">queryByExample</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
               T&nbsp;ex)</code></th>
@@ -618,33 +611,42 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Returns a new query based on the example object</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(T)">queryByExample</a></span>​(T&nbsp;example)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query based on the example object</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#refresh(T)">refresh</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Refreshes an existing entity to its current state in the database.</div>
 </td>
 </tr>
+<tr id="i31" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#replace(java.util.List,dev.morphia.ReplaceOptions)">replace</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
+       <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</code></th>
+<td class="colLast">
+<div class="block">Replaces a list of documents in the database</div>
+</td>
+</tr>
 <tr id="i32" class="altColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#replace(T,dev.morphia.ReplaceOptions)">replace</a></span>​(T&nbsp;entity,
+       <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</code></th>
+<td class="colLast">
+<div class="block">Replaces a document in the database</div>
+</td>
+</tr>
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.util.List,dev.morphia.InsertManyOptions)">save</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
     <a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Saves the entities (Objects) and updates the @Id field</div>
-</td>
-</tr>
-<tr id="i33" class="rowColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T)">save</a></span>​(T&nbsp;entity)</code></th>
-<td class="colLast">
-<div class="block">Saves an entity (Object) and updates the @Id field</div>
 </td>
 </tr>
 <tr id="i34" class="altColor">
@@ -707,7 +709,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;dev.morphia.<a href="Datastore.html" title="interface in dev.morphia">Datastore</a></h3>
-<code><a href="Datastore.html#createQuery(java.lang.Class)">createQuery</a>, <a href="Datastore.html#delete(dev.morphia.query.Query)">delete</a>, <a href="Datastore.html#delete(dev.morphia.query.Query,dev.morphia.DeleteOptions)">delete</a>, <a href="Datastore.html#findAndDelete(dev.morphia.query.Query)">findAndDelete</a>, <a href="Datastore.html#findAndDelete(dev.morphia.query.Query,dev.morphia.FindAndModifyOptions)">findAndDelete</a>, <a href="Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a>, <a href="Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a>, <a href="Datastore.html#getSession()">getSession</a>, <a href="Datastore.html#insert(java.util.List)">insert</a>, <a href="Datastore.html#merge(T,com.mongodb.WriteConcern)">merge</a>, <a href="Datastore.html#save(java.lang.Iterable)">save</a>, <a href="Datastore.html#save(java.lang.Iterable,dev.morphia.InsertOptions)">save</a>, <a href="Datastore.html#save(java.util.List)">save</a>, <a href="Datastore.html#save(T,dev.morphia.InsertOptions)">save</a>, <a href="Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a>, <a href="Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></code></li>
+<code><a href="Datastore.html#createQuery(java.lang.Class)">createQuery</a>, <a href="Datastore.html#delete(dev.morphia.query.Query)">delete</a>, <a href="Datastore.html#delete(dev.morphia.query.Query,dev.morphia.DeleteOptions)">delete</a>, <a href="Datastore.html#findAndDelete(dev.morphia.query.Query)">findAndDelete</a>, <a href="Datastore.html#findAndDelete(dev.morphia.query.Query,dev.morphia.FindAndModifyOptions)">findAndDelete</a>, <a href="Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a>, <a href="Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a>, <a href="Datastore.html#getSession()">getSession</a>, <a href="Datastore.html#insert(java.util.List)">insert</a>, <a href="Datastore.html#insert(T)">insert</a>, <a href="Datastore.html#merge(T,com.mongodb.WriteConcern)">merge</a>, <a href="Datastore.html#replace(java.util.List)">replace</a>, <a href="Datastore.html#replace(T)">replace</a>, <a href="Datastore.html#save(java.lang.Iterable)">save</a>, <a href="Datastore.html#save(java.lang.Iterable,dev.morphia.InsertOptions)">save</a>, <a href="Datastore.html#save(java.util.List)">save</a>, <a href="Datastore.html#save(T)">save</a>, <a href="Datastore.html#save(T,dev.morphia.InsertOptions)">save</a>, <a href="Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a>, <a href="Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -821,6 +823,27 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 </dl>
 </li>
 </ul>
+<a id="createUpdateOperations(java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createUpdateOperations</h4>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;createUpdateOperations​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#createUpdateOperations(java.lang.Class)">Datastore</a></code></span></div>
+<div class="block">The builder for all update operations</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Datastore.html#createUpdateOperations(java.lang.Class)">createUpdateOperations</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type to update</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>clazz</code> - the type to update</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new UpdateOperations instance</dd>
+</dl>
+</li>
+</ul>
 <a id="configureCollection(dev.morphia.internal.CollectionConfiguration,com.mongodb.client.MongoCollection)">
 <!--   -->
 </a>
@@ -841,6 +864,30 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the configured collection</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="delete(java.lang.Object,dev.morphia.DeleteOptions)">
+<!--   -->
+</a><a id="delete(T,dev.morphia.DeleteOptions)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>delete</h4>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/result/DeleteResult.html?is-external=true" title="class or interface in com.mongodb.client.result" class="externalLink">DeleteResult</a>&nbsp;delete​(T&nbsp;entity,
+                               <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</pre>
+<div class="block">Deletes the given entity (by @Id), with the WriteConcern</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Datastore.html#delete(T,dev.morphia.DeleteOptions)">delete</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type to delete</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entity</code> - the entity to delete</dd>
+<dd><code>options</code> - the options to use when deleting</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>results of the delete</dd>
+</dl>
 </li>
 </ul>
 <a id="delete(java.lang.Object)">
@@ -866,27 +913,6 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 </dl>
 </li>
 </ul>
-<a id="createUpdateOperations(java.lang.Class)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>createUpdateOperations</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;createUpdateOperations​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;clazz)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#createUpdateOperations(java.lang.Class)">Datastore</a></code></span></div>
-<div class="block">The builder for all update operations</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#createUpdateOperations(java.lang.Class)">createUpdateOperations</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type to update</dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>clazz</code> - the type to update</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new UpdateOperations instance</dd>
-</dl>
-</li>
-</ul>
 <a id="enableDocumentValidation()">
 <!--   -->
 </a>
@@ -899,30 +925,6 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Datastore.html#enableDocumentValidation()">enableDocumentValidation</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="delete(java.lang.Object,dev.morphia.DeleteOptions)">
-<!--   -->
-</a><a id="delete(T,dev.morphia.DeleteOptions)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>delete</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/result/DeleteResult.html?is-external=true" title="class or interface in com.mongodb.client.result" class="externalLink">DeleteResult</a>&nbsp;delete​(T&nbsp;entity,
-                               <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</pre>
-<div class="block">Deletes the given entity (by @Id), with the WriteConcern</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#delete(T,dev.morphia.DeleteOptions)">delete</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type to delete</dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>entity</code> - the entity to delete</dd>
-<dd><code>options</code> - the options to use when deleting</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>results of the delete</dd>
 </dl>
 </li>
 </ul>
@@ -1124,6 +1126,23 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 </dl>
 </li>
 </ul>
+<a id="getLoggedQuery(dev.morphia.query.FindOptions)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLoggedQuery</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getLoggedQuery​(<a href="query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Datastore.html#getLoggedQuery(dev.morphia.query.FindOptions)">getLoggedQuery</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>options</code> - the options used when requesting logging</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the logged query</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
 <a id="ensureCaps()">
 <!--   -->
 </a>
@@ -1154,23 +1173,6 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 </dl>
 </li>
 </ul>
-<a id="getLoggedQuery(dev.morphia.query.FindOptions)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getLoggedQuery</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getLoggedQuery​(<a href="query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#getLoggedQuery(dev.morphia.query.FindOptions)">getLoggedQuery</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>options</code> - the options used when requesting logging</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the logged query</dd>
-<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
-</li>
-</ul>
 <a id="insert(java.lang.Object,dev.morphia.InsertOneOptions)">
 <!--   -->
 </a><a id="insert(T,dev.morphia.InsertOneOptions)">
@@ -1190,27 +1192,6 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 <dd><code>T</code> - the type of the entity</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>entity</code> - the entity to insert</dd>
-<dd><code>options</code> - the options to apply to the insert operation</dd>
-</dl>
-</li>
-</ul>
-<a id="insert(java.util.List,dev.morphia.InsertManyOptions)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>insert</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;void&nbsp;insert​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
-                       <a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;options)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#insert(java.util.List,dev.morphia.InsertManyOptions)">Datastore</a></code></span></div>
-<div class="block">Inserts entities in to the mapped collection.</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#insert(java.util.List,dev.morphia.InsertManyOptions)">insert</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type of the entity</dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>entities</code> - the entities to insert</dd>
 <dd><code>options</code> - the options to apply to the insert operation</dd>
 </dl>
 </li>
@@ -1238,24 +1219,49 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 </dl>
 </li>
 </ul>
-<a id="insert(java.lang.Object)">
-<!--   -->
-</a><a id="insert(T)">
+<a id="insert(java.util.List,dev.morphia.InsertManyOptions)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>insert</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;void&nbsp;insert​(T&nbsp;entity)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#insert(T)">Datastore</a></code></span></div>
-<div class="block">Inserts an entity in to the mapped collection.</div>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;void&nbsp;insert​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
+                       <a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;options)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#insert(java.util.List,dev.morphia.InsertManyOptions)">Datastore</a></code></span></div>
+<div class="block">Inserts entities in to the mapped collection.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#insert(T)">insert</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dd><code><a href="Datastore.html#insert(java.util.List,dev.morphia.InsertManyOptions)">insert</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the type of the entity</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>entity</code> - the entity to insert</dd>
+<dd><code>entities</code> - the entities to insert</dd>
+<dd><code>options</code> - the options to apply to the insert operation</dd>
+</dl>
+</li>
+</ul>
+<a id="merge(java.lang.Object,dev.morphia.InsertOneOptions)">
+<!--   -->
+</a><a id="merge(T,dev.morphia.InsertOneOptions)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>merge</h4>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;merge​(T&nbsp;entity,
+                   <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#merge(T,dev.morphia.InsertOneOptions)">Datastore</a></code></span></div>
+<div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Datastore.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the entity</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entity</code> - the entity to merge back in to the database</dd>
+<dd><code>options</code> - the options to apply</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new merged entity.  NOTE:  this is a database fetch.</dd>
 </dl>
 </li>
 </ul>
@@ -1304,28 +1310,28 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 </dl>
 </li>
 </ul>
-<a id="merge(java.lang.Object,dev.morphia.InsertOneOptions)">
+<a id="replace(java.lang.Object,dev.morphia.ReplaceOptions)">
 <!--   -->
-</a><a id="merge(T,dev.morphia.InsertOneOptions)">
+</a><a id="replace(T,dev.morphia.ReplaceOptions)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>merge</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;merge​(T&nbsp;entity,
-                   <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#merge(T,dev.morphia.InsertOneOptions)">Datastore</a></code></span></div>
-<div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
+<h4>replace</h4>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;replace​(T&nbsp;entity,
+                     <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#replace(T,dev.morphia.ReplaceOptions)">Datastore</a></code></span></div>
+<div class="block">Replaces a document in the database</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dd><code><a href="Datastore.html#replace(T,dev.morphia.ReplaceOptions)">replace</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the type of the entity</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>entity</code> - the entity to merge back in to the database</dd>
-<dd><code>options</code> - the options to apply</dd>
+<dd><code>entity</code> - the entity to replace</dd>
+<dd><code>options</code> - the options to apply to the replace operation</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new merged entity.  NOTE:  this is a database fetch.</dd>
+<dd>the replaced entity</dd>
 </dl>
 </li>
 </ul>
@@ -1453,26 +1459,26 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 </dl>
 </li>
 </ul>
-<a id="save(java.lang.Object)">
-<!--   -->
-</a><a id="save(T)">
+<a id="replace(java.util.List,dev.morphia.ReplaceOptions)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>save</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;save​(T&nbsp;entity)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#save(T)">Datastore</a></code></span></div>
-<div class="block">Saves an entity (Object) and updates the @Id field</div>
+<h4>replace</h4>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;replace​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
+                           <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#replace(java.util.List,dev.morphia.ReplaceOptions)">Datastore</a></code></span></div>
+<div class="block">Replaces a list of documents in the database</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#save(T)">save</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dd><code><a href="Datastore.html#replace(java.util.List,dev.morphia.ReplaceOptions)">replace</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the type of the entity</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>entity</code> - the entity to save</dd>
+<dd><code>entities</code> - the entities to replace</dd>
+<dd><code>options</code> - the options to apply to the replace operation</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the saved entity</dd>
+<dd>the saved entities</dd>
 </dl>
 </li>
 </ul>

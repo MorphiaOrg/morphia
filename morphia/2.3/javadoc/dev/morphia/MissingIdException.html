@@ -223,11 +223,11 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="package-summary.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../2.2/javadoc/dev/morphia/package-summary.html">2.2</a>
-    <a class="version" href="../../../../2.1/javadoc/dev/morphia/package-summary.html">2.1</a>
-    <a class="version" href="../../../../2.0/javadoc/dev/morphia/package-summary.html">2.0</a>
-    <a class="version" href="../../../../1.6/javadoc/dev/morphia/package-summary.html">1.6</a>
+    <a class="version is-current" href="MissingIdException.html">2.3-SNAPSHOT</a>
+    <a class="version is-missing" href="../../../../2.2/index.html">2.2</a>
+    <a class="version is-missing" href="../../../../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../../../../2.0/index.html">2.0</a>
+    <a class="version is-missing" href="../../../../1.6/index.html">1.6</a>
   </div>
 </div>
 </div>
@@ -236,7 +236,7 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="dev.morphia (Morphia)";
+            parent.document.title="MissingIdException (Morphia)";
         }
     }
     catch(err) {
@@ -261,9 +261,9 @@ loadScripts(document, 'script');</script>
 </a>
 <ul class="navList" title="Navigation">
 <li><a href="../../index.html">Overview</a></li>
-<li class="navBarCell1Rev">Package</li>
-<li>Class</li>
-<li><a href="package-use.html">Use</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="class-use/MissingIdException.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../index-all.html">Index</a></li>
@@ -295,6 +295,21 @@ loadScripts(document, 'script');</script>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
 </div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
+<li>Method</li>
+</ul>
+</div>
 <a id="skip.navbar.top">
 <!--   -->
 </a></div>
@@ -307,158 +322,132 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </script>
 </nav>
 </header>
+<!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<p><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/NonNullApi.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@NonNullApi</a>
-</p>
-<h1 title="Package" class="title">Package&nbsp;dev.morphia</h1>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia</a></div>
+<h2 title="Class MissingIdException" class="title">Class MissingIdException</h2>
 </div>
 <div class="contentContainer">
+<ul class="inheritance">
+<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
+<li>
+<ul class="inheritance">
+<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Throwable</a></li>
+<li>
+<ul class="inheritance">
+<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Exception.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Exception</a></li>
+<li>
+<ul class="inheritance">
+<li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.RuntimeException</a></li>
+<li>
+<ul class="inheritance">
+<li>dev.morphia.MissingIdException</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="description">
 <ul class="blockList">
 <li class="blockList">
-<table class="typeSummary">
-<caption><span>Interface Summary</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Interface</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="AdvancedDatastore.html" title="interface in dev.morphia">AdvancedDatastore</a></th>
-<td class="colLast">Deprecated, for removal: This API element is subject to removal in a future version.&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></th>
-<td class="colLast">
-<div class="block">Datastore interface to get/delete/save objects</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a></th>
-<td class="colLast">
-<div class="block">Interface for intercepting @Entity lifecycle events</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="ObjectFactory.html" title="interface in dev.morphia">ObjectFactory</a></th>
-<td class="colLast">
-<div class="block">The ObjectFactory is used by morphia to create instances of classes which can be customized to fit a particular applications needs.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList">
-<table class="typeSummary">
-<caption><span>Class Summary</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Class</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="AbstractEntityInterceptor.html" title="class in dev.morphia">AbstractEntityInterceptor</a></th>
-<td class="colLast">Deprecated, for removal: This API element is subject to removal in a future version.
-<div class="deprecationComment">the noop default methods have been moved to the interface.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></th>
-<td class="colLast">
-<div class="block">A generic (type-safe) wrapper around mongodb collections</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></th>
-<td class="colLast">
-<div class="block">The options to apply when removing documents from the MongoCollection</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></th>
-<td class="colLast">Deprecated, for removal: This API element is subject to removal in a future version.
-<div class="deprecationComment">use <a href="ModifyOptions.html" title="class in dev.morphia"><code>ModifyOptions</code></a> instead</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></th>
-<td class="colLast">
-<div class="block">Options related to insertion of documents into MongoDB.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></th>
-<td class="colLast">
-<div class="block">Options related to insertion of documents into MongoDB.</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a></th>
-<td class="colLast">Deprecated, for removal: This API element is subject to removal in a future version.
-<div class="deprecationComment">use <a href="InsertOneOptions.html" title="class in dev.morphia"><code>InsertOneOptions</code></a> or <a href="InsertManyOptions.html" title="class in dev.morphia"><code>InsertManyOptions</code></a> instead</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</th>
-<td class="colLast">Deprecated, for removal: This API element is subject to removal in a future version.</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></th>
-<td class="colLast">
-<div class="block">Defines the options for a "find and modify" operation.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="Morphia.html" title="class in dev.morphia">Morphia</a></th>
-<td class="colLast">
-<div class="block">Entry point for working with Morphia</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="MorphiaVersion23.html" title="class in dev.morphia">MorphiaVersion23</a></th>
-<td class="colLast">
-<div class="block">This class is a version marker for certain frameworks to use when loading configurations, e.g.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a></th>
-<td class="colLast">
-<div class="block">Options related to insertion of documents into MongoDB.</div>
-</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></th>
-<td class="colLast">
-<div class="block">The options to apply when updating documents in the MongoCollection</div>
-</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList">
-<table class="typeSummary">
-<caption><span>Exception Summary</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Exception</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="MissingIdException.html" title="class in dev.morphia">MissingIdException</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="VersionMismatchException.html" title="class in dev.morphia">VersionMismatchException</a></th>
-<td class="colLast">
-<div class="block">This exception is thrown when a version field does not match the expected state in the database.</div>
-</td>
-</tr>
-</tbody>
-</table>
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Serializable.html?is-external=true" title="class or interface in java.io" class="externalLink">Serializable</a></code></dd>
+</dl>
+<hr>
+<pre>public class <span class="typeNameLabel">MissingIdException</span>
+extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a></pre>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../serialized-form.html#dev.morphia.MissingIdException">Serialized Form</a></dd>
+</dl>
 </li>
 </ul>
 </div>
+<div class="summary">
+<ul class="blockList">
+<li class="blockList">
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Constructor</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">MissingIdException</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</section>
+<!-- ========== METHOD SUMMARY =========== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="method.summary">
+<!--   -->
+</a>
+<h3>Method Summary</h3>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.java.lang.Throwable">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Throwable</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#addSuppressed(java.lang.Throwable)" title="class or interface in java.lang" class="externalLink">addSuppressed</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#fillInStackTrace()" title="class or interface in java.lang" class="externalLink">fillInStackTrace</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#getCause()" title="class or interface in java.lang" class="externalLink">getCause</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#getLocalizedMessage()" title="class or interface in java.lang" class="externalLink">getLocalizedMessage</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#getMessage()" title="class or interface in java.lang" class="externalLink">getMessage</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#getStackTrace()" title="class or interface in java.lang" class="externalLink">getStackTrace</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#getSuppressed()" title="class or interface in java.lang" class="externalLink">getSuppressed</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#initCause(java.lang.Throwable)" title="class or interface in java.lang" class="externalLink">initCause</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#printStackTrace()" title="class or interface in java.lang" class="externalLink">printStackTrace</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#printStackTrace(java.io.PrintStream)" title="class or interface in java.lang" class="externalLink">printStackTrace</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#printStackTrace(java.io.PrintWriter)" title="class or interface in java.lang" class="externalLink">printStackTrace</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#setStackTrace(java.lang.StackTraceElement%5B%5D)" title="class or interface in java.lang" class="externalLink">setStackTrace</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html?is-external=true#toString()" title="class or interface in java.lang" class="externalLink">toString</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></h3>
+<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#clone()" title="class or interface in java.lang" class="externalLink">clone</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang" class="externalLink">equals</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#finalize()" title="class or interface in java.lang" class="externalLink">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#getClass()" title="class or interface in java.lang" class="externalLink">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#hashCode()" title="class or interface in java.lang" class="externalLink">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notify()" title="class or interface in java.lang" class="externalLink">notify</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#notifyAll()" title="class or interface in java.lang" class="externalLink">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait()" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long)" title="class or interface in java.lang" class="externalLink">wait</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#wait(long,int)" title="class or interface in java.lang" class="externalLink">wait</a></code></li>
+</ul>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</div>
+<div class="details">
+<ul class="blockList">
+<li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a id="<init>()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>MissingIdException</h4>
+<pre>public&nbsp;MissingIdException()</pre>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</div>
+</div>
 </main>
+<!-- ========= END OF CLASS DATA ========= -->
 <footer role="contentinfo">
 <nav role="navigation">
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
@@ -471,9 +460,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <ul class="navList" title="Navigation">
 <li><a href="../../index.html">Overview</a></li>
-<li class="navBarCell1Rev">Package</li>
-<li>Class</li>
-<li><a href="package-use.html">Use</a></li>
+<li><a href="package-summary.html">Package</a></li>
+<li class="navBarCell1Rev">Class</li>
+<li><a href="class-use/MissingIdException.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../index-all.html">Index</a></li>
@@ -498,6 +487,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
 </noscript>
+</div>
+<div>
+<ul class="subNavList">
+<li>Summary:&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
+<li><a href="#method.summary">Method</a></li>
+</ul>
+<ul class="subNavList">
+<li>Detail:&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
+<li>Method</li>
+</ul>
 </div>
 <a id="skip.navbar.bottom">
 <!--   -->
