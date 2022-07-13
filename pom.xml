@@ -32,7 +32,7 @@
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
         <bottlerocket.version>0.32.0</bottlerocket.version>
-        <dokka.version>1.7.0</dokka.version>
+        <dokka.version>1.7.10</dokka.version>
         <driver.version>4.6.1</driver.version>
         <driver.minor.version>4.6</driver.minor.version>
         <json.assert.version>1.5.1</json.assert.version>
