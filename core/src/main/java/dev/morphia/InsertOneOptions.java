@@ -17,11 +17,9 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.client.ClientSession;
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.BsonValue;
 
@@ -30,11 +28,10 @@ import org.bson.BsonValue;
  *
  * @since 1.3
  */
-public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, WriteConfigurable<InsertOneOptions>,
+public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
                                              CollectionConfigurable<InsertOneOptions> {
     private com.mongodb.client.model.InsertOneOptions options = new com.mongodb.client.model.InsertOneOptions();
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
-    private ClientSession clientSession;
     private boolean unset;
     private String collection;
 
@@ -53,7 +50,6 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
     public InsertOneOptions(InsertOneOptions that) {
         this.options = that.options;
         this.writeConcern = that.writeConcern;
-        this.clientSession = that.clientSession;
     }
 
     /**
@@ -77,17 +73,6 @@ public class InsertOneOptions implements SessionConfigurable<InsertOneOptions>, 
     public InsertOneOptions bypassDocumentValidation(@Nullable Boolean bypassDocumentValidation) {
         options.bypassDocumentValidation(bypassDocumentValidation);
         return this;
-    }
-
-    @Override
-    public InsertOneOptions clientSession(@Nullable ClientSession clientSession) {
-        this.clientSession = clientSession;
-        return this;
-    }
-
-    @Override
-    public ClientSession clientSession() {
-        return clientSession;
     }
 
     public InsertOneOptions collection(@Nullable String collection) {

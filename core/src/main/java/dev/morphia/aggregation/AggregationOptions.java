@@ -4,13 +4,11 @@ import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.ReadConfigurable;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.Document;
 
@@ -21,15 +19,12 @@ import java.util.concurrent.TimeUnit;
  * Defines options to be applied to an aggregation pipeline.
  */
 @SuppressWarnings("unused")
-public class AggregationOptions implements SessionConfigurable<AggregationOptions>,
-                                               ReadConfigurable<AggregationOptions>,
-                                               WriteConfigurable<AggregationOptions> {
+public class AggregationOptions implements ReadConfigurable<AggregationOptions>, WriteConfigurable<AggregationOptions> {
     private boolean allowDiskUse;
     private Integer batchSize;
     private boolean bypassDocumentValidation;
     private Collation collation;
     private Long maxTimeMS;
-    private ClientSession clientSession;
     private ReadPreference readPreference;
     private ReadConcern readConcern;
     private WriteConcern writeConcern;
@@ -132,17 +127,6 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
     public AggregationOptions bypassDocumentValidation(boolean bypassDocumentValidation) {
         this.bypassDocumentValidation = bypassDocumentValidation;
         return this;
-    }
-
-    @Override
-    public AggregationOptions clientSession(ClientSession clientSession) {
-        this.clientSession = clientSession;
-        return this;
-    }
-
-    @Override
-    public ClientSession clientSession() {
-        return clientSession;
     }
 
     /**
@@ -274,18 +258,17 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("AggregationOptions{");
-        sb.append("allowDiskUse=").append(allowDiskUse);
-        sb.append(", batchSize=").append(batchSize);
-        sb.append(", bypassDocumentValidation=").append(bypassDocumentValidation);
-        sb.append(", collation=").append(collation);
-        sb.append(", maxTimeMS=").append(maxTimeMS);
-        sb.append(", clientSession=").append(clientSession);
-        sb.append(", readPreference=").append(readPreference);
-        sb.append(", readConcern=").append(readConcern);
-        sb.append(", writeConcern=").append(writeConcern);
-        sb.append(", hint=").append(hint);
-        sb.append('}');
-        return sb.toString();
+        return new StringBuilder("AggregationOptions{")
+                   .append("allowDiskUse=").append(allowDiskUse)
+                   .append(", batchSize=").append(batchSize)
+                   .append(", bypassDocumentValidation=").append(bypassDocumentValidation)
+                   .append(", collation=").append(collation)
+                   .append(", maxTimeMS=").append(maxTimeMS)
+                   .append(", readPreference=").append(readPreference)
+                   .append(", readConcern=").append(readConcern)
+                   .append(", writeConcern=").append(writeConcern)
+                   .append(", hint=").append(hint)
+                   .append('}')
+                   .toString();
     }
 }

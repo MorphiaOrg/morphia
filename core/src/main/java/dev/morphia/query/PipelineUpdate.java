@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.DatastoreImpl;
@@ -52,14 +51,11 @@ class PipelineUpdate<T> {
         List<Document> updateOperations = toDocument();
         final Document queryObject = query.toDocument();
 
-        ClientSession session = datastore.findSession(options);
         MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
         if (options.multi()) {
-            return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)
-                                   : mongoCollection.updateMany(session, queryObject, updateOperations, options);
+            return datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options);
         } else {
-            return session == null ? mongoCollection.updateOne(queryObject, updateOperations, options)
-                                   : mongoCollection.updateOne(session, queryObject, updateOperations, options);
+            return datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
         }
     }
 

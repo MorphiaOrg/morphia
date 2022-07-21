@@ -23,7 +23,6 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.ReadConfigurable;
-import dev.morphia.internal.SessionConfigurable;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -37,22 +36,11 @@ import java.util.concurrent.TimeUnit;
  * @since 1.3
  */
 public class CountOptions extends com.mongodb.client.model.CountOptions
-    implements SessionConfigurable<CountOptions>, CollectionConfigurable<CountOptions>, ReadConfigurable<CountOptions> {
+    implements CollectionConfigurable<CountOptions>, ReadConfigurable<CountOptions> {
     private ReadPreference readPreference;
     private ReadConcern readConcern;
     private ClientSession clientSession;
     private String collection;
-
-    @Override
-    public CountOptions clientSession(ClientSession clientSession) {
-        this.clientSession = clientSession;
-        return this;
-    }
-
-    @Override
-    public ClientSession clientSession() {
-        return clientSession;
-    }
 
     @Override
     public CountOptions collection(String collection) {

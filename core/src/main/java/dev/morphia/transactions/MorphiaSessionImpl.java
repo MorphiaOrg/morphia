@@ -4,8 +4,13 @@ import com.mongodb.ClientSessionOptions;
 import com.mongodb.ServerAddress;
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.ClientSession;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.TransactionBody;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertManyResult;
+import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import com.mongodb.session.ServerSession;
@@ -13,9 +18,15 @@ import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
+import dev.morphia.ModifyOptions;
+import dev.morphia.ReplaceOptions;
+import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.query.CountOptions;
+import dev.morphia.query.FindAndDeleteOptions;
 import org.bson.BsonDocument;
 import org.bson.BsonTimestamp;
+import org.bson.Document;
 
 import java.util.List;
 
@@ -36,48 +47,84 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
      */
     public MorphiaSessionImpl(DatastoreImpl datastore, ClientSession session) {
         super(datastore);
+        operations(new TransactionalOperations());
         this.session = session;
     }
 
-    @Override
-    public <T> DeleteResult delete(T entity, DeleteOptions options) {
-        return super.delete(entity, new DeleteOptions(options)
-            .clientSession(findSession(options)));
-    }
+    private class TransactionalOperations extends DatastoreOperations {
+        @Override
+        public <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options) {
+            return collection.countDocuments(session, query, options);
+        }
 
-    @Override
-    public <T> void insert(T entity, InsertOneOptions options) {
-        super.insert(entity, new InsertOneOptions(options)
-            .clientSession(findSession(options)));
-    }
+        @Override
+        public <T> DeleteResult deleteMany(MongoCollection<T> collection, Document queryDocument, DeleteOptions options) {
+            return collection.deleteMany(session, queryDocument, options);
+        }
 
-    @Override
-    public <T> void insert(List<T> entities, InsertManyOptions options) {
-        super.insert(entities, new InsertManyOptions(options)
-            .clientSession(findSession(options)));
-    }
+        @Override
+        public <T> DeleteResult deleteOne(MongoCollection<T> collection, Document queryDocument, DeleteOptions options) {
+            return collection.deleteOne(session, queryDocument, options);
+        }
 
-    @Override
-    public <T> T merge(T entity, InsertOneOptions options) {
-        return super.merge(entity, new InsertOneOptions(options)
-            .clientSession(findSession(options)));
-    }
+        @Override
+        public <E> FindIterable<E> find(MongoCollection<E> collection, Document query) {
+            return collection.find(session, query);
+        }
 
-    @Override
-    public <T> List<T> save(List<T> entities, InsertManyOptions options) {
-        return super.save(entities, new InsertManyOptions(options)
-            .clientSession(findSession(options)));
+        @Override
+        public <T> T findOneAndDelete(MongoCollection<T> mongoCollection, Document queryDocument, FindAndDeleteOptions options) {
+            return mongoCollection.findOneAndDelete(session, queryDocument, options);
+        }
+
+        @Override
+        public <T> T findOneAndUpdate(MongoCollection<T> collection, Document query, Document update, ModifyOptions options) {
+            return collection.findOneAndUpdate(session, query, update, options);
+        }
+
+        @Override
+        public <T> InsertManyResult insertMany(MongoCollection<T> collection, List<T> list, InsertManyOptions options) {
+            return collection.insertMany(session, list, options.options());
+        }
+
+        @Override
+        public <T> InsertOneResult insertOne(MongoCollection<T> collection, T entity, InsertOneOptions options) {
+            return collection.insertOne(session, entity, options.options());
+        }
+
+        @Override
+        public <T> UpdateResult replaceOne(MongoCollection<T> collection, T entity, Document filter, ReplaceOptions options) {
+            return collection.replaceOne(session, filter, entity, options);
+        }
+
+        @Override
+        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+                                           UpdateOptions options) {
+            return collection.updateMany(session, queryObject, updateOperations, options);
+        }
+
+        @Override
+        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+                                          UpdateOptions options) {
+            return collection.updateOne(session, queryObject, updateOperations, options);
+        }
+
+        @Override
+        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+                                           UpdateOptions options) {
+            return collection.updateMany(session, queryObject, updateOperations, options);
+        }
+
+        @Override
+        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+                                          UpdateOptions options) {
+            return collection.updateOne(session, queryObject, updateOperations, options);
+        }
     }
 
     @Override
     public void commitTransaction() {
         session.commitTransaction();
-    }
-
-    @Override
-    public <T> T save(T entity, InsertOneOptions options) {
-        return super.save(entity, new InsertOneOptions(options)
-            .clientSession(findSession(options)));
     }
 
     @Override

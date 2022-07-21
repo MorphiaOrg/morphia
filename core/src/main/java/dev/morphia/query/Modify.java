@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
 import dev.morphia.DatastoreImpl;
@@ -49,12 +48,9 @@ public class Modify<T> extends UpdateBase<T> {
      */
     @Nullable
     public T execute(ModifyOptions options) {
-        ClientSession session = getDatastore().findSession(options);
         MongoCollection<T> collection = getDatastore().configureCollection(options, getCollection());
         Document update = toDocument();
 
-        return session == null
-               ? collection.findOneAndUpdate(getQuery().toDocument(), update, options)
-               : collection.findOneAndUpdate(session, getQuery().toDocument(), update, options);
+        return getDatastore().operations().findOneAndUpdate(collection, getQuery().toDocument(), update, options);
     }
 }

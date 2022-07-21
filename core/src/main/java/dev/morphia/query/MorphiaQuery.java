@@ -1,7 +1,6 @@
 package dev.morphia.query;
 
 import com.mongodb.ExplainVerbosity;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -105,26 +104,17 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public long count(CountOptions options) {
-        ClientSession session = datastore.findSession(options);
-        Document query = getQueryDocument();
         MongoCollection<T> collection = datastore.configureCollection(options, this.collection);
-
-        return session == null ? collection.countDocuments(query, options)
-                               : collection.countDocuments(session, query, options);
+        return datastore.operations().countDocuments(collection, getQueryDocument(), options);
     }
 
     @Override
     public DeleteResult delete(DeleteOptions options) {
         MongoCollection<T> collection = datastore.configureCollection(options, this.collection);
-        ClientSession session = datastore.findSession(options);
         if (options.multi()) {
-            return session == null
-                   ? collection.deleteMany(getQueryDocument(), options)
-                   : collection.deleteMany(session, getQueryDocument(), options);
+            return datastore.operations().deleteMany(collection, getQueryDocument(), options);
         } else {
-            return session == null
-                   ? collection.deleteOne(getQueryDocument(), options)
-                   : collection.deleteOne(session, getQueryDocument(), options);
+            return datastore.operations().deleteOne(collection, getQueryDocument(), options);
         }
     }
 
@@ -192,10 +182,7 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     public T findAndDelete(FindAndDeleteOptions options) {
         MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
-        ClientSession session = datastore.findSession(options);
-        return session == null
-               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
-               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
+        return datastore.operations().findOneAndDelete(mongoCollection, getQueryDocument(), options);
     }
 
     @Override
@@ -329,13 +316,9 @@ class MorphiaQuery<T> implements Query<T> {
             LOG.trace(format("Running query(%s) : %s, options: %s,", getCollectionName(), query, findOptions));
         }
 
-        ClientSession clientSession = datastore.findSession(findOptions);
-
         MongoCollection<E> updated = datastore.configureCollection(findOptions, collection);
 
-        return clientSession != null
-               ? updated.find(clientSession, query)
-               : updated.find(query);
+        return datastore.operations().find(updated, query);
     }
 
     @SuppressWarnings("ConstantConditions")

@@ -1,11 +1,9 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.client.ClientSession;
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.BsonValue;
 
@@ -14,11 +12,9 @@ import org.bson.BsonValue;
  *
  * @since 1.3
  */
-public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>, WriteConfigurable<InsertManyOptions>,
-                                              CollectionConfigurable<InsertManyOptions> {
+public class InsertManyOptions implements WriteConfigurable<InsertManyOptions>, CollectionConfigurable<InsertManyOptions> {
     private com.mongodb.client.model.InsertManyOptions options = new com.mongodb.client.model.InsertManyOptions();
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
-    private ClientSession clientSession;
     private String collection;
 
     /**
@@ -36,7 +32,6 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
     public InsertManyOptions(InsertManyOptions that) {
         this.options = that.options;
         this.writeConcern = that.writeConcern;
-        this.clientSession = that.clientSession;
         this.collection = that.collection;
     }
 
@@ -50,26 +45,6 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
     public InsertManyOptions bypassDocumentValidation(Boolean bypassDocumentValidation) {
         options.bypassDocumentValidation(bypassDocumentValidation);
         return this;
-    }
-
-    /**
-     * Set the client session to use for the insert.
-     *
-     * @param clientSession the client session
-     * @return this
-     */
-    public InsertManyOptions clientSession(@Nullable ClientSession clientSession) {
-        this.clientSession = clientSession;
-        return this;
-    }
-
-    /**
-     * The client session to use for the insertion.
-     *
-     * @return the client session
-     */
-    public ClientSession clientSession() {
-        return clientSession;
     }
 
     @Override

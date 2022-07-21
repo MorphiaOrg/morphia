@@ -2,7 +2,6 @@ package dev.morphia;
 
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.WriteConcern;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReturnDocument;
@@ -16,7 +15,6 @@ import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
@@ -290,16 +288,6 @@ public interface Datastore {
     }
 
     /**
-     * @param configurable the configurable
-     * @return any session found first on the configurable then on this
-     * @morphia.internal
-     * @since 2.0
-     */
-    @Nullable
-    @MorphiaInternal
-    ClientSession findSession(SessionConfigurable<?> configurable);
-
-    /**
      * @return the codec registry
      * @morphia.internal
      * @since 2.3
@@ -343,17 +331,6 @@ public interface Datastore {
      */
     @MorphiaInternal
     Mapper getMapper();
-
-    /**
-     * Returns the session this datastore is attached to or null if none is attached.
-     *
-     * @return the session
-     * @since 2.0
-     */
-    @Nullable
-    default ClientSession getSession() {
-        return null;
-    }
 
     /**
      * Inserts an entity in to the mapped collection.

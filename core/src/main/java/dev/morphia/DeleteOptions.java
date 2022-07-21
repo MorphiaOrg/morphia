@@ -17,12 +17,10 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.BsonValue;
 import org.bson.Document;
@@ -35,10 +33,9 @@ import org.bson.conversions.Bson;
  * @since 1.3
  */
 public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
-    implements SessionConfigurable<DeleteOptions>, WriteConfigurable<DeleteOptions>, CollectionConfigurable<DeleteOptions> {
+    implements WriteConfigurable<DeleteOptions>, CollectionConfigurable<DeleteOptions> {
     private boolean multi;
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
-    private ClientSession clientSession;
     private String collection;
 
     /**
@@ -56,19 +53,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
     public DeleteOptions(DeleteOptions that) {
         this.multi = that.multi;
         this.writeConcern = that.writeConcern;
-        this.clientSession = that.clientSession;
         this.collection = that.collection;
-    }
-
-    @Override
-    public DeleteOptions clientSession(@Nullable ClientSession clientSession) {
-        this.clientSession = clientSession;
-        return this;
-    }
-
-    @Override
-    public ClientSession clientSession() {
-        return clientSession;
     }
 
     @Override

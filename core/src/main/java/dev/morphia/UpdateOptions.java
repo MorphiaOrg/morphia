@@ -17,12 +17,10 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.query.filters.Filter;
 import org.bson.BsonValue;
@@ -41,10 +39,9 @@ import java.util.List;
  * @since 1.3
  */
 public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
-    implements SessionConfigurable<UpdateOptions>, WriteConfigurable<UpdateOptions>, CollectionConfigurable<UpdateOptions> {
+    implements WriteConfigurable<UpdateOptions>, CollectionConfigurable<UpdateOptions> {
     private WriteConcern writeConcern;
     private boolean multi;
-    private ClientSession clientSession;
     private String collection;
 
     /**
@@ -67,18 +64,6 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
         arrayFilters(arrayFilters);
 
         return this;
-    }
-
-    @Override
-    public UpdateOptions clientSession(@Nullable ClientSession clientSession) {
-        this.clientSession = clientSession;
-        return this;
-    }
-
-    @Override
-    @Nullable
-    public ClientSession clientSession() {
-        return clientSession;
     }
 
     @Override

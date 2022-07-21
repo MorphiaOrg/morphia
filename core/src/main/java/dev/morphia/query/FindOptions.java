@@ -21,7 +21,6 @@ import com.mongodb.DBObject;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.assertions.Assertions;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
@@ -29,7 +28,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.internal.ReadConfigurable;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
@@ -54,8 +52,7 @@ import static dev.morphia.internal.MorphiaInternals.tryInvoke;
  * @since 1.3
  */
 @SuppressWarnings("deprecation")
-public final class FindOptions implements SessionConfigurable<FindOptions>, ReadConfigurable<FindOptions>,
-                                              CollectionConfigurable<FindOptions> {
+public final class FindOptions implements ReadConfigurable<FindOptions>, CollectionConfigurable<FindOptions> {
     private Boolean allowDiskUse;
     private int batchSize;
     private int limit;
@@ -80,7 +77,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     private ReadPreference readPreference;
     private Projection projection;
     private String queryLogId;
-    private ClientSession clientSession;
     private String collection;
 
     /**
@@ -166,28 +162,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     }
 
     /**
-     * Set the client session to use for the insert.
-     *
-     * @param clientSession the client session
-     * @return this
-     * @since 2.0
-     */
-    public FindOptions clientSession(ClientSession clientSession) {
-        this.clientSession = clientSession;
-        return this;
-    }
-
-    /**
-     * The client session to use for the insertion.
-     *
-     * @return the client session
-     * @since 2.0
-     */
-    public ClientSession clientSession() {
-        return clientSession;
-    }
-
-    /**
      * Sets the collation to use
      *
      * @param collation the collation
@@ -270,7 +244,6 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
         this.readPreference = original.readPreference;
         this.projection = original.projection;
         this.queryLogId = original.queryLogId;
-        this.clientSession = original.clientSession;
 
         return this;
     }
@@ -434,7 +407,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
     public int hashCode() {
         return Objects.hash(allowDiskUse, batchSize, limit, maxTimeMS, maxAwaitTimeMS, skip, sort, cursorType, noCursorTimeout, oplogReplay,
             partial, collation, comment, hint, hintString, max, min, returnKey, showRecordId, readConcern, readPreference, projection,
-            queryLogId, clientSession);
+            queryLogId);
     }
 
     @Override
@@ -453,7 +426,7 @@ public final class FindOptions implements SessionConfigurable<FindOptions>, Read
                && Objects.equals(comment, that.comment) && Objects.equals(hint, that.hint) && Objects.equals(hintString, that.hintString)
                && Objects.equals(max, that.max) && Objects.equals(min, that.min) && Objects.equals(readConcern, that.readConcern)
                && Objects.equals(readPreference, that.readPreference) && Objects.equals(projection, that.projection)
-               && Objects.equals(queryLogId, that.queryLogId) && Objects.equals(clientSession, that.clientSession);
+               && Objects.equals(queryLogId, that.queryLogId);
     }
 
     /**

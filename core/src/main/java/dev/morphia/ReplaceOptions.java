@@ -17,11 +17,8 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.BsonValue;
 import org.bson.conversions.Bson;
@@ -31,47 +28,13 @@ import org.bson.conversions.Bson;
  *
  * @since 2.3
  */
-public class ReplaceOptions extends com.mongodb.client.model.ReplaceOptions implements SessionConfigurable<ReplaceOptions>,
-                                                                                           WriteConfigurable<ReplaceOptions> {
+public class ReplaceOptions extends com.mongodb.client.model.ReplaceOptions implements WriteConfigurable<ReplaceOptions> {
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
-    private ClientSession clientSession;
 
     /**
      * Creates a new options wrapper
      */
     public ReplaceOptions() {
-    }
-
-    /**
-     * @param that the options to copy
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public ReplaceOptions(ReplaceOptions that) {
-        upsert(that.isUpsert());
-        bypassDocumentValidation(that.getBypassDocumentValidation());
-        collation(that.getCollation());
-        hint(that.getHint());
-        hintString(this.getHintString());
-        comment(this.getComment());
-        Bson let = that.getLet();
-        if (let != null) {
-            let(let);
-        }
-
-        this.writeConcern = that.writeConcern;
-        this.clientSession = that.clientSession;
-    }
-
-    @Override
-    public ReplaceOptions clientSession(@Nullable ClientSession clientSession) {
-        this.clientSession = clientSession;
-        return this;
-    }
-
-    @Override
-    public ClientSession clientSession() {
-        return clientSession;
     }
 
     @Override
@@ -99,13 +62,13 @@ public class ReplaceOptions extends com.mongodb.client.model.ReplaceOptions impl
     }
 
     @Override
-    public ReplaceOptions hint(Bson hint) {
+    public ReplaceOptions hint(@Nullable Bson hint) {
         super.hint(hint);
         return this;
     }
 
     @Override
-    public ReplaceOptions hintString(String hint) {
+    public ReplaceOptions hintString(@Nullable String hint) {
         super.hintString(hint);
         return this;
     }

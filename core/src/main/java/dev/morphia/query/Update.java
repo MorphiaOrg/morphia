@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.DatastoreImpl;
@@ -55,16 +54,12 @@ public class Update<T> extends UpdateBase<T> {
             }
         }
 
-        ClientSession session = getDatastore().findSession(options);
         MongoCollection<T> mongoCollection = options.prepare(getCollection(), getDatastore().getDatabase());
 
         if (options.multi()) {
-            return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)
-                                   : mongoCollection.updateMany(session, queryObject, updateOperations, options);
-
+            return getDatastore().operations().updateMany(mongoCollection, queryObject, updateOperations, options);
         } else {
-            return session == null ? mongoCollection.updateOne(queryObject, updateOperations, options)
-                                   : mongoCollection.updateOne(session, queryObject, updateOperations, options);
+            return getDatastore().operations().updateOne(mongoCollection, queryObject, updateOperations, options);
         }
     }
 }

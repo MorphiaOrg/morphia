@@ -1,13 +1,11 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.lang.Nullable;
 import dev.morphia.internal.CollectionConfigurable;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import org.bson.BsonValue;
 import org.bson.Document;
@@ -21,29 +19,10 @@ import java.util.concurrent.TimeUnit;
  *
  * @since 2.0
  */
-public class ModifyOptions extends FindOneAndUpdateOptions implements SessionConfigurable<ModifyOptions>,
-                                                                          WriteConfigurable<ModifyOptions>,
+public class ModifyOptions extends FindOneAndUpdateOptions implements WriteConfigurable<ModifyOptions>,
                                                                           CollectionConfigurable<ModifyOptions> {
     private WriteConcern writeConcern;
-    private ClientSession clientSession;
     private String collection;
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ModifyOptions clientSession(ClientSession clientSession) {
-        this.clientSession = clientSession;
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ClientSession clientSession() {
-        return clientSession;
-    }
 
     /**
      * {@inheritDoc}

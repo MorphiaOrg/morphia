@@ -2,7 +2,6 @@ package dev.morphia.query;
 
 
 import com.mongodb.ExplainVerbosity;
-import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -129,9 +128,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public long count(CountOptions options) {
-        ClientSession session = datastore.findSession(options);
-        return session == null ? datastore.configureCollection(options, collection).countDocuments(getQueryDocument(), options)
-                               : datastore.configureCollection(options, collection).countDocuments(session, getQueryDocument(), options);
+        return datastore.operations().countDocuments(datastore.configureCollection(options, collection), getQueryDocument(), options);
     }
 
     @Override
@@ -153,16 +150,11 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public DeleteResult delete(DeleteOptions options) {
-        ClientSession session = datastore.findSession(options);
         MongoCollection<T> collection = datastore.configureCollection(options, this.collection);
         if (options.multi()) {
-            return session == null
-                   ? collection.deleteMany(getQueryDocument(), options)
-                   : collection.deleteMany(session, getQueryDocument(), options);
+            return datastore.operations().deleteMany(collection, getQueryDocument(), options);
         } else {
-            return session == null
-                   ? collection.deleteOne(getQueryDocument(), options)
-                   : collection.deleteOne(session, getQueryDocument(), options);
+            return datastore.operations().deleteOne(collection, getQueryDocument(), options);
         }
     }
 
@@ -255,11 +247,8 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T findAndDelete(FindAndDeleteOptions options) {
-        ClientSession session = datastore.findSession(options);
         MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
-        return session == null
-               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
-               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
+        return datastore.operations().findOneAndDelete(mongoCollection, getQueryDocument(), options);
     }
 
     /**
@@ -494,11 +483,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
-        ClientSession clientSession = datastore.findSession(options);
-
-        return clientSession != null
-               ? collection.find(clientSession, query)
-               : collection.find(query);
+        return datastore.operations().find(collection, query);
     }
 
     private <E> MongoCursor<E> prepareCursor(FindOptions options, MongoCollection<E> collection) {

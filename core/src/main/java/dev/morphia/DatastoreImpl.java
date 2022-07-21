@@ -5,13 +5,15 @@ import com.mongodb.MongoCommandException;
 import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
-import com.mongodb.client.ClientSession;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationOptions;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertManyResult;
+import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
@@ -26,7 +28,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.CollectionConfiguration;
 import dev.morphia.internal.ReadConfigurable;
-import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.mapping.EntityModelImporter;
 import dev.morphia.mapping.Mapper;
@@ -41,13 +42,14 @@ import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+import dev.morphia.query.CountOptions;
+import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
 import dev.morphia.sofia.Sofia;
-import dev.morphia.transactions.MorphiaSession;
 import dev.morphia.transactions.MorphiaSessionImpl;
 import dev.morphia.transactions.MorphiaTransaction;
 import org.bson.Document;
@@ -89,6 +91,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final CodecRegistry codecRegistry;
     private final List<MorphiaCodecProvider> morphiaCodecProviders = new ArrayList<>();
     private MongoDatabase database;
+    private DatastoreOperations operations;
 
     protected DatastoreImpl(Mapper mapper, MongoClient mongoClient, String dbName) {
         this.database = mongoClient.getDatabase(dbName);
@@ -117,6 +120,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.codecRegistry = fromProviders(providers);
 
         this.database = database.withCodecRegistry(this.codecRegistry);
+        operations = new CollectionOperations();
     }
 
     /**
@@ -132,6 +136,51 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mapper = datastore.mapper;
         this.queryFactory = datastore.queryFactory;
         this.codecRegistry = datastore.codecRegistry;
+    }
+
+    @Override
+    public <T> void insert(T entity, InsertOneOptions options) {
+        MongoCollection<T> collection = (MongoCollection<T>) configureCollection(options, getCollection(entity.getClass()));
+        VersionBumpInfo info = updateVersioning(entity);
+
+        try {
+            operations.insertOne(collection, entity, options);
+        } catch (MongoWriteException e) {
+            info.rollbackVersion();
+            throw e;
+        }
+    }
+
+    @Override
+    public <T> void insert(List<T> entities, InsertManyOptions options) {
+        if (entities.isEmpty()) {
+            return;
+        }
+
+        Map<Class<?>, List<T>> grouped = groupByType(entities, model -> false);
+
+        String alternate = options.collection();
+        if (alternate != null && grouped.size() > 1) {
+            Sofia.logInsertManyAlternateCollection();
+        }
+
+        grouped.entrySet().stream()
+               .forEach(entry -> {
+                   List<T> list = entry.getValue();
+
+                   List<VersionBumpInfo> infos = list.stream()
+                                                     .map(this::updateVersioning)
+                                                     .collect(Collectors.toList());
+
+                   try {
+                       MongoCollection<T> collection = configureCollection(options,
+                           (MongoCollection<T>) getCollection(entry.getKey()));
+                       operations.insertMany(collection, list, options);
+                   } catch (MongoException e) {
+                       infos.forEach(VersionBumpInfo::rollbackVersion);
+                       throw e;
+                   }
+               });
     }
 
     @Override
@@ -252,13 +301,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @Nullable
-    public ClientSession findSession(SessionConfigurable<?> configurable) {
-        ClientSession clientSession = configurable.clientSession();
-        return clientSession != null ? clientSession : getSession();
-    }
-
-    @Override
     public CodecRegistry getCodecRegistry() {
         return codecRegistry;
     }
@@ -353,68 +395,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> void insert(T entity, InsertOneOptions options) {
-        ClientSession clientSession = findSession(options);
-
-        MongoCollection<T> collection = (MongoCollection<T>) configureCollection(options, getCollection(entity.getClass()));
-
-        VersionBumpInfo info = updateVersioning(entity);
-
-        try {
-            if (clientSession == null) {
-                collection.insertOne(entity, options.options());
-            } else {
-                collection.insertOne(clientSession, entity, options.options());
-            }
-        } catch (MongoWriteException e) {
-            info.rollbackVersion();
-            throw e;
-        }
-    }
-
-    @Override
-    public <T> T merge(T entity) {
-        return merge(entity, new InsertOneOptions());
-    }
-
-    @Override
-    public <T> void insert(List<T> entities, InsertManyOptions options) {
-        if (entities.isEmpty()) {
-            return;
-        }
-
-        Map<Class<?>, List<T>> grouped = groupByType(entities, model -> false);
-
-        String alternate = options.collection();
-        if (alternate != null && grouped.size() > 1) {
-            Sofia.logInsertManyAlternateCollection();
-        }
-
-        grouped.entrySet().stream()
-               .forEach(entry -> {
-                   List<T> list = entry.getValue();
-
-                   List<VersionBumpInfo> infos = list.stream()
-                                                     .map(this::updateVersioning)
-                                                     .collect(Collectors.toList());
-
-                   try {
-                       MongoCollection<T> collection = configureCollection(options,
-                           (MongoCollection<T>) getCollection(entry.getKey()));
-                       ClientSession clientSession = findSession(options);
-                       if (clientSession == null) {
-                           collection.insertMany(list, options.options());
-                       } else {
-                           collection.insertMany(clientSession, list, options.options());
-                       }
-                   } catch (MongoException e) {
-                       infos.forEach(VersionBumpInfo::rollbackVersion);
-                       throw e;
-                   }
-               });
-    }
-
-    @Override
     public <T> T merge(T entity, InsertOneOptions options) {
         final Object id = mapper.getId(entity);
         if (id == null) {
@@ -424,8 +404,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         VersionBumpInfo info = updateVersioning(entity);
 
         final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
-        if (info.versioned && info.newVersion != -1) {
-            query.filter(eq(info.versionProperty.getMappedName(), info.oldVersion));
+        if (info.versioned() && info.newVersion() != -1) {
+            query.filter(eq(info.versionProperty().getMappedName(), info.oldVersion()));
         }
 
         Update<T> update;
@@ -436,12 +416,10 @@ public class DatastoreImpl implements AdvancedDatastore {
                 (MorphiaCodec) codecRegistry.get(entity.getClass())))
                          .encode(entity);
         }
-        UpdateResult execute = update
-                                   .execute(new UpdateOptions()
-                                                .clientSession(findSession(options))
-                                                .writeConcern(options.writeConcern()));
+        UpdateResult execute = update.execute(new UpdateOptions()
+                                                  .writeConcern(options.writeConcern()));
         if (execute.getModifiedCount() != 1) {
-            if (info.versioned) {
+            if (info.versioned()) {
                 info.rollbackVersion();
                 throw new VersionMismatchException(entity.getClass(), id);
             }
@@ -452,34 +430,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> Query<T> queryByExample(T example) {
-        return queryFactory.createQuery(this, (Class<T>) example.getClass(), toDocument(example));
-    }
-
-    @Override
-    public <T> void refresh(T entity) {
-        Codec<T> refreshCodec = getRefreshCodec(entity);
-
-        MongoCollection<?> collection = getCollection(entity.getClass());
-        PropertyModel idField = mapper.getEntityModel(entity.getClass())
-                                      .getIdProperty();
-        if (idField == null) {
-            throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
-        }
-
-        Document id = collection.find(new Document("_id", idField.getValue(entity)), Document.class)
-                                .iterator()
-                                .next();
-
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+    public <T> T merge(T entity) {
+        return merge(entity, new InsertOneOptions());
     }
 
     @Override
     public <T> T replace(T entity, ReplaceOptions options) {
-        MongoCollection collection = getCollection(entity.getClass());
-        ClientSession clientSession = findSession(options);
-        collection = configureCollection(options, collection);
+        MongoCollection collection = configureCollection(options, getCollection(entity.getClass()));
 
         Object id = mapper.findIdProperty(entity.getClass()).getValue(entity);
         if (id == null) {
@@ -488,14 +445,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         VersionBumpInfo info = updateVersioning(entity);
 
         try {
-            if (!info.versioned || info.newVersion != 1) {
+            if (!info.versioned() || info.newVersion() != 1) {
                 Document filter = new Document("_id", id);
-                if (info.versioned) {
-                    filter.put(info.versionProperty.getMappedName(), info.oldVersion);
+                if (info.versioned()) {
+                    filter.put(info.versionProperty().getMappedName(), info.oldVersion());
                 }
-                UpdateResult updateResult = clientSession == null
-                                            ? collection.replaceOne(filter, entity, options)
-                                            : collection.replaceOne(clientSession, filter, entity, options);
+                UpdateResult updateResult = operations.replaceOne(collection, entity, filter, options);
 
                 if (updateResult.getModifiedCount() != 1) {
                     info.rollbackVersion();
@@ -536,19 +491,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         for (Entry<Class<?>, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = configureCollection(options,
-                (MongoCollection<T>) getCollection(entry.getKey()));
-            ClientSession clientSession = options.clientSession();
-            if (clientSession == null) {
-                collection.insertMany(entry.getValue(), options.options());
-            } else {
-                collection.insertMany(clientSession, entry.getValue(), options.options());
-            }
+            MongoCollection<T> collection = configureCollection(options, (MongoCollection<T>) getCollection(entry.getKey()));
+            operations.insertMany(collection, entry.getValue(), options);
         }
 
         InsertOneOptions insertOneOptions = new InsertOneOptions()
                                                 .bypassDocumentValidation(options.bypassDocumentValidation())
-                                                .clientSession(findSession(options))
                                                 .collection(alternate)
                                                 .writeConcern(options.writeConcern());
         for (T entity : list) {
@@ -558,19 +506,53 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public <T> Query<T> queryByExample(T example) {
+        return queryFactory.createQuery(this, (Class<T>) example.getClass(), toDocument(example));
+    }
+
+    @Override
+    public <T> void refresh(T entity) {
+        Codec<T> refreshCodec = getRefreshCodec(entity);
+
+        MongoCollection<?> collection = getCollection(entity.getClass());
+        PropertyModel idField = mapper.getEntityModel(entity.getClass())
+                                      .getIdProperty();
+        if (idField == null) {
+            throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
+        }
+
+        Document id = collection.find(new Document("_id", idField.getValue(entity)), Document.class)
+                                .iterator()
+                                .next();
+
+        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+    }
+
+    @Override
+    public MorphiaSessionImpl startSession() {
+        return new MorphiaSessionImpl(this, mongoClient.startSession());
+    }
+
+    @Override
+    public MorphiaSessionImpl startSession(ClientSessionOptions options) {
+        return new MorphiaSessionImpl(this, mongoClient.startSession(options));
+    }
+
+    @Override
     public <T> T save(T entity, InsertOneOptions options) {
         save(getCollection(entity.getClass()), entity, options);
         return entity;
     }
 
-    @Override
-    public MorphiaSession startSession() {
-        return new MorphiaSessionImpl(this, mongoClient.startSession());
+    public DatastoreOperations operations() {
+        return operations;
     }
 
-    @Override
-    public MorphiaSession startSession(ClientSessionOptions options) {
-        return new MorphiaSessionImpl(this, mongoClient.startSession(options));
+    protected <T> T doTransaction(MorphiaSessionImpl morphiaSession, MorphiaTransaction<T> body) {
+        try (morphiaSession) {
+            return morphiaSession.getSession().withTransaction(() -> body.execute(morphiaSession));
+        }
     }
 
     @Override
@@ -634,31 +616,41 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    /**
-     * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
-     *
-     * @param entity The POJO
-     * @return the Document
-     * @morphia.internal
-     * @since 2.3
-     */
-    @MorphiaInternal
-    public Document toDocument(Object entity) {
-        final Class<?> type = mapper.getEntityModel(entity.getClass()).getType();
-
-        DocumentWriter writer = new DocumentWriter(mapper);
-        ((Codec) codecRegistry.get(type)).encode(writer, entity, EncoderContext.builder().build());
-
-        return writer.getDocument();
+    protected DatastoreImpl operations(DatastoreOperations operations) {
+        this.operations = operations;
+        return this;
     }
 
-    private <T> T doTransaction(MorphiaSession morphiaSession, MorphiaTransaction<T> body) {
-        try (morphiaSession) {
-            ClientSession session = morphiaSession.getSession();
-            if (session == null) {
-                throw new IllegalStateException("No session could be found for the transaction.");
+    private <T> void save(MongoCollection collection, T entity, InsertOneOptions options) {
+        collection = configureCollection(options, collection);
+
+        Object id = mapper.findIdProperty(entity.getClass()).getValue(entity);
+        VersionBumpInfo info = updateVersioning(entity);
+
+        try {
+            if (id == null || info.versioned() && info.newVersion() == 1) {
+                operations.insertOne(collection, entity, options);
+            } else {
+                ReplaceOptions updateOptions = new ReplaceOptions()
+                                                   .bypassDocumentValidation(options.bypassDocumentValidation())
+                                                   .upsert(true);
+                Document filter = new Document("_id", id);
+                if (info.versioned()) {
+                    filter.put(info.versionProperty().getMappedName(), info.oldVersion());
+                }
+                UpdateResult updateResult = operations.replaceOne(collection, entity, filter, updateOptions);
+
+                if (info.versioned() && updateResult.getModifiedCount() != 1) {
+                    info.rollbackVersion();
+                    throw new VersionMismatchException(entity.getClass(), id);
+                }
             }
-            return session.withTransaction(() -> body.execute(morphiaSession));
+        } catch (MongoWriteException e) {
+            if (info.versioned()) {
+                info.rollbackVersion();
+                throw new VersionMismatchException(entity.getClass(), id);
+            }
+            throw e;
         }
     }
 
@@ -731,44 +723,22 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private <T> void save(MongoCollection collection, T entity, InsertOneOptions options) {
-        ClientSession clientSession = findSession(options);
-        collection = configureCollection(options, collection);
+    /**
+     * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
+     *
+     * @param entity The POJO
+     * @return the Document
+     * @morphia.internal
+     * @since 2.3
+     */
+    @MorphiaInternal
+    private Document toDocument(Object entity) {
+        final Class<?> type = mapper.getEntityModel(entity.getClass()).getType();
 
-        Object id = mapper.findIdProperty(entity.getClass()).getValue(entity);
-        VersionBumpInfo info = updateVersioning(entity);
+        DocumentWriter writer = new DocumentWriter(mapper);
+        ((Codec) codecRegistry.get(type)).encode(writer, entity, EncoderContext.builder().build());
 
-        try {
-            if (id == null || info.versioned && info.newVersion == 1) {
-                if (clientSession == null) {
-                    collection.insertOne(entity, options.options());
-                } else {
-                    collection.insertOne(clientSession, entity, options.options());
-                }
-            } else {
-                com.mongodb.client.model.ReplaceOptions updateOptions = new com.mongodb.client.model.ReplaceOptions()
-                                                                            .bypassDocumentValidation(options.bypassDocumentValidation())
-                                                                            .upsert(true);
-                Document filter = new Document("_id", id);
-                if (info.versioned) {
-                    filter.put(info.versionProperty.getMappedName(), info.oldVersion);
-                }
-                UpdateResult updateResult = clientSession == null
-                                            ? collection.replaceOne(filter, entity, updateOptions)
-                                            : collection.replaceOne(clientSession, filter, entity, updateOptions);
-
-                if (info.versioned && updateResult.getModifiedCount() != 1) {
-                    info.rollbackVersion();
-                    throw new VersionMismatchException(entity.getClass(), id);
-                }
-            }
-        } catch (MongoWriteException e) {
-            if (info.versioned) {
-                info.rollbackVersion();
-                throw new VersionMismatchException(entity.getClass(), id);
-            }
-            throw e;
-        }
+        return writer.getDocument();
     }
 
     private <T> VersionBumpInfo updateVersioning(T entity) {
@@ -796,33 +766,109 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    private static class VersionBumpInfo {
-        private final Long oldVersion;
-        private final boolean versioned;
-        private final Long newVersion;
-        private final PropertyModel versionProperty;
-        private final Object entity;
+    public abstract static class DatastoreOperations {
+        public abstract <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options);
 
-        private VersionBumpInfo() {
-            versioned = false;
-            newVersion = null;
-            oldVersion = null;
-            versionProperty = null;
-            entity = null;
+        public abstract <T> DeleteResult deleteMany(MongoCollection<T> collection, Document queryDocument, DeleteOptions options);
+
+        public abstract <T> DeleteResult deleteOne(MongoCollection<T> collection, Document queryDocument, DeleteOptions options);
+
+        public abstract <E> FindIterable<E> find(MongoCollection<E> collection, Document query);
+
+        @Nullable
+        public abstract <T> T findOneAndDelete(MongoCollection<T> mongoCollection, Document queryDocument, FindAndDeleteOptions options);
+
+        @Nullable
+        public abstract <T> T findOneAndUpdate(MongoCollection<T> collection, Document toDocument, Document update, ModifyOptions options);
+
+        public abstract <T> InsertManyResult insertMany(MongoCollection<T> collection, List<T> list, InsertManyOptions options);
+
+        public abstract <T> InsertOneResult insertOne(MongoCollection<T> collection, T entity, InsertOneOptions options);
+
+        public abstract <T> UpdateResult replaceOne(MongoCollection<T> collection, T entity, Document filter, ReplaceOptions options);
+
+        public abstract <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+                                                    UpdateOptions options);
+
+        public abstract <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+                                                    UpdateOptions options);
+
+        public abstract <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+                                                   UpdateOptions options);
+
+        public abstract <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+                                                   UpdateOptions options);
+
+    }
+
+    private class CollectionOperations extends DatastoreOperations {
+        @Override
+        public <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options) {
+            return collection.countDocuments(query, options);
         }
 
-        private <T> VersionBumpInfo(T entity, PropertyModel versionProperty, @Nullable Long oldVersion, Long newVersion) {
-            this.entity = entity;
-            versioned = true;
-            this.newVersion = newVersion;
-            this.oldVersion = oldVersion;
-            this.versionProperty = versionProperty;
+        @Override
+        public <T> DeleteResult deleteMany(MongoCollection<T> collection, Document queryDocument, DeleteOptions options) {
+            return collection.deleteMany(queryDocument, options);
         }
 
-        private void rollbackVersion() {
-            if (entity != null && versionProperty != null) {
-                versionProperty.setValue(entity, oldVersion);
-            }
+        @Override
+        public <T> DeleteResult deleteOne(MongoCollection<T> collection, Document queryDocument, DeleteOptions options) {
+            return collection.deleteOne(queryDocument, options);
+        }
+
+        @Override
+        public <E> FindIterable<E> find(MongoCollection<E> collection, Document query) {
+            return collection.find(query);
+        }
+
+        @Override
+        public <T> T findOneAndDelete(MongoCollection<T> mongoCollection, Document queryDocument, FindAndDeleteOptions options) {
+            return mongoCollection.findOneAndDelete(queryDocument, options);
+        }
+
+        @Override
+        public <T> T findOneAndUpdate(MongoCollection<T> collection, Document query, Document update, ModifyOptions options) {
+            return collection.findOneAndUpdate(query, update, options);
+        }
+
+        @Override
+        public <T> InsertManyResult insertMany(MongoCollection<T> collection, List<T> list, InsertManyOptions options) {
+            return collection.insertMany(list, options.options());
+        }
+
+        @Override
+        public <T> InsertOneResult insertOne(MongoCollection<T> collection, T entity, InsertOneOptions options) {
+            return collection.insertOne(entity, options.options());
+        }
+
+        @Override
+        public <T> UpdateResult replaceOne(MongoCollection<T> collection, T entity, Document filter, ReplaceOptions options) {
+            return collection.replaceOne(filter, entity, options);
+        }
+
+        @Override
+        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+                                           UpdateOptions options) {
+            return collection.updateMany(queryObject, updateOperations, options);
+        }
+
+        @Override
+        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+                                          UpdateOptions options) {
+            return collection.updateOne(queryObject, updateOperations, options);
+        }
+
+        @Override
+        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+                                           UpdateOptions options) {
+            return collection.updateMany(queryObject, updateOperations, options);
+        }
+
+        @Override
+        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+                                          UpdateOptions options) {
+            return collection.updateOne(queryObject, updateOperations, options);
         }
     }
 }
