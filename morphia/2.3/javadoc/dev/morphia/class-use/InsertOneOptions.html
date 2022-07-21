@@ -325,10 +325,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colFirst" scope="row"><a href="#dev.morphia">dev.morphia</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.transactions">dev.morphia.transactions</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 </tbody>
 </table>
 </li>
@@ -356,32 +352,27 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#clientSession(com.mongodb.client.ClientSession)">clientSession</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">ClientSession</a>&nbsp;clientSession)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#collection(java.lang.String)">collection</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#comment(java.lang.String)">comment</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;comment)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#comment(org.bson.BsonValue)">comment</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonValue.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonValue</a>&nbsp;comment)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#unsetMissing(boolean)">unsetMissing</a></span>​(boolean&nbsp;unset)</code></th>
 <td class="colLast">
 <div class="block">Applies the rules for storing null/empty values for fields no present in the object to be merged.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">InsertOneOptions.</span><code><span class="memberNameLink"><a href="../InsertOneOptions.html#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">WriteConcern</a>&nbsp;writeConcern)</code></th>
 <td class="colLast">
@@ -413,6 +404,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>abstract &lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/result/InsertOneResult.html?is-external=true" title="class or interface in com.mongodb.client.result" class="externalLink">InsertOneResult</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.DatastoreOperations.</span><code><span class="memberNameLink"><a href="../DatastoreImpl.DatastoreOperations.html#insertOne(com.mongodb.client.MongoCollection,T,dev.morphia.InsertOneOptions)">insertOne</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;collection,
+         T&nbsp;entity,
+         <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../Datastore.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
      <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -420,13 +418,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../DatastoreImpl.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
      <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../Datastore.html#save(T,dev.morphia.InsertOneOptions)">save</a></span>​(T&nbsp;entity,
     <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -434,7 +432,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Saves an entity (Object) and updates the @Id field</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../DatastoreImpl.html#save(T,dev.morphia.InsertOneOptions)">save</a></span>​(T&nbsp;entity,
     <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -451,41 +449,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tbody><tbody>
 <tr class="altColor">
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../InsertOneOptions.html#%3Cinit%3E(dev.morphia.InsertOneOptions)">InsertOneOptions</a></span>​(<a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;that)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="dev.morphia.transactions">
-<!--   -->
-</a>
-<h3>Uses of <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a> in <a href="../transactions/package-summary.html">dev.morphia.transactions</a></h3>
-<table class="useSummary">
-<caption><span>Methods in <a href="../transactions/package-summary.html">dev.morphia.transactions</a> with parameters of type <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaSessionImpl.</span><code><span class="memberNameLink"><a href="../transactions/MorphiaSessionImpl.html#insert(T,dev.morphia.InsertOneOptions)">insert</a></span>​(T&nbsp;entity,
-      <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaSessionImpl.</span><code><span class="memberNameLink"><a href="../transactions/MorphiaSessionImpl.html#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
-     <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MorphiaSessionImpl.</span><code><span class="memberNameLink"><a href="../transactions/MorphiaSessionImpl.html#save(T,dev.morphia.InsertOneOptions)">save</a></span>​(T&nbsp;entity,
-    <a href="../InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
