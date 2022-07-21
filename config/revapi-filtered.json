@@ -408,6 +408,66 @@
           "code": "java.method.addedToInterface",
           "new": "method <T> java.util.List<T> dev.morphia.Datastore::replace(java.util.List<T>, dev.morphia.ReplaceOptions)",
           "justification": "new feature"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.noLongerImplementsInterface",
+          "interface": "dev.morphia.internal.SessionConfigurable<dev.morphia.query.FindOptions>",
+          "justification": "internal type"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.noLongerImplementsInterface",
+          "interface": "dev.morphia.internal.SessionConfigurable<dev.morphia.ModifyOptions>",
+          "justification": "internal type"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.noLongerImplementsInterface",
+          "interface": "dev.morphia.internal.SessionConfigurable<dev.morphia.DeleteOptions>",
+          "justification": "internal type"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.noLongerImplementsInterface",
+          "interface": "dev.morphia.internal.SessionConfigurable<dev.morphia.InsertManyOptions>",
+          "justification": "internal type"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.noLongerImplementsInterface",
+          "interface": "dev.morphia.internal.SessionConfigurable<dev.morphia.InsertOneOptions>",
+          "justification": "internal type"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.noLongerImplementsInterface",
+          "interface": "dev.morphia.internal.SessionConfigurable<dev.morphia.UpdateOptions>",
+          "justification": "internal type"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.noLongerImplementsInterface",
+          "interface": "dev.morphia.internal.SessionConfigurable<dev.morphia.query.CountOptions>",
+          "justification": "internal type"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.noLongerImplementsInterface",
+          "interface": "dev.morphia.internal.SessionConfigurable<dev.morphia.query.FindAndDeleteOptions>",
+          "justification": "internal type"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "methodName": "clientSession",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method com.mongodb.client.ClientSession dev.morphia.Datastore::getSession()",
+          "justification": "internal method"
         }
       ]
     }
