@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.stages;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.Document;
 
 /**
@@ -13,6 +14,7 @@ import org.bson.Document;
 public class Out<O> extends Stage {
     private Class<?> type;
     private String collection;
+    private String database;
 
     protected Out() {
         super("$out");
@@ -45,8 +47,32 @@ public class Out<O> extends Stage {
      * @return the collection name
      * @morphia.internal
      */
-    public String getCollection() {
+    @MorphiaInternal
+    public String collection() {
         return collection;
+    }
+
+    /**
+     * @return the database name
+     * @morphia.internal
+     * @since 2.3
+     */
+    @Nullable
+    @MorphiaInternal
+    public String database() {
+        return database;
+    }
+
+    /**
+     * Specifies an alternate database for the output.
+     *
+     * @param database the name of the database to use
+     * @return this
+     * @since 2.3
+     */
+    public Out<O> database(String database) {
+        this.database = database;
+        return this;
     }
 
     /**
@@ -54,7 +80,8 @@ public class Out<O> extends Stage {
      * @morphia.internal
      */
     @Nullable
-    public Class<?> getType() {
+    @MorphiaInternal
+    public Class<?> type() {
         return type;
     }
 

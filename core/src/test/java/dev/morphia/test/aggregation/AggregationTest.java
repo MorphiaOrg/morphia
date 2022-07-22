@@ -448,6 +448,29 @@ public class AggregationTest extends TestBase {
     }
 
     @Test
+    public void testOutAlternateDatabase() {
+        getDs().save(asList(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
+            new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),
+            new Book("Eclogues", "Dante", 2, "Italian", ""),
+            new Book("The Odyssey", "Homer", 10, "Classic", "Mythology", "Sequel"),
+            new Book("Iliad", "Homer", 10, "Mythology", "Trojan War", "No Sequel")));
+
+        getDs().aggregate(Book.class)
+               .match(eq("author", "Homer"))
+               .group(group(id("author"))
+                          .field("copies", sum(field("copies"))))
+               .out(to("testAverage")
+                        .database("homer"));
+
+        try (MongoCursor<Document> testAverage = getMongoClient()
+                                                     .getDatabase("homer")
+                                                     .getCollection("testAverage")
+                                                     .find().iterator()) {
+            Assert.assertEquals(testAverage.next().get("copies"), 20);
+        }
+    }
+
+    @Test
     public void testSkip() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
             new Book("Divine Comedy", "Dante", 1),

@@ -235,7 +235,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public <O> void out(Out<O> out, AggregationOptions options) {
         addStage(out);
-        Class<?> type = out.getType();
+        Class<?> type = out.type();
         type = type != null ? type : Document.class;
         options.apply(getDocuments(), collection, type).toCollection();
     }
