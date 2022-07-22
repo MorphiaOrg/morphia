@@ -68,6 +68,7 @@ public class Out<O> extends Stage {
      *
      * @param database the name of the database to use
      * @return this
+     * @mongodb.server.release 4.4
      * @since 2.3
      */
     public Out<O> database(String database) {
