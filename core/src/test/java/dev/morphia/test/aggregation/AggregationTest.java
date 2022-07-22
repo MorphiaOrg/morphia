@@ -16,6 +16,7 @@
 
 package dev.morphia.test.aggregation;
 
+import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.BucketGranularity;
 import com.mongodb.client.model.Collation;
@@ -449,6 +450,7 @@ public class AggregationTest extends TestBase {
 
     @Test
     public void testOutAlternateDatabase() {
+        checkMinServerVersion(Version.valueOf("4.4.0"));
         getDs().save(asList(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
             new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),
             new Book("Eclogues", "Dante", 2, "Italian", ""),
