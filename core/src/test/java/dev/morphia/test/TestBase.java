@@ -24,6 +24,7 @@ import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
+import org.bson.UuidRepresentation;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -434,7 +435,9 @@ public abstract class TestBase {
             cluster.start();
             mongoClient = cluster.getClient(builder);
         } else {
-            mongoClient = MongoClients.create(builder.build());
+            mongoClient = MongoClients.create(builder
+                                                  .uuidRepresentation(UuidRepresentation.STANDARD)
+                                                  .build());
         }
     }
 }
