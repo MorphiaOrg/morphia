@@ -20,7 +20,9 @@ public final class Morphia {
      *
      * @param dbName the name of the database
      * @return a Datastore that you can use to interact with MongoDB
+     * @deprecated Please use {@link #createDatastore(MongoClient, String)}
      */
+    @Deprecated(forRemoval = true, since = "2.3")
     public static Datastore createDatastore(String dbName) {
         return createDatastore(dbName, MapperOptions.DEFAULT);
     }
@@ -31,7 +33,9 @@ public final class Morphia {
      * @param dbName  the name of the database
      * @param options the mapping options to use.
      * @return a Datastore that you can use to interact with MongoDB
+     * @deprecated Please use {@link #createDatastore(MongoClient, String, MapperOptions)}
      */
+    @Deprecated(forRemoval = true, since = "2.3")
     public static Datastore createDatastore(String dbName, MapperOptions options) {
         return createDatastore(MongoClients.create(MongoClientSettings.builder()
                                                                       .uuidRepresentation(options.getUuidRepresentation())

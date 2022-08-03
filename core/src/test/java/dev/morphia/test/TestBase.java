@@ -15,6 +15,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.lang.NonNull;
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
@@ -46,6 +47,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
@@ -60,7 +62,7 @@ public abstract class TestBase {
 
     private MapperOptions mapperOptions;
     private MongoDatabase database;
-    private Datastore datastore;
+    private DatastoreImpl datastore;
 
     public TestBase() {
         mapperOptions = MapperOptions.DEFAULT;
@@ -88,9 +90,9 @@ public abstract class TestBase {
         return database;
     }
 
-    public Datastore getDs() {
+    public DatastoreImpl getDs() {
         if (datastore == null) {
-            datastore = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME, mapperOptions);
+            datastore = (DatastoreImpl) Morphia.createDatastore(getMongoClient(), TEST_DB_NAME, mapperOptions);
         }
         return datastore;
     }
@@ -309,6 +311,13 @@ public abstract class TestBase {
 
     protected String toString(Document document) {
         return document.toJson(getDs().getCodecRegistry().get(Document.class));
+    }
+
+    protected void withClient(MongoClient client, Consumer<Datastore> block) {
+        MapperOptions previousOptions = mapperOptions;
+        try (client) {
+            block.accept(Morphia.createDatastore(client, TEST_DB_NAME));
+        }
     }
 
     protected void withOptions(MapperOptions options, Runnable block) {

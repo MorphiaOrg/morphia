@@ -98,6 +98,11 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
         }
 
         @Override
+        public Document runCommand(Document command) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
         public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
                                            UpdateOptions options) {
             return collection.updateMany(session, queryObject, updateOperations, options);

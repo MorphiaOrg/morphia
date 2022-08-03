@@ -60,8 +60,7 @@ public class ConstraintViolation {
      * @return the qualified name of the failing mapping
      */
     public String getPrefix() {
-        final String fn = (property != null) ? property.getName() : "";
-        return type.getType().getName() + "." + fn;
+        return type.getType().getName() + (property != null ? property.getName() + "." : "");
     }
 
     /**

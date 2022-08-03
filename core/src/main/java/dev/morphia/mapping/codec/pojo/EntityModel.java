@@ -11,6 +11,7 @@ import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
+import dev.morphia.annotations.ShardKeys;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.Mapper;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
 
 /**
  * A model of metadata about a type
@@ -49,6 +52,7 @@ public class EntityModel {
     private final Map<Class<? extends Annotation>, Annotation> annotations;
     private final Map<String, PropertyModel> propertyModelsByName;
     private final Map<String, PropertyModel> propertyModelsByMappedName;
+    private final List<PropertyModel> shardKeys;
     private final InstanceCreatorFactory creatorFactory;
     private final boolean discriminatorEnabled;
     private final String discriminatorKey;
@@ -84,8 +88,8 @@ public class EntityModel {
         this.propertyModelsByMappedName = new LinkedHashMap<>();
         builder.propertyModels().forEach(modelBuilder -> {
             PropertyModel model = modelBuilder
-                .owner(this)
-                .build();
+                                      .owner(this)
+                                      .build();
             propertyModelsByMappedName.put(model.getMappedName(), model);
             for (String name : modelBuilder.alternateNames()) {
                 if (propertyModelsByMappedName.put(name, model) != null) {
@@ -94,6 +98,16 @@ public class EntityModel {
             }
             propertyModelsByName.putIfAbsent(model.getName(), model);
         });
+
+        ShardKeys shardKeys = getAnnotation(ShardKeys.class);
+        if (shardKeys != null) {
+            this.shardKeys = stream(shardKeys.value())
+                                 .map(k -> getProperty(k.value()))
+                                 .filter(Objects::nonNull)
+                                 .collect(Collectors.toList());
+        } else {
+            this.shardKeys = emptyList();
+        }
 
         this.collectionName = builder.getCollectionName();
         creatorFactory = new InstanceCreatorFactoryImpl(this);
@@ -166,6 +180,10 @@ public class EntityModel {
             throw new MappingException(Sofia.noMappedCollection(getType().getName()));
         }
         return collectionName;
+    }
+
+    public List<PropertyModel> getShardKeys() {
+        return shardKeys;
     }
 
     /**

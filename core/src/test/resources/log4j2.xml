@@ -28,5 +28,8 @@
         <logger name="org.zeroturnaround" level="error">
             <AppenderRef ref="Console"/>
         </logger>
+        <logger name="com.antwerkz.bottlerocket" level="info">
+            <AppenderRef ref="Console"/>
+        </logger>
     </Loggers>
 </Configuration>

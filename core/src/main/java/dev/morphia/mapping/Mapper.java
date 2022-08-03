@@ -457,10 +457,9 @@ public class Mapper {
     public EntityModel register(EntityModel entityModel) {
         discriminatorLookup.addModel(entityModel);
         mappedEntities.put(entityModel.getType(), entityModel);
-        if (entityModel.getCollectionName() != null) {
-            mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                                      .add(entityModel);
-        }
+        entityModel.getCollectionName();
+        mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
+                                  .add(entityModel);
 
         if (!entityModel.isInterface()) {
             new MappingValidator()

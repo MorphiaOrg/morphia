@@ -10,6 +10,7 @@ import dev.morphia.mapping.validation.classrules.EntityAndEmbed;
 import dev.morphia.mapping.validation.classrules.EntityOrEmbed;
 import dev.morphia.mapping.validation.classrules.MultipleId;
 import dev.morphia.mapping.validation.classrules.MultipleVersions;
+import dev.morphia.mapping.validation.classrules.ShardKeyNames;
 import dev.morphia.mapping.validation.fieldrules.ContradictingAnnotations;
 import dev.morphia.mapping.validation.fieldrules.IdDoesNotMix;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceMissingDependencies;
@@ -84,6 +85,7 @@ public class MappingValidator {
         constraints.add(new LazyReferenceOnArray());
         constraints.add(new MapKeyTypeConstraint());
         constraints.add(new VersionMisuse());
+        constraints.add(new ShardKeyNames());
 
         constraints.add(new ContradictingAnnotations(Reference.class, Property.class));
 

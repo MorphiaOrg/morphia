@@ -163,17 +163,6 @@ public interface Datastore {
     void ensureIndexes();
 
     /**
-     * Ensures (creating if necessary) the indexes found during class mapping
-     *
-     * @param clazz the class from which to get the index definitions
-     * @param <T>   the type to index
-     * @see Indexes
-     * @see Indexed
-     * @see Text
-     */
-    <T> void ensureIndexes(Class<T> clazz);
-
-    /**
      * Find instances of a type
      *
      * @param type the class to use for mapping the results
@@ -560,6 +549,15 @@ public interface Datastore {
      * @return the saved entity
      */
     <T> T save(T entity, InsertOneOptions options);
+
+    /**
+     * Shards any collections with sharding defintions.
+     *
+     * @morphia.experimental
+     * @since 2.3
+     */
+    @MorphiaExperimental
+    void shardCollections();
 
     /**
      * Starts a new session on the server.

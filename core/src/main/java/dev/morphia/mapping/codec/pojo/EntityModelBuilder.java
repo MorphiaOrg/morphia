@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("UnusedReturnValue")
 public class EntityModelBuilder {
     private final List<PropertyModelBuilder> propertyModels = new ArrayList<>();
+    private final List<PropertyModelBuilder> shardKeys = new ArrayList<>();
     private final List<EntityModel> interfaceModels = new ArrayList<>();
     private final Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
     private final Set<Class<?>> classes = new LinkedHashSet<>();
@@ -81,19 +82,6 @@ public class EntityModelBuilder {
                   })
                   .filter(Objects::nonNull)
                   .collect(Collectors.toCollection(() -> interfaceModels));
-
-    }
-
-    /**
-     * Adds a property to the model
-     *
-     * @param builder the new builder to add
-     * @return the new PropertyModelBuilder
-     * @since 2.3
-     */
-    public PropertyModelBuilder addProperty(PropertyModelBuilder builder) {
-        propertyModels.add(builder);
-        return builder;
     }
 
     /**

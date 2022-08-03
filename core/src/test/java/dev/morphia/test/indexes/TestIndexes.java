@@ -6,7 +6,6 @@ import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
-import dev.morphia.Datastore;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
@@ -201,8 +200,7 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void testIndexes() {
-        final Datastore datastore = getDs();
-        datastore.ensureIndexes(TestWithIndexOption.class);
+        getDs().ensureIndexes(TestWithIndexOption.class);
         List<Document> indexInfo = getIndexInfo(TestWithIndexOption.class);
         assertEquals(indexInfo.size(), 2);
         assertBackground(indexInfo);
@@ -226,11 +224,11 @@ public class TestIndexes extends TestBase {
             }
         }
 
-        datastore.ensureIndexes(TestWithDeprecatedIndex.class);
+        getDs().ensureIndexes(TestWithDeprecatedIndex.class);
         assertEquals(getIndexInfo(TestWithDeprecatedIndex.class).size(), 2);
         assertBackground(getIndexInfo(TestWithDeprecatedIndex.class));
 
-        datastore.ensureIndexes(TestWithHashedIndex.class);
+        getDs().ensureIndexes(TestWithHashedIndex.class);
         assertEquals(getIndexInfo(TestWithHashedIndex.class).size(), 2);
         assertHashed(getIndexInfo(TestWithHashedIndex.class));
     }
