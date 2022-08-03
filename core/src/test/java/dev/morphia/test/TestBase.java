@@ -24,7 +24,6 @@ import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
-import org.bson.UuidRepresentation;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -412,13 +411,8 @@ public abstract class TestBase {
 
     private void startMongo() {
         String mongodb = System.getenv("MONGODB");
-        Builder builder = MongoClientSettings.builder();
-
-        try {
-            builder.uuidRepresentation(mapperOptions.getUuidRepresentation());
-        } catch (Exception ignored) {
-            // not a 4.0 driver
-        }
+        Builder builder = MongoClientSettings.builder()
+                                             .uuidRepresentation(mapperOptions.getUuidRepresentation());
 
         if (mongodb != null) {
             File mongodbRoot = new File("target/mongo");
@@ -446,9 +440,7 @@ public abstract class TestBase {
             cluster.start();
             mongoClient = cluster.getClient(builder);
         } else {
-            mongoClient = MongoClients.create(builder
-                                                  .uuidRepresentation(UuidRepresentation.STANDARD)
-                                                  .build());
+            mongoClient = MongoClients.create(builder.build());
         }
     }
 }
