@@ -19,7 +19,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.ANNOTATION_TYPE})
 @MorphiaExperimental
 public @interface ShardOptions {
-    int numInitialChunks() default 2;
+    int numInitialChunks() default -1;
 
     boolean presplitHashedZones() default false;
 

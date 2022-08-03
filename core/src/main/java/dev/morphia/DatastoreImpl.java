@@ -23,6 +23,7 @@ import dev.morphia.aggregation.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.IndexHelper;
+import dev.morphia.annotations.ShardKeyType;
 import dev.morphia.annotations.ShardKeys;
 import dev.morphia.annotations.ShardOptions;
 import dev.morphia.annotations.Validation;
@@ -92,7 +93,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 @SuppressWarnings({"unchecked", "rawtypes", "removal"})
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
-    private final MongoClient mongoClient;
+    protected final MongoClient mongoClient;
     private final Mapper mapper;
     private final QueryFactory queryFactory;
     private final CodecRegistry codecRegistry;
@@ -478,18 +479,10 @@ public class DatastoreImpl implements AdvancedDatastore {
                                   .stream().filter(m -> m.getAnnotation(ShardKeys.class) != null)
                                   .collect(Collectors.toList());
 
-        List<String> collectionNames = database.listCollectionNames().into(new ArrayList<>());
+        operations.runCommand(new Document("enableSharding", database.getName()));
+
         entities.forEach(e -> {
-            String name = e.getCollectionName();
-            Document result;
-            if (collectionNames.contains(name)) {
-                result = withTransaction((session) -> {
-                    return ((MorphiaSessionImpl) session).shardCollection(e);
-                });
-            } else {
-                result = shardCollection(e);
-            }
-            if (!result.containsKey("collectionsharded")) {
+            if (!shardCollection(e).containsKey("collectionsharded")) {
                 throw new MappingException(Sofia.cannotShardCollection(getDatabase().getName(), e.getCollectionName()));
             }
         });
@@ -511,8 +504,14 @@ public class DatastoreImpl implements AdvancedDatastore {
 
                 Document command = new Document("shardCollection", format("%s.%s", getDatabase().getName(), model.getCollectionName()))
                                        .append("unique", options.unique())
-                                       .append("numInitialChunks", options.numInitialChunks())
                                        .append("presplitHashedZones", options.presplitHashedZones());
+                var hashed = stream(shardKeys.value()).anyMatch(k -> k.type() == ShardKeyType.HASHED);
+                if (hashed) {
+                    if (options.numInitialChunks() != -1) {
+                        command.append("numInitialChunks", options.numInitialChunks());
+                    }
+                }
+
                 if (collstats.get("collation") != null) {
                     command.append("collation", new Document("locale", "simple"));
                 }

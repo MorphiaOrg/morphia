@@ -99,7 +99,9 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
 
         @Override
         public Document runCommand(Document command) {
-            throw new UnsupportedOperationException();
+            return mongoClient
+                       .getDatabase("admin")
+                       .runCommand(session, command);
         }
 
         @Override

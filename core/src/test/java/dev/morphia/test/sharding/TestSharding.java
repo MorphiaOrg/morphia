@@ -1,6 +1,8 @@
 package dev.morphia.test.sharding;
 
-import com.antwerkz.bottlerocket.clusters.ShardedCluster;
+import com.antwerkz.bottlerocket.Versions;
+import com.antwerkz.bottlerocket.clusters.ClusterBuilder;
+import com.github.zafarkhaja.semver.Version;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.ShardKey;
@@ -11,8 +13,10 @@ import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.time.LocalDateTime;
 
+import static com.antwerkz.bottlerocket.clusters.ClusterType.SHARDED;
 import static dev.morphia.annotations.ShardKeyType.HASHED;
 import static org.testng.Assert.assertEquals;
 
@@ -26,10 +30,16 @@ public class TestSharding extends TestBase {
 
     @Test
     public void testShardCollection() {
-        try (var cluster = new ShardedCluster()) {
+        String mongodb = System.getenv("MONGODB");
+        var version = mongodb != null ? Version.valueOf(mongodb) : Versions.latest();
+        try (var cluster = new ClusterBuilder(SHARDED)
+                               .baseDir(new File("target/mongo-" + version))
+                               .version(version)
+                               .build()) {
             cluster.clean();
             cluster.start();
             withClient(cluster.getClient(), (datastore -> {
+                datastore.getDatabase().createCollection("split_brain");  // make sure the db exists on 4.0.x
                 datastore.getMapper().map(Sharded.class);
                 datastore.shardCollections();
 
@@ -55,7 +65,7 @@ public class TestSharding extends TestBase {
     }
 
     @Entity("split_brain")
-    @ShardKeys({@ShardKey(value = "name", type = HASHED), @ShardKey("date")})
+    @ShardKeys({@ShardKey(value = "name", type = HASHED)})
     private static class Sharded {
         private final String name;
         @Id

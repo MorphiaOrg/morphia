@@ -1,8 +1,7 @@
 package dev.morphia.test;
 
+import com.antwerkz.bottlerocket.clusters.ClusterBuilder;
 import com.antwerkz.bottlerocket.clusters.MongoCluster;
-import com.antwerkz.bottlerocket.clusters.ReplicaSet;
-import com.antwerkz.bottlerocket.clusters.SingleNode;
 import com.antwerkz.bottlerocket.configuration.types.Verbosity;
 import com.github.zafarkhaja.semver.Version;
 import com.mongodb.MongoClientSettings;
@@ -50,6 +49,7 @@ import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static com.antwerkz.bottlerocket.clusters.ClusterType.REPLICA_SET;
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
 import static org.testng.Assert.assertEquals;
@@ -428,9 +428,11 @@ public abstract class TestBase {
                 throw new RuntimeException(e.getMessage(), e);
             }
             Version version = Version.valueOf(mongodb);
-            final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
-                                         ? new SingleNode(mongodbRoot, "morphia_test", version)
-                                         : new ReplicaSet(mongodbRoot, "morphia_test", version);
+            final MongoCluster cluster = new ClusterBuilder(REPLICA_SET)
+                                             .baseDir(mongodbRoot)
+                                             .name("morphia_test")
+                                             .version(version)
+                                             .build();
 
             cluster.configure(c -> {
                 c.systemLog(s -> {
