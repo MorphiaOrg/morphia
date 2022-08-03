@@ -1,6 +1,7 @@
 package dev.morphia.annotations;
 
 import dev.morphia.annotations.internal.MorphiaExperimental;
+import dev.morphia.mapping.ShardKeyType;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

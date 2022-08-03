@@ -17,7 +17,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 
 import static com.antwerkz.bottlerocket.clusters.ClusterType.SHARDED;
-import static dev.morphia.annotations.ShardKeyType.HASHED;
+import static dev.morphia.mapping.ShardKeyType.HASHED;
 import static org.testng.Assert.assertEquals;
 
 public class TestSharding extends TestBase {

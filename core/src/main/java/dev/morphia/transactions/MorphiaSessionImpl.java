@@ -99,7 +99,7 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
 
         @Override
         public Document runCommand(Document command) {
-            return mongoClient
+            return getMongoClient()
                        .getDatabase("admin")
                        .runCommand(session, command);
         }

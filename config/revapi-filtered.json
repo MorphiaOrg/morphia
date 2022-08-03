@@ -468,6 +468,12 @@
           "code": "java.method.removed",
           "old": "method com.mongodb.client.ClientSession dev.morphia.Datastore::getSession()",
           "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method <T> void dev.morphia.Datastore::ensureIndexes(java.lang.Class<T>)",
+          "justification": "internal method"
         }
       ]
     }

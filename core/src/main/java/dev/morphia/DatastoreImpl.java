@@ -23,7 +23,6 @@ import dev.morphia.aggregation.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.IndexHelper;
-import dev.morphia.annotations.ShardKeyType;
 import dev.morphia.annotations.ShardKeys;
 import dev.morphia.annotations.ShardOptions;
 import dev.morphia.annotations.Validation;
@@ -35,6 +34,7 @@ import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.mapping.EntityModelImporter;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.ShardKeyType;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
@@ -93,7 +93,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 @SuppressWarnings({"unchecked", "rawtypes", "removal"})
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
-    protected final MongoClient mongoClient;
+    private final MongoClient mongoClient;
     private final Mapper mapper;
     private final QueryFactory queryFactory;
     private final CodecRegistry codecRegistry;
@@ -359,6 +359,46 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
+    public <T> T replace(T entity, ReplaceOptions options) {
+        MongoCollection collection = configureCollection(options, getCollection(entity.getClass()));
+
+        EntityModel entityModel = mapper.getEntityModel(entity.getClass());
+        PropertyModel idProperty = entityModel.getIdProperty();
+        Object id = idProperty != null ? idProperty.getValue(entity) : null;
+        if (id == null) {
+            throw new MissingIdException();
+        }
+        VersionBumpInfo info = updateVersioning(entity);
+
+        try {
+            Document filter = new Document("_id", id);
+            info.filter(filter);
+            entityModel.getShardKeys().forEach((property) -> {
+                filter.put(property.getMappedName(), property.getValue(entity));
+            });
+
+            UpdateResult updateResult = operations.replaceOne(collection, entity, filter, options);
+
+            if (updateResult.getModifiedCount() != 1) {
+                if (info.versioned()) {
+                    info.rollbackVersion();
+                    throw new VersionMismatchException(entity.getClass(), id);
+                } else if (!entityModel.getShardKeys().isEmpty()) {
+                    throw new MappingException(noShardKeyMatch(entityModel.getShardKeys()
+                                                                          .stream().map(PropertyModel::getMappedName)
+                                                                          .collect(joining(", "))));
+                } else {
+                    throw new MappingException(noDocumentsUpdated(id));
+                }
+            }
+        } catch (MongoWriteException e) {
+            info.rollbackVersion();
+            throw e;
+        }
+        return entity;
+    }
+
+    @Override
     public void ensureCaps() {
         List<String> collectionNames = database.listCollectionNames().into(new ArrayList<>());
         for (EntityModel model : mapper.getMappedEntities()) {
@@ -427,43 +467,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         return (T) find(entity.getClass()).filter(eq("_id", id)).iterator(new FindOptions().limit(1)).next();
     }
 
-    @Override
-    public <T> T replace(T entity, ReplaceOptions options) {
-        MongoCollection collection = configureCollection(options, getCollection(entity.getClass()));
-
-        EntityModel entityModel = mapper.getEntityModel(entity.getClass());
-        Object id = entityModel.getIdProperty().getValue(entity);
-        if (id == null) {
-            throw new MissingIdException();
-        }
-        VersionBumpInfo info = updateVersioning(entity);
-
-        try {
-            Document filter = new Document("_id", id);
-            info.filter(filter);
-            entityModel.getShardKeys().forEach((property) -> {
-                filter.put(property.getMappedName(), property.getValue(entity));
-            });
-
-            UpdateResult updateResult = operations.replaceOne(collection, entity, filter, options);
-
-            if (updateResult.getModifiedCount() != 1) {
-                if (info.versioned()) {
-                    info.rollbackVersion();
-                    throw new VersionMismatchException(entity.getClass(), id);
-                } else if (!entityModel.getShardKeys().isEmpty()) {
-                    throw new MappingException(noShardKeyMatch(entityModel.getShardKeys()
-                                                                          .stream().map(PropertyModel::getMappedName)
-                                                                          .collect(joining(", "))));
-                } else {
-                    throw new MappingException(noDocumentsUpdated(id));
-                }
-            }
-        } catch (MongoWriteException e) {
-            info.rollbackVersion();
-            throw e;
-        }
-        return entity;
+    protected MongoClient getMongoClient() {
+        return mongoClient;
     }
 
     /**

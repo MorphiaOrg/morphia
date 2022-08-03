@@ -1,4 +1,4 @@
-package dev.morphia.annotations;
+package dev.morphia.mapping;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
