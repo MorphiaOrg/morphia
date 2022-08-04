@@ -242,7 +242,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10,"i35":10,"i36":10,"i37":10,"i38":10,"i39":10,"i40":10,"i41":10,"i42":10,"i43":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -537,9 +537,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.Class)">ensureIndexes</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</code></th>
-<td class="colLast">
-<div class="block">Ensures (creating if necessary) the indexes found during class mapping</div>
-</td>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
@@ -597,6 +595,11 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i24" class="altColor">
+<td class="colFirst"><code>protected <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoClient.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoClient</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMongoClient()">getMongoClient</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.util.List,dev.morphia.InsertManyOptions)">insert</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
       <a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;options)</code></th>
@@ -604,7 +607,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Inserts entities in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T,dev.morphia.InsertOneOptions)">insert</a></span>​(T&nbsp;entity,
       <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -612,14 +615,14 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Inserts an entity in to the mapped collection.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T)">merge</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T,dev.morphia.InsertOneOptions)">merge</a></span>​(T&nbsp;entity,
      <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -627,17 +630,17 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="DatastoreImpl.DatastoreOperations.html" title="class in dev.morphia">DatastoreImpl.DatastoreOperations</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#operations()">operations</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>protected <a href="DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#operations(dev.morphia.DatastoreImpl.DatastoreOperations)">operations</a></span>​(<a href="DatastoreImpl.DatastoreOperations.html" title="class in dev.morphia">DatastoreImpl.DatastoreOperations</a>&nbsp;operations)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(java.lang.String,T)">queryByExample</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
               T&nbsp;ex)</code></th>
@@ -645,21 +648,21 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Returns a new query based on the example object</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(T)">queryByExample</a></span>​(T&nbsp;example)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query based on the example object</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#refresh(T)">refresh</a></span>​(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Refreshes an existing entity to its current state in the database.</div>
 </td>
 </tr>
-<tr id="i33" class="rowColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#replace(java.util.List,dev.morphia.ReplaceOptions)">replace</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
        <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</code></th>
@@ -667,7 +670,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Replaces a list of documents in the database</div>
 </td>
 </tr>
-<tr id="i34" class="altColor">
+<tr id="i35" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#replace(T,dev.morphia.ReplaceOptions)">replace</a></span>​(T&nbsp;entity,
        <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</code></th>
@@ -675,7 +678,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Replaces a document in the database</div>
 </td>
 </tr>
-<tr id="i35" class="rowColor">
+<tr id="i36" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.util.List,dev.morphia.InsertManyOptions)">save</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;entities,
     <a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a>&nbsp;options)</code></th>
@@ -683,7 +686,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Saves the entities (Objects) and updates the @Id field</div>
 </td>
 </tr>
-<tr id="i36" class="altColor">
+<tr id="i37" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T,dev.morphia.InsertOneOptions)">save</a></span>​(T&nbsp;entity,
     <a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a>&nbsp;options)</code></th>
@@ -691,27 +694,39 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <div class="block">Saves an entity (Object) and updates the @Id field</div>
 </td>
 </tr>
-<tr id="i37" class="rowColor">
+<tr id="i38" class="altColor">
+<td class="colFirst"><code>protected <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shardCollection(dev.morphia.mapping.codec.pojo.EntityModel)">shardCollection</a></span>​(<a href="mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i39" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shardCollections()">shardCollections</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Shards any collections with sharding defintions.</div>
+</td>
+</tr>
+<tr id="i40" class="altColor">
 <td class="colFirst"><code><a href="transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession()">startSession</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
 </td>
 </tr>
-<tr id="i38" class="altColor">
+<tr id="i41" class="rowColor">
 <td class="colFirst"><code><a href="transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startSession(com.mongodb.ClientSessionOptions)">startSession</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ClientSessionOptions.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ClientSessionOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Starts a new session on the server.</div>
 </td>
 </tr>
-<tr id="i39" class="rowColor">
+<tr id="i42" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.MorphiaTransaction)">withTransaction</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/ClientSessionOptions.html?is-external=true" title="class or interface in com.mongodb" class="externalLink">ClientSessionOptions</a>&nbsp;options,
                <a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;transaction)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i40" class="altColor">
+<tr id="i43" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withTransaction(dev.morphia.transactions.MorphiaTransaction)">withTransaction</a></span>​(<a href="transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a>&lt;T&gt;&nbsp;body)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -1025,20 +1040,6 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <li class="blockList">
 <h4>ensureIndexes</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;void&nbsp;ensureIndexes​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#ensureIndexes(java.lang.Class)">Datastore</a></code></span></div>
-<div class="block">Ensures (creating if necessary) the indexes found during class mapping</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#ensureIndexes(java.lang.Class)">ensureIndexes</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type to index</dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>type</code> - the class from which to get the index definitions</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="annotations/Indexes.html" title="annotation in dev.morphia.annotations"><code>Indexes</code></a>, 
-<a href="annotations/Indexed.html" title="annotation in dev.morphia.annotations"><code>Indexed</code></a>, 
-<a href="annotations/Text.html" title="annotation in dev.morphia.annotations"><code>Text</code></a></dd>
-</dl>
 </li>
 </ul>
 <a id="find(java.lang.Class)">
@@ -1196,6 +1197,31 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
+<a id="replace(java.lang.Object,dev.morphia.ReplaceOptions)">
+<!--   -->
+</a><a id="replace(T,dev.morphia.ReplaceOptions)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>replace</h4>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;replace​(T&nbsp;entity,
+                     <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#replace(T,dev.morphia.ReplaceOptions)">Datastore</a></code></span></div>
+<div class="block">Replaces a document in the database</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Datastore.html#replace(T,dev.morphia.ReplaceOptions)">replace</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the entity</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>entity</code> - the entity to replace</dd>
+<dd><code>options</code> - the options to apply to the replace operation</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the replaced entity</dd>
+</dl>
+</li>
+</ul>
 <a id="ensureCaps()">
 <!--   -->
 </a>
@@ -1208,21 +1234,6 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Datastore.html#ensureCaps()">ensureCaps</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="getMapper()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getMapper</h4>
-<pre class="methodSignature">public&nbsp;<a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;getMapper()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#getMapper()">getMapper</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the Mapper used by this Datastore</dd>
 </dl>
 </li>
 </ul>
@@ -1251,6 +1262,45 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 </dl>
 </li>
 </ul>
+<a id="getMongoClient()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getMongoClient</h4>
+<pre class="methodSignature">protected&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoClient.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoClient</a>&nbsp;getMongoClient()</pre>
+</li>
+</ul>
+<a id="getMapper()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getMapper</h4>
+<pre class="methodSignature">public&nbsp;<a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;getMapper()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Datastore.html#getMapper()">getMapper</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Mapper used by this Datastore</dd>
+</dl>
+</li>
+</ul>
+<a id="shardCollections()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>shardCollections</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;shardCollections()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#shardCollections()">Datastore</a></code></span></div>
+<div class="block">Shards any collections with sharding defintions.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="Datastore.html#shardCollections()">shardCollections</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
+</dl>
+</li>
+</ul>
 <a id="merge(java.lang.Object)">
 <!--   -->
 </a><a id="merge(T)">
@@ -1274,29 +1324,13 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 </dl>
 </li>
 </ul>
-<a id="replace(java.lang.Object,dev.morphia.ReplaceOptions)">
-<!--   -->
-</a><a id="replace(T,dev.morphia.ReplaceOptions)">
+<a id="shardCollection(dev.morphia.mapping.codec.pojo.EntityModel)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>replace</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;T&nbsp;replace​(T&nbsp;entity,
-                     <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#replace(T,dev.morphia.ReplaceOptions)">Datastore</a></code></span></div>
-<div class="block">Replaces a document in the database</div>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="Datastore.html#replace(T,dev.morphia.ReplaceOptions)">replace</a></code>&nbsp;in interface&nbsp;<code><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></code></dd>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type of the entity</dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>entity</code> - the entity to replace</dd>
-<dd><code>options</code> - the options to apply to the replace operation</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the replaced entity</dd>
-</dl>
+<h4>shardCollection</h4>
+<pre class="methodSignature">protected&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;shardCollection​(<a href="mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model)</pre>
 </li>
 </ul>
 <a id="save(java.util.List,dev.morphia.InsertManyOptions)">

@@ -223,8 +223,8 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="PropertyModelBuilder.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../../../../2.2/javadoc/dev/morphia/mapping/codec/pojo/class-use/PropertyModelBuilder.html">2.2</a>
+    <a class="version is-current" href="ShardKeyNames.html">2.3-SNAPSHOT</a>
+    <a class="version is-missing" href="../../../../../../../../2.2/index.html">2.2</a>
     <a class="version is-missing" href="../../../../../../../../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../../../../../../../../2.0/index.html">2.0</a>
     <a class="version is-missing" href="../../../../../../../../1.6/index.html">1.6</a>
@@ -236,7 +236,7 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="Uses of Class dev.morphia.mapping.codec.pojo.PropertyModelBuilder (Morphia)";
+            parent.document.title="Uses of Class dev.morphia.mapping.validation.classrules.ShardKeyNames (Morphia)";
         }
     }
     catch(err) {
@@ -262,7 +262,7 @@ loadScripts(document, 'script');</script>
 <ul class="navList" title="Navigation">
 <li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">Class</a></li>
+<li><a href="../ShardKeyNames.html" title="class in dev.morphia.mapping.validation.classrules">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
@@ -309,173 +309,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </header>
 <main role="main">
 <div class="header">
-<h2 title="Uses of Class dev.morphia.mapping.codec.pojo.PropertyModelBuilder" class="title">Uses of Class<br>dev.morphia.mapping.codec.pojo.PropertyModelBuilder</h2>
+<h2 title="Uses of Class dev.morphia.mapping.validation.classrules.ShardKeyNames" class="title">Uses of Class<br>dev.morphia.mapping.validation.classrules.ShardKeyNames</h2>
 </div>
-<div class="classUseContainer">
-<ul class="blockList">
-<li class="blockList">
-<table class="useSummary">
-<caption><span>Packages that use <a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Package</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.mapping.codec">dev.morphia.mapping.codec</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.mapping.codec.pojo">dev.morphia.mapping.codec.pojo</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList">
-<ul class="blockList">
-<li class="blockList">
-<section role="region"><a id="dev.morphia.mapping.codec">
-<!--   -->
-</a>
-<h3>Uses of <a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a> in <a href="../../package-summary.html">dev.morphia.mapping.codec</a></h3>
-<table class="useSummary">
-<caption><span>Constructors in <a href="../../package-summary.html">dev.morphia.mapping.codec</a> with parameters of type <a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Constructor</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../MorphiaPropertySerialization.html#%3Cinit%3E(dev.morphia.mapping.MapperOptions,dev.morphia.mapping.codec.pojo.PropertyModelBuilder)">MorphiaPropertySerialization</a></span>​(<a href="../../../MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options,
-                            <a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&nbsp;property)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="dev.morphia.mapping.codec.pojo">
-<!--   -->
-</a>
-<h3>Uses of <a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a> in <a href="../package-summary.html">dev.morphia.mapping.codec.pojo</a></h3>
-<table class="useSummary">
-<caption><span>Methods in <a href="../package-summary.html">dev.morphia.mapping.codec.pojo</a> that return <a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#accessor(org.bson.codecs.pojo.PropertyAccessor)">accessor</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html?is-external=true" title="class or interface in org.bson.codecs.pojo" class="externalLink">PropertyAccessor</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;accessor)</code></th>
-<td class="colLast">
-<div class="block">Sets the <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html?is-external=true" title="class or interface in org.bson.codecs.pojo" class="externalLink"><code>PropertyAccessor</code></a></div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">EntityModelBuilder.</span><code><span class="memberNameLink"><a href="../EntityModelBuilder.html#addProperty()">addProperty</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Adds a property to the model</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#annotation(java.lang.annotation.Annotation)">annotation</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&nbsp;annotation)</code></th>
-<td class="colLast">
-<div class="block">Adds an annotation</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#annotations(java.util.List)">annotations</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&gt;&nbsp;annotations)</code></th>
-<td class="colLast">
-<div class="block">Sets the annotations</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#discoverMappedName()">discoverMappedName</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#discriminatorEnabled(java.lang.Boolean)">discriminatorEnabled</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;discriminatorEnabled)</code></th>
-<td class="colLast">
-<div class="block">Enables/disables the use of the discriminator during mapping</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#mappedName(java.lang.String)">mappedName</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;mappedName)</code></th>
-<td class="colLast">
-<div class="block">Sets the field's mapped name</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#modifiers(int)">modifiers</a></span>​(int&nbsp;modifiers)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#name(java.lang.String)">name</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#owner(dev.morphia.mapping.codec.pojo.EntityModel)">owner</a></span>​(<a href="../EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;entityModel)</code></th>
-<td class="colLast">
-<div class="block">Sets the entity model owner</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">EntityModelBuilder.</span><code><span class="memberNameLink"><a href="../EntityModelBuilder.html#propertyModelByName(java.lang.String)">propertyModelByName</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
-<td class="colLast">
-<div class="block">Gets a property by its name</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#serialization(dev.morphia.mapping.codec.MorphiaPropertySerialization)">serialization</a></span>​(<a href="../../MorphiaPropertySerialization.html" title="class in dev.morphia.mapping.codec">MorphiaPropertySerialization</a>&nbsp;propertySerialization)</code></th>
-<td class="colLast">
-<div class="block">Sets the <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/pojo/PropertySerialization.html?is-external=true" title="class or interface in org.bson.codecs.pojo" class="externalLink"><code>PropertySerialization</code></a> checker</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">PropertyModelBuilder.</span><code><span class="memberNameLink"><a href="../PropertyModelBuilder.html#typeData(dev.morphia.mapping.codec.pojo.TypeData)">typeData</a></span>​(<a href="../TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&lt;?&gt;&nbsp;typeData)</code></th>
-<td class="colLast">
-<div class="block">Sets the type data</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary">
-<caption><span>Methods in <a href="../package-summary.html">dev.morphia.mapping.codec.pojo</a> that return types with arguments of type <a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">EntityModelBuilder.</span><code><span class="memberNameLink"><a href="../EntityModelBuilder.html#propertyModels()">propertyModels</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="classUseContainer">No usage of dev.morphia.mapping.validation.classrules.ShardKeyNames</div>
 </main>
 <footer role="contentinfo">
 <nav role="navigation">
@@ -490,7 +326,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="navList" title="Navigation">
 <li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">Class</a></li>
+<li><a href="../ShardKeyNames.html" title="class in dev.morphia.mapping.validation.classrules">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
