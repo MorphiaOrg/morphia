@@ -63,7 +63,7 @@ Using this annotation, you can configure the number of initial shards, {docsRef}
 === How is it used?
 
 Once you have your sharding configured, you have the choice of manually sharding it via the mongo shell or having Morphia shard it for you.
-For the latter, there is a new method xref:javadoc:dev/morphia/Datastore.html#shardCollections()#[shardCollections()] that will do this for you.
+For the latter, there is a new method xref:javadoc:dev/morphia/Datastore.html#shardCollections()[shardCollections()] that will do this for you.
 It should be noted here that if your collection is not empty, there are certain administrative tasks you must perform on the collection first that Morphia does *not* handle.
 You can find those details in the server documentation.
 
