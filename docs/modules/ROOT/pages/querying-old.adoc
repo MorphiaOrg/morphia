@@ -159,7 +159,7 @@ Which version you use is largely a question of preference.
 [TIP]
 ====
 Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-xref:javadoc:dev/morphia/annotations/Property.html#[`@Property`] annotation on the field.
+xref:javadoc:dev/morphia/annotations/Property.html#[@Property] annotation on the field.
 Morphia will normalize the name and validate the name such that a query with a bad field name will result in an error.
 ====
 
@@ -180,7 +180,7 @@ q.and(
 An `or` clause looks exactly the same except for using `or()` instead of `and()`, of course.
 For these clauses we use the `criteria()`
 method instead of `field()` but it is used in much the same fashion.  `and()` and `or()` take a
-https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html[`varargs`] parameter of type `Criteria` so you can include as many filters as necessary.
+https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html[varargs] parameter of type `Criteria` so you can include as many filters as necessary.
 If all you need is an `and` clause, you don't need an explicit call to `and()`:
 
 [source,java]
@@ -285,7 +285,7 @@ While projections can be a nice performance win in some cases, it's important to
 Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database for this entity will be removed.
 To save such instances back consider using
-xref:javadoc:dev/morphia/Datastore.html#merge(T)#[`Datastore#merge(T)`]
+xref:javadoc:dev/morphia/Datastore.html#merge(T)#[Datastore#merge(T)]
 ====
 
 === Limiting and Skipping
@@ -309,7 +309,7 @@ See the {docsRef}/reference/method/cursor.skip[skip] documentation for more deta
 
 === Ordering
 
-Ordering the results of a query is done via [`Query.order(String)`](/javadoc/dev/morphia/query/Query.html#order-java.lang.String-) . The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.
+Ordering the results of a query is done via [Query.order(String)](/javadoc/dev/morphia/query/Query.html#order-java.lang.String-) . The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.
 To reverse the sort order for a particular field simply prefix that field with a `-`.
 For example, to sort by age (youngest to oldest) and then income (highest to lowest), you would use this:
 

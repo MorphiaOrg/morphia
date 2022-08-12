@@ -117,7 +117,7 @@ Using this class, you can get specific numbers from the update operation as well
 === Returning the updated entity
 
 There are times when a document needs to be updated and also fetched from the database.
-In the server documentation, this is referred to as {docsRef}/reference/method/db.collection.findAndModify/[`findAndModify`].
+In the server documentation, this is referred to as {docsRef}/reference/method/db.collection.findAndModify/[findAndModify].
 In Morphia, this functionality is exposed through the xref:javadoc:dev/morphia/query/Query.html#modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator...)#[Query#modify()]
 method.
 With this method, you can choose to return the updated entity in either the state before or after the update.
@@ -135,7 +135,7 @@ datastore
 
 === Merges
 
-A specialized form of an update is the xref:javadoc:dev/morphia/Datastore.html#merge(T)#[`merge()`] operation.
+A specialized form of an update is the xref:javadoc:dev/morphia/Datastore.html#merge(T)#[merge()] operation.
 A common case in scenarios where multiple subsystems or applications share a database is where one part of the system might only have part of a larger entity. e.g., a
 https://en.wikipedia.org/wiki/Data_transfer_object[DTO] might only have a subset of an entity necessary to perform the duties of that particular service.
 Updating the database with the partial entities can be problematic because it forces the application developer to inspect an entity's state and manually generate the correct set of update statements.
