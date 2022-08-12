@@ -209,7 +209,9 @@ public class MapperOptions {
 
     /**
      * @return the UUID representation to use in the driver
+     * @deprecated This should be configured in the MongoClient given to Morphia
      */
+    @Deprecated(forRemoval = true, since = "2.3")
     public UuidRepresentation getUuidRepresentation() {
         return uuidRepresentation;
     }
@@ -578,7 +580,9 @@ public class MapperOptions {
          *
          * @param uuidRepresentation the representation
          * @return this
+         * @deprecated This should be configured in the MongoClient given to Morphia
          */
+        @Deprecated(forRemoval = true, since = "2.3")
         public Builder uuidRepresentation(UuidRepresentation uuidRepresentation) {
             assertNotLocked();
             this.uuidRepresentation = uuidRepresentation;
