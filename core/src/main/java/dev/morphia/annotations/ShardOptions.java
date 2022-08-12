@@ -23,7 +23,5 @@ public @interface ShardOptions {
 
     boolean presplitHashedZones() default false;
 
-//    TimeSeriesOptions timeSeries() default @TimeSeriesOptions(timeField = "____UNUSED____");
-
     boolean unique() default false;
 }

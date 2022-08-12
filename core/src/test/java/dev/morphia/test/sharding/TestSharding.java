@@ -65,11 +65,11 @@ public class TestSharding extends TestBase {
     }
 
     @Entity("split_brain")
-    @ShardKeys({@ShardKey(value = "name", type = HASHED)})
+    @ShardKeys({@ShardKey(value = "name", type = HASHED), @ShardKey("date")})
     private static class Sharded {
-        private final String name;
         @Id
         private ObjectId id;
+        private final String name;
         private String nickName;
         private LocalDateTime date;
 
