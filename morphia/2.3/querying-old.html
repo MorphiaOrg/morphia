@@ -461,7 +461,7 @@ Which version you use is largely a question of preference.</p>
 <td class="content">
 <div class="paragraph">
 <p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-<a href="javadoc/dev/morphia/annotations/Property.html" class="page"><code>@Property</code></a> annotation on the field.
+<a href="javadoc/dev/morphia/annotations/Property.html" class="page">@Property</a> annotation on the field.
 Morphia will normalize the name and validate the name such that a query with a bad field name will result in an error.</p>
 </div>
 </td>
@@ -491,7 +491,7 @@ An <code>and</code> query might look something like this:</p>
 <p>An <code>or</code> clause looks exactly the same except for using <code>or()</code> instead of <code>and()</code>, of course.
 For these clauses we use the <code>criteria()</code>
 method instead of <code>field()</code> but it is used in much the same fashion.  <code>and()</code> and <code>or()</code> take a
-<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html"><code>varargs</code></a> parameter of type <code>Criteria</code> so you can include as many filters as necessary.
+<a href="https://docs.oracle.com/javase/8/docs/technotes/guides/language/varargs.html">varargs</a> parameter of type <code>Criteria</code> so you can include as many filters as necessary.
 If all you need is an <code>and</code> clause, you don&#8217;t need an explicit call to <code>and()</code>:</p>
 </div>
 <div class="listingblock">
@@ -618,7 +618,7 @@ It&#8217;s also worth noting that this project works with both the mapped docume
 Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database for this entity will be removed.
 To save such instances back consider using
-<a href="javadoc/dev/morphia/Datastore.html#merge(T)#" class="page"><code>Datastore#merge(T)</code></a></p>
+<a href="javadoc/dev/morphia/Datastore.html#merge(T)#" class="page">Datastore#merge(T)</a></p>
 </div>
 </td>
 </tr>
@@ -650,7 +650,7 @@ See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip">sk
 <div class="sect2">
 <h3 id="_ordering"><a class="anchor" href="#_ordering"></a>Ordering</h3>
 <div class="paragraph">
-<p>Ordering the results of a query is done via [<code>Query.order(String)</code>](/javadoc/dev/morphia/query/Query.html#order-java.lang.String-) . The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.
+<p>Ordering the results of a query is done via [Query.order(String)](/javadoc/dev/morphia/query/Query.html#order-java.lang.String-) . The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.
 To reverse the sort order for a particular field simply prefix that field with a <code>-</code>.
 For example, to sort by age (youngest to oldest) and then income (highest to lowest), you would use this:</p>
 </div>
