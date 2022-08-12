@@ -7,6 +7,7 @@
 ** xref:kotlin.adoc[Kotlin]
 ** xref:mapping.adoc[Mapping]
 ** xref:indexing.adoc[Indexing]
+** xref:sharding.adoc[Sharding]
 ** xref:queries.adoc[Querying]
 ** xref:querying-old.adoc[Querying (Legacy)]
 ** xref:updates.adoc[Updating]
