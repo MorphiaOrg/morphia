@@ -6,7 +6,7 @@ import dev.morphia.annotations.Property;
 
 @Entity("shapes")
 public class Circle extends TestEntity implements Shape {
-    @Property
+    @Property("r")
     private double radius;
 
     public Circle() {

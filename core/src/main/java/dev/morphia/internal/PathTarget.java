@@ -96,6 +96,14 @@ public class PathTarget {
         this(mapper, type != null && mapper.isMappable(type) ? mapper.getEntityModel(type) : null, path, validateNames);
     }
 
+    public Mapper mapper() {
+        return mapper;
+    }
+
+    public EntityModel root() {
+        return root;
+    }
+
     /**
      * Returns the translated path for this context.  If validation is disabled, that path could be the same as the initial value.
      *
