@@ -35,7 +35,6 @@ import java.util.Objects;
 
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
-import static dev.morphia.query.CriteriaJoin.AND;
 import static dev.morphia.query.UpdateBase.coalesce;
 import static java.lang.String.format;
 import static java.util.List.of;
@@ -47,7 +46,7 @@ import static java.util.List.of;
  * @param <T> The type we will be querying for, and returning.
  * @morphia.internal
  */
-@SuppressWarnings("removal")
+@SuppressWarnings({"removal", "deprecation"})
 @MorphiaInternal
 public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
@@ -82,7 +81,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
             this.collectionName = this.collection.getNamespace().getCollectionName();
         }
 
-        compoundContainer = new CriteriaContainerImpl(datastore, this, AND);
+        compoundContainer = new CriteriaContainerImpl(datastore, this, CriteriaJoin.AND);
     }
 
     @Override
@@ -100,7 +99,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(String field) {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(datastore, this, AND);
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(datastore, this, CriteriaJoin.AND);
         add(container);
 
         return new FieldEndImpl<CriteriaContainer>(datastore, field, container, model, this.isValidatingNames());

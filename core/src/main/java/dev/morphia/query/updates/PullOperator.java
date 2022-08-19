@@ -36,7 +36,7 @@ public class PullOperator extends UpdateOperator {
                     ((Filter) getValue()).encode(datastore, writer, EncoderContext.builder().build());
                 });
 
-                PropertyModel target = pathTarget.getTarget();
+                PropertyModel target = pathTarget.target();
                 return new Document(target != null ? target.getMappedName() : field(), writer.getDocument());
             }
         };

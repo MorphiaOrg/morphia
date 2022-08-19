@@ -24,7 +24,7 @@ public class UnsetOperator extends UpdateOperator {
         return new OperationTarget(pathTarget, "") {
             @Override
             public Object encode(Datastore datastore) {
-                PropertyModel target = pathTarget.getTarget();
+                PropertyModel target = pathTarget.target();
                 return new Document(target != null ? target.getMappedName() : field(), "");
             }
         };

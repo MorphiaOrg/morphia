@@ -17,6 +17,7 @@
 package dev.morphia.internal;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -35,6 +36,7 @@ import static java.util.Arrays.asList;
  * @morphia.internal
  * @since 1.3
  */
+@MorphiaInternal
 public class PathTarget {
     private final List<String> segments;
     private final boolean validateNames;
@@ -99,6 +101,18 @@ public class PathTarget {
     }
 
     /**
+     * @return the Mapper
+     * @since 2.3
+     */
+    public Mapper mapper() {
+        return mapper;
+    }
+
+    public EntityModel root() {
+        return root;
+    }
+
+    /**
      * Returns the translated path for this context.  If validation is disabled, that path could be the same as the initial value.
      *
      * @return the translated path
@@ -118,7 +132,7 @@ public class PathTarget {
      * @return the field
      */
     @Nullable
-    public PropertyModel getTarget() {
+    public PropertyModel target() {
         if (!resolved) {
             resolve();
         }

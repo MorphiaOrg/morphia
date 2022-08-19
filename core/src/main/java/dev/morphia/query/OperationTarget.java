@@ -46,7 +46,7 @@ public class OperationTarget {
             }
             return value;
         }
-        PropertyModel mappedField = this.target.getTarget();
+        PropertyModel mappedField = this.target.target();
         Object mappedValue = value;
 
         PropertyModel model = mappedField != null

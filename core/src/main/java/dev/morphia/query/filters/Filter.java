@@ -139,7 +139,7 @@ public class Filter {
             PathTarget target = pathTarget(datastore.getMapper());
             OperationTarget operationTarget = new OperationTarget(pathTarget, value);
             this.value = operationTarget.getValue();
-            PropertyModel property = target.getTarget();
+            PropertyModel property = target.target();
             if (property != null && property.specializeCodec(datastore) instanceof PropertyHandler) {
                 this.value = ((Document) operationTarget.encode(datastore)).get(field);
             }

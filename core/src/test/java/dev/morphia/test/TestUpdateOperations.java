@@ -107,7 +107,7 @@ import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-@SuppressWarnings({"ConstantConditions", "unused"})
+@SuppressWarnings({"ConstantConditions", "unused", "removal"})
 public class TestUpdateOperations extends TestBase {
     @Test
     public void retainsClassName() {
@@ -427,33 +427,6 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Test
-    public void testMaxKeepsCurrentDocumentValueWhenThisIsLargerThanSuppliedValue() {
-        final ObjectId id = new ObjectId();
-        final double originalValue = 2D;
-
-        Datastore ds = getDs();
-        Query<Circle> query = ds.find(Circle.class)
-                                .filter(eq("id", id));
-        assertInserted(query.update(setOnInsert(Map.of("radius", originalValue)))
-                            .execute(new UpdateOptions().upsert(true)));
-
-        assertEquals(query.update(max("radius", 1D))
-                          .execute(new UpdateOptions().upsert(true)).getMatchedCount(), 1);
-
-        MatcherAssert.assertThat(ds.find(Circle.class)
-                                   .filter(eq("_id", id))
-                                   .first().getRadius(), is(originalValue));
-    }
-
-    @Test
-    public void testInsertUpdate() {
-        assertInserted(getDs().find(Circle.class)
-                              .filter(eq("radius", 0))
-                              .update(inc("radius", 1D))
-                              .execute(new UpdateOptions().upsert(true)));
-    }
-
-    @Test
     public void testInsertWithRef() {
         final Pic pic = new Pic();
         pic.setName("fist");
@@ -475,13 +448,40 @@ public class TestUpdateOperations extends TestBase {
         MatcherAssert.assertThat(getDs().find(ContainsPic.class).count(), is(1L));
 
         //test reading the object.
-        final ContainsPic cp = getDs().find(ContainsPic.class).iterator(new FindOptions().limit(1))
-                                      .next();
+        final ContainsPic cp = getDs().find(ContainsPic.class).first();
         assertThat(cp, is(notNullValue()));
         MatcherAssert.assertThat(cp.getName(), is("second"));
         MatcherAssert.assertThat(cp.getPic(), is(notNullValue()));
         MatcherAssert.assertThat(cp.getPic().getName(), is(notNullValue()));
         MatcherAssert.assertThat(cp.getPic().getName(), is("fist"));
+    }
+
+    @Test
+    public void testInsertUpdate() {
+        assertInserted(getDs().find(Circle.class)
+                              .filter(eq("radius", 0))
+                              .update(inc("radius", 1D))
+                              .execute(new UpdateOptions().upsert(true)));
+    }
+
+    @Test
+    public void testMax() {
+        final ObjectId id = new ObjectId();
+        final double originalValue = 2D;
+
+        Datastore ds = getDs();
+        Query<Circle> query = ds.find(Circle.class)
+                                .filter(eq("id", id));
+        assertInserted(query.update(setOnInsert(Map.of("radius", originalValue)))
+                            .execute(new UpdateOptions().upsert(true)));
+
+        assertEquals(query.update(max("radius", 1D))
+                          .execute(new UpdateOptions().upsert(true)).getMatchedCount(), 1);
+
+        MatcherAssert.assertThat(ds.find(Circle.class)
+                                   .filter(eq("_id", id))
+                                   .first().getRadius(),
+            is(originalValue));
     }
 
     @Test
@@ -575,9 +575,10 @@ public class TestUpdateOperations extends TestBase {
         finder.update(inc("size"))
               .execute(new UpdateOptions().multi(true));
 
-        final MorphiaCursor<ContainsPic> iterator = finder.iterator(new FindOptions().sort(Sort.ascending("size")));
-        for (int i = 0; i < 3; i++) {
-            assertEquals(i + 1, iterator.next().getSize());
+        try (final MorphiaCursor<ContainsPic> iterator = finder.iterator(new FindOptions().sort(Sort.ascending("size")))) {
+            for (int i = 0; i < 3; i++) {
+                assertEquals(i + 1, iterator.next().getSize());
+            }
         }
     }
 
@@ -1031,7 +1032,7 @@ public class TestUpdateOperations extends TestBase {
     public void testValidationBadFieldName() {
         Query<Circle> query = getDs().find(Circle.class)
                                      .filter(eq("radius", 0));
-        query.update(inc("r", 1D)).execute();
+        query.update(inc("rad", 1D)).execute();
     }
 
     @Test
@@ -1357,19 +1358,19 @@ public class TestUpdateOperations extends TestBase {
 
             final LogHolder logHolder = (LogHolder) o;
 
-            if (id != null ? !id.equals(logHolder.id) : logHolder.id != null) {
+            if (!Objects.equals(id, logHolder.id)) {
                 return false;
             }
-            if (uuid != null ? !uuid.equals(logHolder.uuid) : logHolder.uuid != null) {
+            if (!Objects.equals(uuid, logHolder.uuid)) {
                 return false;
             }
-            if (log != null ? !log.equals(logHolder.log) : logHolder.log != null) {
+            if (!Objects.equals(log, logHolder.log)) {
                 return false;
             }
-            if (logs != null ? !logs.equals(logHolder.logs) : logHolder.logs != null) {
+            if (!Objects.equals(logs, logHolder.logs)) {
                 return false;
             }
-            return raw != null ? raw.equals(logHolder.raw) : logHolder.raw == null;
+            return Objects.equals(raw, logHolder.raw);
         }
 
         @Override
