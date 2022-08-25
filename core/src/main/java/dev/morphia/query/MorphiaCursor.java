@@ -76,12 +76,10 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
      */
     public List<T> toList() {
         final List<T> results = new ArrayList<>();
-        try {
+        try (wrapped) {
             while (wrapped.hasNext()) {
                 results.add(next());
             }
-        } finally {
-            wrapped.close();
         }
         return results;
     }

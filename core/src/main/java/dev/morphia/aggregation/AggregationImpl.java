@@ -14,6 +14,7 @@ import dev.morphia.aggregation.stages.Bucket;
 import dev.morphia.aggregation.stages.CollectionStats;
 import dev.morphia.aggregation.stages.Count;
 import dev.morphia.aggregation.stages.CurrentOp;
+import dev.morphia.aggregation.stages.Densify;
 import dev.morphia.aggregation.stages.Facet;
 import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.aggregation.stages.GraphLookup;
@@ -132,6 +133,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> currentOp(CurrentOp currentOp) {
         addStage(currentOp);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> densify(Densify densify) {
+        addStage(densify);
         return this;
     }
 

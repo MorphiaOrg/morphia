@@ -7,6 +7,7 @@ import dev.morphia.aggregation.codecs.stages.BucketCodec;
 import dev.morphia.aggregation.codecs.stages.CollectionStatsCodec;
 import dev.morphia.aggregation.codecs.stages.CountCodec;
 import dev.morphia.aggregation.codecs.stages.CurrentOpCodec;
+import dev.morphia.aggregation.codecs.stages.DensifyCodec;
 import dev.morphia.aggregation.codecs.stages.FacetCodec;
 import dev.morphia.aggregation.codecs.stages.GeoNearCodec;
 import dev.morphia.aggregation.codecs.stages.GraphLookupCodec;
@@ -33,40 +34,11 @@ import dev.morphia.aggregation.codecs.stages.UnionWithCodec;
 import dev.morphia.aggregation.codecs.stages.UnsetCodec;
 import dev.morphia.aggregation.codecs.stages.UnwindCodec;
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.stages.AddFields;
-import dev.morphia.aggregation.stages.AutoBucket;
-import dev.morphia.aggregation.stages.Bucket;
-import dev.morphia.aggregation.stages.CollectionStats;
-import dev.morphia.aggregation.stages.Count;
-import dev.morphia.aggregation.stages.CurrentOp;
-import dev.morphia.aggregation.stages.Facet;
-import dev.morphia.aggregation.stages.GeoNear;
-import dev.morphia.aggregation.stages.GraphLookup;
-import dev.morphia.aggregation.stages.Group;
-import dev.morphia.aggregation.stages.IndexStats;
-import dev.morphia.aggregation.stages.Limit;
-import dev.morphia.aggregation.stages.Lookup;
-import dev.morphia.aggregation.stages.Match;
-import dev.morphia.aggregation.stages.Merge;
-import dev.morphia.aggregation.stages.Out;
-import dev.morphia.aggregation.stages.PlanCacheStats;
-import dev.morphia.aggregation.stages.Projection;
-import dev.morphia.aggregation.stages.Redact;
-import dev.morphia.aggregation.stages.ReplaceRoot;
-import dev.morphia.aggregation.stages.ReplaceWith;
-import dev.morphia.aggregation.stages.Sample;
-import dev.morphia.aggregation.stages.Set;
-import dev.morphia.aggregation.stages.SetWindowFields;
-import dev.morphia.aggregation.stages.Skip;
-import dev.morphia.aggregation.stages.Sort;
-import dev.morphia.aggregation.stages.SortByCount;
-import dev.morphia.aggregation.stages.UnionWith;
-import dev.morphia.aggregation.stages.Unset;
-import dev.morphia.aggregation.stages.Unwind;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,37 +72,45 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs = new HashMap<>();
 
             // Stages
-            codecs.put(AddFields.class, new AddFieldsCodec(datastore));
-            codecs.put(AutoBucket.class, new AutoBucketCodec(datastore));
-            codecs.put(Bucket.class, new BucketCodec(datastore));
-            codecs.put(CollectionStats.class, new CollectionStatsCodec(datastore));
-            codecs.put(Count.class, new CountCodec(datastore));
-            codecs.put(CurrentOp.class, new CurrentOpCodec(datastore));
-            codecs.put(Facet.class, new FacetCodec(datastore));
-            codecs.put(GeoNear.class, new GeoNearCodec(datastore));
-            codecs.put(GraphLookup.class, new GraphLookupCodec(datastore));
-            codecs.put(Group.class, new GroupCodec(datastore));
-            codecs.put(IndexStats.class, new IndexStatsCodec(datastore));
-            codecs.put(Merge.class, new MergeCodec(datastore));
-            codecs.put(PlanCacheStats.class, new PlanCacheStatsCodec(datastore));
-            codecs.put(Limit.class, new LimitCodec(datastore));
-            codecs.put(Lookup.class, new LookupCodec(datastore));
-            codecs.put(Match.class, new MatchCodec(datastore));
-            codecs.put(Out.class, new OutCodec(datastore));
-            codecs.put(Projection.class, new ProjectionCodec(datastore));
-            codecs.put(Redact.class, new RedactCodec(datastore));
-            codecs.put(ReplaceRoot.class, new ReplaceRootCodec(datastore));
-            codecs.put(ReplaceWith.class, new ReplaceWithCodec(datastore));
-            codecs.put(Sample.class, new SampleCodec(datastore));
-            codecs.put(Set.class, new SetStageCodec(datastore));
-            codecs.put(SetWindowFields.class, new SetWindowFieldsCodec(datastore));
-            codecs.put(Skip.class, new SkipCodec(datastore));
-            codecs.put(Sort.class, new SortCodec(datastore));
-            codecs.put(SortByCount.class, new SortByCountCodec(datastore));
-            codecs.put(UnionWith.class, new UnionWithCodec(datastore));
-            codecs.put(Unset.class, new UnsetCodec(datastore));
-            codecs.put(Unwind.class, new UnwindCodec(datastore));
+            addCodec(new AddFieldsCodec(datastore),
+                new AutoBucketCodec(datastore),
+                new BucketCodec(datastore),
+                new CollectionStatsCodec(datastore),
+                new CountCodec(datastore),
+                new CurrentOpCodec(datastore),
+                new DensifyCodec(datastore),
+                new FacetCodec(datastore),
+                new GeoNearCodec(datastore),
+                new GraphLookupCodec(datastore),
+                new GroupCodec(datastore),
+                new IndexStatsCodec(datastore),
+                new MergeCodec(datastore),
+                new PlanCacheStatsCodec(datastore),
+                new LimitCodec(datastore),
+                new LookupCodec(datastore),
+                new MatchCodec(datastore),
+                new OutCodec(datastore),
+                new ProjectionCodec(datastore),
+                new RedactCodec(datastore),
+                new ReplaceRootCodec(datastore),
+                new ReplaceWithCodec(datastore),
+                new SampleCodec(datastore),
+                new SetStageCodec(datastore),
+                new SetWindowFieldsCodec(datastore),
+                new SkipCodec(datastore),
+                new SortCodec(datastore),
+                new SortByCountCodec(datastore),
+                new UnionWithCodec(datastore),
+                new UnsetCodec(datastore),
+                new UnwindCodec(datastore));
         }
         return codecs;
+    }
+
+    @Nullable
+    private void addCodec(StageCodec... stageCodecs) {
+        for (StageCodec codec : stageCodecs) {
+            codecs.put(codec.getEncoderClass(), codec);
+        }
     }
 }

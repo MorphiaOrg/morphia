@@ -19,7 +19,6 @@ import static java.time.Instant.ofEpochMilli;
  * @since 2.0
  */
 public class MorphiaLocalDateTimeCodec implements Codec<LocalDateTime> {
-
     private final Datastore datastore;
 
     MorphiaLocalDateTimeCodec(Datastore datastore) {

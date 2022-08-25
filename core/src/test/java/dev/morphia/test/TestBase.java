@@ -18,6 +18,7 @@ import dev.morphia.DatastoreImpl;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
+import dev.morphia.mapping.codec.ZonedDateTimeCodec;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.DefaultQueryFactory;
@@ -27,6 +28,8 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecProvider;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -40,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -64,7 +68,10 @@ public abstract class TestBase {
     private DatastoreImpl datastore;
 
     public TestBase() {
-        mapperOptions = MapperOptions.DEFAULT;
+
+        mapperOptions = MapperOptions.builder()
+                                     .codecProvider(new ZDTCodecProvider())
+                                     .build();
     }
 
     public TestBase(MapperOptions mapperOptions) {
@@ -441,6 +448,16 @@ public abstract class TestBase {
             mongoClient = cluster.getClient(builder);
         } else {
             mongoClient = MongoClients.create(builder.build());
+        }
+    }
+
+    private static class ZDTCodecProvider implements CodecProvider {
+        @Override
+        public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
+            if (clazz.equals(ZonedDateTime.class)) {
+                return (Codec<T>) new ZonedDateTimeCodec();
+            }
+            return null;
         }
     }
 }

@@ -6,6 +6,7 @@ import dev.morphia.aggregation.stages.AutoBucket;
 import dev.morphia.aggregation.stages.Bucket;
 import dev.morphia.aggregation.stages.CollectionStats;
 import dev.morphia.aggregation.stages.CurrentOp;
+import dev.morphia.aggregation.stages.Densify;
 import dev.morphia.aggregation.stages.Facet;
 import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.aggregation.stages.GraphLookup;
@@ -31,20 +32,6 @@ import dev.morphia.query.internal.MorphiaCursor;
  * @since 2.0
  */
 public interface Aggregation<T> {
-    /**
-     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
-     * added fields.
-     * <p>
-     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
-     * adds the new fields.
-     *
-     * @param fields the stage definition
-     * @return this
-     * @aggregation.expression $addFields
-     * @mongodb.server.release 3.4
-     */
-    Aggregation<T> addFields(AddFields fields);
-
     /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket
      * boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
@@ -114,6 +101,20 @@ public interface Aggregation<T> {
      * @mongodb.server.release 3.6
      */
     Aggregation<T> currentOp(CurrentOp currentOp);
+
+    /**
+     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
+     * added fields.
+     * <p>
+     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
+     * adds the new fields.
+     *
+     * @param fields the stage definition
+     * @return this
+     * @aggregation.expression $addFields
+     * @mongodb.server.release 3.4
+     */
+    Aggregation<T> addFields(AddFields fields);
 
     /**
      * Execute the aggregation and get the results.
@@ -326,21 +327,14 @@ public interface Aggregation<T> {
     Aggregation<T> sample(long sample);
 
     /**
-     * Adds new fields to documents. $set outputs documents that contain all existing fields from the input documents and newly added
-     * fields.
-     * <p>
-     * The $set stage is an alias for $addFields.
-     * <p>
-     * Both stages are equivalent to a $project stage that explicitly specifies all existing fields in the input documents and adds the
-     * new fields.
+     * Creates new documents in a sequence of documents where certain values in a field are missing.
      *
-     * @param set the stage to add
+     * @param densify the Densify stage
      * @return this
+     * @mongodb.server.release 5.1
      * @since 2.3
-     * @aggregation.expression $set
-     * @mongodb.server.release 4.2
      */
-    Aggregation<T> set(Set set);
+    Aggregation<T> densify(Densify densify);
 
     /**
      * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
@@ -357,6 +351,23 @@ public interface Aggregation<T> {
     default Aggregation<T> set(AddFields fields) {
         return addFields(fields);
     }
+
+    /**
+     * Adds new fields to documents. $set outputs documents that contain all existing fields from the input documents and newly added
+     * fields.
+     * <p>
+     * The $set stage is an alias for $addFields.
+     * <p>
+     * Both stages are equivalent to a $project stage that explicitly specifies all existing fields in the input documents and adds the
+     * new fields.
+     *
+     * @param set the stage to add
+     * @return this
+     * @aggregation.expression $set
+     * @mongodb.server.release 4.2
+     * @since 2.3
+     */
+    Aggregation<T> set(Set set);
 
     /**
      * @param fields
