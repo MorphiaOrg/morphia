@@ -226,7 +226,7 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="DocumentExpression.html">2.3-SNAPSHOT</a>
+    <a class="version is-current" href="DocumentsCodec.html">2.3-SNAPSHOT</a>
     <a class="version is-missing" href="../../../../../../../../2.2/index.html">2.2</a>
     <a class="version is-missing" href="../../../../../../../../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../../../../../../../../2.0/index.html">2.0</a>
@@ -239,7 +239,7 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="Uses of Class dev.morphia.aggregation.expressions.impls.DocumentExpression (Morphia)";
+            parent.document.title="Uses of Class dev.morphia.aggregation.codecs.stages.DocumentsCodec (Morphia)";
         }
     }
     catch(err) {
@@ -265,7 +265,7 @@ loadScripts(document, 'script');</script>
 <ul class="navList" title="Navigation">
 <li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">Class</a></li>
+<li><a href="../DocumentsCodec.html" title="class in dev.morphia.aggregation.codecs.stages">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>
@@ -312,193 +312,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </header>
 <main role="main">
 <div class="header">
-<h2 title="Uses of Class dev.morphia.aggregation.expressions.impls.DocumentExpression" class="title">Uses of Class<br>dev.morphia.aggregation.expressions.impls.DocumentExpression</h2>
+<h2 title="Uses of Class dev.morphia.aggregation.codecs.stages.DocumentsCodec" class="title">Uses of Class<br>dev.morphia.aggregation.codecs.stages.DocumentsCodec</h2>
 </div>
-<div class="classUseContainer">
-<ul class="blockList">
-<li class="blockList">
-<table class="useSummary">
-<caption><span>Packages that use <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Package</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.expressions">dev.morphia.aggregation.expressions</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.expressions.impls">dev.morphia.aggregation.expressions.impls</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.stages">dev.morphia.aggregation.stages</a></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li class="blockList">
-<ul class="blockList">
-<li class="blockList">
-<section role="region"><a id="dev.morphia.aggregation.expressions">
-<!--   -->
-</a>
-<h3>Uses of <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a> in <a href="../../package-summary.html">dev.morphia.aggregation.expressions</a></h3>
-<table class="useSummary">
-<caption><span>Methods in <a href="../../package-summary.html">dev.morphia.aggregation.expressions</a> that return <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code>static <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Expressions.</span><code><span class="memberNameLink"><a href="../../Expressions.html#of()">of</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Creates a new DocumentExpression.</div>
-</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="dev.morphia.aggregation.expressions.impls">
-<!--   -->
-</a>
-<h3>Uses of <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a> in <a href="../package-summary.html">dev.morphia.aggregation.expressions.impls</a></h3>
-<table class="useSummary">
-<caption><span>Methods in <a href="../package-summary.html">dev.morphia.aggregation.expressions.impls</a> that return <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DocumentExpression.</span><code><span class="memberNameLink"><a href="../DocumentExpression.html#field(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)">field</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-     <a href="../Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">IfNull.</span><code><span class="memberNameLink"><a href="../IfNull.html#getDocument()">getDocument</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-<li class="blockList">
-<section role="region"><a id="dev.morphia.aggregation.stages">
-<!--   -->
-</a>
-<h3>Uses of <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a> in <a href="../../../stages/package-summary.html">dev.morphia.aggregation.stages</a></h3>
-<table class="useSummary">
-<caption><span>Methods in <a href="../../../stages/package-summary.html">dev.morphia.aggregation.stages</a> that return <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">AddFields.</span><code><span class="memberNameLink"><a href="../../../stages/AddFields.html#getDocument()">getDocument</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Group.GroupId.</span><code><span class="memberNameLink"><a href="../../../stages/Group.GroupId.html#getDocument()">getDocument</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceRoot.</span><code><span class="memberNameLink"><a href="../../../stages/ReplaceRoot.html#getDocument()">getDocument</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">ReplaceWith.</span><code><span class="memberNameLink"><a href="../../../stages/ReplaceWith.html#getDocument()">getDocument</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Set.</span><code><span class="memberNameLink"><a href="../../../stages/Set.html#getDocument()">getDocument</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">AutoBucket.</span><code><span class="memberNameLink"><a href="../../../stages/AutoBucket.html#getOutput()">getOutput</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Bucket.</span><code><span class="memberNameLink"><a href="../../../stages/Bucket.html#getOutput()">getOutput</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Lookup.</span><code><span class="memberNameLink"><a href="../../../stages/Lookup.html#getVariables()">getVariables</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary">
-<caption><span>Methods in <a href="../../../stages/package-summary.html">dev.morphia.aggregation.stages</a> that return types with arguments of type <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Documents.</span><code><span class="memberNameLink"><a href="../../../stages/Documents.html#expressions()">expressions</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary">
-<caption><span>Methods in <a href="../../../stages/package-summary.html">dev.morphia.aggregation.stages</a> with parameters of type <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Method</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<td class="colFirst"><code>static <a href="../../../stages/Documents.html" title="class in dev.morphia.aggregation.stages">Documents</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Documents.</span><code><span class="memberNameLink"><a href="../../../stages/Documents.html#documents(dev.morphia.aggregation.expressions.impls.DocumentExpression...)">documents</a></span>​(<a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>...&nbsp;expressions)</code></th>
-<td class="colLast">
-<div class="block">Creates a new stage with the given document expressions</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table class="useSummary">
-<caption><span>Constructor parameters in <a href="../../../stages/package-summary.html">dev.morphia.aggregation.stages</a> with type arguments of type <a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
-<th class="colFirst" scope="col">Constructor</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-</tbody><tbody>
-<tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../../../stages/Documents.html#%3Cinit%3E(java.util.List)">Documents</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>&gt;&nbsp;expressions)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-</tbody>
-</table>
-</section>
-</li>
-</ul>
-</li>
-</ul>
-</div>
+<div class="classUseContainer">No usage of dev.morphia.aggregation.codecs.stages.DocumentsCodec</div>
 </main>
 <footer role="contentinfo">
 <nav role="navigation">
@@ -513,7 +329,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="navList" title="Navigation">
 <li><a href="../../../../../../index.html">Overview</a></li>
 <li><a href="../package-summary.html">Package</a></li>
-<li><a href="../DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">Class</a></li>
+<li><a href="../DocumentsCodec.html" title="class in dev.morphia.aggregation.codecs.stages">Class</a></li>
 <li class="navBarCell1Rev">Use</li>
 <li><a href="../package-tree.html">Tree</a></li>
 <li><a href="../../../../../../deprecated-list.html">Deprecated</a></li>

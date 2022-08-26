@@ -800,18 +800,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 </tbody><tbody>
 <tr class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Out.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Out.html#collection()">collection</a></span>()</code></th>
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Stage.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Stage.html#aggregation(dev.morphia.aggregation.Aggregation)">aggregation</a></span>​(<a href="../../../aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;?&gt;&nbsp;aggregation)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Out.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Out.html#database()">database</a></span>()</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Out.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Out.html#collection()">collection</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Out.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Out.html#database()">database</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetWindowFields.Window.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/SetWindowFields.Window.html#documents()">documents</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="../../../aggregation/expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>&gt;</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Documents.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Documents.html#expressions()">expressions</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -865,36 +875,43 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Stage.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Stage.html#stageName()">stageName</a></span>()</code></th>
+<td class="colLast">
+<div class="block">The name of the stage.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Densify.Range.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Densify.Range.html#step()">step</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../aggregation/stages/Densify.RangeType.html" title="enum in dev.morphia.aggregation.stages">Densify.RangeType</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Densify.Range.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Densify.Range.html#type()">type</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Out.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Out.html#type()">type</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../aggregation/expressions/TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Densify.Range.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Densify.Range.html#unit()">unit</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../aggregation/expressions/TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetWindowFields.Window.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/SetWindowFields.Window.html#unit()">unit</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Densify.Range.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/Densify.Range.html#upperBound()">upperBound</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../aggregation/stages/SetWindowFields.Window.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Window</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">SetWindowFields.Output.</span><code><span class="memberNameLink"><a href="../../../aggregation/stages/SetWindowFields.Output.html#windowDef()">windowDef</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
