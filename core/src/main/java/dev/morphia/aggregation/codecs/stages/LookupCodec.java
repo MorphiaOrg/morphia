@@ -30,15 +30,19 @@ public class LookupCodec extends StageCodec<Lookup> {
         document(writer, () -> {
             if (value.getFrom() != null) {
                 writer.writeString("from", value.getFrom());
-            } else {
+            } else if (value.getFromType() != null) {
                 writer.writeString("from", getDatastore().getMapper().getEntityModel(value.getFromType()).getCollectionName());
             }
 
-            List<Stage> pipeline = value.getPipeline();
-            if (pipeline == null) {
+            if (value.getLocalField() != null) {
                 writer.writeString("localField", value.getLocalField());
+            }
+            if (value.getForeignField() != null) {
                 writer.writeString("foreignField", value.getForeignField());
-            } else {
+            }
+            writer.writeString("as", value.getAs());
+            List<Stage> pipeline = value.getPipeline();
+            if (pipeline != null) {
                 ExpressionHelper.expression(getDatastore(), writer, "let", value.getVariables(), encoderContext);
                 array(writer, "pipeline", () -> {
                     for (Stage stage : pipeline) {
@@ -47,7 +51,6 @@ public class LookupCodec extends StageCodec<Lookup> {
                     }
                 });
             }
-            writer.writeString("as", value.getAs());
         });
     }
 }

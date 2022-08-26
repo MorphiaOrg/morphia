@@ -36,6 +36,10 @@ public class Lookup extends Stage {
         this.from = from;
     }
 
+    protected Lookup() {
+        super("$lookup");
+    }
+
     /**
      * Creates a new stage using the target collection for the mapped type
      *
@@ -80,6 +84,16 @@ public class Lookup extends Stage {
      */
     public static Lookup lookup(String from) {
         return new Lookup(from);
+    }
+
+    /**
+     * Creates a new stage using the target collection
+     *
+     * @return the new stage
+     * @since 2.3
+     */
+    public static Lookup lookup() {
+        return new Lookup();
     }
 
     /**

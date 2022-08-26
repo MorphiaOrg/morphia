@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.antwerkz.bottlerocket.clusters.ClusterType.REPLICA_SET;
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
@@ -296,6 +297,12 @@ public abstract class TestBase {
         String property = System.getProperty("driver.version");
         Version driverVersion = property != null ? Version.valueOf(property) : null;
         return driverVersion == null || driverVersion.greaterThanOrEqualTo(version);
+    }
+
+    protected List<Document> removeIds(List<Document> documents) {
+        return documents.stream()
+                        .peek(d -> d.remove("_id"))
+                        .collect(Collectors.toList());
     }
 
     /**

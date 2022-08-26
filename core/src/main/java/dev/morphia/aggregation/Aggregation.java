@@ -7,6 +7,7 @@ import dev.morphia.aggregation.stages.Bucket;
 import dev.morphia.aggregation.stages.CollectionStats;
 import dev.morphia.aggregation.stages.CurrentOp;
 import dev.morphia.aggregation.stages.Densify;
+import dev.morphia.aggregation.stages.Documents;
 import dev.morphia.aggregation.stages.Facet;
 import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.aggregation.stages.GraphLookup;
@@ -332,9 +333,21 @@ public interface Aggregation<T> {
      * @param densify the Densify stage
      * @return this
      * @mongodb.server.release 5.1
+     * @aggregation.expression $densify
      * @since 2.3
      */
     Aggregation<T> densify(Densify densify);
+
+    /**
+     * Returns literal documents from input values.
+     *
+     * @param documents the Documents stage
+     * @return this
+     * @mongodb.server.release 5.1
+     * @aggregation.expression $documents
+     * @since 2.3
+     */
+    Aggregation<T> documents(Documents documents);
 
     /**
      * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
