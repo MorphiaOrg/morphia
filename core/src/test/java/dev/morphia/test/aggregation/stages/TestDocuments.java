@@ -18,6 +18,7 @@ public class TestDocuments extends AggregationTest {
 
     @Test
     public void testLookup() throws IOException {
+        checkMinServerVersion(5.1);
         insert("locations", parseDocs(
             "{ zip: 94301, name: 'Palo Alto' }",
             "{ zip: 10019, name: 'New York' }"));

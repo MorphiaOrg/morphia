@@ -22,6 +22,12 @@ public class Documents extends Stage {
         this.expressions = expressions;
     }
 
+    /**
+     * Creates a new stage with the given document expressions
+     *
+     * @param expressions the documents
+     * @return the new stage
+     */
     public static Documents documents(DocumentExpression... expressions) {
         return new Documents(asList(expressions));
     }
