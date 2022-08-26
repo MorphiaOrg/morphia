@@ -78,7 +78,7 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
 
                 if (ifEmpty.isEmpty()) {
                     issuesCreated++
-                    val body = """${docRoot}/${it.drop(1)}"""
+                    val body = url
                     println(
                         """
                             Creating a new issue for $name:
