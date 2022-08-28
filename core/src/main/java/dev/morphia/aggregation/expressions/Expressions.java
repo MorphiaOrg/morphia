@@ -23,6 +23,29 @@ public final class Expressions {
     }
 
     /**
+     * Creates a new DocumentExpression.
+     *
+     * @return the new expression
+     * @since 2.3
+     */
+    public static DocumentExpression document() {
+        return new DocumentExpression();
+    }
+
+    /**
+     * Creates a new DocumentExpression.
+     *
+     * @param name       the first field name
+     * @param expression the first field value
+     * @return the new expression
+     * @since 2.3
+     */
+    public static DocumentExpression document(String name, Expression expression) {
+        return new DocumentExpression()
+                   .field(name, expression);
+    }
+
+    /**
      * Creates a field expression for the given value.  If the value does not already start with '$', it will be prepended automatically.
      *
      * @param name the field name
@@ -57,7 +80,9 @@ public final class Expressions {
      * Creates a new DocumentExpression.
      *
      * @return the new expression
+     * @deprecated use {@link #document()} or {@link #document(String, Expression)}
      */
+    @Deprecated(forRemoval = true, since = "2.3")
     public static DocumentExpression of() {
         return new DocumentExpression();
     }
@@ -84,7 +109,7 @@ public final class Expressions {
      * @param value the value
      * @return the new expression
      */
-    public static Expression value(Object value) {
+    public static ValueExpression value(Object value) {
         return new ValueExpression(value);
     }
 }

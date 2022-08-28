@@ -9,6 +9,7 @@ import dev.morphia.aggregation.stages.CurrentOp;
 import dev.morphia.aggregation.stages.Densify;
 import dev.morphia.aggregation.stages.Documents;
 import dev.morphia.aggregation.stages.Facet;
+import dev.morphia.aggregation.stages.Fill;
 import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.aggregation.stages.GraphLookup;
 import dev.morphia.aggregation.stages.Group;
@@ -118,6 +119,17 @@ public interface Aggregation<T> {
     Aggregation<T> addFields(AddFields fields);
 
     /**
+     * Creates new documents in a sequence of documents where certain values in a field are missing.
+     *
+     * @param densify the Densify stage
+     * @return this
+     * @mongodb.server.release 5.1
+     * @aggregation.expression $densify
+     * @since 2.3
+     */
+    Aggregation<T> densify(Densify densify);
+
+    /**
      * Execute the aggregation and get the results.
      *
      * @param resultType the type of the result
@@ -153,6 +165,17 @@ public interface Aggregation<T> {
      * @mongodb.server.release 3.4
      */
     Aggregation<T> facet(Facet facet);
+
+    /**
+     * Returns literal documents from input values.
+     *
+     * @param documents the Documents stage
+     * @return this
+     * @mongodb.server.release 5.1
+     * @aggregation.expression $documents
+     * @since 2.3
+     */
+    Aggregation<T> documents(Documents documents);
 
     /**
      * Outputs documents in order of nearest to farthest from a specified point.
@@ -328,28 +351,6 @@ public interface Aggregation<T> {
     Aggregation<T> sample(long sample);
 
     /**
-     * Creates new documents in a sequence of documents where certain values in a field are missing.
-     *
-     * @param densify the Densify stage
-     * @return this
-     * @mongodb.server.release 5.1
-     * @aggregation.expression $densify
-     * @since 2.3
-     */
-    Aggregation<T> densify(Densify densify);
-
-    /**
-     * Returns literal documents from input values.
-     *
-     * @param documents the Documents stage
-     * @return this
-     * @mongodb.server.release 5.1
-     * @aggregation.expression $documents
-     * @since 2.3
-     */
-    Aggregation<T> documents(Documents documents);
-
-    /**
      * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
      * added fields.
      * <p>
@@ -364,6 +365,23 @@ public interface Aggregation<T> {
     default Aggregation<T> set(AddFields fields) {
         return addFields(fields);
     }
+
+    /**
+     * Populates null and missing field values within documents.
+     * <p>
+     * You can use $fill to populate missing data points:
+     * <ul>
+     * <li>In a sequence based on surrounding values.
+     * <li>With a fixed value.
+     * </ul>
+     *
+     * @param fill the fill definition
+     * @return this
+     * @aggregation.expression $fill
+     * @mongodb.server.release 5.3
+     * @since 2.3
+     */
+    Aggregation<T> fill(Fill fill);
 
     /**
      * Adds new fields to documents. $set outputs documents that contain all existing fields from the input documents and newly added

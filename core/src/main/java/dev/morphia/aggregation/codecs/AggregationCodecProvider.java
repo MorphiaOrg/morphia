@@ -10,6 +10,7 @@ import dev.morphia.aggregation.codecs.stages.CurrentOpCodec;
 import dev.morphia.aggregation.codecs.stages.DensifyCodec;
 import dev.morphia.aggregation.codecs.stages.DocumentsCodec;
 import dev.morphia.aggregation.codecs.stages.FacetCodec;
+import dev.morphia.aggregation.codecs.stages.FillCodec;
 import dev.morphia.aggregation.codecs.stages.GeoNearCodec;
 import dev.morphia.aggregation.codecs.stages.GraphLookupCodec;
 import dev.morphia.aggregation.codecs.stages.GroupCodec;
@@ -82,6 +83,7 @@ public class AggregationCodecProvider implements CodecProvider {
                 new DensifyCodec(datastore),
                 new DocumentsCodec(datastore),
                 new FacetCodec(datastore),
+                new FillCodec(datastore),
                 new GeoNearCodec(datastore),
                 new GraphLookupCodec(datastore),
                 new GroupCodec(datastore),

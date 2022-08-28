@@ -17,6 +17,7 @@ import dev.morphia.aggregation.stages.CurrentOp;
 import dev.morphia.aggregation.stages.Densify;
 import dev.morphia.aggregation.stages.Documents;
 import dev.morphia.aggregation.stages.Facet;
+import dev.morphia.aggregation.stages.Fill;
 import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.aggregation.stages.GraphLookup;
 import dev.morphia.aggregation.stages.Group;
@@ -169,6 +170,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> facet(Facet facet) {
         addStage(facet);
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> fill(Fill fill) {
+        addStage(fill);
         return this;
     }
 

@@ -1,0 +1,17 @@
+[
+  {
+    "$fill": {
+      "output": {
+        "bootsSold": {
+          "value": 0
+        },
+        "sandalsSold": {
+          "value": 0
+        },
+        "sneakersSold": {
+          "value": 0
+        }
+      }
+    }
+  }
+]
