@@ -1,15 +1,6 @@
-{
-  date: ISODate(
-  "2021-03-08"
-  ),
-  score: 90
-},
+{date: ISODate( "2021-03-08" ), score: 90},
 {date: ISODate("2021-03-09"), score: 92},
-{
-date: ISODate("2021-03-10")
-},
+{date: ISODate("2021-03-10")},
 {date: ISODate("2021-03-11")},
 {date: ISODate("2021-03-12"), score: 85},
-{
-date: ISODate("2021-03-13")
-}
+{date: ISODate("2021-03-13")}
