@@ -63,8 +63,27 @@
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>javadocJar</goal>
+                            <goal>dokka</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
+                <executions>
+                    <execution>
+                        <id>dokka-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>javadoc</classifier>
+                            <classesDirectory>${project.build.directory}/dokka</classesDirectory>
+                            <skipIfEmpty>true</skipIfEmpty>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
