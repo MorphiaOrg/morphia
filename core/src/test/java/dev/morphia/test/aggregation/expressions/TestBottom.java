@@ -14,7 +14,7 @@ import static dev.morphia.query.filters.Filters.eq;
 public class TestBottom extends AggregationTest {
     @Override
     public String prefix() {
-        return "testBottom";
+        return "bottom";
     }
 
     @Test

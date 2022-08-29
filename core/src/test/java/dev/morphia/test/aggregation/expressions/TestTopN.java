@@ -1,7 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.aggregation.expressions.ComparisonExpressions;
-import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
@@ -11,25 +9,25 @@ import static dev.morphia.aggregation.expressions.ConditionalExpressions.conditi
 import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.WindowExpressions.bottomN;
+import static dev.morphia.aggregation.expressions.WindowExpressions.topN;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.filters.Filters.eq;
 
-public class TestBottomN extends AggregationTest {
+public class TestTopN extends AggregationTest {
     @Override
     public String prefix() {
-        return "bottomN";
+        return "topN";
     }
 
     @Test
-    public void testBottom3Scores() {
-        testPipeline(5.2, "bottom3Scores", "gamescores", false, false, (aggregation) -> {
+    public void testTop3Scores() {
+        testPipeline(5.2, "top3Scores", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .match(eq("gameId", "G1"))
                        .group(group(id(field("gameId")))
-                                  .field("playerId", bottomN(
+                                  .field("playerId", topN(
                                       value(3),
                                       array(field("playerId"), field("score")),
                                       descending("score"))));
@@ -37,11 +35,11 @@ public class TestBottomN extends AggregationTest {
     }
 
     @Test
-    public void testBottom3ScoresAcrossGames() {
-        testPipeline(5.2, "bottom3ScoresAcrossGames", "gamescores", false, false, (aggregation) -> {
+    public void testTop3ScoresAcrossGames() {
+        testPipeline(5.2, "top3ScoresAcrossGames", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .group(group(id(field("gameId")))
-                                  .field("playerId", bottomN(
+                                  .field("playerId", topN(
                                       value(3),
                                       array(field("playerId"), field("score")),
                                       descending("score"))));
@@ -53,7 +51,7 @@ public class TestBottomN extends AggregationTest {
         testPipeline(5.2, "computedN", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .group(group(id(document("gameId", field("gameId"))))
-                                  .field("gamescores", bottomN(
+                                  .field("gamescores", topN(
                                       condition(
                                           eq(field("gameId"), value("G2")),
                                           value(1),
@@ -61,7 +59,5 @@ public class TestBottomN extends AggregationTest {
                                       field("score"),
                                       descending("score"))));
         });
-
     }
-
 }
