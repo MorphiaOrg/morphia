@@ -19,7 +19,7 @@ public class TestBottom extends AggregationTest {
 
     @Test
     public void testBottom() {
-        testPipeline(5.2, "bottom", "gamescores", false, (aggregation) -> {
+        testPipeline(5.2, "bottom", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .match(eq("gameId", "G1"))
                        .group(group(id(field("gameId")))
@@ -31,7 +31,7 @@ public class TestBottom extends AggregationTest {
 
     @Test
     public void testBottomAcrossGames() {
-        testPipeline(5.2, "bottomAcrossGames", "gamescores", false, (aggregation) -> {
+        testPipeline(5.2, "bottomAcrossGames", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .group(group(id(field("gameId")))
                                   .field("playerId", bottom(

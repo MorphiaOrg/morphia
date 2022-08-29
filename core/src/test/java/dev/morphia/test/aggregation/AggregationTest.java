@@ -48,10 +48,10 @@ public class AggregationTest extends TestBase {
 
     public void testPipeline(double serverVersion, String resourceName, String collection,
                              Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        testPipeline(serverVersion, resourceName, collection, true, pipeline);
+        testPipeline(serverVersion, resourceName, collection, true, true, pipeline);
     }
 
-    public void testPipeline(double serverVersion, String resourceName, String collection, boolean removeIds,
+    public void testPipeline(double serverVersion, String resourceName, String collection, boolean removeIds, boolean orderMatters,
                              Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         checkMinServerVersion(serverVersion);
         loadData(collection, resourceName);
@@ -61,7 +61,11 @@ public class AggregationTest extends TestBase {
 
         List<Document> expected = loadExpected(resourceName);
 
-        assertEquals(actual, expected);
+        if (orderMatters){
+            assertEquals(actual, expected);
+        } else {
+            assertListEquals(actual, expected);
+        }
     }
 
     protected void loadData(String collection, String resourceName) {

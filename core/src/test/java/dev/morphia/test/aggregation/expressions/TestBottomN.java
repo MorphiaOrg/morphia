@@ -25,7 +25,7 @@ public class TestBottomN extends AggregationTest {
 
     @Test
     public void testThreeLowestScores() {
-        testPipeline(5.2, "threeLowestScores", "gamescores", false, (aggregation) -> {
+        testPipeline(5.2, "threeLowestScores", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .match(eq("gameId", "G1"))
                        .group(group(id(field("gameId")))
@@ -38,7 +38,7 @@ public class TestBottomN extends AggregationTest {
 
     @Test
     public void testThreeLowestScoresAcrossGames() {
-        testPipeline(5.2, "threeLowestScoresAcrossGames", "gamescores", false, (aggregation) -> {
+        testPipeline(5.2, "threeLowestScoresAcrossGames", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .group(group(id(field("gameId")))
                                   .field("playerId", bottomN(
@@ -50,7 +50,7 @@ public class TestBottomN extends AggregationTest {
 
     @Test
     public void testComputedN() {
-        testPipeline(5.2, "computedN", "gamescores", false, (aggregation) -> {
+        testPipeline(5.2, "computedN", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .group(group(id(document("gameId", field("gameId"))))
                                   .field("gamescores", bottomN(
