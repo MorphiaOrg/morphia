@@ -61,6 +61,37 @@ public final class WindowExpressions {
             }
         };
     }
+    /**
+     * Returns the top element within a group according to the specified sort order.
+     *
+     * @param output the expression listing the fields to use
+     * @param sortBy the sort order
+     * @return the expression
+     * @aggregation.expression $top
+     * @mongodb.server.release 5.2
+     * @since 2.3
+     */
+    public static Expression top(Expression output, Sort... sortBy) {
+        return new Expression("$top") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                    expression(datastore, writer, "output", output, encoderContext);
+                    if (sortBy.length == 1) {
+                        writer.writeName("sortBy");
+
+                        WindowExpressions.encode(writer, sortBy[0]);
+                    } else {
+                        array(writer, "sortBy", () -> {
+                            for (Sort sort : sortBy) {
+                                WindowExpressions.encode(writer, sort);
+                            }
+                        });
+                    }
+                });
+            }
+        };
+    }
 
     /**
      * Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer
