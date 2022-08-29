@@ -1,7 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.aggregation.expressions.ComparisonExpressions;
-import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
@@ -11,7 +9,7 @@ import static dev.morphia.aggregation.expressions.ConditionalExpressions.conditi
 import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.WindowExpressions.bottomN;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.bottomN;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.query.Sort.descending;

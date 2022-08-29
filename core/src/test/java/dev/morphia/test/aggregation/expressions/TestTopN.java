@@ -9,7 +9,7 @@ import static dev.morphia.aggregation.expressions.ConditionalExpressions.conditi
 import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.WindowExpressions.topN;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.topN;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.query.Sort.descending;

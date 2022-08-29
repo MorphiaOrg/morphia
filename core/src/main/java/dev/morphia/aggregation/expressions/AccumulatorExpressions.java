@@ -1,14 +1,21 @@
 package dev.morphia.aggregation.expressions;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.AccumulatorExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.FunctionExpression;
 import dev.morphia.aggregation.expressions.impls.Push;
+import dev.morphia.query.Sort;
+import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static java.util.Arrays.asList;
 
 /**
@@ -64,6 +71,81 @@ public final class AccumulatorExpressions {
         expressions.add(value);
         expressions.addAll(asList(additional));
         return new Accumulator("$avg", expressions);
+    }
+
+    /**
+     * Returns the bottom element within a group according to the specified sort order.
+     *
+     * @param output the expression listing the fields to use
+     * @param sortBy the sort order
+     * @return the expression
+     * @aggregation.expression $bottom
+     * @mongodb.server.release 5.2
+     * @since 2.3
+     */
+    public static Expression bottom(Expression output, Sort... sortBy) {
+        return new Expression("$bottom") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                    expression(datastore, writer, "output", output, encoderContext);
+                    if (sortBy.length == 1) {
+                        writer.writeName("sortBy");
+
+                        AccumulatorExpressions.encode(writer, sortBy[0]);
+                    } else {
+                        array(writer, "sortBy", () -> {
+                            for (Sort sort : sortBy) {
+                                AccumulatorExpressions.encode(writer, sort);
+                            }
+                        });
+                    }
+                });
+            }
+        };
+    }
+
+    private static void encode(BsonWriter writer, Sort sort) {
+        document(writer, () -> {
+            writer.writeInt64(sort.getField(), sort.getOrder());
+        });
+    }
+
+    /**
+     * Returns an aggregation of the bottom n elements within a group, according to the specified sort order. If the group contains fewer
+     * than n elements, $bottomN returns all elements in the group.
+     *
+     * @param n      the number of results per group and has to be a positive integral expression that is either a constant or depends on
+     *              the
+     *               _id value for $group
+     * @param output the expression listing the fields to use
+     * @param sortBy the sort order
+     * @return the expression
+     * @aggregation.expression $bottomN
+     * @mongodb.server.release 5.2
+     * @since 2.3
+     */
+    public static Expression bottomN(Expression n, Expression output, Sort... sortBy) {
+        return new Expression("$bottomN") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                    expression(datastore, writer, "output", output, encoderContext);
+                    if (sortBy.length == 1) {
+                        writer.writeName("sortBy");
+
+                        AccumulatorExpressions.encode(writer, sortBy[0]);
+                    } else {
+                        array(writer, "sortBy", () -> {
+                            for (Sort sort : sortBy) {
+                                AccumulatorExpressions.encode(writer, sort);
+                            }
+                        });
+                    }
+                    expression(datastore, writer, "n", n, encoderContext);
+                });
+            }
+        };
     }
 
     /**
@@ -160,6 +242,75 @@ public final class AccumulatorExpressions {
         expressions.add(first);
         expressions.addAll(asList(additional));
         return new Accumulator("$sum", expressions);
+    }
+
+    /**
+     * Returns the top element within a group according to the specified sort order.
+     *
+     * @param output the expression listing the fields to use
+     * @param sortBy the sort order
+     * @return the expression
+     * @aggregation.expression $top
+     * @mongodb.server.release 5.2
+     * @since 2.3
+     */
+    public static Expression top(Expression output, Sort... sortBy) {
+        return new Expression("$top") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                    expression(datastore, writer, "output", output, encoderContext);
+                    if (sortBy.length == 1) {
+                        writer.writeName("sortBy");
+
+                        AccumulatorExpressions.encode(writer, sortBy[0]);
+                    } else {
+                        array(writer, "sortBy", () -> {
+                            for (Sort sort : sortBy) {
+                                AccumulatorExpressions.encode(writer, sort);
+                            }
+                        });
+                    }
+                });
+            }
+        };
+    }
+
+    /**
+     * Returns an aggregation of the top n elements within a group, according to the specified sort order. If the group contains fewer
+     * than n elements, $topN returns all elements in the group.
+     *
+     * @param n      the number of results per group and has to be a positive integral expression that is either a constant or depends on
+     *              the
+     *               _id value for $group
+     * @param output the expression listing the fields to use
+     * @param sortBy the sort order
+     * @return the expression
+     * @aggregation.expression $topN
+     * @mongodb.server.release 5.2
+     * @since 2.3
+     */
+    public static Expression topN(Expression n, Expression output, Sort... sortBy) {
+        return new Expression("$topN") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                    expression(datastore, writer, "output", output, encoderContext);
+                    if (sortBy.length == 1) {
+                        writer.writeName("sortBy");
+
+                        AccumulatorExpressions.encode(writer, sortBy[0]);
+                    } else {
+                        array(writer, "sortBy", () -> {
+                            for (Sort sort : sortBy) {
+                                AccumulatorExpressions.encode(writer, sort);
+                            }
+                        });
+                    }
+                    expression(datastore, writer, "n", n, encoderContext);
+                });
+            }
+        };
     }
 }
 

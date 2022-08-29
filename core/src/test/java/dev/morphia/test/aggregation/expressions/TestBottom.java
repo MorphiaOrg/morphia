@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.WindowExpressions.bottom;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.bottom;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.query.Sort.descending;
