@@ -12,11 +12,6 @@ import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.filters.Filters.eq;
 
 public class TestTop extends AggregationTest {
-    @Override
-    public String prefix() {
-        return "top";
-    }
-
     @Test
     public void testTop() {
         testPipeline(5.2, "top", "gamescores", false, false, (aggregation) -> {

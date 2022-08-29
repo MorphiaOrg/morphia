@@ -11,11 +11,6 @@ import static dev.morphia.aggregation.stages.Fill.fill;
 import static dev.morphia.query.Sort.ascending;
 
 public class TestFill extends AggregationTest {
-    @Override
-    public String prefix() {
-        return "fill";
-    }
-
     @Test
     public void testConstantValue() {
         testPipeline(5.3, "constantValue", "dailySales", aggregation -> {

@@ -9,11 +9,6 @@ import static dev.morphia.aggregation.stages.Documents.documents;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
 
 public class TestDocuments extends AggregationTest {
-    @Override
-    public String prefix() {
-        return "documents";
-    }
-
     @Test
     public void testLookup() {
         testPipeline(5.1, "lookup", "locations", aggregation -> {

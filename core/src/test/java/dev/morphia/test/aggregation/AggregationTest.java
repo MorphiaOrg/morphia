@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -117,8 +118,9 @@ public class AggregationTest extends TestBase {
         return data;
     }
 
-    public String prefix() {
-        throw new UnsupportedOperationException();
+    public final String prefix() {
+        String root = getClass().getSimpleName().replace("Test", "");
+        return toLowerCase(root.charAt(0)) + root.substring(1);
     }
 
     protected void cakeSales() {
