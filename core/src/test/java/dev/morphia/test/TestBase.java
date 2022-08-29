@@ -287,6 +287,7 @@ public abstract class TestBase {
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         collection.deleteMany(new Document());
         InsertManyResult insertManyResult = collection.insertMany(list);
+        assertEquals(insertManyResult.getInsertedIds().size(), list.size());
     }
 
     /**

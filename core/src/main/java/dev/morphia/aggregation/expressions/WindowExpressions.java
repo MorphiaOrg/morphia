@@ -9,13 +9,16 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.MathExpression;
 import dev.morphia.aggregation.expressions.impls.ShiftExpression;
 import dev.morphia.aggregation.stages.SetWindowFields;
+import dev.morphia.query.Sort;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static java.util.Arrays.asList;
 
 /**
@@ -25,6 +28,44 @@ import static java.util.Arrays.asList;
  */
 public final class WindowExpressions {
     private WindowExpressions() {
+    }
+
+    /**
+     * Returns the bottom element within a group according to the specified sort order.
+     *
+     * @param output the expression listing the fields to use
+     * @param sortBy the sort order
+     * @return the expression
+     * @aggregation.expression $bottom
+     * @mongodb.server.release 5.2
+     * @since 2.3
+     */
+    public static Expression bottom(Expression output, Sort... sortBy) {
+        return new Expression("$bottom") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                    expression(datastore, writer, "output", output, encoderContext);
+                    if (sortBy.length == 1) {
+                        writer.writeName("sortBy");
+
+                        encode(writer, sortBy[0]);
+                    } else {
+                        array(writer, "sortBy", () -> {
+                            for (Sort sort : sortBy) {
+                                encode(writer, sort);
+                            }
+                        });
+                    }
+                });
+            }
+
+            private void encode(BsonWriter writer, Sort sort) {
+                document(writer, () -> {
+                    writer.writeInt64(sort.getField(), sort.getOrder());
+                });
+            }
+        };
     }
 
     /**

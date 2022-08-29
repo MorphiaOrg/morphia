@@ -1,0 +1,9 @@
+{
+  _id: 'G2',
+  playerId: [
+    'PlayerA',
+    10
+  ]
+},
+{_id: 'G1', playerId: ['PlayerD', 1]
+}
