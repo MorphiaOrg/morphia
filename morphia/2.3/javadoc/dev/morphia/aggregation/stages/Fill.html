@@ -226,7 +226,7 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="Expressions.html">2.3-SNAPSHOT</a>
+    <a class="version is-current" href="Fill.html">2.3-SNAPSHOT</a>
     <a class="version is-missing" href="../../../../../../2.2/index.html">2.2</a>
     <a class="version is-missing" href="../../../../../../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../../../../../../2.0/index.html">2.0</a>
@@ -239,14 +239,14 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="Expressions (Morphia)";
+            parent.document.title="Fill (Morphia)";
         }
     }
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":41,"i6":9,"i7":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
+var data = {"i0":10,"i1":10,"i2":10,"i3":9,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -272,7 +272,7 @@ loadScripts(document, 'script');</script>
 <li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/Expressions.html">Use</a></li>
+<li><a href="class-use/Fill.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
@@ -307,15 +307,15 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
@@ -334,15 +334,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!-- ======== START OF CLASS DATA ======== -->
 <main role="main">
 <div class="header">
-<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.aggregation.expressions</a></div>
-<h2 title="Class Expressions" class="title">Class Expressions</h2>
+<div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.aggregation.stages</a></div>
+<h2 title="Class Fill" class="title">Class Fill</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
 <li><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li>dev.morphia.aggregation.expressions.Expressions</li>
+<li><a href="Stage.html" title="class in dev.morphia.aggregation.stages">dev.morphia.aggregation.stages.Stage</a></li>
+<li>
+<ul class="inheritance">
+<li>dev.morphia.aggregation.stages.Fill</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -350,19 +355,73 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public final class <span class="typeNameLabel">Expressions</span>
-extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<div class="block">Defines helper methods for various expressions.</div>
+<pre>public class <span class="typeNameLabel">Fill</span>
+extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a></pre>
+<div class="block">Populates null and missing field values within documents.
+ <p>
+ You can use $fill to populate missing data points:
+ </p><ul>
+ <li>In a sequence based on surrounding values.
+ </li><li>With a fixed value.
+ </li></ul></div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.0</dd>
-</dl>
-</li>
+<dd>2.3</dd>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.3">5.3</a></dd></dl>
+</dl></li>
 </ul>
 </div>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="nested.class.summary">
+<!--   -->
+</a>
+<h3>Nested Class Summary</h3>
+<table class="memberSummary">
+<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Class</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="Fill.Method.html" title="enum in dev.morphia.aggregation.stages">Fill.Method</a></span></code></th>
+<td class="colLast">
+<div class="block">Possible methods for defining fill strategies.</div>
+</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</section>
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.summary">
+<!--   -->
+</a>
+<h3>Constructor Summary</h3>
+<table class="memberSummary">
+<caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier</th>
+<th class="colSecond" scope="col">Constructor</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>protected </code></td>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">Fill</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</section>
 <!-- ========== METHOD SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -371,71 +430,84 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tbody><tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#document()">document</a></span>()</code></th>
+<td class="colFirst"><code><a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#field(java.lang.String,dev.morphia.aggregation.expressions.impls.ValueExpression)">field</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+     <a href="../expressions/impls/ValueExpression.html" title="class in dev.morphia.aggregation.expressions.impls">ValueExpression</a>&nbsp;value)</code></th>
 <td class="colLast">
-<div class="block">Creates a new DocumentExpression.</div>
+<div class="block">Specifies an object indicating how to fill missing values in the target field.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#document(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)">document</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-        <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<td class="colFirst"><code><a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#field(java.lang.String,dev.morphia.aggregation.stages.Fill.Method)">field</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+     <a href="Fill.Method.html" title="enum in dev.morphia.aggregation.stages">Fill.Method</a>&nbsp;method)</code></th>
 <td class="colLast">
-<div class="block">Creates a new DocumentExpression.</div>
+<div class="block">Specifies an object indicating how to fill missing values in the target field.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#field(java.lang.String)">field</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
-<td class="colLast">
-<div class="block">Creates a field expression for the given value.</div>
-</td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fields()">fields</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#literal(java.lang.Object)">literal</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
+<td class="colFirst"><code>static <a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fill()">fill</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Returns a value without parsing.</div>
+<div class="block">Creates a new $fill stage</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#meta()">meta</a></span>()</code></th>
-<td class="colLast">
-<div class="block">Returns the metadata associated with a document in a pipeline operations, e.g.</div>
-</td>
+<td class="colFirst"><code><a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#partitionBy()">partitionBy</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>static <a href="impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#of()">of</a></span>()</code></th>
+<td class="colFirst"><code><a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#partitionBy(dev.morphia.aggregation.expressions.impls.Expression)">partitionBy</a></span>​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;partitionBy)</code></th>
 <td class="colLast">
-<div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#document()"><code>document()</code></a> or <a href="#document(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)"><code>document(String, Expression)</code></a></div>
-</div>
+<div class="block">Specifies an array of fields as the compound key to group the documents.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code>static &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toList(T,T...)">toList</a></span>​(T&nbsp;first,
-      T...&nbsp;additional)</code></th>
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#partitionByFields()">partitionByFields</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code>static <a href="impls/ValueExpression.html" title="class in dev.morphia.aggregation.expressions.impls">ValueExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#value(java.lang.Object)">value</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
+<td class="colFirst"><code><a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#partitionByFields(java.lang.String...)">partitionByFields</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;fields)</code></th>
 <td class="colLast">
-<div class="block">Returns a value without parsing.</div>
+<div class="block">Specifies an array of fields as the compound key to group the documents.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="../../query/Sort.html" title="class in dev.morphia.query">Sort</a>[]</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortBy()">sortBy</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code><a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortBy(dev.morphia.query.Sort...)">sortBy</a></span>​(<a href="../../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</code></th>
+<td class="colLast">
+<div class="block">Specifies the field or fields to sort the documents within each partition.</div>
 </td>
 </tr>
 </tbody></table>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.dev.morphia.aggregation.stages.Stage">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;dev.morphia.aggregation.stages.<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a></h3>
+<code><a href="Stage.html#aggregation(dev.morphia.aggregation.Aggregation)">aggregation</a>, <a href="Stage.html#stageName()">stageName</a></code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -452,6 +524,25 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="details">
 <ul class="blockList">
 <li class="blockList">
+<!-- ========= CONSTRUCTOR DETAIL ======== -->
+<section role="region">
+<ul class="blockList">
+<li class="blockList"><a id="constructor.detail">
+<!--   -->
+</a>
+<h3>Constructor Detail</h3>
+<a id="<init>()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>Fill</h4>
+<pre>protected&nbsp;Fill()</pre>
+</li>
+</ul>
+</li>
+</ul>
+</section>
 <!-- ============ METHOD DETAIL ========== -->
 <section role="region">
 <ul class="blockList">
@@ -459,144 +550,161 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="document()">
+<a id="fill()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>document</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>&nbsp;document()</pre>
-<div class="block">Creates a new DocumentExpression.</div>
+<h4>fill</h4>
+<pre class="methodSignature">public static&nbsp;<a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;fill()</pre>
+<div class="block">Creates a new $fill stage</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new expression</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.3</dd>
+<dd>the new stage</dd>
 </dl>
 </li>
 </ul>
-<a id="document(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>document</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>&nbsp;document​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
-                                          <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</pre>
-<div class="block">Creates a new DocumentExpression.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>name</code> - the first field name</dd>
-<dd><code>expression</code> - the first field value</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new expression</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.3</dd>
-</dl>
-</li>
-</ul>
-<a id="field(java.lang.String)">
+<a id="field(java.lang.String,dev.morphia.aggregation.expressions.impls.ValueExpression)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>field</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;field​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
-<div class="block">Creates a field expression for the given value.  If the value does not already start with '$', it will be prepended automatically.</div>
+<pre class="methodSignature">public&nbsp;<a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;field​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+                  <a href="../expressions/impls/ValueExpression.html" title="class in dev.morphia.aggregation.expressions.impls">ValueExpression</a>&nbsp;value)</pre>
+<div class="block">Specifies an object indicating how to fill missing values in the target field.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>name</code> - the field name</dd>
+<dd><code>value</code> - the value to fill with</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new expression</dd>
+<dd>this</dd>
 </dl>
 </li>
 </ul>
-<a id="literal(java.lang.Object)">
+<a id="field(java.lang.String,dev.morphia.aggregation.stages.Fill.Method)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>literal</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;literal​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
-<div class="block">Returns a value without parsing. Use for values that the aggregation pipeline may interpret as an expression.</div>
+<h4>field</h4>
+<pre class="methodSignature">public&nbsp;<a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;field​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+                  <a href="Fill.Method.html" title="enum in dev.morphia.aggregation.stages">Fill.Method</a>&nbsp;method)</pre>
+<div class="block">Specifies an object indicating how to fill missing values in the target field.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>value</code> - the value</dd>
+<dd><code>name</code> - the field name</dd>
+<dd><code>method</code> - the method to use when filling in missing values</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/literal">Aggregration Expression:  $literal</a></dd></dl>
-</dl></li>
-</ul>
-<a id="meta()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>meta</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;meta()</pre>
-<div class="block">Returns the metadata associated with a document in a pipeline operations, e.g. "textScore" when performing text search.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/meta">Aggregration Expression:  $meta</a></dd></dl>
-</dl></li>
-</ul>
-<a id="of()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>of</h4>
-<pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true,
-            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.3")
-public static&nbsp;<a href="impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>&nbsp;of()</pre>
-<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#document()"><code>document()</code></a> or <a href="#document(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)"><code>document(String, Expression)</code></a></div>
-</div>
-<div class="block">Creates a new DocumentExpression.</div>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new expression</dd>
+<dd>this</dd>
 </dl>
 </li>
 </ul>
-<a id="toList(java.lang.Object,java.lang.Object[])">
-<!--   -->
-</a><a id="toList(T,T...)">
+<a id="fields()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>toList</h4>
+<h4>fields</h4>
 <pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
-public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;T&gt;&nbsp;toList​(T&nbsp;first,
-                                 T...&nbsp;additional)</pre>
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;fields()</pre>
 <dl>
-<dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the element type</dd>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>first</code> - the first item</dd>
-<dd><code>additional</code> - additional items</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a list of them all</dd>
+<dd>this</dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
-<a id="value(java.lang.Object)">
+<a id="partitionBy(dev.morphia.aggregation.expressions.impls.Expression)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>partitionBy</h4>
+<pre class="methodSignature">public&nbsp;<a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;partitionBy​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;partitionBy)</pre>
+<div class="block">Specifies an array of fields as the compound key to group the documents.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>partitionBy</code> - the partition expression</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="partitionBy()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>partitionBy</h4>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+<a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public&nbsp;<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;partitionBy()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="partitionByFields(java.lang.String...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>partitionByFields</h4>
+<pre class="methodSignature">public&nbsp;<a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;partitionByFields​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;fields)</pre>
+<div class="block">Specifies an array of fields as the compound key to group the documents.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>fields</code> - the fields</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="partitionByFields()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>partitionByFields</h4>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+<a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;partitionByFields()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
+</li>
+</ul>
+<a id="sortBy(dev.morphia.query.Sort...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>sortBy</h4>
+<pre class="methodSignature">public&nbsp;<a href="Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;sortBy​(<a href="../../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</pre>
+<div class="block">Specifies the field or fields to sort the documents within each partition.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>sorts</code> - the sorting values to apply</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="sortBy()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>value</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/ValueExpression.html" title="class in dev.morphia.aggregation.expressions.impls">ValueExpression</a>&nbsp;value​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
-<div class="block">Returns a value without parsing. Note that this is different from <a href="#literal(java.lang.Object)"><code>literal(Object)</code></a> in that the given value will dropped
- directly in to the pipeline for use/evaluation in whatever context the value is used.</div>
+<h4>sortBy</h4>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+<a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+public&nbsp;<a href="../../query/Sort.html" title="class in dev.morphia.query">Sort</a>[]&nbsp;sortBy()</pre>
 <dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>value</code> - the value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new expression</dd>
-</dl>
+<dd>this</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </li>
@@ -622,7 +730,7 @@ public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javas
 <li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/Expressions.html">Use</a></li>
+<li><a href="class-use/Fill.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../index-all.html">Index</a></li>
@@ -651,15 +759,15 @@ public static&nbsp;&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javas
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li>Constr&nbsp;|&nbsp;</li>
+<li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
 </div>

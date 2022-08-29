@@ -1065,6 +1065,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Defines helper methods for the boolean expressions</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/WindowExpressions.html#bottom(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.query.Sort...)">bottom(Expression, Sort...)</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/WindowExpressions.html" title="class in dev.morphia.aggregation.expressions">WindowExpressions</a></dt>
+<dd>
+<div class="block">Returns the bottom element within a group according to the specified sort order.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/WindowExpressions.html#bottomN(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.query.Sort...)">bottomN(Expression, Expression, Sort...)</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/WindowExpressions.html" title="class in dev.morphia.aggregation.expressions">WindowExpressions</a></dt>
+<dd>
+<div class="block">Returns an aggregation of the bottom n elements within a group, according to the specified sort order.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Bucket.html#boundaries(dev.morphia.aggregation.expressions.impls.Expression...)">boundaries(Expression...)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Bucket.html" title="class in dev.morphia.aggregation.stages">Bucket</a></dt>
 <dd>
 <div class="block">An array of values based on the groupBy expression that specify the boundaries for each bucket.</div>
@@ -2689,8 +2697,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a division projection</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/Expressions.html#document()">document()</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/Expressions.html" title="class in dev.morphia.aggregation.expressions">Expressions</a></dt>
+<dd>
+<div class="block">Creates a new DocumentExpression.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/ExpressionHelper.html#document(dev.morphia.mapping.Mapper,org.bson.Document,java.util.function.Consumer)">document(Mapper, Document, Consumer&lt;BsonWriter&gt;)</a></span> - Static method in class dev.morphia.aggregation.codecs.<a href="dev/morphia/aggregation/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.codecs">ExpressionHelper</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/Expressions.html#document(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)">document(String, Expression)</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/Expressions.html" title="class in dev.morphia.aggregation.expressions">Expressions</a></dt>
+<dd>
+<div class="block">Creates a new DocumentExpression.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/ExpressionHelper.html#document(org.bson.BsonWriter,java.lang.Runnable)">document(BsonWriter, Runnable)</a></span> - Static method in class dev.morphia.aggregation.codecs.<a href="dev/morphia/aggregation/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.codecs">ExpressionHelper</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/ExpressionHelper.html#document(org.bson.BsonWriter,java.lang.String,java.lang.Runnable)">document(BsonWriter, String, Runnable)</a></span> - Static method in class dev.morphia.aggregation.codecs.<a href="dev/morphia/aggregation/codecs/ExpressionHelper.html" title="class in dev.morphia.aggregation.codecs">ExpressionHelper</a></dt>
@@ -3055,6 +3071,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/DocumentsCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.stages.Documents,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, Documents, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/DocumentsCodec.html" title="class in dev.morphia.aggregation.codecs.stages">DocumentsCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/FacetCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.stages.Facet,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, Facet, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/FacetCodec.html" title="class in dev.morphia.aggregation.codecs.stages">FacetCodec</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/FillCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.stages.Fill,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, Fill, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/FillCodec.html" title="class in dev.morphia.aggregation.codecs.stages">FillCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/GeoNearCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.stages.GeoNear,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, GeoNear, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/GeoNearCodec.html" title="class in dev.morphia.aggregation.codecs.stages">GeoNearCodec</a></dt>
 <dd>&nbsp;</dd>
@@ -3560,6 +3578,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Add a field to the stage</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#field(java.lang.String,dev.morphia.aggregation.expressions.impls.ValueExpression)">field(String, ValueExpression)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>
+<div class="block">Specifies an object indicating how to fill missing values in the target field.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#field(java.lang.String,dev.morphia.aggregation.stages.Fill.Method)">field(String, Fill.Method)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>
+<div class="block">Specifies an object indicating how to fill missing values in the target field.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Facet.html#field(java.lang.String,dev.morphia.aggregation.stages.Stage...)">field(String, Stage...)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Facet.html" title="class in dev.morphia.aggregation.stages">Facet</a></dt>
 <dd>
 <div class="block">Adds a field to the facet</div>
@@ -3609,6 +3635,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationComment">use <a href="dev/morphia/mapping/MapperOptions.Builder.html#propertyNaming(dev.morphia.mapping.NamingStrategy)"><code>MapperOptions.Builder.propertyNaming(NamingStrategy)</code></a> instead</div>
 </div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#fields()">fields()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/annotations/Index.html#fields()">fields()</a></span> - Method in annotation type dev.morphia.annotations.<a href="dev/morphia/annotations/Index.html" title="annotation in dev.morphia.annotations">Index</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Unset.html#fields(java.lang.String,java.lang.String...)">fields(String, String...)</a></span> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Unset.html" title="class in dev.morphia.aggregation.stages">Unset</a></dt>
@@ -3622,6 +3650,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/impls/Fields.html#%3Cinit%3E(T)">Fields(T)</a></span> - Constructor for class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/Fields.html" title="class in dev.morphia.aggregation.expressions.impls">Fields</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.PropertyDiscovery.html#FIELDS">FIELDS</a></span> - dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.PropertyDiscovery.html" title="enum in dev.morphia.mapping">MapperOptions.PropertyDiscovery</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#fill()">fill()</a></span> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>
+<div class="block">Creates a new $fill stage</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/Aggregation.html#fill(dev.morphia.aggregation.stages.Fill)">fill(Fill)</a></span> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
+<dd>
+<div class="block">Populates null and missing field values within documents.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationImpl.html#fill(dev.morphia.aggregation.stages.Fill)">fill(Fill)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationImpl.html" title="class in dev.morphia.aggregation">AggregationImpl</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages"><span class="typeNameLink">Fill</span></a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
+<dd>
+<div class="block">Populates null and missing field values within documents.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#%3Cinit%3E()">Fill()</a></span> - Constructor for class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/aggregation/stages/Fill.Method.html" title="enum in dev.morphia.aggregation.stages"><span class="typeNameLink">Fill.Method</span></a> - Enum in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
+<dd>
+<div class="block">Possible methods for defining fill strategies.</div>
+</dd>
+<dt><a href="dev/morphia/aggregation/codecs/stages/FillCodec.html" title="class in dev.morphia.aggregation.codecs.stages"><span class="typeNameLink">FillCodec</span></a> - Class in <a href="dev/morphia/aggregation/codecs/stages/package-summary.html">dev.morphia.aggregation.codecs.stages</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/FillCodec.html#%3Cinit%3E(dev.morphia.Datastore)">FillCodec(Datastore)</a></span> - Constructor for class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/FillCodec.html" title="class in dev.morphia.aggregation.codecs.stages">FillCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/ArrayExpressions.html#filter(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">filter(Expression, Expression)</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/ArrayExpressions.html" title="class in dev.morphia.aggregation.expressions">ArrayExpressions</a></dt>
 <dd>
@@ -4324,6 +4376,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/DocumentsCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/DocumentsCodec.html" title="class in dev.morphia.aggregation.codecs.stages">DocumentsCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/FacetCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/FacetCodec.html" title="class in dev.morphia.aggregation.codecs.stages">FacetCodec</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/FillCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/FillCodec.html" title="class in dev.morphia.aggregation.codecs.stages">FillCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/GeoNearCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/GeoNearCodec.html" title="class in dev.morphia.aggregation.codecs.stages">GeoNearCodec</a></dt>
 <dd>&nbsp;</dd>
@@ -6276,6 +6330,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.Method.html#LINEAR">LINEAR</a></span> - dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.Method.html" title="enum in dev.morphia.aggregation.stages">Fill.Method</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/geo/GeoJson.html#lineString(dev.morphia.geo.Point...)">lineString(Point...)</a></span> - Static method in class dev.morphia.geo.<a href="dev/morphia/geo/GeoJson.html" title="class in dev.morphia.geo">GeoJson</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -6344,6 +6400,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">If set to true for an aggregation running on mongos, $currentOp reports only those operations running locally on that mongos.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.Method.html#LOCF">LOCF</a></span> - dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.Method.html" title="enum in dev.morphia.aggregation.stages">Fill.Method</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/MathExpressions.html#log(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">log(Expression, Expression)</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/MathExpressions.html" title="class in dev.morphia.aggregation.expressions">MathExpressions</a></dt>
 <dd>
 <div class="block">Calculates the log of a number in the specified base.</div>
@@ -7543,7 +7601,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/Expressions.html#of()">of()</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/Expressions.html" title="class in dev.morphia.aggregation.expressions">Expressions</a></dt>
 <dd>
-<div class="block">Creates a new DocumentExpression.</div>
+<div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecationComment">use <a href="dev/morphia/aggregation/expressions/Expressions.html#document()"><code>Expressions.document()</code></a> or <a href="dev/morphia/aggregation/expressions/Expressions.html#document(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)"><code>Expressions.document(String, Expression)</code></a></div>
+</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/AddFields.html#of()">of()</a></span> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/AddFields.html" title="class in dev.morphia.aggregation.stages">AddFields</a></dt>
 <dd>
@@ -7899,15 +7959,27 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Densify.RangeType.html#PARTITION">PARTITION</a></span> - dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Densify.RangeType.html" title="enum in dev.morphia.aggregation.stages">Densify.RangeType</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#partitionBy()">partitionBy()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#partitionBy(dev.morphia.aggregation.expressions.impls.Expression)">partitionBy(Expression)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>
+<div class="block">Specifies an array of fields as the compound key to group the documents.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/SetWindowFields.html#partitionBy(dev.morphia.aggregation.expressions.impls.Expression)">partitionBy(Expression)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a></dt>
 <dd>
 <div class="block">Defines the expression to use to partition the data.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Densify.html#partitionByFields()">partitionByFields()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Densify.html" title="class in dev.morphia.aggregation.stages">Densify</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#partitionByFields()">partitionByFields()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Densify.html#partitionByFields(java.lang.String...)">partitionByFields(String...)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Densify.html" title="class in dev.morphia.aggregation.stages">Densify</a></dt>
 <dd>
 <div class="block">The set of fields to act as the compound key to group the documents.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#partitionByFields(java.lang.String...)">partitionByFields(String...)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>
+<div class="block">Specifies an array of fields as the compound key to group the documents.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/filters/Filter.html#path(dev.morphia.mapping.Mapper)">path(Mapper)</a></span> - Method in class dev.morphia.query.filters.<a href="dev/morphia/query/filters/Filter.html" title="class in dev.morphia.query.filters">Filter</a></dt>
 <dd>&nbsp;</dd>
@@ -9596,6 +9668,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/Sort.SortType.html" title="class in dev.morphia.aggregation.stages"><span class="typeNameLink">Sort.SortType</span></a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#sortBy()">sortBy()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.html#sortBy(dev.morphia.query.Sort...)">sortBy(Sort...)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a></dt>
+<dd>
+<div class="block">Specifies the field or fields to sort the documents within each partition.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/SetWindowFields.html#sortBy(dev.morphia.query.Sort...)">sortBy(Sort...)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/Aggregation.html#sortByCount(dev.morphia.aggregation.expressions.impls.Expression)">sortByCount(Expression)</a></span> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
@@ -10758,6 +10836,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.Method.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.Method.html" title="enum in dev.morphia.aggregation.stages">Fill.Method</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this type with the specified name.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Sort.Direction.html#valueOf(java.lang.String)">valueOf(String)</a></span> - Static method in enum dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Sort.Direction.html" title="enum in dev.morphia.aggregation.stages">Sort.Direction</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
@@ -10839,6 +10921,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Densify.RangeType.html#values()">values()</a></span> - Static method in enum dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Densify.RangeType.html" title="enum in dev.morphia.aggregation.stages">Densify.RangeType</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum type, in
+the order they are declared.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Fill.Method.html#values()">values()</a></span> - Static method in enum dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Fill.Method.html" title="enum in dev.morphia.aggregation.stages">Fill.Method</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
