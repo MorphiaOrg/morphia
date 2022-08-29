@@ -11,10 +11,10 @@ import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.filters.Filters.eq;
 
-public class WindowExpressionsTest extends AggregationTest {
+public class TestBottom extends AggregationTest {
     @Override
     public String prefix() {
-        return "windowExpressions";
+        return "testBottom";
     }
 
     @Test

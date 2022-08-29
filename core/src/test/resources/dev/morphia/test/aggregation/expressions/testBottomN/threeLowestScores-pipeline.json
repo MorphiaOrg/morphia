@@ -1,0 +1,24 @@
+[
+  {
+    "$match": {
+      "gameId": "G1"
+    }
+  },
+  {
+    "$group": {
+      "_id": "$gameId",
+      "playerId": {
+        "$bottomN": {
+          "output": [
+            "$playerId",
+            "$score"
+          ],
+          "sortBy": {
+            "score": -1
+          },
+          "n":3
+        }
+      }
+    }
+  }
+]
