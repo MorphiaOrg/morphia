@@ -29,8 +29,8 @@ public class TestMaxN extends AggregationTest {
     }
 
     @Test
-    public void testmax3Scores() {
-        testPipeline(5.2, "max3Scores", "gamescores", false, false, (aggregation) -> {
+    public void testSingleGame() {
+        testPipeline(5.2, "singleGame", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .match(eq("gameId", "G1"))
                        .group(group(id(field("gameId")))
@@ -42,8 +42,8 @@ public class TestMaxN extends AggregationTest {
     }
 
     @Test
-    public void testmax3ScoresAcrossGames() {
-        testPipeline(5.2, "max3ScoresAcrossGames", "gamescores", false, false, (aggregation) -> {
+    public void testAcrossGames() {
+        testPipeline(5.2, "acrossGames", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .group(group(id("$gameId"))
                                   .field("maxScores", maxN(
@@ -51,29 +51,5 @@ public class TestMaxN extends AggregationTest {
                                       array(field("score"), field("playerId")))));
         });
 
-    }
-
-    @Test
-    @Ignore("needs #2014 to be complete")
-    public void testNullAndMissing() {
-        testPipeline(5.2, "nullAndMissing", "gamescores", false, false, (aggregation) -> {
-            return aggregation.documents(
-                                  document("playerId", value("PlayerA"))
-                                      .field("gameId", value("G1"))
-                                      .field("score", value(1)),
-                                  document("playerId", value("PlayerB"))
-                                      .field("gameId", value("G1"))
-                                      .field("score", value(2)),
-                                  document("playerId", value("PlayerC"))
-                                      .field("gameId", value("G1"))
-                                      .field("score", value(3)),
-                                  document("playerId", value("PlayerD"))
-                                      .field("gameId", value("G1")),
-                                  document("playerId", value("PlayerE"))
-                                      .field("gameId", value("G1"))
-                                      .field("score", value(null)))
-                              .group(group(id("$gameId"))
-                                         .field("maximumThreeScores", maxN(value(4), field("score"))));
-        });
     }
 }

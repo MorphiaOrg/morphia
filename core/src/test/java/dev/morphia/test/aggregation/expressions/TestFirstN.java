@@ -33,8 +33,8 @@ public class TestFirstN extends AggregationTest {
     }
 
     @Test
-    public void testFirst3Scores() {
-        testPipeline(5.2, "first3Scores", "gamescores", false, false, (aggregation) -> {
+    public void testSingleGame() {
+        testPipeline(5.2, "singleGame", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .match(eq("gameId", "G1"))
                        .group(group(id(field("gameId")))
@@ -46,8 +46,8 @@ public class TestFirstN extends AggregationTest {
     }
 
     @Test
-    public void testFirst3ScoresAcrossGames() {
-        testPipeline(5.2, "first3ScoresAcrossGames", "gamescores", false, false, (aggregation) -> {
+    public void testAcrossGames() {
+        testPipeline(5.2, "acrossGames", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .group(group(id("$gameId"))
                                   .field("playerId", firstN(
@@ -58,32 +58,8 @@ public class TestFirstN extends AggregationTest {
     }
 
     @Test
-    @Ignore("needs #2014 to be complete")
-    public void testNullAndMissing() {
-        testPipeline(5.2, "nullAndMissing", "gamescores", false, false, (aggregation) -> {
-            return aggregation.documents(
-                                  document("playerId", value("PlayerA"))
-                                      .field("gameId", value("G1"))
-                                      .field("score", value(1)),
-                                  document("playerId", value("PlayerB"))
-                                      .field("gameId", value("G1"))
-                                      .field("score", value(2)),
-                                  document("playerId", value("PlayerC"))
-                                      .field("gameId", value("G1"))
-                                      .field("score", value(3)),
-                                  document("playerId", value("PlayerD"))
-                                      .field("gameId", value("G1")),
-                                  document("playerId", value("PlayerE"))
-                                      .field("gameId", value("G1"))
-                                      .field("score", value(null)))
-                              .group(group(id("$gameId"))
-                                         .field("firstFiveScores", firstN(value(5), field("score"))));
-        });
-    }
-
-    @Test
-    public void testSortedFirst3Scores() {
-        testPipeline(5.2, "sortedFirst3Scores", "gamescores", false, false, (aggregation) -> {
+    public void testSortedScores() {
+        testPipeline(5.2, "sortedScores", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .sort(sort()
                                  .descending("score"))

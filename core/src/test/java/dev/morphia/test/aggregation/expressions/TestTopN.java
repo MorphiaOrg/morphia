@@ -17,8 +17,8 @@ import static dev.morphia.query.filters.Filters.eq;
 
 public class TestTopN extends AggregationTest {
     @Test
-    public void testTop3Scores() {
-        testPipeline(5.2, "top3Scores", "gamescores", false, false, (aggregation) -> {
+    public void testSingleGame() {
+        testPipeline(5.2, "singleGame", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .match(eq("gameId", "G1"))
                        .group(group(id(field("gameId")))
@@ -30,8 +30,8 @@ public class TestTopN extends AggregationTest {
     }
 
     @Test
-    public void testTop3ScoresAcrossGames() {
-        testPipeline(5.2, "top3ScoresAcrossGames", "gamescores", false, false, (aggregation) -> {
+    public void testAcrossGames() {
+        testPipeline(5.2, "acrossGames", "gamescores", false, false, (aggregation) -> {
             return aggregation
                        .group(group(id(field("gameId")))
                                   .field("playerId", topN(

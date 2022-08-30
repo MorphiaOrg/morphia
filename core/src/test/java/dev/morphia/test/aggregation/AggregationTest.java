@@ -71,12 +71,12 @@ public class AggregationTest extends TestBase {
     }
 
     protected void loadData(String collection, String resourceName) {
-        insert(collection, loadJson(format("%s/%s-data.json", prefix(), resourceName)));
+        insert(collection, loadJson(format("%s/%s/data.json", prefix(), resourceName)));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected List<Document> runPipeline(String pipelineTemplate, Aggregation<Document> aggregation) {
-        String pipelineName = format("%s/%s-pipeline.json", prefix(), pipelineTemplate);
+        String pipelineName = format("%s/%s/pipeline.json", prefix(), pipelineTemplate);
         try {
             List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
 
@@ -102,7 +102,7 @@ public class AggregationTest extends TestBase {
     }
 
     protected @NotNull List<Document> loadExpected(String resourceName) {
-        return loadJson(format("%s/%s-expected.json", prefix(), resourceName));
+        return loadJson(format("%s/%s/expected.json", prefix(), resourceName));
     }
 
     @NotNull
