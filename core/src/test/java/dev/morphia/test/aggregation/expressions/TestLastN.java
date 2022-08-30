@@ -19,7 +19,6 @@ import static dev.morphia.query.filters.Filters.eq;
 
 public class TestLastN extends AggregationTest {
     @Test
-    @Ignore("https://jira.mongodb.org/browse/SERVER-69239")
     public void testComputedN() {
         testPipeline(5.2, "computedN", "gamescores", false, false, (aggregation) -> {
             return aggregation
