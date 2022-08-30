@@ -8,7 +8,6 @@ import dev.morphia.aggregation.stages.Bucket;
 import dev.morphia.aggregation.stages.CollectionStats;
 import dev.morphia.aggregation.stages.CurrentOp;
 import dev.morphia.aggregation.stages.Densify;
-import dev.morphia.aggregation.stages.Documents;
 import dev.morphia.aggregation.stages.Facet;
 import dev.morphia.aggregation.stages.Fill;
 import dev.morphia.aggregation.stages.GeoNear;
@@ -106,20 +105,6 @@ public interface Aggregation<T> {
     Aggregation<T> currentOp(CurrentOp currentOp);
 
     /**
-     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
-     * added fields.
-     * <p>
-     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
-     * adds the new fields.
-     *
-     * @param fields the stage definition
-     * @return this
-     * @aggregation.expression $addFields
-     * @mongodb.server.release 3.4
-     */
-    Aggregation<T> addFields(AddFields fields);
-
-    /**
      * Creates new documents in a sequence of documents where certain values in a field are missing.
      *
      * @param densify the Densify stage
@@ -129,6 +114,17 @@ public interface Aggregation<T> {
      * @since 2.3
      */
     Aggregation<T> densify(Densify densify);
+
+    /**
+     * Returns literal documents from input values.
+     *
+     * @param documents the documents to use
+     * @return this
+     * @mongodb.server.release 5.1
+     * @aggregation.expression $documents
+     * @since 2.3
+     */
+    Aggregation<T> documents(DocumentExpression... documents);
 
     /**
      * Execute the aggregation and get the results.
@@ -168,15 +164,21 @@ public interface Aggregation<T> {
     Aggregation<T> facet(Facet facet);
 
     /**
-     * Returns literal documents from input values.
+     * Populates null and missing field values within documents.
+     * <p>
+     * You can use $fill to populate missing data points:
+     * <ul>
+     * <li>In a sequence based on surrounding values.
+     * <li>With a fixed value.
+     * </ul>
      *
-     * @param documents the documents to use
+     * @param fill the fill definition
      * @return this
-     * @mongodb.server.release 5.1
-     * @aggregation.expression $documents
+     * @aggregation.expression $fill
+     * @mongodb.server.release 5.3
      * @since 2.3
      */
-    Aggregation<T> documents(DocumentExpression... documents);
+    Aggregation<T> fill(Fill fill);
 
     /**
      * Outputs documents in order of nearest to farthest from a specified point.
@@ -368,21 +370,18 @@ public interface Aggregation<T> {
     }
 
     /**
-     * Populates null and missing field values within documents.
+     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
+     * added fields.
      * <p>
-     * You can use $fill to populate missing data points:
-     * <ul>
-     * <li>In a sequence based on surrounding values.
-     * <li>With a fixed value.
-     * </ul>
+     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
+     * adds the new fields.
      *
-     * @param fill the fill definition
+     * @param fields the stage definition
      * @return this
-     * @aggregation.expression $fill
-     * @mongodb.server.release 5.3
-     * @since 2.3
+     * @aggregation.expression $addFields
+     * @mongodb.server.release 3.4
      */
-    Aggregation<T> fill(Fill fill);
+    Aggregation<T> addFields(AddFields fields);
 
     /**
      * Adds new fields to documents. $set outputs documents that contain all existing fields from the input documents and newly added
