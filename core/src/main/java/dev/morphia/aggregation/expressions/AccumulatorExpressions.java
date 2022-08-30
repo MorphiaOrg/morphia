@@ -1,21 +1,17 @@
 package dev.morphia.aggregation.expressions;
 
-import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.AccumulatorExpression;
+import dev.morphia.aggregation.expressions.impls.EdgeResultsExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.FunctionExpression;
+import dev.morphia.aggregation.expressions.impls.NEdgeResultsExpression;
 import dev.morphia.aggregation.expressions.impls.Push;
 import dev.morphia.query.Sort;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static java.util.Arrays.asList;
 
 /**
@@ -84,31 +80,7 @@ public final class AccumulatorExpressions {
      * @since 2.3
      */
     public static Expression bottom(Expression output, Sort... sortBy) {
-        return new Expression("$bottom") {
-            @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, getOperation(), () -> {
-                    expression(datastore, writer, "output", output, encoderContext);
-                    if (sortBy.length == 1) {
-                        writer.writeName("sortBy");
-
-                        AccumulatorExpressions.encode(writer, sortBy[0]);
-                    } else {
-                        array(writer, "sortBy", () -> {
-                            for (Sort sort : sortBy) {
-                                AccumulatorExpressions.encode(writer, sort);
-                            }
-                        });
-                    }
-                });
-            }
-        };
-    }
-
-    private static void encode(BsonWriter writer, Sort sort) {
-        document(writer, () -> {
-            writer.writeInt64(sort.getField(), sort.getOrder());
-        });
+        return new EdgeResultsExpression("$bottom", output, sortBy);
     }
 
     /**
@@ -126,26 +98,7 @@ public final class AccumulatorExpressions {
      * @since 2.3
      */
     public static Expression bottomN(Expression n, Expression output, Sort... sortBy) {
-        return new Expression("$bottomN") {
-            @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, getOperation(), () -> {
-                    expression(datastore, writer, "output", output, encoderContext);
-                    if (sortBy.length == 1) {
-                        writer.writeName("sortBy");
-
-                        AccumulatorExpressions.encode(writer, sortBy[0]);
-                    } else {
-                        array(writer, "sortBy", () -> {
-                            for (Sort sort : sortBy) {
-                                AccumulatorExpressions.encode(writer, sort);
-                            }
-                        });
-                    }
-                    expression(datastore, writer, "n", n, encoderContext);
-                });
-            }
-        };
+        return new NEdgeResultsExpression("$bottomN", n, output, sortBy);
     }
 
     /**
@@ -255,25 +208,7 @@ public final class AccumulatorExpressions {
      * @since 2.3
      */
     public static Expression top(Expression output, Sort... sortBy) {
-        return new Expression("$top") {
-            @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, getOperation(), () -> {
-                    expression(datastore, writer, "output", output, encoderContext);
-                    if (sortBy.length == 1) {
-                        writer.writeName("sortBy");
-
-                        AccumulatorExpressions.encode(writer, sortBy[0]);
-                    } else {
-                        array(writer, "sortBy", () -> {
-                            for (Sort sort : sortBy) {
-                                AccumulatorExpressions.encode(writer, sort);
-                            }
-                        });
-                    }
-                });
-            }
-        };
+        return new EdgeResultsExpression("$top", output, sortBy);
     }
 
     /**
@@ -291,26 +226,7 @@ public final class AccumulatorExpressions {
      * @since 2.3
      */
     public static Expression topN(Expression n, Expression output, Sort... sortBy) {
-        return new Expression("$topN") {
-            @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, getOperation(), () -> {
-                    expression(datastore, writer, "output", output, encoderContext);
-                    if (sortBy.length == 1) {
-                        writer.writeName("sortBy");
-
-                        AccumulatorExpressions.encode(writer, sortBy[0]);
-                    } else {
-                        array(writer, "sortBy", () -> {
-                            for (Sort sort : sortBy) {
-                                AccumulatorExpressions.encode(writer, sort);
-                            }
-                        });
-                    }
-                    expression(datastore, writer, "n", n, encoderContext);
-                });
-            }
-        };
+        return new NEdgeResultsExpression("$topN", n, output, sortBy);
     }
 }
 
