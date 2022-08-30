@@ -145,6 +145,34 @@ public final class WindowExpressions {
     }
 
     /**
+     * Fills null and missing fields in a window using linear interpolation based on surrounding field values.
+     * <p>
+     * $linearFill is only available in the $setWindowFields stage.
+     *
+     * @param fillValue the expression to use when calculating fill values
+     * @return the fill expression
+     * @mongodb.server.release 5.3
+     * @aggregation.expression $linearFill
+     * @since 2.3
+     */
+    public static Expression linearFill(Expression fillValue) {
+        return new Expression("$linearFill", fillValue);
+    }
+
+    /**
+     * Last observation carried forward. Set values for null and missing fields in a window to the last non-null value for the field.
+     *
+     * @param fillValue the expression to use when calculating fill values
+     * @return the fill expression
+     * @mongodb.server.release 5.2
+     * @aggregation.expression $locf
+     * @since 2.3
+     */
+    public static Expression locf(Expression fillValue) {
+        return new Expression("$locf", fillValue);
+    }
+
+    /**
      * Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.
      *
      * @return the new expression

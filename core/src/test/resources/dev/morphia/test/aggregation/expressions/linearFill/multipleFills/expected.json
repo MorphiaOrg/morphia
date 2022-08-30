@@ -1,0 +1,6 @@
+{ time: ISODate("2021-03-08T09:00:00.000Z"), price: 500.0, linearFillPrice: 500.0, locfPrice: 500.0 },
+{ time: ISODate("2021-03-08T10:00:00.000Z"), linearFillPrice: 507.5, locfPrice: 500.0 },
+{ time: ISODate("2021-03-08T11:00:00.000Z"), price: 515.0, linearFillPrice: 515.0, locfPrice: 515.0 },
+{ time: ISODate("2021-03-08T12:00:00.000Z"), linearFillPrice: 505.0, locfPrice: 515.0 },
+{ time: ISODate("2021-03-08T13:00:00.000Z"), linearFillPrice: 495.0, locfPrice: 515.0 },
+{ time: ISODate("2021-03-08T14:00:00.000Z"), price: 485.0, linearFillPrice: 485.0, locfPrice: 485.0 }
