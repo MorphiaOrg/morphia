@@ -170,6 +170,17 @@ public final class AccumulatorExpressions {
     }
 
     /**
+     * Returns the highest expression value for each group.
+     *
+     * @param value the value
+     * @return the new expression
+     * @aggregation.expression $max
+     */
+    public static Expression max(Expression value) {
+        return new Expression("$max", value);
+    }
+
+    /**
      * Returns an aggregation of the max n elements within a group. The elements returned are meaningful only if in a specified sort
      * order. If the group contains fewer than n elements, $maxN returns all elements in the group.
      *
@@ -187,17 +198,6 @@ public final class AccumulatorExpressions {
     }
 
     /**
-     * Returns the highest expression value for each group.
-     *
-     * @param value the value
-     * @return the new expression
-     * @aggregation.expression $max
-     */
-    public static Expression max(Expression value) {
-        return new Expression("$max", value);
-    }
-
-    /**
      * Returns the lowest expression value for each group.
      *
      * @param value the value
@@ -206,6 +206,23 @@ public final class AccumulatorExpressions {
      */
     public static Expression min(Expression value) {
         return new Expression("$min", value);
+    }
+
+    /**
+     * Returns an aggregation of the min n elements within a group. The elements returned are meaningful only if in a specified sort
+     * order. If the group contains fewer than n elements, $minN returns all elements in the group.
+     *
+     * @param n     the number of results per group and n has to be a positive integral expression that is either a constant or depends on
+     *              the _id value for $group.
+     * @param input the expression that is the input to $minN. It is evaluated for each element in the group and $minN preserves the
+     *              minimum n values.
+     * @return the expression
+     * @aggregation.expression $minN
+     * @mongodb.server.release 5.2
+     * @since 2.3
+     */
+    public static Expression minN(Expression n, Expression input) {
+        return new EndResultsExpression("$minN", n, input);
     }
 
     /**

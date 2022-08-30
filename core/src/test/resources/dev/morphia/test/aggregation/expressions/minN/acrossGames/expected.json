@@ -1,0 +1,2 @@
+{_id: 'G2', minScores: [ [ 10, 'PlayerA' ], [ 14, 'PlayerB' ], [ 66, 'PlayerC' ] ]},
+{_id: 'G1', minScores: [ [ 1, 'PlayerD' ], [ 31, 'PlayerA' ], [ 33, 'PlayerB' ] ]}
