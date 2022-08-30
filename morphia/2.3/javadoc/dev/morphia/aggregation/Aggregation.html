@@ -427,7 +427,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#documents(dev.morphia.aggregation.stages.Documents)">documents</a></span>​(<a href="stages/Documents.html" title="class in dev.morphia.aggregation.stages">Documents</a>&nbsp;documents)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#documents(dev.morphia.aggregation.expressions.impls.DocumentExpression...)">documents</a></span>​(<a href="expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>...&nbsp;documents)</code></th>
 <td class="colLast">
 <div class="block">Returns literal documents from input values.</div>
 </td>
@@ -776,26 +776,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/3.6">3.6</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/currentOp">Aggregration Expression:  $currentOp</a></dd></dl>
 </dl></dl></li>
 </ul>
-<a id="addFields(dev.morphia.aggregation.stages.AddFields)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>addFields</h4>
-<pre class="methodSignature"><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;&nbsp;addFields​(<a href="stages/AddFields.html" title="class in dev.morphia.aggregation.stages">AddFields</a>&nbsp;fields)</pre>
-<div class="block">Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
- added fields.
- <p>
- The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
- adds the new fields.</p></div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>fields</code> - the stage definition</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>this</dd>
-<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/3.4">3.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/addFields">Aggregration Expression:  $addFields</a></dd></dl>
-</dl></dl></li>
-</ul>
 <a id="densify(dev.morphia.aggregation.stages.Densify)">
 <!--   -->
 </a>
@@ -812,6 +792,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
 <dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.1">5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/densify">Aggregration Expression:  $densify</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="documents(dev.morphia.aggregation.expressions.impls.DocumentExpression...)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>documents</h4>
+<pre class="methodSignature"><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;&nbsp;documents​(<a href="expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>...&nbsp;documents)</pre>
+<div class="block">Returns literal documents from input values.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>documents</code> - the documents to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.1">5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/documents">Aggregration Expression:  $documents</a></dd></dl>
 </dl></dl></li>
 </ul>
 <a id="execute(java.lang.Class)">
@@ -876,22 +874,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/3.4">3.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/facet">Aggregration Expression:  $facet</a></dd></dl>
 </dl></dl></li>
 </ul>
-<a id="documents(dev.morphia.aggregation.stages.Documents)">
+<a id="fill(dev.morphia.aggregation.stages.Fill)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>documents</h4>
-<pre class="methodSignature"><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;&nbsp;documents​(<a href="stages/Documents.html" title="class in dev.morphia.aggregation.stages">Documents</a>&nbsp;documents)</pre>
-<div class="block">Returns literal documents from input values.</div>
+<h4>fill</h4>
+<pre class="methodSignature"><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;&nbsp;fill​(<a href="stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;fill)</pre>
+<div class="block">Populates null and missing field values within documents.
+ <p>
+ You can use $fill to populate missing data points:
+ </p><ul>
+ <li>In a sequence based on surrounding values.
+ </li><li>With a fixed value.
+ </li></ul></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>documents</code> - the Documents stage</dd>
+<dd><code>fill</code> - the fill definition</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
-<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.1">5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/documents">Aggregration Expression:  $documents</a></dd></dl>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.3">5.3</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/fill">Aggregration Expression:  $fill</a></dd></dl>
 </dl></dl></li>
 </ul>
 <a id="geoNear(dev.morphia.aggregation.stages.GeoNear)">
@@ -1201,28 +1205,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/set">Aggregration Expression:  $set</a></dd></dl>
 </dl></li>
 </ul>
-<a id="fill(dev.morphia.aggregation.stages.Fill)">
+<a id="addFields(dev.morphia.aggregation.stages.AddFields)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>fill</h4>
-<pre class="methodSignature"><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;&nbsp;fill​(<a href="stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;fill)</pre>
-<div class="block">Populates null and missing field values within documents.
+<h4>addFields</h4>
+<pre class="methodSignature"><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;&nbsp;addFields​(<a href="stages/AddFields.html" title="class in dev.morphia.aggregation.stages">AddFields</a>&nbsp;fields)</pre>
+<div class="block">Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
+ added fields.
  <p>
- You can use $fill to populate missing data points:
- </p><ul>
- <li>In a sequence based on surrounding values.
- </li><li>With a fixed value.
- </li></ul></div>
+ The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
+ adds the new fields.</p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>fill</code> - the fill definition</dd>
+<dd><code>fields</code> - the stage definition</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.3</dd>
-<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.3">5.3</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/fill">Aggregration Expression:  $fill</a></dd></dl>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/3.4">3.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/addFields">Aggregration Expression:  $addFields</a></dd></dl>
 </dl></dl></li>
 </ul>
 <a id="set(dev.morphia.aggregation.stages.Set)">

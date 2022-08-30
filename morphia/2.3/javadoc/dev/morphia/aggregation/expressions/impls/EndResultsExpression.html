@@ -226,7 +226,7 @@
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="NEdgeResultsExpression.html">2.3-SNAPSHOT</a>
+    <a class="version is-current" href="EndResultsExpression.html">2.3-SNAPSHOT</a>
     <a class="version is-missing" href="../../../../../../../2.2/index.html">2.2</a>
     <a class="version is-missing" href="../../../../../../../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../../../../../../../2.0/index.html">2.0</a>
@@ -239,7 +239,7 @@
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
-            parent.document.title="NEdgeResultsExpression (Morphia)";
+            parent.document.title="EndResultsExpression (Morphia)";
         }
     }
     catch(err) {
@@ -272,7 +272,7 @@ loadScripts(document, 'script');</script>
 <li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/NEdgeResultsExpression.html">Use</a></li>
+<li><a href="class-use/EndResultsExpression.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>
@@ -335,7 +335,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <main role="main">
 <div class="header">
 <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.aggregation.expressions.impls</a></div>
-<h2 title="Class NEdgeResultsExpression" class="title">Class NEdgeResultsExpression</h2>
+<h2 title="Class EndResultsExpression" class="title">Class EndResultsExpression</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -345,7 +345,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">dev.morphia.aggregation.expressions.impls.Expression</a></li>
 <li>
 <ul class="inheritance">
-<li>dev.morphia.aggregation.expressions.impls.NEdgeResultsExpression</li>
+<li>dev.morphia.aggregation.expressions.impls.EndResultsExpression</li>
 </ul>
 </li>
 </ul>
@@ -355,8 +355,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public class <span class="typeNameLabel">NEdgeResultsExpression</span>
+<pre>public class <span class="typeNameLabel">EndResultsExpression</span>
 extends <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></pre>
+<div class="block">Gives first/last results</div>
 </li>
 </ul>
 </div>
@@ -377,10 +378,9 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.expres
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.query.Sort...)">NEdgeResultsExpression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
-                      <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
-                      <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;output,
-                      <a href="../../../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sortBy)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">EndResultsExpression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
+                    <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
+                    <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;input)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody></table>
@@ -439,16 +439,15 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.expres
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.query.Sort...)">
+<a id="<init>(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>NEdgeResultsExpression</h4>
-<pre>public&nbsp;NEdgeResultsExpression​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
-                              <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
-                              <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;output,
-                              <a href="../../../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sortBy)</pre>
+<h4>EndResultsExpression</h4>
+<pre>public&nbsp;EndResultsExpression​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operation,
+                            <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
+                            <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;input)</pre>
 </li>
 </ul>
 </li>
@@ -503,7 +502,7 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.expres
 <li><a href="../../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="navBarCell1Rev">Class</li>
-<li><a href="class-use/NEdgeResultsExpression.html">Use</a></li>
+<li><a href="class-use/EndResultsExpression.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
 <li><a href="../../../../../deprecated-list.html">Deprecated</a></li>
 <li><a href="../../../../../index-all.html">Index</a></li>

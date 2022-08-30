@@ -245,7 +245,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -428,34 +428,58 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#firstN(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">firstN</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
+      <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;input)</code></th>
+<td class="colLast">
+<div class="block">Returns an aggregation of the first n elements within a group.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#function(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression...)">function</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;body,
         <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>...&nbsp;args)</code></th>
 <td class="colLast">
 <div class="block">Defines a custom aggregation function or expression in JavaScript.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#last(dev.morphia.aggregation.expressions.impls.Expression)">last</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns a value from the last document for each group.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lastN(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">lastN</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
+     <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;input)</code></th>
+<td class="colLast">
+<div class="block">Returns an aggregation of the last n elements within a group.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max(dev.morphia.aggregation.expressions.impls.Expression)">max</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the highest expression value for each group.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxN(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">maxN</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
+    <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;input)</code></th>
+<td class="colLast">
+<div class="block">Returns an aggregation of the max n elements within a group.</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min(dev.morphia.aggregation.expressions.impls.Expression)">min</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the lowest expression value for each group.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Push.html" title="class in dev.morphia.aggregation.expressions.impls">Push</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push()">push</a></span>()</code></th>
 <td class="colLast">
@@ -463,14 +487,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  same group by key.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push(dev.morphia.aggregation.expressions.impls.Expression)">push</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns an array of expression values for each group.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sum(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression...)">sum</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;first,
    <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
@@ -478,7 +502,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Calculates and returns the sum of numeric values.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#top(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.query.Sort...)">top</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;output,
    <a href="../../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sortBy)</code></th>
@@ -486,7 +510,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Returns the top element within a group according to the specified sort order.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#topN(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.query.Sort...)">topN</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
     <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;output,
@@ -612,7 +636,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>n</code> - the number of results per group and has to be a positive integral expression that is either a constant or depends on
-              the
+               the
                _id value for $group</dd>
 <dd><code>output</code> - the expression listing the fields to use</dd>
 <dd><code>sortBy</code> - the sort order</dd>
@@ -638,6 +662,28 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd>the new expression</dd>
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/first">Aggregration Expression:  $first</a></dd></dl>
 </dl></li>
+</ul>
+<a id="firstN(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>firstN</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;firstN​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
+                                <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;input)</pre>
+<div class="block">Returns an aggregation of the first n elements within a group. The elements returned are meaningful only if in a specified sort
+ order. If the group contains fewer than n elements, $firstN returns all elements in the group.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>n</code> - the number of results per group and has to be a positive integral expression that is either a constant or depends on
+              the _id value for $group</dd>
+<dd><code>input</code> - the expression listing the fields to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.2">5.2</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/firstN">Aggregration Expression:  $firstN</a></dd></dl>
+</dl></dl></li>
 </ul>
 <a id="function(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression...)">
 <!--   -->
@@ -674,6 +720,51 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd>the new expression</dd>
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/last">Aggregration Expression:  $last</a></dd></dl>
 </dl></li>
+</ul>
+<a id="lastN(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>lastN</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;lastN​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
+                               <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;input)</pre>
+<div class="block">Returns an aggregation of the last n elements within a group. The elements returned are meaningful only if in a specified sort
+ order. If the group contains fewer than n elements, $lastN returns all elements in the group.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>n</code> - the number of results per group and has to be a positive integral expression that is either a constant or depends on
+              the _id value for $group</dd>
+<dd><code>input</code> - the expression listing the fields to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.2">5.2</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/lastN">Aggregration Expression:  $lastN</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="maxN(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>maxN</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;maxN​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
+                              <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;input)</pre>
+<div class="block">Returns an aggregation of the max n elements within a group. The elements returned are meaningful only if in a specified sort
+ order. If the group contains fewer than n elements, $maxN returns all elements in the group.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>n</code> - the number of results per group and n has to be a positive integral expression that is either a constant or depends on
+              the _id value for $group.</dd>
+<dd><code>input</code> - the expression that is the input to $maxN. It is evaluated for each element in the group and $maxN preserves the
+              maximum n values.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.2">5.2</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/maxN">Aggregration Expression:  $maxN</a></dd></dl>
+</dl></dl></li>
 </ul>
 <a id="max(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -792,7 +883,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>n</code> - the number of results per group and has to be a positive integral expression that is either a constant or depends on
-              the
+               the
                _id value for $group</dd>
 <dd><code>output</code> - the expression listing the fields to use</dd>
 <dd><code>sortBy</code> - the sort order</dd>
