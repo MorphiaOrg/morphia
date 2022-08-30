@@ -1,0 +1,16 @@
+[
+  {
+    "$group":
+    {
+      "_id": {"gameId": "$gameId"},
+      "gamescores":
+      {
+        "$lastN":
+        {
+          "input": "$score",
+          "n": { "$cond": [ {"$eq": ["$gameId","G2"] }, 1, 3 ] }
+        }
+      }
+    }
+  }
+]

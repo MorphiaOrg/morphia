@@ -128,6 +128,21 @@ public final class AccumulatorExpressions {
     public static Expression firstN(Expression n, Expression input) {
         return new EndResultsExpression("$firstN", n, input);
     }
+    /**
+     * Returns an aggregation of the last n elements within a group. The elements returned are meaningful only if in a specified sort
+     * order. If the group contains fewer than n elements, $lastN returns all elements in the group.
+     *
+     * @param n     the number of results per group and has to be a positive integral expression that is either a constant or depends on
+     *              the _id value for $group
+     * @param input the expression listing the fields to use
+     * @return the expression
+     * @aggregation.expression $lastN
+     * @mongodb.server.release 5.2
+     * @since 2.3
+     */
+    public static Expression lastN(Expression n, Expression input) {
+        return new EndResultsExpression("$lastN", n, input);
+    }
 
     /**
      * Defines a custom aggregation function or expression in JavaScript.

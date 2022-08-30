@@ -1,0 +1,13 @@
+[
+  {
+    "$group": {
+      "_id": "$gameId",
+      "playerId": {
+        "$lastN": {
+          "input": ["$playerId", "$score"],
+          "n": 3
+        }
+      }
+    }
+  }
+]
