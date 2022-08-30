@@ -2,11 +2,12 @@ package dev.morphia.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.AccumulatorExpression;
-import dev.morphia.aggregation.expressions.impls.EdgeResultsExpression;
+import dev.morphia.aggregation.expressions.impls.EndResultsExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.FunctionExpression;
-import dev.morphia.aggregation.expressions.impls.NEdgeResultsExpression;
+import dev.morphia.aggregation.expressions.impls.NRankedResultsExpression;
 import dev.morphia.aggregation.expressions.impls.Push;
+import dev.morphia.aggregation.expressions.impls.RankedResultsExpression;
 import dev.morphia.query.Sort;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public final class AccumulatorExpressions {
      * @since 2.3
      */
     public static Expression bottom(Expression output, Sort... sortBy) {
-        return new EdgeResultsExpression("$bottom", output, sortBy);
+        return new RankedResultsExpression("$bottom", output, sortBy);
     }
 
     /**
@@ -88,7 +89,7 @@ public final class AccumulatorExpressions {
      * than n elements, $bottomN returns all elements in the group.
      *
      * @param n      the number of results per group and has to be a positive integral expression that is either a constant or depends on
-     *              the
+     *               the
      *               _id value for $group
      * @param output the expression listing the fields to use
      * @param sortBy the sort order
@@ -98,7 +99,7 @@ public final class AccumulatorExpressions {
      * @since 2.3
      */
     public static Expression bottomN(Expression n, Expression output, Sort... sortBy) {
-        return new NEdgeResultsExpression("$bottomN", n, output, sortBy);
+        return new NRankedResultsExpression("$bottomN", n, output, sortBy);
     }
 
     /**
@@ -110,6 +111,22 @@ public final class AccumulatorExpressions {
      */
     public static Expression first(Expression value) {
         return new Expression("$first", value);
+    }
+
+    /**
+     * Returns an aggregation of the first n elements within a group. The elements returned are meaningful only if in a specified sort
+     * order. If the group contains fewer than n elements, $firstN returns all elements in the group.
+     *
+     * @param n     the number of results per group and has to be a positive integral expression that is either a constant or depends on
+     *              the _id value for $group
+     * @param input the expression listing the fields to use
+     * @return the expression
+     * @aggregation.expression $firstN
+     * @mongodb.server.release 5.2
+     * @since 2.3
+     */
+    public static Expression firstN(Expression n, Expression input) {
+        return new EndResultsExpression("$firstN", n, input);
     }
 
     /**
@@ -208,7 +225,7 @@ public final class AccumulatorExpressions {
      * @since 2.3
      */
     public static Expression top(Expression output, Sort... sortBy) {
-        return new EdgeResultsExpression("$top", output, sortBy);
+        return new RankedResultsExpression("$top", output, sortBy);
     }
 
     /**
@@ -216,7 +233,7 @@ public final class AccumulatorExpressions {
      * than n elements, $topN returns all elements in the group.
      *
      * @param n      the number of results per group and has to be a positive integral expression that is either a constant or depends on
-     *              the
+     *               the
      *               _id value for $group
      * @param output the expression listing the fields to use
      * @param sortBy the sort order
@@ -226,7 +243,7 @@ public final class AccumulatorExpressions {
      * @since 2.3
      */
     public static Expression topN(Expression n, Expression output, Sort... sortBy) {
-        return new NEdgeResultsExpression("$topN", n, output, sortBy);
+        return new NRankedResultsExpression("$topN", n, output, sortBy);
     }
 }
 

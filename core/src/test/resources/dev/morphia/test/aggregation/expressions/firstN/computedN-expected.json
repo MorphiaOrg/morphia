@@ -1,0 +1,2 @@
+{ _id: { gameId: 'G1' }, gamescores: [ 31, 33, 99 ] },
+{ _id: { gameId: 'G2' }, gamescores: [ 10 ] }
