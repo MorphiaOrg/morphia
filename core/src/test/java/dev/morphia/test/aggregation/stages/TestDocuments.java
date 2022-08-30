@@ -21,11 +21,9 @@ public class TestDocuments extends AggregationTest {
                                    .pipeline(
                                        documents(
                                            document("zip_id", value(94301))
-                                               .field("name",
-                                                   value("Palo Alto, CA")),
+                                               .field("name", value("Palo Alto, CA")),
                                            document("zip_id", value(10019))
-                                                  .field("name",
-                                                      value("New York, NY")))));
+                                                  .field("name", value("New York, NY")))));
 
         });
     }

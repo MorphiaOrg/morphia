@@ -1,5 +1,6 @@
 package dev.morphia.aggregation;
 
+import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.AddFields;
 import dev.morphia.aggregation.stages.AutoBucket;
@@ -169,13 +170,13 @@ public interface Aggregation<T> {
     /**
      * Returns literal documents from input values.
      *
-     * @param documents the Documents stage
+     * @param documents the documents to use
      * @return this
      * @mongodb.server.release 5.1
      * @aggregation.expression $documents
      * @since 2.3
      */
-    Aggregation<T> documents(Documents documents);
+    Aggregation<T> documents(DocumentExpression... documents);
 
     /**
      * Outputs documents in order of nearest to farthest from a specified point.

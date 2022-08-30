@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.LiteralExpression;
@@ -109,7 +110,7 @@ public final class Expressions {
      * @param value the value
      * @return the new expression
      */
-    public static ValueExpression value(Object value) {
+    public static ValueExpression value(@Nullable Object value) {
         return new ValueExpression(value);
     }
 }

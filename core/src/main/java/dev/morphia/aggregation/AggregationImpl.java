@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.Expressions;
+import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.AddFields;
 import dev.morphia.aggregation.stages.AutoBucket;
@@ -264,8 +265,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> documents(Documents documents) {
-        addStage(documents);
+    public Aggregation<T> documents(DocumentExpression... documents) {
+        addStage(Documents.documents(documents));
         return this;
     }
 

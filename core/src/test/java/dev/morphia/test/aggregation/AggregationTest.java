@@ -41,6 +41,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.bson.json.JsonWriterSettings.builder;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class AggregationTest extends TestBase {
@@ -107,8 +108,11 @@ public class AggregationTest extends TestBase {
     @NotNull
     private List<Document> loadJson(String name) {
         List<Document> data = new ArrayList<>();
-        try (InputStream stream = getClass().getResourceAsStream(name);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+        InputStream stream = getClass().getResourceAsStream(name);
+        if (stream == null) {
+            fail("missing data file: " + name);
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             while (reader.ready()) {
                 data.add(Document.parse(reader.readLine()));
             }

@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -8,7 +9,7 @@ import org.bson.codecs.EncoderContext;
 public class ValueExpression extends Expression implements SingleValuedExpression {
     private final Object object;
 
-    public ValueExpression(Object value) {
+    public ValueExpression(@Nullable Object value) {
         super("unused");
         object = value;
     }

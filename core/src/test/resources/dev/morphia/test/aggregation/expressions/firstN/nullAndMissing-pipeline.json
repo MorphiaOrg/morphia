@@ -1,0 +1,25 @@
+[
+  {
+    "$documents": [
+      { "playerId": "PlayerA", "gameId": "G1", "score": 1 },
+      { "playerId": "PlayerB", "gameId": "G1", "score": 2 },
+      { "playerId": "PlayerC", "gameId": "G1", "score": 3 },
+      { "playerId": "PlayerD", "gameId": "G1"},
+      { "playerId": "PlayerE", "gameId": "G1", "score": null }
+    ]
+  },
+  {
+    "$group":
+    {
+      "_id": "$gameId",
+      "firstFiveScores":
+      {
+        "$firstN":
+        {
+          "input": "$score",
+          "n": 5
+        }
+      }
+    }
+  }
+]
