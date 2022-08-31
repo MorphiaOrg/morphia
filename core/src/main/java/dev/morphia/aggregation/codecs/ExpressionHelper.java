@@ -10,6 +10,7 @@ import dev.morphia.aggregation.expressions.impls.ValueExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+import dev.morphia.query.Sort;
 import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -33,12 +34,6 @@ public final class ExpressionHelper {
         writer.writeEndArray();
     }
 
-    public static void array(BsonWriter writer, String name, Runnable body) {
-        writer.writeStartArray(name);
-        body.run();
-        writer.writeEndArray();
-    }
-
     public static void array(Datastore datastore, BsonWriter writer, String name, @Nullable List<Expression> list,
                              EncoderContext encoderContext) {
         if (list != null) {
@@ -47,6 +42,34 @@ public final class ExpressionHelper {
                     wrapExpression(datastore, writer, expression, encoderContext);
                 }
             });
+        }
+    }
+
+    public static void array(BsonWriter writer, String name, Runnable body) {
+        writer.writeStartArray(name);
+        body.run();
+        writer.writeEndArray();
+    }
+
+    /**
+     * @param datastore
+     * @param writer
+     * @param expression
+     * @param encoderContext
+     * @morphia.internal
+     * @since 2.3
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static void wrapExpression(Datastore datastore, BsonWriter writer, @Nullable Expression expression,
+                                      EncoderContext encoderContext) {
+        if (expression != null) {
+            if (expression instanceof SingleValuedExpression) {
+                expression.encode(datastore, writer, encoderContext);
+            } else {
+                document(writer, () -> {
+                    expression.encode(datastore, writer, encoderContext);
+                });
+            }
         }
     }
 
@@ -69,6 +92,12 @@ public final class ExpressionHelper {
         writer.writeEndDocument();
 
         return writer.getDocument();
+    }
+
+    public static void encode(BsonWriter writer, Sort sort) {
+        document(writer, () -> {
+            writer.writeInt64(sort.getField(), sort.getOrder());
+        });
     }
 
     /**
@@ -169,29 +198,11 @@ public final class ExpressionHelper {
     @MorphiaInternal
     public static void value(Datastore datastore, BsonWriter writer, @Nullable Object value, EncoderContext encoderContext) {
         if (value != null) {
-            Codec codec = datastore.getCodecRegistry().get(value.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, value);
-        }
-    }
-
-    /**
-     * @param datastore
-     * @param writer
-     * @param expression
-     * @param encoderContext
-     * @morphia.internal
-     * @since 2.3
-     */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void wrapExpression(Datastore datastore, BsonWriter writer, @Nullable Expression expression,
-                                      EncoderContext encoderContext) {
-        if (expression != null) {
-            if (expression instanceof SingleValuedExpression) {
-                expression.encode(datastore, writer, encoderContext);
+            if (value instanceof Expression) {
+                ((Expression) value).encode(datastore, writer, encoderContext);
             } else {
-                document(writer, () -> {
-                    expression.encode(datastore, writer, encoderContext);
-                });
+                Codec codec = datastore.getCodecRegistry().get(value.getClass());
+                encoderContext.encodeWithChildContext(codec, writer, value);
             }
         }
     }

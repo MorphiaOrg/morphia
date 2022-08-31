@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.expressions;
 
+import dev.morphia.Datastore;
+import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.aggregation.expressions.impls.ArrayExpression;
 import dev.morphia.aggregation.expressions.impls.ArrayFilterExpression;
 import dev.morphia.aggregation.expressions.impls.ArrayIndexExpression;
@@ -10,9 +12,16 @@ import dev.morphia.aggregation.expressions.impls.RangeExpression;
 import dev.morphia.aggregation.expressions.impls.ReduceExpression;
 import dev.morphia.aggregation.expressions.impls.SliceExpression;
 import dev.morphia.aggregation.expressions.impls.ZipExpression;
+import dev.morphia.annotations.internal.MorphiaExperimental;
+import dev.morphia.query.Sort;
+import dev.morphia.sofia.Sofia;
+import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
 import java.util.List;
 
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static java.util.Arrays.asList;
 
 /**
@@ -34,6 +43,21 @@ public final class ArrayExpressions {
      */
     public static ArrayExpression array(Expression... expressions) {
         return new ArrayLiteral(expressions);
+    }
+
+    /**
+     * Creates an array of the given objects.  This method is an experiment in accepting a wider breadth of types and finding the
+     * expressions at encoding time and dealing with them appropriately. There might be bugs in this approach. This method might go away.
+     * But it's useful in some Morphia tests, at least.
+     *
+     * @param objects the objects
+     * @return the new expression
+     * @since 2.3
+     * @morphia.experimental
+     */
+    @MorphiaExperimental
+    public static ArrayExpression array(Object... objects) {
+        return new ArrayLiteral(objects);
     }
 
     /**
@@ -199,6 +223,40 @@ public final class ArrayExpressions {
      */
     public static Expression slice(Expression array, int size) {
         return new SliceExpression(array, size);
+    }
+
+    /**
+     * Sorts an array based on its elements. To sort by value, use {@link Sort#naturalAscending()} or {@link Sort#naturalDescending()}.
+     * See <a href="https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/#sort-by-value">here</a> for details.
+     *
+     * @param input the array to be sorted.
+     * @param sort  the sort order
+     * @return the new expression
+     * @mongodb.server.release 5.2
+     * @aggregation.expression $sortArray
+     * @since 2.3
+     */
+    public static Expression sortArray(Expression input, Sort... sort) {
+        if (sort.length == 0) {
+            throw new IllegalArgumentException(Sofia.atLeastOneSortRequired());
+        }
+        return new Expression("$sortArray") {
+            @Override
+            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+                document(writer, getOperation(), () -> {
+                    expression(datastore, writer, "input", input, encoderContext);
+                    if (sort[0].getField().equals(Sort.NATURAL)) {
+                        ExpressionHelper.value(writer, "sortBy", sort[0].getOrder());
+                    } else {
+                        document(writer, "sortBy", () -> {
+                            for (Sort s : sort) {
+                                writer.writeInt64(s.getField(), s.getOrder());
+                            }
+                        });
+                    }
+                });
+            }
+        };
     }
 
     /**

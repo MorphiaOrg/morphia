@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.query.Sort;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -28,11 +29,11 @@ public class NRankedResultsExpression extends Expression {
             if (sortBy.length == 1) {
                 writer.writeName("sortBy");
 
-                RankedResultsExpression.encode(writer, sortBy[0]);
+                ExpressionHelper.encode(writer, sortBy[0]);
             } else {
                 array(writer, "sortBy", () -> {
                     for (Sort sort : sortBy) {
-                        RankedResultsExpression.encode(writer, sort);
+                        ExpressionHelper.encode(writer, sort);
                     }
                 });
             }

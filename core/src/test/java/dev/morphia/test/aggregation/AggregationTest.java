@@ -48,13 +48,14 @@ public class AggregationTest extends TestBase {
 
     protected final ObjectMapper mapper = new ObjectMapper();
 
-    public void testPipeline(double serverVersion, String resourceName, String collection,
+    public void testPipeline(double serverVersion, String resourceName,
                              Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        testPipeline(serverVersion, resourceName, collection, true, true, pipeline);
+        testPipeline(serverVersion, resourceName, true, true, pipeline);
     }
 
-    public void testPipeline(double serverVersion, String resourceName, String collection, boolean removeIds, boolean orderMatters,
+    public void testPipeline(double serverVersion, String resourceName, boolean removeIds, boolean orderMatters,
                              Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
+        String collection = "pipeline-test";
         checkMinServerVersion(serverVersion);
         loadData(collection, resourceName);
 

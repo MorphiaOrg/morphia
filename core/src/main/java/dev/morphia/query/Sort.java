@@ -7,8 +7,7 @@ package dev.morphia.query;
  * @since 1.3
  */
 public class Sort {
-    private static final String NATURAL = "$natural";
-
+    public static final String NATURAL = "$natural";
     private final String field;
     private final int order;
 

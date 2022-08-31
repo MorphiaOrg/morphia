@@ -1,0 +1,13 @@
+[
+  {
+    "$project": {
+      "_id": 0,
+      "result": {
+        "$sortArray": {
+          "input": [ 1, 4, 1, 6, 12, 5 ],
+          "sortBy": 1
+        }
+      }
+    }
+  }
+]

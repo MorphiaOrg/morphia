@@ -64,14 +64,14 @@ public class Projection extends Stage {
     public List<PipelineField> getFields() {
         List<PipelineField> fields = new ArrayList<>();
 
+        if (suppressId) {
+            fields.add(new PipelineField("_id", value(0)));
+        }
         if (includes != null) {
             fields.addAll(includes.getFields());
         }
         if (excludes != null) {
             fields.addAll(excludes.getFields());
-        }
-        if (suppressId) {
-            fields.add(new PipelineField("_id", value(false)));
         }
         return fields;
     }

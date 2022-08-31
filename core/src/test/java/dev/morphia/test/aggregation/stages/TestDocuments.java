@@ -11,7 +11,7 @@ import static dev.morphia.aggregation.stages.Lookup.lookup;
 public class TestDocuments extends AggregationTest {
     @Test
     public void testLookup() {
-        testPipeline(5.1, "lookup", "locations", aggregation -> {
+        testPipeline(5.1, "lookup", aggregation -> {
             return aggregation
                        .match()
                        .lookup(lookup()

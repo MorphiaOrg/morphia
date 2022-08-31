@@ -1,0 +1,1 @@
+{ result: [4, 5, 6, 10.23, 20, 21, 'Gratis', { a: null }, { a: 'Free' }, { a: 'On sale' }, { a: { sale: true, price: 19 } }] }

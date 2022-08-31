@@ -13,7 +13,7 @@ import static dev.morphia.query.Sort.ascending;
 public class TestFill extends AggregationTest {
     @Test
     public void testConstantValue() {
-        testPipeline(5.3, "constantValue", "dailySales", aggregation -> {
+        testPipeline(5.3, "constantValue", aggregation -> {
             return aggregation
                        .fill(fill()
                                  .field("bootsSold", value(0))
@@ -24,7 +24,7 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testDistinctPartitions() {
-        testPipeline(5.3, "distinctPartitions", "restaurantReviewsMultiple", aggregation -> {
+        testPipeline(5.3, "distinctPartitions", aggregation -> {
             return aggregation
                        .fill(fill()
                                  .sortBy(ascending("date"))
@@ -36,7 +36,7 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testLastObserved() {
-        testPipeline(5.3, "lastObserved", "restaurantReviews", aggregation -> {
+        testPipeline(5.3, "lastObserved", aggregation -> {
             return aggregation
                        .fill(fill()
                                  .sortBy(ascending("date"))
@@ -46,7 +46,7 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testLinearInterpolation() {
-        testPipeline(5.3, "linearInterpolation", "stock", aggregation -> {
+        testPipeline(5.3, "linearInterpolation", aggregation -> {
             return aggregation
                        .fill(fill()
                                  .sortBy(ascending("time"))
