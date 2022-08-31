@@ -329,22 +329,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.codecs">dev.morphia.aggregation.codecs</a></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.expressions">dev.morphia.aggregation.expressions</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.expressions.impls">dev.morphia.aggregation.expressions.impls</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#dev.morphia.aggregation.stages">dev.morphia.aggregation.stages</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="#dev.morphia.query">dev.morphia.query</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="#dev.morphia.query.updates">dev.morphia.query.updates</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -386,6 +390,29 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </section>
 </li>
 <li class="blockList">
+<section role="region"><a id="dev.morphia.aggregation.codecs">
+<!--   -->
+</a>
+<h3>Uses of <a href="../Sort.html" title="class in dev.morphia.query">Sort</a> in <a href="../../aggregation/codecs/package-summary.html">dev.morphia.aggregation.codecs</a></h3>
+<table class="useSummary">
+<caption><span>Methods in <a href="../../aggregation/codecs/package-summary.html">dev.morphia.aggregation.codecs</a> with parameters of type <a href="../Sort.html" title="class in dev.morphia.query">Sort</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tbody><tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Method</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+</tbody><tbody>
+<tr class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ExpressionHelper.</span><code><span class="memberNameLink"><a href="../../aggregation/codecs/ExpressionHelper.html#encode(org.bson.BsonWriter,dev.morphia.query.Sort)">encode</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
+      <a href="../Sort.html" title="class in dev.morphia.query">Sort</a>&nbsp;sort)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</section>
+</li>
+<li class="blockList">
 <section role="region"><a id="dev.morphia.aggregation.expressions">
 <!--   -->
 </a>
@@ -417,13 +444,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><span class="typeNameLabel">ArrayExpressions.</span><code><span class="memberNameLink"><a href="../../aggregation/expressions/ArrayExpressions.html#sortArray(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.query.Sort...)">sortArray</a></span>​(<a href="../../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;input,
+         <a href="../Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sort)</code></th>
+<td class="colLast">
+<div class="block">Sorts an array based on its elements.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static <a href="../../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../aggregation/expressions/AccumulatorExpressions.html#top(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.query.Sort...)">top</a></span>​(<a href="../../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;output,
    <a href="../Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sortBy)</code></th>
 <td class="colLast">
 <div class="block">Returns the top element within a group according to the specified sort order.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static <a href="../../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AccumulatorExpressions.</span><code><span class="memberNameLink"><a href="../../aggregation/expressions/AccumulatorExpressions.html#topN(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.query.Sort...)">topN</a></span>​(<a href="../../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;n,
     <a href="../../aggregation/expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;output,
