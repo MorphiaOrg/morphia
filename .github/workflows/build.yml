@@ -132,3 +132,16 @@ jobs:
           repo: MorphiaOrg/morphia-docs
           token: ${{ secrets.PUSH_TOKEN }}
           ref: refs/heads/master
+  Critter:
+    name: Build Critter snapshot
+    needs:
+      - Snapshots
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invoke antora build
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Docs
+          repo: MorphiaOrg/critter
+          token: ${{ secrets.PUSH_TOKEN }}
+          ref: refs/heads/master
