@@ -138,10 +138,10 @@ jobs:
       - Snapshots
     runs-on: ubuntu-latest
     steps:
-      - name: Invoke antora build
+      - name: Invoke critter build
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: Docs
+          workflow: critter
           repo: MorphiaOrg/critter
           token: ${{ secrets.PUSH_TOKEN }}
           ref: refs/heads/master
