@@ -1,0 +1,8 @@
+[
+  {
+    "$project":
+    {
+      "_id": 0, "saleTimestamp": 1, "saleIncrement": { "$tsIncrement": "$saleTimestamp" }
+    }
+  }
+]

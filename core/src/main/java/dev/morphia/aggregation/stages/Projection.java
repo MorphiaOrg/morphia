@@ -54,7 +54,7 @@ public class Projection extends Stage {
      * @return this
      */
     public Projection exclude(String name) {
-        return exclude(name, value(false));
+        return exclude(name, value(0));
     }
 
     /**
@@ -99,7 +99,7 @@ public class Projection extends Stage {
      * @return this
      */
     public Projection include(String name) {
-        return include(name, value(true));
+        return include(name, value(1));
     }
 
     /**

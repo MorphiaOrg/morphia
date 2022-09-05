@@ -42,22 +42,6 @@ public final class DateExpressions {
     }
 
     /**
-     * Decrements a Date object by a specified number of time units.
-     *
-     * @param startDate The beginning date, in UTC, for the subtraction operation. The startDate can be any expression that resolves to a
-     *                  Date, a Timestamp, or an ObjectID.
-     * @param amount    The number of units subtracted to the startDate.
-     * @param unit      The unit used to measure the amount of time subtracted to the startDate.
-     * @return the new expression
-     * @aggregation.expression $dateSubtract
-     * @mongodb.server.release 5.0
-     * @since 2.3
-     */
-    public static DateDeltaExpression dateSubtract(Expression startDate, long amount, TimeUnit unit) {
-        return new DateDeltaExpression("$dateSubtract", startDate, amount, unit);
-    }
-
-    /**
      * Returns the difference between two dates.
      *
      * @param startDate The beginning date, in UTC, for the addition operation. The startDate can be any expression that resolves to a
@@ -72,21 +56,6 @@ public final class DateExpressions {
      */
     public static DateDiffExpression dateDiff(Expression startDate, Expression endDate, TimeUnit unit) {
         return new DateDiffExpression(startDate, endDate, unit);
-    }
-
-    /**
-     * Truncates a date.
-     *
-     * @param date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an
-     *             ObjectID.
-     * @param unit The unit used to measure the amount of time added to the startDate.
-     * @return the new expression
-     * @aggregation.expression $dateTrunc
-     * @mongodb.server.release 5.0
-     * @since 2.3
-     */
-    public static DateTruncExpression dateTrunc(Expression date, TimeUnit unit) {
-        return new DateTruncExpression(date, unit);
     }
 
     /**
@@ -110,6 +79,22 @@ public final class DateExpressions {
     }
 
     /**
+     * Decrements a Date object by a specified number of time units.
+     *
+     * @param startDate The beginning date, in UTC, for the subtraction operation. The startDate can be any expression that resolves to a
+     *                  Date, a Timestamp, or an ObjectID.
+     * @param amount    The number of units subtracted to the startDate.
+     * @param unit      The unit used to measure the amount of time subtracted to the startDate.
+     * @return the new expression
+     * @aggregation.expression $dateSubtract
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static DateDeltaExpression dateSubtract(Expression startDate, long amount, TimeUnit unit) {
+        return new DateDeltaExpression("$dateSubtract", startDate, amount, unit);
+    }
+
+    /**
      * Constructs and returns a Date object given the date’s constituent properties.
      *
      * @param date The input date for which to return parts.
@@ -128,6 +113,21 @@ public final class DateExpressions {
      */
     public static DateToString dateToString() {
         return new DateToString();
+    }
+
+    /**
+     * Truncates a date.
+     *
+     * @param date The date to truncate, specified in UTC. The date can be any expression that resolves to a Date, a Timestamp, or an
+     *             ObjectID.
+     * @param unit The unit used to measure the amount of time added to the startDate.
+     * @return the new expression
+     * @aggregation.expression $dateTrunc
+     * @mongodb.server.release 5.0
+     * @since 2.3
+     */
+    public static DateTruncExpression dateTrunc(Expression date, TimeUnit unit) {
+        return new DateTruncExpression(date, unit);
     }
 
     /**
@@ -264,6 +264,19 @@ public final class DateExpressions {
      */
     public static DateExpression toDate(Expression value) {
         return new DateExpression("$toDate", value);
+    }
+
+    /**
+     * Returns the incrementing ordinal from a timestamp as a long.
+     *
+     * @param expression the expression to use when incrementing
+     * @return the new expression
+     * @aggregation.expression $tsIncrement
+     * @mongodb.server.release 5.1
+     * @since 2.3
+     */
+    public static Expression tsIncrement(Expression expression) {
+        return new Expression("$tsIncrement", expression);
     }
 
     /**

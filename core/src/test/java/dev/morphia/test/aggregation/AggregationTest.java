@@ -55,13 +55,13 @@ public class AggregationTest extends TestBase {
 
     public void testPipeline(double serverVersion, String resourceName, boolean removeIds, boolean orderMatters,
                              Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        String collection = "pipeline-test";
+        String collection = "aggtest";
         checkMinServerVersion(serverVersion);
         loadData(collection, resourceName);
 
         List<Document> documents = runPipeline(resourceName, pipeline.apply(getDs().aggregate(collection)));
-        List<Document> actual = removeIds ? removeIds(documents) : documents;
 
+        List<Document> actual = removeIds ? removeIds(documents) : documents;
         List<Document> expected = loadExpected(resourceName);
 
         if (orderMatters){
