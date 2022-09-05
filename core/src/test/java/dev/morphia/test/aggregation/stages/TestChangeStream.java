@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.stages;
 
+import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.FullDocumentBeforeChange;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 
+import static com.github.zafarkhaja.semver.Version.valueOf;
 import static dev.morphia.aggregation.stages.ChangeStream.changeStream;
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
@@ -28,6 +30,7 @@ public class TestChangeStream extends AggregationTest {
     @SuppressWarnings("unchecked")
     public void testChangeStream() {
         assumeTrue(isReplicaSet(), "These tests require a replica set");
+        driverIsAtLeastVersion(valueOf("4.7"));
 
         String collName = "aggtest";
         Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream")).iterator();
@@ -47,6 +50,7 @@ public class TestChangeStream extends AggregationTest {
 
     @Test
     public void testChangeStreamOptions() {
+        driverIsAtLeastVersion(valueOf("4.7"));
         LocalDateTime startAtOperationTime = now();
         ChangeStream changeStream = changeStream().allChangesForCluster(true)
                                                   .fullDocument(FullDocument.REQUIRED)
