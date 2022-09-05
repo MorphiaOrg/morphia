@@ -278,6 +278,18 @@ public final class DateExpressions {
     public static Expression tsIncrement(Expression expression) {
         return new Expression("$tsIncrement", expression);
     }
+    /**
+     * Returns the seconds from a timestamp as a long.
+     *
+     * @param expression the expression to use
+     * @return the new expression
+     * @aggregation.expression $tsSecond
+     * @mongodb.server.release 5.1
+     * @since 2.3
+     */
+    public static Expression tsSecond(Expression expression) {
+        return new Expression("$tsSecond", expression);
+    }
 
     /**
      * Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the year) and 53
