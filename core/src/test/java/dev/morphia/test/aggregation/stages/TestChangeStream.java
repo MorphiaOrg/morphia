@@ -30,7 +30,7 @@ public class TestChangeStream extends AggregationTest {
     @SuppressWarnings("unchecked")
     public void testChangeStream() {
         assumeTrue(isReplicaSet(), "These tests require a replica set");
-        driverIsAtLeastVersion(valueOf("4.7"));
+        driverIsAtLeastVersion(valueOf("4.7.0"));
 
         String collName = "aggtest";
         Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream")).iterator();
@@ -50,7 +50,7 @@ public class TestChangeStream extends AggregationTest {
 
     @Test
     public void testChangeStreamOptions() {
-        driverIsAtLeastVersion(valueOf("4.7"));
+        driverIsAtLeastVersion(valueOf("4.7.0"));
         LocalDateTime startAtOperationTime = now();
         ChangeStream changeStream = changeStream().allChangesForCluster(true)
                                                   .fullDocument(FullDocument.REQUIRED)
