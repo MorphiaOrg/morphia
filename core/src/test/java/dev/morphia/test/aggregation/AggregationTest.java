@@ -107,7 +107,7 @@ public class AggregationTest extends TestBase {
     }
 
     @NotNull
-    private List<Document> loadJson(String name) {
+    protected List<Document> loadJson(String name) {
         List<Document> data = new ArrayList<>();
         InputStream stream = getClass().getResourceAsStream(name);
         if (stream == null) {

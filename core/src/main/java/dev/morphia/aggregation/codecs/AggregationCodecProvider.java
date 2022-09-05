@@ -4,6 +4,7 @@ import dev.morphia.Datastore;
 import dev.morphia.aggregation.codecs.stages.AddFieldsCodec;
 import dev.morphia.aggregation.codecs.stages.AutoBucketCodec;
 import dev.morphia.aggregation.codecs.stages.BucketCodec;
+import dev.morphia.aggregation.codecs.stages.ChangeStreamCodec;
 import dev.morphia.aggregation.codecs.stages.CollectionStatsCodec;
 import dev.morphia.aggregation.codecs.stages.CountCodec;
 import dev.morphia.aggregation.codecs.stages.CurrentOpCodec;
@@ -77,6 +78,7 @@ public class AggregationCodecProvider implements CodecProvider {
             addCodec(new AddFieldsCodec(datastore),
                 new AutoBucketCodec(datastore),
                 new BucketCodec(datastore),
+                new ChangeStreamCodec(datastore),
                 new CollectionStatsCodec(datastore),
                 new CountCodec(datastore),
                 new CurrentOpCodec(datastore),

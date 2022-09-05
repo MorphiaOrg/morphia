@@ -12,6 +12,7 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.AddFields;
 import dev.morphia.aggregation.stages.AutoBucket;
 import dev.morphia.aggregation.stages.Bucket;
+import dev.morphia.aggregation.stages.ChangeStream;
 import dev.morphia.aggregation.stages.CollectionStats;
 import dev.morphia.aggregation.stages.Count;
 import dev.morphia.aggregation.stages.CurrentOp;
@@ -108,12 +109,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> addFields(AddFields fields) {
-        addStage(fields);
-        return this;
-    }
-
-    @Override
     public Aggregation<T> autoBucket(AutoBucket bucket) {
         addStage(bucket);
         return this;
@@ -150,6 +145,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public Aggregation<T> documents(DocumentExpression... documents) {
+        addStage(Documents.documents(documents));
+        return this;
+    }
+
+    @Override
     public <R> MorphiaCursor<R> execute(Class<R> resultType) {
         MongoCursor<R> cursor;
         List<Document> pipeline = pipeline();
@@ -169,6 +170,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
+        return new MorphiaCursor<>(options.apply(pipeline(), collection, resultType)
+                                          .iterator());
+    }
+
+    @Override
     public Aggregation<T> facet(Facet facet) {
         addStage(facet);
         return this;
@@ -178,19 +185,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     public Aggregation<T> fill(Fill fill) {
         addStage(fill);
         return this;
-    }
-
-    @Override
-    public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
-        return new MorphiaCursor<>(options.apply(pipeline(), collection, resultType)
-                                          .iterator());
-    }
-
-    @Override
-    public <M> void merge(Merge<M> merge) {
-        addStage(merge);
-        collection.aggregate(pipeline())
-                  .toCollection();
     }
 
     @Override
@@ -241,6 +235,13 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public <M> void merge(Merge<M> merge) {
+        addStage(merge);
+        collection.aggregate(pipeline())
+                  .toCollection();
+    }
+
+    @Override
     public <M> void merge(Merge<M> merge, AggregationOptions options) {
         addStage(merge);
         Class<?> type = merge.getType();
@@ -262,12 +263,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
         Class<?> type = out.type();
         type = type != null ? type : Document.class;
         options.apply(pipeline(), collection, type).toCollection();
-    }
-
-    @Override
-    public Aggregation<T> documents(DocumentExpression... documents) {
-        addStage(Documents.documents(documents));
-        return this;
     }
 
     @Override
@@ -303,6 +298,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> sample(long sample) {
         addStage(Sample.sample(sample));
+        return this;
+    }
+
+    @Override
+    public Aggregation<T> addFields(AddFields fields) {
+        addStage(fields);
         return this;
     }
 
@@ -360,9 +361,16 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return this;
     }
 
-    private void addStage(Stage stage) {
-        stage.aggregation(this);
-        stages.add(stage);
+    @Override
+    public Aggregation changeStream() {
+        addStage(ChangeStream.changeStream());
+        return this;
+    }
+
+    @Override
+    public Aggregation changeStream(ChangeStream stream) {
+        addStage(stream);
+        return this;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -375,6 +383,11 @@ public class AggregationImpl<T> implements Aggregation<T> {
                          return writer.getDocument();
                      })
                      .collect(Collectors.toList());
+    }
+
+    private void addStage(Stage stage) {
+        stage.aggregation(this);
+        stages.add(stage);
     }
 
     private static class MappingCursor<R> implements MongoCursor<R> {

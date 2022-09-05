@@ -5,6 +5,7 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.AddFields;
 import dev.morphia.aggregation.stages.AutoBucket;
 import dev.morphia.aggregation.stages.Bucket;
+import dev.morphia.aggregation.stages.ChangeStream;
 import dev.morphia.aggregation.stages.CollectionStats;
 import dev.morphia.aggregation.stages.CurrentOp;
 import dev.morphia.aggregation.stages.Densify;
@@ -490,4 +491,24 @@ public interface Aggregation<T> {
      * @aggregation.expression $unwind
      */
     Aggregation<T> unwind(Unwind unwind);
+
+    /**
+     * Returns a Change Stream cursor on a collection, a database, or an entire cluster. Must be used as the first stage in an
+     * aggregation pipeline.
+     *
+     * @return this
+     * @since 2.3
+     * @aggregation.expression $changeStream
+     */
+    Aggregation changeStream();
+    /**
+     * Returns a Change Stream cursor on a collection, a database, or an entire cluster. Must be used as the first stage in an
+     * aggregation pipeline.
+     * @param stream the options to apply to the stage
+     *
+     * @return this
+     * @since 2.3
+     * @aggregation.expression $changeStream
+     */
+    Aggregation changeStream(ChangeStream stream);
 }
