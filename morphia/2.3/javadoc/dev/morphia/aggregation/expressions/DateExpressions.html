@@ -245,7 +245,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9,"i14":9,"i15":9,"i16":9,"i17":9,"i18":9,"i19":9,"i20":9,"i21":9,"i22":9,"i23":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -557,6 +557,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr id="i21" class="rowColor">
+<td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tsSecond(dev.morphia.aggregation.expressions.impls.Expression)">tsSecond</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<td class="colLast">
+<div class="block">Returns the seconds from a timestamp as a long.</div>
+</td>
+</tr>
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#week(dev.morphia.aggregation.expressions.impls.Expression)">week</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
@@ -564,7 +571,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  (leap year).</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#year(dev.morphia.aggregation.expressions.impls.Expression)">year</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
@@ -956,6 +963,24 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
 <dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.1">5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/tsIncrement">Aggregration Expression:  $tsIncrement</a></dd></dl>
+</dl></dl></li>
+</ul>
+<a id="tsSecond(dev.morphia.aggregation.expressions.impls.Expression)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>tsSecond</h4>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;tsSecond​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</pre>
+<div class="block">Returns the seconds from a timestamp as a long.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>expression</code> - the expression to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new expression</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.1">5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/tsSecond">Aggregration Expression:  $tsSecond</a></dd></dl>
 </dl></dl></li>
 </ul>
 <a id="week(dev.morphia.aggregation.expressions.impls.Expression)">

@@ -686,6 +686,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#allChangesForCluster()">allChangesForCluster()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#allChangesForCluster(java.lang.Boolean)">allChangesForCluster(Boolean)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>
+<div class="block">Sets whether the change stream should include all changes in the cluster.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/SetExpressions.html#allElementsTrue(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression...)">allElementsTrue(Expression, Expression...)</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/SetExpressions.html" title="class in dev.morphia.aggregation.expressions">SetExpressions</a></dt>
 <dd>
 <div class="block">Returns true if no element of a set evaluates to false, otherwise, returns false.</div>
@@ -1371,6 +1377,32 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Defines a circle for a geospatial query that uses spherical geometry.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/Aggregation.html#changeStream()">changeStream()</a></span> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
+<dd>
+<div class="block">Returns a Change Stream cursor on a collection, a database, or an entire cluster.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationImpl.html#changeStream()">changeStream()</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationImpl.html" title="class in dev.morphia.aggregation">AggregationImpl</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#changeStream()">changeStream()</a></span> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>
+<div class="block">Returns a Change Stream cursor on a collection, a database, or an entire cluster.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/Aggregation.html#changeStream(dev.morphia.aggregation.stages.ChangeStream)">changeStream(ChangeStream)</a></span> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
+<dd>
+<div class="block">Returns a Change Stream cursor on a collection, a database, or an entire cluster.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/AggregationImpl.html#changeStream(dev.morphia.aggregation.stages.ChangeStream)">changeStream(ChangeStream)</a></span> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationImpl.html" title="class in dev.morphia.aggregation">AggregationImpl</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages"><span class="typeNameLink">ChangeStream</span></a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
+<dd>
+<div class="block">Returns a Change Stream cursor on a collection, a database, or an entire cluster.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#%3Cinit%3E()">ChangeStream()</a></span> - Constructor for class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/aggregation/codecs/stages/ChangeStreamCodec.html" title="class in dev.morphia.aggregation.codecs.stages"><span class="typeNameLink">ChangeStreamCodec</span></a> - Class in <a href="dev/morphia/aggregation/codecs/stages/package-summary.html">dev.morphia.aggregation.codecs.stages</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/ChangeStreamCodec.html#%3Cinit%3E(dev.morphia.Datastore)">ChangeStreamCodec(Datastore)</a></span> - Constructor for class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/ChangeStreamCodec.html" title="class in dev.morphia.aggregation.codecs.stages">ChangeStreamCodec</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/impls/TrimExpression.html#chars(dev.morphia.aggregation.expressions.impls.Expression)">chars(Expression)</a></span> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/TrimExpression.html" title="class in dev.morphia.aggregation.expressions.impls">TrimExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/validation/fieldrules/ContradictingAnnotations.html#check(dev.morphia.mapping.Mapper,dev.morphia.mapping.codec.pojo.EntityModel,dev.morphia.mapping.codec.pojo.PropertyModel,java.util.Set)">check(Mapper, EntityModel, PropertyModel, Set&lt;ConstraintViolation&gt;)</a></span> - Method in class dev.morphia.mapping.validation.fieldrules.<a href="dev/morphia/mapping/validation/fieldrules/ContradictingAnnotations.html" title="class in dev.morphia.mapping.validation.fieldrules">ContradictingAnnotations</a></dt>
@@ -3074,6 +3106,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/BucketCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.stages.Bucket,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, Bucket, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/BucketCodec.html" title="class in dev.morphia.aggregation.codecs.stages">BucketCodec</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/ChangeStreamCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.stages.ChangeStream,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, ChangeStream, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/ChangeStreamCodec.html" title="class in dev.morphia.aggregation.codecs.stages">ChangeStreamCodec</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/CollectionStatsCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.stages.CollectionStats,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, CollectionStats, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/CollectionStatsCodec.html" title="class in dev.morphia.aggregation.codecs.stages">CollectionStatsCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/CountCodec.html#encodeStage(org.bson.BsonWriter,dev.morphia.aggregation.stages.Count,org.bson.codecs.EncoderContext)">encodeStage(BsonWriter, Count, EncoderContext)</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/CountCodec.html" title="class in dev.morphia.aggregation.codecs.stages">CountCodec</a></dt>
@@ -3925,6 +3959,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Densify.RangeType.html#FULL">FULL</a></span> - dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Densify.RangeType.html" title="enum in dev.morphia.aggregation.stages">Densify.RangeType</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#fullDocument()">fullDocument()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#fullDocument(com.mongodb.client.model.changestream.FullDocument)">fullDocument(FullDocument)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>
+<div class="block">Specifies whether change notifications include a copy of the full document when modified by update operations.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#fullDocumentBeforeChange()">fullDocumentBeforeChange()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#fullDocumentBeforeChange(com.mongodb.client.model.changestream.FullDocumentBeforeChange)">fullDocumentBeforeChange(FullDocumentBeforeChange)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>
+<div class="block">Include the full document from before the change.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/AccumulatorExpressions.html#function(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression...)">function(String, Expression...)</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/AccumulatorExpressions.html" title="class in dev.morphia.aggregation.expressions">AccumulatorExpressions</a></dt>
 <dd>
 <div class="block">Defines a custom aggregation function or expression in JavaScript.</div>
@@ -4388,6 +4434,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/AutoBucketCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/AutoBucketCodec.html" title="class in dev.morphia.aggregation.codecs.stages">AutoBucketCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/BucketCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/BucketCodec.html" title="class in dev.morphia.aggregation.codecs.stages">BucketCodec</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/ChangeStreamCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/ChangeStreamCodec.html" title="class in dev.morphia.aggregation.codecs.stages">ChangeStreamCodec</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/codecs/stages/CollectionStatsCodec.html#getEncoderClass()">getEncoderClass()</a></span> - Method in class dev.morphia.aggregation.codecs.stages.<a href="dev/morphia/aggregation/codecs/stages/CollectionStatsCodec.html" title="class in dev.morphia.aggregation.codecs.stages">CollectionStatsCodec</a></dt>
 <dd>&nbsp;</dd>
@@ -9040,6 +9088,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Optional.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#resumeAfter()">resumeAfter()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#resumeAfter(org.bson.Document)">resumeAfter(Document)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>
+<div class="block">Specifies a resume token as the logical starting point for the change stream.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/LegacyQuery.html#retrieveKnownFields()">retrieveKnownFields()</a></span> - Method in class dev.morphia.query.<a href="dev/morphia/query/LegacyQuery.html" title="class in dev.morphia.query">LegacyQuery</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/query/Query.html#retrieveKnownFields()">retrieveKnownFields()</a></span> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
@@ -9814,6 +9868,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">The starting index</div>
 </dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#startAfter()">startAfter()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#startAfter(org.bson.Document)">startAfter(Document)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>
+<div class="block">Specifies a resume token as the logical starting point for the change stream.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#startAtOperationTime()">startAtOperationTime()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#startAtOperationTime(java.time.LocalDateTime)">startAtOperationTime(LocalDateTime)</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>
+<div class="block">Specifies a time as the logical starting point for the change stream.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/impls/DateDiffExpression.html#startOfWeek(java.time.DayOfWeek)">startOfWeek(DayOfWeek)</a></span> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/DateDiffExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDiffExpression</a></dt>
 <dd>
 <div class="block">The start of the week.</div>
@@ -10239,6 +10305,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/ChangeStream.html#toString()">toString()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/geo/GeometryCollection.html#toString()">toString()</a></span> - Method in class dev.morphia.geo.<a href="dev/morphia/geo/GeometryCollection.html" title="class in dev.morphia.geo">GeometryCollection</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -10386,6 +10454,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/DateExpressions.html#tsIncrement(dev.morphia.aggregation.expressions.impls.Expression)">tsIncrement(Expression)</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/DateExpressions.html" title="class in dev.morphia.aggregation.expressions">DateExpressions</a></dt>
 <dd>
 <div class="block">Returns the incrementing ordinal from a timestamp as a long.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="dev/morphia/aggregation/expressions/DateExpressions.html#tsSecond(dev.morphia.aggregation.expressions.impls.Expression)">tsSecond(Expression)</a></span> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/DateExpressions.html" title="class in dev.morphia.aggregation.expressions">DateExpressions</a></dt>
+<dd>
+<div class="block">Returns the seconds from a timestamp as a long.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/aggregation/stages/Densify.Range.html#type()">type()</a></span> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a></dt>
 <dd>&nbsp;</dd>
