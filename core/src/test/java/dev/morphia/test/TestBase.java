@@ -296,7 +296,7 @@ public abstract class TestBase {
      * @param version the minimum version allowed
      * @return true if server is at least specified version
      */
-    protected boolean driverIsAtLeastVersion(Version version) {
+    private boolean driverIsAtLeastVersion(Version version) {
         String property = System.getProperty("driver.version");
         Version driverVersion = property != null ? Version.valueOf(property) : null;
         return driverVersion == null || driverVersion.greaterThanOrEqualTo(version);

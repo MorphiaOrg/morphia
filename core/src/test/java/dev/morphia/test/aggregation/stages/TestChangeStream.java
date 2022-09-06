@@ -27,7 +27,7 @@ public class TestChangeStream extends AggregationTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testChangeStream() {
-        driverIsAtLeastVersion(valueOf("4.7.0"));
+        checkMinDriverVersion(4.7);
         assumeTrue(isReplicaSet(), "These tests require a replica set");
 
         String collName = "aggtest";
@@ -48,7 +48,7 @@ public class TestChangeStream extends AggregationTest {
 
     @Test
     public void testChangeStreamOptions() {
-        driverIsAtLeastVersion(valueOf("4.7.0"));
+        checkMinDriverVersion(4.7);
         LocalDateTime startAtOperationTime = now();
         ChangeStream changeStream = changeStream().allChangesForCluster(true)
                                                   .fullDocument(FullDocument.REQUIRED)
