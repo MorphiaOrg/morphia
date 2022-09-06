@@ -28,7 +28,7 @@ public class TestChangeStream extends AggregationTest {
     @SuppressWarnings("unchecked")
     public void testChangeStream() {
         checkMinDriverVersion(4.7);
-        assumeTrue(isReplicaSet(), "These tests require a replica set");
+        checkForReplicaSet();
 
         String collName = "aggtest";
         Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream")).iterator();
