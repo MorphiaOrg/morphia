@@ -1,6 +1,5 @@
 package dev.morphia.mapping;
 
-
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
@@ -32,10 +31,7 @@ import static org.bson.UuidRepresentation.STANDARD;
 
 /**
  * Options to control mapping behavior.
- *
- * @morphia.internal
  */
-@MorphiaInternal
 public class MapperOptions {
     private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
     public static final MapperOptions DEFAULT = MapperOptions.builder().build();
@@ -292,7 +288,7 @@ public class MapperOptions {
         private Builder() {
         }
 
-        public Builder(MapperOptions original) {
+        private Builder(MapperOptions original) {
             autoImportModels = original.autoImportModels;
             cacheClassLookups = original.cacheClassLookups;
             classLoader = original.getClassLoader();

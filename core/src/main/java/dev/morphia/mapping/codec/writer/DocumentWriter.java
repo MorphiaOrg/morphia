@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.writer;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 public class DocumentWriter implements BsonWriter {
     private final RootState root;
@@ -81,6 +83,9 @@ public class DocumentWriter implements BsonWriter {
         return root.getDocument();
     }
 
+    /**
+     * @return the state
+     */
     public WriteState state() {
         return state;
     }

@@ -24,6 +24,7 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
@@ -55,6 +56,7 @@ import static java.util.Arrays.asList;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 @SuppressWarnings("removal")
 public final class PropertyModel {
     private final String name;
@@ -134,7 +136,7 @@ public final class PropertyModel {
         return type.cast(annotationMap.get(type));
     }
 
-    public Codec<?> getCodec() {
+    Codec<?> getCodec() {
         return codec;
     }
 

@@ -3,7 +3,7 @@ package dev.morphia.mapping.conventions;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
-import dev.morphia.annotations.builders.EntityBuilder;
+import dev.morphia.annotations.internal.EntityBuilder;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;

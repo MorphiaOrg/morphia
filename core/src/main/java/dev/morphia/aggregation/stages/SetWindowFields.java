@@ -24,10 +24,25 @@ public class SetWindowFields extends Stage {
         super("$setWindowFields");
     }
 
+    /**
+     * Performs operations on a specified span of documents in a collection, known as a window, and returns the results based on the chosen
+     * window operator.
+     *
+     * @return the new stage
+     * @mongodb.server.release 5.0
+     * @aggregation.expression $setWindowFields
+     * @since 2.3
+     */
     public static SetWindowFields setWindowFields() {
         return new SetWindowFields();
     }
 
+    /**
+     * Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage.
+     *
+     * @param outputs the output fields
+     * @return this
+     */
     public SetWindowFields output(Output... outputs) {
         this.outputs = outputs;
         return this;
@@ -63,6 +78,12 @@ public class SetWindowFields extends Stage {
         return this;
     }
 
+    /**
+     * Specifies the field(s) to sort the documents by in the partition.
+     *
+     * @param sorts the sort criteria
+     * @return this
+     */
     public SetWindowFields sortBy(Sort... sorts) {
         this.sorts = sorts;
         return this;
@@ -87,6 +108,12 @@ public class SetWindowFields extends Stage {
             this.name = name;
         }
 
+        /**
+         * Creates a named output
+         *
+         * @param name the name
+         * @return the new Output
+         */
         public static Output output(String name) {
             return new Output(name);
         }
@@ -110,11 +137,22 @@ public class SetWindowFields extends Stage {
             return operator;
         }
 
+        /**
+         * The operator to use in the output.
+         *
+         * @param operator the output
+         * @return the Output
+         */
         public Output operator(Expression operator) {
             this.operator = operator;
             return this;
         }
 
+        /**
+         * Creates a new window.
+         *
+         * @return the new window
+         */
         public Window window() {
             window = new Window(this);
             return window;
@@ -141,6 +179,14 @@ public class SetWindowFields extends Stage {
             this.output = output;
         }
 
+        /**
+         * A window where the lower and upper boundaries are specified relative to the position of the current document read from the
+         * collection.
+         *
+         * @param lower the lower bound
+         * @param upper the upper bound
+         * @return the Output
+         */
         public Output documents(Object lower, Object upper) {
             documents = List.of(lower, upper);
             return output;
@@ -156,12 +202,29 @@ public class SetWindowFields extends Stage {
             return documents;
         }
 
+        /**
+         * A window where the lower and upper boundaries are defined using a range of values based on the sortBy field in the current
+         * document.
+         *
+         * @param lower the lower bound
+         * @param upper the upper bound
+         * @param unit  the unit to use
+         * @return the Output
+         */
         public Output range(Object lower, Object upper, TimeUnit unit) {
             range = List.of(lower, upper);
             this.unit = unit;
             return output;
         }
 
+        /**
+         * A window where the lower and upper boundaries are defined using a range of values based on the sortBy field in the current
+         * document.
+         *
+         * @param lower the lower bound
+         * @param upper the upper bound
+         * @return the Output
+         */
         public Output range(Object lower, Object upper) {
             range = List.of(lower, upper);
             return output;

@@ -47,7 +47,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
-import static dev.morphia.annotations.builders.ValidationBuilder.validationBuilder;
+import static dev.morphia.annotations.internal.ValidationBuilder.validationBuilder;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.set;
 import static dev.morphia.query.updates.UpdateOperators.unset;

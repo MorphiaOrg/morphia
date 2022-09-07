@@ -12,6 +12,7 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.ShardKeys;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.Mapper;
@@ -42,6 +43,7 @@ import static java.util.Collections.emptyList;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 @SuppressWarnings({"unchecked", "deprecation", "removal"})
 public class EntityModel {
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
@@ -182,6 +184,9 @@ public class EntityModel {
         return collectionName;
     }
 
+    /**
+     * @return the shard keys
+     */
     public List<PropertyModel> getShardKeys() {
         return shardKeys;
     }
@@ -361,6 +366,9 @@ public class EntityModel {
         return getType().isInterface();
     }
 
+    /**
+     * @return true if the discriminator should be used
+     */
     public boolean useDiscriminator() {
         return discriminatorEnabled;
     }

@@ -154,6 +154,9 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         return (TypeData<T>) getTypeData(genericType);
     }
 
+    /**
+     * @return true if an array
+     */
     public boolean getArray() {
         return array;
     }
@@ -198,10 +201,16 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         return getTypeParameters().equals(that.getTypeParameters());
     }
 
+    /**
+     * @return true if an array
+     */
     public boolean isArray() {
         return array;
     }
 
+    /**
+     * @param array
+     */
     public void setArray(boolean array) {
         this.array = array;
     }

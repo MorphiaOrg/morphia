@@ -36,6 +36,10 @@ public class MergingEncoder<T> extends EntityEncoder {
         setOperations = new DocumentWriter(morphiaCodec.getMapper());
     }
 
+    /**
+     * @param entity
+     * @return the update
+     */
     public Update<T> encode(Object entity) {
         encode(setOperations, entity, EncoderContext.builder().build());
 

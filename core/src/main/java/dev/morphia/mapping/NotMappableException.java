@@ -8,7 +8,7 @@ import dev.morphia.sofia.Sofia;
  * @since 2.2
  */
 public final class NotMappableException extends RuntimeException {
-    public NotMappableException(Class type) {
+    NotMappableException(Class type) {
         super(Sofia.notMappable(type.getName()));
     }
 }

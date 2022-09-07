@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -31,6 +32,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final PropertyModel idProperty;
@@ -109,7 +111,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return datastore;
     }
 
-    public DiscriminatorLookup getDiscriminatorLookup() {
+    DiscriminatorLookup getDiscriminatorLookup() {
         return discriminatorLookup;
     }
 
@@ -149,7 +151,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return datastore.getMapper();
     }
 
-    public CodecRegistry getRegistry() {
+    CodecRegistry getRegistry() {
         return registry;
     }
 

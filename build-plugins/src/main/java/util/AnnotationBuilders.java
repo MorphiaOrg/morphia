@@ -111,76 +111,78 @@ public class AnnotationBuilders extends AbstractMojo {
 
     private void emitBuilder(File sourceFile) throws IOException {
         source = Roaster.parse(JavaAnnotationSource.class, sourceFile);
-        builder = Roaster.create(JavaClassSource.class)
-                         .setName(source.getName() + "Builder")
-                         .setPackage(source.getPackage() + ".builders")
-                         .setFinal(true);
-        builder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal");
-        JavaDocSource<JavaClassSource> javaDoc = builder.getJavaDoc();
-        javaDoc.addTagValue("@since", "2.3");
-        javaDoc.addTagValue("@morphia.internal", "");
+        if (source.isPublic()) {
+            builder = Roaster.create(JavaClassSource.class)
+                             .setName(source.getName() + "Builder")
+                             .setPackage(source.getPackage() + ".internal")
+                             .setFinal(true);
+            builder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal");
+            JavaDocSource<JavaClassSource> javaDoc = builder.getJavaDoc();
+            javaDoc.addTagValue("@since", "2.3");
+            javaDoc.addTagValue("@morphia.internal", "");
 
-        MethodSource<JavaClassSource> constructor = builder.addMethod()
-                                                           .setConstructor(true)
-                                                           .setPrivate();
-        setDefaults(constructor, source);
+            MethodSource<JavaClassSource> constructor = builder.addMethod()
+                                                               .setConstructor(true)
+                                                               .setPrivate();
+            setDefaults(constructor, source);
 
-        builder.addMethod()
-               .setPublic()
-               .setName("build")
-               .setReturnType(source.getName())
-               .setBody(format("var anno = annotation; annotation = null; return anno;", builder.getName()));
-
-        builder.addMethod()
-               .setPublic()
-               .setStatic(true)
-               .setName(builderMethodName(source.getName()))
-               .setReturnType(builder.getName())
-               .setBody(format("return new %s();", builder.getName()));
-
-
-        JavaClassSource morphiaAnnotation = annotationType(source, builder);
-        List<AnnotationElementSource> elements = source.getAnnotationElements();
-        if (!elements.isEmpty()) {
-            copyBuilder(source, elements);
-            equals(morphiaAnnotation, elements);
-            hashCode(morphiaAnnotation, elements);
-        }
-        for (AnnotationElementSource element : elements) {
-            String name = element.getName();
-            morphiaAnnotation.addField()
-                             .setName(name)
-                             .setType(element.getType().toString())
-                             .setPrivate();
-
-            morphiaAnnotation.addMethod()
-                             .setPublic()
-                             .setName(name)
-                             .setReturnType(element.getType())
-                             .setBody(format("return %s;", name))
-                             .addAnnotation(Override.class);
-
-            String parameterType = parameterType(element);
-            boolean varargs = false;
-            if (parameterType.endsWith("[]")) {
-                parameterType = parameterType.substring(0, parameterType.length() - 2);
-                varargs = true;
-            }
             builder.addMethod()
                    .setPublic()
-                   .setName(name)
-                   .setReturnType(builder.getName())
-                   .setBody(
-                       format("annotation.%s = %s; return this;", name,
-                           name))
-                   .addParameter(parameterType, name).setVarArgs(varargs);
-        }
+                   .setName("build")
+                   .setReturnType(source.getName())
+                   .setBody(format("var anno = annotation; annotation = null; return anno;", builder.getName()));
 
-        for (Import anImport : source.getImports()) {
-            builder.addImport(anImport);
+            builder.addMethod()
+                   .setPublic()
+                   .setStatic(true)
+                   .setName(builderMethodName(source.getName()))
+                   .setReturnType(builder.getName())
+                   .setBody(format("return new %s();", builder.getName()));
+
+
+            JavaClassSource morphiaAnnotation = annotationType(source, builder);
+            List<AnnotationElementSource> elements = source.getAnnotationElements();
+            if (!elements.isEmpty()) {
+                copyBuilder(source, elements);
+                equals(morphiaAnnotation, elements);
+                hashCode(morphiaAnnotation, elements);
+            }
+            for (AnnotationElementSource element : elements) {
+                String name = element.getName();
+                morphiaAnnotation.addField()
+                                 .setName(name)
+                                 .setType(element.getType().toString())
+                                 .setPrivate();
+
+                morphiaAnnotation.addMethod()
+                                 .setPublic()
+                                 .setName(name)
+                                 .setReturnType(element.getType())
+                                 .setBody(format("return %s;", name))
+                                 .addAnnotation(Override.class);
+
+                String parameterType = parameterType(element);
+                boolean varargs = false;
+                if (parameterType.endsWith("[]")) {
+                    parameterType = parameterType.substring(0, parameterType.length() - 2);
+                    varargs = true;
+                }
+                builder.addMethod()
+                       .setPublic()
+                       .setName(name)
+                       .setReturnType(builder.getName())
+                       .setBody(
+                           format("annotation.%s = %s; return this;", name,
+                               name))
+                       .addParameter(parameterType, name).setVarArgs(varargs);
+            }
+
+            for (Import anImport : source.getImports()) {
+                builder.addImport(anImport);
+            }
+            builder.addImport(Objects.class);
+            output();
         }
-        builder.addImport(Objects.class);
-        output();
     }
 
     private String parameterType(AnnotationElementSource element) {
@@ -236,7 +238,7 @@ public class AnnotationBuilders extends AbstractMojo {
 
     private void output() throws IOException {
         var outputFile = new File(generated, source.getPackage().replace('.', '/')
-                                             + "/builders/" + builder.getName() + ".java");
+                                             + "/internal/" + builder.getName() + ".java");
         if (!outputFile.getParentFile().mkdirs() && !outputFile.getParentFile().exists()) {
             throw new IOException(format("Could not create directory: %s", outputFile.getParentFile()));
         }
@@ -255,7 +257,7 @@ public class AnnotationBuilders extends AbstractMojo {
                 var annot = defaultValue.getAnnotation();
                 if (annot != null) {
                     literal = format("%sBuilder.%s().build()",
-                        annot.getQualifiedName().replace(annot.getName(), "") + "builders." + annot.getName(),
+                        annot.getQualifiedName().replace(annot.getName(), "") + "internal." + annot.getName(),
                         builderMethodName(annot.getName()));
                 } else if (literal != null && element.getType().isArray()) {
                     literal = format("new %s%s", element.getType().getName(), literal);

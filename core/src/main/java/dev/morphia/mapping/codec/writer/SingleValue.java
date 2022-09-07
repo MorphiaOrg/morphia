@@ -1,10 +1,10 @@
 package dev.morphia.mapping.codec.writer;
 
-public class SingleValue extends ValueState<Object> {
+class SingleValue extends ValueState<Object> {
 
     private final Object value;
 
-    public SingleValue(DocumentWriter writer, Object value, WriteState previous) {
+    SingleValue(DocumentWriter writer, Object value, WriteState previous) {
         super(writer, previous);
         this.value = value;
     }

@@ -21,6 +21,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Version;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
@@ -41,6 +42,7 @@ import static org.bson.assertions.Assertions.notNull;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public final class PropertyModelBuilder {
     private final List<String> alternateNames = new ArrayList<>();
     private final Mapper mapper;
@@ -56,18 +58,6 @@ public final class PropertyModelBuilder {
 
     PropertyModelBuilder(Mapper mapper) {
         this.mapper = mapper;
-    }
-
-    /**
-     * Adds an annotation
-     *
-     * @param annotation the annotation
-     * @return this
-     * @since 2.3
-     */
-    public PropertyModelBuilder annotation(Annotation annotation) {
-        this.annotations.add(notNull("annotation", annotation));
-        return this;
     }
 
     /**
@@ -105,23 +95,15 @@ public final class PropertyModelBuilder {
         return alternateNames;
     }
 
-    public PropertyModelBuilder discoverMappedName() {
-        MapperOptions options = mapper.getOptions();
-        Property property = getAnnotation(Property.class);
-        Reference reference = getAnnotation(Reference.class);
-        Version version = getAnnotation(Version.class);
-
-        if (hasAnnotation(Id.class)) {
-            mappedName("_id");
-        } else if (property != null && !property.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName(property.value());
-        } else if (reference != null && !reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName(reference.value());
-        } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName(version.value());
-        } else {
-            mappedName(options.getFieldNaming().apply(name()));
-        }
+    /**
+     * Adds an annotation
+     *
+     * @param annotation the annotation
+     * @return this
+     * @since 2.3
+     */
+    public PropertyModelBuilder annotation(Annotation annotation) {
+        this.annotations.add(notNull("annotation", annotation));
         return this;
     }
 
@@ -155,21 +137,28 @@ public final class PropertyModelBuilder {
     }
 
     /**
-     * Enables/disables the use of the discriminator during mapping
-     *
-     * @param discriminatorEnabled true if the discriminator should be used
-     * @return this
+     * @return the mapped name
+     * @morphia.internal
      */
-    public PropertyModelBuilder discriminatorEnabled(Boolean discriminatorEnabled) {
-        this.discriminatorEnabled = discriminatorEnabled;
-        return this;
-    }
+    @MorphiaInternal
+    public PropertyModelBuilder discoverMappedName() {
+        MapperOptions options = mapper.getOptions();
+        Property property = getAnnotation(Property.class);
+        Reference reference = getAnnotation(Reference.class);
+        Version version = getAnnotation(Version.class);
 
-    /**
-     * @return true if the discriminator is to be used
-     */
-    public Boolean discriminatorEnabled() {
-        return discriminatorEnabled;
+        if (hasAnnotation(Id.class)) {
+            mappedName("_id");
+        } else if (property != null && !property.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(property.value());
+        } else if (reference != null && !reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(reference.value());
+        } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
+            mappedName(version.value());
+        } else {
+            mappedName(options.getFieldNaming().apply(name()));
+        }
+        return this;
     }
 
     /**
@@ -216,28 +205,57 @@ public final class PropertyModelBuilder {
     }
 
     /**
-     * @return the field's mapped name
-     */
-    public String mappedName() {
-        return this.mappedName;
-    }
-
-    public int modifiers() {
-        return modifiers;
-    }
-
-    public PropertyModelBuilder modifiers(int modifiers) {
-        this.modifiers = modifiers;
-        return this;
-    }
-
-    /**
      * @return the field name
      */
     public String name() {
         return name;
     }
 
+    /**
+     * Enables/disables the use of the discriminator during mapping
+     *
+     * @param discriminatorEnabled true if the discriminator should be used
+     * @return this
+     */
+    public PropertyModelBuilder discriminatorEnabled(Boolean discriminatorEnabled) {
+        this.discriminatorEnabled = discriminatorEnabled;
+        return this;
+    }
+
+    /**
+     * @return true if the discriminator is to be used
+     */
+    public Boolean discriminatorEnabled() {
+        return discriminatorEnabled;
+    }
+
+    /**
+     * @return the field's mapped name
+     */
+    public String mappedName() {
+        return this.mappedName;
+    }
+
+    /**
+     * @return the modifiers
+     */
+    public int modifiers() {
+        return modifiers;
+    }
+
+    /**
+     * @param modifiers
+     * @return the builder
+     */
+    public PropertyModelBuilder modifiers(int modifiers) {
+        this.modifiers = modifiers;
+        return this;
+    }
+
+    /**
+     * @param name
+     * @return the builder
+     */
     public PropertyModelBuilder name(String name) {
         this.name = name;
         return this;

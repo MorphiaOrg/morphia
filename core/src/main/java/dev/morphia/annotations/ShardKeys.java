@@ -21,8 +21,18 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @MorphiaExperimental
 public @interface ShardKeys {
+    /**
+     * The sharding options to apply.
+     *
+     * @return the options
+     */
     ShardOptions options() default @ShardOptions();
 
+    /**
+     * The shard keys
+     *
+     * @return the keys
+     */
     ShardKey[] value();
 }
 

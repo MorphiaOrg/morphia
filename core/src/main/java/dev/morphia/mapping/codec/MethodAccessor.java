@@ -1,14 +1,25 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 import org.bson.codecs.pojo.PropertyAccessor;
 
 import java.lang.reflect.Method;
 
+/**
+ * @morphia.internal
+ */
+@MorphiaInternal
 public class MethodAccessor implements PropertyAccessor<Object> {
     private final Method getter;
     private final Method setter;
 
+    /**
+     * @param getter
+     * @param setter
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public MethodAccessor(Method getter, Method setter) {
         this.getter = getter;
         this.setter = setter;

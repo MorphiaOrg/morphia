@@ -32,6 +32,23 @@ public class Densify extends Stage {
         this.range = range;
     }
 
+    /**
+     * Creates new documents in a sequence of documents where certain values in a field are missing.
+     * <p>
+     * You can use $densify to:
+     * <ul>
+     * <li>Fill gaps in time series data.
+     * <li>Add missing values between groups of data.
+     * <li>Populate your data with a specified range of values.
+     * </ul>
+     *
+     * @param field The field to densify. The values of the specified field must either be all numeric values or all dates.
+     * @param range specifies how the data is densified.
+     * @return the new stage
+     * @aggregation.expression $densify
+     * @mongodb.server.release 5.1
+     * @since 2.3
+     */
     public static Densify densify(String field, Range range) {
         return new Densify(field, range);
     }
@@ -99,6 +116,14 @@ public class Densify extends Stage {
             this.step = step;
         }
 
+        /**
+         * Creates a bounded range.
+         *
+         * @param lowerBound the lower bound
+         * @param upperBound the upper bound
+         * @param step
+         * @return the Range to pass to {@link #densify(String, Range)}
+         */
         public static Range bounded(Object lowerBound, Object upperBound, Number step) {
             return new Range(RangeType.BOUNDED, step)
                        .bounds(lowerBound, upperBound);
@@ -110,10 +135,23 @@ public class Densify extends Stage {
             return this;
         }
 
+        /**
+         * Creates a "full" range with documents spanning the full range of values of the field being densified.
+         *
+         * @param step the step size to use
+         * @return the Range to pass to {@link #densify(String, Range)}
+         */
         public static Range full(Number step) {
             return new Range(RangeType.FULL, step);
         }
 
+        /**
+         * Creates a partitioned range and adds documents to each partition, similar to if you had run a full range densification on each
+         * partition individually.
+         *
+         * @param step the step size
+         * @return the Range to pass to {@link #densify(String, Range)}
+         */
         public static Range partition(Number step) {
             return new Range(RangeType.PARTITION, step);
         }
@@ -154,6 +192,13 @@ public class Densify extends Stage {
             return unit;
         }
 
+        /**
+         * The unit to apply to the step field when incrementing date values in field.
+         *
+         * @param unit the unit to use
+         *
+         * @return the Range itself
+         */
         public Range unit(TimeUnit unit) {
             this.unit = unit;
             return this;

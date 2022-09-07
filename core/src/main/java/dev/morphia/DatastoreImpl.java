@@ -22,7 +22,7 @@ import dev.morphia.aggregation.AggregationImpl;
 import dev.morphia.aggregation.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.IndexHelper;
+import dev.morphia.annotations.internal.IndexHelper;
 import dev.morphia.annotations.ShardKeys;
 import dev.morphia.annotations.ShardOptions;
 import dev.morphia.annotations.Validation;
@@ -521,7 +521,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                     command.append("collation", new Document("locale", "simple"));
                 }
                 command.append("key", stream(shardKeys.value())
-                                          .map(k -> new Document(k.value(), k.type().queryForm()))
+                                          .map(k -> new Document(k.value(), queryForm(k.type())))
                                           .reduce(new Document(), (a, m) -> {
                                               a.putAll(m);
                                               return a;
@@ -531,6 +531,17 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
         return new Document();
+    }
+
+    private Object queryForm(ShardKeyType type) {
+        switch (type) {
+            case HASHED:
+                return "hashed";
+            case RANGED:
+                return 1;
+        }
+
+        throw new IllegalStateException("Every shard key type should be handled.");
     }
 
     @Override
@@ -817,15 +828,14 @@ public class DatastoreImpl implements AdvancedDatastore {
     private <T> VersionBumpInfo updateVersioning(T entity) {
         final EntityModel entityModel = mapper.getEntityModel(entity.getClass());
         PropertyModel versionProperty = entityModel.getVersionProperty();
-        PropertyModel idProperty = entityModel.getIdProperty();
         if (versionProperty != null) {
             Long value = (Long) versionProperty.getValue(entity);
             long updated = value == null ? 1 : value + 1;
             versionProperty.setValue(entity, updated);
-            return new VersionBumpInfo(entity, idProperty, versionProperty, value, updated);
+            return new VersionBumpInfo(entity, versionProperty, value, updated);
         }
 
-        return new VersionBumpInfo();
+        return new VersionBumpInfo(entity);
     }
 
     private static class NoDeleteResult extends DeleteResult {
@@ -952,6 +962,66 @@ public class DatastoreImpl implements AdvancedDatastore {
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
                                           UpdateOptions options) {
             return collection.updateOne(queryObject, updateOperations, options);
+        }
+    }
+
+    @MorphiaInternal
+    private static class VersionBumpInfo {
+        private final Long oldVersion;
+        private final boolean versioned;
+        private final Long newVersion;
+        private final PropertyModel versionProperty;
+        private final Object entity;
+
+        <T> VersionBumpInfo(T entity) {
+            versioned = false;
+            newVersion = null;
+            oldVersion = null;
+            versionProperty = null;
+            this.entity = entity;
+        }
+
+        <T> VersionBumpInfo(T entity, PropertyModel versionProperty, @Nullable Long oldVersion, Long newVersion) {
+            this.entity = entity;
+            versioned = true;
+            this.newVersion = newVersion;
+            this.oldVersion = oldVersion;
+            this.versionProperty = versionProperty;
+        }
+
+        public Object entity() {
+            return entity;
+        }
+
+        public void filter(Document filter) {
+            if (versioned()) {
+                filter.put(versionProperty.getMappedName(), oldVersion());
+            }
+        }
+
+        public <T> void filter(Query<T> query) {
+            if (versioned() && newVersion() != -1) {
+                query.filter(eq(versionProperty.getMappedName(), oldVersion()));
+            }
+
+        }
+
+        public Long newVersion() {
+            return newVersion;
+        }
+
+        public Long oldVersion() {
+            return oldVersion;
+        }
+
+        public void rollbackVersion() {
+            if (entity != null && versionProperty != null) {
+                versionProperty.setValue(entity, oldVersion);
+            }
+        }
+
+        public boolean versioned() {
+            return versioned;
         }
     }
 }

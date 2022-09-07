@@ -24,14 +24,13 @@ public interface CollectionConfigurable<T> extends CollectionConfiguration {
     T collection(@Nullable String collection);
 
     /**
-     * Returns the alternate collection to use for the operation.  Might return null.
+     * Returns an alternate collection if one is defined on this type.
      *
-     * @return the collection name or null
-     * @since 2.3
+     * @param collection the mapped collection
+     * @param database   the database
+     * @param <T>        the collection type
+     * @return either the alternate collection if one is defined or the collection passed in
      */
-    @Nullable
-    String collection();
-
     default <T> MongoCollection<T> prepare(MongoCollection<T> collection, MongoDatabase database) {
         String alternateName = collection();
         if (alternateName != null) {
@@ -40,4 +39,13 @@ public interface CollectionConfigurable<T> extends CollectionConfiguration {
 
         return collection;
     }
+
+    /**
+     * Returns the alternate collection to use for the operation.  Might return null.
+     *
+     * @return the collection name or null
+     * @since 2.3
+     */
+    @Nullable
+    String collection();
 }

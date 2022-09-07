@@ -1,7 +1,14 @@
-package dev.morphia.annotations;
+package dev.morphia.annotations.internal;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.Collation;
+import dev.morphia.annotations.Field;
+import dev.morphia.annotations.Index;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Indexes;
+import dev.morphia.annotations.Text;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -22,8 +29,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static dev.morphia.annotations.Collation.DEFAULT_LOCALE;
-import static dev.morphia.annotations.builders.FieldBuilder.fieldBuilder;
-import static dev.morphia.annotations.builders.IndexBuilder.indexBuilder;
+import static dev.morphia.annotations.internal.FieldBuilder.fieldBuilder;
+import static dev.morphia.annotations.internal.IndexBuilder.indexBuilder;
 import static dev.morphia.utils.IndexType.fromValue;
 import static java.util.Collections.emptyList;
 

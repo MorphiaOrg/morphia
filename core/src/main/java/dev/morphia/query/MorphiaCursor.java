@@ -44,6 +44,7 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
         return wrapped.next();
     }
 
+    @Override
     public int available() {
         return wrapped.available();
     }

@@ -53,17 +53,6 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
     }
 
     /**
-     * @return the bypass document level validation flag
-     * @morphia.internal
-     * @see com.mongodb.client.model.InsertOneOptions#getBypassDocumentValidation()
-     */
-    @Nullable
-    @MorphiaInternal
-    public Boolean bypassDocumentValidation() {
-        return options.getBypassDocumentValidation();
-    }
-
-    /**
      * Sets whether to bypass document validation.
      *
      * @param bypassDocumentValidation whether to bypass document validation, or null if unspecified
@@ -75,11 +64,23 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
         return this;
     }
 
+    /**
+     * Specifies an alternate collection to use rather than the mapped collection.
+     *
+     * @param collection the name of the collection to use
+     * @return the options
+     */
     public InsertOneOptions collection(@Nullable String collection) {
         this.collection = collection;
         return this;
     }
 
+    /**
+     *
+     * @return the collection
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public String collection() {
         return collection;
     }
@@ -115,6 +116,17 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
     @Deprecated(forRemoval = true, since = "2.3")
     public Boolean getBypassDocumentValidation() {
         return bypassDocumentValidation();
+    }
+
+    /**
+     * @return the bypass document level validation flag
+     * @morphia.internal
+     * @see com.mongodb.client.model.InsertOneOptions#getBypassDocumentValidation()
+     */
+    @Nullable
+    @MorphiaInternal
+    public Boolean bypassDocumentValidation() {
+        return options.getBypassDocumentValidation();
     }
 
     /**

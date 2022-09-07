@@ -20,7 +20,17 @@ import java.lang.annotation.Target;
 @Target({ElementType.ANNOTATION_TYPE})
 @MorphiaExperimental
 public @interface ShardKey {
+    /**
+     * The type of sharding to use.
+     *
+     * @return the type
+     */
     ShardKeyType type() default ShardKeyType.RANGED;
 
+    /**
+     * The shard key value
+     *
+     * @return the shard key
+     */
     String value();
 }

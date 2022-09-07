@@ -42,7 +42,7 @@
           },
           {
             "matcher": "java-package",
-            "match": "dev.morphia.annotations.builders"
+            "match": "dev.morphia.annotations.internal"
           }
         ]
       }
@@ -473,6 +473,36 @@
           "ignore": true,
           "code": "java.method.removed",
           "old": "method <T> void dev.morphia.Datastore::ensureIndexes(java.lang.Class<T>)",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.removed",
+          "package": "dev.morphia.annotations.builders",
+          "justification": "internal types"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.visibilityReduced",
+          "old": "method void dev.morphia.mapping.NotMappableException::<init>(java.lang.Class)",
+          "new": "method void dev.morphia.mapping.NotMappableException::<init>(java.lang.Class)",
+          "oldVisibility": "public",
+          "newVisibility": "package",
+          "justification": "internal constructor"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.visibilityReduced",
+          "old": "method void dev.morphia.mapping.MapperOptions.Builder::<init>(dev.morphia.mapping.MapperOptions)",
+          "new": "method void dev.morphia.mapping.MapperOptions.Builder::<init>(dev.morphia.mapping.MapperOptions)",
+          "oldVisibility": "public",
+          "newVisibility": "private",
+          "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method java.lang.ClassLoader dev.morphia.mapping.MapperOptions::getClassLoader()",
           "justification": "internal method"
         }
       ]

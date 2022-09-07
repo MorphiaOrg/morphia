@@ -22,7 +22,7 @@ import static com.mongodb.client.model.TimeSeriesGranularity.SECONDS;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE})
 @MorphiaExperimental
-public @interface TimeSeriesOptions {
+@interface TimeSeriesOptions {
     TimeSeriesGranularity granularity() default SECONDS;
 
     String metaField() default Mapper.IGNORED_FIELDNAME;

@@ -191,6 +191,12 @@ public class EntityModelBuilder {
         return (A) annotations.get(type);
     }
 
+    /**
+     * @param type
+     * @param suggested
+     * @param genericType
+     * @return the type data for the model
+     */
     public TypeData<?> getTypeData(Class<?> type, TypeData<?> suggested, Type genericType) {
 
         if (genericType instanceof TypeVariable) {
