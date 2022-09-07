@@ -252,7 +252,7 @@
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>4.2.0</version>
+                        <version>4.7.2.0</version>
                         <dependencies>
                             <dependency>
                                 <groupId>com.github.spotbugs</groupId>
