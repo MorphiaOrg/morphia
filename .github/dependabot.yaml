@@ -5,3 +5,9 @@ updates:
     open-pull-requests-limit: 100
     schedule:
       interval: daily
+  - package-ecosystem: maven
+    directory: "/"
+    open-pull-requests-limit: 100
+    schedule:
+      interval: daily
+    target-branch: 2.2.x
