@@ -421,7 +421,9 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <td class="colFirst"><code>static <a href="Densify.html" title="class in dev.morphia.aggregation.stages">Densify</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#densify(java.lang.String,dev.morphia.aggregation.stages.Densify.Range)">densify</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
        <a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a>&nbsp;range)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates new documents in a sequence of documents where certain values in a field are missing.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
@@ -484,7 +486,24 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <h4>densify</h4>
 <pre class="methodSignature">public static&nbsp;<a href="Densify.html" title="class in dev.morphia.aggregation.stages">Densify</a>&nbsp;densify​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                               <a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a>&nbsp;range)</pre>
-</li>
+<div class="block">Creates new documents in a sequence of documents where certain values in a field are missing.
+ <p>
+ You can use $densify to:
+ </p><ul>
+ <li>Fill gaps in time series data.
+ </li><li>Add missing values between groups of data.
+ </li><li>Populate your data with a specified range of values.
+ </li></ul></div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>field</code> - The field to densify. The values of the specified field must either be all numeric values or all dates.</dd>
+<dd><code>range</code> - specifies how the data is densified.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new stage</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.1">5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/densify">Aggregration Expression:  $densify</a></dd></dl>
+</dl></dl></li>
 </ul>
 <a id="field()">
 <!--   -->
@@ -492,7 +511,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <ul class="blockList">
 <li class="blockList">
 <h4>field</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -525,7 +544,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <ul class="blockList">
 <li class="blockList">
 <h4>partitionByFields</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt;&nbsp;partitionByFields()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -539,7 +558,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <ul class="blockListLast">
 <li class="blockList">
 <h4>range</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a>&nbsp;range()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

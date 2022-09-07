@@ -351,17 +351,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><span class="typeNameLabel">Densify.Range.</span><code><span class="memberNameLink"><a href="../Densify.Range.html#bounded(java.lang.Object,java.lang.Object,java.lang.Number)">bounded</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;lowerBound,
        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;upperBound,
        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a bounded range.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Densify.Range.</span><code><span class="memberNameLink"><a href="../Densify.Range.html#full(java.lang.Number)">full</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a "full" range with documents spanning the full range of values of the field being densified.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Densify.Range.</span><code><span class="memberNameLink"><a href="../Densify.Range.html#partition(java.lang.Number)">partition</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a partitioned range and adds documents to each partition, similar to if you had run a full range densification on each
+ partition individually.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a></code></td>
@@ -371,7 +378,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <td class="colFirst"><code><a href="../Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Densify.Range.</span><code><span class="memberNameLink"><a href="../Densify.Range.html#unit(dev.morphia.aggregation.expressions.TimeUnit)">unit</a></span>​(<a href="../../expressions/TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">The unit to apply to the step field when incrementing date values in field.</div>
+</td>
 </tr>
 </tbody>
 </table>
@@ -387,7 +396,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>static <a href="../Densify.html" title="class in dev.morphia.aggregation.stages">Densify</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">Densify.</span><code><span class="memberNameLink"><a href="../Densify.html#densify(java.lang.String,dev.morphia.aggregation.stages.Densify.Range)">densify</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
        <a href="../Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a>&nbsp;range)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates new documents in a sequence of documents where certain values in a field are missing.</div>
+</td>
 </tr>
 </tbody>
 </table>

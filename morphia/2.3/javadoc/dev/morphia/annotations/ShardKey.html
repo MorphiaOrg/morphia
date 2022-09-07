@@ -337,7 +337,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Documented</a>
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#ANNOTATION_TYPE" title="class or interface in java.lang.annotation" class="externalLink">ANNOTATION_TYPE</a>)
-<a href="internal/MorphiaExperimental.html" title="annotation in dev.morphia.annotations.internal">@MorphiaExperimental</a>
+@MorphiaExperimental
 public @interface <span class="memberNameLabel">ShardKey</span></pre>
 <div class="block">Defines a shard key of a particular type</div>
 <dl>
@@ -367,7 +367,9 @@ public @interface <span class="memberNameLabel">ShardKey</span></pre>
 <tr class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#value()">value</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">The shard key value</div>
+</td>
 </tr>
 </tbody></table>
 </li>
@@ -390,7 +392,9 @@ public @interface <span class="memberNameLabel">ShardKey</span></pre>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../mapping/ShardKeyType.html" title="enum in dev.morphia.mapping">ShardKeyType</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#type()">type</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">The type of sharding to use.</div>
+</td>
 </tr>
 </tbody></table>
 </li>
@@ -416,6 +420,11 @@ public @interface <span class="memberNameLabel">ShardKey</span></pre>
 <li class="blockList">
 <h4>value</h4>
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value</pre>
+<div class="block">The shard key value</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the shard key</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -431,6 +440,11 @@ public @interface <span class="memberNameLabel">ShardKey</span></pre>
 <li class="blockList">
 <h4>type</h4>
 <pre><a href="../mapping/ShardKeyType.html" title="enum in dev.morphia.mapping">ShardKeyType</a>&nbsp;type</pre>
+<div class="block">The type of sharding to use.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the type</dd>
+</dl>
 <dl>
 <dt>Default:</dt>
 <dd>dev.morphia.mapping.ShardKeyType.RANGED</dd>

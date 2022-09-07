@@ -350,7 +350,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public final class <span class="typeNameLabel">PropertyModelBuilder</span>
+<pre>@MorphiaInternal
+public final class <span class="typeNameLabel">PropertyModelBuilder</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block">A builder for programmatically creating <code>FieldModels</code>.</div>
 <dl>
@@ -557,24 +558,6 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="annotation(java.lang.annotation.Annotation)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>annotation</h4>
-<pre class="methodSignature">public&nbsp;<a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&nbsp;annotation​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&nbsp;annotation)</pre>
-<div class="block">Adds an annotation</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>annotation</code> - the annotation</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>this</dd>
-<dt><span class="simpleTagLabel">Since:</span></dt>
-<dd>2.3</dd>
-</dl>
-</li>
-</ul>
 <a id="accessor()">
 <!--   -->
 </a>
@@ -633,13 +616,22 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
-<a id="discoverMappedName()">
+<a id="annotation(java.lang.annotation.Annotation)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>discoverMappedName</h4>
-<pre class="methodSignature">public&nbsp;<a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&nbsp;discoverMappedName()</pre>
+<h4>annotation</h4>
+<pre class="methodSignature">public&nbsp;<a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&nbsp;annotation​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Annotation.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">Annotation</a>&nbsp;annotation)</pre>
+<div class="block">Adds an annotation</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>annotation</code> - the annotation</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+</dl>
 </li>
 </ul>
 <a id="annotations(java.util.List)">
@@ -686,33 +678,18 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </dl>
 </li>
 </ul>
-<a id="discriminatorEnabled(java.lang.Boolean)">
+<a id="discoverMappedName()">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>discriminatorEnabled</h4>
-<pre class="methodSignature">public&nbsp;<a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&nbsp;discriminatorEnabled​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;discriminatorEnabled)</pre>
-<div class="block">Enables/disables the use of the discriminator during mapping</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>discriminatorEnabled</code> - true if the discriminator should be used</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>this</dd>
-</dl>
-</li>
-</ul>
-<a id="discriminatorEnabled()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>discriminatorEnabled</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;discriminatorEnabled()</pre>
+<h4>discoverMappedName</h4>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&nbsp;discoverMappedName()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if the discriminator is to be used</dd>
-</dl>
+<dd>the mapped name</dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 <a id="getAnnotation(java.lang.Class)">
@@ -766,6 +743,48 @@ public&nbsp;&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/doc
 </dl>
 </li>
 </ul>
+<a id="name()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>name</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the field name</dd>
+</dl>
+</li>
+</ul>
+<a id="discriminatorEnabled(java.lang.Boolean)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>discriminatorEnabled</h4>
+<pre class="methodSignature">public&nbsp;<a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&nbsp;discriminatorEnabled​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;discriminatorEnabled)</pre>
+<div class="block">Enables/disables the use of the discriminator during mapping</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>discriminatorEnabled</code> - true if the discriminator should be used</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
+</li>
+</ul>
+<a id="discriminatorEnabled()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>discriminatorEnabled</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;discriminatorEnabled()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the discriminator is to be used</dd>
+</dl>
+</li>
+</ul>
 <a id="mappedName()">
 <!--   -->
 </a>
@@ -786,6 +805,10 @@ public&nbsp;&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/doc
 <li class="blockList">
 <h4>modifiers</h4>
 <pre class="methodSignature">public&nbsp;int&nbsp;modifiers()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the modifiers</dd>
+</dl>
 </li>
 </ul>
 <a id="modifiers(int)">
@@ -795,18 +818,11 @@ public&nbsp;&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/doc
 <li class="blockList">
 <h4>modifiers</h4>
 <pre class="methodSignature">public&nbsp;<a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&nbsp;modifiers​(int&nbsp;modifiers)</pre>
-</li>
-</ul>
-<a id="name()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>name</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name()</pre>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>modifiers</code> - </dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the field name</dd>
+<dd>the builder</dd>
 </dl>
 </li>
 </ul>
@@ -817,6 +833,12 @@ public&nbsp;&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/doc
 <li class="blockList">
 <h4>name</h4>
 <pre class="methodSignature">public&nbsp;<a href="PropertyModelBuilder.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModelBuilder</a>&nbsp;name​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>name</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the builder</dd>
+</dl>
 </li>
 </ul>
 <a id="owner(dev.morphia.mapping.codec.pojo.EntityModel)">

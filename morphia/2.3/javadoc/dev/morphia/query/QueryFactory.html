@@ -385,7 +385,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code>default &lt;T&gt;&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createQuery(dev.morphia.Datastore,java.lang.Class)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a new query for the given type.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
@@ -430,29 +432,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>createQuery</h4>
 <pre class="methodSignature">default&nbsp;&lt;T&gt;&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</pre>
-</li>
-</ul>
-<a id="createQuery(dev.morphia.Datastore,java.lang.String,java.lang.Class)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>createQuery</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
-                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
-                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</pre>
-<div class="block">Creates and returns a <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> for the given arguments. Default implementations of this method will simply delegate to <a href="#createQuery(dev.morphia.Datastore,java.lang.Class)"><code>createQuery(Datastore, Class)</code></a> with the last argument being <code>null</code>.</div>
+<div class="block">Creates a new query for the given type.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
-<dd><code>T</code> - the type of the result</dd>
+<dd><code>T</code> - the query type</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>datastore</code> - the Datastore to use</dd>
-<dd><code>collection</code> - the actual collection to query.  This overrides any mapped on collection on type.</dd>
-<dd><code>type</code> - the type of the result</dd>
+<dd><code>datastore</code> - the datastore</dd>
+<dd><code>type</code> - the query type</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the query</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="#createQuery(dev.morphia.Datastore,java.lang.Class)"><code>createQuery(Datastore, Class)</code></a></dd>
+<dd>the new query</dd>
 </dl>
 </li>
 </ul>
@@ -476,6 +464,30 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code>query</code> - the Document containing the query structure</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the query</dd>
+</dl>
+</li>
+</ul>
+<a id="createQuery(dev.morphia.Datastore,java.lang.String,java.lang.Class)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createQuery</h4>
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
+                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</pre>
+<div class="block">Creates and returns a <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> for the given arguments. Default implementations of this method will simply delegate to <a href="#createQuery(dev.morphia.Datastore,java.lang.Class)"><code>createQuery(Datastore, Class)</code></a> with the last argument being <code>null</code>.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the result</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>datastore</code> - the Datastore to use</dd>
+<dd><code>collection</code> - the actual collection to query.  This overrides any mapped on collection on type.</dd>
+<dd><code>type</code> - the type of the result</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the query</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="#createQuery(dev.morphia.Datastore,java.lang.Class)"><code>createQuery(Datastore, Class)</code></a></dd>
 </dl>
 </li>
 </ul>

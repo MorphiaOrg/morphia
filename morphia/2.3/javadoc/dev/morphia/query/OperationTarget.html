@@ -350,7 +350,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public class <span class="typeNameLabel">OperationTarget</span>
+<pre>@MorphiaInternal
+public class <span class="typeNameLabel">OperationTarget</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
@@ -373,7 +374,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.internal.PathTarget,java.lang.Object)">OperationTarget</a></span>​(<a href="../internal/PathTarget.html" title="class in dev.morphia.internal">PathTarget</a>&nbsp;target,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.internal.PathTarget,java.lang.Object)">OperationTarget</a></span>​(dev.morphia.internal.PathTarget&nbsp;target,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -403,7 +404,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../internal/PathTarget.html" title="class in dev.morphia.internal">PathTarget</a></code></td>
+<td class="colFirst"><code>dev.morphia.internal.PathTarget</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getTarget()">getTarget</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -447,8 +448,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockListLast">
 <li class="blockList">
 <h4>OperationTarget</h4>
-<pre>public&nbsp;OperationTarget​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
-                       <a href="../internal/PathTarget.html" title="class in dev.morphia.internal">PathTarget</a>&nbsp;target,
+<pre>@MorphiaInternal
+public&nbsp;OperationTarget​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+                       dev.morphia.internal.PathTarget&nbsp;target,
                        <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 <dl>
@@ -474,7 +476,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>encode</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;encode​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;encode​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</pre>
 <div class="block">Encodes this target</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -491,7 +494,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>getTarget</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
-public&nbsp;<a href="../internal/PathTarget.html" title="class in dev.morphia.internal">PathTarget</a>&nbsp;getTarget()</pre>
+public&nbsp;dev.morphia.internal.PathTarget&nbsp;getTarget()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the PathTarget for this instance</dd>

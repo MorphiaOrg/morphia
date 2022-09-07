@@ -338,7 +338,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Inherited.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Inherited</a>
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#TYPE" title="class or interface in java.lang.annotation" class="externalLink">TYPE</a>)
-<a href="internal/MorphiaExperimental.html" title="annotation in dev.morphia.annotations.internal">@MorphiaExperimental</a>
+@MorphiaExperimental
 public @interface <span class="memberNameLabel">ShardKeys</span></pre>
 <div class="block">Defines the properties used in the shard key.</div>
 <dl>
@@ -368,7 +368,9 @@ public @interface <span class="memberNameLabel">ShardKeys</span></pre>
 <tr class="altColor">
 <td class="colFirst"><code><a href="ShardKey.html" title="annotation in dev.morphia.annotations">ShardKey</a>[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#value()">value</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">The shard keys</div>
+</td>
 </tr>
 </tbody></table>
 </li>
@@ -391,7 +393,9 @@ public @interface <span class="memberNameLabel">ShardKeys</span></pre>
 <tr class="altColor">
 <td class="colFirst"><code><a href="ShardOptions.html" title="annotation in dev.morphia.annotations">ShardOptions</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#options()">options</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">The sharding options to apply.</div>
+</td>
 </tr>
 </tbody></table>
 </li>
@@ -417,6 +421,11 @@ public @interface <span class="memberNameLabel">ShardKeys</span></pre>
 <li class="blockList">
 <h4>value</h4>
 <pre><a href="ShardKey.html" title="annotation in dev.morphia.annotations">ShardKey</a>[]&nbsp;value</pre>
+<div class="block">The shard keys</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the keys</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -432,6 +441,11 @@ public @interface <span class="memberNameLabel">ShardKeys</span></pre>
 <li class="blockList">
 <h4>options</h4>
 <pre><a href="ShardOptions.html" title="annotation in dev.morphia.annotations">ShardOptions</a>&nbsp;options</pre>
+<div class="block">The sharding options to apply.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the options</dd>
+</dl>
 <dl>
 <dt>Default:</dt>
 <dd>@dev.morphia.annotations.ShardOptions</dd>

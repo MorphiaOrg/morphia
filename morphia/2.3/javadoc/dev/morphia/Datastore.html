@@ -1060,7 +1060,7 @@ default&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver
 <ul class="blockList">
 <li class="blockList">
 <h4>find</h4>
-<pre class="methodSignature"><a href="annotations/internal/MorphiaExperimental.html" title="annotation in dev.morphia.annotations.internal">@MorphiaExperimental</a>
+<pre class="methodSignature">@MorphiaExperimental
 &lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type,
                   <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;nativeQuery)</pre>
 <div class="block">Find instances of a type using a native query.  This method is intended as an aid when copying queries from external sources such
@@ -1109,7 +1109,7 @@ default&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver
 <ul class="blockList">
 <li class="blockList">
 <h4>find</h4>
-<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 &lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
 <div class="block">Find all instances by type in a different collection than what is mapped on the class given.</div>
 <dl>
@@ -1234,7 +1234,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" t
 <ul class="blockList">
 <li class="blockList">
 <h4>getCodecRegistry</h4>
-<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/configuration/CodecRegistry.html?is-external=true" title="class or interface in org.bson.codecs.configuration" class="externalLink">CodecRegistry</a>&nbsp;getCodecRegistry()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -1250,7 +1250,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" t
 <ul class="blockList">
 <li class="blockList">
 <h4>getCollection</h4>
-<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 &lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;getCollection​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type)</pre>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1270,7 +1270,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" t
 <ul class="blockList">
 <li class="blockList">
 <h4>getDatabase</h4>
-<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoDatabase.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoDatabase</a>&nbsp;getDatabase()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -1286,7 +1286,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" t
 <ul class="blockList">
 <li class="blockList">
 <h4>getLoggedQuery</h4>
-<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getLoggedQuery​(<a href="query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -1308,7 +1308,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" t
 <ul class="blockList">
 <li class="blockList">
 <h4>getMapper</h4>
-<pre class="methodSignature"><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 <a href="mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;getMapper()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -1757,7 +1757,7 @@ default&nbsp;&lt;T&gt;&nbsp;T&nbsp;save​(T&nbsp;entity,
 <ul class="blockList">
 <li class="blockList">
 <h4>shardCollections</h4>
-<pre class="methodSignature"><a href="annotations/internal/MorphiaExperimental.html" title="annotation in dev.morphia.annotations.internal">@MorphiaExperimental</a>
+<pre class="methodSignature">@MorphiaExperimental
 void&nbsp;shardCollections()</pre>
 <div class="block">Shards any collections with sharding defintions.</div>
 <dl>

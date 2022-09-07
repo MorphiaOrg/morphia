@@ -359,7 +359,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="../pojo/PropertyHandler.html" title="interface in dev.morphia.mapping.codec.pojo">PropertyHandler</a></code>, <code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/Codec.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">Codec</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code>, <code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/Decoder.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">Decoder</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code>, <code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/Encoder.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">Encoder</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">ReferenceCodec</span>
+<pre>@MorphiaInternal
+public class <span class="typeNameLabel">ReferenceCodec</span>
 extends <a href="../BaseReferenceCodec.html" title="class in dev.morphia.mapping.codec">BaseReferenceCodec</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;
 implements <a href="../pojo/PropertyHandler.html" title="interface in dev.morphia.mapping.codec.pojo">PropertyHandler</a></pre>
 <dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
@@ -514,6 +515,7 @@ implements <a href="../pojo/PropertyHandler.html" title="interface in dev.morphi
 <li class="blockList">
 <h4>encodeId</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public static&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;encodeId​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
                               <a href="../pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model)</pre>

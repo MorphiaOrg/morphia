@@ -337,7 +337,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Documented.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Documented</a>
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#ANNOTATION_TYPE" title="class or interface in java.lang.annotation" class="externalLink">ANNOTATION_TYPE</a>)
-<a href="internal/MorphiaExperimental.html" title="annotation in dev.morphia.annotations.internal">@MorphiaExperimental</a>
+@MorphiaExperimental
 public @interface <span class="memberNameLabel">ShardOptions</span></pre>
 <div class="block">Specifies options to be applied when sharding.</div>
 <dl>
@@ -367,17 +367,23 @@ public @interface <span class="memberNameLabel">ShardOptions</span></pre>
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#numInitialChunks()">numInitialChunks</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Optional.</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#presplitHashedZones()">presplitHashedZones</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Optional.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unique()">unique</a></span></code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Optional.</div>
+</td>
 </tr>
 </tbody></table>
 </li>
@@ -403,6 +409,11 @@ public @interface <span class="memberNameLabel">ShardOptions</span></pre>
 <li class="blockList">
 <h4>numInitialChunks</h4>
 <pre>int&nbsp;numInitialChunks</pre>
+<div class="block">Optional. Specifies the minimum number of chunks to create initially when sharding an empty collection with a hashed shard key.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the number of chunks</dd>
+</dl>
 <dl>
 <dt>Default:</dt>
 <dd>-1</dd>
@@ -421,6 +432,14 @@ public @interface <span class="memberNameLabel">ShardOptions</span></pre>
 <li class="blockList">
 <h4>presplitHashedZones</h4>
 <pre>boolean&nbsp;presplitHashedZones</pre>
+<div class="block">Optional. Specify true to perform initial chunk creation and distribution for an empty or non-existing collection based on the
+ defined zones and zone ranges for the collection. For hashed sharding only.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true for presplits</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../mapping/ShardKeyType.html#HASHED"><code>ShardKeyType.HASHED</code></a></dd>
+</dl>
 <dl>
 <dt>Default:</dt>
 <dd>false</dd>
@@ -439,6 +458,11 @@ public @interface <span class="memberNameLabel">ShardOptions</span></pre>
 <li class="blockList">
 <h4>unique</h4>
 <pre>boolean&nbsp;unique</pre>
+<div class="block">Optional. Specify true to ensure that the underlying index enforces a unique constraint.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true for unique constraints</dd>
+</dl>
 <dl>
 <dt>Default:</dt>
 <dd>false</dd>

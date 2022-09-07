@@ -354,7 +354,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="AddToSetOperator.html" title="class in dev.morphia.query.updates">AddToSetOperator</a></code>, <code><a href="CurrentDateOperator.html" title="class in dev.morphia.query.updates">CurrentDateOperator</a></code>, <code><a href="PopOperator.html" title="class in dev.morphia.query.updates">PopOperator</a></code>, <code><a href="PullOperator.html" title="class in dev.morphia.query.updates">PullOperator</a></code>, <code><a href="PushOperator.html" title="class in dev.morphia.query.updates">PushOperator</a></code>, <code><a href="SetEntityOperator.html" title="class in dev.morphia.query.updates">SetEntityOperator</a></code>, <code><a href="SetOnInsertOperator.html" title="class in dev.morphia.query.updates">SetOnInsertOperator</a></code>, <code><a href="UnsetOperator.html" title="class in dev.morphia.query.updates">UnsetOperator</a></code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">UpdateOperator</span>
+<pre>@MorphiaInternal
+public class <span class="typeNameLabel">UpdateOperator</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block">Defines an update operator</div>
 <dl>
@@ -425,7 +426,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../OperationTarget.html" title="class in dev.morphia.query">OperationTarget</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toTarget(dev.morphia.internal.PathTarget)">toTarget</a></span>​(<a href="../../internal/PathTarget.html" title="class in dev.morphia.internal">PathTarget</a>&nbsp;pathTarget)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toTarget(dev.morphia.internal.PathTarget)">toTarget</a></span>​(dev.morphia.internal.PathTarget&nbsp;pathTarget)</code></th>
 <td class="colLast">
 <div class="block">Creates the OperationTarget for serialization</div>
 </td>
@@ -502,7 +503,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>field</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field()</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the field</dd>
@@ -515,7 +517,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>operator</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operator()</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;operator()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the operator</dd>
@@ -528,7 +531,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>toTarget</h4>
-<pre class="methodSignature">public&nbsp;<a href="../OperationTarget.html" title="class in dev.morphia.query">OperationTarget</a>&nbsp;toTarget​(<a href="../../internal/PathTarget.html" title="class in dev.morphia.internal">PathTarget</a>&nbsp;pathTarget)</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="../OperationTarget.html" title="class in dev.morphia.query">OperationTarget</a>&nbsp;toTarget​(dev.morphia.internal.PathTarget&nbsp;pathTarget)</pre>
 <div class="block">Creates the OperationTarget for serialization</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -544,7 +548,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>value</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value()</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value</dd>

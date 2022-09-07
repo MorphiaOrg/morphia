@@ -359,7 +359,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 extends <a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></pre>
 <div class="block">Returns a document that contains the constituent parts of a given BSON Date value as individual properties. The properties returned
  are year, month, day, hour, minute, second and millisecond.</div>
-<dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </div>
@@ -459,7 +458,12 @@ extends <a href="Expression.html" title="class in dev.morphia.aggregation.expres
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DateToParts</h4>
-<pre>public&nbsp;DateToParts​(<a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date)</pre>
+<pre>@MorphiaInternal
+public&nbsp;DateToParts​(<a href="Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>date</code> - </dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </li>

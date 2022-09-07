@@ -355,13 +355,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public class <span class="typeNameLabel">PullOperator</span>
+<pre>@MorphiaInternal
+public class <span class="typeNameLabel">PullOperator</span>
 extends <a href="UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a></pre>
 <div class="block">Defines an operator for $pull</div>
 <dl>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-</dl>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </div>
@@ -406,7 +407,7 @@ extends <a href="UpdateOperator.html" title="class in dev.morphia.query.updates"
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../OperationTarget.html" title="class in dev.morphia.query">OperationTarget</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toTarget(dev.morphia.internal.PathTarget)">toTarget</a></span>​(<a href="../../internal/PathTarget.html" title="class in dev.morphia.internal">PathTarget</a>&nbsp;pathTarget)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toTarget(dev.morphia.internal.PathTarget)">toTarget</a></span>​(dev.morphia.internal.PathTarget&nbsp;pathTarget)</code></th>
 <td class="colLast">
 <div class="block">Creates the OperationTarget for serialization</div>
 </td>
@@ -448,7 +449,8 @@ extends <a href="UpdateOperator.html" title="class in dev.morphia.query.updates"
 <ul class="blockListLast">
 <li class="blockList">
 <h4>PullOperator</h4>
-<pre>public&nbsp;PullOperator​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre>@MorphiaInternal
+public&nbsp;PullOperator​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                     <a href="../filters/Filter.html" title="class in dev.morphia.query.filters">Filter</a>&nbsp;filter)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -473,7 +475,7 @@ extends <a href="UpdateOperator.html" title="class in dev.morphia.query.updates"
 <ul class="blockListLast">
 <li class="blockList">
 <h4>toTarget</h4>
-<pre class="methodSignature">public&nbsp;<a href="../OperationTarget.html" title="class in dev.morphia.query">OperationTarget</a>&nbsp;toTarget​(<a href="../../internal/PathTarget.html" title="class in dev.morphia.internal">PathTarget</a>&nbsp;pathTarget)</pre>
+<pre class="methodSignature">public&nbsp;<a href="../OperationTarget.html" title="class in dev.morphia.query">OperationTarget</a>&nbsp;toTarget​(dev.morphia.internal.PathTarget&nbsp;pathTarget)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="UpdateOperator.html#toTarget(dev.morphia.internal.PathTarget)">UpdateOperator</a></code></span></div>
 <div class="block">Creates the OperationTarget for serialization</div>
 <dl>

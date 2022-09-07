@@ -358,7 +358,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="transactions/MorphiaSessionImpl.html" title="class in dev.morphia.transactions">MorphiaSessionImpl</a></code></dd>
 </dl>
 <hr>
-<pre><a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre>@MorphiaInternal
 public class <span class="typeNameLabel">DatastoreImpl</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">AdvancedDatastore</a></pre>
@@ -455,7 +455,7 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#configureCollection(dev.morphia.internal.CollectionConfiguration,com.mongodb.client.MongoCollection)">configureCollection</a></span>​(<a href="internal/CollectionConfiguration.html" title="interface in dev.morphia.internal">CollectionConfiguration</a>&nbsp;options,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#configureCollection(dev.morphia.internal.CollectionConfiguration,com.mongodb.client.MongoCollection)">configureCollection</a></span>​(dev.morphia.internal.CollectionConfiguration&nbsp;options,
                    <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block">Applies configuration options to the collection</div>
@@ -940,8 +940,8 @@ implements <a href="AdvancedDatastore.html" title="interface in dev.morphia">Adv
 <li class="blockList">
 <h4>configureCollection</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/NonNull.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@NonNull</a>
-<a href="annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
-public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;configureCollection​(<a href="internal/CollectionConfiguration.html" title="interface in dev.morphia.internal">CollectionConfiguration</a>&nbsp;options,
+@MorphiaInternal
+public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;configureCollection​(dev.morphia.internal.CollectionConfiguration&nbsp;options,
                                                   <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;T&gt;&nbsp;collection)</pre>
 <div class="block">Applies configuration options to the collection</div>
 <dl>
@@ -1620,7 +1620,8 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <ul class="blockList">
 <li class="blockList">
 <h4>enableValidation</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;enableValidation​(<a href="mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model,
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;void&nbsp;enableValidation​(<a href="mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model,
                              <a href="annotations/Validation.html" title="annotation in dev.morphia.annotations">Validation</a>&nbsp;validation)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

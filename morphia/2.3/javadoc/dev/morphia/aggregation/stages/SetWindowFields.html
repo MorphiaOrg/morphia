@@ -437,7 +437,9 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#output(dev.morphia.aggregation.stages.SetWindowFields.Output...)">output</a></span>​(<a href="SetWindowFields.Output.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Output</a>...&nbsp;outputs)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="SetWindowFields.Output.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Output</a>[]</code></td>
@@ -459,12 +461,17 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setWindowFields()">setWindowFields</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Performs operations on a specified span of documents in a collection, known as a window, and returns the results based on the chosen
+ window operator.</div>
+</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortBy(dev.morphia.query.Sort...)">sortBy</a></span>​(<a href="../../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Specifies the field(s) to sort the documents by in the partition.</div>
+</td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="../../query/Sort.html" title="class in dev.morphia.query">Sort</a>[]</code></td>
@@ -528,7 +535,15 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <li class="blockList">
 <h4>setWindowFields</h4>
 <pre class="methodSignature">public static&nbsp;<a href="SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a>&nbsp;setWindowFields()</pre>
-</li>
+<div class="block">Performs operations on a specified span of documents in a collection, known as a window, and returns the results based on the chosen
+ window operator.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new stage</dd>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>2.3</dd>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/setWindowFields">Aggregration Expression:  $setWindowFields</a></dd></dl>
+</dl></dl></li>
 </ul>
 <a id="output(dev.morphia.aggregation.stages.SetWindowFields.Output...)">
 <!--   -->
@@ -537,6 +552,13 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <li class="blockList">
 <h4>output</h4>
 <pre class="methodSignature">public&nbsp;<a href="SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a>&nbsp;output​(<a href="SetWindowFields.Output.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Output</a>...&nbsp;outputs)</pre>
+<div class="block">Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>outputs</code> - the output fields</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
 </li>
 </ul>
 <a id="outputs()">
@@ -545,7 +567,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <ul class="blockList">
 <li class="blockList">
 <h4>outputs</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="SetWindowFields.Output.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Output</a>[]&nbsp;outputs()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -560,7 +582,7 @@ public&nbsp;<a href="SetWindowFields.Output.html" title="class in dev.morphia.ag
 <li class="blockList">
 <h4>partition</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
-<a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+@MorphiaInternal
 public&nbsp;<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;partition()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -591,6 +613,13 @@ public&nbsp;<a href="../expressions/impls/Expression.html" title="class in dev.m
 <li class="blockList">
 <h4>sortBy</h4>
 <pre class="methodSignature">public&nbsp;<a href="SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a>&nbsp;sortBy​(<a href="../../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</pre>
+<div class="block">Specifies the field(s) to sort the documents by in the partition.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>sorts</code> - the sort criteria</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>this</dd>
+</dl>
 </li>
 </ul>
 <a id="sorts()">
@@ -600,7 +629,7 @@ public&nbsp;<a href="../expressions/impls/Expression.html" title="class in dev.m
 <li class="blockList">
 <h4>sorts</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
-<a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+@MorphiaInternal
 public&nbsp;<a href="../../query/Sort.html" title="class in dev.morphia.query">Sort</a>[]&nbsp;sorts()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

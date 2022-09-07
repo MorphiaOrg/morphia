@@ -350,7 +350,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public class <span class="typeNameLabel">EntityModelBuilder</span>
+<pre>@MorphiaInternal
+public class <span class="typeNameLabel">EntityModelBuilder</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block">Builder for EntityModels</div>
 <dl>
@@ -769,6 +770,14 @@ public&nbsp;&lt;A extends <a href="https://docs.oracle.com/en/java/javase/11/doc
 <pre class="methodSignature">public&nbsp;<a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&lt;?&gt;&nbsp;getTypeData​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type,
                                <a href="TypeData.html" title="class in dev.morphia.mapping.codec.pojo">TypeData</a>&lt;?&gt;&nbsp;suggested,
                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Type.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Type</a>&nbsp;genericType)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>type</code> - </dd>
+<dd><code>suggested</code> - </dd>
+<dd><code>genericType</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the type data for the model</dd>
+</dl>
 </li>
 </ul>
 <a id="hasAnnotation(java.lang.Class)">

@@ -359,7 +359,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">ClientSession</a></code>, <code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true" title="class or interface in com.mongodb.session" class="externalLink">ClientSession</a></code>, <code><a href="../AdvancedDatastore.html" title="interface in dev.morphia">AdvancedDatastore</a></code>, <code><a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code>, <code><a href="MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/io/Closeable.html?is-external=true" title="class or interface in java.io" class="externalLink">Closeable</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/AutoCloseable.html?is-external=true" title="class or interface in java.lang" class="externalLink">AutoCloseable</a></code></dd>
 </dl>
 <hr>
-<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre>@MorphiaInternal
 public class <span class="typeNameLabel">MorphiaSessionImpl</span>
 extends <a href="../DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>
 implements <a href="MorphiaSession.html" title="interface in dev.morphia.transactions">MorphiaSession</a></pre>
@@ -641,19 +641,6 @@ implements <a href="MorphiaSession.html" title="interface in dev.morphia.transac
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="commitTransaction()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>commitTransaction</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;commitTransaction()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true#commitTransaction()" title="class or interface in com.mongodb.client" class="externalLink">commitTransaction</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">ClientSession</a></code></dd>
-</dl>
-</li>
-</ul>
 <a id="getPinnedServerAddress()">
 <!--   -->
 </a>
@@ -709,20 +696,6 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 </dl>
 </li>
 </ul>
-<a id="getRecoveryToken()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getRecoveryToken</h4>
-<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
-public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonDocument.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonDocument</a>&nbsp;getRecoveryToken()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true#getRecoveryToken()" title="class or interface in com.mongodb.session" class="externalLink">getRecoveryToken</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true" title="class or interface in com.mongodb.session" class="externalLink">ClientSession</a></code></dd>
-</dl>
-</li>
-</ul>
 <a id="getTransactionOptions()">
 <!--   -->
 </a>
@@ -749,19 +722,6 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bso
 </dl>
 </li>
 </ul>
-<a id="getSnapshotTimestamp()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>getSnapshotTimestamp</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonTimestamp.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonTimestamp</a>&nbsp;getSnapshotTimestamp()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true#getSnapshotTimestamp()" title="class or interface in com.mongodb.session" class="externalLink">getSnapshotTimestamp</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true" title="class or interface in com.mongodb.session" class="externalLink">ClientSession</a></code></dd>
-</dl>
-</li>
-</ul>
 <a id="startTransaction(com.mongodb.TransactionOptions)">
 <!--   -->
 </a>
@@ -772,6 +732,19 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bso
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true#startTransaction(com.mongodb.TransactionOptions)" title="class or interface in com.mongodb.client" class="externalLink">startTransaction</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">ClientSession</a></code></dd>
+</dl>
+</li>
+</ul>
+<a id="commitTransaction()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>commitTransaction</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;commitTransaction()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true#commitTransaction()" title="class or interface in com.mongodb.client" class="externalLink">commitTransaction</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">ClientSession</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -798,6 +771,19 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bso
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true#withTransaction(com.mongodb.client.TransactionBody)" title="class or interface in com.mongodb.client" class="externalLink">withTransaction</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">ClientSession</a></code></dd>
+</dl>
+</li>
+</ul>
+<a id="getSnapshotTimestamp()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getSnapshotTimestamp</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonTimestamp.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonTimestamp</a>&nbsp;getSnapshotTimestamp()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true#getSnapshotTimestamp()" title="class or interface in com.mongodb.session" class="externalLink">getSnapshotTimestamp</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true" title="class or interface in com.mongodb.session" class="externalLink">ClientSession</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -842,19 +828,6 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 </dl>
 </li>
 </ul>
-<a id="isCausallyConsistent()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>isCausallyConsistent</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;isCausallyConsistent()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true#isCausallyConsistent()" title="class or interface in com.mongodb.session" class="externalLink">isCausallyConsistent</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true" title="class or interface in com.mongodb.session" class="externalLink">ClientSession</a></code></dd>
-</dl>
-</li>
-</ul>
 <a id="setTransactionContext(com.mongodb.ServerAddress,java.lang.Object)">
 <!--   -->
 </a>
@@ -882,6 +855,20 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 </dl>
 </li>
 </ul>
+<a id="getRecoveryToken()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getRecoveryToken</h4>
+<pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonDocument.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonDocument</a>&nbsp;getRecoveryToken()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true#getRecoveryToken()" title="class or interface in com.mongodb.session" class="externalLink">getRecoveryToken</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true" title="class or interface in com.mongodb.session" class="externalLink">ClientSession</a></code></dd>
+</dl>
+</li>
+</ul>
 <a id="setRecoveryToken(org.bson.BsonDocument)">
 <!--   -->
 </a>
@@ -905,6 +892,19 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true#getOptions()" title="class or interface in com.mongodb.session" class="externalLink">getOptions</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true" title="class or interface in com.mongodb.session" class="externalLink">ClientSession</a></code></dd>
+</dl>
+</li>
+</ul>
+<a id="isCausallyConsistent()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isCausallyConsistent</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isCausallyConsistent()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true#isCausallyConsistent()" title="class or interface in com.mongodb.session" class="externalLink">isCausallyConsistent</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/session/ClientSession.html?is-external=true" title="class or interface in com.mongodb.session" class="externalLink">ClientSession</a></code></dd>
 </dl>
 </li>
 </ul>

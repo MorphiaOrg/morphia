@@ -553,7 +553,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>isNot</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;isNot()</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;boolean&nbsp;isNot()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if this filter has been notted</dd>
@@ -568,7 +569,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>encode</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;encode​(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;void&nbsp;encode​(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                    <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a>&nbsp;writer,
                    <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;context)</pre>
 <dl>
@@ -585,7 +587,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>entityType</h4>
-<pre class="methodSignature">public&nbsp;<a href="Filter.html" title="class in dev.morphia.query.filters">Filter</a>&nbsp;entityType​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="Filter.html" title="class in dev.morphia.query.filters">Filter</a>&nbsp;entityType​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</pre>
 <div class="block">Sets the query entity type on the filter</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -602,6 +605,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>getField</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getField()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -630,6 +634,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>getName</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getName()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -644,6 +649,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>getValue</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;getValue()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -657,7 +663,8 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <ul class="blockList">
 <li class="blockList">
 <h4>isValidating</h4>
-<pre class="methodSignature">public&nbsp;<a href="Filter.html" title="class in dev.morphia.query.filters">Filter</a>&nbsp;isValidating​(boolean&nbsp;validate)</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="Filter.html" title="class in dev.morphia.query.filters">Filter</a>&nbsp;isValidating​(boolean&nbsp;validate)</pre>
 <div class="block">Sets whether to validate field names or not</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

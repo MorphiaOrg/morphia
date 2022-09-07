@@ -358,7 +358,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></dd>
 </dl>
 <hr>
-<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre>@MorphiaInternal
 public class <span class="typeNameLabel">AggregationImpl&lt;T&gt;</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</pre>
@@ -490,14 +490,14 @@ implements <a href="Aggregation.html" title="interface in dev.morphia.aggregatio
 </td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>&lt;R&gt;&nbsp;<a href="../query/internal/MorphiaCursor.html" title="class in dev.morphia.query.internal">MorphiaCursor</a>&lt;R&gt;</code></td>
+<td class="colFirst"><code>&lt;R&gt;&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;R&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute(java.lang.Class)">execute</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;R&gt;&nbsp;resultType)</code></th>
 <td class="colLast">
 <div class="block">Execute the aggregation and get the results.</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
-<td class="colFirst"><code>&lt;R&gt;&nbsp;<a href="../query/internal/MorphiaCursor.html" title="class in dev.morphia.query.internal">MorphiaCursor</a>&lt;R&gt;</code></td>
+<td class="colFirst"><code>&lt;R&gt;&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;R&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#execute(java.lang.Class,dev.morphia.aggregation.AggregationOptions)">execute</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;R&gt;&nbsp;resultType,
        <a href="AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -748,7 +748,7 @@ implements <a href="Aggregation.html" title="interface in dev.morphia.aggregatio
 <ul class="blockList">
 <li class="blockList">
 <h4>AggregationImpl</h4>
-<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre>@MorphiaInternal
 public&nbsp;AggregationImpl​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                        <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</pre>
 <div class="block">Creates an instance.</div>
@@ -765,7 +765,7 @@ public&nbsp;AggregationImpl​(<a href="../Datastore.html" title="interface in d
 <ul class="blockListLast">
 <li class="blockList">
 <h4>AggregationImpl</h4>
-<pre><a href="../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre>@MorphiaInternal
 public&nbsp;AggregationImpl​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;source,
                        <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html?is-external=true" title="class or interface in com.mongodb.client" class="externalLink">MongoCollection</a>&lt;<a href="AggregationImpl.html" title="type parameter in AggregationImpl">T</a>&gt;&nbsp;collection)</pre>
@@ -948,7 +948,7 @@ public&nbsp;AggregationImpl​(<a href="../Datastore.html" title="interface in d
 <ul class="blockList">
 <li class="blockList">
 <h4>execute</h4>
-<pre class="methodSignature">public&nbsp;&lt;R&gt;&nbsp;<a href="../query/internal/MorphiaCursor.html" title="class in dev.morphia.query.internal">MorphiaCursor</a>&lt;R&gt;&nbsp;execute​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;R&gt;&nbsp;resultType)</pre>
+<pre class="methodSignature">public&nbsp;&lt;R&gt;&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;R&gt;&nbsp;execute​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;R&gt;&nbsp;resultType)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Aggregation.html#execute(java.lang.Class)">Aggregation</a></code></span></div>
 <div class="block">Execute the aggregation and get the results.</div>
 <dl>
@@ -969,8 +969,8 @@ public&nbsp;AggregationImpl​(<a href="../Datastore.html" title="interface in d
 <ul class="blockList">
 <li class="blockList">
 <h4>execute</h4>
-<pre class="methodSignature">public&nbsp;&lt;R&gt;&nbsp;<a href="../query/internal/MorphiaCursor.html" title="class in dev.morphia.query.internal">MorphiaCursor</a>&lt;R&gt;&nbsp;execute​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;R&gt;&nbsp;resultType,
-                                    <a href="AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</pre>
+<pre class="methodSignature">public&nbsp;&lt;R&gt;&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;R&gt;&nbsp;execute​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;R&gt;&nbsp;resultType,
+                                                               <a href="AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Aggregation.html#execute(java.lang.Class,dev.morphia.aggregation.AggregationOptions)">Aggregation</a></code></span></div>
 <div class="block">Execute the aggregation and get the results.</div>
 <dl>

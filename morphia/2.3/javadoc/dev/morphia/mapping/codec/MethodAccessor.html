@@ -354,9 +354,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html?is-external=true" title="class or interface in org.bson.codecs.pojo" class="externalLink">PropertyAccessor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">MethodAccessor</span>
+<pre>@MorphiaInternal
+public class <span class="typeNameLabel">MethodAccessor</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html?is-external=true" title="class or interface in org.bson.codecs.pojo" class="externalLink">PropertyAccessor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;</pre>
+<dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </div>
@@ -440,8 +442,14 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockListLast">
 <li class="blockList">
 <h4>MethodAccessor</h4>
-<pre>public&nbsp;MethodAccessor​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;getter,
+<pre>@MorphiaInternal
+public&nbsp;MethodAccessor​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;getter,
                       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/Method.html?is-external=true" title="class or interface in java.lang.reflect" class="externalLink">Method</a>&nbsp;setter)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>getter</code> - </dd>
+<dd><code>setter</code> - </dd>
+<div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
 </ul>
 </li>

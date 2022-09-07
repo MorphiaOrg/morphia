@@ -362,7 +362,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="WildCardTypeData.html" title="class in dev.morphia.mapping.codec.pojo">WildCardTypeData</a></code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">TypeData&lt;T&gt;</span>
+<pre>@MorphiaInternal
+public class <span class="typeNameLabel">TypeData&lt;T&gt;</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/pojo/TypeWithTypeParameters.html?is-external=true" title="class or interface in org.bson.codecs.pojo" class="externalLink">TypeWithTypeParameters</a>&lt;T&gt;</pre>
 <div class="block">Holds type information about a type element</div>
@@ -646,6 +647,10 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <li class="blockList">
 <h4>getArray</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;getArray()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if an array</dd>
+</dl>
 </li>
 </ul>
 <a id="getType()">
@@ -711,6 +716,10 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <li class="blockList">
 <h4>isArray</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;isArray()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if an array</dd>
+</dl>
 </li>
 </ul>
 <a id="setArray(boolean)">
@@ -720,6 +729,10 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <li class="blockList">
 <h4>setArray</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;setArray​(boolean&nbsp;array)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>array</code> - </dd>
+</dl>
 </li>
 </ul>
 <a id="toString()">

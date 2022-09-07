@@ -405,12 +405,16 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bounded(java.lang.Object,java.lang.Object,java.lang.Number)">bounded</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;lowerBound,
        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;upperBound,
        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a bounded range.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#full(java.lang.Number)">full</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a "full" range with documents spanning the full range of values of the field being densified.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
@@ -420,7 +424,10 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#partition(java.lang.Number)">partition</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a partitioned range and adds documents to each partition, similar to if you had run a full range densification on each
+ partition individually.</div>
+</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a></code></td>
@@ -440,7 +447,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unit(dev.morphia.aggregation.expressions.TimeUnit)">unit</a></span>​(<a href="../expressions/TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">The unit to apply to the step field when incrementing date values in field.</div>
+</td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></td>
@@ -500,6 +509,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <pre class="methodSignature">public static&nbsp;<a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a>&nbsp;bounded​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;lowerBound,
                                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;upperBound,
                                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step)</pre>
+<div class="block">Creates a bounded range.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>lowerBound</code> - the lower bound</dd>
+<dd><code>upperBound</code> - the upper bound</dd>
+<dd><code>step</code> - </dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Range to pass to <a href="Densify.html#densify(java.lang.String,dev.morphia.aggregation.stages.Densify.Range)"><code>Densify.densify(String, Range)</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="full(java.lang.Number)">
@@ -509,6 +527,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>full</h4>
 <pre class="methodSignature">public static&nbsp;<a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a>&nbsp;full​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step)</pre>
+<div class="block">Creates a "full" range with documents spanning the full range of values of the field being densified.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>step</code> - the step size to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Range to pass to <a href="Densify.html#densify(java.lang.String,dev.morphia.aggregation.stages.Densify.Range)"><code>Densify.densify(String, Range)</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="partition(java.lang.Number)">
@@ -518,6 +543,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>partition</h4>
 <pre class="methodSignature">public static&nbsp;<a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a>&nbsp;partition​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step)</pre>
+<div class="block">Creates a partitioned range and adds documents to each partition, similar to if you had run a full range densification on each
+ partition individually.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>step</code> - the step size</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Range to pass to <a href="Densify.html#densify(java.lang.String,dev.morphia.aggregation.stages.Densify.Range)"><code>Densify.densify(String, Range)</code></a></dd>
+</dl>
 </li>
 </ul>
 <a id="lowerBound()">
@@ -526,7 +559,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>lowerBound</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;lowerBound()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -540,7 +573,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <ul class="blockList">
 <li class="blockList">
 <h4>step</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;step()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -554,7 +587,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <ul class="blockList">
 <li class="blockList">
 <h4>type</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="Densify.RangeType.html" title="enum in dev.morphia.aggregation.stages">Densify.RangeType</a>&nbsp;type()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -568,7 +601,7 @@ public&nbsp;<a href="Densify.RangeType.html" title="enum in dev.morphia.aggregat
 <ul class="blockList">
 <li class="blockList">
 <h4>unit</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="../expressions/TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -583,6 +616,13 @@ public&nbsp;<a href="../expressions/TimeUnit.html" title="enum in dev.morphia.ag
 <li class="blockList">
 <h4>unit</h4>
 <pre class="methodSignature">public&nbsp;<a href="Densify.Range.html" title="class in dev.morphia.aggregation.stages">Densify.Range</a>&nbsp;unit​(<a href="../expressions/TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</pre>
+<div class="block">The unit to apply to the step field when incrementing date values in field.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>unit</code> - the unit to use</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Range itself</dd>
+</dl>
 </li>
 </ul>
 <a id="upperBound()">
@@ -591,7 +631,7 @@ public&nbsp;<a href="../expressions/TimeUnit.html" title="enum in dev.morphia.ag
 <ul class="blockListLast">
 <li class="blockList">
 <h4>upperBound</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;upperBound()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

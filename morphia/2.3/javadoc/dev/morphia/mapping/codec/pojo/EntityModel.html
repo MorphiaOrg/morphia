@@ -350,7 +350,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <hr>
-<pre>public class <span class="typeNameLabel">EntityModel</span>
+<pre>@MorphiaInternal
+public class <span class="typeNameLabel">EntityModel</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
 <div class="block">A model of metadata about a type</div>
 <dl>
@@ -619,6 +620,10 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>getShardKeys</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="PropertyModel.html" title="class in dev.morphia.mapping.codec.pojo">PropertyModel</a>&gt;&nbsp;getShardKeys()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the shard keys</dd>
+</dl>
 </li>
 </ul>
 <a id="getDiscriminator()">
@@ -907,6 +912,10 @@ public&nbsp;<a href="PropertyModel.html" title="class in dev.morphia.mapping.cod
 <li class="blockList">
 <h4>useDiscriminator</h4>
 <pre class="methodSignature">public&nbsp;boolean&nbsp;useDiscriminator()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>true if the discriminator should be used</dd>
+</dl>
 </li>
 </ul>
 </li>

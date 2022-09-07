@@ -389,17 +389,23 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="SetWindowFields.Output.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Output</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#operator(dev.morphia.aggregation.expressions.impls.Expression)">operator</a></span>​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;operator)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">The operator to use in the output.</div>
+</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="SetWindowFields.Output.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Output</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#output(java.lang.String)">output</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a named output</div>
+</td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="SetWindowFields.Window.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Window</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#window()">window</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">Creates a new window.</div>
+</td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="SetWindowFields.Window.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Window</a></code></td>
@@ -437,6 +443,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <li class="blockList">
 <h4>output</h4>
 <pre class="methodSignature">public static&nbsp;<a href="SetWindowFields.Output.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Output</a>&nbsp;output​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<div class="block">Creates a named output</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>name</code> - the name</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new Output</dd>
+</dl>
 </li>
 </ul>
 <a id="name()">
@@ -445,7 +458,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>name</h4>
-<pre class="methodSignature"><a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+<pre class="methodSignature">@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -460,7 +473,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>operator</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
-<a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+@MorphiaInternal
 public&nbsp;<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;operator()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -475,6 +488,13 @@ public&nbsp;<a href="../expressions/impls/Expression.html" title="class in dev.m
 <li class="blockList">
 <h4>operator</h4>
 <pre class="methodSignature">public&nbsp;<a href="SetWindowFields.Output.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Output</a>&nbsp;operator​(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;operator)</pre>
+<div class="block">The operator to use in the output.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>operator</code> - the output</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Output</dd>
+</dl>
 </li>
 </ul>
 <a id="window()">
@@ -484,6 +504,11 @@ public&nbsp;<a href="../expressions/impls/Expression.html" title="class in dev.m
 <li class="blockList">
 <h4>window</h4>
 <pre class="methodSignature">public&nbsp;<a href="SetWindowFields.Window.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Window</a>&nbsp;window()</pre>
+<div class="block">Creates a new window.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new window</dd>
+</dl>
 </li>
 </ul>
 <a id="windowDef()">
@@ -493,7 +518,7 @@ public&nbsp;<a href="../expressions/impls/Expression.html" title="class in dev.m
 <li class="blockList">
 <h4>windowDef</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
-<a href="../../annotations/internal/MorphiaInternal.html" title="annotation in dev.morphia.annotations.internal">@MorphiaInternal</a>
+@MorphiaInternal
 public&nbsp;<a href="SetWindowFields.Window.html" title="class in dev.morphia.aggregation.stages">SetWindowFields.Window</a>&nbsp;windowDef()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

@@ -727,6 +727,7 @@ public static&nbsp;<a href="Lookup.html" title="class in dev.morphia.aggregation
 <li class="blockList">
 <h4>getAs</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getAs()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -741,6 +742,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>getForeignField</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getForeignField()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -755,6 +757,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>getFrom</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getFrom()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -769,6 +772,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>getFromType</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;getFromType()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -783,6 +787,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>getLocalField</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getLocalField()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -797,6 +802,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>getPipeline</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;getPipeline()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -810,7 +816,8 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <ul class="blockList">
 <li class="blockList">
 <h4>getVariables</h4>
-<pre class="methodSignature">public&nbsp;<a href="../expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>&nbsp;getVariables()</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="../expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>&nbsp;getVariables()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the embeded pipeline's variables</dd>

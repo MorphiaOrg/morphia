@@ -354,7 +354,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
 </dl>
 <hr>
-<pre>public class <span class="typeNameLabel">DocumentWriter</span>
+<pre>@MorphiaInternal
+public class <span class="typeNameLabel">DocumentWriter</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>
 implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></pre>
 <div class="block">Utility to write out to a Document</div>
@@ -800,6 +801,10 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <li class="blockList">
 <h4>state</h4>
 <pre class="methodSignature">public&nbsp;dev.morphia.mapping.codec.writer.WriteState&nbsp;state()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the state</dd>
+</dl>
 </li>
 </ul>
 <a id="writeBinaryData(org.bson.BsonBinary)">

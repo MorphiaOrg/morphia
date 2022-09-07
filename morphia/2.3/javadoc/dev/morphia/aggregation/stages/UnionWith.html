@@ -466,7 +466,8 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <ul class="blockList">
 <li class="blockList">
 <h4>UnionWith</h4>
-<pre>public&nbsp;UnionWith​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
+<pre>@MorphiaInternal
+public&nbsp;UnionWith​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection,
                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;stages)</pre>
 <div class="block">Creates the new stage</div>
 <dl>
@@ -482,7 +483,8 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <ul class="blockListLast">
 <li class="blockList">
 <h4>UnionWith</h4>
-<pre>public&nbsp;UnionWith​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type,
+<pre>@MorphiaInternal
+public&nbsp;UnionWith​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type,
                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;stages)</pre>
 <div class="block">Creates the new stage</div>
 <dl>
@@ -509,6 +511,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <li class="blockList">
 <h4>getCollectionName</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
+@MorphiaInternal
 public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;getCollectionName()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -522,7 +525,8 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <ul class="blockList">
 <li class="blockList">
 <h4>getCollectionType</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;getCollectionType()</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;getCollectionType()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the collection type</dd>
@@ -535,7 +539,8 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getStages</h4>
-<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;getStages()</pre>
+<pre class="methodSignature">@MorphiaInternal
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;getStages()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the pipeline</dd>
