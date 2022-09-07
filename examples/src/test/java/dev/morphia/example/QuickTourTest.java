@@ -58,8 +58,8 @@ public class QuickTourTest {
             }
             Version version = Version.valueOf(mongodb);
             cluster = version.lessThan(Version.valueOf("4.0.0"))
-                      ? new SingleNode(mongodbRoot, "morphia_test", version)
-                      : new ReplicaSet(mongodbRoot, "morphia_test", version);
+                      ? new SingleNode(version, "morphia_test", mongodbRoot)
+                      : new ReplicaSet(version, "morphia_test", mongodbRoot);
 
             cluster.configure(c -> {
                 c.systemLog(s -> {
