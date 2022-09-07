@@ -5,6 +5,7 @@ import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket boundaries
@@ -62,6 +63,7 @@ public class AutoBucket extends Stage {
      * @return the number of buckets
      * @morphia.internal
      */
+    @MorphiaInternal
     public ValueExpression getBuckets() {
         return buckets;
     }
@@ -70,6 +72,7 @@ public class AutoBucket extends Stage {
      * @return the granularity
      * @morphia.internal
      */
+    @MorphiaInternal
     public ValueExpression getGranularity() {
         return granularity;
     }
@@ -78,6 +81,7 @@ public class AutoBucket extends Stage {
      * @return the group by expression
      * @morphia.internal
      */
+    @MorphiaInternal
     public Expression getGroupBy() {
         return groupBy;
     }
@@ -86,6 +90,7 @@ public class AutoBucket extends Stage {
      * @return the output document
      * @morphia.internal
      */
+    @MorphiaInternal
     public DocumentExpression getOutput() {
         return output;
     }

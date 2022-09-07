@@ -1,6 +1,7 @@
 package dev.morphia.query.updates;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -13,6 +14,7 @@ import java.util.Map;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class SetOnInsertOperator extends UpdateOperator {
     private final Map<String, Object> insertValues;
 
@@ -20,6 +22,7 @@ public class SetOnInsertOperator extends UpdateOperator {
      * @param values the values
      * @morphia.internal
      */
+    @MorphiaInternal
     public SetOnInsertOperator(Map<String, Object> values) {
         super("$setOnInsert", "unused", "unused");
         insertValues = new LinkedHashMap<>(values);

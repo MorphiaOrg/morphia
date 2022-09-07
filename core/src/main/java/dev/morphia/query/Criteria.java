@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.Document;
 
 import static dev.morphia.query.MorphiaQuery.legacyOperation;
@@ -11,6 +12,7 @@ import static dev.morphia.query.MorphiaQuery.legacyOperation;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public interface Criteria {

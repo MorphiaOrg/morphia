@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import org.bson.BsonInvalidOperationException;
@@ -20,6 +21,7 @@ import static dev.morphia.mapping.codec.Conversions.convert;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class EntityDecoder<T> implements Decoder<T> {
     private final MorphiaCodec<T> morphiaCodec;
     private final EntityModel classModel;

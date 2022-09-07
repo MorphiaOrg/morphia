@@ -2,6 +2,7 @@ package dev.morphia.mapping.validation;
 
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
@@ -41,6 +42,7 @@ public class MappingValidator {
      * @param mapper      the Mapper to use for validation
      * @morphia.internal
      */
+    @MorphiaInternal
     public void validate(Mapper mapper, EntityModel entityModel) {
         final Set<ConstraintViolation> ve = new TreeSet<>((o1, o2) -> o1.getLevel().ordinal() > o2.getLevel().ordinal() ? -1 : 1);
 

@@ -4,6 +4,7 @@ import com.mongodb.client.model.MergeOptions.WhenMatched;
 import com.mongodb.client.model.MergeOptions.WhenNotMatched;
 import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,6 +86,7 @@ public class Merge<M> extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public String getCollection() {
         return collection;
     }
@@ -94,6 +96,7 @@ public class Merge<M> extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public String getDatabase() {
         return database;
     }
@@ -102,6 +105,7 @@ public class Merge<M> extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public List<String> getOn() {
         return on;
     }
@@ -111,6 +115,7 @@ public class Merge<M> extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Class<M> getType() {
         return type;
     }
@@ -119,6 +124,7 @@ public class Merge<M> extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public Map<String, Expression> getVariables() {
         return variables;
     }
@@ -127,6 +133,7 @@ public class Merge<M> extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public WhenMatched getWhenMatched() {
         return whenMatched;
     }
@@ -135,6 +142,7 @@ public class Merge<M> extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public List<Stage> getWhenMatchedPipeline() {
         return whenMatchedPipeline;
     }
@@ -143,6 +151,7 @@ public class Merge<M> extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public WhenNotMatched getWhenNotMatched() {
         return whenNotMatched;
     }

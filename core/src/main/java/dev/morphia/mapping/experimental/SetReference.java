@@ -1,6 +1,7 @@
 package dev.morphia.mapping.experimental;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
@@ -12,6 +13,7 @@ import java.util.Set;
  * @param <T>
  * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 @Deprecated(forRemoval = true, since = "2.3")
 public class SetReference<T> extends CollectionReference<Set<T>> {
@@ -24,6 +26,7 @@ public class SetReference<T> extends CollectionReference<Set<T>> {
      * @param ids         the IDs
      * @morphia.internal
      */
+    @MorphiaInternal
     public SetReference(Datastore datastore, Mapper mapper, EntityModel entityModel, List ids) {
         super(datastore, mapper, entityModel, ids);
     }

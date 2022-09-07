@@ -124,6 +124,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
      * @return the constructor taking all fields if it exists
      * @morphia.internal
      */
+    @MorphiaInternal
     public static Constructor<?> getFullConstructor(EntityModel model) {
         for (Constructor<?> constructor : model.getType().getDeclaredConstructors()) {
             if (constructor.getParameterCount() == model.getProperties().size() && namesMatchProperties(model, constructor)) {
@@ -138,6 +139,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
      * @return the name
      * @morphia.internal
      */
+    @MorphiaInternal
     public static String getParameterName(Parameter parameter) {
         Name name = parameter.getAnnotation(Name.class);
         return name != null ? name.value() : parameter.getName();

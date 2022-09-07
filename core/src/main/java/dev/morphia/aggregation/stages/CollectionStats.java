@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.stages;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 /**
  * Returns statistics regarding a collection or view.
  *
@@ -50,6 +52,7 @@ public class CollectionStats extends Stage {
      * @return whether to get the count
      * @morphia.internal
      */
+    @MorphiaInternal
     public boolean getCount() {
         return count;
     }
@@ -58,6 +61,7 @@ public class CollectionStats extends Stage {
      * @return whether to add the histogram
      * @morphia.internal
      */
+    @MorphiaInternal
     public boolean getHistogram() {
         return histogram;
     }
@@ -66,6 +70,7 @@ public class CollectionStats extends Stage {
      * @return the scale
      * @morphia.internal
      */
+    @MorphiaInternal
     public Integer getScale() {
         return scale;
     }

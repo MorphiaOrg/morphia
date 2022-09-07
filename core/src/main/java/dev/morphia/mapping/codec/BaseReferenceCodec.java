@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec;
 
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -17,6 +18,7 @@ import java.util.Objects;
  * @param <T> the property type
  * @morphia.internal
  */
+@MorphiaInternal
 public abstract class BaseReferenceCodec<T> implements Codec<T> {
     private final PropertyModel property;
     private final Mapper mapper;

@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -11,7 +12,6 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 /**
  * Defines the $indexOfBytes expression
  *
- * @morphia.internal
  * @since 2.0
  */
 public class IndexExpression extends Expression {
@@ -26,7 +26,9 @@ public class IndexExpression extends Expression {
      * @param operation the index operation name
      * @param string    the string to search
      * @param substring the target string
+     * @morphia.internal
      */
+    @MorphiaInternal
     public IndexExpression(String operation, Expression string, Expression substring) {
         super(operation);
         this.string = string;

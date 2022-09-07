@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.stages;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Restricts the contents of the documents based on information stored in the documents themselves.
@@ -45,6 +46,7 @@ public class Redact extends Stage {
      * @return the expression
      * @morphia.internal
      */
+    @MorphiaInternal
     public Expression getExpression() {
         return expression;
     }

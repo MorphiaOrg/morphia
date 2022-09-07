@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.stages;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 /**
  * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions that are
  * holding locks as part of a transaction.
@@ -89,6 +91,7 @@ public class CurrentOp extends Stage {
      * @return include all users?
      * @morphia.internal
      */
+    @MorphiaInternal
     public boolean isAllUsers() {
         return allUsers;
     }
@@ -97,6 +100,7 @@ public class CurrentOp extends Stage {
      * @return include idle connections?
      * @morphia.internal
      */
+    @MorphiaInternal
     public boolean isIdleConnections() {
         return idleConnections;
     }
@@ -105,6 +109,7 @@ public class CurrentOp extends Stage {
      * @return include idle cursors?
      * @morphia.internal
      */
+    @MorphiaInternal
     public boolean isIdleCursors() {
         return idleCursors;
     }
@@ -113,6 +118,7 @@ public class CurrentOp extends Stage {
      * @return include idle sessions?
      * @morphia.internal
      */
+    @MorphiaInternal
     public boolean isIdleSessions() {
         return idleSessions;
     }
@@ -121,6 +127,7 @@ public class CurrentOp extends Stage {
      * @return is local ops?
      * @morphia.internal
      */
+    @MorphiaInternal
     public boolean isLocalOps() {
         return localOps;
     }

@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistry;
 
@@ -11,6 +12,7 @@ import java.util.Map;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 public class PrimitiveCodecRegistry implements CodecRegistry {
     private final Map<Class, Codec> primitiveCodecs = new HashMap<>();

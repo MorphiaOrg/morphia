@@ -3,6 +3,7 @@ package dev.morphia.mapping.experimental;
 import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -20,6 +21,7 @@ import static dev.morphia.query.filters.Filters.eq;
  * @param <T>
  * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 @Deprecated(forRemoval = true, since = "2.3")
 public class SingleReference<T> extends MorphiaReference<T> {
@@ -34,6 +36,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @param id          the ID value
      * @morphia.internal
      */
+    @MorphiaInternal
     public SingleReference(Datastore datastore, Mapper mapper, EntityModel entityModel, Object id) {
         super(datastore, mapper);
         this.entityModel = entityModel;

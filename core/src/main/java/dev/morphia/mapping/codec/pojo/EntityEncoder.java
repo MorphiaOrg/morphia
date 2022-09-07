@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
@@ -18,6 +19,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     public static final ObjectIdGenerator OBJECT_ID_GENERATOR = new ObjectIdGenerator();
     private final MorphiaCodec<T> morphiaCodec;

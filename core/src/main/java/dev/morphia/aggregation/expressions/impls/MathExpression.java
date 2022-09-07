@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -21,6 +22,7 @@ public class MathExpression extends Expression {
      * @param operands
      * @morphia.internal
      */
+    @MorphiaInternal
     public MathExpression(String operation, List<Expression> operands) {
         super(operation, new ExpressionList(operands));
     }
@@ -30,6 +32,7 @@ public class MathExpression extends Expression {
      * @param operand
      * @morphia.internal
      */
+    @MorphiaInternal
     public MathExpression(String operation, Expression operand) {
         super(operation, new ExpressionList(operand));
     }

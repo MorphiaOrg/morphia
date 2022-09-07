@@ -2,6 +2,7 @@ package dev.morphia.aggregation.stages;
 
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class Unset extends Stage {
      * @return the fields
      * @morphia.internal
      */
+    @MorphiaInternal
     public List<Expression> getFields() {
         return fields;
     }

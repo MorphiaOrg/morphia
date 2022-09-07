@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.Document;
@@ -13,6 +14,7 @@ import java.util.Map;
  * @morphia.internal
  */
 @SuppressWarnings("removal")
+@MorphiaInternal
 @Deprecated(since = "2.0", forRemoval = true)
 class FieldCriteria extends AbstractCriteria {
     private final String field;

@@ -1,9 +1,10 @@
 package dev.morphia.query.updates;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 /**
  * Defines the $pop update operator.
  *
- * @morphia.internal
  * @since 2.0
  */
 public class PopOperator extends UpdateOperator {
@@ -11,6 +12,7 @@ public class PopOperator extends UpdateOperator {
      * @param field the field
      * @morphia.internal
      */
+    @MorphiaInternal
     public PopOperator(String field) {
         super("$pop", field, 1);
     }

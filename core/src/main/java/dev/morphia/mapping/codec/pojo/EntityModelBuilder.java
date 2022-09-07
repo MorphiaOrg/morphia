@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.conventions.MorphiaConvention;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 @SuppressWarnings("UnusedReturnValue")
 public class EntityModelBuilder {
     private final List<PropertyModelBuilder> propertyModels = new ArrayList<>();

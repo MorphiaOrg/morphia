@@ -15,6 +15,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
  * @morphia.internal
  * @since 2.1
  */
+@MorphiaInternal
 public class UnionWithCodec extends StageCodec<UnionWith> {
     /**
      * Creates the codec

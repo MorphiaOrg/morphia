@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.stages;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 /**
  * Limits the number of documents passed to the next stage in the pipeline.
  *
@@ -40,6 +42,7 @@ public class Limit extends Stage {
      * @return the limit
      * @morphia.internal
      */
+    @MorphiaInternal
     public long getLimit() {
         return limit;
     }

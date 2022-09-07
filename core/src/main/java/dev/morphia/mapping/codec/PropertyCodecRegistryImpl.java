@@ -16,6 +16,7 @@
 
 package dev.morphia.mapping.codec;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PropertyCodecProvider;
@@ -31,6 +32,7 @@ import java.util.List;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
     private final List<PropertyCodecProvider> propertyCodecProviders;
 

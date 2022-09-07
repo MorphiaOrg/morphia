@@ -46,7 +46,12 @@ public class Mapper {
      *
      * @morphia.internal
      */
+    @MorphiaInternal
     public static final String IGNORED_FIELDNAME = ".";
+    /**
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public static final List<Class<? extends Annotation>> MAPPING_ANNOTATIONS = List.of(Entity.class, Embedded.class, ExternalEntity.class);
 
     /**
@@ -66,6 +71,7 @@ public class Mapper {
      * @param options the options to use
      * @morphia.internal
      */
+    @MorphiaInternal
     public Mapper(MapperOptions options) {
         this.options = options;
         discriminatorLookup = new DiscriminatorLookup(options.getClassLoader());
@@ -100,6 +106,7 @@ public class Mapper {
      * @morphia.internal
      * @since 2.2
      */
+    @MorphiaInternal
     public PropertyModel findIdProperty(Class<?> type) {
         EntityModel entityModel = getEntityModel(type);
         PropertyModel idField = entityModel.getIdProperty();
@@ -145,6 +152,7 @@ public class Mapper {
      * @return the Class mapped to this collection name
      * @morphia.internal
      */
+    @MorphiaInternal
     public <T> Class<T> getClassFromCollection(String collection) {
         final List<EntityModel> classes = getClassesMappedToCollection(collection);
         if (classes.size() > 1) {
@@ -163,6 +171,7 @@ public class Mapper {
      * @return the mapped types
      * @morphia.internal
      */
+    @MorphiaInternal
     public List<EntityModel> getClassesMappedToCollection(String collection) {
         final Set<EntityModel> entities = mappedEntitiesByCollection.get(collection);
         if (entities == null || entities.isEmpty()) {
@@ -454,6 +463,7 @@ public class Mapper {
      * @morphia.internal
      * @since 2.3
      */
+    @MorphiaInternal
     public EntityModel register(EntityModel entityModel) {
         discriminatorLookup.addModel(entityModel);
         mappedEntities.put(entityModel.getType(), entityModel);
@@ -473,7 +483,6 @@ public class Mapper {
      * @param clazz the model type
      * @param <T>   type model type
      * @return the new model
-     * @morphia.internal
      */
     private <T> EntityModel createEntityModel(Class<T> clazz) {
         return new EntityModelBuilder(this, clazz)

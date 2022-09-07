@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.Query;
 import dev.morphia.query.Update;
@@ -19,6 +20,7 @@ import static dev.morphia.query.updates.UpdateOperators.unset;
  * @morphia.internal
  * @since 2.2
  */
+@MorphiaInternal
 public class MergingEncoder<T> extends EntityEncoder {
     private final Query<T> query;
     private final DocumentWriter setOperations;
@@ -30,6 +32,7 @@ public class MergingEncoder<T> extends EntityEncoder {
      * @morphia.internal
      * @since 2.2
      */
+    @MorphiaInternal
     public MergingEncoder(Query<T> query, MorphiaCodec<T> morphiaCodec) {
         super(morphiaCodec);
         this.query = query;

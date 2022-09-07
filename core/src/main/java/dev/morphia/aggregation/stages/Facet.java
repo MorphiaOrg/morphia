@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.stages;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,7 @@ public class Facet extends Stage {
      * @return the fields
      * @morphia.internal
      */
+    @MorphiaInternal
     public Map<String, List<Stage>> getFields() {
         return fields;
     }

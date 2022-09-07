@@ -250,6 +250,7 @@ class MorphiaQuery<T> implements Query<T> {
      * @morphia.internal
      */
     @Override
+    @MorphiaInternal
     public Document toDocument() {
         return getQueryDocument();
     }

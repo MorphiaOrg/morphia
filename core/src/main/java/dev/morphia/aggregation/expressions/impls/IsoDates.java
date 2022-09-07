@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -10,7 +11,6 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 /**
  * Reusable type for ISO Date related expressions.
  *
- * @morphia.internal
  * @see dev.morphia.aggregation.expressions.DateExpressions#isoDayOfWeek(Expression)
  * @see dev.morphia.aggregation.expressions.DateExpressions#isoWeek(Expression)
  * @see dev.morphia.aggregation.expressions.DateExpressions#isoWeekYear(Expression)
@@ -19,6 +19,12 @@ public class IsoDates extends Expression {
     private final Expression date;
     private Expression timezone;
 
+    /**
+     * @param operation
+     * @param date
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public IsoDates(String operation, Expression date) {
         super(operation);
         this.date = date;

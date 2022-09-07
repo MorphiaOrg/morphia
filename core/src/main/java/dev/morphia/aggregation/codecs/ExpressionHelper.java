@@ -59,6 +59,7 @@ public final class ExpressionHelper {
      * @morphia.internal
      * @since 2.3
      */
+    @MorphiaInternal
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void wrapExpression(Datastore datastore, BsonWriter writer, @Nullable Expression expression,
                                       EncoderContext encoderContext) {

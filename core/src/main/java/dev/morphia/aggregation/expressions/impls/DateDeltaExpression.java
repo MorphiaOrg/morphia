@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -29,6 +30,7 @@ public class DateDeltaExpression extends Expression {
      * @param unit
      * @morphia.internal
      */
+    @MorphiaInternal
     public DateDeltaExpression(String operator, Expression startDate, long amount, TimeUnit unit) {
         super(operator);
         this.startDate = startDate;

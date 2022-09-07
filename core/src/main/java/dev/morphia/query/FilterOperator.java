@@ -5,6 +5,7 @@ import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.client.model.geojson.Position;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filter;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.sofia.Sofia;
@@ -271,6 +272,7 @@ public enum FilterOperator {
      * @return the new Filter
      * @morphia.internal
      */
+    @MorphiaInternal
     public abstract Filter apply(String prop, Object value);
 
     /**

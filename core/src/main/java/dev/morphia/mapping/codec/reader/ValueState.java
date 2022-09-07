@@ -1,10 +1,12 @@
 package dev.morphia.mapping.codec.reader;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonType;
 
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 public class ValueState extends ReaderState {
     public static final String NAME = "VALUE";
     private final Object value;

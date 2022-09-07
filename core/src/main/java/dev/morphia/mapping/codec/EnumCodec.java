@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -13,6 +14,7 @@ import org.bson.codecs.EncoderContext;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class EnumCodec<T extends Enum<T>> implements Codec<T> {
     private final Class<T> type;
 

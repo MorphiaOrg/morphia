@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.reader;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.BsonTypeMap;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.sofia.Sofia;
@@ -28,6 +29,7 @@ import static java.lang.String.format;
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 public class DocumentReader implements BsonReader {
     private static final BsonTypeMap TYPE_MAP = new BsonTypeMap();
     private final ReaderState start;

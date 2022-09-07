@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -20,6 +21,7 @@ public class Accumulator extends Expression {
      * @param values
      * @morphia.internal
      */
+    @MorphiaInternal
     public Accumulator(String operation, List<Expression> values) {
         super(operation, new ExpressionList(values));
     }

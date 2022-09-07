@@ -1,6 +1,7 @@
 package dev.morphia.mapping.experimental;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @param <T>
  * @morphia.internal
  */
+@MorphiaInternal
 @Deprecated(forRemoval = true, since = "2.3")
 public class ListReference<T> extends CollectionReference<List<T>> {
     private List<T> values;
@@ -22,6 +24,7 @@ public class ListReference<T> extends CollectionReference<List<T>> {
      * @param model     the EntityModel for the entity type
      * @morphia.internal
      */
+    @MorphiaInternal
     public ListReference(Datastore datastore, Mapper mapper, EntityModel model, List ids) {
         super(datastore, mapper, model, ids);
     }

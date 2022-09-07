@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.TypeData;
 
 import java.lang.reflect.Array;
@@ -13,6 +14,7 @@ import static java.lang.String.format;
  * @morphia.internal
  */
 @SuppressWarnings("rawtypes")
+@MorphiaInternal
 public class ArrayFieldAccessor extends FieldAccessor {
 
     private final TypeData<?> typeData;

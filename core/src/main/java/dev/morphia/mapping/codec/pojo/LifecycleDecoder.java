@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec.pojo;
 
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonReader;
@@ -17,6 +18,7 @@ import static java.lang.String.format;
  * @morphia.internal
  * @since 2.2
  */
+@MorphiaInternal
 public class LifecycleDecoder<T> extends EntityDecoder<T> {
     /**
      * creates the decoder

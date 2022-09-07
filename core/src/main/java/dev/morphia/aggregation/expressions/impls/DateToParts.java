@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -11,8 +12,6 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 /**
  * Returns a document that contains the constituent parts of a given BSON Date value as individual properties. The properties returned
  * are year, month, day, hour, minute, second and millisecond.
- *
- * @morphia.internal
  */
 public class DateToParts extends Expression {
     private final Expression date;
@@ -20,6 +19,11 @@ public class DateToParts extends Expression {
 
     private ValueExpression iso8601;
 
+    /**
+     * @param date
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public DateToParts(Expression date) {
         super("$dateToParts");
         this.date = date;

@@ -19,6 +19,7 @@ import static java.util.Arrays.asList;
  * @param <T>
  * @morphia.internal
  */
+@MorphiaInternal
 public abstract class UpdateBase<T> {
 
     private final Query<T> query;
@@ -56,6 +57,7 @@ public abstract class UpdateBase<T> {
      * @morphia.internal
      * @since 2.2
      */
+    @MorphiaInternal
     public void add(UpdateOperator operator) {
         updates.add(operator);
     }

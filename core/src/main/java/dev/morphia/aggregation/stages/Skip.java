@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.stages;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 /**
  * Randomly selects the specified number of documents from its input.
  *
@@ -40,6 +42,7 @@ public class Skip extends Stage {
      * @return the size
      * @morphia.internal
      */
+    @MorphiaInternal
     public long getSize() {
         return size;
     }

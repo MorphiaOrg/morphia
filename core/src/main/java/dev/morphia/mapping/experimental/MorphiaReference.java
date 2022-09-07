@@ -3,6 +3,7 @@ package dev.morphia.mapping.experimental;
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Handler;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
@@ -128,6 +129,7 @@ public abstract class MorphiaReference<T> {
      * @return true if this reference has already been resolved
      * @morphia.internal
      */
+    @MorphiaInternal
     public final boolean isResolved() {
         return resolved;
     }

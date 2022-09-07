@@ -3,6 +3,7 @@ package dev.morphia.mapping.experimental;
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
@@ -26,6 +27,7 @@ import static java.util.Arrays.asList;
  * @param <C>
  * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Deprecated(forRemoval = true, since = "2.3")
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {

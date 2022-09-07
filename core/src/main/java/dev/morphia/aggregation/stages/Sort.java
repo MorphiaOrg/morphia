@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.stages;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 
 import java.util.ArrayList;
@@ -74,6 +75,7 @@ public class Sort extends Stage {
      * @return the sorts
      * @morphia.internal
      */
+    @MorphiaInternal
     public List<SortType> getSorts() {
         return sorts;
     }
@@ -116,12 +118,14 @@ public class Sort extends Stage {
          * @param writer the writer to use
          * @morphia.internal
          */
+        @MorphiaInternal
         public abstract void encode(BsonWriter writer);
     }
 
     /**
      * @morphia.internal
      */
+    @MorphiaInternal
     public class SortType {
         private final String field;
         private final Direction direction;
@@ -135,6 +139,7 @@ public class Sort extends Stage {
          * @return the direction
          * @morphia.internal
          */
+        @MorphiaInternal
         public Direction getDirection() {
             return direction;
         }
@@ -143,6 +148,7 @@ public class Sort extends Stage {
          * @return the field
          * @morphia.internal
          */
+        @MorphiaInternal
         public String getField() {
             return field;
         }

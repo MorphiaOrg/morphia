@@ -2,6 +2,7 @@ package dev.morphia.aggregation.stages;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filter;
 
 /**
@@ -143,6 +144,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public String getAs() {
         return as;
     }
@@ -152,6 +154,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public String getConnectFromField() {
         return connectFromField;
     }
@@ -161,6 +164,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public String getConnectToField() {
         return connectToField;
     }
@@ -170,6 +174,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public String getDepthField() {
         return depthField;
     }
@@ -179,6 +184,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public String getFrom() {
         return from;
     }
@@ -188,6 +194,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Class getFromType() {
         return fromType;
     }
@@ -197,6 +204,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Integer getMaxDepth() {
         return maxDepth;
     }
@@ -206,6 +214,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Filter[] getRestriction() {
         return restriction;
     }
@@ -215,6 +224,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Expression getStartWith() {
         return startWith;
     }

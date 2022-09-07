@@ -1,5 +1,6 @@
 package dev.morphia.mapping;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.internal.ConstructorCreator;
@@ -14,6 +15,7 @@ import java.util.function.Supplier;
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
     private static final Logger LOG = LoggerFactory.getLogger(InstanceCreatorFactoryImpl.class);
 

@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec
 
 import com.mongodb.lang.Nullable
+import dev.morphia.annotations.internal.MorphiaInternal
 import dev.morphia.mapping.codec.pojo.TypeData
 import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecConfigurationException
@@ -12,6 +13,7 @@ import kotlin.properties.ReadWriteProperty
  * @morphia.internal
  * @since 2.2
  */
+@MorphiaInternal
 @Suppress("UNCHECKED_CAST")
 class ReadWritePropertyCodecProvider : MorphiaPropertyCodecProvider() {
     @Nullable

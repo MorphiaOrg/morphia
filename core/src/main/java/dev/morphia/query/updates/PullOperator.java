@@ -1,6 +1,7 @@
 package dev.morphia.query.updates;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -15,13 +16,16 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
  * Defines an operator for $pull
  *
  * @since 2.0
+ * @morphia.internal
  */
+@MorphiaInternal
 public class PullOperator extends UpdateOperator {
     /**
      * @param field  the field
      * @param filter the filter to apply
      * @morphia.internal
      */
+    @MorphiaInternal
     public PullOperator(String field, Filter filter) {
         super("$pull", field, filter);
     }

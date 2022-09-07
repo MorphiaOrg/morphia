@@ -306,6 +306,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return the entity {@link Class}.
      * @morphia.internal
      */
+    @MorphiaInternal
     Class<T> getEntityClass();
 
     /**
@@ -382,6 +383,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @since 2.0
      * @deprecated
      */
+    @MorphiaInternal
     @Deprecated(since = "2.0", forRemoval = true)
     default Modify<T> modify(UpdateOperations<T> operations) {
         return legacyOperation();
@@ -488,6 +490,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @since 2.0
      * @deprecated use {@link #update(UpdateOperator, UpdateOperator...)}
      */
+    @MorphiaInternal
     @Deprecated(since = "2.0", forRemoval = true)
     default Update<T> update(UpdateOperations<T> operations) {
         return legacyOperation();

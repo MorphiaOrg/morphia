@@ -17,6 +17,7 @@
 package dev.morphia.mapping;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.codecs.configuration.CodecConfigurationException;
@@ -33,6 +34,7 @@ import static java.lang.String.format;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 public final class DiscriminatorLookup {
     private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<>();
     private final Set<String> packages = new ConcurrentSkipListSet<>();

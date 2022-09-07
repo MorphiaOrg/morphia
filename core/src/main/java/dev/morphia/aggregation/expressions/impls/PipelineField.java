@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -9,6 +10,7 @@ import static java.lang.String.format;
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 public class PipelineField {
     private final String name;
     private final Expression value;

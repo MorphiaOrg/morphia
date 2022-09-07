@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 
@@ -25,6 +26,7 @@ import static org.bson.assertions.Assertions.notNull;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 public class TypeData<T> implements TypeWithTypeParameters<T> {
 

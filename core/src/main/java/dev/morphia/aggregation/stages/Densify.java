@@ -196,7 +196,6 @@ public class Densify extends Stage {
          * The unit to apply to the step field when incrementing date values in field.
          *
          * @param unit the unit to use
-         *
          * @return the Range itself
          */
         public Range unit(TimeUnit unit) {

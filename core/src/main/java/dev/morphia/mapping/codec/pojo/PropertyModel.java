@@ -103,6 +103,7 @@ public final class PropertyModel {
      * @return the unwrapped type
      * @morphia.internal
      */
+    @MorphiaInternal
     public static Class<?> normalize(TypeData<?> toNormalize) {
         Class<?> type;
         TypeData<?> typeData = toNormalize;

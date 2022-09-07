@@ -62,7 +62,6 @@ class Operations {
 
     /**
      * @return the Document form of this instance
-     * @morphia.internal
      */
     Document toDocument() {
         versionUpdate();

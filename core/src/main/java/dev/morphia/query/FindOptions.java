@@ -106,6 +106,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      * @return the iterable instance for the query results
      * @morphia.internal
      */
+    @MorphiaInternal
     public <T> FindIterable<T> apply(FindIterable<T> iterable, Mapper mapper, Class<?> type) {
         if (isLogQuery()) {
             logQuery();  //  reset to a new ID
@@ -219,6 +220,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      * @return the new copy
      * @morphia.internal
      */
+    @MorphiaInternal
     public FindOptions copy(FindOptions original) {
         this.allowDiskUse = original.allowDiskUse;
         this.batchSize = original.batchSize;
@@ -373,6 +375,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Projection getProjection() {
         return this.projection;
     }
@@ -381,6 +384,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      * @return the query log id used for retrieving the logged query
      * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public String getQueryLogId() {
         return queryLogId;

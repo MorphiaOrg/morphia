@@ -6,6 +6,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.BaseReferenceCodec;
@@ -63,6 +64,7 @@ import static java.lang.String.format;
  * @morphia.internal
  */
 @SuppressWarnings({"unchecked", "removal"})
+@MorphiaInternal
 public class ReferenceCodec extends BaseReferenceCodec<Object> implements PropertyHandler {
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
@@ -99,6 +101,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public static Object encodeId(Mapper mapper, Object value, EntityModel model) {
         Object idValue;
         Class<?> type;
@@ -272,7 +275,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      *
      * @param value the value to encode
      * @return the encoded value
-     * @morphia.internal
      */
     @Nullable
     private Object encodeId(Object value) {

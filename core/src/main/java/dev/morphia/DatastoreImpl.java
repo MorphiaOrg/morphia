@@ -675,6 +675,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @param validation internal
      * @morphia.internal
      */
+    @MorphiaInternal
     public void enableValidation(EntityModel model, Validation validation) {
         String collectionName = model.getCollectionName();
         try {
@@ -742,7 +743,6 @@ public class DatastoreImpl implements AdvancedDatastore {
      * Enables any document validation defined on the class
      *
      * @param model the model to use
-     * @morphia.internal
      */
     private void enableDocumentValidation(EntityModel model) {
         Validation validation = model.getAnnotation(Validation.class);
@@ -812,10 +812,8 @@ public class DatastoreImpl implements AdvancedDatastore {
      *
      * @param entity The POJO
      * @return the Document
-     * @morphia.internal
      * @since 2.3
      */
-    @MorphiaInternal
     private Document toDocument(Object entity) {
         final Class<?> type = mapper.getEntityModel(entity.getClass()).getType();
 

@@ -5,6 +5,7 @@ import dev.morphia.aggregation.AggregationException;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
 /**
@@ -98,6 +99,7 @@ public class ReplaceWith extends Stage {
      * @return the expression
      * @morphia.internal
      */
+    @MorphiaInternal
     public DocumentExpression getDocument() {
         return document;
     }
@@ -107,6 +109,7 @@ public class ReplaceWith extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Expression getValue() {
         return value;
     }

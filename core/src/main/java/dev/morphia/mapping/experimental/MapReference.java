@@ -3,6 +3,7 @@ package dev.morphia.mapping.experimental;
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -23,6 +24,7 @@ import static dev.morphia.query.filters.Filters.in;
  * @param <T>
  * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Deprecated(forRemoval = true, since = "2.3")
 public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
@@ -37,6 +39,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      * @param entityModel the model of the entity type
      * @morphia.internal
      */
+    @MorphiaInternal
     public MapReference(Datastore datastore, Mapper mapper, Map<String, Object> ids, EntityModel entityModel) {
         super(datastore, mapper);
         for (Entry<String, Object> entry : ids.entrySet()) {

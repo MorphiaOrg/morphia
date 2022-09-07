@@ -6,6 +6,7 @@ import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.Fields;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
 /**
@@ -132,6 +133,7 @@ public class Group extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Fields<Group> getFields() {
         return fields;
     }
@@ -141,6 +143,7 @@ public class Group extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public GroupId getId() {
         return id;
     }
@@ -197,6 +200,7 @@ public class Group extends Stage {
          * @morphia.internal
          */
         @Nullable
+        @MorphiaInternal
         public DocumentExpression getDocument() {
             return document;
         }
@@ -206,6 +210,7 @@ public class Group extends Stage {
          * @morphia.internal
          */
         @Nullable
+        @MorphiaInternal
         public Expression getField() {
             return field;
         }

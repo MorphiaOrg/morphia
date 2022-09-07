@@ -504,6 +504,146 @@
           "code": "java.method.removed",
           "old": "method java.lang.ClassLoader dev.morphia.mapping.MapperOptions::getClassLoader()",
           "justification": "internal method"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.numberOfParametersChanged",
+          "old": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.UpdateOperations<T>)",
+          "new": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator[])",
+          "justification": "added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.class.removed",
+          "old": "class dev.morphia.utils.Assert",
+          "justification": "internal class"
+        },
+        {
+          "ignore": true,
+          "code": "java.annotation.attributeValueChanged",
+          "old": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.UpdateOperations<T>)",
+          "new": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator[])",
+          "annotationType": "java.lang.Deprecated",
+          "attribute": "since",
+          "oldValue": "\"2.0\"",
+          "newValue": "\"2.3\"",
+          "justification": "added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.annotation.added",
+          "old": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator[])",
+          "new": "method T dev.morphia.query.Query<T>::modify(dev.morphia.ModifyOptions, dev.morphia.query.updates.UpdateOperator[])",
+          "annotation": "@com.mongodb.lang.Nullable",
+          "justification": "added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method java.util.List<java.util.List<com.mongodb.client.model.geojson.Position>> dev.morphia.geo.GeoJson::convertLineStrings(java.util.List<dev.morphia.geo.LineString>)",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method java.util.List<com.mongodb.client.model.geojson.Position> dev.morphia.geo.GeoJson::convertPoints(java.util.List<dev.morphia.geo.Point>)",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method com.mongodb.client.model.geojson.Point dev.morphia.geo.Point::convert()",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method com.mongodb.client.model.geojson.Point dev.morphia.geo.Point::convert(dev.morphia.geo.CoordinateReferenceSystem)",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method void dev.morphia.mapping.validation.MappingValidator::validate(dev.morphia.mapping.Mapper, dev.morphia.mapping.codec.pojo.EntityModel)",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method dev.morphia.query.experimental.filters.Filter dev.morphia.query.FilterOperator::apply(java.lang.String, java.lang.Object)",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method <T> com.mongodb.client.FindIterable<T> dev.morphia.query.FindOptions::apply(com.mongodb.client.FindIterable<T>, dev.morphia.mapping.Mapper, java.lang.Class<?>)",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method dev.morphia.query.FindOptions dev.morphia.query.FindOptions::copy(dev.morphia.query.FindOptions)",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method dev.morphia.query.Projection dev.morphia.query.FindOptions::getProjection()",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method java.lang.String dev.morphia.query.FindOptions::getQueryLogId()",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChangedCovariantly",
+          "old": "method dev.morphia.Datastore dev.morphia.query.UpdateBase<T>::getDatastore() @ dev.morphia.query.Modify<T>",
+          "new": "method dev.morphia.DatastoreImpl dev.morphia.query.UpdateBase<T>::getDatastore() @ dev.morphia.query.Modify<T>",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method java.lang.Class<T> dev.morphia.query.Query<T>::getEntityClass()",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.noLongerDefault",
+          "old": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.UpdateOperations<T>)",
+          "new": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator[])",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.nowAbstract",
+          "old": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.UpdateOperations<T>)",
+          "new": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator[])",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method dev.morphia.query.Modify<T> dev.morphia.query.Query<T>::modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator[])",
+          "new": "method T dev.morphia.query.Query<T>::modify(dev.morphia.ModifyOptions, dev.morphia.query.updates.UpdateOperator[])",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChanged",
+          "old": "method dev.morphia.query.Update<T> dev.morphia.query.Query<T>::update(dev.morphia.query.UpdateOperations<T>)",
+          "new": "method com.mongodb.client.result.UpdateResult dev.morphia.query.Query<T>::update(dev.morphia.aggregation.stages.Stage[])",
+          "justification": "Added @MorphiaInternal so revapi is confused"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.returnTypeChangedCovariantly",
+          "old": "method dev.morphia.Datastore dev.morphia.query.UpdateBase<T>::getDatastore() @ dev.morphia.query.Update<T>",
+          "new": "method dev.morphia.DatastoreImpl dev.morphia.query.UpdateBase<T>::getDatastore() @ dev.morphia.query.Update<T>",
+          "justification": "Added @MorphiaInternal so revapi is confused"
         }
       ]
     }

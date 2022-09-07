@@ -3,8 +3,9 @@ package dev.morphia.aggregation.stages;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
- /**
+/**
  * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly added
  * fields.
  * <p>
@@ -57,6 +58,7 @@ public class AddFields extends Stage {
      * @return the fields
      * @morphia.internal
      */
+    @MorphiaInternal
     public DocumentExpression getDocument() {
         return document;
     }

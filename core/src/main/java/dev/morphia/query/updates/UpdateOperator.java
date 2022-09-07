@@ -1,5 +1,6 @@
 package dev.morphia.query.updates;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.UpdateException;
@@ -13,6 +14,7 @@ import java.util.List;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class UpdateOperator {
     private final String operator;
     private final String field;
@@ -37,6 +39,7 @@ public class UpdateOperator {
      * @return the field
      * @morphia.internal
      */
+    @MorphiaInternal
     public String field() {
         return field;
     }
@@ -45,6 +48,7 @@ public class UpdateOperator {
      * @return the operator
      * @morphia.internal
      */
+    @MorphiaInternal
     public String operator() {
         return operator;
     }
@@ -56,6 +60,7 @@ public class UpdateOperator {
      * @return the OperationTarget
      * @morphia.internal
      */
+    @MorphiaInternal
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, value());
     }
@@ -64,6 +69,7 @@ public class UpdateOperator {
      * @return the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public Object value() {
         return value;
     }

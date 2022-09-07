@@ -1,6 +1,7 @@
 package dev.morphia.internal;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ import java.util.function.Supplier;
  * @since 2.2
  */
 @SuppressWarnings("CheckStyle")
+@MorphiaInternal
 public final class MorphiaInternals {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaInternals.class);
     private static final Map<DriverVersion, Boolean> versions = new HashMap<>();

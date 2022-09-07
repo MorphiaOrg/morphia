@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.stages;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filter;
 
 /**
@@ -42,6 +43,7 @@ public class Match extends Stage {
      * @return the filters
      * @morphia.internal
      */
+    @MorphiaInternal
     public Filter[] getFilters() {
         return filters;
     }

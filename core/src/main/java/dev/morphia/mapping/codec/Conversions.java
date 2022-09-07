@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 import org.bson.types.Binary;
 import org.bson.types.ObjectId;
@@ -26,6 +27,7 @@ import static java.lang.Boolean.FALSE;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 public final class Conversions {
     private static final Logger LOG = LoggerFactory.getLogger(Conversions.class);
 

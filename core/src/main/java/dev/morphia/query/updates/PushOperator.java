@@ -1,5 +1,6 @@
 package dev.morphia.query.updates;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.Sort;
@@ -15,6 +16,7 @@ import java.util.List;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class PushOperator extends UpdateOperator {
     private Integer position;
     private Integer slice;
@@ -26,6 +28,7 @@ public class PushOperator extends UpdateOperator {
      * @param values the values
      * @morphia.internal
      */
+    @MorphiaInternal
     PushOperator(String field, List<?> values) {
         super("$push", field, values);
     }

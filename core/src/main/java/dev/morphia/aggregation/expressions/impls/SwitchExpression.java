@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -25,6 +26,7 @@ public class SwitchExpression extends Expression {
     /**
      * @morphia.internal
      */
+    @MorphiaInternal
     public SwitchExpression() {
         super("$switch");
     }

@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 
 import com.mongodb.client.model.geojson.Point;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filters;
 
 /**
@@ -94,6 +95,7 @@ public class Shape {
     /**
      * @morphia.internal
      */
+    @MorphiaInternal
     public static class Center extends Shape {
         private final Point center;
         private final double radius;

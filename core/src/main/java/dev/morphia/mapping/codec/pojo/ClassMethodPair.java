@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 public class ClassMethodPair {
     private final Class<?> type;
     private final Method method;

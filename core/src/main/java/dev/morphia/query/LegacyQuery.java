@@ -255,6 +255,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @morphia.internal
      */
     @Override
+    @MorphiaInternal
     public Class<T> getEntityClass() {
         return type;
     }
@@ -362,6 +363,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Document getFieldsObject() {
         Projection projection = getOptions().getProjection();
 
@@ -396,6 +398,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Document getSort() {
         return options != null ? options.sort() : null;
     }
@@ -407,6 +410,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      * @morphia.internal
      */
     @Override
+    @MorphiaInternal
     public Document toDocument() {
         final Document query = getQueryDocument();
         EntityModel model = datastore.getMapper().getEntityModel(getEntityClass());

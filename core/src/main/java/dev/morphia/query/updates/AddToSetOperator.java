@@ -1,5 +1,6 @@
 package dev.morphia.query.updates;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
 import org.bson.Document;
@@ -19,6 +20,7 @@ public class AddToSetOperator extends UpdateOperator {
      * @param values the values
      * @morphia.internal
      */
+    @MorphiaInternal
     public AddToSetOperator(String field, Object values) {
         super("$addToSet", field, values);
         each = values instanceof Collection;

@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 /**
@@ -8,6 +9,7 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 public interface MorphiaInstanceCreator {
     /**
      * @return the new class instance.

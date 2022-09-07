@@ -40,6 +40,7 @@ import static java.util.Collections.emptyList;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public final class IndexHelper {
     private static final Logger LOG = LoggerFactory.getLogger(IndexHelper.class);
 
@@ -50,10 +51,16 @@ public final class IndexHelper {
      * @morphia.internal
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
+    @MorphiaInternal
     public IndexHelper(Mapper mapper) {
         this.mapper = mapper;
     }
 
+    /**
+     * @param entityModel
+     * @param index
+     * @return
+     */
     public Document calculateKeys(EntityModel entityModel, Index index) {
         Document keys = new Document();
         for (Field field : index.fields()) {
@@ -72,6 +79,11 @@ public final class IndexHelper {
         return keys;
     }
 
+    /**
+     * @param text
+     * @param nameToStore
+     * @return
+     */
     @Nullable
     public Index convert(@Nullable Text text, String nameToStore) {
         return text == null
@@ -86,6 +98,12 @@ public final class IndexHelper {
                      .build();
     }
 
+    /**
+     *
+     * @param indexed
+     * @param nameToStore
+     * @return the index
+     */
     @Nullable
     public Index convert(@Nullable Indexed indexed, String nameToStore) {
         return indexed == null
@@ -99,6 +117,10 @@ public final class IndexHelper {
                      .build();
     }
 
+    /**
+     * @param options
+     * @return the converted options
+     */
     public com.mongodb.client.model.IndexOptions convert(IndexOptions options) {
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
                                                                  .background(options.background())
@@ -125,6 +147,10 @@ public final class IndexHelper {
         return indexOptions;
     }
 
+    /**
+     * @param collation
+     * @return the collation
+     */
     @Nullable
     public com.mongodb.client.model.Collation convert(Collation collation) {
         if (!collation.locale().equals("")) {
@@ -152,6 +178,7 @@ public final class IndexHelper {
      * @param model      the model
      * @morphia.internal
      */
+    @MorphiaInternal
     public void createIndex(MongoCollection<?> collection, EntityModel model) {
         if (!model.isInterface() && !model.isAbstract()) {
             for (Index index : collectIndexes(model, Collections.emptyList())) {
@@ -160,6 +187,11 @@ public final class IndexHelper {
         }
     }
 
+    /**
+     * @param collection
+     * @param entityModel
+     * @param index
+     */
     public void createIndex(MongoCollection<?> collection, EntityModel entityModel, Index index) {
         Document keys = calculateKeys(entityModel, index);
         com.mongodb.client.model.IndexOptions indexOptions = convert(index.options());
@@ -168,6 +200,12 @@ public final class IndexHelper {
         collection.createIndex(keys, indexOptions);
     }
 
+    /**
+     * @param entityModel
+     * @param options
+     * @param path
+     * @return the field
+     */
     public String findField(EntityModel entityModel, IndexOptions options, String path) {
         if (path.equals("$**")) {
             return path;

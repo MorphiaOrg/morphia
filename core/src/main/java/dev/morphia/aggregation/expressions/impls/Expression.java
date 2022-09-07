@@ -30,6 +30,7 @@ public class Expression {
      * @param value     the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public Expression(String operation, Expression value) {
         this.operation = operation;
         this.value = value;
@@ -40,6 +41,7 @@ public class Expression {
      * @param value     the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public Expression(String operation, List<Expression> value) {
         this.operation = operation;
         this.value = new ExpressionList(value);
@@ -60,6 +62,7 @@ public class Expression {
      * @return the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public String getOperation() {
         return operation;
     }
@@ -69,6 +72,7 @@ public class Expression {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Expression getValue() {
         return value;
     }

@@ -1,6 +1,7 @@
 package dev.morphia.geo;
 
 import com.mongodb.client.model.geojson.Position;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +129,7 @@ public final class GeoJson {
      * @morphia.internal
      * @return the converted values
      */
+    @MorphiaInternal
     public static List<Position> convertPoints(List<Point> values) {
         final ArrayList<Position> positions = new ArrayList<Position>();
         for (Point point : values) {
@@ -142,6 +144,7 @@ public final class GeoJson {
      * @morphia.internal
      * @return the converted values
      */
+    @MorphiaInternal
     public static List<List<Position>> convertLineStrings(List<LineString> values) {
         final List<List<Position>> positions = new ArrayList<List<Position>>();
         for (LineString line : values) {

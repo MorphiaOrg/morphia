@@ -5,6 +5,7 @@ import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
@@ -81,6 +82,7 @@ public class Bucket extends Stage {
      * @return the boundaries
      * @morphia.internal
      */
+    @MorphiaInternal
     public ExpressionList getBoundaries() {
         return boundaries;
     }
@@ -89,6 +91,7 @@ public class Bucket extends Stage {
      * @return the default value
      * @morphia.internal
      */
+    @MorphiaInternal
     public Object getDefaultValue() {
         return defaultValue;
     }
@@ -97,6 +100,7 @@ public class Bucket extends Stage {
      * @return the group by expression
      * @morphia.internal
      */
+    @MorphiaInternal
     public Expression getGroupBy() {
         return groupBy;
     }
@@ -106,6 +110,7 @@ public class Bucket extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public DocumentExpression getOutput() {
         return output;
     }

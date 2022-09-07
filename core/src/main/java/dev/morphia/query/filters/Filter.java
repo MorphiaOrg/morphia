@@ -2,6 +2,7 @@ package dev.morphia.query.filters;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
@@ -47,6 +48,7 @@ public class Filter {
      * @morphia.internal
      * @see #not()
      */
+    @MorphiaInternal
     public boolean isNot() {
         return not;
     }
@@ -57,6 +59,7 @@ public class Filter {
      * @param context   the context
      * @morphia.internal
      */
+    @MorphiaInternal
     public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
         document(writer, path(datastore.getMapper()), () -> {
             if (not) {
@@ -76,6 +79,7 @@ public class Filter {
      * @return this
      * @morphia.internal
      */
+    @MorphiaInternal
     public Filter entityType(Class<?> type) {
         this.entityClass = type;
         return this;
@@ -86,6 +90,7 @@ public class Filter {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public String getField() {
         return field;
     }
@@ -106,6 +111,7 @@ public class Filter {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public String getName() {
         return name;
     }
@@ -115,6 +121,7 @@ public class Filter {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Object getValue() {
         return value;
     }
@@ -126,6 +133,7 @@ public class Filter {
      * @return this
      * @morphia.internal
      */
+    @MorphiaInternal
     public Filter isValidating(boolean validate) {
         this.validate = validate;
         pathTarget = null;

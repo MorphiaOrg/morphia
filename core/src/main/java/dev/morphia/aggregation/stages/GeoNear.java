@@ -2,6 +2,7 @@ package dev.morphia.aggregation.stages;
 
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filter;
 
 /**
@@ -108,6 +109,7 @@ public class GeoNear extends Stage {
      * @return the coordinates
      * @morphia.internal
      */
+    @MorphiaInternal
     public double[] getCoordinates() {
         return coordinates;
     }
@@ -116,6 +118,7 @@ public class GeoNear extends Stage {
      * @return the distance field
      * @morphia.internal
      */
+    @MorphiaInternal
     public String getDistanceField() {
         return distanceField;
     }
@@ -124,6 +127,7 @@ public class GeoNear extends Stage {
      * @return the distance multiplier
      * @morphia.internal
      */
+    @MorphiaInternal
     public Number getDistanceMultiplier() {
         return distanceMultiplier;
     }
@@ -133,6 +137,7 @@ public class GeoNear extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public Filter[] getFilters() {
         return filters;
     }
@@ -141,6 +146,7 @@ public class GeoNear extends Stage {
      * @return includeLocs
      * @morphia.internal
      */
+    @MorphiaInternal
     public String getIncludeLocs() {
         return includeLocs;
     }
@@ -149,6 +155,7 @@ public class GeoNear extends Stage {
      * @return the key
      * @morphia.internal
      */
+    @MorphiaInternal
     public String getKey() {
         return key;
     }
@@ -157,6 +164,7 @@ public class GeoNear extends Stage {
      * @return the max distance
      * @morphia.internal
      */
+    @MorphiaInternal
     public Number getMaxDistance() {
         return maxDistance;
     }
@@ -165,6 +173,7 @@ public class GeoNear extends Stage {
      * @return the min distance
      * @morphia.internal
      */
+    @MorphiaInternal
     public Number getMinDistance() {
         return minDistance;
     }
@@ -173,6 +182,7 @@ public class GeoNear extends Stage {
      * @return the point
      * @morphia.internal
      */
+    @MorphiaInternal
     public Point getPoint() {
         return point;
     }
@@ -181,6 +191,7 @@ public class GeoNear extends Stage {
      * @return spherical?
      * @morphia.internal
      */
+    @MorphiaInternal
     public Boolean getSpherical() {
         return spherical;
     }

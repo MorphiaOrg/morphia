@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.stages;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,7 @@ public class UnionWith extends Stage {
      * @param stages     the pipeline
      * @morphia.internal
      */
+    @MorphiaInternal
     public UnionWith(String collection, List<Stage> stages) {
         super("$unionWith");
         this.collectionName = collection;
@@ -37,6 +39,7 @@ public class UnionWith extends Stage {
      * @param stages the pipeline
      * @morphia.internal
      */
+    @MorphiaInternal
     public UnionWith(Class<?> type, List<Stage> stages) {
         super("$unionWith");
         this.collectionType = type;
@@ -48,6 +51,7 @@ public class UnionWith extends Stage {
      * @morphia.internal
      */
     @Nullable
+    @MorphiaInternal
     public String getCollectionName() {
         return collectionName;
     }
@@ -56,6 +60,7 @@ public class UnionWith extends Stage {
      * @return the collection type
      * @morphia.internal
      */
+    @MorphiaInternal
     public Class<?> getCollectionType() {
         return collectionType;
     }
@@ -64,6 +69,7 @@ public class UnionWith extends Stage {
      * @return the pipeline
      * @morphia.internal
      */
+    @MorphiaInternal
     public List<Stage> getStages() {
         return stages;
     }

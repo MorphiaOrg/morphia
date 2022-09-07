@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 import org.bson.codecs.pojo.PropertyAccessor;
 
@@ -9,6 +10,7 @@ import java.lang.reflect.Field;
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 public class FieldAccessor implements PropertyAccessor<Object> {
     private final Field field;
 

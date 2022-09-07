@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec.references;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.IdGetter;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
@@ -16,6 +17,7 @@ import java.util.List;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
     private static final List<String> NONFETCHES = List.of("isEmpty", "size");
     private final MorphiaReference<?> reference;

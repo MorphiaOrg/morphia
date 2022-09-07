@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -24,6 +25,7 @@ public class FunctionExpression extends Expression {
      * @param args the funcation arguments
      * @morphia.internal
      */
+    @MorphiaInternal
     public FunctionExpression(String body, List<Expression> args) {
         super("$function");
         this.body = body;

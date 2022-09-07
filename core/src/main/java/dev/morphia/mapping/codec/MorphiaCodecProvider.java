@@ -6,6 +6,7 @@ import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityDecoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -29,6 +30,7 @@ import java.util.ServiceLoader;
  *
  * @morphia.internal
  */
+@MorphiaInternal
 public class MorphiaCodecProvider implements CodecProvider {
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
     private final Mapper mapper;

@@ -1,6 +1,7 @@
 package dev.morphia.query.updates;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -14,11 +15,13 @@ import org.bson.codecs.EncoderContext;
  * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class SetEntityOperator extends UpdateOperator {
     /**
      * @param value the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public SetEntityOperator(Object value) {
         super("$set", "", value);
     }

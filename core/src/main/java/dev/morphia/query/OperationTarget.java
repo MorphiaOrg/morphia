@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -18,6 +19,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 public class OperationTarget {
     private final PathTarget target;
     private final Object value;
@@ -27,6 +29,7 @@ public class OperationTarget {
      * @param value  the value
      * @morphia.internal
      */
+    @MorphiaInternal
     public OperationTarget(@Nullable PathTarget target, @Nullable Object value) {
         this.target = target;
         this.value = value;
@@ -39,6 +42,7 @@ public class OperationTarget {
      * @return the encoded form
      * @morphia.internal
      */
+    @MorphiaInternal
     public Object encode(Datastore datastore) {
         if (target == null) {
             if (value == null) {

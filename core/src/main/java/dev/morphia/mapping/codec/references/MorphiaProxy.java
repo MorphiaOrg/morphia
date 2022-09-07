@@ -1,10 +1,12 @@
 package dev.morphia.mapping.codec.references;
 
 import com.mongodb.lang.Nullable;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * @morphia.internal
  */
+@MorphiaInternal
 public interface MorphiaProxy {
     /**
      * @return true if the reference has been fetched
