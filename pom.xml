@@ -31,7 +31,7 @@
 
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
-        <bottlerocket.version>0.36.0</bottlerocket.version>
+        <bottlerocket.version>0.37.0</bottlerocket.version>
         <dokka.version>1.7.10</dokka.version>
         <driver.version>4.7.1</driver.version>
         <driver.minor.version>4.6</driver.minor.version>
