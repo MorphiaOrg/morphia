@@ -6,6 +6,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -18,6 +20,8 @@ import java.util.List;
  */
 @MorphiaInternal
 public class ClassMethodPair {
+    private static final Logger LOG = LoggerFactory.getLogger(ClassMethodPair.class);
+
     private final Class<?> type;
     private final Method method;
     private final Class<? extends Annotation> event;
@@ -40,7 +44,7 @@ public class ClassMethodPair {
             final Method method = getMethod();
             method.setAccessible(true);
 
-            Sofia.logCallingLifecycleMethod(event.getSimpleName(), method, instance);
+            LOG.debug(Sofia.callingLifecycleMethod(event.getSimpleName(), method, instance));
             List<Object> args = new ArrayList<>();
 
             for (Class<?> parameterType : method.getParameterTypes()) {

@@ -20,6 +20,8 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -40,6 +42,8 @@ import java.util.stream.Collectors;
 @MorphiaInternal
 @SuppressWarnings({"unchecked", "rawtypes", "removal"})
 public class Mapper {
+    private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
+
 
     /**
      * Special name that can never be used. Used as default for some fields to indicate default state.
@@ -156,10 +160,10 @@ public class Mapper {
     public <T> Class<T> getClassFromCollection(String collection) {
         final List<EntityModel> classes = getClassesMappedToCollection(collection);
         if (classes.size() > 1) {
-            Sofia.logMoreThanOneMapper(collection,
+            LOG.warn(Sofia.moreThanOneMapper(collection,
                 classes.stream()
                        .map(c -> c.getType().getName())
-                       .collect(Collectors.joining(", ")));
+                       .collect(Collectors.joining(", "))));
         }
         return (Class<T>) classes.get(0).getType();
     }

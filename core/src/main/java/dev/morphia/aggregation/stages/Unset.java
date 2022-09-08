@@ -4,6 +4,8 @@ import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.List;
  * @aggregation.expression $unset
  */
 public class Unset extends Stage {
+    private static final Logger LOG = LoggerFactory.getLogger(Unset.class);
+
     private final List<Expression> fields = new ArrayList<>();
 
     protected Unset() {
@@ -68,7 +72,7 @@ public class Unset extends Stage {
         String fieldName = name;
         if (fieldName.startsWith("$")) {
             fieldName = fieldName.substring(1);
-            Sofia.logUnsetNamesDollarSign();
+            LOG.warn(Sofia.unsetNamesDollarSign());
         }
         fields.add(Expressions.value(fieldName));
         return this;

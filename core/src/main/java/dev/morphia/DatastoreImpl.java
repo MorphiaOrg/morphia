@@ -92,7 +92,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 @MorphiaInternal
 @SuppressWarnings({"unchecked", "rawtypes", "removal"})
 public class DatastoreImpl implements AdvancedDatastore {
-    private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Datastore.class);
     private final MongoClient mongoClient;
     private final Mapper mapper;
     private final QueryFactory queryFactory;
@@ -169,7 +169,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         String alternate = options.collection();
         if (alternate != null && grouped.size() > 1) {
-            Sofia.logInsertManyAlternateCollection();
+            LOG.warn(Sofia.insertManyAlternateCollection(alternate));
         }
 
         grouped.entrySet().stream()
@@ -270,7 +270,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void ensureIndexes() {
         if (mapper.getMappedEntities().isEmpty()) {
-            Sofia.logNoMappedClasses();
+            LOG.warn(Sofia.noMappedClasses());
         }
         final IndexHelper indexHelper = new IndexHelper(mapper);
         for (EntityModel model : mapper.getMappedEntities()) {
@@ -567,7 +567,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         String alternate = options.collection();
         if (grouped.size() > 1 && alternate != null) {
-            Sofia.logInsertManyAlternateCollection();
+            LOG.warn(Sofia.insertManyAlternateCollection(alternate));
         }
 
         for (Entry<Class<?>, List<T>> entry : grouped.entrySet()) {

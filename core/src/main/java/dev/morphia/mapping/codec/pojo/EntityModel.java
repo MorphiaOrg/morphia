@@ -20,6 +20,8 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.sofia.Sofia;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -46,6 +48,8 @@ import static java.util.Collections.emptyList;
 @MorphiaInternal
 @SuppressWarnings({"unchecked", "deprecation", "removal"})
 public class EntityModel {
+    private static final Logger LOG = LoggerFactory.getLogger(EntityModel.class);
+
     private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
         PreLoad.class,
         PostPersist.class,
@@ -383,7 +387,7 @@ public class EntityModel {
     private void callGlobalInterceptors(Class<? extends Annotation> event, Object entity, Document document,
                                         Datastore datastore) {
         for (EntityInterceptor ei : datastore.getMapper().getInterceptors()) {
-            Sofia.logCallingInterceptorMethod(event.getSimpleName(), ei);
+            LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), ei));
 
             if (event.equals(PreLoad.class)) {
                 ei.preLoad(entity, document, mapper);
