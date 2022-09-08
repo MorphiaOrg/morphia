@@ -178,7 +178,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void ensureIndexes() {
         if (mapper.getMappedEntities().isEmpty()) {
-            Sofia.logNoMappedClasses();
+            LOG.warn(Sofia.noMappedClasses());
         }
         final IndexHelper indexHelper = new IndexHelper(mapper);
         for (EntityModel model : mapper.getMappedEntities()) {

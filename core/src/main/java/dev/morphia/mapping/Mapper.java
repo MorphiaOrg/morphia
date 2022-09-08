@@ -31,6 +31,8 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -55,6 +57,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
  */
 @SuppressWarnings({"unchecked", "rawtypes", "removal"})
 public class Mapper {
+    private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
+
 
     /**
      * Special name that can never be used. Used as default for some fields to indicate default state.
@@ -213,10 +217,10 @@ public class Mapper {
     public <T> Class<T> getClassFromCollection(String collection) {
         final List<EntityModel> classes = getClassesMappedToCollection(collection);
         if (classes.size() > 1) {
-            Sofia.logMoreThanOneMapper(collection,
+            LOG.warn(Sofia.moreThanOneMapper(collection,
                 classes.stream()
                        .map(c -> c.getType().getName())
-                       .collect(Collectors.joining(", ")));
+                       .collect(Collectors.joining(", "))));
         }
         return (Class<T>) classes.get(0).getType();
     }
