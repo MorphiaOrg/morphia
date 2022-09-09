@@ -245,7 +245,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -448,38 +448,48 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="../../DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDiscriminatorLookup()">getDiscriminatorLookup</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonValue.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonValue</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDocumentId(java.lang.Object)">getDocumentId</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;document)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="EntityEncoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityEncoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoder()">getEncoder</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEncoderClass()">getEncoderClass</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getEntityModel()">getEntityModel</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMapper()">getMapper</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
+<td class="colFirst"><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/configuration/CodecRegistry.html?is-external=true" title="class or interface in org.bson.codecs.configuration" class="externalLink">CodecRegistry</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getRegistry()">getRegistry</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDecoder(dev.morphia.mapping.codec.pojo.EntityDecoder)">setDecoder</a></span>​(<a href="EntityDecoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityDecoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;decoder)</code></th>
 <td class="colLast">
 <div class="block">Sets the decoder</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="MorphiaCodec.html" title="class in dev.morphia.mapping.codec.pojo">MorphiaCodec</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setEncoder(dev.morphia.mapping.codec.pojo.EntityEncoder)">setEncoder</a></span>​(<a href="EntityEncoder.html" title="class in dev.morphia.mapping.codec.pojo">EntityEncoder</a>&lt;<a href="MorphiaCodec.html" title="type parameter in MorphiaCodec">T</a>&gt;&nbsp;encoder)</code></th>
 <td class="colLast">
@@ -640,6 +650,19 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </dl>
 </li>
 </ul>
+<a id="getDiscriminatorLookup()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDiscriminatorLookup</h4>
+<pre class="methodSignature">public&nbsp;<a href="../../DiscriminatorLookup.html" title="class in dev.morphia.mapping">DiscriminatorLookup</a>&nbsp;getDiscriminatorLookup()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the DiscriminatorLookup</dd>
+</dl>
+</li>
+</ul>
 <a id="getEncoder()">
 <!--   -->
 </a>
@@ -694,6 +717,19 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the mapper being used</dd>
+</dl>
+</li>
+</ul>
+<a id="getRegistry()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getRegistry</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/configuration/CodecRegistry.html?is-external=true" title="class or interface in org.bson.codecs.configuration" class="externalLink">CodecRegistry</a>&nbsp;getRegistry()</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the codec registry</dd>
 </dl>
 </li>
 </ul>
