@@ -11,10 +11,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>audits</artifactId>
+    <artifactId>morphia-audits</artifactId>
     <packaging>jar</packaging>
-
-    <name>Morphia Audits</name>
 
     <dependencies>
         <dependency>

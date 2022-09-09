@@ -111,7 +111,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return datastore;
     }
 
-    DiscriminatorLookup getDiscriminatorLookup() {
+    public DiscriminatorLookup getDiscriminatorLookup() {
         return discriminatorLookup;
     }
 
@@ -151,7 +151,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return datastore.getMapper();
     }
 
-    CodecRegistry getRegistry() {
+    public CodecRegistry getRegistry() {
         return registry;
     }
 
