@@ -12,6 +12,7 @@ import dev.morphia.sofia.Sofia;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -28,9 +29,9 @@ import static java.util.Arrays.asList;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
+    private final Map<String, List<Object>> collections = new HashMap<>();
     private EntityModel entityModel;
     private List ids;
-    private final Map<String, List<Object>> collections = new HashMap<>();
 
     CollectionReference(Datastore datastore, EntityModel entityModel, List ids) {
         super(datastore);
@@ -45,11 +46,6 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 this.ids = ids;
             }
         }
-    }
-
-    abstract void setValues(List ids);
-
-    protected CollectionReference() {
     }
 
     static void collate(EntityModel valueType, Map<String, List<Object>> collections,
@@ -72,17 +68,15 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         return collections.computeIfAbsent(name, k -> new ArrayList<>());
     }
 
+    protected CollectionReference() {
+    }
+
     /**
      * Gets the referenced entities.  This may require at least one request to the server.
      *
      * @return the referenced entities
      */
     public abstract C get();
-
-    @Override
-    public Class<C> getType() {
-        return (Class<C>) entityModel.getType();
-    }
 
     @Override
     public List<Object> getIds() {
@@ -97,6 +91,11 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     @Override
+    public Class<C> getType() {
+        return (Class<C>) entityModel.getType();
+    }
+
+    @Override
     final List<Object> getId(Mapper mapper, Datastore datastore, EntityModel entityModel) {
         if (ids == null) {
             ids = getValues().stream()
@@ -105,6 +104,10 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         }
         return ids;
     }
+
+    abstract Collection<?> getValues();
+
+    abstract void setValues(List ids);
 
     private List<Object> extractIds(List<Object> list) {
         List<Object> ids = new ArrayList<>();
@@ -149,8 +152,6 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         return values;
     }
 
-    abstract Collection<?> getValues();
-
     Map<Object, Object> query(String collection, List<Object> collectionIds) {
 
         final Map<Object, Object> idMap = new HashMap<>();
@@ -162,7 +163,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
                 idMap.put(getDatastore().getMapper().getId(entity), entity);
             }
 
-            if (!ignoreMissing() && idMap.size() != collectionIds.size()) {
+            if (!ignoreMissing() && idMap.size() != new HashSet<>(collectionIds).size()) {
                 throw new ReferenceException(
                     Sofia.missingReferencedEntities(entityModel.getType().getSimpleName()));
 
