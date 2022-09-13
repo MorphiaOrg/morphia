@@ -102,7 +102,7 @@ public class TestLazyIdOnlyIgnoreMissing extends ProxyTestBase {
         }
     }
 
-    private static class ReferencedEntity extends TestEntity {
+    public static class ReferencedEntity extends TestEntity {
         private String foo;
 
         public String getFoo() {
@@ -132,7 +132,7 @@ public class TestLazyIdOnlyIgnoreMissing extends ProxyTestBase {
         }
     }
 
-    private static class RootEntity extends TestEntity {
+    public static class RootEntity extends TestEntity {
         @Reference(idOnly = true, lazy = true, ignoreMissing = true)
         private ReferencedEntity r;
 
