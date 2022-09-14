@@ -8,6 +8,7 @@ on: [ push, pull_request, workflow_dispatch ]
 jobs:
   Morphia:
     runs-on: ubuntu-latest
+    if: "github.repository == 'MorphiaOrg/morphia' && startsWith(github.ref, 'refs/heads/')"
     strategy:
       matrix:
         java: [ 11, 17 ]
@@ -32,7 +33,7 @@ jobs:
           MONGODB: ${{ matrix.mongo }}
         run: mvn surefire:test -Ddriver.version=${{ matrix.driver }}
       - uses: actions/upload-artifact@v2
-        if: always()
+        if: failure()
         with:
           name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}-${{matrix.driver}}
           path: |
