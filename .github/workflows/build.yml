@@ -8,6 +8,7 @@ on: [ push, pull_request, workflow_dispatch ]
 jobs:
   Morphia:
     runs-on: ubuntu-latest
+    if: "github.repository == 'MorphiaOrg/morphia' && startsWith('refs/heads/', github.ref)"
     strategy:
       matrix:
         java: [ 11, 17 ]
