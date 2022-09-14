@@ -9,6 +9,7 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     name: "Build"
+    if: "github.repository == 'MorphiaOrg/morphia' && startsWith(github.ref, 'refs/heads/')"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -56,7 +57,7 @@ jobs:
           MONGODB: ${{ matrix.mongo }}
         run: mvn surefire:test -Ddriver.version=${{ matrix.driver }}
       - uses: actions/upload-artifact@v3
-        if: always()
+        if: failure()
         with:
           name: mongo-logs-${{matrix.java}}-${{matrix.mongo}}-${{matrix.driver}}
           path: |
@@ -66,6 +67,7 @@ jobs:
   Quality:
     name: Style Checks
     runs-on: ubuntu-latest
+    if: "github.repository == 'MorphiaOrg/morphia' && startsWith(github.ref, 'refs/heads/')"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -83,7 +85,7 @@ jobs:
 
   Snapshots:
     name: Publish Snapshot Artifacts
-    if: "github.repository == 'MorphiaOrg/morphia' && github.ref == 'refs/heads/master' && github.event_name == 'push'"
+    if: "github.event_name == 'push'"
     needs:
       - Tests
       - Quality
