@@ -13,17 +13,17 @@ public class TestDocuments extends AggregationTest {
     public void testLookup() {
         testPipeline(5.1, "lookup", aggregation -> {
             return aggregation
-                       .match()
-                       .lookup(lookup()
-                                   .localField("zip")
-                                   .foreignField("zip_id")
-                                   .as("city_state")
-                                   .pipeline(
-                                       documents(
-                                           document("zip_id", value(94301))
-                                               .field("name", value("Palo Alto, CA")),
-                                           document("zip_id", value(10019))
-                                                  .field("name", value("New York, NY")))));
+                    .match()
+                    .lookup(lookup()
+                            .localField("zip")
+                            .foreignField("zip_id")
+                            .as("city_state")
+                            .pipeline(
+                                    documents(
+                                            document("zip_id", value(94301))
+                                                    .field("name", value("Palo Alto, CA")),
+                                            document("zip_id", value(10019))
+                                                    .field("name", value("New York, NY")))));
 
         });
     }

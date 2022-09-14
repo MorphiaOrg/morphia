@@ -201,7 +201,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public String readJavaScript() {
-        return stage().<BsonJavaScript>value().getCode();
+        return stage().<BsonJavaScript> value().getCode();
     }
 
     @Override
@@ -212,7 +212,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public String readJavaScriptWithScope() {
-        return stage().<BsonJavaScriptWithScope>value().getCode();
+        return stage().<BsonJavaScriptWithScope> value().getCode();
     }
 
     @Override
@@ -371,7 +371,7 @@ public class DocumentReader implements BsonReader {
         String actualName = readName();
         if (!actualName.equals(expectedName)) {
             throw new BsonSerializationException(format("Expected element name to be '%s', not '%s'.",
-                expectedName, actualName));
+                    expectedName, actualName));
         }
     }
 
@@ -388,7 +388,7 @@ public class DocumentReader implements BsonReader {
             location = location.nextState();
         }
         return joiner
-                   .toString();
+                .toString();
     }
 
     BsonType getBsonType(@Nullable Object o) {

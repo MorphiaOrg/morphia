@@ -38,7 +38,7 @@ public class ReplaceRoot extends Stage {
     }
 
     /**
-     * Creates a new stage to replace the root with the given expression.  This expression must evaluate to a document.  No further
+     * Creates a new stage to replace the root with the given expression. This expression must evaluate to a document. No further
      * fields can be added to this stage.
      *
      * @param expression the document expression
@@ -61,7 +61,7 @@ public class ReplaceRoot extends Stage {
     }
 
     /**
-     * Creates a new stage to replace the root with the given expression.  This expression must evaluate to a document.  No further
+     * Creates a new stage to replace the root with the given expression. This expression must evaluate to a document. No further
      * fields can be added to this stage.
      *
      * @param expression the document expression

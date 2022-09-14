@@ -5,7 +5,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 
 /**
- * Defines a function to calculate a discriminator value.  This function is only applied if the existing value is the annotation default
+ * Defines a function to calculate a discriminator value. This function is only applied if the existing value is the annotation default
  * value.
  */
 @SuppressWarnings("deprecation")

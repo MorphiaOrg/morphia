@@ -27,8 +27,8 @@ public class MorphiaDateCodec implements Codec<LocalDate> {
     @Override
     public LocalDate decode(BsonReader reader, DecoderContext decoderContext) {
         return Instant.ofEpochMilli(reader.readDateTime())
-                      .atZone(datastore.getMapper().getOptions().getDateStorage().getZone())
-                      .toLocalDate();
+                .atZone(datastore.getMapper().getOptions().getDateStorage().getZone())
+                .toLocalDate();
     }
 
     @Override

@@ -70,8 +70,8 @@ public class TestLifecycles extends TestBase {
         Assert.assertTrue(a.bs.get(0).isPrePersist());
 
         a = getDs().find(LifecyleA.class)
-                   .filter(eq("_id", a.id)).iterator(new FindOptions().limit(1))
-                   .tryNext();
+                .filter(eq("_id", a.id)).iterator(new FindOptions().limit(1))
+                .tryNext();
 
         Assert.assertTrue(a.isPostLoad());
         Assert.assertTrue(a.b.isPostLoad());
@@ -105,15 +105,15 @@ public class TestLifecycles extends TestBase {
         getDs().save(entity);
         Assert.assertTrue(entity.isPersistent());
         final SomeEntity reloaded = getDs().find(SomeEntity.class)
-                                           .filter(eq("id", entity.getId())).iterator(new FindOptions().limit(1))
-                                           .tryNext();
+                .filter(eq("id", entity.getId())).iterator(new FindOptions().limit(1))
+                .tryNext();
         Assert.assertTrue(reloaded.isPersistent());
     }
 
     @Test
     public void testWithGeoJson() {
         final Polygon polygon = new Polygon(
-            asList(new Position(0d, 0d), new Position(1d, 1d), new Position(2d, 2d), new Position(3d, 3d), new Position(0d, 0d)));
+                asList(new Position(0d, 0d), new Position(1d, 1d), new Position(2d, 2d), new Position(3d, 3d), new Position(0d, 0d)));
         getDs().save(new HoldsPolygon(ObjectId.get(), polygon));
 
         Assert.assertFalse(HoldsPolygon.lifecycle);
@@ -198,7 +198,7 @@ public class TestLifecycles extends TestBase {
     }
 
     @Entity
-    @SuppressWarnings({"NotNullFieldNotInitialized"})
+    @SuppressWarnings({ "NotNullFieldNotInitialized" })
     private static class InvalidNullHolder {
         @Id
         private final ObjectId id = new ObjectId();
@@ -223,7 +223,7 @@ public class TestLifecycles extends TestBase {
         @Override
         public void prePersist(Object ent, Document document, Datastore datastore) {
             final List<PropertyModel> fieldsToTest = datastore.getMapper().getEntityModel(ent.getClass())
-                                                              .getProperties(NonNull.class);
+                    .getProperties(NonNull.class);
             for (PropertyModel mf : fieldsToTest) {
                 if (mf.getValue(ent) == null) {
                     throw new NonNullValidationException(mf);

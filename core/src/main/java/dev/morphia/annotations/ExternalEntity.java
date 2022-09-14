@@ -11,10 +11,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a class as a "stand in" for an external class whose source can not be properly annotated.  A class annotated with this
+ * Marks a class as a "stand in" for an external class whose source can not be properly annotated. A class annotated with this
  * annotation will be processed like any class annotated with {@link Entity} however, the resulting information stored will reference the
- * target type instead of the annotated type.  In this way third party classes can be mapped properly in spite of not having access to the
- * source.  See the documentation for more detail.
+ * target type instead of the annotated type. In this way third party classes can be mapped properly in spite of not having access to the
+ * source. See the documentation for more detail.
  *
  * @morphia.experimental
  * @since 2.3
@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 @MorphiaExperimental
 public @interface ExternalEntity {
     /**
@@ -58,7 +58,7 @@ public @interface ExternalEntity {
     boolean useDiscriminator() default true;
 
     /**
-     * @return the collection name to for this entity.  Defaults to the class's simple name
+     * @return the collection name to for this entity. Defaults to the class's simple name
      * @see Class#getSimpleName()
      */
     String value() default Mapper.IGNORED_FIELDNAME;

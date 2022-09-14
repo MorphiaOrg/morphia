@@ -29,7 +29,7 @@ public class Out<O> extends Stage {
      */
     public static <O> Out<O> to(Class<O> type) {
         return new Out<O>()
-                   .type(type);
+                .type(type);
     }
 
     /**
@@ -40,7 +40,7 @@ public class Out<O> extends Stage {
      */
     public static Out<Document> to(String collection) {
         return new Out<Document>()
-                   .collection(collection);
+                .collection(collection);
     }
 
     /**

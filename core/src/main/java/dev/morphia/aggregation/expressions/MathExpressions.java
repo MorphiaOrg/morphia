@@ -203,7 +203,7 @@ public final class MathExpressions {
     /**
      * Truncates a number to a whole integer or to a specified decimal place.
      * <p>
-     * NOTE:  Prior to 4.2, the place value wasn't available.  Pass null if your server is older than 4.2.
+     * NOTE: Prior to 4.2, the place value wasn't available. Pass null if your server is older than 4.2.
      *
      * @param number the value
      * @param place  the place to trunc to

@@ -33,7 +33,7 @@ public class DocumentReaderTest extends TestBase {
     @Test
     public void mark() {
         setup(new Document("key", "value")
-                  .append("nested", "detsen"));
+                .append("nested", "detsen"));
 
         step(BsonReader::readStartDocument);
         BsonReaderMark docMark = reader.getMark();
@@ -55,11 +55,10 @@ public class DocumentReaderTest extends TestBase {
     @Test
     public void nested() {
         setup(new Document("key", new Document("nested", "detsen"))
-                  .append("list", List.of(
-                      new Document("list1", "value1"),
-                      new Document("list2", "value2"),
-                      new Document("list3", "value3")
-                                         )));
+                .append("list", List.of(
+                        new Document("list1", "value1"),
+                        new Document("list2", "value2"),
+                        new Document("list3", "value3"))));
 
         step(BsonReader::readStartDocument);
         step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
@@ -92,7 +91,7 @@ public class DocumentReaderTest extends TestBase {
         Document first = collection.find().first();
 
         Parent decode = getDs().getCodecRegistry().get(Parent.class)
-                               .decode(new DocumentReader(first), DecoderContext.builder().build());
+                .decode(new DocumentReader(first), DecoderContext.builder().build());
 
         assertEquals(parent, decode);
     }
@@ -100,8 +99,8 @@ public class DocumentReaderTest extends TestBase {
     @Test
     public void read() {
         setup(new Document("key", "value")
-                  .append("numbers", List.of(1, 2, 3, 4, 5))
-                  .append("another", "entry"));
+                .append("numbers", List.of(1, 2, 3, 4, 5))
+                .append("another", "entry"));
 
         step(BsonReader::readStartDocument);
         step(r -> assertEquals(r.getCurrentBsonType(), BsonType.STRING));
@@ -156,31 +155,31 @@ public class DocumentReaderTest extends TestBase {
     @Test
     public void testByteArray() {
         HasByteArray hasByteArray = new HasByteArray();
-        hasByteArray.data = new byte[]{1, 2, 3};
+        hasByteArray.data = new byte[] { 1, 2, 3 };
         getDs().save(hasByteArray);
         Document first = getDs().getCollection(HasByteArray.class)
-                                .withDocumentClass(Document.class)
-                                .find().first();
+                .withDocumentClass(Document.class)
+                .find().first();
         fromDocument(HasByteArray.class, first);
     }
 
     @Test
     public void testNestedByteArray() {
         HasByteArray hasByteArray = new HasByteArray();
-        hasByteArray.data = new byte[]{1, 2, 3};
+        hasByteArray.data = new byte[] { 1, 2, 3 };
         HasNestedByteArray hasNestedByteArray = new HasNestedByteArray();
         hasNestedByteArray.nested = hasByteArray;
         getDs().save(hasNestedByteArray);
         Document first = getDs().getCollection(HasNestedByteArray.class)
-                                .withDocumentClass(Document.class)
-                                .find().first();
+                .withDocumentClass(Document.class)
+                .find().first();
         fromDocument(HasNestedByteArray.class, first);
     }
 
     @Test
     public void testNestedByteArrayWithInterceptor() {
         HasByteArray hasByteArray = new HasByteArray();
-        hasByteArray.data = new byte[]{1, 2, 3};
+        hasByteArray.data = new byte[] { 1, 2, 3 };
         HasNestedByteArray hasNestedByteArray = new HasNestedByteArray();
         hasNestedByteArray.nested = hasByteArray;
         getDs().save(hasNestedByteArray);
@@ -189,8 +188,8 @@ public class DocumentReaderTest extends TestBase {
         try {
             getDs().getMapper().addInterceptor(interceptor);
             Document first = getDs().getCollection(HasNestedByteArray.class)
-                                    .withDocumentClass(Document.class)
-                                    .find().first();
+                    .withDocumentClass(Document.class)
+                    .find().first();
             fromDocument(HasNestedByteArray.class, first);
         } finally {
             getDs().getMapper().getInterceptors().remove(interceptor);
@@ -203,8 +202,8 @@ public class DocumentReaderTest extends TestBase {
         entity.myInstant = Instant.now();
         final TimeEntity save = getDs().save(entity);
         final TimeEntity find = getDs().find(TimeEntity.class)
-                                       .filter(eq("_id", save.id))
-                                       .first();
+                .filter(eq("_id", save.id))
+                .first();
     }
 
     @Test
@@ -226,7 +225,6 @@ public class DocumentReaderTest extends TestBase {
         }
         step(BsonReader::readEndArray);
         step(BsonReader::readEndArray);
-
 
         step(BsonReader::readEndDocument);
     }

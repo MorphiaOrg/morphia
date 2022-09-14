@@ -46,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class AggregationCodecProvider implements CodecProvider {
 
     private final Codec expressionCodec;
@@ -76,39 +76,39 @@ public class AggregationCodecProvider implements CodecProvider {
 
             // Stages
             addCodec(new AddFieldsCodec(datastore),
-                new AutoBucketCodec(datastore),
-                new BucketCodec(datastore),
-                new ChangeStreamCodec(datastore),
-                new CollectionStatsCodec(datastore),
-                new CountCodec(datastore),
-                new CurrentOpCodec(datastore),
-                new DensifyCodec(datastore),
-                new DocumentsCodec(datastore),
-                new FacetCodec(datastore),
-                new FillCodec(datastore),
-                new GeoNearCodec(datastore),
-                new GraphLookupCodec(datastore),
-                new GroupCodec(datastore),
-                new IndexStatsCodec(datastore),
-                new MergeCodec(datastore),
-                new PlanCacheStatsCodec(datastore),
-                new LimitCodec(datastore),
-                new LookupCodec(datastore),
-                new MatchCodec(datastore),
-                new OutCodec(datastore),
-                new ProjectionCodec(datastore),
-                new RedactCodec(datastore),
-                new ReplaceRootCodec(datastore),
-                new ReplaceWithCodec(datastore),
-                new SampleCodec(datastore),
-                new SetStageCodec(datastore),
-                new SetWindowFieldsCodec(datastore),
-                new SkipCodec(datastore),
-                new SortCodec(datastore),
-                new SortByCountCodec(datastore),
-                new UnionWithCodec(datastore),
-                new UnsetCodec(datastore),
-                new UnwindCodec(datastore));
+                    new AutoBucketCodec(datastore),
+                    new BucketCodec(datastore),
+                    new ChangeStreamCodec(datastore),
+                    new CollectionStatsCodec(datastore),
+                    new CountCodec(datastore),
+                    new CurrentOpCodec(datastore),
+                    new DensifyCodec(datastore),
+                    new DocumentsCodec(datastore),
+                    new FacetCodec(datastore),
+                    new FillCodec(datastore),
+                    new GeoNearCodec(datastore),
+                    new GraphLookupCodec(datastore),
+                    new GroupCodec(datastore),
+                    new IndexStatsCodec(datastore),
+                    new MergeCodec(datastore),
+                    new PlanCacheStatsCodec(datastore),
+                    new LimitCodec(datastore),
+                    new LookupCodec(datastore),
+                    new MatchCodec(datastore),
+                    new OutCodec(datastore),
+                    new ProjectionCodec(datastore),
+                    new RedactCodec(datastore),
+                    new ReplaceRootCodec(datastore),
+                    new ReplaceWithCodec(datastore),
+                    new SampleCodec(datastore),
+                    new SetStageCodec(datastore),
+                    new SetWindowFieldsCodec(datastore),
+                    new SkipCodec(datastore),
+                    new SortCodec(datastore),
+                    new SortByCountCodec(datastore),
+                    new UnionWithCodec(datastore),
+                    new UnsetCodec(datastore),
+                    new UnwindCodec(datastore));
         }
         return codecs;
     }

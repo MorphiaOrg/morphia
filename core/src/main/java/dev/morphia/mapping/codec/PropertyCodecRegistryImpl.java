@@ -39,12 +39,12 @@ public class PropertyCodecRegistryImpl implements PropertyCodecRegistry {
     /**
      * Creates an all purpose registry for property codecs
      *
-     * @param pojoCodec the "parent" codec
-     * @param codecRegistry the parent registry
+     * @param pojoCodec              the "parent" codec
+     * @param codecRegistry          the parent registry
      * @param propertyCodecProviders a list of providers
      */
     public PropertyCodecRegistryImpl(Codec<?> pojoCodec, CodecRegistry codecRegistry,
-                                     List<PropertyCodecProvider> propertyCodecProviders) {
+            List<PropertyCodecProvider> propertyCodecProviders) {
         List<PropertyCodecProvider> augmentedProviders = new ArrayList<PropertyCodecProvider>();
         augmentedProviders.addAll(propertyCodecProviders);
         augmentedProviders.add(new CollectionPropertyCodecProvider());

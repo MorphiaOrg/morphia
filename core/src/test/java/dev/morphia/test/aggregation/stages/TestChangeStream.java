@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 
-import static com.github.zafarkhaja.semver.Version.valueOf;
 import static dev.morphia.aggregation.stages.ChangeStream.changeStream;
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
@@ -35,8 +34,8 @@ public class TestChangeStream extends AggregationTest {
         MongoCollection<Document> collection = getDatabase().getCollection(collName);
 
         try (MorphiaCursor<Document> cursor = getDs().aggregate(collName)
-                                                     .changeStream(changeStream())
-                                                     .execute(Document.class)) {
+                .changeStream(changeStream())
+                .execute(Document.class)) {
             while (input.hasNext()) {
                 Document inserted = input.next();
                 collection.insertOne(inserted);
@@ -51,11 +50,11 @@ public class TestChangeStream extends AggregationTest {
         checkMinDriverVersion(4.7);
         LocalDateTime startAtOperationTime = now();
         ChangeStream changeStream = changeStream().allChangesForCluster(true)
-                                                  .fullDocument(FullDocument.REQUIRED)
-                                                  .fullDocumentBeforeChange(FullDocumentBeforeChange.REQUIRED)
-                                                  .resumeAfter(new Document("resume", "after"))
-                                                  .startAfter(new Document("start", "after"))
-                                                  .startAtOperationTime(startAtOperationTime);
+                .fullDocument(FullDocument.REQUIRED)
+                .fullDocumentBeforeChange(FullDocumentBeforeChange.REQUIRED)
+                .resumeAfter(new Document("resume", "after"))
+                .startAfter(new Document("start", "after"))
+                .startAtOperationTime(startAtOperationTime);
 
         Codec<ChangeStream> codec = getDs().getCodecRegistry().get(ChangeStream.class);
 

@@ -66,8 +66,8 @@ public class MultiLineString implements Geometry {
     @Override
     public String toString() {
         return "MultiLineString{"
-               + "coordinates=" + coordinates
-               + '}';
+                + "coordinates=" + coordinates
+                + '}';
     }
 
     @Override
@@ -78,6 +78,6 @@ public class MultiLineString implements Geometry {
     @Override
     public com.mongodb.client.model.geojson.MultiLineString convert(@Nullable CoordinateReferenceSystem crs) {
         return new com.mongodb.client.model.geojson.MultiLineString(crs != null ? crs.convert() : null,
-            GeoJson.convertLineStrings(coordinates));
+                GeoJson.convertLineStrings(coordinates));
     }
 }

@@ -29,8 +29,8 @@ public class BucketAutoResult {
     @Override
     public String toString() {
         return "BucketAutoResult{"
-               + "id=" + id
-               + ", count=" + count
-               + '}';
+                + "id=" + id
+                + ", count=" + count
+                + '}';
     }
 }

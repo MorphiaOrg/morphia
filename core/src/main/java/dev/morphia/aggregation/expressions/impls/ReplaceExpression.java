@@ -27,9 +27,9 @@ public class ReplaceExpression extends Expression {
      */
     @MorphiaInternal
     public ReplaceExpression(String operator,
-                             Expression input,
-                             Expression find,
-                             Expression replacement) {
+            Expression input,
+            Expression find,
+            Expression replacement) {
         super(operator);
         this.input = input;
         this.find = find;

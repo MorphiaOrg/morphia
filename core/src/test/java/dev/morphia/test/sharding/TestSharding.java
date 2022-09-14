@@ -33,13 +33,13 @@ public class TestSharding extends TestBase {
         String mongodb = System.getenv("MONGODB");
         var version = mongodb != null ? Version.valueOf(mongodb) : Versions.latest();
         try (var cluster = new ClusterBuilder(SHARDED)
-                               .baseDir(new File("target/mongo-" + version))
-                               .version(version)
-                               .build()) {
+                .baseDir(new File("target/mongo-" + version))
+                .version(version)
+                .build()) {
             cluster.clean();
             cluster.start();
             withClient(cluster.getClient(), (datastore -> {
-                datastore.getDatabase().createCollection("split_brain");  // make sure the db exists on 4.0.x
+                datastore.getDatabase().createCollection("split_brain"); // make sure the db exists on 4.0.x
                 datastore.getMapper().map(Sharded.class);
                 datastore.shardCollections();
 
@@ -58,14 +58,14 @@ public class TestSharding extends TestBase {
     }
 
     @Entity
-    @ShardKeys({@ShardKey("name"), @ShardKey("age")})
+    @ShardKeys({ @ShardKey("name"), @ShardKey("age") })
     private static class BadShardKeys {
         @Id
         private ObjectId id;
     }
 
     @Entity("split_brain")
-    @ShardKeys({@ShardKey(value = "name", type = HASHED)})
+    @ShardKeys({ @ShardKey(value = "name", type = HASHED) })
     private static class Sharded {
         @Id
         private ObjectId id;

@@ -3,10 +3,11 @@ package dev.morphia.test.validation;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.test.TestBase;
 import dev.morphia.validation.ValidationExtension;
-import jakarta.validation.ValidationException;
 import org.bson.Document;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import jakarta.validation.ValidationException;
 
 import static org.testng.Assert.assertTrue;
 

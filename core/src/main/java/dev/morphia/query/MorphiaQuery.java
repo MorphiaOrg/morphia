@@ -46,7 +46,7 @@ import static java.util.Arrays.asList;
  * @param <T> the type
  * @morphia.internal
  */
-@SuppressWarnings({"removal", "deprecation"})
+@SuppressWarnings({ "removal", "deprecation" })
 @MorphiaInternal
 class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
@@ -91,8 +91,8 @@ class MorphiaQuery<T> implements Query<T> {
     public Query<T> filter(Filter... additional) {
         for (Filter filter : additional) {
             filters.add(filter
-                .entityType(getEntityClass())
-                .isValidating(validate));
+                    .entityType(getEntityClass())
+                    .isValidating(validate));
         }
         return this;
     }
@@ -133,18 +133,18 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
         return verbosity == null
-               ? iterable(options, collection).explain()
-               : iterable(options, collection).explain(verbosity);
+                ? iterable(options, collection).explain()
+                : iterable(options, collection).explain(verbosity);
     }
 
     @Override
-    @SuppressWarnings({"removal", "unchecked"})
+    @SuppressWarnings({ "removal", "unchecked" })
     public FieldEnd<? extends Query<T>> field(String name) {
         return new MorphiaQueryFieldEnd(name);
     }
 
     @Override
-    @SuppressWarnings({"removal"})
+    @SuppressWarnings({ "removal" })
     public Query<T> filter(String condition, Object value) {
         final String[] parts = condition.trim().split(" ");
         if (parts.length < 1 || parts.length > 6) {
@@ -161,11 +161,11 @@ class MorphiaQuery<T> implements Query<T> {
         if (lastOptions.isLogQuery()) {
             String json = "{}";
             Document first = datastore.getDatabase()
-                                      .getCollection("system.profile")
-                                      .find(new Document("command.comment", "logged query: " + lastOptions.queryLogId()),
-                                          Document.class)
-                                      .projection(new Document("command.filter", 1))
-                                      .first();
+                    .getCollection("system.profile")
+                    .find(new Document("command.comment", "logged query: " + lastOptions.queryLogId()),
+                            Document.class)
+                    .projection(new Document("command.filter", 1))
+                    .first();
             if (first != null) {
                 Document command = (Document) first.get("command");
                 Document filter = (Document) command.get("filter");
@@ -210,7 +210,7 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     public T modify(ModifyOptions options, UpdateOperator... updates) {
         return new Modify<>(datastore, datastore.configureCollection(options, collection), this, getEntityClass(), List.of(updates))
-                   .execute(options);
+                .execute(options);
     }
 
     @Override
@@ -226,11 +226,11 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     public MorphiaKeyCursor<T> keys(FindOptions options) {
         FindOptions includeId = new FindOptions().copy(options)
-                                                 .projection()
-                                                 .include("_id");
+                .projection()
+                .include("_id");
 
         return new MorphiaKeyCursor<>(prepareCursor(includeId, datastore.getDatabase().getCollection(getCollectionName())),
-            datastore, type, getCollectionName());
+                datastore, type, getCollectionName());
     }
 
     @Override
@@ -269,13 +269,13 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     public UpdateResult update(UpdateOptions options, Stage... updates) {
         return new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, asList(updates))
-                   .execute(options);
+                .execute(options);
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
         return new Update<>(datastore, datastore.configureCollection(options, collection), this, type, asList(updates))
-                   .execute(options);
+                .execute(options);
     }
 
     @Override
@@ -293,16 +293,16 @@ class MorphiaQuery<T> implements Query<T> {
         }
         final MorphiaQuery<?> query20 = (MorphiaQuery<?>) o;
         return validate == query20.validate
-               && Objects.equals(type, query20.type)
-               && Objects.equals(getCollectionName(), query20.getCollectionName());
+                && Objects.equals(type, query20.type)
+                && Objects.equals(getCollectionName(), query20.getCollectionName());
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", MorphiaQuery.class.getSimpleName() + "[", "]")
-            .add("clazz=" + type.getSimpleName())
-            .add("query=" + getQueryDocument())
-            .toString();
+                .add("clazz=" + type.getSimpleName())
+                .add("query=" + getQueryDocument())
+                .toString();
     }
 
     private String getCollectionName() {
@@ -331,13 +331,13 @@ class MorphiaQuery<T> implements Query<T> {
         }
         try {
             return findOptions
-                .apply(iterable(findOptions, collection), mapper, type)
-                .iterator();
+                    .apply(iterable(findOptions, collection), mapper, type)
+                    .iterator();
         } finally {
             if (findOptions.isLogQuery()) {
                 datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
-                    .append("slowms", oldProfile.get("slowms"))
-                    .append("sampleRate", oldProfile.get("sampleRate")));
+                        .append("slowms", oldProfile.get("slowms"))
+                        .append("sampleRate", oldProfile.get("sampleRate")));
             }
 
         }
@@ -360,7 +360,7 @@ class MorphiaQuery<T> implements Query<T> {
         return query;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked", "DeprecatedIsStillUsed"})
+    @SuppressWarnings({ "rawtypes", "unchecked", "DeprecatedIsStillUsed" })
     @Deprecated(since = "2.0", forRemoval = true)
     private class MorphiaQueryFieldEnd extends FieldEndImpl {
         private final String name;

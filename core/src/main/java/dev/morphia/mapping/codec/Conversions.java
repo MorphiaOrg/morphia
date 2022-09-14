@@ -21,8 +21,8 @@ import java.util.function.Function;
 import static java.lang.Boolean.FALSE;
 
 /**
- * Defines basic type conversions.  This class is mostly intended for internal use only but its methods are public so that when cases
- * arise where certain conversions are missing, users can add their in between releases.  However, this must be done with the understand
+ * Defines basic type conversions. This class is mostly intended for internal use only but its methods are public so that when cases
+ * arise where certain conversions are missing, users can add their in between releases. However, this must be done with the understand
  * that, however unlikely, this API is subject to change and any uses might break at some point.
  *
  * @morphia.internal
@@ -104,7 +104,7 @@ public final class Conversions {
     }
 
     /**
-     * Register a conversion between two types.  For example, to register the conversion of {@link Date} to a {@link Long}, this method
+     * Register a conversion between two types. For example, to register the conversion of {@link Date} to a {@link Long}, this method
      * could be invoked as follows:
      *
      * <code>
@@ -113,7 +113,7 @@ public final class Conversions {
      *
      * @param source   the source type
      * @param target   the target type
-     * @param function the function that performs the conversion.  This is often just a method reference.
+     * @param function the function that performs the conversion. This is often just a method reference.
      * @param <S>      the source type
      * @param <T>      the target type.
      */
@@ -129,7 +129,7 @@ public final class Conversions {
      * @param <T>    the target type
      * @return the potentially converted value
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Nullable
     public static <T> T convert(@Nullable Object value, Class<T> target) {
         if (value == null) {
@@ -142,8 +142,8 @@ public final class Conversions {
         }
 
         final Function function = CONVERSIONS
-                                      .computeIfAbsent(fromType, (f) -> new HashMap<>())
-                                      .get(target);
+                .computeIfAbsent(fromType, (f) -> new HashMap<>())
+                .get(target);
         if (function == null) {
             if (target.equals(String.class)) {
                 return (T) value.toString();
@@ -167,7 +167,7 @@ public final class Conversions {
     }
 
     /**
-     * Register a conversion between two types.  For example, to register the conversion of {@link Date} to a {@link Long}, this method
+     * Register a conversion between two types. For example, to register the conversion of {@link Date} to a {@link Long}, this method
      * could be invoked as follows:
      *
      * <code>
@@ -176,23 +176,23 @@ public final class Conversions {
      *
      * @param source   the source type
      * @param target   the target type
-     * @param function the function that performs the conversion.  This is often just a method reference.
+     * @param function the function that performs the conversion. This is often just a method reference.
      * @param warning  if non-null, this will be the message logged on the WARN level indicating the conversion is taking place.
      * @param <S>      the source type
      * @param <T>      the target type.
      */
     public static <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function,
-                                       @Nullable String warning) {
+            @Nullable String warning) {
         final Function<S, T> conversion = warning == null
-                                          ? function
-                                          : s -> {
-                                              if (LOG.isWarnEnabled()) {
-                                                  LOG.warn(warning);
-                                              }
-                                              return function.apply(s);
-                                          };
+                ? function
+                : s -> {
+                    if (LOG.isWarnEnabled()) {
+                        LOG.warn(warning);
+                    }
+                    return function.apply(s);
+                };
         CONVERSIONS.computeIfAbsent(source, (Class<?> c) -> new HashMap<>())
-                   .put(target, conversion);
+                .put(target, conversion);
     }
 
     private static boolean isNumber(Class<?> type) {

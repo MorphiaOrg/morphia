@@ -14,7 +14,6 @@ class PendingValue extends ValueState<Object> {
         return null;
     }
 
-
     @Override
     protected String state() {
         return "pending value";

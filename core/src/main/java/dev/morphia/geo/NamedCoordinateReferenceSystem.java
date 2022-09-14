@@ -20,6 +20,7 @@ import static java.lang.String.format;
 
 /**
  * A GeoJSON named Coordinate Reference System.
+ *
  * @deprecated use the driver-provided types instead
  */
 @SuppressWarnings("removal")
@@ -29,20 +30,18 @@ public final class NamedCoordinateReferenceSystem extends CoordinateReferenceSys
     /**
      * The EPSG:4326 Coordinate Reference System.
      */
-    public static final NamedCoordinateReferenceSystem EPSG_4326 =
-        new NamedCoordinateReferenceSystem("EPSG:4326");
+    public static final NamedCoordinateReferenceSystem EPSG_4326 = new NamedCoordinateReferenceSystem("EPSG:4326");
 
     /**
      * The urn:ogc:def:crs:OGC:1.3:CRS84 Coordinate Reference System
      */
-    public static final NamedCoordinateReferenceSystem CRS_84 =
-        new NamedCoordinateReferenceSystem("urn:ogc:def:crs:OGC:1.3:CRS84");
+    public static final NamedCoordinateReferenceSystem CRS_84 = new NamedCoordinateReferenceSystem("urn:ogc:def:crs:OGC:1.3:CRS84");
 
     /**
      * A custom MongoDB EPSG:4326 Coordinate Reference System that uses a strict counter-clockwise winding order.
      */
-    public static final NamedCoordinateReferenceSystem EPSG_4326_STRICT_WINDING =
-        new NamedCoordinateReferenceSystem("urn:x-mongodb:crs:strictwinding:EPSG:4326");
+    public static final NamedCoordinateReferenceSystem EPSG_4326_STRICT_WINDING = new NamedCoordinateReferenceSystem(
+            "urn:x-mongodb:crs:strictwinding:EPSG:4326");
 
     private final String name;
 

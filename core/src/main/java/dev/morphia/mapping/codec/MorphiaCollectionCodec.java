@@ -23,5 +23,4 @@ class MorphiaCollectionCodec<T> extends CollectionCodec<T> {
         return collection;
     }
 
-
 }

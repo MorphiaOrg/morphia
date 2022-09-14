@@ -78,7 +78,7 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
             return inc(field, (value.doubleValue() * -1));
         }
         throw new IllegalArgumentException(
-            "Currently only the following types are allowed: integer, long, double, float.");
+                "Currently only the following types are allowed: integer, long, double, float.");
     }
 
     @Override

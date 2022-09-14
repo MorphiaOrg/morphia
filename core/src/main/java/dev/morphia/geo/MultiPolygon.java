@@ -63,8 +63,8 @@ public class MultiPolygon implements Geometry {
     @Override
     public String toString() {
         return "MultiPolygon{"
-               + "coordinates=" + coordinates
-               + '}';
+                + "coordinates=" + coordinates
+                + '}';
     }
 
     @Override

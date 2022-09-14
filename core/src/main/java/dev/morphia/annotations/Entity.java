@@ -15,7 +15,6 @@
  *  under the License.
  */
 
-
 package dev.morphia.annotations;
 
 import dev.morphia.mapping.Mapper;
@@ -33,7 +32,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 public @interface Entity {
     /**
      * @return The capped collection configuration options
@@ -51,7 +50,7 @@ public @interface Entity {
     boolean useDiscriminator() default true;
 
     /**
-     * @return the collection name to for this entity.  Defaults to the class's simple name
+     * @return the collection name to for this entity. Defaults to the class's simple name
      * @see Class#getSimpleName()
      */
     String value() default Mapper.IGNORED_FIELDNAME;
@@ -66,4 +65,3 @@ public @interface Entity {
      */
     String discriminator() default Mapper.IGNORED_FIELDNAME;
 }
-

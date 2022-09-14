@@ -37,12 +37,11 @@ class DocumentState extends ReaderState {
     void startDocument() {
         if (endState == null) {
             List<ReaderState> states = document.entrySet().stream()
-                                               .flatMap(e -> {
-                                                   List<ReaderState> nameStates =
-                                                       List.of(new NameState(reader(), e.getKey()), valueState(e.getValue()));
-                                                   return nameStates.stream();
-                                               })
-                                               .collect(toList());
+                    .flatMap(e -> {
+                        List<ReaderState> nameStates = List.of(new NameState(reader(), e.getKey()), valueState(e.getValue()));
+                        return nameStates.stream();
+                    })
+                    .collect(toList());
             ReaderState docState = null;
             for (ReaderState state : states) {
                 if (docState != null) {

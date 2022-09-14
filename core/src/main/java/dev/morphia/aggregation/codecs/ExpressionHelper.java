@@ -35,7 +35,7 @@ public final class ExpressionHelper {
     }
 
     public static void array(Datastore datastore, BsonWriter writer, String name, @Nullable List<Expression> list,
-                             EncoderContext encoderContext) {
+            EncoderContext encoderContext) {
         if (list != null) {
             array(writer, name, () -> {
                 for (Expression expression : list) {
@@ -60,9 +60,9 @@ public final class ExpressionHelper {
      * @since 2.3
      */
     @MorphiaInternal
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void wrapExpression(Datastore datastore, BsonWriter writer, @Nullable Expression expression,
-                                      EncoderContext encoderContext) {
+            EncoderContext encoderContext) {
         if (expression != null) {
             if (expression instanceof SingleValuedExpression) {
                 expression.encode(datastore, writer, encoderContext);
@@ -111,7 +111,7 @@ public final class ExpressionHelper {
      */
     @MorphiaInternal
     public static void expression(Datastore datastore, BsonWriter writer, String name, @Nullable Expression expression,
-                                  EncoderContext encoderContext) {
+            EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
             wrapExpression(datastore, writer, expression, encoderContext);
@@ -218,9 +218,9 @@ public final class ExpressionHelper {
      * @since 2.3
      */
     @MorphiaInternal
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void wrapExpression(Datastore datastore, BsonWriter writer, String name, @Nullable Expression expression,
-                                      EncoderContext encoderContext) {
+            EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
             if (expression instanceof ValueExpression || expression instanceof ArrayLiteral || expression instanceof ExpressionList) {

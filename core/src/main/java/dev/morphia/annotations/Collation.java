@@ -44,8 +44,8 @@ public @interface Collation {
     boolean caseLevel() default false;
 
     /**
-     * If this value is empty, no collation will be configured for an index.  Any other string passed will be parsed as the name of the
-     * localed you wish to use.  However, if you want to use the default locale as defined by the JVM, pass the value "&lt;default&gt;"
+     * If this value is empty, no collation will be configured for an index. Any other string passed will be parsed as the name of the
+     * localed you wish to use. However, if you want to use the default locale as defined by the JVM, pass the value "&lt;default&gt;"
      * instead.
      *
      * @return the locale
@@ -55,12 +55,12 @@ public @interface Collation {
     String locale() default "";
 
     /**
-     * @return the normalization value.  If true, normalizes text into Unicode NFD.
+     * @return the normalization value. If true, normalizes text into Unicode NFD.
      */
     boolean normalization() default false;
 
     /**
-     * @return  the numeric ordering.  if true will order numbers based on numerical order and not collation order
+     * @return the numeric ordering. if true will order numbers based on numerical order and not collation order
      */
     boolean numericOrdering() default false;
 

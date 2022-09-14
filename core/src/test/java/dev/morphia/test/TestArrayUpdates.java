@@ -32,24 +32,25 @@ public class TestArrayUpdates extends TestBase {
         datastore.ensureIndexes();
 
         datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
-            new Grade(90, singletonMap("name", "Test"))));
+                new Grade(90, singletonMap("name", "Test"))));
 
         Query<Student> testQuery = datastore.find(Student.class)
-                                            .filter(eq("_id", 1L),
-                                                eq("grades.data.name", "Test"));
+                .filter(eq("_id", 1L),
+                        eq("grades.data.name", "Test"));
         assertNotNull(testQuery.iterator(new FindOptions().limit(1))
-                               .tryNext());
+                .tryNext());
 
         testQuery.update(set("grades.$.data.name", "Makeup Test"))
-                 .execute();
+                .execute();
 
         assertNull(testQuery.iterator(new FindOptions().limit(1))
-                            .tryNext());
+                .tryNext());
 
         assertNotNull(datastore.find(Student.class)
-                               .filter(eq("_id", 1L),
-                                   eq("grades.data.name", "Makeup Test")).iterator(new FindOptions().limit(1))
-                               .tryNext());
+                .filter(eq("_id", 1L),
+                        eq("grades.data.name", "Makeup Test"))
+                .iterator(new FindOptions().limit(1))
+                .tryNext());
     }
 
     @Test
@@ -67,23 +68,22 @@ public class TestArrayUpdates extends TestBase {
         ObjectId id2 = theBatch.id;
 
         getDs().find(BatchData.class)
-               .filter(eq("_id", id),
-                   eq("files.fileName", "fileName1"))
-               .update(set("files.$.fileHash", "new hash"))
-               .execute();
-
+                .filter(eq("_id", id),
+                        eq("files.fileName", "fileName1"))
+                .update(set("files.$.fileHash", "new hash"))
+                .execute();
 
         BatchData data = getDs().find(BatchData.class)
-                                .filter(eq("_id", id)).iterator(new FindOptions().limit(1))
-                                .tryNext();
+                .filter(eq("_id", id)).iterator(new FindOptions().limit(1))
+                .tryNext();
 
         assertEquals(data.files.get(0).fileHash, "new hash");
         assertEquals(data.files.get(1).fileHash, "fileHash2");
 
         data = getDs().find(BatchData.class)
-                      .filter(eq("_id", id2))
-                      .iterator(new FindOptions().limit(1))
-                      .tryNext();
+                .filter(eq("_id", id2))
+                .iterator(new FindOptions().limit(1))
+                .tryNext();
 
         assertEquals(data.files.get(0).fileHash, "fileHash3");
         assertEquals(data.files.get(1).fileHash, "fileHash4");
@@ -96,14 +96,14 @@ public class TestArrayUpdates extends TestBase {
         datastore.ensureIndexes();
 
         datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
-            new Grade(90, singletonMap("name", "Test"))));
+                new Grade(90, singletonMap("name", "Test"))));
 
         Query<Student> grade80 = datastore.find(Student.class)
-                                          .filter(eq("_id", 1L),
-                                              eq("grades.marks", 80));
+                .filter(eq("_id", 1L),
+                        eq("grades.marks", 80));
         Query<Student> grade90 = datastore.find(Student.class)
-                                          .filter(eq("_id", 1L),
-                                              eq("grades.marks", 90));
+                .filter(eq("_id", 1L),
+                        eq("grades.marks", 90));
 
         assertNotNull(grade80.iterator().tryNext());
         assertNotNull(grade90.iterator().tryNext());
@@ -111,29 +111,29 @@ public class TestArrayUpdates extends TestBase {
         Query<Student> student = datastore.find(Student.class).filter(eq("_id", 1L));
 
         student.update(inc("grades.$[elem].marks", 5))
-               .execute(new UpdateOptions()
-                            .arrayFilter(lt("elem.marks", 90)));
+                .execute(new UpdateOptions()
+                        .arrayFilter(lt("elem.marks", 90)));
 
         assertNull(grade80.iterator().tryNext());
         assertNotNull(grade90.iterator().tryNext());
 
         assertNotNull(datastore.find(Student.class)
-                               .filter(eq("_id", 1L),
-                                   eq("grades.marks", 85))
-                               .iterator()
-                               .tryNext());
+                .filter(eq("_id", 1L),
+                        eq("grades.marks", 85))
+                .iterator()
+                .tryNext());
         assertNotNull(grade90.iterator().tryNext());
 
         student.update(inc("grades.$[elem].marks", 5))
-               .execute(new UpdateOptions()
-                            .arrayFilter(lt("elem.marks", 90).not()));
+                .execute(new UpdateOptions()
+                        .arrayFilter(lt("elem.marks", 90).not()));
 
         assertNull(grade90.iterator().tryNext());
         assertNotNull(datastore.find(Student.class)
-                               .filter(eq("_id", 1L),
-                                   eq("grades.marks", 95))
-                               .iterator()
-                               .tryNext());
+                .filter(eq("_id", 1L),
+                        eq("grades.marks", 95))
+                .iterator()
+                .tryNext());
 
     }
 

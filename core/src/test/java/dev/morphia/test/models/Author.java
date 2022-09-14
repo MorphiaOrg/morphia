@@ -58,6 +58,6 @@ public class Author {
         }
         Author author = (Author) o;
         return Objects.equals(name, author.name) && Objects.equals(list, author.list) &&
-               Objects.equals(set, author.set);
+                Objects.equals(set, author.set);
     }
 }

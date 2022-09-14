@@ -15,10 +15,10 @@ public class TestFill extends AggregationTest {
     public void testConstantValue() {
         testPipeline(5.3, "constantValue", aggregation -> {
             return aggregation
-                       .fill(fill()
-                                 .field("bootsSold", value(0))
-                                 .field("sandalsSold", value(0))
-                                 .field("sneakersSold", value(0)));
+                    .fill(fill()
+                            .field("bootsSold", value(0))
+                            .field("sandalsSold", value(0))
+                            .field("sneakersSold", value(0)));
         });
     }
 
@@ -26,11 +26,10 @@ public class TestFill extends AggregationTest {
     public void testDistinctPartitions() {
         testPipeline(5.3, "distinctPartitions", aggregation -> {
             return aggregation
-                       .fill(fill()
-                                 .sortBy(ascending("date"))
-                                 .partitionBy(document("restaurant", field("restaurant")))
-                                 .field("score", Method.LOCF)
-                            );
+                    .fill(fill()
+                            .sortBy(ascending("date"))
+                            .partitionBy(document("restaurant", field("restaurant")))
+                            .field("score", Method.LOCF));
         });
     }
 
@@ -38,9 +37,9 @@ public class TestFill extends AggregationTest {
     public void testLastObserved() {
         testPipeline(5.3, "lastObserved", aggregation -> {
             return aggregation
-                       .fill(fill()
-                                 .sortBy(ascending("date"))
-                                 .field("score", Method.LOCF));
+                    .fill(fill()
+                            .sortBy(ascending("date"))
+                            .field("score", Method.LOCF));
         });
     }
 
@@ -48,10 +47,9 @@ public class TestFill extends AggregationTest {
     public void testLinearInterpolation() {
         testPipeline(5.3, "linearInterpolation", aggregation -> {
             return aggregation
-                       .fill(fill()
-                                 .sortBy(ascending("time"))
-                                 .field("price", Method.LINEAR));
+                    .fill(fill()
+                            .sortBy(ascending("time"))
+                            .field("price", Method.LINEAR));
         });
     }
 }
-

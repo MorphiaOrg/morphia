@@ -15,18 +15,18 @@ public class TestCount extends AggregationTest {
     @Test
     public void testCount() {
         insert("scores", List.of(
-            parse("{ '_id' : 1, 'subject' : 'History', 'score' : 88 }"),
-            parse("{ '_id' : 2, 'subject' : 'History', 'score' : 92 }"),
-            parse("{ '_id' : 3, 'subject' : 'History', 'score' : 97 }"),
-            parse("{ '_id' : 4, 'subject' : 'History', 'score' : 71 }"),
-            parse("{ '_id' : 5, 'subject' : 'History', 'score' : 79 }"),
-            parse("{ '_id' : 6, 'subject' : 'History', 'score' : 83 }")));
+                parse("{ '_id' : 1, 'subject' : 'History', 'score' : 88 }"),
+                parse("{ '_id' : 2, 'subject' : 'History', 'score' : 92 }"),
+                parse("{ '_id' : 3, 'subject' : 'History', 'score' : 97 }"),
+                parse("{ '_id' : 4, 'subject' : 'History', 'score' : 71 }"),
+                parse("{ '_id' : 5, 'subject' : 'History', 'score' : 79 }"),
+                parse("{ '_id' : 6, 'subject' : 'History', 'score' : 83 }")));
 
         Document scores = getDs().aggregate(Score.class)
-                                 .match(gt("score", 80))
-                                 .count("passing_scores")
-                                 .execute(Document.class)
-                                 .next();
+                .match(gt("score", 80))
+                .count("passing_scores")
+                .execute(Document.class)
+                .next();
         assertEquals(scores, parse("{ \"passing_scores\" : 4 }"));
     }
 

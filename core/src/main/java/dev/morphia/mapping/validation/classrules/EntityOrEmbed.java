@@ -19,8 +19,8 @@ public class EntityOrEmbed implements ClassConstraint {
     @Override
     public void check(Mapper mapper, EntityModel entityModel, Set<ConstraintViolation> ve) {
         if (entityModel.getEntityAnnotation() == null
-            && entityModel.getAnnotation(ExternalEntity.class) == null
-            && entityModel.getEmbeddedAnnotation() == null) {
+                && entityModel.getAnnotation(ExternalEntity.class) == null
+                && entityModel.getEmbeddedAnnotation() == null) {
             ve.add(new ConstraintViolation(Level.FATAL, entityModel, getClass(), mappingAnnotationNeeded(entityModel.getType().getName())));
         }
     }

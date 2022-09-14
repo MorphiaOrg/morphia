@@ -60,7 +60,6 @@ class Address {
 
     private final String zip;
 
-
     public Address(String city, String state, String zip) {
         this.city = city;
         this.state = state;
@@ -102,9 +101,9 @@ class Address {
     @Override
     public String toString() {
         return new StringJoiner(", ", Address.class.getSimpleName() + "[", "]").add("city='" + city + "'")
-                                                                               .add("state='" + state + "'")
-                                                                               .add("zip='" + zip + "'")
-                                                                               .toString();
+                .add("state='" + state + "'")
+                .add("zip='" + zip + "'")
+                .toString();
     }
 
 }
@@ -126,11 +125,11 @@ public class ConstructorCreatorTest extends TestBase {
         getDs().save(invoice);
 
         MorphiaCursor<Invoice> criteria1 = getDs().find(Invoice.class)
-                                                  .filter(lte("orderDate", LocalDateTime.now().plusDays(5)))
-                                                  .iterator(new FindOptions().sort(ascending("addresses")));
+                .filter(lte("orderDate", LocalDateTime.now().plusDays(5)))
+                .iterator(new FindOptions().sort(ascending("addresses")));
         List<Invoice> list = criteria1.toList();
         assertEquals(list.get(0).getAddresses().get(0).getCity(), "NYC",
-            list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
+                list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
         assertEquals(list.get(0), invoice, list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
 
         MorphiaCursor<Invoice> criteria2 = getDs().find(Invoice.class).iterator(new FindOptions().sort(descending("addresses")));
@@ -335,21 +334,21 @@ class Invoice {
         }
         Invoice invoice = (Invoice) o;
         return Objects.equals(id, invoice.id) && Objects.equals(orderDate, invoice.orderDate) && Objects.equals(person, invoice.person) &&
-               Objects.equals(listListList, invoice.listListList) && Objects.equals(addresses, invoice.addresses) &&
-               Objects.equals(mapList, invoice.mapList) && Objects.equals(total, invoice.total) && Objects.equals(items, invoice.items);
+                Objects.equals(listListList, invoice.listListList) && Objects.equals(addresses, invoice.addresses) &&
+                Objects.equals(mapList, invoice.mapList) && Objects.equals(total, invoice.total) && Objects.equals(items, invoice.items);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Invoice.class.getSimpleName() + "[", "]").add("id=" + id)
-                                                                               .add("orderDate=" + orderDate)
-                                                                               .add("person=" + person)
-                                                                               .add("listListList=" + listListList)
-                                                                               .add("addresses=" + addresses)
-                                                                               .add("mapList=" + mapList)
-                                                                               .add("total=" + total)
-                                                                               .add("items=" + items)
-                                                                               .toString();
+                .add("orderDate=" + orderDate)
+                .add("person=" + person)
+                .add("listListList=" + listListList)
+                .add("addresses=" + addresses)
+                .add("mapList=" + mapList)
+                .add("total=" + total)
+                .add("items=" + items)
+                .toString();
     }
 
     public boolean isPostLoad() {
@@ -437,7 +436,7 @@ class Item {
 }
 
 @Entity(cap = @CappedAt(count = 12))
-@Indexes({@Index(fields = @Field("1")), @Index(fields = @Field("2")), @Index(fields = @Field("3"))})
+@Indexes({ @Index(fields = @Field("1")), @Index(fields = @Field("2")), @Index(fields = @Field("3")) })
 class Person extends AbstractPerson {
     @Id
     private ObjectId id;
@@ -498,9 +497,9 @@ class Person extends AbstractPerson {
     @Override
     public String toString() {
         return new StringJoiner(", ", Person.class.getSimpleName() + "[", "]").add("age=" + getAge())
-                                                                              .add("id=" + id)
-                                                                              .add("firstName='" + firstName + "'")
-                                                                              .add("lastName='" + lastName + "'")
-                                                                              .toString();
+                .add("id=" + id)
+                .add("firstName='" + firstName + "'")
+                .add("lastName='" + lastName + "'")
+                .toString();
     }
 }

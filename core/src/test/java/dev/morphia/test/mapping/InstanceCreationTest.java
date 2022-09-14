@@ -16,7 +16,7 @@ public class InstanceCreationTest extends TestBase {
         getDs().save(author);
 
         final Author loaded = getDs().find(Author.class).iterator(new FindOptions()
-                                                                      .limit(1)).tryNext();
+                .limit(1)).tryNext();
         assertEquals(author, loaded);
     }
 

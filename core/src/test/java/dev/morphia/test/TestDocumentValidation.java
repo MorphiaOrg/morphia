@@ -24,7 +24,6 @@ import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
 import com.mongodb.client.model.ValidationOptions;
-import dev.morphia.DatastoreImpl;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
 import dev.morphia.ModifyOptions;
@@ -85,7 +84,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         ModifyOptions options = new ModifyOptions()
-                                    .bypassDocumentValidation(false);
+                .bypassDocumentValidation(false);
         Modify<DocumentValidation> modify = query.modify(set("number", 5));
         try {
             modify.execute(options);
@@ -98,8 +97,8 @@ public class TestDocumentValidation extends TestBase {
         modify.execute(options);
 
         Assert.assertNotNull(query.filter(eq("number", 5))
-                                  .iterator(new FindOptions().limit(1))
-                                  .next());
+                .iterator(new FindOptions().limit(1))
+                .next());
     }
 
     @Test
@@ -115,17 +114,17 @@ public class TestDocumentValidation extends TestBase {
         }
 
         getDs().insert(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
-                                                                            .bypassDocumentValidation(true));
+                .bypassDocumentValidation(true));
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
-                                                 .filter(eq("number", 8));
+                .filter(eq("number", 8));
         Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
-            new DocumentValidation("John", 8, new Date()),
-            new DocumentValidation("Sarah", 8, new Date()),
-            new DocumentValidation("Amy", 8, new Date()),
-            new DocumentValidation("James", 8, new Date()));
+                new DocumentValidation("John", 8, new Date()),
+                new DocumentValidation("Sarah", 8, new Date()),
+                new DocumentValidation("Amy", 8, new Date()),
+                new DocumentValidation("James", 8, new Date()));
 
         try {
             getDs().insert(list);
@@ -135,7 +134,7 @@ public class TestDocumentValidation extends TestBase {
         }
 
         getDs().insert(list, new InsertManyOptions()
-                                 .bypassDocumentValidation(true));
+                .bypassDocumentValidation(true));
 
         assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
     }
@@ -143,21 +142,21 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void jsonSchemaValidation() {
         insert("contacts", List.of(
-            parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
-            parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
+                parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
+                parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
         getDs().getMapper().map(Contact.class);
         getDs().enableDocumentValidation();
 
         Assert.assertThrows(MongoWriteException.class,
-            () -> getDs().find(Contact.class)
-                         .filter(eq("_id", 1))
-                         .update(set("age", 42))
-                         .execute());
+                () -> getDs().find(Contact.class)
+                        .filter(eq("_id", 1))
+                        .update(set("age", 42))
+                        .execute());
 
         getDs().find(Contact.class)
-               .filter(eq("_id", 2))
-               .update(unset("name"))
-               .execute();
+                .filter(eq("_id", 2))
+                .update(unset("name"))
+                .execute();
     }
 
     @Test
@@ -207,17 +206,17 @@ public class TestDocumentValidation extends TestBase {
         }
 
         getDs().save(new DocumentValidation("Harold", 8, new Date()), new InsertOneOptions()
-                                                                          .bypassDocumentValidation(true));
+                .bypassDocumentValidation(true));
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
-                                                 .filter(eq("number", 8));
+                .filter(eq("number", 8));
         Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
-            new DocumentValidation("Harold", 8, new Date()),
-            new DocumentValidation("Harold", 8, new Date()),
-            new DocumentValidation("Harold", 8, new Date()),
-            new DocumentValidation("Harold", 8, new Date()));
+                new DocumentValidation("Harold", 8, new Date()),
+                new DocumentValidation("Harold", 8, new Date()),
+                new DocumentValidation("Harold", 8, new Date()),
+                new DocumentValidation("Harold", 8, new Date()));
         try {
             getDs().save(list);
             fail("Document validation should have complained");
@@ -259,7 +258,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         UpdateOptions options = new UpdateOptions()
-                                    .bypassDocumentValidation(false);
+                .bypassDocumentValidation(false);
         Update<DocumentValidation> update = query.update(set("number", 5));
         try {
             update.execute(options);
@@ -272,7 +271,7 @@ public class TestDocumentValidation extends TestBase {
         update.execute(options);
 
         Assert.assertNotNull(query.filter(eq("number", 5)).iterator(new FindOptions().limit(1))
-                                  .tryNext());
+                .tryNext());
     }
 
     @Test
@@ -290,9 +289,9 @@ public class TestDocumentValidation extends TestBase {
 
     private MongoDatabase addValidation(Document validator) {
         ValidationOptions options = new ValidationOptions()
-                                        .validator(validator)
-                                        .validationLevel(ValidationLevel.MODERATE)
-                                        .validationAction(ValidationAction.ERROR);
+                .validator(validator)
+                .validationLevel(ValidationLevel.MODERATE)
+                .validationAction(ValidationAction.ERROR);
         MongoDatabase database = getMongoClient().getDatabase(TestBase.TEST_DB_NAME);
         database.getCollection("validation").drop();
         database.createCollection("validation", new CreateCollectionOptions().validationOptions(options));
@@ -300,11 +299,11 @@ public class TestDocumentValidation extends TestBase {
     }
 
     private void checkValidation(Document validator, EntityModel model, ValidationLevel level,
-                                 ValidationAction action) {
+            ValidationAction action) {
         updateValidation(model, level, action);
         Document expected = new Document("validator", validator)
-                                .append("validationLevel", level.getValue())
-                                .append("validationAction", action.getValue());
+                .append("validationLevel", level.getValue())
+                .append("validationAction", action.getValue());
 
         Document validation = getValidation();
         for (String key : expected.keySet()) {
@@ -315,8 +314,8 @@ public class TestDocumentValidation extends TestBase {
     @SuppressWarnings("unchecked")
     private Document getValidation() {
         Document document = getMongoClient().getDatabase(TestBase.TEST_DB_NAME)
-                                            .runCommand(new Document("listCollections", 1)
-                                                            .append("filter", new Document("name", "validation")));
+                .runCommand(new Document("listCollections", 1)
+                        .append("filter", new Document("name", "validation")));
 
         List<Document> firstBatch = (List<Document>) ((Document) document.get("cursor")).get("firstBatch");
         return (Document) firstBatch.get(0).get("options");
@@ -328,8 +327,8 @@ public class TestDocumentValidation extends TestBase {
 
     private void updateValidation(EntityModel model, ValidationLevel level, ValidationAction action) {
         getDs().enableValidation(model, validationBuilder().value("{ jelly : { $ne : 'rhubarb' } }")
-                                                           .level(level)
-                                                           .action(action)
-                                                           .build());
+                .level(level)
+                .action(action)
+                .build());
     }
 }

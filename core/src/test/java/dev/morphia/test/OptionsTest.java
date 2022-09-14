@@ -31,11 +31,11 @@ public class OptionsTest {
     @Test
     public void aggregationOptions() {
         beanScan(com.mongodb.AggregationOptions.class, AggregationOptions.class, List.of("builder",
-            "getAllowDiskUse",
-            "getBatchSize",
-            "getBypassDocumentValidation",
-            "getCollation",
-            "getMaxTime"));
+                "getAllowDiskUse",
+                "getBatchSize",
+                "getBypassDocumentValidation",
+                "getCollation",
+                "getMaxTime"));
     }
 
     @Test
@@ -100,12 +100,13 @@ public class OptionsTest {
         Class<?>[] parameterTypes = method.getParameterTypes();
         Method morphiaMethod = morphiaType.getMethod(method.getName(), parameterTypes);
         Assert.assertTrue(!method.getReturnType().equals(driverType)
-                          || morphiaMethod.getReturnType().equals(morphiaType), method.toString());
+                || morphiaMethod.getReturnType().equals(morphiaType), method.toString());
 
-        if (parameterTypes.equals(new Class[]{Bson.class})) {
+        if (parameterTypes.equals(new Class[] { Bson.class })) {
             Assert.assertTrue(!method.getReturnType().equals(driverType)
-                              || morphiaType.getMethod(method.getName(), Document.class)
-                                            .getReturnType().equals(morphiaType), method.toString());
+                    || morphiaType.getMethod(method.getName(), Document.class)
+                            .getReturnType().equals(morphiaType),
+                    method.toString());
 
         }
     }
@@ -127,7 +128,7 @@ public class OptionsTest {
         try {
             Method[] methods = driverType.getDeclaredMethods();
             Assert.assertEquals(driverType.equals(morphiaType.getSuperclass()), !Modifier.isFinal(driverType.getModifiers()),
-                "Options class should be a subclass");
+                    "Options class should be a subclass");
             for (Method method : methods) {
                 if (method.getAnnotation(Deprecated.class) == null && !method.getName().equals("builder") && !getter(method)) {
                     checkOverride(driverType, morphiaType, method);
@@ -135,7 +136,7 @@ public class OptionsTest {
             }
             for (Class<?> localField : localFields) {
                 String name = localField.getSimpleName()
-                                        .replaceAll("^get", "");
+                        .replaceAll("^get", "");
                 name = name.substring(0, 1).toLowerCase() + name.substring(1);
 
                 Field field = morphiaType.getDeclaredField(name);

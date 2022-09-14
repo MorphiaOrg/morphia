@@ -18,7 +18,6 @@ public class BucketAutoOptions {
     private Granularity granularity;
     private final Map<String, Accumulator> accumulators = new HashMap<String, Accumulator>();
 
-
     /**
      * Converts a BucketAutoOptions to a Document for use by the Java driver.
      *
@@ -120,7 +119,6 @@ public class BucketAutoOptions {
             accumulators.put(fieldName, new Accumulator("$sum", field));
             return BucketAutoOptions.this;
         }
-
 
     }
 

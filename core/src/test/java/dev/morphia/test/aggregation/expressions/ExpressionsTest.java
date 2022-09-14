@@ -20,21 +20,21 @@ public class ExpressionsTest extends ExpressionsTestBase {
         MongoCollection<Document> articles = getDatabase().getCollection("articles");
         articles.createIndex(new Document("title", "text"));
         articles.insertMany(List.of(
-            parse("{ '_id' : 1, 'title' : 'cakes and ale' }"),
-            parse("{ '_id' : 2, 'title' : 'more cakes' }"),
-            parse("{ '_id' : 3, 'title' : 'bread' }"),
-            parse("{ '_id' : 4, 'title' : 'some cakes' }")));
+                parse("{ '_id' : 1, 'title' : 'cakes and ale' }"),
+                parse("{ '_id' : 2, 'title' : 'more cakes' }"),
+                parse("{ '_id' : 3, 'title' : 'bread' }"),
+                parse("{ '_id' : 4, 'title' : 'some cakes' }")));
 
         List<Document> actual = getDs().aggregate("articles")
-                                       .match(text("cake"))
-                                       .group(Group.group(Group.id(meta()))
-                                                   .field("count", sum(value(1))))
-                                       .execute(Document.class)
-                                       .toList();
+                .match(text("cake"))
+                .group(Group.group(Group.id(meta()))
+                        .field("count", sum(value(1))))
+                .execute(Document.class)
+                .toList();
 
         List<Document> expected = List.of(
-            parse("{ '_id' : 0.75, 'count' : 1 }"),
-            parse("{ '_id' : 1.0, 'count' : 2 }"));
+                parse("{ '_id' : 0.75, 'count' : 1 }"),
+                parse("{ '_id' : 1.0, 'count' : 2 }"));
 
         assertDocumentEquals(actual, expected);
     }

@@ -82,7 +82,7 @@ public class PathTargetTest extends TestBase {
     @Test
     public void interfaces() {
         getMapper().map(HoldsAnInterface.class, MappedInterface.class,
-            InterfaceTypeA.class, InterfaceTypeB.class);
+                InterfaceTypeA.class, InterfaceTypeB.class);
 
         Mapper mapper = getMapper();
         EntityModel entityModel = mapper.getEntityModel(HoldsAnInterface.class);

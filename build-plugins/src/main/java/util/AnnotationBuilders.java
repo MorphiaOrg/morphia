@@ -39,9 +39,9 @@ public class AnnotationBuilders extends AbstractMojo {
     private JavaAnnotationSource source;
     private File generated;
     private final FileFilter filter = pathname -> pathname.getName().endsWith(".java")
-                                                  && !pathname.getName().endsWith("Handler.java")
-                                                  && !pathname.getName().endsWith("Helper.java")
-                                                  && !pathname.getName().equals("package-info.java");
+            && !pathname.getName().endsWith("Handler.java")
+            && !pathname.getName().endsWith("Helper.java")
+            && !pathname.getName().equals("package-info.java");
 
     @Override
     @SuppressWarnings("ConstantConditions")
@@ -65,22 +65,22 @@ public class AnnotationBuilders extends AbstractMojo {
 
     private JavaClassSource annotationType(JavaAnnotationSource source, JavaClassSource builder) {
         JavaClassSource morphiaAnnotation = builder.addNestedType(JavaClassSource.class)
-                                                   .addInterface(source.getQualifiedName())
-                                                   .setName(format("%sAnnotation", source.getName()))
-                                                   .setStatic(true)
-                                                   .setPrivate();
+                .addInterface(source.getQualifiedName())
+                .setName(format("%sAnnotation", source.getName()))
+                .setStatic(true)
+                .setPrivate();
 
         morphiaAnnotation.addMethod()
-                         .setPublic()
-                         .setName("annotationType")
-                         .setReturnType(format("Class<%s>", source.getName()))
-                         .setBody(format("return %s.class;", source.getName()));
+                .setPublic()
+                .setName("annotationType")
+                .setReturnType(format("Class<%s>", source.getName()))
+                .setBody(format("return %s.class;", source.getName()));
 
         builder.addField()
-               .setPrivate()
-               .setName("annotation")
-               .setType(format("%sAnnotation", source.getName()))
-               .setLiteralInitializer(format("new %sAnnotation()", source.getName()));
+                .setPrivate()
+                .setName("annotation")
+                .setType(format("%sAnnotation", source.getName()))
+                .setLiteralInitializer(format("new %sAnnotation()", source.getName()));
 
         return morphiaAnnotation;
     }
@@ -91,11 +91,11 @@ public class AnnotationBuilders extends AbstractMojo {
 
     private void copyBuilder(JavaAnnotationSource source, List<AnnotationElementSource> elements) {
         MethodSource<JavaClassSource> copier = builder.addMethod()
-                                                      .setPublic()
-                                                      .setStatic(true)
-                                                      .setName(builderMethodName(source.getName()))
-                                                      .setReturnType(builder.getName())
-                                                      .setBody(format("return new %s();", builder.getName()));
+                .setPublic()
+                .setStatic(true)
+                .setName(builderMethodName(source.getName()))
+                .setReturnType(builder.getName())
+                .setBody(format("return new %s();", builder.getName()));
         copier.addParameter(source.getName(), "source");
         StringJoiner copies = new StringJoiner("\n");
         copies.add(format("var builder =  new %s();", builder.getName()));
@@ -113,32 +113,31 @@ public class AnnotationBuilders extends AbstractMojo {
         source = Roaster.parse(JavaAnnotationSource.class, sourceFile);
         if (source.isPublic()) {
             builder = Roaster.create(JavaClassSource.class)
-                             .setName(source.getName() + "Builder")
-                             .setPackage(source.getPackage() + ".internal")
-                             .setFinal(true);
+                    .setName(source.getName() + "Builder")
+                    .setPackage(source.getPackage() + ".internal")
+                    .setFinal(true);
             builder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal");
             JavaDocSource<JavaClassSource> javaDoc = builder.getJavaDoc();
             javaDoc.addTagValue("@since", "2.3");
             javaDoc.addTagValue("@morphia.internal", "");
 
             MethodSource<JavaClassSource> constructor = builder.addMethod()
-                                                               .setConstructor(true)
-                                                               .setPrivate();
+                    .setConstructor(true)
+                    .setPrivate();
             setDefaults(constructor, source);
 
             builder.addMethod()
-                   .setPublic()
-                   .setName("build")
-                   .setReturnType(source.getName())
-                   .setBody(format("var anno = annotation; annotation = null; return anno;", builder.getName()));
+                    .setPublic()
+                    .setName("build")
+                    .setReturnType(source.getName())
+                    .setBody(format("var anno = annotation; annotation = null; return anno;", builder.getName()));
 
             builder.addMethod()
-                   .setPublic()
-                   .setStatic(true)
-                   .setName(builderMethodName(source.getName()))
-                   .setReturnType(builder.getName())
-                   .setBody(format("return new %s();", builder.getName()));
-
+                    .setPublic()
+                    .setStatic(true)
+                    .setName(builderMethodName(source.getName()))
+                    .setReturnType(builder.getName())
+                    .setBody(format("return new %s();", builder.getName()));
 
             JavaClassSource morphiaAnnotation = annotationType(source, builder);
             List<AnnotationElementSource> elements = source.getAnnotationElements();
@@ -150,16 +149,16 @@ public class AnnotationBuilders extends AbstractMojo {
             for (AnnotationElementSource element : elements) {
                 String name = element.getName();
                 morphiaAnnotation.addField()
-                                 .setName(name)
-                                 .setType(element.getType().toString())
-                                 .setPrivate();
+                        .setName(name)
+                        .setType(element.getType().toString())
+                        .setPrivate();
 
                 morphiaAnnotation.addMethod()
-                                 .setPublic()
-                                 .setName(name)
-                                 .setReturnType(element.getType())
-                                 .setBody(format("return %s;", name))
-                                 .addAnnotation(Override.class);
+                        .setPublic()
+                        .setName(name)
+                        .setReturnType(element.getType())
+                        .setBody(format("return %s;", name))
+                        .addAnnotation(Override.class);
 
                 String parameterType = parameterType(element);
                 boolean varargs = false;
@@ -168,13 +167,13 @@ public class AnnotationBuilders extends AbstractMojo {
                     varargs = true;
                 }
                 builder.addMethod()
-                       .setPublic()
-                       .setName(name)
-                       .setReturnType(builder.getName())
-                       .setBody(
-                           format("annotation.%s = %s; return this;", name,
-                               name))
-                       .addParameter(parameterType, name).setVarArgs(varargs);
+                        .setPublic()
+                        .setName(name)
+                        .setReturnType(builder.getName())
+                        .setBody(
+                                format("annotation.%s = %s; return this;", name,
+                                        name))
+                        .addParameter(parameterType, name).setVarArgs(varargs);
             }
 
             for (Import anImport : source.getImports()) {
@@ -201,21 +200,21 @@ public class AnnotationBuilders extends AbstractMojo {
                 comparator = "Objects";
             }
             comparisons.add(format("%s.equals(%s, that.%s)", comparator, element.getName(),
-                element.getName()));
+                    element.getName()));
         }
         annotation.addMethod()
-                  .setName("equals")
-                  .setReturnType(boolean.class)
-                  .setPublic()
-                  .setBody("if (this == o) {\n"
-                           + "   return true;\n"
-                           + "}\n"
-                           + "if (!(o instanceof " + annotation.getName() + ")) {\n"
-                           + "   return false;\n"
-                           + "}\n"
-                           + "var that = (" + annotation.getName() + ") o;\n"
-                           + comparisons)
-                  .addParameter("Object", "o");
+                .setName("equals")
+                .setReturnType(boolean.class)
+                .setPublic()
+                .setBody("if (this == o) {\n"
+                        + "   return true;\n"
+                        + "}\n"
+                        + "if (!(o instanceof " + annotation.getName() + ")) {\n"
+                        + "   return false;\n"
+                        + "}\n"
+                        + "var that = (" + annotation.getName() + ") o;\n"
+                        + comparisons)
+                .addParameter("Object", "o");
 
     }
 
@@ -230,15 +229,15 @@ public class AnnotationBuilders extends AbstractMojo {
             values.add(element.getName());
         }
         annotation.addMethod()
-                  .setName("hashCode")
-                  .setReturnType(int.class)
-                  .setPublic()
-                  .setBody(values.toString());
+                .setName("hashCode")
+                .setReturnType(int.class)
+                .setPublic()
+                .setBody(values.toString());
     }
 
     private void output() throws IOException {
         var outputFile = new File(generated, source.getPackage().replace('.', '/')
-                                             + "/internal/" + builder.getName() + ".java");
+                + "/internal/" + builder.getName() + ".java");
         if (!outputFile.getParentFile().mkdirs() && !outputFile.getParentFile().exists()) {
             throw new IOException(format("Could not create directory: %s", outputFile.getParentFile()));
         }
@@ -257,8 +256,8 @@ public class AnnotationBuilders extends AbstractMojo {
                 var annot = defaultValue.getAnnotation();
                 if (annot != null) {
                     literal = format("%sBuilder.%s().build()",
-                        annot.getQualifiedName().replace(annot.getName(), "") + "internal." + annot.getName(),
-                        builderMethodName(annot.getName()));
+                            annot.getQualifiedName().replace(annot.getName(), "") + "internal." + annot.getName(),
+                            builderMethodName(annot.getName()));
                 } else if (literal != null && element.getType().isArray()) {
                     literal = format("new %s%s", element.getType().getName(), literal);
                 }

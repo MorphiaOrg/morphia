@@ -33,7 +33,7 @@ import org.bson.conversions.Bson;
  * @since 1.3
  */
 public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
-    implements WriteConfigurable<DeleteOptions>, CollectionConfigurable<DeleteOptions> {
+        implements WriteConfigurable<DeleteOptions>, CollectionConfigurable<DeleteOptions> {
     private boolean multi;
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private String collection;

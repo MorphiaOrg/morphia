@@ -30,10 +30,10 @@ public abstract class UpdateBase<T> {
     private final DatastoreImpl datastore;
 
     UpdateBase(DatastoreImpl datastore,
-               @Nullable MongoCollection<T> collection,
-               @Nullable Query<T> query,
-               Class<T> type,
-               List<UpdateOperator> updates) {
+            @Nullable MongoCollection<T> collection,
+            @Nullable Query<T> query,
+            Class<T> type,
+            List<UpdateOperator> updates) {
         this.datastore = datastore;
         this.mapper = datastore.getMapper();
         this.type = type;

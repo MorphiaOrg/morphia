@@ -31,7 +31,7 @@ import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 
 /**
- * @param <T> The initial type of the aggregation.  Used for collection name resolution.
+ * @param <T> The initial type of the aggregation. Used for collection name resolution.
  * @since 2.0
  */
 public interface Aggregation<T> {
@@ -473,7 +473,7 @@ public interface Aggregation<T> {
     Aggregation<T> unionWith(String collection, Stage first, Stage... others);
 
     /**
-     * Removes/excludes fields from documents.  Names must not start with '$'.
+     * Removes/excludes fields from documents. Names must not start with '$'.
      *
      * @param unset the unset definition
      * @return this
@@ -501,9 +501,11 @@ public interface Aggregation<T> {
      * @aggregation.expression $changeStream
      */
     Aggregation changeStream();
+
     /**
      * Returns a Change Stream cursor on a collection, a database, or an entire cluster. Must be used as the first stage in an
      * aggregation pipeline.
+     *
      * @param stream the options to apply to the stage
      *
      * @return this

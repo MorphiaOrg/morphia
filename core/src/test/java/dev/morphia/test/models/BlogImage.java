@@ -35,8 +35,7 @@ public abstract class BlogImage {
         }
         BlogImage blogImage = (BlogImage) o;
         return Objects.equals(id, blogImage.id) &&
-               type == blogImage.type &&
-               Objects.equals(content, blogImage.content);
+                type == blogImage.type &&
+                Objects.equals(content, blogImage.content);
     }
 }
-

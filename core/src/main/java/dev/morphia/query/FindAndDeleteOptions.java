@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * Defines options to use for find and delete operations
  */
 public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements WriteConfigurable<FindAndDeleteOptions>,
-                                                                                 CollectionConfigurable<FindAndDeleteOptions> {
+        CollectionConfigurable<FindAndDeleteOptions> {
     private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
     private String collection;
 

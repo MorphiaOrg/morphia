@@ -1,6 +1,5 @@
 package dev.morphia.mapping.validation.fieldrules;
 
-
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -22,7 +21,7 @@ public class VersionMisuse extends PropertyConstraint {
             final Class<?> type = propertyModel.getType();
             if (!Long.class.equals(type) && !long.class.equals(type)) {
                 ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
-                    format("@%s can only be used on a Long/long field.", Version.class.getSimpleName())));
+                        format("@%s can only be used on a Long/long field.", Version.class.getSimpleName())));
             }
         }
     }

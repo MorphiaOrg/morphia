@@ -15,9 +15,7 @@
  *  under the License.
  */
 
-
 package dev.morphia.annotations;
-
 
 import dev.morphia.utils.IndexType;
 
@@ -34,10 +32,10 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.ANNOTATION_TYPE})
+@Target({ ElementType.ANNOTATION_TYPE })
 public @interface Field {
     /**
-     * @return "Direction" of the indexing.  Defaults to {@link IndexType#ASC}.
+     * @return "Direction" of the indexing. Defaults to {@link IndexType#ASC}.
      *
      * @see IndexType
      */
@@ -49,7 +47,7 @@ public @interface Field {
     String value();
 
     /**
-     * @return The weight to use when creating a text index.  This value only makes sense when direction is {@link IndexType#TEXT}
+     * @return The weight to use when creating a text index. This value only makes sense when direction is {@link IndexType#TEXT}
      */
     int weight() default -1;
 }

@@ -30,15 +30,15 @@ public class FieldDiscovery implements MorphiaConvention {
                     TypeData<?> typeData = builder.getTypeData(type, TypeData.newInstance(field), field.getGenericType());
                     try {
                         builder.addProperty()
-                               .name(field.getName())
-                               .typeData(typeData)
-                               .annotations(List.of(field.getDeclaredAnnotations()))
-                               .accessor(getAccessor(getTargetField(builder, field), typeData))
-                               .modifiers(field.getModifiers())
-                               .discoverMappedName();
+                                .name(field.getName())
+                                .typeData(typeData)
+                                .annotations(List.of(field.getDeclaredAnnotations()))
+                                .accessor(getAccessor(getTargetField(builder, field), typeData))
+                                .modifiers(field.getModifiers())
+                                .discoverMappedName();
                     } catch (NoSuchFieldException e) {
                         throw new MappingException(Sofia.mismatchedFieldOnExternalType(field.getName(), builder.type().getName(),
-                            builder.targetType().getName()));
+                                builder.targetType().getName()));
                     }
                 }
             }
@@ -55,7 +55,7 @@ public class FieldDiscovery implements MorphiaConvention {
 
     private PropertyAccessor<? super Object> getAccessor(Field field, TypeData<?> typeData) {
         return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
-               ? new ArrayFieldAccessor(typeData, field)
-               : new FieldAccessor(field);
+                ? new ArrayFieldAccessor(typeData, field)
+                : new FieldAccessor(field);
     }
 }

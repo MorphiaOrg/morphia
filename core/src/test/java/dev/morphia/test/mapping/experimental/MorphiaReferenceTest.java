@@ -92,31 +92,31 @@ public class MorphiaReferenceTest extends TestBase {
 
         getDs().save(author);
         Object document = getDs().aggregate(Author.class)
-                                 .lookup(lookup(Book.class)
-                                             .as("set")
-                                             .foreignField("_id")
-                                             .localField("set"))
-                                 .lookup(lookup(Book.class)
-                                             .as("list")
-                                             .foreignField("_id")
-                                             .localField("list"))
-                                 //  TODO how to fetch the values from a nested document for cross-referencing?
-                                 //                                   .lookup(Lookup.from(Book.class)
-                                 //                                                 .as("map")
-                                 //                                                 .foreignField("_id")
-                                 //                                                 .localField("map.$"))
-                                 .execute(Author.class)
-                                 .tryNext();
+                .lookup(lookup(Book.class)
+                        .as("set")
+                        .foreignField("_id")
+                        .localField("set"))
+                .lookup(lookup(Book.class)
+                        .as("list")
+                        .foreignField("_id")
+                        .localField("list"))
+                //  TODO how to fetch the values from a nested document for cross-referencing?
+                //                                   .lookup(Lookup.from(Book.class)
+                //                                                 .as("map")
+                //                                                 .foreignField("_id")
+                //                                                 .localField("map.$"))
+                .execute(Author.class)
+                .tryNext();
 
         final Author loaded = (Author) document;
         Book foundBook = getDs().aggregate(Book.class)
-                                .lookup(lookup(Author.class)
-                                            .as("author")
-                                            .foreignField("_id")
-                                            .localField("author"))
-                                .unwind(unwind("author"))
-                                .execute(Book.class)
-                                .next();
+                .lookup(lookup(Author.class)
+                        .as("author")
+                        .foreignField("_id")
+                        .localField("author"))
+                .unwind(unwind("author"))
+                .execute(Book.class)
+                .next();
         assertTrue(foundBook.author.isResolved());
         assertEquals(author, foundBook.author.get());
 
@@ -144,12 +144,12 @@ public class MorphiaReferenceTest extends TestBase {
 
     protected Map<String, Book> addBookMap(Author author) {
         Map<String, Book> books = new LinkedHashMap<>();
-        for (Book book : new Book[]{
-            new Book("Sense and Sensibility"),
-            new Book("Pride and Prejudice"),
-            new Book("Mansfield Park"),
-            new Book("Emma"),
-            new Book("Northanger Abbey")}) {
+        for (Book book : new Book[] {
+                new Book("Sense and Sensibility"),
+                new Book("Pride and Prejudice"),
+                new Book("Mansfield Park"),
+                new Book("Emma"),
+                new Book("Northanger Abbey") }) {
             book.setAuthor(author);
             getDs().save(book);
             books.put(book.name, book);
@@ -361,9 +361,9 @@ public class MorphiaReferenceTest extends TestBase {
         @Override
         public String toString() {
             return "Book{" +
-                   "name='" + name + "', " +
-                   "hash=" + hashCode() +
-                   '}';
+                    "name='" + name + "', " +
+                    "hash=" + hashCode() +
+                    '}';
         }
     }
 }

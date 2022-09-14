@@ -67,8 +67,8 @@ public class GeometryCollection {
     @Override
     public String toString() {
         return "GeometryCollection{"
-               + "type='" + type + '\''
-               + ", geometries=" + geometries
-               + '}';
+                + "type='" + type + '\''
+                + ", geometries=" + geometries
+                + '}';
     }
 }

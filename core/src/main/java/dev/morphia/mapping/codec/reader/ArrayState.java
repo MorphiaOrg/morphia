@@ -34,8 +34,8 @@ class ArrayState extends ReaderState {
     void startArray() {
         if (endState == null) {
             List<ReaderState> states = values.stream()
-                                             .map(this::valueState)
-                                             .collect(toList());
+                    .map(this::valueState)
+                    .collect(toList());
             ReaderState docState = null;
             for (ReaderState state : states) {
                 if (docState != null) {

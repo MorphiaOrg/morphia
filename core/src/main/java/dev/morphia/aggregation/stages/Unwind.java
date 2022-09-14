@@ -30,7 +30,7 @@ public class Unwind extends Stage {
     @Deprecated(forRemoval = true)
     public static Unwind on(String name) {
         return new Unwind()
-                   .path(name);
+                .path(name);
     }
 
     /**
@@ -42,7 +42,7 @@ public class Unwind extends Stage {
      */
     public static Unwind unwind(String name) {
         return new Unwind()
-                   .path(name);
+                .path(name);
     }
 
     /**
@@ -90,7 +90,7 @@ public class Unwind extends Stage {
     @MorphiaInternal
     public boolean optionsPresent() {
         return includeArrayIndex != null
-               || preserveNullAndEmptyArrays != null;
+                || preserveNullAndEmptyArrays != null;
     }
 
     /**

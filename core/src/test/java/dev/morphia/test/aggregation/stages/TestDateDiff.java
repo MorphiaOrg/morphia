@@ -20,18 +20,18 @@ public class TestDateDiff extends AggregationTest {
         checkMinServerVersion(5.0);
 
         insert("orders", parseDocs(
-            "{ _id: 1, custId: 456, purchased: ISODate('2020-12-31'), delivered: ISODate('2021-01-05') }",
-            "{ _id: 2, custId: 457, purchased: ISODate('2021-02-28'), delivered: ISODate('2021-03-07') }",
-            "{ _id: 3, custId: 458, purchased: ISODate('2021-02-16'), delivered: ISODate('2021-02-18') }"));
+                "{ _id: 1, custId: 456, purchased: ISODate('2020-12-31'), delivered: ISODate('2021-01-05') }",
+                "{ _id: 2, custId: 457, purchased: ISODate('2021-02-28'), delivered: ISODate('2021-03-07') }",
+                "{ _id: 3, custId: 458, purchased: ISODate('2021-02-16'), delivered: ISODate('2021-02-18') }"));
 
         Document actual = getDs().aggregate("orders")
-                                 .group(group()
-                                            .field("averageTime", avg(dateDiff(field("purchased"), field("delivered"), DAY))))
-                                 .project(project()
-                                              .suppressId()
-                                              .include("numDays", trunc(field("averageTime"), literal(1))))
-                                 .execute(Document.class)
-                                 .next();
+                .group(group()
+                        .field("averageTime", avg(dateDiff(field("purchased"), field("delivered"), DAY))))
+                .project(project()
+                        .suppressId()
+                        .include("numDays", trunc(field("averageTime"), literal(1))))
+                .execute(Document.class)
+                .next();
 
         Document expected = new Document("numDays", 4.6D);
 

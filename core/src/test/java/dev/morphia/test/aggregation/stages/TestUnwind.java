@@ -20,16 +20,16 @@ public class TestUnwind extends AggregationTest {
     public void testUnwind() {
         DateTimeFormatter format = ofPattern("yyyy-MM-dd");
         getDs().save(asList(new User("jane", parse("2011-03-02", format), "golf", "racquetball"),
-            new User("joe", parse("2012-07-02", format), "tennis", "golf", "swimming"),
-            new User("john", parse("2012-07-02", format))));
+                new User("joe", parse("2012-07-02", format), "tennis", "golf", "swimming"),
+                new User("john", parse("2012-07-02", format))));
 
         Iterator<User> aggregate = getDs().aggregate(User.class)
-                                          .project(project()
-                                                       .include("name")
-                                                       .include("joined")
-                                                       .include("likes"))
-                                          .unwind(unwind("likes"))
-                                          .execute(User.class);
+                .project(project()
+                        .include("name")
+                        .include("joined")
+                        .include("likes"))
+                .unwind(unwind("likes"))
+                .execute(User.class);
         int count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();
@@ -61,13 +61,13 @@ public class TestUnwind extends AggregationTest {
         }
 
         aggregate = getDs().aggregate(User.class)
-                           .project(project()
-                                        .include("name")
-                                        .include("joined")
-                                        .include("likes"))
-                           .unwind(unwind("likes")
-                                       .preserveNullAndEmptyArrays(true))
-                           .execute(User.class);
+                .project(project()
+                        .include("name")
+                        .include("joined")
+                        .include("likes"))
+                .unwind(unwind("likes")
+                        .preserveNullAndEmptyArrays(true))
+                .execute(User.class);
         count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();

@@ -278,6 +278,7 @@ public final class DateExpressions {
     public static Expression tsIncrement(Expression expression) {
         return new Expression("$tsIncrement", expression);
     }
+
     /**
      * Returns the seconds from a timestamp as a long.
      *

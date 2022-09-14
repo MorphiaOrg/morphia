@@ -41,8 +41,8 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
-import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
+import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
 
 /**
  * The options to apply to a find operation (also commonly referred to as a query).
@@ -109,7 +109,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     @MorphiaInternal
     public <T> FindIterable<T> apply(FindIterable<T> iterable, Mapper mapper, Class<?> type) {
         if (isLogQuery()) {
-            logQuery();  //  reset to a new ID
+            logQuery(); //  reset to a new ID
         }
         if (projection != null) {
             iterable.projection(projection.map(mapper, type));
@@ -410,8 +410,8 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     @Override
     public int hashCode() {
         return Objects.hash(allowDiskUse, batchSize, limit, maxTimeMS, maxAwaitTimeMS, skip, sort, cursorType, noCursorTimeout, oplogReplay,
-            partial, collation, comment, hint, hintString, max, min, returnKey, showRecordId, readConcern, readPreference, projection,
-            queryLogId);
+                partial, collation, comment, hint, hintString, max, min, returnKey, showRecordId, readConcern, readPreference, projection,
+                queryLogId);
     }
 
     @Override
@@ -424,13 +424,14 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         }
         FindOptions that = (FindOptions) o;
         return batchSize == that.batchSize && limit == that.limit && maxTimeMS == that.maxTimeMS && maxAwaitTimeMS == that.maxAwaitTimeMS
-               && skip == that.skip && noCursorTimeout == that.noCursorTimeout && oplogReplay == that.oplogReplay && partial == that.partial
-               && returnKey == that.returnKey && showRecordId == that.showRecordId && Objects.equals(allowDiskUse, that.allowDiskUse)
-               && Objects.equals(sort, that.sort) && cursorType == that.cursorType && Objects.equals(collation, that.collation)
-               && Objects.equals(comment, that.comment) && Objects.equals(hint, that.hint) && Objects.equals(hintString, that.hintString)
-               && Objects.equals(max, that.max) && Objects.equals(min, that.min) && Objects.equals(readConcern, that.readConcern)
-               && Objects.equals(readPreference, that.readPreference) && Objects.equals(projection, that.projection)
-               && Objects.equals(queryLogId, that.queryLogId);
+                && skip == that.skip && noCursorTimeout == that.noCursorTimeout && oplogReplay == that.oplogReplay
+                && partial == that.partial
+                && returnKey == that.returnKey && showRecordId == that.showRecordId && Objects.equals(allowDiskUse, that.allowDiskUse)
+                && Objects.equals(sort, that.sort) && cursorType == that.cursorType && Objects.equals(collation, that.collation)
+                && Objects.equals(comment, that.comment) && Objects.equals(hint, that.hint) && Objects.equals(hintString, that.hintString)
+                && Objects.equals(max, that.max) && Objects.equals(min, that.min) && Objects.equals(readConcern, that.readConcern)
+                && Objects.equals(readPreference, that.readPreference) && Objects.equals(projection, that.projection)
+                && Objects.equals(queryLogId, that.queryLogId);
     }
 
     /**
@@ -486,7 +487,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * This is an internal method.  It's implementation and presence are subject to change.
+     * This is an internal method. It's implementation and presence are subject to change.
      *
      * @return this
      * @morphia.internal
@@ -531,7 +532,9 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     /**
      * Add top-level variables to the operation. A null value means no variables are set.
      *
-     * <p>Allows for improved command readability by separating the variables from the query text.</p>
+     * <p>
+     * Allows for improved command readability by separating the variables from the query text.
+     * </p>
      *
      * @param variables for find operation or null
      * @return this
@@ -563,7 +566,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * This is an experimental method.  It's implementation and presence are subject to change.
+     * This is an experimental method. It's implementation and presence are subject to change.
      *
      * @return this
      */
@@ -757,28 +760,28 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     @Override
     public String toString() {
         return new StringJoiner(", ", FindOptions.class.getSimpleName() + "[", "]")
-                   .add("allowDiskUse=" + allowDiskUse)
-                   .add("batchSize=" + batchSize)
-                   .add("limit=" + limit)
-                   .add("maxTimeMS=" + maxTimeMS)
-                   .add("maxAwaitTimeMS=" + maxAwaitTimeMS)
-                   .add("skip=" + skip)
-                   .add("sort=" + sort)
-                   .add("cursorType=" + cursorType)
-                   .add("noCursorTimeout=" + noCursorTimeout)
-                   .add("oplogReplay=" + oplogReplay)
-                   .add("partial=" + partial)
-                   .add("collation=" + collation)
-                   .add("comment='" + comment + "'")
-                   .add("hint=" + hint)
-                   .add("max=" + max)
-                   .add("min=" + min)
-                   .add("returnKey=" + returnKey)
-                   .add("showRecordId=" + showRecordId)
-                   .add("readPreference=" + readPreference)
-                   .add("queryLogId='" + queryLogId + "'")
-                   .add("projection=" + projection)
-                   .toString();
+                .add("allowDiskUse=" + allowDiskUse)
+                .add("batchSize=" + batchSize)
+                .add("limit=" + limit)
+                .add("maxTimeMS=" + maxTimeMS)
+                .add("maxAwaitTimeMS=" + maxAwaitTimeMS)
+                .add("skip=" + skip)
+                .add("sort=" + sort)
+                .add("cursorType=" + cursorType)
+                .add("noCursorTimeout=" + noCursorTimeout)
+                .add("oplogReplay=" + oplogReplay)
+                .add("partial=" + partial)
+                .add("collation=" + collation)
+                .add("comment='" + comment + "'")
+                .add("hint=" + hint)
+                .add("max=" + max)
+                .add("min=" + min)
+                .add("returnKey=" + returnKey)
+                .add("showRecordId=" + showRecordId)
+                .add("readPreference=" + readPreference)
+                .add("queryLogId='" + queryLogId + "'")
+                .add("projection=" + projection)
+                .toString();
     }
 
     /**

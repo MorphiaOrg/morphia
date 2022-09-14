@@ -18,10 +18,10 @@ public class TestMinN extends AggregationTest {
     public void testComputedN() {
         testPipeline(5.2, "computedN", false, false, (aggregation) -> {
             return aggregation
-                       .group(group(id().field("gameId", field("gameId")))
-                                  .field("gamescores", minN(
-                                      condition(eq(field("gameId"), value("G2")), value(1), value(3)),
-                                      array(field("score"), field("playerId")))));
+                    .group(group(id().field("gameId", field("gameId")))
+                            .field("gamescores", minN(
+                                    condition(eq(field("gameId"), value("G2")), value(1), value(3)),
+                                    array(field("score"), field("playerId")))));
         });
     }
 
@@ -29,11 +29,11 @@ public class TestMinN extends AggregationTest {
     public void testSingleGame() {
         testPipeline(5.2, "singleGame", false, false, (aggregation) -> {
             return aggregation
-                       .match(eq("gameId", "G1"))
-                       .group(group(id(field("gameId")))
-                                  .field("minScores", minN(
-                                      value(3),
-                                      array(field("score"), field("playerId")))));
+                    .match(eq("gameId", "G1"))
+                    .group(group(id(field("gameId")))
+                            .field("minScores", minN(
+                                    value(3),
+                                    array(field("score"), field("playerId")))));
         });
 
     }
@@ -42,10 +42,10 @@ public class TestMinN extends AggregationTest {
     public void testAcrossGames() {
         testPipeline(5.2, "acrossGames", false, false, (aggregation) -> {
             return aggregation
-                       .group(group(id("$gameId"))
-                                  .field("minScores", minN(
-                                      value(3),
-                                      array(field("score"), field("playerId")))));
+                    .group(group(id("$gameId"))
+                            .field("minScores", minN(
+                                    value(3),
+                                    array(field("score"), field("playerId")))));
         });
 
     }

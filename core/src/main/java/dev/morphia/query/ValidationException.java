@@ -11,9 +11,7 @@
  * and limitations under the License.
  */
 
-
 package dev.morphia.query;
-
 
 /**
  * Error during validation.

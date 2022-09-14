@@ -118,9 +118,9 @@ public class MethodMappedUser {
         }
         MethodMappedUser that = (MethodMappedUser) o;
         return age == that.age && Objects.equals(name, that.name) && Objects.equals(likes, that.likes) &&
-               Objects.equals(version, that.version) && Objects.equals(id, that.id) &&
-               Objects.equals(joined, that.joined) && Objects.equals(friend, that.friend) &&
-               Objects.equals(friends, that.friends);
+                Objects.equals(version, that.version) && Objects.equals(id, that.id) &&
+                Objects.equals(joined, that.joined) && Objects.equals(friend, that.friend) &&
+                Objects.equals(friends, that.friends);
     }
 
     @Override

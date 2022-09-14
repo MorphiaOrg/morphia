@@ -14,10 +14,10 @@ public class TestIndexStats extends AggregationTest {
         getDs().getMapper().map(Author.class);
         getDs().ensureIndexes();
         Document stats = getDs().aggregate(Author.class)
-                                .indexStats()
-                                .match(eq("name", "books_1"))
-                                .execute(Document.class)
-                                .next();
+                .indexStats()
+                .match(eq("name", "books_1"))
+                .execute(Document.class)
+                .next();
 
         assertNotNull(stats);
     }

@@ -126,7 +126,7 @@ public class Densify extends Stage {
          */
         public static Range bounded(Object lowerBound, Object upperBound, Number step) {
             return new Range(RangeType.BOUNDED, step)
-                       .bounds(lowerBound, upperBound);
+                    .bounds(lowerBound, upperBound);
         }
 
         private Range bounds(Object lowerBound, Object upperBound) {

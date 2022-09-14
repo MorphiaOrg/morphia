@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Factory class for creating GeoJSON types.  See <a href="http://docs.mongodb
+ * Factory class for creating GeoJSON types. See <a href="http://docs.mongodb
  * .org/manual/applications/geospatial-indexes/#geojson-objects">the
  * documentation</a> for all the types.
+ *
  * @deprecated use the driver-provided types instead
  */
 @SuppressWarnings("removal")
@@ -20,9 +21,9 @@ public final class GeoJson {
 
     /**
      * Create a new Polygon representing a GeoJSON Polygon type. This helper method uses {@link #polygon(LineString, LineString...)} to
-     * create the Polygon.  If you need to create Polygons with interior rings (holes), use that method.
+     * create the Polygon. If you need to create Polygons with interior rings (holes), use that method.
      *
-     * @param points an ordered series of Points that make up the polygon.  The first and last points should be the same to close the
+     * @param points an ordered series of Points that make up the polygon. The first and last points should be the same to close the
      *               polygon
      * @return a Polygon as defined by the points.
      * @throws java.lang.IllegalArgumentException if the start and end points are not the same
@@ -52,7 +53,7 @@ public final class GeoJson {
         int size = points.getCoordinates().size();
         if (size > 0 && !points.getCoordinates().get(0).equals(points.getCoordinates().get(size - 1))) {
             throw new IllegalArgumentException("A polygon requires the starting point to be the same as the end to ensure a closed "
-                                               + "area");
+                    + "area");
         }
     }
 
@@ -60,7 +61,7 @@ public final class GeoJson {
      * Lets you create a Polygon representing a GeoJSON Polygon type. This method is especially useful for defining polygons with inner
      * rings.
      *
-     * @param exteriorBoundary   a LineString that contains a series of Points that make up the polygon.  The first and last points should
+     * @param exteriorBoundary   a LineString that contains a series of Points that make up the polygon. The first and last points should
      *                           be the same to close the polygon
      * @param interiorBoundaries optional varargs that let you define the boundaries for any holes inside the polygon
      * @return a PolygonBuilder to be used to build up the required Polygon

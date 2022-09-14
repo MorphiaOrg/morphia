@@ -3,9 +3,9 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.bottom;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.bottom;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.query.Sort.descending;
@@ -16,11 +16,11 @@ public class TestBottom extends AggregationTest {
     public void testSingleGame() {
         testPipeline(5.2, "singleGame", false, false, (aggregation) -> {
             return aggregation
-                       .match(eq("gameId", "G1"))
-                       .group(group(id(field("gameId")))
-                                  .field("playerId", bottom(
-                                      array(field("playerId"), field("score")),
-                                      descending("score"))));
+                    .match(eq("gameId", "G1"))
+                    .group(group(id(field("gameId")))
+                            .field("playerId", bottom(
+                                    array(field("playerId"), field("score")),
+                                    descending("score"))));
         });
     }
 
@@ -28,10 +28,10 @@ public class TestBottom extends AggregationTest {
     public void testAcrossGames() {
         testPipeline(5.2, "acrossGames", false, false, (aggregation) -> {
             return aggregation
-                       .group(group(id(field("gameId")))
-                                  .field("playerId", bottom(
-                                      array(field("playerId"), field("score")),
-                                      descending("score"))));
+                    .group(group(id(field("gameId")))
+                            .field("playerId", bottom(
+                                    array(field("playerId"), field("score")),
+                                    descending("score"))));
         });
     }
 }

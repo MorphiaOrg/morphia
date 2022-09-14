@@ -49,8 +49,8 @@ public class TestLazyIdOnlyIgnoreMissing extends ProxyTestBase {
         datastore.save(root);
 
         root = datastore.find(RootEntity.class)
-                        .filter(eq("_id", root.getId()))
-                        .first();
+                .filter(eq("_id", root.getId()))
+                .first();
 
         final ReferencedEntity p = root.r;
 
@@ -63,8 +63,8 @@ public class TestLazyIdOnlyIgnoreMissing extends ProxyTestBase {
 
         // Re-Fetch root entity from DB
         root = datastore.find(RootEntity.class)
-                        .filter(eq("_id", root.getId()))
-                        .first();
+                .filter(eq("_id", root.getId()))
+                .first();
 
         root.setBar("baz");
         datastore.save(root);
@@ -128,7 +128,7 @@ public class TestLazyIdOnlyIgnoreMissing extends ProxyTestBase {
             }
             ReferencedEntity that = (ReferencedEntity) o;
             return Objects.equals(id, that.id)
-                   && Objects.equals(foo, that.foo);
+                    && Objects.equals(foo, that.foo);
         }
     }
 

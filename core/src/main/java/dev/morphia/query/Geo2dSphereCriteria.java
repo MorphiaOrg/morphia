@@ -21,24 +21,24 @@ final class Geo2dSphereCriteria extends FieldCriteria {
     private CoordinateReferenceSystem crs;
 
     private Geo2dSphereCriteria(Datastore datastore, String field, dev.morphia.query.FilterOperator operator,
-                                Geometry geometry, EntityModel model, boolean validating) {
+            Geometry geometry, EntityModel model, boolean validating) {
         super(datastore, field, operator, geometry, model, validating);
         this.geometry = geometry;
     }
 
     static Geo2dSphereCriteria geo(Datastore datastore, String field, dev.morphia.query.FilterOperator operator,
-                                   Geometry value, EntityModel model, boolean validating) {
+            Geometry value, EntityModel model, boolean validating) {
         return new Geo2dSphereCriteria(datastore, field, operator, value, model, validating);
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public Document toDocument() {
         Document query;
         dev.morphia.query.FilterOperator operator = getOperator();
         DocumentWriter writer = new DocumentWriter(getDatastore().getMapper());
         ((Codec) getDatastore().getCodecRegistry().get(geometry.getClass()))
-            .encode(writer, geometry, EncoderContext.builder().build());
+                .encode(writer, geometry, EncoderContext.builder().build());
         Document document = new Document("$geometry", writer.getDocument());
 
         if (operator == dev.morphia.query.FilterOperator.NEAR || operator == dev.morphia.query.FilterOperator.NEAR_SPHERE) {

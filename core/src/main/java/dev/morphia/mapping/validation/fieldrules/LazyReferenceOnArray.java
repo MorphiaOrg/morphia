@@ -21,8 +21,8 @@ public class LazyReferenceOnArray extends PropertyConstraint {
             final Class<?> type = propertyModel.getType();
             if (type.isArray()) {
                 ve.add(new ConstraintViolation(Level.FATAL, model, propertyModel, getClass(),
-                    "The lazy attribute cannot be used for an Array. If you need a lazy array "
-                    + "please use ArrayList instead."));
+                        "The lazy attribute cannot be used for an Array. If you need a lazy array "
+                                + "please use ArrayList instead."));
             }
         }
     }

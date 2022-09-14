@@ -21,7 +21,7 @@ import static java.lang.String.format;
  *
  * @since 2.0
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class Filter {
     private final String name;
     private String field;
@@ -174,7 +174,7 @@ public class Filter {
     }
 
     protected void writeNamedValue(@Nullable String name, @Nullable Object value, Datastore datastore, BsonWriter writer,
-                                   EncoderContext encoderContext) {
+            EncoderContext encoderContext) {
         writer.writeName(name);
         if (value != null) {
             Codec codec = datastore.getCodecRegistry().get(value.getClass());

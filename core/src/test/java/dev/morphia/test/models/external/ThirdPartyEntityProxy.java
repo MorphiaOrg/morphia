@@ -4,12 +4,7 @@ import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Id;
 
-@ExternalEntity(value = "extEnt",
-    discriminator = "ext",
-    discriminatorKey = "_xt",
-    concern = "JOURNALED",
-    cap = @CappedAt(count = 123, value = 456),
-    target = ThirdPartyEntity.class)
+@ExternalEntity(value = "extEnt", discriminator = "ext", discriminatorKey = "_xt", concern = "JOURNALED", cap = @CappedAt(count = 123, value = 456), target = ThirdPartyEntity.class)
 public class ThirdPartyEntityProxy {
     public String field;
     @Id

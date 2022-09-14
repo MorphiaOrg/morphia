@@ -498,8 +498,8 @@ public final class Filters {
      * $nin selects the documents where:
      *
      * <ul>
-     *   <li>the field value is not in the specified array or
-     *   <li>the field does not exist.
+     * <li>the field value is not in the specified array or
+     * <li>the field does not exist.
      * </ul>
      *
      * @param field the field to check
@@ -631,5 +631,3 @@ public final class Filters {
     }
 
 }
-
-

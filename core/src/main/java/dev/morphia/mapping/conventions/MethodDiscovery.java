@@ -40,8 +40,8 @@ public class MethodDiscovery implements MorphiaConvention {
 
     private List<Annotation> discoverAnnotations(Method getter, Method setter) {
         return List.of(getter, setter).stream()
-                   .flatMap(m -> Arrays.stream(m.getDeclaredAnnotations()))
-                   .collect(Collectors.toList());
+                .flatMap(m -> Arrays.stream(m.getDeclaredAnnotations()))
+                .collect(Collectors.toList());
     }
 
     @NonNull
@@ -53,7 +53,7 @@ public class MethodDiscovery implements MorphiaConvention {
             return builder.targetType().getDeclaredMethod(method.getName(), method.getParameterTypes());
         } catch (ReflectiveOperationException e) {
             throw new MappingException(Sofia.mismatchedMethodOnExternalType(method.getName(),
-                method.getParameterTypes(), builder.type().getName(), builder.targetType().getName()));
+                    method.getParameterTypes(), builder.type().getName(), builder.targetType().getName()));
         }
     }
 
@@ -64,39 +64,38 @@ public class MethodDiscovery implements MorphiaConvention {
 
             Methods(List<Method> methods) {
                 List<Method> collect = methods.stream().sorted(Comparator.comparing(Method::getName))
-                                              .collect(Collectors.toList());
+                        .collect(Collectors.toList());
                 getter = collect.get(0);
                 setter = collect.get(1);
             }
         }
 
         Map<String, List<Method>> properties = Arrays.stream(type.getDeclaredMethods())
-                                                     .filter(m -> m.getName().startsWith("get")
-                                                                  || m.getName().startsWith("set")
-                                                                  || m.getName().startsWith("is"))
-                                                     .collect(Collectors.groupingBy(m -> m.getName().startsWith("get")
-                                                                                         || m.getName().startsWith("set")
-                                                                                         ? stripPrefix(m, 3)
-                                                                                         : stripPrefix(m, 2)));
+                .filter(m -> m.getName().startsWith("get")
+                        || m.getName().startsWith("set")
+                        || m.getName().startsWith("is"))
+                .collect(Collectors.groupingBy(m -> m.getName().startsWith("get")
+                        || m.getName().startsWith("set")
+                                ? stripPrefix(m, 3)
+                                : stripPrefix(m, 2)));
 
         for (Entry<String, List<Method>> entry : properties.entrySet()) {
             List<Method> value = entry.getValue();
             if (value.size() == 2) {
                 Methods methods = new Methods(value);
                 TypeData<?> typeData = entityModelBuilder.getTypeData(type, TypeData.newInstance(methods.getter),
-                    methods.getter.getGenericReturnType());
+                        methods.getter.getGenericReturnType());
 
                 entityModelBuilder.addProperty()
-                                  .name(entry.getKey())
-                                  .accessor(new MethodAccessor(getTargetMethod(builder, methods.getter),
-                                      getTargetMethod(builder, methods.setter)))
-                                  .annotations(discoverAnnotations(methods.getter, methods.setter))
-                                  .typeData(typeData)
-                                  .discoverMappedName();
+                        .name(entry.getKey())
+                        .accessor(new MethodAccessor(getTargetMethod(builder, methods.getter),
+                                getTargetMethod(builder, methods.setter)))
+                        .annotations(discoverAnnotations(methods.getter, methods.setter))
+                        .typeData(typeData)
+                        .discoverMappedName();
             }
         }
     }
-
 
     private String stripPrefix(Method method, int size) {
         String name = method.getName().substring(size);

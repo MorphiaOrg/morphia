@@ -37,97 +37,101 @@ public class StringExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testConcat() {
         assertAndCheckDocShape("{ $concat: [ 'item', ' - ', 'description' ] }", concat(value("item"), value(" - "), value("description")),
-            "item - description");
+                "item - description");
     }
 
     @Test
     public void testIndexOfBytes() {
         assertAndCheckDocShape("{ $indexOfBytes: [ 'item', 'foo' ] }", indexOfBytes(value("item"), value("foo")), -1);
         assertAndCheckDocShape("{ $indexOfBytes: [ 'winter wonderland', 'winter' ] }",
-            indexOfBytes(value("winter wonderland"), value("winter"))
-                .start(4), -1);
+                indexOfBytes(value("winter wonderland"), value("winter"))
+                        .start(4),
+                -1);
         assertAndCheckDocShape("{ $indexOfBytes: [ 'winter wonderland', 'winter' ] }",
-            indexOfBytes(value("winter wonderland"), value("winter"))
-                .end(5), -1);
+                indexOfBytes(value("winter wonderland"), value("winter"))
+                        .end(5),
+                -1);
     }
 
     @Test
     public void testIndexOfCP() {
         assertAndCheckDocShape("{ $indexOfCP: [ 'item', 'foo' ] }", indexOfCP(value("item"), value("foo")), -1);
         assertAndCheckDocShape("{ $indexOfCP: [ 'winter wonderland', 'winter' ] }",
-            indexOfCP(value("winter wonderland"), value("winter"))
-                .start(4), -1);
+                indexOfCP(value("winter wonderland"), value("winter"))
+                        .start(4),
+                -1);
         assertAndCheckDocShape("{ $indexOfCP: [ 'winter wonderland', 'winter' ] }",
-            indexOfCP(value("winter wonderland"), value("winter"))
-                .end(5), -1);
+                indexOfCP(value("winter wonderland"), value("winter"))
+                        .end(5),
+                -1);
     }
 
     @Test
     public void testLtrim() {
         checkMinServerVersion(4.0);
         assertAndCheckDocShape("{ $ltrim: { input: '    winter wonderland' } }", ltrim(value("    winter wonderland")),
-            "winter wonderland");
+                "winter wonderland");
         assertAndCheckDocShape("{ $ltrim: { input: 'winter wonderland' } }", ltrim(value("winter wonderland"))
-                                                                                 .chars(value("winter")),
-            " wonderland");
+                .chars(value("winter")),
+                " wonderland");
     }
 
     @Test
     public void testRegexFind() {
         checkMinServerVersion(4.2);
         assertAndCheckDocShape("{ $regexFind: { input: 'winter wonderland', regex: /inter/ } }", regexFind(value("winter wonderland"))
-                                                                                                     .pattern("inter"),
-            parse("{match: 'inter', idx:1, captures:[]}"));
+                .pattern("inter"),
+                parse("{match: 'inter', idx:1, captures:[]}"));
         assertAndCheckDocShape("{ $regexFind: { input: 'winter wonderland', regex: /inter/ } }", regexFind(value("winter wonderland"))
-                                                                                                     .pattern(Pattern.compile("inter")),
-            parse("{match: 'inter', idx:1, captures:[]}"));
+                .pattern(Pattern.compile("inter")),
+                parse("{match: 'inter', idx:1, captures:[]}"));
         assertAndCheckDocShape("{ $regexFind: { input: 'winter wonderland', regex: /splinter/ } }", regexFind(value("winter wonderland"))
-                                                                                                        .pattern("splinter"), null);
+                .pattern("splinter"), null);
     }
 
     @Test
     public void testRegexFindAll() {
         checkMinServerVersion(4.2);
         assertAndCheckDocShape("{ $regexFindAll: { input: 'winter wonderland', regex: /inter/ } }",
-            regexFindAll(value("winter wonderland")).pattern("inter"),
-            List.of(parse("{match: 'inter', idx:1, captures:[]}")));
+                regexFindAll(value("winter wonderland")).pattern("inter"),
+                List.of(parse("{match: 'inter', idx:1, captures:[]}")));
         assertAndCheckDocShape("{ $regexFindAll: { input: 'winter wonderland', regex: /inter/ } }",
-            regexFindAll(value("winter wonderland")).pattern(Pattern.compile("inter")),
-            List.of(parse("{match: 'inter', idx:1, captures:[]}")));
+                regexFindAll(value("winter wonderland")).pattern(Pattern.compile("inter")),
+                List.of(parse("{match: 'inter', idx:1, captures:[]}")));
         assertAndCheckDocShape("{ $regexFindAll: { input: 'winter wonderland', regex: /splinter/ } }",
-            regexFindAll(value("winter wonderland")).pattern("splinter"), List.of());
+                regexFindAll(value("winter wonderland")).pattern("splinter"), List.of());
     }
 
     @Test
     public void testRegexMatch() {
         checkMinServerVersion(4.2);
         assertAndCheckDocShape("{ $regexMatch: { input: 'winter wonderland', regex: /inter/ } }",
-            regexMatch(value("winter wonderland")).pattern("inter"), true);
+                regexMatch(value("winter wonderland")).pattern("inter"), true);
         assertAndCheckDocShape("{ $regexMatch: { input: 'winter wonderland', regex: /inter/ } }",
-            regexMatch(value("winter wonderland")).pattern(Pattern.compile("inter")), true);
+                regexMatch(value("winter wonderland")).pattern(Pattern.compile("inter")), true);
         assertAndCheckDocShape("{ $regexMatch: { input: 'winter wonderland', regex: /splinter/ } }",
-            regexMatch(value("winter wonderland")).pattern("splinter"), false);
+                regexMatch(value("winter wonderland")).pattern("splinter"), false);
     }
 
     @Test
     public void testReplaceAll() {
         checkMinServerVersion(4.4);
         insert("myCollection", List.of(
-            parse("{ _id: 1, name: 'cafe' }"),
-            parse("{ _id: 2, name: 'Cafe' }"),
-            parse("{ _id: 3, name: 'café' }")));
+                parse("{ _id: 1, name: 'cafe' }"),
+                parse("{ _id: 2, name: 'Cafe' }"),
+                parse("{ _id: 3, name: 'café' }")));
 
         List<Document> actual = getDs().aggregate("myCollection")
-                                       .addFields(AddFields.addFields()
-                                                           .field("resultObject",
-                                                               replaceAll(field("name"), literal("Cafe"), literal("CAFE"))))
-                                       .execute(Document.class)
-                                       .toList();
+                .addFields(AddFields.addFields()
+                        .field("resultObject",
+                                replaceAll(field("name"), literal("Cafe"), literal("CAFE"))))
+                .execute(Document.class)
+                .toList();
 
         List<Document> expected = List.of(
-            parse("{ '_id' : 1, 'name' : 'cafe', 'resultObject' : 'cafe' }"),
-            parse("{ '_id' : 2, 'name' : 'Cafe', 'resultObject' : 'CAFE' }"),
-            parse("{ '_id' : 3, 'name' : 'café', 'resultObject' : 'café' }"));
+                parse("{ '_id' : 1, 'name' : 'cafe', 'resultObject' : 'cafe' }"),
+                parse("{ '_id' : 2, 'name' : 'Cafe', 'resultObject' : 'CAFE' }"),
+                parse("{ '_id' : 3, 'name' : 'café', 'resultObject' : 'café' }"));
 
         assertListEquals(actual, expected);
     }
@@ -136,24 +140,24 @@ public class StringExpressionsTest extends ExpressionsTestBase {
     public void testReplaceOne() {
         checkMinServerVersion(4.4);
         insert("myCollection", List.of(
-            parse("{ '_id' : 1, 'item' : 'blue paint' }"),
-            parse("{ '_id' : 2, 'item' : 'blue and green paint' }"),
-            parse("{ '_id' : 3, 'item' : 'blue paint with blue paintbrush' }"),
-            parse("{ '_id' : 4, 'item' : 'blue paint with green paintbrush' }")));
+                parse("{ '_id' : 1, 'item' : 'blue paint' }"),
+                parse("{ '_id' : 2, 'item' : 'blue and green paint' }"),
+                parse("{ '_id' : 3, 'item' : 'blue paint with blue paintbrush' }"),
+                parse("{ '_id' : 4, 'item' : 'blue paint with green paintbrush' }")));
 
         List<Document> actual = getDs().aggregate("myCollection")
-                                       .project(Projection.project()
-                                                          .include("item",
-                                                              replaceOne(field("$item"), literal("blue paint"),
-                                                                  literal("red paint"))))
-                                       .execute(Document.class)
-                                       .toList();
+                .project(Projection.project()
+                        .include("item",
+                                replaceOne(field("$item"), literal("blue paint"),
+                                        literal("red paint"))))
+                .execute(Document.class)
+                .toList();
 
         List<Document> expected = List.of(
-            parse("{ '_id' : 1, 'item' : 'red paint' }"),
-            parse("{ '_id' : 2, 'item' : 'blue and green paint' }"),
-            parse("{ '_id' : 3, 'item' : 'red paint with blue paintbrush' }"),
-            parse("{ '_id' : 4, 'item' : 'red paint with green paintbrush' }"));
+                parse("{ '_id' : 1, 'item' : 'red paint' }"),
+                parse("{ '_id' : 2, 'item' : 'blue and green paint' }"),
+                parse("{ '_id' : 3, 'item' : 'red paint with blue paintbrush' }"),
+                parse("{ '_id' : 4, 'item' : 'red paint with green paintbrush' }"));
 
         assertListEquals(actual, expected);
     }
@@ -162,16 +166,16 @@ public class StringExpressionsTest extends ExpressionsTestBase {
     public void testRtrim() {
         checkMinServerVersion(4.0);
         assertAndCheckDocShape("{ $rtrim: { input: 'winter wonderland    ' } }", rtrim(value("winter wonderland    ")),
-            "winter wonderland");
+                "winter wonderland");
         assertAndCheckDocShape("{ $rtrim: { input: 'winter wonderland' } }", rtrim(value("winter wonderland"))
-                                                                                 .chars(value("land")),
-            "winter wonder");
+                .chars(value("land")),
+                "winter wonder");
     }
 
     @Test
     public void testSplit() {
         assertAndCheckDocShape("{ $split: [ 'June-15-2013', '-' ] }", split(value("June-15-2013"), value("-")),
-            List.of("June", "15", "2013"));
+                List.of("June", "15", "2013"));
     }
 
     @Test
@@ -192,13 +196,13 @@ public class StringExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testSubstrBytes() {
         assertAndCheckDocShape("{ $substrBytes: [ 'winter wonderland', 3, 5 ] }", substrBytes(value("winter wonderland"), 3, 5),
-            "ter w");
+                "ter w");
     }
 
     @Test
     public void testSubstrCP() {
         assertAndCheckDocShape("{ $substrCP: [ 'winter wonderland', 3, 5 ] }", substrCP(value("winter wonderland"), 3, 5),
-            "ter w");
+                "ter w");
     }
 
     @Test

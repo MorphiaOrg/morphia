@@ -14,12 +14,12 @@ public class TestSample extends AggregationTest {
     @Test
     public void testSample() {
         getDs().save(asList(new User("John", LocalDate.now()),
-            new User("Paul", LocalDate.now()),
-            new User("George", LocalDate.now()),
-            new User("Ringo", LocalDate.now())));
+                new User("Paul", LocalDate.now()),
+                new User("George", LocalDate.now()),
+                new User("Ringo", LocalDate.now())));
         Aggregation<User> pipeline = getDs()
-                                         .aggregate(User.class)
-                                         .sample(3);
+                .aggregate(User.class)
+                .sample(3);
 
         assertEquals(pipeline.execute(User.class).toList().size(), 3);
     }

@@ -59,7 +59,7 @@ class PipelineUpdate<T> {
         }
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private List<Document> toDocument() {
         CodecRegistry registry = datastore.getCodecRegistry();
         List<Document> documents = new ArrayList<>();

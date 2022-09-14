@@ -33,7 +33,7 @@ public class ContradictingAnnotations extends PropertyConstraint {
     protected final void check(Mapper mapper, EntityModel entityModel, PropertyModel propertyModel, Set<ConstraintViolation> ve) {
         if (propertyModel.hasAnnotation(a1) && propertyModel.hasAnnotation(a2)) {
             ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
-                Sofia.contradictingAnnotations(a1.getSimpleName(), a2.getSimpleName())));
+                    Sofia.contradictingAnnotations(a1.getSimpleName(), a2.getSimpleName())));
         }
     }
 }

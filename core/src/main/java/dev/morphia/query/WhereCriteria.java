@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-
 import org.bson.Document;
 
 /**

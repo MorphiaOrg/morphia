@@ -47,7 +47,7 @@ public class MorphiaCodecProvider implements CodecProvider {
         this.mapper = datastore.getMapper();
 
         propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
-            new MorphiaCollectionPropertyCodecProvider()));
+                new MorphiaCollectionPropertyCodecProvider()));
 
         ServiceLoader<MorphiaPropertyCodecProvider> providers = ServiceLoader.load(MorphiaPropertyCodecProvider.class);
         providers.forEach(propertyCodecProviders::add);
@@ -55,7 +55,7 @@ public class MorphiaCodecProvider implements CodecProvider {
 
     @Nullable
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public <T> Codec<T> get(Class<T> type, CodecRegistry registry) {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {

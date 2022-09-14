@@ -41,7 +41,7 @@ public interface CollectionConfigurable<T> extends CollectionConfiguration {
     }
 
     /**
-     * Returns the alternate collection to use for the operation.  Might return null.
+     * Returns the alternate collection to use for the operation. Might return null.
      *
      * @return the collection name or null
      * @since 2.3

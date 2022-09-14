@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 @MorphiaExperimental
 public @interface ShardKeys {
     /**
@@ -35,4 +35,3 @@ public @interface ShardKeys {
      */
     ShardKey[] value();
 }
-

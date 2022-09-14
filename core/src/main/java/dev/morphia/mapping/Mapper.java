@@ -1,6 +1,5 @@
 package dev.morphia.mapping;
 
-
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
@@ -36,14 +35,14 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
+
 /**
  * @morphia.internal
  */
 @MorphiaInternal
-@SuppressWarnings({"unchecked", "rawtypes", "removal"})
+@SuppressWarnings({ "unchecked", "rawtypes", "removal" })
 public class Mapper {
     private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
-
 
     /**
      * Special name that can never be used. Used as default for some fields to indicate default state.
@@ -100,8 +99,8 @@ public class Mapper {
     public MongoCollection enforceWriteConcern(MongoCollection collection, Class type) {
         WriteConcern applied = getWriteConcern(type);
         return applied != null
-               ? collection.withWriteConcern(applied)
-               : collection;
+                ? collection.withWriteConcern(applied)
+                : collection;
     }
 
     /**
@@ -126,7 +125,7 @@ public class Mapper {
      *
      * @param document the document to check
      * @param <T>      the class type
-     * @return the class reference.  might be null
+     * @return the class reference. might be null
      */
     @SuppressWarnings("unchecked")
     @Nullable
@@ -161,9 +160,9 @@ public class Mapper {
         final List<EntityModel> classes = getClassesMappedToCollection(collection);
         if (classes.size() > 1) {
             LOG.warn(Sofia.moreThanOneMapper(collection,
-                classes.stream()
-                       .map(c -> c.getType().getName())
-                       .collect(Collectors.joining(", "))));
+                    classes.stream()
+                            .map(c -> c.getType().getName())
+                            .collect(Collectors.joining(", "))));
         }
         return (Class<T>) classes.get(0).getType();
     }
@@ -380,9 +379,9 @@ public class Mapper {
             }
         }
         return classes.stream()
-                      .map(this::getEntityModel)
-                      .filter(Objects::nonNull)
-                      .collect(Collectors.toList());
+                .map(this::getEntityModel)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -393,16 +392,16 @@ public class Mapper {
     public synchronized void mapPackage(String packageName) {
         try {
             getClasses(options.getClassLoader(), packageName, getOptions().isMapSubPackages())
-                .stream()
-                .map(type -> {
-                    try {
-                        return getEntityModel(type);
-                    } catch (NotMappableException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(type -> {
+                        try {
+                            return getEntityModel(type);
+                        } catch (NotMappableException e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
@@ -446,8 +445,8 @@ public class Mapper {
     public void updateQueryWithDiscriminators(EntityModel model, Document query) {
         Entity annotation = model.getEntityAnnotation();
         if (annotation != null && annotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(model.getDiscriminatorKey())) {
+                && !query.containsKey("_id")
+                && !query.containsKey(model.getDiscriminatorKey())) {
             List<EntityModel> subtypes = model.getSubtypes();
             List<String> values = new ArrayList<>();
             values.add(model.getDiscriminator());
@@ -457,7 +456,7 @@ public class Mapper {
                 }
             }
             query.put(model.getDiscriminatorKey(),
-                new Document("$in", values));
+                    new Document("$in", values));
         }
     }
 
@@ -473,11 +472,11 @@ public class Mapper {
         mappedEntities.put(entityModel.getType(), entityModel);
         entityModel.getCollectionName();
         mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                                  .add(entityModel);
+                .add(entityModel);
 
         if (!entityModel.isInterface()) {
             new MappingValidator()
-                .validate(this, entityModel);
+                    .validate(this, entityModel);
 
         }
         return entityModel;
@@ -490,16 +489,16 @@ public class Mapper {
      */
     private <T> EntityModel createEntityModel(Class<T> clazz) {
         return new EntityModelBuilder(this, clazz)
-            .build();
+                .build();
     }
 
     private List<Class> getClasses(ClassLoader loader, String packageName, boolean mapSubPackages)
-        throws ClassNotFoundException {
+            throws ClassNotFoundException {
         final Set<Class> classes = new HashSet<>();
 
         ClassGraph classGraph = new ClassGraph()
-                                    .addClassLoader(loader)
-                                    .enableAllInfo();
+                .addClassLoader(loader)
+                .enableAllInfo();
         if (mapSubPackages) {
             classGraph.acceptPackages(packageName);
             classGraph.acceptPackages(packageName + ".*");
@@ -523,7 +522,7 @@ public class Mapper {
         }
 
         return clazz.getSuperclass() != null && hasAnnotation(clazz.getSuperclass(), annotations)
-               || Arrays.stream(clazz.getInterfaces())
+                || Arrays.stream(clazz.getInterfaces())
                         .map(i -> hasAnnotation(i, annotations))
                         .reduce(false, (l, r) -> l || r);
     }

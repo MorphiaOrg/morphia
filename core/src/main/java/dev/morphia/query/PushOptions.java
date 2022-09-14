@@ -42,6 +42,7 @@ public class PushOptions {
 
     /**
      * Sets the position for the update
+     *
      * @param position the position in the array for the update
      * @return this
      */
@@ -55,6 +56,7 @@ public class PushOptions {
 
     /**
      * Sets the slice value for the update
+     *
      * @param slice the slice value for the update
      * @return this
      */
@@ -65,6 +67,7 @@ public class PushOptions {
 
     /**
      * Sets the sort value for the update
+     *
      * @param sort the sort value for the update
      * @return this
      */

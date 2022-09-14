@@ -20,11 +20,11 @@ public class TestBottomN extends AggregationTest {
     public void testAcrossGames() {
         testPipeline(5.2, "acrossGames", false, false, (aggregation) -> {
             return aggregation
-                       .group(group(id(field("gameId")))
-                                  .field("playerId", bottomN(
-                                      value(3),
-                                      array(field("playerId"), field("score")),
-                                      descending("score"))));
+                    .group(group(id(field("gameId")))
+                            .field("playerId", bottomN(
+                                    value(3),
+                                    array(field("playerId"), field("score")),
+                                    descending("score"))));
         });
     }
 
@@ -32,14 +32,14 @@ public class TestBottomN extends AggregationTest {
     public void testComputedN() {
         testPipeline(5.2, "computedN", false, false, (aggregation) -> {
             return aggregation
-                       .group(group(id(document("gameId", field("gameId"))))
-                                  .field("gamescores", bottomN(
-                                      condition(
-                                          eq(field("gameId"), value("G2")),
-                                          value(1),
-                                          value(3)),
-                                      field("score"),
-                                      descending("score"))));
+                    .group(group(id(document("gameId", field("gameId"))))
+                            .field("gamescores", bottomN(
+                                    condition(
+                                            eq(field("gameId"), value("G2")),
+                                            value(1),
+                                            value(3)),
+                                    field("score"),
+                                    descending("score"))));
         });
 
     }
@@ -48,12 +48,12 @@ public class TestBottomN extends AggregationTest {
     public void testSingleGame() {
         testPipeline(5.2, "singleGame", false, false, (aggregation) -> {
             return aggregation
-                       .match(eq("gameId", "G1"))
-                       .group(group(id(field("gameId")))
-                                  .field("playerId", bottomN(
-                                      value(3),
-                                      array(field("playerId"), field("score")),
-                                      descending("score"))));
+                    .match(eq("gameId", "G1"))
+                    .group(group(id(field("gameId")))
+                            .field("playerId", bottomN(
+                                    value(3),
+                                    array(field("playerId"), field("score")),
+                                    descending("score"))));
         });
     }
 

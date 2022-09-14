@@ -28,8 +28,8 @@ public class SortByCountResult {
     @Override
     public String toString() {
         return "SortByCountResult{"
-               + "id=" + id
-               + ", count=" + count
-               + '}';
+                + "id=" + id
+                + ", count=" + count
+                + '}';
     }
 }

@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.lazy;
 
-
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
@@ -18,7 +17,6 @@ import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertNotNull;
 
-
 @Test(groups = "references")
 public class LazyInEmbeddedTest extends TestBase {
     public void testLoadingOfRefInField() {
@@ -33,11 +31,11 @@ public class LazyInEmbeddedTest extends TestBase {
         getDs().save(asList(otherEntity, containerWithRefInField));
 
         otherEntity = getDs().find(OtherEntity.class)
-                             .filter(eq("_id", otherEntity.getId()))
-                             .first();
+                .filter(eq("_id", otherEntity.getId()))
+                .first();
         containerWithRefInField = getDs().find(ContainerWithRefInField.class)
-                                         .filter(eq("_id", containerWithRefInField.getId()))
-                                         .first();
+                .filter(eq("_id", containerWithRefInField.getId()))
+                .first();
         assertNotNull(otherEntity);
         assertNotNull(containerWithRefInField);
 
@@ -48,8 +46,8 @@ public class LazyInEmbeddedTest extends TestBase {
         getDs().save(containerWithRefInField);
 
         assertNotNull(getDs().find(ContainerWithRefInField.class)
-                             .filter(eq("_id", containerWithRefInField.getId()))
-                             .first());
+                .filter(eq("_id", containerWithRefInField.getId()))
+                .first());
 
     }
 
@@ -66,11 +64,11 @@ public class LazyInEmbeddedTest extends TestBase {
         getDs().save(asList(otherEntity, containerWithRefInList));
 
         otherEntity = getDs().find(OtherEntity.class)
-                             .filter(eq("_id", otherEntity.getId()))
-                             .first();
+                .filter(eq("_id", otherEntity.getId()))
+                .first();
         containerWithRefInList = getDs().find(ContainerWithRefList.class)
-                                        .filter(eq("_id", containerWithRefInList.getId()))
-                                        .first();
+                .filter(eq("_id", containerWithRefInList.getId()))
+                .first();
         assertNotNull(otherEntity);
         assertNotNull(containerWithRefInList);
 
@@ -81,8 +79,8 @@ public class LazyInEmbeddedTest extends TestBase {
         getDs().save(asList(otherEntity, containerWithRefInList));
 
         containerWithRefInList = getDs().find(ContainerWithRefList.class)
-                                        .filter(eq("_id", containerWithRefInList.getId()))
-                                        .first();
+                .filter(eq("_id", containerWithRefInList.getId()))
+                .first();
         assertNotNull(containerWithRefInList);
 
         final Query<ContainerWithRefList> createQuery = getDs().find(ContainerWithRefList.class);
@@ -104,11 +102,11 @@ public class LazyInEmbeddedTest extends TestBase {
         getDs().save(asList(otherEntity, containerWithRefInField));
 
         otherEntity = getDs().find(OtherEntityChild.class)
-                             .filter(eq("_id", otherEntity.getId()))
-                             .first();
+                .filter(eq("_id", otherEntity.getId()))
+                .first();
         ContainerWithRefInField reload = getDs().find(ContainerWithRefInField.class)
-                                                .filter(eq("_id", containerWithRefInField.getId()))
-                                                .first();
+                .filter(eq("_id", containerWithRefInField.getId()))
+                .first();
         assertNotNull(otherEntity);
         assertNotNull(reload);
 
@@ -118,11 +116,11 @@ public class LazyInEmbeddedTest extends TestBase {
 
         getDs().save(reload);
         getDs().find(ContainerWithRefInField.class)
-               .filter(eq("_id", reload.getId()))
-               .first();
+                .filter(eq("_id", reload.getId()))
+                .first();
         containerWithRefInField = getDs().find(ContainerWithRefInField.class)
-                                         .filter(eq("_id", containerWithRefInField.getId()))
-                                         .first();
+                .filter(eq("_id", containerWithRefInField.getId()))
+                .first();
         assertNotNull(containerWithRefInField);
 
     }
@@ -140,11 +138,11 @@ public class LazyInEmbeddedTest extends TestBase {
         getDs().save(asList(otherEntity, containerWithRefInList));
 
         otherEntity = getDs().find(OtherEntityChild.class)
-                             .filter(eq("_id", otherEntity.getId()))
-                             .first();
+                .filter(eq("_id", otherEntity.getId()))
+                .first();
         final ContainerWithRefList reload = getDs().find(ContainerWithRefList.class)
-                                                   .filter(eq("_id", containerWithRefInList.getId()))
-                                                   .first();
+                .filter(eq("_id", containerWithRefInList.getId()))
+                .first();
         assertNotNull(otherEntity);
         assertNotNull(reload);
 
@@ -155,8 +153,8 @@ public class LazyInEmbeddedTest extends TestBase {
         getDs().save(asList(otherEntity, reload));
 
         containerWithRefInList = getDs().find(ContainerWithRefList.class)
-                                        .filter(eq("_id", reload.getId()))
-                                        .first();
+                .filter(eq("_id", reload.getId()))
+                .first();
         assertNotNull(containerWithRefInList);
         final Query<ContainerWithRefList> createQuery = getDs().find(ContainerWithRefList.class);
         containerWithRefInList = createQuery.iterator(new FindOptions().limit(1)).tryNext();

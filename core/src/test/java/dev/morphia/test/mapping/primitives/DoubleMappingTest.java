@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.primitives;
 
-
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
@@ -19,20 +18,20 @@ public class DoubleMappingTest extends TestBase {
     public void testMapping() {
         getMapper().map(Doubles.class);
         final Doubles ent = new Doubles();
-        ent.listWrapperArray.add(new Double[]{1.1, 2.2});
-        ent.listPrimitiveArray.add(new double[]{2.0, 3.6, 12.4});
+        ent.listWrapperArray.add(new Double[] { 1.1, 2.2 });
+        ent.listPrimitiveArray.add(new double[] { 2.0, 3.6, 12.4 });
         ent.listWrapper.addAll(Arrays.asList(1.1, 2.2));
         ent.singlePrimitive = 100.0;
         ent.singleWrapper = 40.7;
-        ent.primitiveArray = new double[]{5.0, 93.5};
-        ent.wrapperArray = new Double[]{55.7, 16.2, 99.9999};
-        ent.nestedPrimitiveArray = new double[][]{{42.0, 49152.0}, {5.0, 93.5}};
-        ent.nestedWrapperArray = new Double[][]{{42.0, 49152.0}, {5.0, 93.5}};
+        ent.primitiveArray = new double[] { 5.0, 93.5 };
+        ent.wrapperArray = new Double[] { 55.7, 16.2, 99.9999 };
+        ent.nestedPrimitiveArray = new double[][] { { 42.0, 49152.0 }, { 5.0, 93.5 } };
+        ent.nestedWrapperArray = new Double[][] { { 42.0, 49152.0 }, { 5.0, 93.5 } };
         getDs().save(ent);
 
         final Doubles loaded = getDs().find(Doubles.class)
-                                      .filter(eq("_id", ent.id))
-                                      .first();
+                .filter(eq("_id", ent.id))
+                .first();
         Assert.assertNotNull(loaded.id);
 
         Assert.assertEquals(loaded.listWrapperArray.get(0), ent.listWrapperArray.get(0));

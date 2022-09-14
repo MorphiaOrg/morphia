@@ -11,9 +11,7 @@
  * and limitations under the License.
  */
 
-
 package dev.morphia.annotations;
-
 
 import dev.morphia.mapping.Mapper;
 
@@ -24,15 +22,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
  * Marks a type as eligible for mapping and embedding in entity types.
- * @deprecated It is now possible to use @Entity everywhere.  If a type is only for use as an embedded value, no @Id field is necessary.
+ *
+ * @deprecated It is now possible to use @Entity everywhere. If a type is only for use as an embedded value, no @Id field is necessary.
  */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 @Deprecated(since = "2.2")
 public @interface Embedded {
     /**

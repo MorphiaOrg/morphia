@@ -56,8 +56,8 @@ public class ObjectCodec implements Codec<Object> {
             clazz = bsonTypeClassMap.get(bsonType);
         }
         return datastore.getCodecRegistry()
-                        .get(clazz)
-                        .decode(reader, decoderContext);
+                .get(clazz)
+                .decode(reader, decoderContext);
     }
 
     @Override

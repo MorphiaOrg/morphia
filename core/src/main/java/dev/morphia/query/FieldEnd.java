@@ -191,7 +191,7 @@ public interface FieldEnd<T> {
 
     /**
      * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
-     * geometry intersects with the document shape.  This includes cases where the data and the specified object share an edge.
+     * geometry intersects with the document shape. This includes cases where the data and the specified object share an edge.
      *
      * @param geometry the shape to use to query for any stored shapes that intersect
      * @return T
@@ -206,7 +206,7 @@ public interface FieldEnd<T> {
 
     /**
      * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
-     * geometry intersects with the document shape.  This includes cases where the data and the specified object share an edge.
+     * geometry intersects with the document shape. This includes cases where the data and the specified object share an edge.
      *
      * @param geometry the shape to use to query for any stored shapes that intersect
      * @return T
@@ -220,7 +220,7 @@ public interface FieldEnd<T> {
 
     /**
      * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
-     * geometry intersects with the document shape.  This includes cases where the data and the specified object share an edge.
+     * geometry intersects with the document shape. This includes cases where the data and the specified object share an edge.
      *
      * @param geometry the shape to use to query for any stored shapes that intersect
      * @param crs      the coordinate reference system to use with the query
@@ -236,7 +236,7 @@ public interface FieldEnd<T> {
 
     /**
      * This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
-     * geometry intersects with the document shape.  This includes cases where the data and the specified object share an edge.
+     * geometry intersects with the document shape. This includes cases where the data and the specified object share an edge.
      *
      * @param geometry the shape to use to query for any stored shapes that intersect
      * @param crs      the coordinate reference system to use with the query
@@ -532,9 +532,9 @@ public interface FieldEnd<T> {
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @mongodb.server.release 2.4
      * @deprecated use {@link Filters#geoWithin(String, Polygon)}, {@link Filters#geoWithin(String, MultiPolygon)},
-     * {@link Filters#box(String, Point, Point)}, {@link Filters#center(String, Point, double)},
-     * {@link Filters#centerSphere(String, Point, double)}, or {@link Filters#polygon(String, Point[])} instead
-     * instead
+     *             {@link Filters#box(String, Point, Point)}, {@link Filters#center(String, Point, double)},
+     *             {@link Filters#centerSphere(String, Point, double)}, or {@link Filters#polygon(String, Point[])} instead
+     *             instead
      */
     @Deprecated(since = "2.0", forRemoval = true)
     T within(Shape shape);
@@ -657,7 +657,7 @@ public interface FieldEnd<T> {
      * These queries are only compatible with MongoDB 2.6 or greater.
      *
      * @param boundaries a multi-polygon describing the areas to search within.
-     * @param crs      the coordinate reference system to use
+     * @param crs        the coordinate reference system to use
      * @return T
      * @mongodb.driver.manual reference/operator/query/geoWithin/ $geoWithin
      * @deprecated use {@link Filters#geoWithin(String, MultiPolygon)} instead

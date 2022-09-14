@@ -31,7 +31,7 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
 /**
- * Defines a Creator that uses a full constructor to create an instance rather than field injection.  This requires that a class have a
+ * Defines a Creator that uses a full constructor to create an instance rather than field injection. This requires that a class have a
  * constructor that accepts a parameter for each mapped field on the class.
  *
  * @morphia.internal
@@ -80,30 +80,30 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     public static Constructor<?> bestConstructor(EntityModel model) {
         var propertyMap = new TreeMap<String, Class<?>>();
         model.getProperties()
-             .forEach(it -> propertyMap.put(it.getName(), it.getType()));
+                .forEach(it -> propertyMap.put(it.getName(), it.getType()));
 
         var constructors = asList(model.getType().getDeclaredConstructors());
 
         if (hasLifecycleEvents(model)) {
             return constructors.stream()
-                               .filter(it -> it.getParameters().length == 0)
-                               .findFirst()
-                               .orElseThrow(() -> new IllegalStateException("A type with lifecycle events must have a no-arg constructor"));
+                    .filter(it -> it.getParameters().length == 0)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("A type with lifecycle events must have a no-arg constructor"));
         }
 
         return constructors.stream()
-                           .filter(it -> stream(it.getParameters())
-                               .allMatch(param -> Objects.equals(propertyMap.get(getParameterName(param)), param.getType())))
-                           .sorted((o1, o2) -> compare(o2.getParameterCount(), o1.getParameterCount()))
-                           .findFirst()
-                           .orElse(null);
+                .filter(it -> stream(it.getParameters())
+                        .allMatch(param -> Objects.equals(propertyMap.get(getParameterName(param)), param.getType())))
+                .sorted((o1, o2) -> compare(o2.getParameterCount(), o1.getParameterCount()))
+                .findFirst()
+                .orElse(null);
     }
 
     private static boolean hasLifecycleEvents(EntityModel model) {
         return model.hasLifecycle(PreLoad.class)
-               || model.hasLifecycle(PostLoad.class)
-               || model.hasLifecycle(PrePersist.class)
-               || model.hasLifecycle(PostPersist.class);
+                || model.hasLifecycle(PostLoad.class)
+                || model.hasLifecycle(PrePersist.class)
+                || model.hasLifecycle(PostPersist.class);
     }
 
     @Override

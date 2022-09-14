@@ -70,8 +70,8 @@ public abstract class TestBase {
 
     public TestBase() {
         mapperOptions = MapperOptions.builder()
-                                     .codecProvider(new ZDTCodecProvider())
-                                     .build();
+                .codecProvider(new ZDTCodecProvider())
+                .build();
     }
 
     public TestBase(MapperOptions mapperOptions) {
@@ -119,7 +119,7 @@ public abstract class TestBase {
     private void startMongo() {
         String mongodb = System.getenv("MONGODB");
         Builder builder = MongoClientSettings.builder()
-                                             .uuidRepresentation(mapperOptions.getUuidRepresentation());
+                .uuidRepresentation(mapperOptions.getUuidRepresentation());
 
         if (mongodb != null) {
             File mongodbRoot = new File("target/mongo");
@@ -130,10 +130,10 @@ public abstract class TestBase {
             }
             Version version = Version.valueOf(mongodb);
             final MongoCluster cluster = new ClusterBuilder(REPLICA_SET)
-                                             .baseDir(mongodbRoot)
-                                             .name("morphia_test")
-                                             .version(version)
-                                             .build();
+                    .baseDir(mongodbRoot)
+                    .name("morphia_test")
+                    .version(version)
+                    .build();
 
             cluster.configure(c -> {
                 c.systemLog(s -> {
@@ -170,7 +170,7 @@ public abstract class TestBase {
                 MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
                 zipcodes.drop();
                 Files.lines(file.toPath())
-                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
+                        .forEach(l -> zipcodes.insertOne(Document.parse(l)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -197,17 +197,17 @@ public abstract class TestBase {
 
     @DataProvider(name = "mapperOptions")
     public Object[][] mapperOptions() {
-        return new Object[][]{
-            new Object[]{MapperOptions.DEFAULT},
-            new Object[]{MapperOptions.legacy().build()}
+        return new Object[][] {
+                new Object[] { MapperOptions.DEFAULT },
+                new Object[] { MapperOptions.legacy().build() }
         };
     }
 
     @DataProvider(name = "queryFactories")
     public Object[][] queryFactories() {
-        return new Object[][]{
-            new Object[]{new DefaultQueryFactory()},
-            new Object[]{new LegacyQueryFactory()}
+        return new Object[][] {
+                new Object[] { new DefaultQueryFactory() },
+                new Object[] { new LegacyQueryFactory() }
         };
     }
 
@@ -233,7 +233,7 @@ public abstract class TestBase {
     protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
         assertEquals(actual.size(), expected.size());
         expected.forEach(
-            d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
+                d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
     }
 
     public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
@@ -256,7 +256,7 @@ public abstract class TestBase {
 
     private Document runIsMaster() {
         return mongoClient.getDatabase("admin")
-                          .runCommand(new Document("ismaster", 1));
+                .runCommand(new Document("ismaster", 1));
     }
 
     protected void checkMinDriverVersion(double version) {
@@ -265,7 +265,7 @@ public abstract class TestBase {
 
     protected void checkMinDriverVersion(Version version) {
         assumeTrue(driverIsAtLeastVersion(version),
-            String.format("Server should be at least %s but found %s", version, getServerVersion()));
+                String.format("Server should be at least %s but found %s", version, getServerVersion()));
     }
 
     /**
@@ -280,9 +280,9 @@ public abstract class TestBase {
 
     protected Version getServerVersion() {
         String version = (String) getMongoClient()
-                                      .getDatabase("admin")
-                                      .runCommand(new Document("serverStatus", 1))
-                                      .get("version");
+                .getDatabase("admin")
+                .runCommand(new Document("serverStatus", 1))
+                .get("version");
         return Version.valueOf(version);
     }
 
@@ -292,7 +292,7 @@ public abstract class TestBase {
 
     protected void checkMinServerVersion(Version version) {
         assumeTrue(serverIsAtLeastVersion(version),
-            String.format("Server should be at least %s but found %s", version, getServerVersion()));
+                String.format("Server should be at least %s but found %s", version, getServerVersion()));
     }
 
     protected int count(MongoCursor<?> cursor) {
@@ -323,8 +323,8 @@ public abstract class TestBase {
         DocumentReader reader = new DocumentReader(document);
 
         return getDs().getCodecRegistry()
-                      .get(aClass)
-                      .decode(reader, DecoderContext.builder().build());
+                .get(aClass)
+                .decode(reader, DecoderContext.builder().build());
     }
 
     protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
@@ -339,13 +339,13 @@ public abstract class TestBase {
     protected Document getOptions(Class<?> type) {
         String collection = getMapper().getEntityModel(type).getCollectionName();
         Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
-                                                       .append("filter",
-                                                           new Document("name", collection)));
+                .append("filter",
+                        new Document("name", collection)));
 
         Document cursor = (Document) result.get("cursor");
         return (Document) cursor.getList("firstBatch", Document.class)
-                                .get(0)
-                                .get("options");
+                .get(0)
+                .get("options");
     }
 
     protected void insert(String collectionName, List<Document> list) {
@@ -359,8 +359,8 @@ public abstract class TestBase {
 
     protected List<Document> removeIds(List<Document> documents) {
         return documents.stream()
-                        .peek(d -> d.remove("_id"))
-                        .collect(Collectors.toList());
+                .peek(d -> d.remove("_id"))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -406,7 +406,7 @@ public abstract class TestBase {
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void assertDocumentEquals(String path, Object actual, Object expected) {
         assertSameNullity(path, expected, actual);
         if (expected == null) {
@@ -450,7 +450,7 @@ public abstract class TestBase {
 
     private void assertSameNullity(String path, Object expected, Object actual) {
         if (expected == null && actual != null
-            || actual == null && expected != null) {
+                || actual == null && expected != null) {
             assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }

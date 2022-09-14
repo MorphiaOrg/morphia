@@ -19,8 +19,9 @@ package taglets;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.UnknownBlockTagTree;
 
-import javax.lang.model.element.Element;
 import java.util.List;
+
+import javax.lang.model.element.Element;
 
 /**
  * Provides a taglet for linking to the MongoDB manual pages
@@ -58,4 +59,3 @@ public class UpdateOperatorTaglet extends ManualTaglet {
     }
 
 }
-

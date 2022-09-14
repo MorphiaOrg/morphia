@@ -1,14 +1,13 @@
 package dev.morphia.validation;
 
-
 import dev.morphia.EntityInterceptor;
 import dev.morphia.mapping.Mapper;
-import jakarta.validation.Validation;
-import jakarta.validation.ValidatorFactory;
 import org.bson.Document;
 
 import java.util.Set;
 
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 
 /**
  * Enables jakarta.validation support.
@@ -23,8 +22,8 @@ public class ValidationExtension implements EntityInterceptor {
      */
     public ValidationExtension() {
         validationFactory = Validation.byDefaultProvider()
-                                      .configure()
-                                      .buildValidatorFactory();
+                .configure()
+                .buildValidatorFactory();
     }
 
     @Override

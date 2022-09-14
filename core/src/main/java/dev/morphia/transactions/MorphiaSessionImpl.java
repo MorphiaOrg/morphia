@@ -100,7 +100,9 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
     @Override
     public <T> T withTransaction(TransactionBody<T> transactionBody) {
         return session.withTransaction(transactionBody);
-    }    @Override
+    }
+
+    @Override
     public BsonTimestamp getSnapshotTimestamp() {
         return session.getSnapshotTimestamp();
     }
@@ -228,36 +230,34 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
         @Override
         public Document runCommand(Document command) {
             return getMongoClient()
-                       .getDatabase("admin")
-                       .runCommand(session, command);
+                    .getDatabase("admin")
+                    .runCommand(session, command);
         }
 
         @Override
         public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
-                                           UpdateOptions options) {
+                UpdateOptions options) {
             return collection.updateMany(session, queryObject, updateOperations, options);
         }
 
         @Override
         public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
-                                           UpdateOptions options) {
+                UpdateOptions options) {
             return collection.updateMany(session, queryObject, updateOperations, options);
         }
 
         @Override
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, Document updateOperations,
-                                          UpdateOptions options) {
+                UpdateOptions options) {
             return collection.updateOne(session, queryObject, updateOperations, options);
         }
 
         @Override
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
-                                          UpdateOptions options) {
+                UpdateOptions options) {
             return collection.updateOne(session, queryObject, updateOperations, options);
         }
     }
-
-
 
     @Override
     public void setSnapshotTimestamp(BsonTimestamp bsonTimestamp) {

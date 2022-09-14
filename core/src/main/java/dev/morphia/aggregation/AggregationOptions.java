@@ -70,8 +70,8 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
             bound = bound.withReadPreference(readPreference);
         }
         AggregateIterable<S> aggregate = bound.aggregate(documents, resultType)
-                                              .allowDiskUse(allowDiskUse)
-                                              .bypassDocumentValidation(bypassDocumentValidation);
+                .allowDiskUse(allowDiskUse)
+                .bypassDocumentValidation(bypassDocumentValidation);
         if (batchSize != null) {
             aggregate.batchSize(batchSize);
         }
@@ -259,16 +259,16 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     @Override
     public String toString() {
         return new StringBuilder("AggregationOptions{")
-                   .append("allowDiskUse=").append(allowDiskUse)
-                   .append(", batchSize=").append(batchSize)
-                   .append(", bypassDocumentValidation=").append(bypassDocumentValidation)
-                   .append(", collation=").append(collation)
-                   .append(", maxTimeMS=").append(maxTimeMS)
-                   .append(", readPreference=").append(readPreference)
-                   .append(", readConcern=").append(readConcern)
-                   .append(", writeConcern=").append(writeConcern)
-                   .append(", hint=").append(hint)
-                   .append('}')
-                   .toString();
+                .append("allowDiskUse=").append(allowDiskUse)
+                .append(", batchSize=").append(batchSize)
+                .append(", bypassDocumentValidation=").append(bypassDocumentValidation)
+                .append(", collation=").append(collation)
+                .append(", maxTimeMS=").append(maxTimeMS)
+                .append(", readPreference=").append(readPreference)
+                .append(", readConcern=").append(readConcern)
+                .append(", writeConcern=").append(writeConcern)
+                .append(", hint=").append(hint)
+                .append('}')
+                .toString();
     }
 }

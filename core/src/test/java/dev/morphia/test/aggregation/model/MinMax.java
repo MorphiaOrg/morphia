@@ -26,8 +26,8 @@ public class MinMax {
     @Override
     public String toString() {
         return "MinMax{"
-               + "min=" + min
-               + ", max=" + max
-               + '}';
+                + "min=" + min
+                + ", max=" + max
+                + '}';
     }
 }

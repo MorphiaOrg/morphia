@@ -52,7 +52,7 @@ public class ZipExpression extends Expression {
     }
 
     /**
-     * Specifies whether the length of the longest array determines the number of arrays in the output array.  The default on the server
+     * Specifies whether the length of the longest array determines the number of arrays in the output array. The default on the server
      * is false.
      *
      * @param useLongestLength true to use the longest length

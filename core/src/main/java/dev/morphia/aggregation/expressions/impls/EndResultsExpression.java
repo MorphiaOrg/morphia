@@ -1,11 +1,9 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.Datastore;
-import dev.morphia.query.Sort;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 

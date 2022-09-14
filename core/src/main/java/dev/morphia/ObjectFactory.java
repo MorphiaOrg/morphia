@@ -22,18 +22,18 @@ public interface ObjectFactory {
     <T> T createInstance(Class<T> clazz);
 
     /**
-     * Creates an instance of the class defined in the discriminator field in the document passed in.  If that field
+     * Creates an instance of the class defined in the discriminator field in the document passed in. If that field
      * is missing, the given Class is used instead.
      *
-     * @param clazz type class to instantiate
+     * @param clazz    type class to instantiate
      * @param document the state to populate the new instance with
-     * @param <T>   the type of the entity
+     * @param <T>      the type of the entity
      * @return the new instance
      */
     <T> T createInstance(Class<T> clazz, Document document);
 
     /**
-     * Creates an instance of the class defined in the discriminator field in the document passed in.  If that field
+     * Creates an instance of the class defined in the discriminator field in the document passed in. If that field
      * is missing, morphia attempts to the MappedField to determine which concrete class to instantiate.
      *
      * @param mapper   the Mapper to use

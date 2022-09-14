@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.firstN;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
-import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -20,14 +19,14 @@ public class TestFirstN extends AggregationTest {
     public void testComputedN() {
         testPipeline(5.2, "computedN", false, false, (aggregation) -> {
             return aggregation
-                       .group(group(id()
-                                        .field("gameId", field("gameId")))
-                                  .field("gamescores", firstN(
-                                      condition(
-                                          ComparisonExpressions.eq(field("gameId"), value("G2")),
-                                          value(1),
-                                          value(3)),
-                                      field("score"))));
+                    .group(group(id()
+                            .field("gameId", field("gameId")))
+                            .field("gamescores", firstN(
+                                    condition(
+                                            ComparisonExpressions.eq(field("gameId"), value("G2")),
+                                            value(1),
+                                            value(3)),
+                                    field("score"))));
         });
     }
 
@@ -35,11 +34,11 @@ public class TestFirstN extends AggregationTest {
     public void testSingleGame() {
         testPipeline(5.2, "singleGame", false, false, (aggregation) -> {
             return aggregation
-                       .match(eq("gameId", "G1"))
-                       .group(group(id(field("gameId")))
-                                  .field("firstThreeScores", firstN(
-                                      value(3),
-                                      array(field("playerId"), field("score")))));
+                    .match(eq("gameId", "G1"))
+                    .group(group(id(field("gameId")))
+                            .field("firstThreeScores", firstN(
+                                    value(3),
+                                    array(field("playerId"), field("score")))));
         });
 
     }
@@ -48,10 +47,10 @@ public class TestFirstN extends AggregationTest {
     public void testAcrossGames() {
         testPipeline(5.2, "acrossGames", false, false, (aggregation) -> {
             return aggregation
-                       .group(group(id("$gameId"))
-                                  .field("playerId", firstN(
-                                      value(3),
-                                      array(field("playerId"), field("score")))));
+                    .group(group(id("$gameId"))
+                            .field("playerId", firstN(
+                                    value(3),
+                                    array(field("playerId"), field("score")))));
         });
 
     }
@@ -60,12 +59,12 @@ public class TestFirstN extends AggregationTest {
     public void testSortedScores() {
         testPipeline(5.2, "sortedScores", false, false, (aggregation) -> {
             return aggregation
-                       .sort(sort()
-                                 .descending("score"))
-                       .group(group(id("$gameId"))
-                                  .field("playerId", firstN(
-                                      value(3),
-                                      array(field("playerId"), field("score")))));
+                    .sort(sort()
+                            .descending("score"))
+                    .group(group(id("$gameId"))
+                            .field("playerId", firstN(
+                                    value(3),
+                                    array(field("playerId"), field("score")))));
         });
 
     }

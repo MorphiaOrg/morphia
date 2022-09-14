@@ -11,9 +11,7 @@
  * and limitations under the License.
  */
 
-
 package dev.morphia.annotations;
-
 
 import dev.morphia.mapping.Mapper;
 
@@ -24,7 +22,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
  * Optional annotation for specifying persistence behavior
  *
@@ -34,7 +31,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ ElementType.FIELD, ElementType.METHOD })
 public @interface Property {
 
     /**
@@ -43,7 +40,7 @@ public @interface Property {
     Class<?> concreteClass() default Object.class;
 
     /**
-     * @return the field name to use in the document.  Defaults to the java field name.
+     * @return the field name to use in the document. Defaults to the java field name.
      */
     String value() default Mapper.IGNORED_FIELDNAME;
 }

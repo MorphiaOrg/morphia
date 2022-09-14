@@ -207,19 +207,19 @@ public class TestIndexes extends TestBase {
         for (Document document : indexInfo) {
             if (document.get("name").equals("collated")) {
                 assertEquals(document.get("partialFilterExpression"),
-                    parse("{ name : { $exists : true } }"));
+                        parse("{ name : { $exists : true } }"));
                 Document collation = (Document) document.get("collation");
                 collation.remove("version");
 
                 Document parse = parse("{ 'locale': 'en_US', "
-                                       + "'alternate': 'shifted',"
-                                       + "'backwards': true,"
-                                       + "'caseFirst': 'upper',"
-                                       + "'caseLevel': true,"
-                                       + "'maxVariable': 'space',"
-                                       + "'normalization': true,"
-                                       + "'numericOrdering': true,"
-                                       + "'strength': 5 }");
+                        + "'alternate': 'shifted',"
+                        + "'backwards': true,"
+                        + "'caseFirst': 'upper',"
+                        + "'caseLevel': true,"
+                        + "'maxVariable': 'space',"
+                        + "'normalization': true,"
+                        + "'numericOrdering': true,"
+                        + "'strength': 5 }");
                 assertEquals(collation, parse, collation.toJson());
             }
         }
@@ -243,11 +243,11 @@ public class TestIndexes extends TestBase {
     @Test
     public void testMethodMapping() {
         withOptions(MapperOptions.builder().propertyDiscovery(PropertyDiscovery.METHODS).build(),
-            () -> {
-                getMapper().map(MethodMappedUser.class);
-                getDs().ensureIndexes(MethodMappedUser.class);
-                assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3);
-            });
+                () -> {
+                    getMapper().map(MethodMappedUser.class);
+                    getDs().ensureIndexes(MethodMappedUser.class);
+                    assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3);
+                });
     }
 
     @Test
@@ -328,8 +328,8 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity
-    @Indexes(@Index(fields = {@Field("active"), @Field(value = "lastModified", type = IndexType.DESC)},
-        options = @IndexOptions(unique = true)))
+    @Indexes(@Index(fields = { @Field("active"),
+            @Field(value = "lastModified", type = IndexType.DESC) }, options = @IndexOptions(unique = true)))
     private static class Ad2 {
         @Id
         private long id;
@@ -369,10 +369,9 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity
-    @Indexes(@Index(fields = {@Field(value = "name", type = TEXT),
-                              @Field(value = "nick", type = TEXT, weight = 10),
-                              @Field(value = "age")}, options = @IndexOptions(name = "indexing_test", language = "russian",
-        languageOverride = "nativeTongue")))
+    @Indexes(@Index(fields = { @Field(value = "name", type = TEXT),
+            @Field(value = "nick", type = TEXT, weight = 10),
+            @Field(value = "age") }, options = @IndexOptions(name = "indexing_test", language = "russian", languageOverride = "nativeTongue")))
     private static class CompoundTextIndex {
         @Id
         private ObjectId id;
@@ -384,9 +383,8 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity
-    @Indexes(@Index(fields = {@Field("actor.actorObject.userId"), @Field(value = "actor.actorType", type = DESC)},
-        options = @IndexOptions(disableValidation = true,
-            partialFilter = "{ 'actor.actorObject.userId': { $exists: true }, 'actor.actorType': { $exists: true } }")))
+    @Indexes(@Index(fields = { @Field("actor.actorObject.userId"),
+            @Field(value = "actor.actorType", type = DESC) }, options = @IndexOptions(disableValidation = true, partialFilter = "{ 'actor.actorObject.userId': { $exists: true }, 'actor.actorType': { $exists: true } }")))
     private static class FeedEvent {
         @Id
         private ObjectId id;
@@ -417,8 +415,8 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity
-    @Indexes({@Index(fields = @Field(value = "name", type = TEXT)),
-              @Index(fields = @Field(value = "nickName", type = TEXT))})
+    @Indexes({ @Index(fields = @Field(value = "name", type = TEXT)),
+            @Index(fields = @Field(value = "nickName", type = TEXT)) })
     private static class MultipleTextIndexes {
         @Id
         private ObjectId id;
@@ -481,8 +479,7 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity(useDiscriminator = false)
-    @Indexes({@Index(options = @IndexOptions(background = true),
-        fields = @Field("name"))})
+    @Indexes({ @Index(options = @IndexOptions(background = true), fields = @Field("name")) })
     private static class TestWithDeprecatedIndex {
         @Id
         private ObjectId id;
@@ -491,7 +488,7 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity(useDiscriminator = false)
-    @Indexes({@Index(options = @IndexOptions(), fields = {@Field(value = "hashedValue", type = IndexType.HASHED)})})
+    @Indexes({ @Index(options = @IndexOptions(), fields = { @Field(value = "hashedValue", type = IndexType.HASHED) }) })
     private static class TestWithHashedIndex {
         @Id
         private ObjectId id;
@@ -500,13 +497,9 @@ public class TestIndexes extends TestBase {
     }
 
     @Entity(useDiscriminator = false)
-    @Indexes({@Index(options = @IndexOptions(name = "collated",
-        partialFilter = "{ name : { $exists : true } }",
-        collation = @Collation(locale = "en_US", alternate = SHIFTED, backwards = true,
-            caseFirst = CollationCaseFirst.UPPER, caseLevel = true, maxVariable = CollationMaxVariable.SPACE, normalization = true,
-            numericOrdering = true, strength = CollationStrength.IDENTICAL),
-        background = true),
-        fields = {@Field(value = "name")})})
+    @Indexes({
+            @Index(options = @IndexOptions(name = "collated", partialFilter = "{ name : { $exists : true } }", collation = @Collation(locale = "en_US", alternate = SHIFTED, backwards = true, caseFirst = CollationCaseFirst.UPPER, caseLevel = true, maxVariable = CollationMaxVariable.SPACE, normalization = true, numericOrdering = true, strength = CollationStrength.IDENTICAL), background = true), fields = {
+                    @Field(value = "name") }) })
     private static class TestWithIndexOption {
         @Id
         private ObjectId id;

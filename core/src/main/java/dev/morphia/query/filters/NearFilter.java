@@ -46,6 +46,7 @@ public class NearFilter extends Filter {
 
     /**
      * Sets the min distance to consider
+     *
      * @param minDistance the min
      * @return this
      */

@@ -30,7 +30,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = morphiaCodec.getEntityModel();
         if (areEquivalentTypes(value.getClass(), model.getType())) {
@@ -52,8 +52,8 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
             });
         } else {
             morphiaCodec.getRegistry()
-                        .get((Class) value.getClass())
-                        .encode(writer, value, encoderContext);
+                    .get((Class) value.getClass())
+                    .encode(writer, value, encoderContext);
         }
     }
 
@@ -64,8 +64,8 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
 
     protected <S, V> boolean areEquivalentTypes(Class<S> t1, Class<V> t2) {
         return t1.equals(t2)
-               || Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)
-               || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
+                || Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)
+                || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
     }
 
     protected void encodeDiscriminator(BsonWriter writer, EntityModel model) {

@@ -20,16 +20,17 @@ public class TestCollation extends AggregationTest {
         getDs().save(asList(new User("john doe", LocalDate.now()), new User("John Doe", LocalDate.now())));
 
         Aggregation<User> pipeline = getDs()
-                                         .aggregate(User.class)
-                                         .match(eq("name", "john doe"));
+                .aggregate(User.class)
+                .match(eq("name", "john doe"));
         assertEquals(count(pipeline.execute(User.class)), 1);
 
         assertEquals(count(pipeline.execute(User.class,
-            new AggregationOptions()
-                .collation(Collation.builder()
-                                    .locale("en")
-                                    .collationStrength(SECONDARY)
-                                    .build()))), 2);
+                new AggregationOptions()
+                        .collation(Collation.builder()
+                                .locale("en")
+                                .collationStrength(SECONDARY)
+                                .build()))),
+                2);
     }
 
 }

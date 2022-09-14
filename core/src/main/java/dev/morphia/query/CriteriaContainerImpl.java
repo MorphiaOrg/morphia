@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;

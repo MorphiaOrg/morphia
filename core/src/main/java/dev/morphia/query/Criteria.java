@@ -1,11 +1,9 @@
 package dev.morphia.query;
 
-
 import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.Document;
 
 import static dev.morphia.query.MorphiaQuery.legacyOperation;
-
 
 /**
  * Internal class for building up query documents.

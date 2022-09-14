@@ -21,8 +21,8 @@ public class DiscriminantLifecycleTest extends TestBase {
     @DataProvider(name = "classes")
     public Object[][] classes() {
         return new Object[][] {
-                {BaseLifecycleEntity.class, ChildLifecycleEntity.class},
-                {BaseEntity.class, ChildEntity.class}
+                { BaseLifecycleEntity.class, ChildLifecycleEntity.class },
+                { BaseEntity.class, ChildEntity.class }
         };
     }
 
@@ -58,6 +58,7 @@ public class DiscriminantLifecycleTest extends TestBase {
 
     interface Child {
         boolean getAudited();
+
         Embed getEmbed();
     }
 
@@ -75,7 +76,7 @@ public class DiscriminantLifecycleTest extends TestBase {
         }
     }
 
-    static class ChildLifecycleEntity extends BaseLifecycleEntity implements Child{
+    static class ChildLifecycleEntity extends BaseLifecycleEntity implements Child {
         Embed embed;
 
         @Override
@@ -97,7 +98,7 @@ public class DiscriminantLifecycleTest extends TestBase {
         boolean audited = true;
     }
 
-    static class ChildEntity extends BaseEntity implements Child{
+    static class ChildEntity extends BaseEntity implements Child {
         Embed embed;
 
         @Override
@@ -110,7 +111,6 @@ public class DiscriminantLifecycleTest extends TestBase {
             return embed;
         }
     }
-
 
     @Entity
     static class Embed {

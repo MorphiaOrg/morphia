@@ -24,7 +24,7 @@ import org.bson.BsonValue;
 import org.bson.conversions.Bson;
 
 /**
- * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.
+ * Options related to insertion of documents into MongoDB. The setter methods return {@code this} so that a chaining style can be used.
  *
  * @since 2.3
  */
@@ -111,7 +111,7 @@ public class ReplaceOptions extends com.mongodb.client.model.ReplaceOptions impl
     }
 
     /**
-     * The write concern to use for the insertion.  By default, the write concern configured for the MongoCollection instance will be used.
+     * The write concern to use for the insertion. By default, the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern or null if the default will be used.
      */

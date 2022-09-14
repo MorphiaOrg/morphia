@@ -15,15 +15,14 @@ public class TestSortByCount extends AggregationTest {
     @Test
     public void testSortByCount() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
-            new Book("Divine Comedy", "Dante", 1),
-            new Book("Eclogues", "Dante", 2),
-            new Book("The Odyssey", "Homer", 10),
-            new Book("Iliad", "Homer", 10)));
-
+                new Book("Divine Comedy", "Dante", 1),
+                new Book("Eclogues", "Dante", 2),
+                new Book("The Odyssey", "Homer", 10),
+                new Book("Iliad", "Homer", 10)));
 
         Iterator<SortByCountResult> aggregate = getDs().aggregate(Book.class)
-                                                       .sortByCount(field("author"))
-                                                       .execute(SortByCountResult.class);
+                .sortByCount(field("author"))
+                .execute(SortByCountResult.class);
         SortByCountResult result1 = aggregate.next();
         Assert.assertEquals(result1.getId(), "Dante");
         Assert.assertEquals(result1.getCount(), 3);

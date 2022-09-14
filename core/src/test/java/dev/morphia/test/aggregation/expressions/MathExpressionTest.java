@@ -85,7 +85,7 @@ public class MathExpressionTest extends ExpressionsTestBase {
     @Test
     public void testSubtract() {
         assertAndCheckDocShape("{ $subtract: [ { $add: [ 4 , 5 ] }, 6 ] }",
-            MathExpressions.subtract(MathExpressions.add(value(4), value(5)), value(6)), 3);
+                MathExpressions.subtract(MathExpressions.add(value(4), value(5)), value(6)), 3);
     }
 
     @Test

@@ -4,6 +4,7 @@ import org.bson.BsonReaderMark;
 
 /**
  * A bookmark for processing Documents
+ *
  * @see DocumentReader
  */
 public class Mark implements BsonReaderMark {

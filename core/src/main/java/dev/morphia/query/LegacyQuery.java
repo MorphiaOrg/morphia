@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-
 import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -39,14 +38,13 @@ import static dev.morphia.query.UpdateBase.coalesce;
 import static java.lang.String.format;
 import static java.util.List.of;
 
-
 /**
  * Implementation of Query
  *
  * @param <T> The type we will be querying for, and returning.
  * @morphia.internal
  */
-@SuppressWarnings({"removal", "deprecation"})
+@SuppressWarnings({ "removal", "deprecation" })
 @MorphiaInternal
 public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
@@ -161,17 +159,17 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
         MongoCollection<T> collection = datastore.configureCollection(options, this.collection);
         return tryInvoke(DriverVersion.v4_2_0,
-            () -> {
-                return verbosity == null
-                       ? iterable(options, collection).explain()
-                       : iterable(options, collection).explain(verbosity);
-            },
-            () -> {
-                return new LinkedHashMap<>(datastore.getDatabase()
-                                                    .runCommand(new Document("explain",
-                                                        new Document("find", collection.getNamespace().getCollectionName())
-                                                            .append("filter", getQueryDocument()))));
-            });
+                () -> {
+                    return verbosity == null
+                            ? iterable(options, collection).explain()
+                            : iterable(options, collection).explain(verbosity);
+                },
+                () -> {
+                    return new LinkedHashMap<>(datastore.getDatabase()
+                            .runCommand(new Document("explain",
+                                    new Document("find", collection.getNamespace().getCollectionName())
+                                            .append("filter", getQueryDocument()))));
+                });
     }
 
     @Override
@@ -205,11 +203,11 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         if (lastOptions.isLogQuery()) {
             String json = "{}";
             Document first = datastore.getDatabase()
-                                      .getCollection("system.profile")
-                                      .find(new Document("command.comment", "logged query: " + lastOptions.queryLogId()),
-                                          Document.class)
-                                      .projection(new Document("command.filter", 1))
-                                      .first();
+                    .getCollection("system.profile")
+                    .find(new Document("command.comment", "logged query: " + lastOptions.queryLogId()),
+                            Document.class)
+                    .projection(new Document("command.filter", 1))
+                    .first();
             if (first != null) {
                 Document command = (Document) first.get("command");
                 Document filter = (Document) command.get("filter");
@@ -239,7 +237,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         final FilterOperator op = (parts.length == 2) ? translate(parts[1]) : FilterOperator.EQUAL;
 
         add(new FieldCriteria(datastore, prop, op, value, datastore.getMapper().getEntityModel(this.getEntityClass()),
-            this.isValidatingNames()));
+                this.isValidatingNames()));
 
         return this;
     }
@@ -280,7 +278,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public T modify(ModifyOptions options, UpdateOperator... updates) {
         return new Modify<>(datastore, datastore.configureCollection(options, collection), this, type, of(updates))
-                   .execute(options);
+                .execute(options);
     }
 
     @Override
@@ -291,12 +289,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public MorphiaKeyCursor<T> keys(FindOptions options) {
         FindOptions returnKey = new FindOptions().copy(options)
-                                                 .projection()
-                                                 .include("_id");
+                .projection()
+                .include("_id");
 
         return new MorphiaKeyCursor<>(prepareCursor(returnKey,
-            datastore.getDatabase().getCollection(getCollectionName())), datastore,
-            type, getCollectionName());
+                datastore.getDatabase().getCollection(getCollectionName())), datastore,
+                type, getCollectionName());
     }
 
     @Override
@@ -313,7 +311,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public Query<T> search(String search, String language) {
         this.criteria("$text").equal(new Document("$search", search)
-            .append("$language", language));
+                .append("$language", language));
         return this;
     }
 
@@ -349,13 +347,13 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public UpdateResult update(UpdateOptions options, Stage... updates) {
         return new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, of(updates))
-                   .execute(options);
+                .execute(options);
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
         return new Update<>(datastore, datastore.configureCollection(options, collection), this, type, of(updates))
-                   .execute(options);
+                .execute(options);
     }
 
     /**
@@ -385,12 +383,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
         final LegacyQuery<?> query = (LegacyQuery<?>) o;
         return validateName == query.validateName
-               && validateType == query.validateType
-               && Objects.equals(type, query.type)
-               && Objects.equals(baseQuery, query.baseQuery)
-               && Objects.equals(getOptions(), query.getOptions())
-               && Objects.equals(compoundContainer, query.compoundContainer)
-               && Objects.equals(getCollectionName(), query.getCollectionName());
+                && validateType == query.validateType
+                && Objects.equals(type, query.type)
+                && Objects.equals(baseQuery, query.baseQuery)
+                && Objects.equals(getOptions(), query.getOptions())
+                && Objects.equals(compoundContainer, query.compoundContainer)
+                && Objects.equals(getCollectionName(), query.getCollectionName());
     }
 
     /**
@@ -416,8 +414,8 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         EntityModel model = datastore.getMapper().getEntityModel(getEntityClass());
         Entity entityAnnotation = model.getEntityAnnotation();
         if (entityAnnotation != null && entityAnnotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(model.getDiscriminatorKey())) {
+                && !query.containsKey("_id")
+                && !query.containsKey(model.getDiscriminatorKey())) {
 
             List<EntityModel> subtypes = datastore.getMapper().getEntityModel(getEntityClass()).getSubtypes();
             List<String> values = new ArrayList<>();
@@ -426,7 +424,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                 values.add(subtype.getDiscriminator());
             }
             query.put(model.getDiscriminatorKey(),
-                new Document("$in", values));
+                    new Document("$in", values));
         }
         return query;
     }
@@ -434,7 +432,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public String toString() {
         return getOptions().getProjection() == null ? getQueryDocument().toString()
-                                                    : format("{ %s, %s }", getQueryDocument(), getFieldsObject());
+                : format("{ %s, %s }", getQueryDocument(), getFieldsObject());
     }
 
     /**
@@ -482,7 +480,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
 
         if ((options.cursorType() != null && options.cursorType() != NonTailable)
-            && (options.sort() != null)) {
+                && (options.sort() != null)) {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
@@ -497,13 +495,13 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         }
         try {
             return options
-                .apply(iterable(options, collection), datastore.getMapper(), type)
-                .iterator();
+                    .apply(iterable(options, collection), datastore.getMapper(), type)
+                    .iterator();
         } finally {
             if (options.isLogQuery()) {
                 datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
-                    .append("slowms", oldProfile.get("slowms"))
-                    .append("sampleRate", oldProfile.get("sampleRate")));
+                        .append("slowms", oldProfile.get("slowms"))
+                        .append("sampleRate", oldProfile.get("sampleRate")));
             }
 
         }

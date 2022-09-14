@@ -50,7 +50,6 @@ public class ListReference<T> extends CollectionReference<List<T>> {
         resolve();
     }
 
-
     @Override
     public List<T> get() {
         if (values == null) {

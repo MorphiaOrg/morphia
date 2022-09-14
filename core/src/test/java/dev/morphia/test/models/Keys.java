@@ -8,7 +8,7 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 @Entity
-@SuppressWarnings({"UnusedDeclaration", "removal"})
+@SuppressWarnings({ "UnusedDeclaration", "removal" })
 public class Keys {
     @Id
     private ObjectId id;

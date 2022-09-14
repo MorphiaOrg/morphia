@@ -91,7 +91,7 @@ public class User {
         }
         User user = (User) o;
         return age == user.age && Objects.equals(name, user.name) && Objects.equals(likes, user.likes) &&
-               Objects.equals(id, user.id) && Objects.equals(joined, user.joined);
+                Objects.equals(id, user.id) && Objects.equals(joined, user.joined);
     }
 
     @Override

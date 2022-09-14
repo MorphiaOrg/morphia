@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.primitives;
 
-
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
@@ -15,28 +14,27 @@ import java.util.List;
 import static dev.morphia.query.filters.Filters.eq;
 import static java.lang.String.format;
 
-
 public class BooleanMappingTest extends TestBase {
     @Test
     public void testMapping() {
         getMapper().map(Booleans.class);
         final Booleans ent = new Booleans();
-        ent.booleans.add(new Boolean[]{Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE});
+        ent.booleans.add(new Boolean[] { Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE });
         ent.list.addAll(Arrays.asList(Boolean.TRUE, Boolean.TRUE));
 
-        ent.booleanPrimitives.add(new boolean[]{true, true, false});
+        ent.booleanPrimitives.add(new boolean[] { true, true, false });
         ent.singlePrimitive = false;
         ent.singleWrapper = true;
-        ent.primitiveArray = new boolean[]{false, true};
-        ent.wrapperArray = new Boolean[]{Boolean.FALSE, Boolean.FALSE, Boolean.TRUE};
-        ent.nestedPrimitiveArray = new boolean[][]{{false, false}, {false, true}};
-        ent.nestedWrapperArray = new Boolean[][]{{Boolean.FALSE, Boolean.TRUE, Boolean.FALSE},
-                                                 {Boolean.FALSE, Boolean.FALSE, Boolean.TRUE}};
+        ent.primitiveArray = new boolean[] { false, true };
+        ent.wrapperArray = new Boolean[] { Boolean.FALSE, Boolean.FALSE, Boolean.TRUE };
+        ent.nestedPrimitiveArray = new boolean[][] { { false, false }, { false, true } };
+        ent.nestedWrapperArray = new Boolean[][] { { Boolean.FALSE, Boolean.TRUE, Boolean.FALSE },
+                { Boolean.FALSE, Boolean.FALSE, Boolean.TRUE } };
         getDs().save(ent);
 
         final Booleans loaded = getDs().find(Booleans.class)
-                                       .filter(eq("_id", ent.id))
-                                       .first();
+                .filter(eq("_id", ent.id))
+                .first();
 
         Assert.assertNotNull(loaded.id);
 

@@ -20,12 +20,12 @@ import java.util.List;
 public class Update<T> extends UpdateBase<T> {
     @SuppressWarnings("rawtypes")
     Update(DatastoreImpl datastore, MongoCollection<T> collection,
-           Query<T> query, Class<T> type, UpdateOpsImpl operations) {
+            Query<T> query, Class<T> type, UpdateOpsImpl operations) {
         super(datastore, collection, query, type, operations.getUpdates());
     }
 
     Update(DatastoreImpl datastore, MongoCollection<T> collection,
-           Query<T> query, Class<T> type, List<UpdateOperator> updates) {
+            Query<T> query, Class<T> type, List<UpdateOperator> updates) {
         super(datastore, collection, query, type, updates);
     }
 

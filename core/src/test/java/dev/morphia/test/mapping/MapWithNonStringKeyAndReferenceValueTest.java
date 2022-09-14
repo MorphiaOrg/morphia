@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping;
 
-
 import dev.morphia.annotations.Reference;
 import dev.morphia.test.models.TestEntity;
 import org.testng.annotations.Test;
@@ -14,7 +13,6 @@ import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-
 
 @Test(groups = "references")
 public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
@@ -61,8 +59,8 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         getDs().save(asList(ce1, ce2, pe));
 
         final ParentEntity fetched = getDs().find(ParentEntity.class)
-                                            .filter(eq("_id", pe.getId()))
-                                            .first();
+                .filter(eq("_id", pe.getId()))
+                .first();
         assertNotNull(fetched);
         assertIsProxy(fetched.lazyChildMap);
         assertNotFetched(fetched.lazyChildMap);

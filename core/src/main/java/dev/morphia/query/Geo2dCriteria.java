@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import org.bson.Document;
@@ -17,7 +16,7 @@ class Geo2dCriteria extends FieldCriteria {
     private final Map<String, Object> opts;
 
     Geo2dCriteria(Datastore datastore, String field, FilterOperator op, Object value,
-                  Map<String, Object> opts, EntityModel model, boolean validating) {
+            Map<String, Object> opts, EntityModel model, boolean validating) {
         super(datastore, field, op, value, model, validating);
         this.opts = opts;
     }

@@ -29,7 +29,7 @@ import static java.util.Arrays.asList;
  * @morphia.internal
  */
 @MorphiaInternal
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Deprecated(forRemoval = true, since = "2.3")
 public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
     private final Map<String, List<Object>> collections = new HashMap<>();
@@ -52,7 +52,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     static void collate(EntityModel valueType, Map<String, List<Object>> collections,
-                        Object o) {
+            Object o) {
         final String collectionName;
         final Object id;
         if (o instanceof DBRef) {
@@ -75,7 +75,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     }
 
     /**
-     * Gets the referenced entities.  This may require at least one request to the server.
+     * Gets the referenced entities. This may require at least one request to the server.
      *
      * @return the referenced entities
      */
@@ -102,8 +102,8 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     final List<Object> getId(Mapper mapper, EntityModel entityModel) {
         if (ids == null) {
             ids = getValues().stream()
-                             .map(v -> ReferenceCodec.encodeId(mapper, v, entityModel))
-                             .collect(Collectors.toList());
+                    .map(v -> ReferenceCodec.encodeId(mapper, v, entityModel))
+                    .collect(Collectors.toList());
         }
         return ids;
     }
@@ -149,8 +149,8 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
             idMap.putAll(query(entry.getKey(), extractIds(entry.getValue())));
         }
         List values = mapIds(ids, idMap).stream()
-                                        .filter(Objects::nonNull)
-                                        .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         resolve();
         return values;
     }
@@ -159,8 +159,8 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
         final Map<Object, Object> idMap = new HashMap<>();
         try (MongoCursor<?> cursor = getDatastore().find(collection)
-                                                   .disableValidation()
-                                                   .filter(in("_id", collectionIds)).iterator()) {
+                .disableValidation()
+                .filter(in("_id", collectionIds)).iterator()) {
             while (cursor.hasNext()) {
                 final Object entity = cursor.next();
                 idMap.put(getMapper().getId(entity), entity);
@@ -168,7 +168,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
 
             if (!ignoreMissing() && idMap.size() != new HashSet<>(collectionIds).size()) {
                 throw new ReferenceException(
-                    Sofia.missingReferencedEntities(entityModel.getType().getSimpleName()));
+                        Sofia.missingReferencedEntities(entityModel.getType().getSimpleName()));
             }
         }
 

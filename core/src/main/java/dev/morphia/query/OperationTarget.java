@@ -54,9 +54,9 @@ public class OperationTarget {
         Object mappedValue = value;
 
         PropertyModel model = mappedField != null
-                              ? mappedField.getEntityModel()
-                                           .getProperty(mappedField.getName())
-                              : null;
+                ? mappedField.getEntityModel()
+                        .getProperty(mappedField.getName())
+                : null;
 
         Codec cachedCodec = null;
         if (model != null && !(mappedValue instanceof LegacyQuery)) {
@@ -92,8 +92,8 @@ public class OperationTarget {
     @Override
     public String toString() {
         return new StringJoiner(", ", OperationTarget.class.getSimpleName() + "[", "]")
-            .add("target=" + target)
-            .add("value=" + value)
-            .toString();
+                .add("target=" + target)
+                .add("value=" + value)
+                .toString();
     }
 }

@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  * @since 1.3
  */
 public class CountOptions extends com.mongodb.client.model.CountOptions
-    implements CollectionConfigurable<CountOptions>, ReadConfigurable<CountOptions> {
+        implements CollectionConfigurable<CountOptions>, ReadConfigurable<CountOptions> {
     private ReadPreference readPreference;
     private ReadConcern readConcern;
     private ClientSession clientSession;
@@ -183,4 +183,3 @@ public class CountOptions extends com.mongodb.client.model.CountOptions
         return this;
     }
 }
-

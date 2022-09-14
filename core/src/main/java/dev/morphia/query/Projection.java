@@ -107,7 +107,7 @@ public class Projection {
     }
 
     private void iterate(Mapper mapper, Document projection, Class<?> clazz, @Nullable List<String> fields,
-                         int include) {
+            int include) {
         if (fields != null) {
             for (String field : fields) {
                 projection.put(new PathTarget(mapper, mapper.getEntityModel(clazz), field).translatedPath(), include);
@@ -118,9 +118,9 @@ public class Projection {
     private Document knownFields(Mapper mapper, Class<?> clazz) {
         Document projection = new Document();
         mapper.getEntityModel(clazz).getProperties()
-              .stream()
-              .map(mf -> new PathTarget(mapper, mapper.getEntityModel(clazz), mf.getMappedName()).translatedPath())
-              .forEach(name -> projection.put(name, 1));
+                .stream()
+                .map(mf -> new PathTarget(mapper, mapper.getEntityModel(clazz), mf.getMappedName()).translatedPath())
+                .forEach(name -> projection.put(name, 1));
 
         return projection;
     }
@@ -187,12 +187,12 @@ public class Projection {
     @Override
     public String toString() {
         return new StringJoiner(", ", Projection.class.getSimpleName() + "[", "]")
-                   .add("includes=" + includes)
-                   .add("excludes=" + excludes)
-                   .add("arrayField='" + arrayField + "'")
-                   .add("slice=" + slice)
-                   .add("meta=" + meta)
-                   .add("knownFields=" + knownFields)
-                   .toString();
+                .add("includes=" + includes)
+                .add("excludes=" + excludes)
+                .add("arrayField='" + arrayField + "'")
+                .add("slice=" + slice)
+                .add("meta=" + meta)
+                .add("knownFields=" + knownFields)
+                .toString();
     }
 }

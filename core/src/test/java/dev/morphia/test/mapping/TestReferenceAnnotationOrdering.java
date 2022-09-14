@@ -20,7 +20,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.testng.Assert.assertEquals;
 
 //this is a random annotation which doesn't play any role beside separating @Reference and field
-@Target({FIELD})
+@Target({ FIELD })
 @Retention(RUNTIME)
 @interface AnAnnotation {
 
@@ -85,8 +85,8 @@ public class TestReferenceAnnotationOrdering extends TestBase {
         getDs().save(box);
 
         MongoCollection<Document> collection = getDs()
-                                                   .getCollection(Box.class)
-                                                   .withDocumentClass(Document.class);
+                .getCollection(Box.class)
+                .withDocumentClass(Document.class);
 
         Document firstDoc = collection.find().first();
         Object items = firstDoc.get("items");

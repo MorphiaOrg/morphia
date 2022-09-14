@@ -169,7 +169,7 @@ public class ChangeStream extends Stage {
     @Override
     public String toString() {
         return format("ChangeStream{allChangesForCluster=%s, fullDocument=%s, fullDocumentBeforeChange=%s, resumeAfter=%s, "
-                      + "startAfter=%s, startAtOperationTime=%s}", allChangesForCluster, fullDocument, fullDocumentBeforeChange,
-            resumeAfter, startAfter, startAtOperationTime);
+                + "startAfter=%s, startAtOperationTime=%s}", allChangesForCluster, fullDocument, fullDocumentBeforeChange,
+                resumeAfter, startAfter, startAtOperationTime);
     }
 }

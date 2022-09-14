@@ -36,7 +36,7 @@ public class ProjectedBook {
         }
         final ProjectedBook that = (ProjectedBook) o;
         return Objects.equals(id, that.id) &&
-               title.equals(that.title) &&
-               author.equals(that.author);
+                title.equals(that.title) &&
+                author.equals(that.author);
     }
 }

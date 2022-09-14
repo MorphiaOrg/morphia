@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 @Deprecated(since = "2.0", forRemoval = true)
 public @interface Converters {
     /**

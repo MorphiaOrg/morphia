@@ -50,8 +50,8 @@ public class ClassB2 implements InterfaceB {
     @Override
     public String toString() {
         return "B2{" +
-               "id=" + id +
-               ", age=" + age +
-               '}';
+                "id=" + id +
+                ", age=" + age +
+                '}';
     }
 }

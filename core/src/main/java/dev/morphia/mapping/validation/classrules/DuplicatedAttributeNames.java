@@ -22,8 +22,8 @@ public class DuplicatedAttributeNames implements ClassConstraint {
             for (String name : model.getLoadNames()) {
                 if (!foundNames.add(name)) {
                     ve.add(new ConstraintViolation(Level.FATAL, entityModel, model, getClass(),
-                        "Mapping to MongoDB field name '" + name
-                        + "' is duplicated; you cannot map different java fields to the same MongoDB field."));
+                            "Mapping to MongoDB field name '" + name
+                                    + "' is duplicated; you cannot map different java fields to the same MongoDB field."));
                 }
             }
         }

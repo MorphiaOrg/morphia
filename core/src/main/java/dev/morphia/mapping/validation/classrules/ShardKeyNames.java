@@ -33,7 +33,7 @@ public class ShardKeyNames implements ClassConstraint {
                     }
                 }
                 ve.add(new ConstraintViolation(Level.FATAL, model, getClass(),
-                    Sofia.badShardKeys(String.join(", ", names))));
+                        Sofia.badShardKeys(String.join(", ", names))));
             }
         }
     }

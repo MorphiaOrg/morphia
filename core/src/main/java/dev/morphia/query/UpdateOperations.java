@@ -1,19 +1,19 @@
 package dev.morphia.query;
 
-
 import dev.morphia.query.updates.UpdateOperator;
 
 import java.util.List;
 
-
 /**
- * <p> A nicer interface to the update operations in mongodb. All these operations happen at the server and can cause the server and
+ * <p>
+ * A nicer interface to the update operations in mongodb. All these operations happen at the server and can cause the server and
  * client
- * version of the Entity to be different </p>
+ * version of the Entity to be different
+ * </p>
  *
  * @param <T> The Java type used in the updates
  * @deprecated updates should be performed using the {@link Query#update(UpdateOperator, UpdateOperator...)} instead
- * of this class directly
+ *             of this class directly
  */
 @Deprecated(since = "2.0", forRemoval = true)
 public interface UpdateOperations<T> {
@@ -64,7 +64,7 @@ public interface UpdateOperations<T> {
      * @param field the field to update
      * @param value the value to decrement by
      * @throws IllegalArgumentException of the value is not an instance of
-     *         Double, Float,Long, or Integer
+     *                                  Double, Float,Long, or Integer
      * @return this
      * @mongodb.driver.manual reference/operator/update/inc/ $inc
      */

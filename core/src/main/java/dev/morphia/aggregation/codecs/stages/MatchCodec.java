@@ -20,7 +20,7 @@ public class MatchCodec extends StageCodec<Match> {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected void encodeStage(BsonWriter writer, Match value, EncoderContext encoderContext) {
         document(writer, () -> {
             for (Filter filter : value.getFilters()) {

@@ -1,6 +1,5 @@
 package dev.morphia.aggregation;
 
-
 import com.mongodb.AggregationOptions;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.UnwindOptions;
@@ -26,7 +25,7 @@ public interface AggregationPipeline {
      * Executes the pipeline and aggregates the output in to the type mapped by the target type using
      * the default options as defined in {@link AggregationOptions}.
      *
-     * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
+     * <b>Note: This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
      * resource management.</b>
      *
      * @param target The class to use when iterating over the results
@@ -38,7 +37,7 @@ public interface AggregationPipeline {
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
      *
-     * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
+     * <b>Note: This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
      * resource management.</b>
      *
      * @param target  The class to use when iterating over the results
@@ -51,7 +50,7 @@ public interface AggregationPipeline {
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
      *
-     * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
+     * <b>Note: This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
      * resource management.</b>
      *
      * @param target         The class to use when iterating over the results
@@ -61,12 +60,12 @@ public interface AggregationPipeline {
      * @return an iterator of the computed results
      */
     <U> Iterator<U> aggregate(Class<U> target, AggregationOptions options,
-                              ReadPreference readPreference);
+            ReadPreference readPreference);
 
     /**
      * Executes the pipeline and aggregates the output in to the type mapped by the target type.
      *
-     * <b>Note:  This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
+     * <b>Note: This return type will change to {@code MongoCursor} in 2.0 to allow for finer-grained control of iteration and
      * resource management.</b>
      *
      * @param collectionName The collection in which to store the results of the aggregation overriding the mapped value in target
@@ -169,7 +168,7 @@ public interface AggregationPipeline {
     /**
      * Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group
      * . Consumes all input documents and outputs one document per each distinct group. The output documents only contain the identifier
-     * field and, if specified, accumulated fields.  The ID for this group is null.
+     * field and, if specified, accumulated fields. The ID for this group is null.
      *
      * @param groupings the group definitions
      * @return this
@@ -211,7 +210,7 @@ public interface AggregationPipeline {
     /**
      * Performs a left outer join to an unsharded collection in the same database to filter in documents from the "joined" collection for
      * processing. The $lookup stage does an equality match between a field from the input documents with a field from the documents of
-     * the “joined” collection.  To each input document, the $lookup stage adds a new array field whose elements are the matching
+     * the “joined” collection. To each input document, the $lookup stage adds a new array field whose elements are the matching
      * documents from the “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
      *
      * @param from         the collection to join

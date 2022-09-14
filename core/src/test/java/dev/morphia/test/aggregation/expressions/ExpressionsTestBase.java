@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static org.testng.Assert.assertEquals;
 
-
 public class ExpressionsTestBase extends TestBase {
     @BeforeMethod
     public void seed() {
@@ -34,10 +33,10 @@ public class ExpressionsTestBase extends TestBase {
         assertDocumentEquals(actual, expected);
 
         Document test = getDs().aggregate(User.class)
-                               .project(Projection.project()
-                                                  .include("test", value))
-                               .execute(Document.class)
-                               .next();
+                .project(Projection.project()
+                        .include("test", value))
+                .execute(Document.class)
+                .next();
         assertEquals(test.get("test"), expectedValue);
     }
 }

@@ -48,20 +48,20 @@ public class TestDateExpression extends ExpressionsTestBase {
     @Test
     public void testDateAggregation() {
         insert("sales", List.of(
-            parse("{\"_id\" : 1,\"item\" : \"abc\",\"price\" : 10,\"quantity\" : 2,\"date\" : ISODate(\"2014-01-01T08:15:39.736Z\")\n}")));
+                parse("{\"_id\" : 1,\"item\" : \"abc\",\"price\" : 10,\"quantity\" : 2,\"date\" : ISODate(\"2014-01-01T08:15:39.736Z\")\n}")));
         Aggregation<Sales> pipeline = getDs()
-                                          .aggregate(Sales.class)
-                                          .project(project()
-                                                       .include("year", year(field("date")))
-                                                       .include("month", month(field("date")))
-                                                       .include("day", dayOfMonth(field("date")))
-                                                       .include("hour", hour(field("date")))
-                                                       .include("minutes", minute(field("date")))
-                                                       .include("seconds", second(field("date")))
-                                                       .include("milliseconds", milliseconds(field("date")))
-                                                       .include("dayOfYear", dayOfYear(field("date")))
-                                                       .include("dayOfWeek", dayOfWeek(field("date")))
-                                                       .include("week", week(field("date"))));
+                .aggregate(Sales.class)
+                .project(project()
+                        .include("year", year(field("date")))
+                        .include("month", month(field("date")))
+                        .include("day", dayOfMonth(field("date")))
+                        .include("hour", hour(field("date")))
+                        .include("minutes", minute(field("date")))
+                        .include("seconds", second(field("date")))
+                        .include("milliseconds", milliseconds(field("date")))
+                        .include("dayOfYear", dayOfYear(field("date")))
+                        .include("dayOfWeek", dayOfWeek(field("date")))
+                        .include("week", week(field("date"))));
         Document dates = pipeline.execute(Document.class).tryNext();
         assertEquals(dates.getInteger("_id").intValue(), 1);
         assertEquals(dates.getInteger("year").intValue(), 2014);
@@ -79,94 +79,92 @@ public class TestDateExpression extends ExpressionsTestBase {
     @Test
     public void testDateFromParts() {
         getDs().save(new Sales());
-        Document result =
-            getDs()
+        Document result = getDs()
                 .aggregate(Sales.class)
                 .project(project()
-                             .include("date", dateFromParts()
-                                                  .year(2017)
-                                                  .month(2)
-                                                  .day(8)
-                                                  .hour(12))
-                             .include("date_iso", dateFromParts()
-                                                      .isoWeekYear(2017)
-                                                      .isoWeek(6)
-                                                      .isoDayOfWeek(3)
-                                                      .hour(12))
-                             .include("date_timezone", dateFromParts()
-                                                           .year(2016)
-                                                           .month(12)
-                                                           .day(31)
-                                                           .hour(23)
-                                                           .minute(46)
-                                                           .second(12)
-                                                           .timezone("America/New_York")))
+                        .include("date", dateFromParts()
+                                .year(2017)
+                                .month(2)
+                                .day(8)
+                                .hour(12))
+                        .include("date_iso", dateFromParts()
+                                .isoWeekYear(2017)
+                                .isoWeek(6)
+                                .isoDayOfWeek(3)
+                                .hour(12))
+                        .include("date_timezone", dateFromParts()
+                                .year(2016)
+                                .month(12)
+                                .day(31)
+                                .hour(23)
+                                .minute(46)
+                                .second(12)
+                                .timezone("America/New_York")))
                 .execute(Document.class)
                 .next();
         result.remove("_id");
         assertEquals(result, parse("{'date': ISODate('2017-02-08T12:00:00Z'), 'date_iso': ISODate('2017-02-08T12:00:00Z'),"
-                                   + "'date_timezone': ISODate('2017-01-01T04:46:12Z')}"));
+                + "'date_timezone': ISODate('2017-01-01T04:46:12Z')}"));
     }
 
     @Test
     public void testDateFromString() {
         List<Document> list = List.of(
-            parse("{ _id: 1, date: '2017-02-08T12:10:40.787', timezone: 'America/New_York', message:  'Step 1: Started' }"),
-            parse("{ _id: 2, date: '2017-02-08', timezone: '-05:00', message:  'Step 1: Ended' }"),
-            parse("{ _id: 3, message:  ' Step 1: Ended ' }"),
-            parse("{ _id: 4, date: '2017-02-09', timezone: 'Europe/London', message: 'Step 2: Started'}"),
-            parse("{ _id: 5, date: '2017-02-09T03:35:02.055', timezone: '+0530', message: 'Step 2: In Progress'}"));
+                parse("{ _id: 1, date: '2017-02-08T12:10:40.787', timezone: 'America/New_York', message:  'Step 1: Started' }"),
+                parse("{ _id: 2, date: '2017-02-08', timezone: '-05:00', message:  'Step 1: Ended' }"),
+                parse("{ _id: 3, message:  ' Step 1: Ended ' }"),
+                parse("{ _id: 4, date: '2017-02-09', timezone: 'Europe/London', message: 'Step 2: Started'}"),
+                parse("{ _id: 5, date: '2017-02-09T03:35:02.055', timezone: '+0530', message: 'Step 2: In Progress'}"));
 
         insert("logmessages", list);
 
         List<Document> result = getDs().aggregate(LogMessage.class)
-                                       .project(project().include("date", dateFromString()
-                                                                              .dateString(field("date"))
-                                                                              .timeZone("America/New_York")))
-                                       .execute(Document.class)
-                                       .toList();
+                .project(project().include("date", dateFromString()
+                        .dateString(field("date"))
+                        .timeZone("America/New_York")))
+                .execute(Document.class)
+                .toList();
         assertEquals(result, List.of(
-            parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
-            parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
-            parse("{ '_id' : 3, 'date' : null }"),
-            parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T05:00:00Z') }"),
-            parse("{ '_id' : 5, 'date' : ISODate('2017-02-09T08:35:02.055Z') }")));
-
+                parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
+                parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
+                parse("{ '_id' : 3, 'date' : null }"),
+                parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T05:00:00Z') }"),
+                parse("{ '_id' : 5, 'date' : ISODate('2017-02-09T08:35:02.055Z') }")));
 
         result = getDs().aggregate(LogMessage.class)
-                        .project(project().include("date", dateFromString()
-                                                               .dateString(field("date"))
-                                                               .timeZone(field("timezone"))))
-                        .execute(Document.class)
-                        .toList();
+                .project(project().include("date", dateFromString()
+                        .dateString(field("date"))
+                        .timeZone(field("timezone"))))
+                .execute(Document.class)
+                .toList();
 
         assertEquals(result, List.of(
-            parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
-            parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
-            parse("{ '_id' : 3, 'date' : null }"),
-            parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T00:00:00Z') }"),
-            parse("{ '_id' : 5, 'date' : ISODate('2017-02-08T22:05:02.055Z') }")));
+                parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
+                parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
+                parse("{ '_id' : 3, 'date' : null }"),
+                parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T00:00:00Z') }"),
+                parse("{ '_id' : 5, 'date' : ISODate('2017-02-08T22:05:02.055Z') }")));
     }
 
     @Test
     public void testDateToParts() {
         getDs().getCollection(User.class).drop();
         getDocumentCollection(User.class)
-            .insertOne(parse("{'_id': 2, 'item': 'abc', 'price': 10, 'quantity': 2, 'date': ISODate('2017-01-01T01:29:09.123Z')}"));
+                .insertOne(parse("{'_id': 2, 'item': 'abc', 'price': 10, 'quantity': 2, 'date': ISODate('2017-01-01T01:29:09.123Z')}"));
 
         Document parts = getDs().aggregate(User.class)
-                                .project(project()
-                                             .include("date", dateToParts(field("date")))
-                                             .include("date_iso", dateToParts(field("date"))
-                                                                      .iso8601(true))
-                                             .include("date_timezone", dateToParts(field("date"))
-                                                                           .timezone(value("America/New_York"))))
-                                .execute(Document.class)
-                                .next();
+                .project(project()
+                        .include("date", dateToParts(field("date")))
+                        .include("date_iso", dateToParts(field("date"))
+                                .iso8601(true))
+                        .include("date_timezone", dateToParts(field("date"))
+                                .timezone(value("America/New_York"))))
+                .execute(Document.class)
+                .next();
         assertDocumentEquals(parts, parse("{\"_id\":2,\"date\":{\"year\":2017,\"month\":1,\"day\":1,\"hour\":1,\"minute\":29,\"second\":9,"
-                                          + "\"millisecond\":123},\"date_iso\":{\"isoWeekYear\":2016,\"isoWeek\":52,\"isoDayOfWeek\":7,"
-                                          + "\"hour\":1,\"minute\":29,\"second\":9,\"millisecond\":123},\"date_timezone\":{\"year\":2016,"
-                                          + "\"month\":12,\"day\":31,\"hour\":20,\"minute\":29,\"second\":9,\"millisecond\":123}}"));
+                + "\"millisecond\":123},\"date_iso\":{\"isoWeekYear\":2016,\"isoWeek\":52,\"isoDayOfWeek\":7,"
+                + "\"hour\":1,\"minute\":29,\"second\":9,\"millisecond\":123},\"date_timezone\":{\"year\":2016,"
+                + "\"month\":12,\"day\":31,\"hour\":20,\"minute\":29,\"second\":9,\"millisecond\":123}}"));
     }
 
     @Test
@@ -175,11 +173,11 @@ public class TestDateExpression extends ExpressionsTestBase {
         getDs().getCollection(User.class).drop();
         getDs().save(new User("John Doe", joined));
         Aggregation<User> pipeline = getDs()
-                                         .aggregate(User.class)
-                                         .project(project().include("string",
-                                             dateToString()
-                                                 .format("%Y-%m-%d")
-                                                 .date(field("joined"))));
+                .aggregate(User.class)
+                .project(project().include("string",
+                        dateToString()
+                                .format("%Y-%m-%d")
+                                .date(field("joined"))));
 
         MorphiaCursor<StringDates> it = pipeline.execute(StringDates.class);
         while (it.hasNext()) {
@@ -202,37 +200,37 @@ public class TestDateExpression extends ExpressionsTestBase {
     @Test
     public void testIsoWeekYear() throws ParseException {
         assertAndCheckDocShape("{}", isoWeekYear(value(new SimpleDateFormat("MMM dd, yyyy").parse("April 08, 2024")))
-                           .timezone(value("America/Chicago")), 2024L);
+                .timezone(value("America/Chicago")), 2024L);
         assertAndCheckDocShape("{}", isoWeekYear(value(new SimpleDateFormat("yyyy-MM-dd").parse("2015-05-26"))),
-            2015L);
+                2015L);
     }
 
     @Test
     public void testToDate() {
         checkMinServerVersion(4.0);
         insert("orders", List.of(
-            parse(" { _id: 1, item: 'apple', qty: 5, order_date: '2018-03-10'}"),
-            parse("{ _id: 2, item: 'pie', qty: 10,  order_date: '2018-03-12'}"),
-            parse("{ _id: 3, item: 'ice cream', qty: 2, price: '4.99', order_date: '2018-03-05' }"),
-            parse("{ _id: 4, item: 'almonds' ,  qty: 5, price: 5,  order_date: '2018-03-05 +10:00'}")));
+                parse(" { _id: 1, item: 'apple', qty: 5, order_date: '2018-03-10'}"),
+                parse("{ _id: 2, item: 'pie', qty: 10,  order_date: '2018-03-12'}"),
+                parse("{ _id: 3, item: 'ice cream', qty: 2, price: '4.99', order_date: '2018-03-05' }"),
+                parse("{ _id: 4, item: 'almonds' ,  qty: 5, price: 5,  order_date: '2018-03-05 +10:00'}")));
 
         List<Document> result = getDs().aggregate(Order.class)
-                                       .addFields(AddFields.addFields()
-                                                           .field("convertedDate", toDate(field("order_date"))))
-                                       .sort(Sort.sort()
-                                                 .ascending("convertedDate"))
-                                       .execute(Document.class)
-                                       .toList();
+                .addFields(AddFields.addFields()
+                        .field("convertedDate", toDate(field("order_date"))))
+                .sort(Sort.sort()
+                        .ascending("convertedDate"))
+                .execute(Document.class)
+                .toList();
 
         List<Document> documents = List.of(
-            parse(
-                "{'_id': 4, 'item': 'almonds', 'qty': 5, 'price': 5, 'order_date': '2018-03-05 +10:00', 'convertedDate': ISODate" +
-                "('2018-03-04T14:00:00Z')}"),
-            parse(
-                "{'_id': 3, 'item': 'ice cream', 'qty': 2, 'price': '4.99', 'order_date': '2018-03-05', 'convertedDate': ISODate" +
-                "('2018-03-05T00:00:00Z')}"),
-            parse("{'_id': 1, 'item': 'apple', 'qty': 5, 'order_date': '2018-03-10', 'convertedDate': ISODate('2018-03-10T00:00:00Z')}"),
-            parse("{'_id': 2, 'item': 'pie', 'qty': 10, 'order_date': '2018-03-12', 'convertedDate': ISODate('2018-03-12T00:00:00Z')}"));
+                parse(
+                        "{'_id': 4, 'item': 'almonds', 'qty': 5, 'price': 5, 'order_date': '2018-03-05 +10:00', 'convertedDate': ISODate" +
+                                "('2018-03-04T14:00:00Z')}"),
+                parse(
+                        "{'_id': 3, 'item': 'ice cream', 'qty': 2, 'price': '4.99', 'order_date': '2018-03-05', 'convertedDate': ISODate" +
+                                "('2018-03-05T00:00:00Z')}"),
+                parse("{'_id': 1, 'item': 'apple', 'qty': 5, 'order_date': '2018-03-10', 'convertedDate': ISODate('2018-03-10T00:00:00Z')}"),
+                parse("{'_id': 2, 'item': 'pie', 'qty': 10, 'order_date': '2018-03-12', 'convertedDate': ISODate('2018-03-12T00:00:00Z')}"));
 
         assertEquals(result, documents);
     }

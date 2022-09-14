@@ -4,9 +4,10 @@ import java.util.List;
 
 /**
  * Enumerates all the GeoJson types that are currently supported by Morphia.
+ *
  * @deprecated use the driver defined types
  */
-@SuppressWarnings({"unchecked", "removal"}) // can't know, or define generics for, the Lists in the factory
+@SuppressWarnings({ "unchecked", "removal" }) // can't know, or define generics for, the Lists in the factory
 @Deprecated(since = "2.0", forRemoval = true)
 public enum GeoJsonType implements GeometryFactory {
     POINT("Point", Point.class) {

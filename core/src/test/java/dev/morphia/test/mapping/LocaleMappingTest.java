@@ -22,13 +22,13 @@ public class LocaleMappingTest extends TestBase {
         E e = new E();
         e.l1 = Locale.CANADA_FRENCH;
         e.l2 = Arrays.asList(Locale.GERMANY, Locale.TRADITIONAL_CHINESE);
-        e.l3 = new Locale[]{Locale.TRADITIONAL_CHINESE, Locale.FRENCH};
+        e.l3 = new Locale[] { Locale.TRADITIONAL_CHINESE, Locale.FRENCH };
 
         getDs().save(e);
         final Datastore datastore = getDs();
         e = datastore.find(E.class)
-                     .filter(eq("_id", e.id))
-                     .first();
+                .filter(eq("_id", e.id))
+                .first();
 
         assertEquals(e.l1, Locale.CANADA_FRENCH);
 

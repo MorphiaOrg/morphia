@@ -105,11 +105,11 @@ public class Order {
     @Override
     public String toString() {
         return new StringJoiner(", ", Order.class.getSimpleName() + "[", "]")
-                   .add("id=" + id)
-                   .add("item='" + item + "'")
-                   .add("price=" + price)
-                   .add("quantity=" + quantity)
-                   .add("inventoryDocs=" + inventoryDocs)
-                   .toString();
+                .add("id=" + id)
+                .add("item='" + item + "'")
+                .add("price=" + price)
+                .add("quantity=" + quantity)
+                .add("inventoryDocs=" + inventoryDocs)
+                .toString();
     }
 }

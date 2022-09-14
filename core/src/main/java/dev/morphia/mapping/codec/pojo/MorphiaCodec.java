@@ -54,8 +54,8 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * @param registry               the codec registry for lookups
      */
     public MorphiaCodec(Datastore datastore, EntityModel model,
-                        List<PropertyCodecProvider> propertyCodecProviders,
-                        DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
+            List<PropertyCodecProvider> propertyCodecProviders,
+            DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
         this.datastore = datastore;
         this.discriminatorLookup = discriminatorLookup;
 
@@ -180,13 +180,13 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         this.decoder = decoder;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void specializePropertyCodecs() {
         EntityModel entityModel = getEntityModel();
         for (PropertyModel propertyModel : entityModel.getProperties()) {
             Codec<?> specializeCodec = propertyModel.specializeCodec(datastore);
             Codec codec = specializeCodec != null ? specializeCodec
-                                                  : propertyCodecRegistry.get(propertyModel.getTypeData());
+                    : propertyCodecRegistry.get(propertyModel.getTypeData());
             if (codec != null) {
                 propertyModel.codec(codec);
             }

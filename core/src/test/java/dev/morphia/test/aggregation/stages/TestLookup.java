@@ -17,24 +17,24 @@ public class TestLookup extends AggregationTest {
     public void testLookup() {
         // Test data pulled from https://docs.mongodb.com/v3.2/reference/operator/aggregation/lookup/
         getDs().save(asList(new Order(1, "abc", 12, 2),
-            new Order(2, "jkl", 20, 1),
-            new Order(3)));
+                new Order(2, "jkl", 20, 1),
+                new Order(3)));
         List<Inventory> inventories = asList(new Inventory(1, "abc", "product 1", 120),
-            new Inventory(2, "def", "product 2", 80),
-            new Inventory(3, "ijk", "product 3", 60),
-            new Inventory(4, "jkl", "product 4", 70),
-            new Inventory(5, null, "Incomplete"),
-            new Inventory(6));
+                new Inventory(2, "def", "product 2", 80),
+                new Inventory(3, "ijk", "product 3", 60),
+                new Inventory(4, "jkl", "product 4", 70),
+                new Inventory(5, null, "Incomplete"),
+                new Inventory(6));
         getDs().save(inventories);
 
         List<Order> lookups = getDs().aggregate(Order.class)
-                                     .lookup(lookup(Inventory.class)
-                                                 .localField("item")
-                                                 .foreignField("sku")
-                                                 .as("inventoryDocs"))
-                                     .sort(sort().ascending("_id"))
-                                     .execute(Order.class)
-                                     .toList();
+                .lookup(lookup(Inventory.class)
+                        .localField("item")
+                        .foreignField("sku")
+                        .as("inventoryDocs"))
+                .sort(sort().ascending("_id"))
+                .execute(Order.class)
+                .toList();
         assertEquals(lookups.get(0).getInventoryDocs().get(0), inventories.get(0));
         assertEquals(lookups.get(1).getInventoryDocs().get(0), inventories.get(3));
         assertEquals(lookups.get(2).getInventoryDocs().get(0), inventories.get(4));

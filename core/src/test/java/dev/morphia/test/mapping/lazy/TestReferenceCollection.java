@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.lazy;
 
-
 import dev.morphia.annotations.Reference;
 import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.TestEntity;
@@ -14,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import static dev.morphia.query.filters.Filters.eq;
-
 
 @SuppressWarnings("unchecked")
 public class TestReferenceCollection extends ProxyTestBase {
@@ -39,8 +37,8 @@ public class TestReferenceCollection extends ProxyTestBase {
         getDs().save(origin);
 
         Origin reloaded = getDs().find(Origin.class)
-                                 .filter(eq("_id", origin.getId()))
-                                 .first();
+                .filter(eq("_id", origin.getId()))
+                .first();
         Assert.assertEquals("b1", reloaded.lazyList.iterator().next().foo);
         Collections.swap(reloaded.lazyList, 0, 1);
         Assert.assertEquals("b2", reloaded.lazyList.iterator().next().foo);
@@ -48,8 +46,8 @@ public class TestReferenceCollection extends ProxyTestBase {
         getDs().save(reloaded);
 
         reloaded = getDs().find(Origin.class)
-                          .filter(eq("_id", origin.getId()))
-                          .first();
+                .filter(eq("_id", origin.getId()))
+                .first();
         final Collection<Endpoint> lbs = reloaded.lazyList;
         Assert.assertEquals(2, lbs.size());
         final Iterator<Endpoint> iterator = lbs.iterator();

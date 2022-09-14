@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-
 package dev.morphia.annotations;
-
 
 import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
@@ -31,7 +29,6 @@ import java.lang.annotation.Target;
 import static com.mongodb.client.model.ValidationAction.ERROR;
 import static com.mongodb.client.model.ValidationLevel.STRICT;
 
-
 /**
  * Defines the document validation logic for a collection.
  *
@@ -40,11 +37,11 @@ import static com.mongodb.client.model.ValidationLevel.STRICT;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 public @interface Validation {
     /**
-     * @return the query used to validate documents in a collection.  This query is not validated so care must be taken to ensure
-     * document field names and types are correct.
+     * @return the query used to validate documents in a collection. This query is not validated so care must be taken to ensure
+     *         document field names and types are correct.
      *
      * @mongodb.driver.manual core/document-validation/
      */

@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Denotes the ID field on an entity.  This field is typically on a parent type outside the current source base and can't be directly
+ * Denotes the ID field on an entity. This field is typically on a parent type outside the current source base and can't be directly
  * annotated with {@link dev.morphia.annotations.Id}
  *
  * @morphia.experimental

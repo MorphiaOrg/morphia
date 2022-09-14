@@ -38,9 +38,9 @@ public final class AccumulatorExpressions {
      * @since 2.1
      */
     public static AccumulatorExpression accumulator(String initFunction,
-                                                    String accumulateFunction,
-                                                    List<Expression> accumulateArgs,
-                                                    String mergeFunction) {
+            String accumulateFunction,
+            List<Expression> accumulateArgs,
+            String mergeFunction) {
         return new AccumulatorExpression(initFunction, accumulateFunction, accumulateArgs, mergeFunction);
     }
 
@@ -296,4 +296,3 @@ public final class AccumulatorExpressions {
         return new NRankedResultsExpression("$topN", n, output, sortBy);
     }
 }
-

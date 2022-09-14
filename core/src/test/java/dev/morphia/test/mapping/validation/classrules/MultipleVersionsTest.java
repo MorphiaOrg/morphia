@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.validation.classrules;
 
-
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;

@@ -68,9 +68,9 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @return the entity
      */
     public static MorphiaReference<?> decode(Datastore datastore,
-                                             Mapper mapper,
-                                             PropertyModel mappedField,
-                                             Class<?> paramType, Document document) {
+            Mapper mapper,
+            PropertyModel mappedField,
+            Class<?> paramType, Document document) {
         final EntityModel entityModel = mapper.getEntityModel(paramType);
         Object id = document.get(mappedField.getMappedName());
 
@@ -83,7 +83,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
             value = (T) buildQuery().iterator().tryNext();
             if (value == null && !ignoreMissing()) {
                 throw new ReferenceException(
-                    Sofia.missingReferencedEntity(entityModel.getType().getSimpleName()));
+                        Sofia.missingReferencedEntity(entityModel.getType().getSimpleName()));
             }
             resolve();
         }
@@ -125,8 +125,8 @@ public class SingleReference<T> extends MorphiaReference<T> {
         final Query<?> query;
         if (id instanceof DBRef) {
             query = getDatastore().find(getDatastore()
-                                            .getMapper()
-                                            .getClassFromCollection(((DBRef) this.id).getCollectionName()));
+                    .getMapper()
+                    .getClassFromCollection(((DBRef) this.id).getCollectionName()));
         } else {
             query = getDatastore().find(entityModel.getType());
         }

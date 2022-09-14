@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.primitives;
 
-
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
@@ -15,11 +14,11 @@ public class ByteArrayMappingTest extends TestBase {
     public void testCharMapping() {
         getMapper().map(ContainsByteArray.class);
         final ContainsByteArray entity = new ContainsByteArray();
-        entity.ba = new Byte[]{6, 9, 1, -122};
+        entity.ba = new Byte[] { 6, 9, 1, -122 };
         getDs().save(entity);
         final ContainsByteArray loaded = getDs().find(ContainsByteArray.class)
-                                                .filter(eq("_id", entity.id))
-                                                .first();
+                .filter(eq("_id", entity.id))
+                .first();
 
         for (int i = 0; i < entity.ba.length; i++) {
             Assert.assertEquals(loaded.ba[i], entity.ba[i]);

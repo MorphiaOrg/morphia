@@ -61,16 +61,16 @@ public class WildCardTypeData<T> extends TypeData<T> {
 
     @Override
     public String toString() {
-/*
-        String value = type.getSimpleName();
-        if (!typeParameters.isEmpty()) {
-            StringJoiner joiner = new StringJoiner(", ", "<", ">");
-            typeParameters.forEach(t -> {
-                joiner.add(t.toString());
-            });
-            value += joiner;
-        }
-*/
+        /*
+         * String value = type.getSimpleName();
+         * if (!typeParameters.isEmpty()) {
+         * StringJoiner joiner = new StringJoiner(", ", "<", ">");
+         * typeParameters.forEach(t -> {
+         * joiner.add(t.toString());
+         * });
+         * value += joiner;
+         * }
+         */
 
         return (upperBound ? "? extends " : "? super ") + super.toString();
     }

@@ -48,4 +48,3 @@ open class TestKotlinMapping : TestBase() {
         assertEquals(first?.status, delegated.status)
     }
 }
-

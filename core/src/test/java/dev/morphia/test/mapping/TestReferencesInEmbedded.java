@@ -23,8 +23,8 @@ public class TestReferencesInEmbedded extends TestBase {
         getDs().save(container);
 
         Assert.assertNotNull(getDs().find(Container.class)
-                                    .filter(eq("_id", container.getId()))
-                                    .first());
+                .filter(eq("_id", container.getId()))
+                .first());
     }
 
     @Entity

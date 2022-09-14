@@ -119,7 +119,7 @@ public final class PropertyModelBuilder {
     }
 
     /**
-     * Returns the read annotations,  to be applied when serializing to BSON
+     * Returns the read annotations, to be applied when serializing to BSON
      *
      * @return the read annotations
      */
@@ -302,11 +302,11 @@ public final class PropertyModelBuilder {
     @Override
     public String toString() {
         return new StringJoiner(", ", PropertyModelBuilder.class.getSimpleName() + "[", "]")
-                   .add("name='" + name + "'")
-                   .add("mappedName='" + mappedName + "'")
-                   .add("typeData=" + typeData)
-                   .add("annotations=" + annotations)
-                   .toString();
+                .add("name='" + name + "'")
+                .add("mappedName='" + mappedName + "'")
+                .add("typeData=" + typeData)
+                .add("annotations=" + annotations)
+                .toString();
     }
 
     /**

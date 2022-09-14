@@ -28,10 +28,10 @@ public class TestGeoNear extends AggregationTest {
 
         // when
         Iterator<GeoCity> cities = getDs().aggregate(GeoCity.class)
-                                          .geoNear(geoNear(new double[]{latitude, longitude})
-                                                       .distanceField("distance")
-                                                       .spherical(true))
-                                          .execute(GeoCity.class);
+                .geoNear(geoNear(new double[] { latitude, longitude })
+                        .distanceField("distance")
+                        .spherical(true))
+                .execute(GeoCity.class);
 
         // then
         Assert.assertTrue(cities.hasNext());

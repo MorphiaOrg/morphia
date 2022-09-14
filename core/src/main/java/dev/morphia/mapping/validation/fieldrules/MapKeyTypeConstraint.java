@@ -1,6 +1,5 @@
 package dev.morphia.mapping.validation.fieldrules;
 
-
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -34,33 +33,33 @@ public class MapKeyTypeConstraint extends PropertyConstraint {
             // WARN if not parameterized : null or Object...
             if (aClass == null || Object.class.equals(aClass)) {
                 ve.add(new ConstraintViolation(Level.WARNING, entityModel, propertyModel, getClass(),
-                    "Maps cannot be keyed by Object (Map<Object,?>); Use a parametrized type that is supported "
-                    + SUPPORTED));
+                        "Maps cannot be keyed by Object (Map<Object,?>); Use a parametrized type that is supported "
+                                + SUPPORTED));
             } else if (!aClass.equals(String.class) && !aClass.equals(ObjectId.class) && !isPrimitiveLike(aClass)) {
                 ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
-                    "Maps must be keyed by a simple type " + SUPPORTED + "; " + aClass
-                    + " is not supported as a map key type."));
+                        "Maps must be keyed by a simple type " + SUPPORTED + "; " + aClass
+                                + " is not supported as a map key type."));
             }
         }
     }
 
     private boolean isPrimitiveLike(Class<?> type) {
         return List.of(
-            Character.class, char.class,
-            Short.class, short.class,
-            Integer.class, int.class,
-            Long.class, long.class,
-            Double.class, double.class,
-            Float.class, float.class,
-            Boolean.class, boolean.class,
-            Byte.class, byte.class,
-            String.class,
-            Date.class,
-            Locale.class,
-            Class.class,
-            UUID.class,
-            URI.class)
-                   .contains(type) || type.isEnum();
+                Character.class, char.class,
+                Short.class, short.class,
+                Integer.class, int.class,
+                Long.class, long.class,
+                Double.class, double.class,
+                Float.class, float.class,
+                Boolean.class, boolean.class,
+                Byte.class, byte.class,
+                String.class,
+                Date.class,
+                Locale.class,
+                Class.class,
+                UUID.class,
+                URI.class)
+                .contains(type) || type.isEnum();
 
     }
 }

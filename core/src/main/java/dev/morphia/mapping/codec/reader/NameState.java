@@ -26,8 +26,8 @@ public class NameState extends ReaderState {
     BsonType getCurrentBsonType() {
         ReaderState readerState = nextState();
         return readerState != null
-               ? readerState.getCurrentBsonType()
-               : BsonType.UNDEFINED;
+                ? readerState.getCurrentBsonType()
+                : BsonType.UNDEFINED;
     }
 
     @Override

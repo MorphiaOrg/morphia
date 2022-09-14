@@ -13,12 +13,12 @@ public class TestCollectionStats extends AggregationTest {
     public void testCollectionStats() {
         getDs().save(new dev.morphia.test.aggregation.model.Author());
         Document stats = getDs().aggregate(Author.class)
-                                .collStats(collStats()
-                                               .histogram(true)
-                                               .scale(42)
-                                               .count(true))
-                                .execute(Document.class)
-                                .tryNext();
+                .collStats(collStats()
+                        .histogram(true)
+                        .scale(42)
+                        .count(true))
+                .execute(Document.class)
+                .tryNext();
         assertNotNull(stats);
     }
 }

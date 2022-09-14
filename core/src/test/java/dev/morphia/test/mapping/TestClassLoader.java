@@ -51,7 +51,6 @@ public class TestClassLoader extends TestBase {
         useClassLoading(cl -> getDs().getCollection(BasicEntity.class));
     }
 
-
     private void useClassLoading(Function<ClassLoader, MongoCollection<BasicEntity>> collectionCreator) {
         storePreviousInstance();
         ClassLoader classLoader = new ByteArrayClassLoader(new AppClassLoader(), false, Map.of());
@@ -63,29 +62,29 @@ public class TestClassLoader extends TestBase {
 
     private MongoCollection<BasicEntity> recreateCollection(ClassLoader classLoader) {
         MapperOptions options = MapperOptions.builder()
-                                             .discriminator(DiscriminatorFunction.className())
-                                             .classLoader(classLoader)
-                                             .build();
+                .discriminator(DiscriminatorFunction.className())
+                .classLoader(classLoader)
+                .build();
         Datastore datastore = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME, options);
         return datastore.getCollection(BasicEntity.class);
     }
 
     private Class<?> loadDynamicClass(ClassLoader classLoader) {
         return new ByteBuddy().subclass(Base.class)
-                              .name("dev.morphia.test.mapping.ChildEmbed")
-                              .defineField("type", String.class, Opcodes.ACC_PUBLIC)
-                              .annotateType(Base.class.getAnnotation(Entity.class))
-                              .make()
-                              .load(classLoader)
-                              .getLoaded();
+                .name("dev.morphia.test.mapping.ChildEmbed")
+                .defineField("type", String.class, Opcodes.ACC_PUBLIC)
+                .annotateType(Base.class.getAnnotation(Entity.class))
+                .make()
+                .load(classLoader)
+                .getLoaded();
     }
 
     private void storePreviousInstance() {
         Document data = new Document("_t", "dev.morphia.test.mapping.ChildEmbed");
         data.put("type", "one");
         getDs()
-            .getCollection(BasicEntity.class)
-            .withDocumentClass(Document.class)
-            .insertOne(new Document("data", data));
+                .getCollection(BasicEntity.class)
+                .withDocumentClass(Document.class)
+                .insertOne(new Document("data", data));
     }
 }

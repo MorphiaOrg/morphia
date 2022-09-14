@@ -29,7 +29,6 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     private final Class<T> clazz;
     private final String collection;
 
-
     /**
      * Create
      *
@@ -118,12 +117,12 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
         DocumentReader reader = new DocumentReader(document);
 
         return datastore.getCodecRegistry()
-                        .get(aClass)
-                        .decode(reader, DecoderContext.builder().build());
+                .get(aClass)
+                .decode(reader, DecoderContext.builder().build());
     }
 
     /**
-     * Converts this cursor to a List.  Care should be taken on large datasets as OutOfMemoryErrors are a risk.
+     * Converts this cursor to a List. Care should be taken on large datasets as OutOfMemoryErrors are a risk.
      *
      * @return the list of Entities
      */

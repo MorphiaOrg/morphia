@@ -26,7 +26,7 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
     public SetWindowFieldsCodec(Datastore datastore) {
         super(datastore);
         objectCodec = getDatastore().getCodecRegistry()
-                                    .get(Object.class);
+                .get(Object.class);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
     }
 
     private void documents(BsonWriter writer, @Nullable List<Object> list, String documents,
-                           EncoderContext encoderContext) {
+            EncoderContext encoderContext) {
         if (list != null) {
             array(writer, documents, () -> {
                 for (Object document : list) {

@@ -35,7 +35,7 @@ public final class ArrayExpressions {
     }
 
     /**
-     * Creates an array of the given expressions.  This "expression" isn't so much a mongodb expression as it is a convenience method for
+     * Creates an array of the given expressions. This "expression" isn't so much a mongodb expression as it is a convenience method for
      * building pipeline definitions.
      *
      * @param expressions the expressions
@@ -46,7 +46,7 @@ public final class ArrayExpressions {
     }
 
     /**
-     * Creates an array of the given objects.  This method is an experiment in accepting a wider breadth of types and finding the
+     * Creates an array of the given objects. This method is an experiment in accepting a wider breadth of types and finding the
      * expressions at encoding time and dealing with them appropriately. There might be bugs in this approach. This method might go away.
      * But it's useful in some Morphia tests, at least.
      *

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Defines an importer to allow for the external definition and import of model and codec definitions.
  * <p>
- * NOTE:  This interface is marked as an internal interface but is intended for use in more advanced scenarios.  While this API should
+ * NOTE: This interface is marked as an internal interface but is intended for use in more advanced scenarios. While this API should
  * remain relatively stable over time, breaking changes might happen occasionally.
  *
  * @morphia.internal

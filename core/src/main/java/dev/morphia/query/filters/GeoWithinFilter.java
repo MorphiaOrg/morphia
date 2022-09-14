@@ -16,7 +16,7 @@ import org.bson.codecs.EncoderContext;
  * @since 2.0
  */
 @MorphiaInternal
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class GeoWithinFilter extends Filter {
     private CoordinateReferenceSystem crs;
 

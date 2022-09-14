@@ -253,13 +253,13 @@ public class DateFromParts extends Expression {
      * Can be any expression that evaluates to a string whose value is either:
      *
      * <ul>
-     *     <li>an Olson Timezone Identifier, such as "Europe/London" or "America/New_York", or
-     *     <li>a UTC offset in the form:
-     *     <ul>
-     *         <li> +/-[hh]:[mm], e.g. "+04:45", or
-     *         <li> +/-[hh][mm], e.g. "-0530", or
-     *         <li> +/-[hh], e.g. "+03".
-     *     </ul>
+     * <li>an Olson Timezone Identifier, such as "Europe/London" or "America/New_York", or
+     * <li>a UTC offset in the form:
+     * <ul>
+     * <li>+/-[hh]:[mm], e.g. "+04:45", or
+     * <li>+/-[hh][mm], e.g. "-0530", or
+     * <li>+/-[hh], e.g. "+03".
+     * </ul>
      * </ul>
      * <p>
      * Optional
@@ -273,13 +273,13 @@ public class DateFromParts extends Expression {
      * Can be any string whose value is either:
      *
      * <ul>
-     *     <li>an Olson Timezone Identifier, such as "Europe/London" or "America/New_York", or
-     *     <li>a UTC offset in the form:
-     *     <ul>
-     *         <li> +/-[hh]:[mm], e.g. "+04:45", or
-     *         <li> +/-[hh][mm], e.g. "-0530", or
-     *         <li> +/-[hh], e.g. "+03".
-     *     </ul>
+     * <li>an Olson Timezone Identifier, such as "Europe/London" or "America/New_York", or
+     * <li>a UTC offset in the form:
+     * <ul>
+     * <li>+/-[hh]:[mm], e.g. "+04:45", or
+     * <li>+/-[hh][mm], e.g. "-0530", or
+     * <li>+/-[hh], e.g. "+03".
+     * </ul>
      * </ul>
      * <p>
      * Optional

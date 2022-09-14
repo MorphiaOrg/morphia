@@ -36,8 +36,8 @@ public class TestGenerics extends TestBase {
         getDs().save(entity);
 
         ChildEntity childEntity = getDs().find(ChildEntity.class)
-                                         .iterator(new FindOptions().limit(1))
-                                         .next();
+                .iterator(new FindOptions().limit(1))
+                .next();
 
         Assert.assertEquals(childEntity, entity);
     }
@@ -54,15 +54,14 @@ public class TestGenerics extends TestBase {
         PropertyModel test = entityModel.getProperty("test");
         assertEquals(test.getType(), UUID.class);
 
-
         SpecializedEntity beforeDB = new SpecializedEntity();
         beforeDB.setId(UUID.randomUUID());
         beforeDB.setTest(UUID.randomUUID());
         getDs().save(beforeDB);
 
         SpecializedEntity loaded = getDs().find(SpecializedEntity.class)
-                                          .filter(eq("_id", beforeDB.getId()))
-                                          .first();
+                .filter(eq("_id", beforeDB.getId()))
+                .first();
 
         assertEquals(loaded.getId(), beforeDB.getId());
 
@@ -84,7 +83,7 @@ public class TestGenerics extends TestBase {
         assertNotNull(ct.id);
         assertEquals(getDs().find(ContainsThings.class).count(), 1);
         final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator(new FindOptions().limit(1))
-                                               .next();
+                .next();
         assertNotNull(ctLoaded);
         assertNotNull(ctLoaded.id);
         assertNotNull(ctLoaded.stringThing);
@@ -94,15 +93,14 @@ public class TestGenerics extends TestBase {
     @Test
     public void testMethodMappedGenericEntities() {
         Datastore datastore = createDatastore(getMongoClient(), TEST_DB_NAME,
-            MapperOptions.builder()
-                         .propertyDiscovery(PropertyDiscovery.METHODS)
-                         .build());
+                MapperOptions.builder()
+                        .propertyDiscovery(PropertyDiscovery.METHODS)
+                        .build());
 
         EntityModel entityModel = datastore.getMapper().map(MethodMappedSpecializedEntity.class).get(0);
 
         PropertyModel test = entityModel.getProperty("test");
         assertEquals(test.getType(), UUID.class);
-
 
         MethodMappedSpecializedEntity beforeDB = new MethodMappedSpecializedEntity();
         beforeDB.setId(UUID.randomUUID());
@@ -110,8 +108,8 @@ public class TestGenerics extends TestBase {
         datastore.save(beforeDB);
 
         MethodMappedSpecializedEntity loaded = datastore.find(MethodMappedSpecializedEntity.class)
-                                                        .filter(eq("_id", beforeDB.getId()))
-                                                        .first();
+                .filter(eq("_id", beforeDB.getId()))
+                .first();
 
         assertEquals(loaded.getId(), beforeDB.getId());
 
@@ -207,8 +205,7 @@ public class TestGenerics extends TestBase {
 
     @Entity
     private static class WildCards {
-        private static final Class<? extends Status<EmailItem>>
-            PROCEDURE_CLASS = EmailStatus.class;
+        private static final Class<? extends Status<EmailItem>> PROCEDURE_CLASS = EmailStatus.class;
         @Id
         private ObjectId id;
     }

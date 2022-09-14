@@ -2,10 +2,11 @@ package taglets;
 
 import com.sun.source.doctree.DocTree;
 
-import javax.lang.model.element.Element;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.lang.model.element.Element;
 
 public class ExperimentalTaglet extends DocTaglet {
     @Override
@@ -25,13 +26,13 @@ public class ExperimentalTaglet extends DocTaglet {
         }
 
         String text = "<div class=\"deprecationBlock\"><span class=\"deprecatedLabel\">%s</span>"
-            + " <div class=\"deprecationComment\">%s</div> </div>";
+                + " <div class=\"deprecationComment\">%s</div> </div>";
         return String.format(text, getHeader(), getMessage());
     }
 
     private String getMessage() {
         return "This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability "
-               + "extremely welcome.";
+                + "extremely welcome.";
     }
 
     @Override

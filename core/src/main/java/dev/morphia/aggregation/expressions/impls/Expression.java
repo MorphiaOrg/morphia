@@ -80,7 +80,7 @@ public class Expression {
     @Override
     public String toString() {
         return new StringJoiner(", ", Expression.class.getSimpleName() + "[", "]")
-                   .add("operation='" + operation + "'")
-                   .toString();
+                .add("operation='" + operation + "'")
+                .toString();
     }
 }

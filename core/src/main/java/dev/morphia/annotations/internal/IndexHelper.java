@@ -87,15 +87,15 @@ public final class IndexHelper {
     @Nullable
     public Index convert(@Nullable Text text, String nameToStore) {
         return text == null
-               ? null
-               : indexBuilder()
-                   .options(text.options())
-                   .fields(fieldBuilder()
-                       .value(nameToStore)
-                       .type(IndexType.TEXT)
-                       .weight(text.value())
-                       .build())
-                     .build();
+                ? null
+                : indexBuilder()
+                        .options(text.options())
+                        .fields(fieldBuilder()
+                                .value(nameToStore)
+                                .type(IndexType.TEXT)
+                                .weight(text.value())
+                                .build())
+                        .build();
     }
 
     /**
@@ -107,14 +107,14 @@ public final class IndexHelper {
     @Nullable
     public Index convert(@Nullable Indexed indexed, String nameToStore) {
         return indexed == null
-               ? null
-               : indexBuilder()
-                   .options(indexed.options())
-                   .fields(fieldBuilder()
-                       .value(nameToStore)
-                       .type(fromValue(indexed.value().toIndexValue()))
-                       .build())
-                     .build();
+                ? null
+                : indexBuilder()
+                        .options(indexed.options())
+                        .fields(fieldBuilder()
+                                .value(nameToStore)
+                                .type(fromValue(indexed.value().toIndexValue()))
+                                .build())
+                        .build();
     }
 
     /**
@@ -123,9 +123,9 @@ public final class IndexHelper {
      */
     public com.mongodb.client.model.IndexOptions convert(IndexOptions options) {
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
-                                                                 .background(options.background())
-                                                                 .sparse(options.sparse())
-                                                                 .unique(options.unique());
+                .background(options.background())
+                .sparse(options.sparse())
+                .unique(options.unique());
 
         if (!options.language().equals("")) {
             indexOptions.defaultLanguage(options.language());
@@ -155,18 +155,18 @@ public final class IndexHelper {
     public com.mongodb.client.model.Collation convert(Collation collation) {
         if (!collation.locale().equals("")) {
             return com.mongodb.client.model.Collation.builder()
-                                                     .locale(collation.locale().equals(DEFAULT_LOCALE)
-                                                             ? Locale.getDefault().toString()
-                                                             : collation.locale())
-                                                     .backwards(collation.backwards())
-                                                     .caseLevel(collation.caseLevel())
-                                                     .collationAlternate(collation.alternate())
-                                                     .collationCaseFirst(collation.caseFirst())
-                                                     .collationMaxVariable(collation.maxVariable())
-                                                     .collationStrength(collation.strength())
-                                                     .normalization(collation.normalization())
-                                                     .numericOrdering(collation.numericOrdering())
-                                                     .build();
+                    .locale(collation.locale().equals(DEFAULT_LOCALE)
+                            ? Locale.getDefault().toString()
+                            : collation.locale())
+                    .backwards(collation.backwards())
+                    .caseLevel(collation.caseLevel())
+                    .collationAlternate(collation.alternate())
+                    .collationCaseFirst(collation.caseFirst())
+                    .collationMaxVariable(collation.maxVariable())
+                    .collationStrength(collation.strength())
+                    .normalization(collation.normalization())
+                    .numericOrdering(collation.numericOrdering())
+                    .build();
         } else {
             return null;
         }
@@ -231,12 +231,12 @@ public final class IndexHelper {
 
     private List<Index> collectFieldIndexes(EntityModel entityModel) {
         List<Index> list = entityModel.getProperties(Indexed.class).stream()
-                                      .map(field -> convert(field.getAnnotation(Indexed.class), field.getMappedName()))
-                                      .collect(Collectors.toList());
+                .map(field -> convert(field.getAnnotation(Indexed.class), field.getMappedName()))
+                .collect(Collectors.toList());
 
         list.addAll(entityModel.getProperties(Text.class).stream()
-                               .map(field -> convert(field.getAnnotation(Text.class), field.getMappedName()))
-                               .collect(Collectors.toList()));
+                .map(field -> convert(field.getAnnotation(Text.class), field.getMappedName()))
+                .collect(Collectors.toList()));
 
         return list;
     }
@@ -260,10 +260,10 @@ public final class IndexHelper {
                 List<Field> fields = new ArrayList<>();
                 for (Field field : index.fields()) {
                     fields.add(fieldBuilder()
-                                   .value(findField(entityModel, index.options(), field.value()))
-                                   .type(field.type())
-                                   .weight(field.weight())
-                                   .build());
+                            .value(findField(entityModel, index.options(), field.value()))
+                            .type(field.type())
+                            .weight(field.weight())
+                            .build());
                 }
 
                 list.add(replaceFields(index, fields));
@@ -279,7 +279,7 @@ public final class IndexHelper {
 
     private Index replaceFields(Index original, List<Field> list) {
         return indexBuilder(original)
-                   .fields(list.toArray(new Field[0]))
-                   .build();
+                .fields(list.toArray(new Field[0]))
+                .build();
     }
 }

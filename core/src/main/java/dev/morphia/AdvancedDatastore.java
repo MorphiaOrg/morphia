@@ -64,7 +64,7 @@ public interface AdvancedDatastore extends Datastore {
      * @return the DBRef for the entity
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    default <T> DBRef createRef(T entity)  {
+    default <T> DBRef createRef(T entity) {
         final Object id = getMapper().getId(entity);
         if (id == null) {
             throw new MappingException("Could not get id for " + entity.getClass().getName());

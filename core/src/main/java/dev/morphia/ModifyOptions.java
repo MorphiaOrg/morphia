@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2.0
  */
 public class ModifyOptions extends FindOneAndUpdateOptions implements WriteConfigurable<ModifyOptions>,
-                                                                          CollectionConfigurable<ModifyOptions> {
+        CollectionConfigurable<ModifyOptions> {
     private WriteConcern writeConcern;
     private String collection;
 

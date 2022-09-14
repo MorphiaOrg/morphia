@@ -15,7 +15,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class MergeCodec extends StageCodec<Merge> {
     public MergeCodec(Datastore datastore) {
         super(datastore);
@@ -30,8 +30,8 @@ public class MergeCodec extends StageCodec<Merge> {
     protected void encodeStage(BsonWriter writer, Merge merge, EncoderContext encoderContext) {
         document(writer, () -> {
             String collection = merge.getType() != null
-                                ? getDatastore().getMapper().getEntityModel(merge.getType()).getCollectionName()
-                                : merge.getCollection();
+                    ? getDatastore().getMapper().getEntityModel(merge.getType()).getCollectionName()
+                    : merge.getCollection();
             String database = merge.getDatabase();
 
             if (database == null) {

@@ -16,7 +16,7 @@ public final class VariableExpressions {
     /**
      * Binds variables for use in the specified expression, and returns the result of the expression.
      *
-     * @param in the expression to evaluate.  variables can be defined using the {@link LetExpression#variable(String, Expression)} method
+     * @param in the expression to evaluate. variables can be defined using the {@link LetExpression#variable(String, Expression)} method
      * @return the new expression
      * @aggregation.expression $let
      */

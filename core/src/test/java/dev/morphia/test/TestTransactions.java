@@ -36,20 +36,20 @@ public class TestTransactions extends TestBase {
         getDs().save(rectangle);
 
         getDs().withTransaction(builder()
-                                    .defaultTransactionOptions(TransactionOptions.builder()
-                                                                                 .writeConcern(MAJORITY)
-                                                                                 .build())
-                                    .build(), (session) -> {
+                .defaultTransactionOptions(TransactionOptions.builder()
+                        .writeConcern(MAJORITY)
+                        .build())
+                .build(), (session) -> {
 
-            assertNotNull(getDs().find(Rectangle.class).first());
-            assertNotNull(session.find(Rectangle.class).first());
+                    assertNotNull(getDs().find(Rectangle.class).first());
+                    assertNotNull(session.find(Rectangle.class).first());
 
-            session.delete(rectangle);
+                    session.delete(rectangle);
 
-            assertNotNull(getDs().find(Rectangle.class).first());
-            assertNull(session.find(Rectangle.class).first());
-            return null;
-        });
+                    assertNotNull(getDs().find(Rectangle.class).first());
+                    assertNull(session.find(Rectangle.class).first());
+                    return null;
+                });
 
         assertNull(getDs().find(Rectangle.class).first());
     }
@@ -73,7 +73,7 @@ public class TestTransactions extends TestBase {
     @Test
     public void insertList() {
         List<Rectangle> rectangles = List.of(new Rectangle(5, 7),
-            new Rectangle(1, 1));
+                new Rectangle(1, 1));
 
         getDs().withTransaction((session) -> {
             session.insert(rectangles);
@@ -156,13 +156,13 @@ public class TestTransactions extends TestBase {
             assertNull(getDs().find(Rectangle.class).first());
 
             Rectangle modified = session.find(Rectangle.class)
-                                        .modify(inc("width", 13))
-                                        .execute();
+                    .modify(inc("width", 13))
+                    .execute();
 
             assertNull(getDs().find(Rectangle.class).first());
             assertEquals(rectangle.getWidth(), modified.getWidth(), 0.5);
             assertEquals(rectangle.getWidth() + 13, session.find(Rectangle.class)
-                                                           .first().getWidth(), 0.5);
+                    .first().getWidth(), 0.5);
 
             return null;
         });
@@ -181,7 +181,7 @@ public class TestTransactions extends TestBase {
             assertNotNull(session.find(Rectangle.class).first());
 
             session.find(Rectangle.class)
-                   .delete();
+                    .delete();
 
             assertNotNull(getDs().find(Rectangle.class).first());
             assertNull(session.find(Rectangle.class).first());
@@ -216,7 +216,7 @@ public class TestTransactions extends TestBase {
     @Test
     public void saveList() {
         List<Rectangle> rectangles = List.of(new Rectangle(5, 7),
-            new Rectangle(1, 1));
+                new Rectangle(1, 1));
 
         getDs().withTransaction((session) -> {
             session.save(rectangles);
@@ -240,8 +240,8 @@ public class TestTransactions extends TestBase {
             assertNull(getDs().find(Rectangle.class).first());
 
             session.find(Rectangle.class)
-                   .update(inc("width", 13))
-                   .execute();
+                    .update(inc("width", 13))
+                    .execute();
 
             assertEquals(session.find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
 

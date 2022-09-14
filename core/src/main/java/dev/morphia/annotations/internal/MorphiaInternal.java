@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Marks an item as an internal implementation detail.  No guarantee is made to maintain compatibility with prior versions.
+ * Marks an item as an internal implementation detail. No guarantee is made to maintain compatibility with prior versions.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

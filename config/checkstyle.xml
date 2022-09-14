@@ -116,10 +116,7 @@
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.org/config_whitespace.html -->
         <module name="EmptyForIteratorPad"/>
-        <module name="GenericWhitespace"/>
         <module name="MethodParamPad"/>
-        <module name="NoWhitespaceAfter"/>
-        <module name="NoWhitespaceBefore"/>
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>

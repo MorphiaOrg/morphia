@@ -22,7 +22,6 @@ public class AccumulatorExpression extends Expression {
     private List<Expression> initArgs;
     private String finalizeFunction;
 
-
     /**
      * @param initFunction
      * @param accumulateFunction

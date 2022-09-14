@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a GeoJSON Point type.  Will be persisted into the database according to <a href="http://geojson.org/geojson-spec.html#id2">the
+ * Represents a GeoJSON Point type. Will be persisted into the database according to <a href="http://geojson.org/geojson-spec.html#id2">the
  * specification</a>. Therefore because of this, this entity will never have its own ID or store the its Class name.
  * <p/>
  * The builder for creating a Point is the {@code GeoJson.pointBuilder} method, or the helper {@code GeoJson.point} factory method.

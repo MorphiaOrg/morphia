@@ -1,7 +1,7 @@
 package dev.morphia.transactions;
 
 /**
- * Defines the functional interface for executing statements within a transaction.  Care should be take to use only the session reference
+ * Defines the functional interface for executing statements within a transaction. Care should be take to use only the session reference
  * passed rather than any direct reference to another Datastore.
  *
  * @param <T> the entity type

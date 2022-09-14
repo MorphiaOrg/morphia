@@ -197,7 +197,7 @@ public final class StringExpressions {
     /**
      * Deprecated. Use $substrBytes or $substrCP.
      * <p>
-     * *note*:  Included for completeness and discoverability.
+     * *note*: Included for completeness and discoverability.
      *
      * @param input  the string to process
      * @param start  the starting position
@@ -218,7 +218,7 @@ public final class StringExpressions {
      *
      * @param input  the string to process
      * @param start  Indicates the starting point of the substring
-     * @param length the byte count to include.  Can not result in an ending index that is in the middle of a UTF-8 character.
+     * @param length the byte count to include. Can not result in an ending index that is in the middle of a UTF-8 character.
      * @return the new expression
      * @aggregation.expression $substrBytes
      */

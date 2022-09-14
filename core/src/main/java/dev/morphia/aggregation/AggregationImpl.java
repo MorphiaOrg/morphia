@@ -162,7 +162,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
             MongoCursor<Document> results = collection.aggregate(pipeline).iterator();
             EntityModel entityModel = datastore.getMapper().getEntityModel(this.collection.getDocumentClass());
             cursor = new MappingCursor<>(results, datastore.getCodecRegistry().get(resultType),
-                entityModel.getDiscriminatorKey());
+                    entityModel.getDiscriminatorKey());
         } else {
             cursor = collection.aggregate(pipeline, resultType).iterator();
         }
@@ -172,7 +172,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
         return new MorphiaCursor<>(options.apply(pipeline(), collection, resultType)
-                                          .iterator());
+                .iterator());
     }
 
     @Override
@@ -227,8 +227,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
     public Aggregation<T> match(Filter... filters) {
         if (stages.isEmpty()) {
             Arrays.stream(filters)
-                  .filter(f -> f.getName().equals("$eq"))
-                  .forEach(f -> f.entityType(source));
+                    .filter(f -> f.getName().equals("$eq"))
+                    .forEach(f -> f.entityType(source));
         }
         addStage(Match.match(filters));
         return this;
@@ -238,7 +238,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     public <M> void merge(Merge<M> merge) {
         addStage(merge);
         collection.aggregate(pipeline())
-                  .toCollection();
+                .toCollection();
     }
 
     @Override
@@ -247,14 +247,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
         Class<?> type = merge.getType();
         type = type != null ? type : Document.class;
         options.apply(pipeline(), collection, type)
-               .toCollection();
+                .toCollection();
     }
 
     @Override
     public <O> void out(Out<O> out) {
         addStage(out);
         collection.aggregate(pipeline())
-                  .toCollection();
+                .toCollection();
     }
 
     @Override
@@ -373,16 +373,16 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return this;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<Document> pipeline() {
         return stages.stream()
-                     .map(s -> {
-                         Codec codec = datastore.getCodecRegistry().get(s.getClass());
-                         DocumentWriter writer = new DocumentWriter(datastore.getMapper());
-                         codec.encode(writer, s, EncoderContext.builder().build());
-                         return writer.getDocument();
-                     })
-                     .collect(Collectors.toList());
+                .map(s -> {
+                    Codec codec = datastore.getCodecRegistry().get(s.getClass());
+                    DocumentWriter writer = new DocumentWriter(datastore.getMapper());
+                    codec.encode(writer, s, EncoderContext.builder().build());
+                    return writer.getDocument();
+                })
+                .collect(Collectors.toList());
     }
 
     private void addStage(Stage stage) {

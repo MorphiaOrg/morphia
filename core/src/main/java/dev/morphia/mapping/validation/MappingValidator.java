@@ -142,7 +142,7 @@ public class MappingValidator {
                     break;
                 default:
                     throw new IllegalStateException(format("Cannot log %s of Level %s", ConstraintViolation.class.getSimpleName(),
-                                                           v.getLevel()));
+                            v.getLevel()));
             }
         }
     }

@@ -47,8 +47,8 @@ public class QuickTourTest {
             }
             Version version = Version.valueOf(mongodb);
             cluster = version.lessThan(Version.valueOf("4.0.0"))
-                      ? new SingleNode(version, "morphia_test", mongodbRoot)
-                      : new ReplicaSet(version, "morphia_test", mongodbRoot);
+                    ? new SingleNode(version, "morphia_test", mongodbRoot)
+                    : new ReplicaSet(version, "morphia_test", mongodbRoot);
 
             cluster.configure(c -> {
                 c.systemLog(s -> {
@@ -105,20 +105,19 @@ public class QuickTourTest {
         assertEquals(employees, 3);
 
         long underpaid = datastore.find(Employee.class)
-                                  .filter(lte("salary", 30000))
-                                  .count();
+                .filter(lte("salary", 30000))
+                .count();
         assertEquals(underpaid, 1);
 
         final Query<Employee> underPaidQuery = datastore.find(Employee.class)
-                                                        .filter(lte("salary", 30000));
+                .filter(lte("salary", 30000));
         final UpdateResult results = underPaidQuery.update(inc("salary", 10000))
-                                                   .execute();
+                .execute();
 
         assertEquals(results.getModifiedCount(), 1);
 
         datastore.find(Employee.class)
-                 .filter(gt("salary", 100000))
-                 .findAndDelete();
+                .filter(gt("salary", 100000))
+                .findAndDelete();
     }
 }
-

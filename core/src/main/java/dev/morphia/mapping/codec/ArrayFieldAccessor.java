@@ -67,7 +67,6 @@ public class ArrayFieldAccessor extends FieldAccessor {
         return newArray;
     }
 
-
     @Nullable
     private Object convert(Object o, Class<?> type) {
         if (o instanceof List) {

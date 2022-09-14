@@ -65,8 +65,8 @@ public class MultiPoint implements Geometry {
     @Override
     public String toString() {
         return "MultiPoint{"
-               + "coordinates=" + coordinates
-               + '}';
+                + "coordinates=" + coordinates
+                + '}';
     }
 
     @Override
@@ -77,6 +77,6 @@ public class MultiPoint implements Geometry {
     @Override
     public com.mongodb.client.model.geojson.MultiPoint convert(@Nullable CoordinateReferenceSystem crs) {
         return new com.mongodb.client.model.geojson.MultiPoint(crs != null ? crs.convert() : null,
-            GeoJson.convertPoints(coordinates));
+                GeoJson.convertPoints(coordinates));
     }
 }

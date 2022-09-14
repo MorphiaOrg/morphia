@@ -52,8 +52,8 @@ public class GeoCity {
     @Override
     public String toString() {
         return "City{"
-               + "location=" + location
-               + ", name='" + name + '\''
-               + '}';
+                + "location=" + location
+                + ", name='" + name + '\''
+                + '}';
     }
 }

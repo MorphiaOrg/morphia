@@ -32,6 +32,6 @@ public class ProjectedAuthor {
         }
         final ProjectedAuthor that = (ProjectedAuthor) o;
         return last.equals(that.last) &&
-               first.equals(that.first);
+                first.equals(that.first);
     }
 }
