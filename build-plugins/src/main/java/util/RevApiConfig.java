@@ -51,21 +51,21 @@ public class RevApiConfig extends AbstractMojo {
                 Map<String, List<Map<String, String>>> flatten = flatten(entry);
                 flatten.forEach((code, instances) -> {
                     nodes.addAll(instances.stream()
-                                          .map(instance -> {
-                                              Map node = new LinkedHashMap();
-                                              node.put("code", "java." + code);
-                                              node.putAll(instance);
-                                              return node;
-                                          })
-                                          .collect(Collectors.toList()));
+                            .map(instance -> {
+                                Map node = new LinkedHashMap();
+                                node.put("code", "java." + code);
+                                node.putAll(instance);
+                                return node;
+                            })
+                            .collect(Collectors.toList()));
                 });
             }
 
             config.put("configuration", nodes);
 
             mapper.writer()
-                  .withDefaultPrettyPrinter()
-                  .writeValue(output, singletonList(config));
+                    .withDefaultPrettyPrinter()
+                    .writeValue(output, singletonList(config));
         } catch (IOException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
@@ -77,9 +77,9 @@ public class RevApiConfig extends AbstractMojo {
         if (entry.getValue() instanceof Map) {
             for (Object object : ((Map) entry.getValue()).entrySet()) {
                 flatten((Entry<String, Object>) object)
-                    .forEach((k, v) -> {
-                        flat.put(key + "." + k, v);
-                    });
+                        .forEach((k, v) -> {
+                            flat.put(key + "." + k, v);
+                        });
             }
         } else if (entry.getValue() instanceof List) {
             flat.put(key, (List<Map<String, String>>) entry.getValue());
@@ -88,4 +88,3 @@ public class RevApiConfig extends AbstractMojo {
         return flat;
     }
 }
-
