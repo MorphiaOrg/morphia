@@ -5,19 +5,23 @@ import dev.morphia.annotations.Id;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
+import org.jetbrains.annotations.NotNull;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;
 import static dev.morphia.aggregation.experimental.stages.Unwind.unwind;
 import static dev.morphia.query.experimental.filters.Filters.eq;
+import static java.util.Comparator.comparing;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -122,18 +126,25 @@ public class MorphiaReferenceTest extends TestBase {
 
         assertTrue(loaded.set.isResolved());
         final Set<Book> set1 = loaded.getSet();
-        assertEquals(set.size(), set1.size());
+        assertEquals(treeSet(set), treeSet(set1));
         for (Book book1 : set) {
             assertTrue(set1.contains(book1), "Looking for " + book1 + " in " + set1);
         }
 
         assertTrue(loaded.list.isResolved());
-        assertEquals(list, loaded.getList());
+        assertListEquals(list, loaded.getList());
         for (Book book1 : list) {
             assertTrue(list.contains(book1), "Looking for " + book1 + " in " + list);
         }
         assertTrue(loaded.list.isResolved());
         //        validateMap(map, loaded);
+    }
+
+    @NotNull
+    private static TreeSet<Book> treeSet(Set<Book> set) {
+        TreeSet<Book> tree = new TreeSet<>(comparing(o -> o.id));
+        tree.addAll(set);
+        return tree;
     }
 
     protected Book addBook(Author author) {
