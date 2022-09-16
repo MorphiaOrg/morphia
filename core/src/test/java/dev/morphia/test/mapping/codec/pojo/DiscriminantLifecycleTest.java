@@ -30,9 +30,9 @@ public class DiscriminantLifecycleTest extends TestBase {
 
     @DataProvider(name = "classes")
     public Object[][] classes() {
-        return new Object[][]{
-            {BaseLifecycleEntity.class, ChildLifecycleEntity.class},
-            {BaseEntity.class, ChildEntity.class}
+        return new Object[][] {
+                { BaseLifecycleEntity.class, ChildLifecycleEntity.class },
+                { BaseEntity.class, ChildEntity.class }
         };
     }
 

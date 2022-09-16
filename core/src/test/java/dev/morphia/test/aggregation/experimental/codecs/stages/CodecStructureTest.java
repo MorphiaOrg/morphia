@@ -52,171 +52,168 @@ import static dev.morphia.query.experimental.filters.Filters.exists;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 
-
 public class CodecStructureTest extends TestBase {
     @Test
     public void testBucket() {
         evaluate(parse("{ $bucket: { groupBy: '$price', boundaries: [  0, 150, 200, 300, 400 ], default: 'Other', output: { 'count': { "
-                       + "$sum: 1 },'titles': { $push: '$title' } } } }"),
-            Bucket.bucket()
-                  .groupBy(field("price"))
-                  .boundaries(value(0), value(150), value(200), value(300), value(400))
-                  .defaultValue("Other")
-                  .outputField("count", sum(value(1)))
-                  .outputField("titles", push().single(field("title"))));
+                + "$sum: 1 },'titles': { $push: '$title' } } } }"),
+                Bucket.bucket()
+                        .groupBy(field("price"))
+                        .boundaries(value(0), value(150), value(200), value(300), value(400))
+                        .defaultValue("Other")
+                        .outputField("count", sum(value(1)))
+                        .outputField("titles", push().single(field("title"))));
     }
 
     @Test
     public void testCollectionStats() {
         evaluate(parse("{ $collStats: { latencyStats: { histograms: true }, storageStats: { scale: 42 }, count: {} } }"),
-            CollectionStats.collStats()
-                           .histogram(true)
-                           .scale(42)
-                           .count(true));
+                CollectionStats.collStats()
+                        .histogram(true)
+                        .scale(42)
+                        .count(true));
 
     }
 
     @Test
     public void testCurrentOp() {
         evaluate(parse("{ $currentOp: { allUsers: true, idleConnections: true, idleCursors: true, idleSessions: true, localOps: true } }"),
-            CurrentOp.currentOp()
-                     .allUsers(true)
-                     .idleConnections(true)
-                     .idleCursors(true)
-                     .idleSessions(true)
-                     .localOps(true));
+                CurrentOp.currentOp()
+                        .allUsers(true)
+                        .idleConnections(true)
+                        .idleCursors(true)
+                        .idleSessions(true)
+                        .localOps(true));
         evaluate(parse("{ $currentOp: { idleConnections: true, idleCursors: true, idleSessions: true, localOps: true } }"),
-            CurrentOp.currentOp()
-                     .idleConnections(true)
-                     .idleCursors(true)
-                     .idleSessions(true)
-                     .localOps(true));
+                CurrentOp.currentOp()
+                        .idleConnections(true)
+                        .idleCursors(true)
+                        .idleSessions(true)
+                        .localOps(true));
         evaluate(parse("{ $currentOp: { idleCursors: true, idleSessions: true, localOps: true } }"),
-            CurrentOp.currentOp()
-                     .idleCursors(true)
-                     .idleSessions(true)
-                     .localOps(true));
+                CurrentOp.currentOp()
+                        .idleCursors(true)
+                        .idleSessions(true)
+                        .localOps(true));
         evaluate(parse("{ $currentOp: { idleSessions: true, localOps: true } }"),
-            CurrentOp.currentOp()
-                     .idleSessions(true)
-                     .localOps(true));
+                CurrentOp.currentOp()
+                        .idleSessions(true)
+                        .localOps(true));
         evaluate(parse("{ $currentOp: { localOps: true } }"),
-            CurrentOp.currentOp()
-                     .localOps(true));
+                CurrentOp.currentOp()
+                        .localOps(true));
         evaluate(parse("{ $currentOp: {  } }"),
-            CurrentOp.currentOp());
+                CurrentOp.currentOp());
     }
 
     @Test
     public void testGeoNear() {
         evaluate(parse("{ $geoNear: { near: { type: 'Point', coordinates: [ -73.98142 , 40.71782 ] }, key: 'location', distanceField: "
-                       + "'dist.calculated', query: { 'category': 'Parks' } } }"),
-            GeoNear.geoNear(new Point(new Position(-73.98142, 40.71782)))
-                   .key("location")
-                   .distanceField("dist.calculated")
-                   .query(eq("category", "Parks")));
+                + "'dist.calculated', query: { 'category': 'Parks' } } }"),
+                GeoNear.geoNear(new Point(new Position(-73.98142, 40.71782)))
+                        .key("location")
+                        .distanceField("dist.calculated")
+                        .query(eq("category", "Parks")));
     }
 
     @Test
     public void testGraphLookup() {
         Document document = parse("{$graphLookup: {from: 'employees',startWith: '$reportsTo',connectFromField: 'reportsTo',"
-                                  + "connectToField: 'name',as: 'reportingHierarchy' }}");
+                + "connectToField: 'name',as: 'reportingHierarchy' }}");
         evaluate(document,
-            GraphLookup.graphLookup("employees")
-                       .startWith(field("reportsTo"))
-                       .connectFromField("reportsTo")
-                       .connectToField("name")
-                       .as("reportingHierarchy"));
+                GraphLookup.graphLookup("employees")
+                        .startWith(field("reportsTo"))
+                        .connectFromField("reportsTo")
+                        .connectToField("name")
+                        .as("reportingHierarchy"));
     }
 
     @Test
     public void testMatch() {
         evaluate(parse("{ $match: { price: { $exists: true } } }"),
-            Match.match(exists("price")));
+                Match.match(exists("price")));
     }
 
     @Test
     public void testIfNull() {
         evaluate(parse("{ $ifNull: [ \"$name\", { _id: \"$_id\", missingName: true} ] }"),
-            ConditionalExpressions.ifNull()
-                                  .target(field("name"))
-                                  .field("_id", field("_id"))
-                                  .field("missingName", value(true)));
+                ConditionalExpressions.ifNull()
+                        .target(field("name"))
+                        .field("_id", field("_id"))
+                        .field("missingName", value(true)));
     }
 
     @Test
     public void testMerge() {
         evaluate(parse("{ $merge : { into: { db: 'reporting', coll: 'budgets' }, on: '_id',  whenMatched: 'replace', "
-                       + "whenNotMatched: 'insert' } }"),
-            Merge.into("reporting", "budgets")
-                 .on("_id")
-                 .whenMatched(WhenMatched.REPLACE)
-                 .whenNotMatched(WhenNotMatched.INSERT));
-
+                + "whenNotMatched: 'insert' } }"),
+                Merge.into("reporting", "budgets")
+                        .on("_id")
+                        .whenMatched(WhenMatched.REPLACE)
+                        .whenNotMatched(WhenNotMatched.INSERT));
 
         evaluate(parse("{ $merge: { into: 'monthlytotals', on: '_id', whenMatched:  [ { $addFields: { thumbsup: { $add:[ '$thumbsup', "
-                       + "'$$new.thumbsup' ] }, thumbsdown: { $add: [ '$thumbsdown', '$$new.thumbsdown' ] } } } ], whenNotMatched: "
-                       + "'insert' } }"),
-            Merge.into("monthlytotals")
-                 .on("_id")
-                 .whenMatched(List.of(
-                     AddFields.addFields()
-                              .field("thumbsup", add(field("thumbsup"), value("$$new.thumbsup")))
-                              .field("thumbsdown", add(field("$thumbsdown"), value("$$new.thumbsdown")))))
-                 .whenNotMatched(WhenNotMatched.INSERT));
+                + "'$$new.thumbsup' ] }, thumbsdown: { $add: [ '$thumbsdown', '$$new.thumbsdown' ] } } } ], whenNotMatched: "
+                + "'insert' } }"),
+                Merge.into("monthlytotals")
+                        .on("_id")
+                        .whenMatched(List.of(
+                                AddFields.addFields()
+                                        .field("thumbsup", add(field("thumbsup"), value("$$new.thumbsup")))
+                                        .field("thumbsdown", add(field("$thumbsdown"), value("$$new.thumbsdown")))))
+                        .whenNotMatched(WhenNotMatched.INSERT));
     }
 
     @Test
     public void testRedact() {
         evaluate(parse("{ $redact: { $cond: [ { $gt: [ { $size: { $setIntersection: [ '$tags', [ 'STLW', 'G' ] ] } }, 0 ] }, "
-                       + "'$$DESCEND', '$$PRUNE']}}"),
-            Redact.redact(condition(
-                gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
-                DESCEND, PRUNE)));
+                + "'$$DESCEND', '$$PRUNE']}}"),
+                Redact.redact(condition(
+                        gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
+                        DESCEND, PRUNE)));
     }
 
     @Test
     public void testMergeObjects() {
         evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
-            ObjectExpressions.mergeObjects()
-                             .add(elementAt(field("fromItems"), value(0)))
-                             .add(ROOT));
+                ObjectExpressions.mergeObjects()
+                        .add(elementAt(field("fromItems"), value(0)))
+                        .add(ROOT));
     }
 
     @Test
     public void testPush() {
         evaluate(parse("{ $push:  { item: \"$item\", quantity: \"$quantity\" } }"),
-            AccumulatorExpressions.push()
-                                  .field("item", field("item"))
-                                  .field("quantity", field("quantity")));
+                AccumulatorExpressions.push()
+                        .field("item", field("item"))
+                        .field("quantity", field("quantity")));
 
         evaluate(parse("{ $push: '$title' }"),
-            AccumulatorExpressions.push()
-                                  .single(field("title")));
+                AccumulatorExpressions.push()
+                        .single(field("title")));
     }
 
     @Test
     public void testReplaceWith() {
         evaluate(parse("{ $replaceWith: \"$grades\" }"),
-            ReplaceWith.replaceWith(field("grades")));
+                ReplaceWith.replaceWith(field("grades")));
 
         evaluate(parse("{ $replaceWith: { _id: '$_id', item: '$item', amount: { $multiply: [ '$price', '$quantity']}, status: 'Complete', "
-                       + "asofDate: '$$NOW' } }"),
-            ReplaceWith.replaceWith()
-                       .field("_id", field("_id"))
-                       .field("item", field("item"))
-                       .field("amount", MathExpressions.multiply(field("price"), field("quantity")))
-                       .field("status", value("Complete"))
-                       .field("asofDate", NOW)
-                );
+                + "asofDate: '$$NOW' } }"),
+                ReplaceWith.replaceWith()
+                        .field("_id", field("_id"))
+                        .field("item", field("item"))
+                        .field("amount", MathExpressions.multiply(field("price"), field("quantity")))
+                        .field("status", value("Complete"))
+                        .field("asofDate", NOW));
     }
 
     @Test
     public void testSample() {
         DocumentWriter writer = new DocumentWriter(getMapper());
         getMapper().getCodecRegistry()
-                   .get(Sample.class)
-                   .encode(writer, Sample.sample(15L), EncoderContext.builder().build());
+                .get(Sample.class)
+                .encode(writer, Sample.sample(15L), EncoderContext.builder().build());
         Document actual = writer.getDocument();
         assertEquals(((Document) actual.get("$sample")).getLong("size").longValue(), 15L);
     }
@@ -225,18 +222,18 @@ public class CodecStructureTest extends TestBase {
     public void testSkip() {
         DocumentWriter writer = new DocumentWriter(getMapper());
         getMapper().getCodecRegistry()
-                   .get(Skip.class)
-                   .encode(writer, Skip.skip(15L), EncoderContext.builder().build());
+                .get(Skip.class)
+                .encode(writer, Skip.skip(15L), EncoderContext.builder().build());
         Document actual = writer.getDocument();
         assertEquals(actual.getLong("$skip").longValue(), 15L);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void evaluate(Document expected, Object value) {
         DocumentWriter writer = new DocumentWriter(getMapper());
         ((Codec) getMapper().getCodecRegistry()
-                            .get(value.getClass()))
-            .encode(writer, value, EncoderContext.builder().build());
+                .get(value.getClass()))
+                .encode(writer, value, EncoderContext.builder().build());
         Document actual = writer.getDocument();
 
         assertDocumentEquals(actual, expected);
@@ -245,22 +242,22 @@ public class CodecStructureTest extends TestBase {
     @Test
     public void testSortByCount() {
         evaluate(parse("{ $sortByCount: \"$tags\" }"),
-            SortByCount.sortByCount(field("tags")));
+                SortByCount.sortByCount(field("tags")));
     }
 
     @Test
     public void testUnset() {
         evaluate(parse("{ $unset:  'single' }"),
-            Unset.unset("single"));
+                Unset.unset("single"));
 
         evaluate(parse("{ $unset:  [\"more\", \"than\", \"one\"] }"),
-            Unset.unset("more", "than", "one"));
+                Unset.unset("more", "than", "one"));
     }
 
     @Test
     public void testUnwind() {
         evaluate(parse("{ $unwind : \"$sizes\" }"),
-            Unwind.unwind("sizes"));
+                Unwind.unwind("sizes"));
     }
 
 }

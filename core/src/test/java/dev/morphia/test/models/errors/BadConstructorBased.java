@@ -14,7 +14,7 @@ public class BadConstructorBased {
 
     @Constructor
     public BadConstructorBased(@Name("_id") ObjectId id,
-                               @Name("named") String name) {
+            @Name("named") String name) {
         this.id = id;
         this.name = name;
     }

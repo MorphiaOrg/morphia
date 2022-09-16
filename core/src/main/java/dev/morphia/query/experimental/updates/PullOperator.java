@@ -34,7 +34,7 @@ public class PullOperator extends UpdateOperator {
                 DocumentWriter writer = new DocumentWriter(mapper);
                 document(writer, () -> {
                     ((Filter) getValue())
-                        .encode(mapper, writer, EncoderContext.builder().build());
+                            .encode(mapper, writer, EncoderContext.builder().build());
                 });
 
                 PropertyModel target = pathTarget.getTarget();

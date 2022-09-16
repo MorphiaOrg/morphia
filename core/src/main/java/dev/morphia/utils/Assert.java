@@ -6,6 +6,7 @@ import static java.lang.String.format;
 
 /**
  * Provides various assertions for Morphia during validation
+ *
  * @morphia.internal
  */
 public final class Assert {

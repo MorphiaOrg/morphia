@@ -1,17 +1,6 @@
 package dev.morphia.test.mapping;
 
-import static org.testng.Assert.assertTrue;
-
-import java.util.Map;
-import java.util.function.Function;
-
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecConfigurationException;
-import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
-
 import com.mongodb.client.MongoCollection;
-
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.Entity;
@@ -22,6 +11,15 @@ import dev.morphia.test.TestBase;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
 import net.bytebuddy.jar.asm.Opcodes;
+import org.bson.Document;
+import org.bson.codecs.configuration.CodecConfigurationException;
+import org.bson.types.ObjectId;
+import org.testng.annotations.Test;
+
+import java.util.Map;
+import java.util.function.Function;
+
+import static org.testng.Assert.assertTrue;
 
 public class TestClassLoader extends TestBase {
     private static class AppClassLoader extends ClassLoader {
@@ -52,7 +50,6 @@ public class TestClassLoader extends TestBase {
     public void testNotUsingClassLoader() {
         useClassLoading(cl -> getMapper().getCollection(BasicEntity.class));
     }
-
 
     private void useClassLoading(Function<ClassLoader, MongoCollection<BasicEntity>> collectionCreator) {
         storePreviousInstance();

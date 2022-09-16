@@ -12,7 +12,8 @@ class KotlinDelegatedPropertiesDiscovery : MorphiaConvention {
         if (field != null) {
             field.trySetAccessible()
             for (kProperty in field.get(builder.type) as Array<KProperty<*>>) {
-                builder.propertyModelByName("${kProperty.name}\$delegate")
+                builder
+                    .propertyModelByName("${kProperty.name}\$delegate")
                     .name(kProperty.name)
                     .discoverMappedName(datastore.mapper.options)
                     .accessor(ReadWritePropertyAccessor(kProperty as KMutableProperty<*>))
@@ -20,4 +21,3 @@ class KotlinDelegatedPropertiesDiscovery : MorphiaConvention {
         }
     }
 }
-

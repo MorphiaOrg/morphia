@@ -25,7 +25,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         } else {
             modelBuilder.enableDiscriminator(embedded == null || embedded.useDiscriminator());
             modelBuilder.discriminatorKey(applyDefaults(embedded != null ? embedded.discriminatorKey() : Mapper.IGNORED_FIELDNAME,
-                options.getDiscriminatorKey()));
+                    options.getDiscriminatorKey()));
         }
 
         options.getDiscriminator().apply(modelBuilder);

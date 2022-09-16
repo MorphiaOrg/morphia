@@ -18,7 +18,6 @@ public class BucketOptions {
     private Object defaultField;
     private final Map<String, Accumulator> accumulators = new HashMap<String, Accumulator>();
 
-
     /**
      * Converts a BucketOptions to a Document for use by the Java driver.
      *
@@ -121,7 +120,6 @@ public class BucketOptions {
             accumulators.put(fieldName, new Accumulator("$sum", field));
             return BucketOptions.this;
         }
-
 
     }
 

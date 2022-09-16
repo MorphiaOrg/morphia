@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * Defines a specific handler for a type above and beyond the codecs
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Documented
 @Inherited
 public @interface Handler {

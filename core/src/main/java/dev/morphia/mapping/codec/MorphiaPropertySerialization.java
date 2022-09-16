@@ -42,7 +42,7 @@ public class MorphiaPropertySerialization implements PropertySerialization {
         }
         if (!options.isStoreEmpties()) {
             if (value instanceof Map && ((Map) value).isEmpty()
-                || value instanceof Collection && ((Collection) value).isEmpty()) {
+                    || value instanceof Collection && ((Collection) value).isEmpty()) {
                 return false;
             }
         }

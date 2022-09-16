@@ -91,7 +91,7 @@ abstract class ReaderState {
         if (value instanceof DBRef) {
             DBRef dbRef = (DBRef) value;
             Document document = new Document("$ref", dbRef.getCollectionName())
-                                    .append("$id", dbRef.getId());
+                    .append("$id", dbRef.getId());
             if (dbRef.getDatabaseName() != null) {
                 document.append("$db", dbRef.getDatabaseName());
             }

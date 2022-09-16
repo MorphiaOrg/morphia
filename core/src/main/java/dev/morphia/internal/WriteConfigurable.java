@@ -6,7 +6,7 @@ import com.mongodb.lang.Nullable;
 
 public interface WriteConfigurable<T> {
     /**
-     * The write concern to use.  By default the write concern configured for the MongoCollection instance will be used.
+     * The write concern to use. By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
      * @deprecated use {@link #writeConcern()} instead
@@ -28,8 +28,8 @@ public interface WriteConfigurable<T> {
     default <C> MongoCollection<C> prepare(MongoCollection<C> collection) {
         WriteConcern writeConcern = writeConcern();
         return writeConcern == null
-               ? collection
-               : collection.withWriteConcern(writeConcern);
+                ? collection
+                : collection.withWriteConcern(writeConcern);
     }
 
     /**
@@ -41,7 +41,7 @@ public interface WriteConfigurable<T> {
     T writeConcern(@Nullable WriteConcern writeConcern);
 
     /**
-     * The write concern to use.  By default the write concern configured for the MongoCollection instance will be used.
+     * The write concern to use. By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
      */

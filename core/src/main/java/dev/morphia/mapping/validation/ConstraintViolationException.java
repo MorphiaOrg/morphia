@@ -4,7 +4,6 @@ import dev.morphia.mapping.MappingException;
 
 import java.util.Collection;
 
-
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
  */

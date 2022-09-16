@@ -28,9 +28,7 @@ import java.lang.reflect.Modifier;
  * @author Joel Leitch
  * @author Jesse Wilson
  */
-@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(
-    value = "REC_CATCH_EXCEPTION",
-    justification = "Unsafe")
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "REC_CATCH_EXCEPTION", justification = "Unsafe")
 public abstract class UnsafeAllocator {
     /**
      * Check if the class can be instantiated by unsafe allocator. If the instance has interface or abstract modifiers
@@ -77,11 +75,11 @@ public abstract class UnsafeAllocator {
         // }
         try {
             Method getConstructorId = ObjectStreamClass.class
-                                          .getDeclaredMethod("getConstructorId", Class.class);
+                    .getDeclaredMethod("getConstructorId", Class.class);
             getConstructorId.setAccessible(true);
             final int constructorId = (Integer) getConstructorId.invoke(null, Object.class);
             final Method newInstance = ObjectStreamClass.class
-                                           .getDeclaredMethod("newInstance", Class.class, int.class);
+                    .getDeclaredMethod("newInstance", Class.class, int.class);
             newInstance.setAccessible(true);
             return new UnsafeAllocator() {
                 @Override
@@ -101,7 +99,7 @@ public abstract class UnsafeAllocator {
         // }
         try {
             final Method newInstance = ObjectInputStream.class
-                                           .getDeclaredMethod("newInstance", Class.class, Class.class);
+                    .getDeclaredMethod("newInstance", Class.class, Class.class);
             newInstance.setAccessible(true);
             return new UnsafeAllocator() {
                 @Override

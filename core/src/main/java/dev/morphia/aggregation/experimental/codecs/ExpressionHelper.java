@@ -61,7 +61,7 @@ public final class ExpressionHelper {
      * @morphia.internal
      */
     public static void expression(Mapper mapper, BsonWriter writer, String name, @Nullable Expression expression,
-                                  EncoderContext encoderContext) {
+            EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
             expression.encode(mapper, writer, encoderContext);

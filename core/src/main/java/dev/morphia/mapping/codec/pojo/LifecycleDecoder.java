@@ -1,17 +1,16 @@
 package dev.morphia.mapping.codec.pojo;
 
-import static java.lang.String.format;
-
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.codec.reader.DocumentReader;
 import org.bson.BsonReader;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.codec.reader.DocumentReader;
+import static java.lang.String.format;
 
 /**
  * @morphia.internal

@@ -100,7 +100,7 @@ public class Group extends Stage {
     }
 
     /**
-     * Adds a field to the group.  This method is equivalent to calling {@code field("name", Expression.field("name"))}
+     * Adds a field to the group. This method is equivalent to calling {@code field("name", Expression.field("name"))}
      *
      * @param name the field name
      * @return this
@@ -170,7 +170,7 @@ public class Group extends Stage {
         }
 
         /**
-         * Adds a field to the group.  This method is equivalent to calling {@code field("name", Expression.field("name"))}
+         * Adds a field to the group. This method is equivalent to calling {@code field("name", Expression.field("name"))}
          *
          * @param name the field name
          * @return this

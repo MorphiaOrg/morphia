@@ -108,7 +108,7 @@ public abstract class TestBase {
                 MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
                 zipcodes.drop();
                 Files.lines(file.toPath())
-                     .forEach(l -> zipcodes.insertOne(Document.parse(l)));
+                        .forEach(l -> zipcodes.insertOne(Document.parse(l)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,9 +130,9 @@ public abstract class TestBase {
 
     @DataProvider(name = "queryFactories")
     public Object[][] queryFactories() {
-        return new Object[][]{
-            new Object[]{new DefaultQueryFactory()},
-            new Object[]{new LegacyQueryFactory()}
+        return new Object[][] {
+                new Object[] { new DefaultQueryFactory() },
+                new Object[] { new LegacyQueryFactory() }
         };
     }
 
@@ -150,7 +150,7 @@ public abstract class TestBase {
     protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
         assertEquals(actual.size(), expected.size());
         expected.forEach(
-            d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
+                d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
     }
 
     protected void assumeTrue(boolean condition, String message) {
@@ -169,7 +169,7 @@ public abstract class TestBase {
 
     protected void checkMinServerVersion(Version version) {
         assumeTrue(serverIsAtLeastVersion(version),
-            String.format("Server should be at least %s but found %s", version, getServerVersion()));
+                String.format("Server should be at least %s but found %s", version, getServerVersion()));
     }
 
     protected int count(MongoCursor<?> cursor) {
@@ -220,20 +220,20 @@ public abstract class TestBase {
     protected Document getOptions(Class<?> type) {
         MongoCollection<?> collection = getMapper().getCollection(type);
         Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
-                                                       .append("filter",
-                                                           new Document("name", collection.getNamespace().getCollectionName())));
+                .append("filter",
+                        new Document("name", collection.getNamespace().getCollectionName())));
 
         Document cursor = (Document) result.get("cursor");
         return (Document) cursor.getList("firstBatch", Document.class)
-                                .get(0)
-                                .get("options");
+                .get(0)
+                .get("options");
     }
 
     protected Version getServerVersion() {
         String version = (String) getMongoClient()
-                                      .getDatabase("admin")
-                                      .runCommand(new Document("serverStatus", 1))
-                                      .get("version");
+                .getDatabase("admin")
+                .runCommand(new Document("serverStatus", 1))
+                .get("version");
         return Version.valueOf(version);
     }
 
@@ -270,7 +270,7 @@ public abstract class TestBase {
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void assertDocumentEquals(String path, Object actual, Object expected) {
         assertSameNullity(path, expected, actual);
         if (expected == null) {
@@ -314,7 +314,7 @@ public abstract class TestBase {
 
     private void assertSameNullity(String path, Object expected, Object actual) {
         if (expected == null && actual != null
-            || actual == null && expected != null) {
+                || actual == null && expected != null) {
             assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
@@ -342,7 +342,7 @@ public abstract class TestBase {
 
     private Document runIsMaster() {
         return mongoClient.getDatabase("admin")
-                          .runCommand(new Document("ismaster", 1));
+                .runCommand(new Document("ismaster", 1));
     }
 
     private void startMongo() {
@@ -364,8 +364,8 @@ public abstract class TestBase {
             }
             Version version = Version.valueOf(mongodb);
             final MongoCluster cluster = version.lessThan(Version.valueOf("4.0.0"))
-                                         ? new SingleNode(version, "morphia_test", mongodbRoot)
-                                         : new ReplicaSet(version, "morphia_test", mongodbRoot);
+                    ? new SingleNode(version, "morphia_test", mongodbRoot)
+                    : new ReplicaSet(version, "morphia_test", mongodbRoot);
 
             cluster.configure(c -> {
                 c.systemLog(s -> {

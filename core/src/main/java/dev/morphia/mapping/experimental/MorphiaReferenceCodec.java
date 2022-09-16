@@ -50,8 +50,8 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
     public MorphiaReference decode(BsonReader reader, DecoderContext decoderContext) {
         Mapper mapper = getDatastore().getMapper();
         Object value = mapper.getCodecRegistry()
-                             .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
-                             .decode(reader, decoderContext);
+                .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
+                .decode(reader, decoderContext);
         value = processId(value, mapper, decoderContext);
         TypeData typeData = getTypeData().getTypeParameters().get(0);
         EntityModel fieldEntityModel = getEntityModelForField();
@@ -90,8 +90,8 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
     public void encode(BsonWriter writer, MorphiaReference value, EncoderContext encoderContext) {
         Object ids = value.getId(mapper, getDatastore(), getEntityModelForField());
         if (ids == null
-            || (ids instanceof Collection && ((Collection<?>) ids).isEmpty())
-            || (ids instanceof Map && ((Map<?, ?>) ids).isEmpty())) {
+                || (ids instanceof Collection && ((Collection<?>) ids).isEmpty())
+                || (ids instanceof Map && ((Map<?, ?>) ids).isEmpty())) {
             throw new ReferenceException(Sofia.noIdForReference());
         }
 

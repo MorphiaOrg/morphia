@@ -18,19 +18,19 @@ import static org.testng.Assert.assertNotNull;
 public class TestIgnoreMissingReferences extends TestBase {
     public void testMissingReference() {
         final Container c = new Container();
-        c.refs = new StringHolder[]{new StringHolder(), new StringHolder()};
+        c.refs = new StringHolder[] { new StringHolder(), new StringHolder() };
         getDs().save(c);
         getDs().save(c.refs[0]);
 
         Container reloadedContainer = getDs().find(Container.class).iterator(new FindOptions().limit(1))
-                                             .tryNext();
+                .tryNext();
         assertNotNull(reloadedContainer);
         assertNotNull(reloadedContainer.refs);
         assertEquals(reloadedContainer.refs.length, 1);
 
         reloadedContainer = getDs().find(Container.class)
-                                   .filter(eq("_id", c.id))
-                                   .first();
+                .filter(eq("_id", c.id))
+                .first();
         assertNotNull(reloadedContainer);
         assertNotNull(reloadedContainer.refs);
         assertEquals(reloadedContainer.refs.length, 1);

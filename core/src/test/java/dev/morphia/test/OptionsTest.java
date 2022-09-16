@@ -29,7 +29,7 @@ public class OptionsTest {
     @Test
     public void aggregationOptions() {
         scan(com.mongodb.AggregationOptions.class, AggregationOptions.class, false, List.of(ReadConcern.class, ReadPreference.class,
-            WriteConcern.class));
+                WriteConcern.class));
     }
 
     @Test
@@ -89,12 +89,13 @@ public class OptionsTest {
         Class<?>[] parameterTypes = method.getParameterTypes();
         Method morphiaMethod = morphiaType.getMethod(method.getName(), parameterTypes);
         Assert.assertTrue(!method.getReturnType().equals(driverType)
-                          || morphiaMethod.getReturnType().equals(morphiaType), method.toString());
+                || morphiaMethod.getReturnType().equals(morphiaType), method.toString());
 
-        if (parameterTypes.equals(new Class[]{Bson.class})) {
+        if (parameterTypes.equals(new Class[] { Bson.class })) {
             Assert.assertTrue(!method.getReturnType().equals(driverType)
-                              || morphiaType.getMethod(method.getName(), Document.class)
-                                            .getReturnType().equals(morphiaType), method.toString());
+                    || morphiaType.getMethod(method.getName(), Document.class)
+                            .getReturnType().equals(morphiaType),
+                    method.toString());
 
         }
     }
@@ -119,7 +120,7 @@ public class OptionsTest {
             }
             for (Class<?> localField : localFields) {
                 String name = localField.getSimpleName()
-                                        .replaceAll("^get", "");
+                        .replaceAll("^get", "");
                 name = name.substring(0, 1).toLowerCase() + name.substring(1);
 
                 Field field = morphiaType.getDeclaredField(name);

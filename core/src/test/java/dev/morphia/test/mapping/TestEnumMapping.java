@@ -40,17 +40,17 @@ public class TestEnumMapping extends TestBase {
 
         getDs().save(customer);
         Customer loaded = getDs().find(Customer.class)
-                                 .filter(eq("_id", customer.id))
-                                 .first();
+                .filter(eq("_id", customer.id))
+                .first();
         assertEquals(customer.map, loaded.map);
     }
 
     @Test
     public void testCustomerWithArrayList() {
         MapperOptions options = MapperOptions.builder(getMapper().getOptions())
-                                             .storeEmpties(true)
-                                             .storeNulls(true)
-                                             .build();
+                .storeEmpties(true)
+                .storeNulls(true)
+                .build();
         final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
 
         Mapper mapper = datastore.getMapper();
@@ -71,8 +71,8 @@ public class TestEnumMapping extends TestBase {
         getDs().save(customer);
         final Datastore datastore1 = getDs();
         CustomerWithArrayList loaded = datastore1.find(CustomerWithArrayList.class)
-                                                 .filter(eq("_id", customer.id))
-                                                 .first();
+                .filter(eq("_id", customer.id))
+                .first();
 
         assertEquals(customer.mapWithArrayList, loaded.mapWithArrayList);
     }
@@ -81,9 +81,9 @@ public class TestEnumMapping extends TestBase {
     public void testCustomerWithList() {
 
         MapperOptions options = MapperOptions.builder(getMapper().getOptions())
-                                             .storeEmpties(true)
-                                             .storeNulls(true)
-                                             .build();
+                .storeEmpties(true)
+                .storeNulls(true)
+                .build();
         final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
         Mapper mapper = datastore.getMapper();
 
@@ -103,8 +103,8 @@ public class TestEnumMapping extends TestBase {
         getDs().save(customer);
         final Datastore datastore1 = getDs();
         CustomerWithList loaded = datastore1.find(CustomerWithList.class)
-                                            .filter(eq("_id", customer.id))
-                                            .first();
+                .filter(eq("_id", customer.id))
+                .first();
 
         assertEquals(customer.mapWithList, loaded.mapWithList);
     }
@@ -117,9 +117,9 @@ public class TestEnumMapping extends TestBase {
 
         getDs().save(new ContainsEnum());
         assertEquals(getDs().find(ContainsEnum.class).filter(eq("foo", Foo.BAR))
-                            .count(), 1);
+                .count(), 1);
         assertEquals(getDs().find(ContainsEnum.class).disableValidation().filter(eq("foo", Foo.BAR))
-                            .count(), 1);
+                .count(), 1);
     }
 
     private enum Foo {
@@ -171,8 +171,7 @@ public class TestEnumMapping extends TestBase {
 
     @Entity(useDiscriminator = false)
     private static class CustomerWithArrayList {
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList
-            = new HashMap<>();
+        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList = new HashMap<>();
         @Id
         private ObjectId id;
 

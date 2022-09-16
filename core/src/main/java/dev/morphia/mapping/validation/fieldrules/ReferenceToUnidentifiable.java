@@ -29,7 +29,7 @@ public class ReferenceToUnidentifiable extends PropertyConstraint {
                     mapper.getEntityModel(realType);
                 } catch (NotMappableException ignored) {
                     ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
-                        Sofia.referredTypeMissingId(propertyModel.getFullName(), propertyModel.getType().getName())));
+                            Sofia.referredTypeMissingId(propertyModel.getFullName(), propertyModel.getType().getName())));
                 }
             }
         }

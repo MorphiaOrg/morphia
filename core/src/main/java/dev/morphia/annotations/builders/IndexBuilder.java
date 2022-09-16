@@ -44,7 +44,7 @@ public class IndexBuilder extends AnnotationBuilder<Index> implements Index {
     }
 
     /**
-     * Options to apply to the index.  Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
+     * Options to apply to the index. Use of this field will ignore any of the deprecated options defined on {@link Index} directly.
      */
     public IndexBuilder options(IndexOptions options) {
         put("options", options);

@@ -29,8 +29,8 @@ class Operations {
     @Override
     public String toString() {
         return new StringJoiner(", ", Operations.class.getSimpleName() + "[", "]")
-                   .add("ops=" + ops)
-                   .toString();
+                .add("ops=" + ops)
+                .toString();
     }
 
     protected void versionUpdate() {
@@ -39,11 +39,11 @@ class Operations {
             List<OperationTarget> operationTargets = ops.get("$inc");
             String version = versionField.getMappedName();
             boolean already = operationTargets != null
-                              && operationTargets.stream()
-                                                 .anyMatch(tv -> {
-                                                     PathTarget target = tv.getTarget();
-                                                     return target != null && target.translatedPath().equals(version);
-                                                 });
+                    && operationTargets.stream()
+                            .anyMatch(tv -> {
+                                PathTarget target = tv.getTarget();
+                                return target != null && target.translatedPath().equals(version);
+                            });
             if (!already) {
                 add("$inc", new OperationTarget(new PathTarget(mapper, entityModel, versionField.getName()), 1L));
             }

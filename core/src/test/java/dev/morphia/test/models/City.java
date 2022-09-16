@@ -45,10 +45,9 @@ public final class City {
         return population;
     }
 
-
     @Override
     public String toString() {
         return format("City{id='%s', name='%s', location=%s, population=%s, state='%s'}", id, name, Arrays.toString(location),
-            population, state);
+                population, state);
     }
 }

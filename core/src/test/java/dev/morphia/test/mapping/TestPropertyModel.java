@@ -98,9 +98,8 @@ public class TestPropertyModel extends TestBase {
         getDs().save(testEntity);
 
         Assert.assertEquals(list, getDs().find(TestEntity.class)
-                                         .filter(eq("_id", testEntity.id))
-                                         .first()
-                                      .listOfListOfString);
+                .filter(eq("_id", testEntity.id))
+                .first().listOfListOfString);
     }
 
     private PropertyModel getMappedField(String name) {

@@ -28,15 +28,15 @@ abstract class WriteState {
         if (value instanceof Document) {
             StringJoiner joiner = new StringJoiner(", ", "{ ", " }");
             ((Document) value).entrySet().stream()
-                              .map(e -> e.getKey() + ": " + toString(e.getValue()))
-                              .forEach(joiner::add);
+                    .map(e -> e.getKey() + ": " + toString(e.getValue()))
+                    .forEach(joiner::add);
 
             return joiner.toString();
         } else if (value instanceof List) {
             StringJoiner joiner = new StringJoiner(", ", "[ ", " ]");
             ((List<?>) value).stream()
-                             .map(this::toString)
-                             .forEach(joiner::add);
+                    .map(this::toString)
+                    .forEach(joiner::add);
 
             return joiner.toString();
         } else {

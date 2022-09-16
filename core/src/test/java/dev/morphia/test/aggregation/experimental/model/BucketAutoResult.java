@@ -29,9 +29,9 @@ public class BucketAutoResult {
     @Override
     public String toString() {
         return "BucketAutoResult{"
-               + "id=" + id
-               + ", count=" + count
-               + '}';
+                + "id=" + id
+                + ", count=" + count
+                + '}';
     }
 
     public static class MinMax {
@@ -57,9 +57,9 @@ public class BucketAutoResult {
         @Override
         public String toString() {
             return "MinMax{"
-                   + "min=" + min
-                   + ", max=" + max
-                   + '}';
+                    + "min=" + min
+                    + ", max=" + max
+                    + '}';
         }
     }
 }

@@ -1,6 +1,5 @@
 package dev.morphia.mapping.validation;
 
-
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 

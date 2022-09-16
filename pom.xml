@@ -26,7 +26,10 @@
         <bottlerocket.version>0.37.0</bottlerocket.version>
         <dokka.version>1.7.10</dokka.version>
         <driver.version>4.2.3</driver.version>
+        <formatter-maven-plugin.version>2.20.0</formatter-maven-plugin.version>
+        <impsort-maven-plugin.version>1.7.0</impsort-maven-plugin.version>
         <json.assert.version>1.5.1</json.assert.version>
+        <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.7.10</kotlin.version>
         <maven.version>3.8.6</maven.version>
         <revapi.maven.plugin.version>0.14.7</revapi.maven.plugin.version>
@@ -417,6 +420,95 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>java formatting</id>
+            <activation>
+                <file>
+                    <exists>src/main/java</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.revelc.code</groupId>
+                        <artifactId>impsort-maven-plugin</artifactId>
+                        <version>${impsort-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sort-imports</id>
+                                <goals>
+                                    <goal>sort</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <groups>*,java.,javax.,jakarta.</groups>
+                                    <staticAfter>true</staticAfter>
+                                    <staticGroups>*</staticGroups>
+                                    <removeUnused>true</removeUnused>
+                                    <treatSamePackageAsUnused>true</treatSamePackageAsUnused>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>net.revelc.code.formatter</groupId>
+                        <artifactId>formatter-maven-plugin</artifactId>
+                        <version>${formatter-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>format</goal>
+                                </goals>
+                                <configuration>
+                                    <cachedir>${project.basedir}/../config/formatter-maven-plugin</cachedir>
+                                    <configFile>${project.basedir}/../config/eclipse-format.xml</configFile>
+                                    <lineEnding>LF</lineEnding>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>format-kotlin</id>
+            <activation>
+                <file><exists>src/main/kotlin</exists></file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.diffplug.spotless</groupId>
+                        <artifactId>spotless-maven-plugin</artifactId>
+                        <version>2.26.0</version>
+                        <executions>
+                            <execution>
+                                <id>format-kotlin</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>apply</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+
+                        <configuration>
+                            <kotlin>
+                                <ktfmt>
+                                    <style>KOTLINLANG</style> <!-- optional, other options are DEFAULT, DROPBOX, GOOGLE and KOTLINLANG -->
+                                </ktfmt>
+<!--
+                                <ktlint>
+                                    <version>0.47.1</version>
+                                </ktlint>
+-->
+
+                            </kotlin>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

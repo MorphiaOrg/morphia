@@ -27,10 +27,10 @@ public abstract class UpdateBase<T> {
     private final Datastore datastore;
 
     UpdateBase(Datastore datastore,
-               Mapper mapper,
-               @Nullable MongoCollection<T> collection,
-               @Nullable Query<T> query,
-               Class<T> type) {
+            Mapper mapper,
+            @Nullable MongoCollection<T> collection,
+            @Nullable Query<T> query,
+            Class<T> type) {
         this.datastore = datastore;
         this.mapper = mapper;
         this.collection = collection;
@@ -39,12 +39,12 @@ public abstract class UpdateBase<T> {
     }
 
     UpdateBase(Datastore datastore,
-               Mapper mapper,
-               MongoCollection<T> collection,
-               Query<T> query,
-               Class<T> type,
-               UpdateOperator first,
-               UpdateOperator[] updates) {
+            Mapper mapper,
+            MongoCollection<T> collection,
+            Query<T> query,
+            Class<T> type,
+            UpdateOperator first,
+            UpdateOperator[] updates) {
         this.datastore = datastore;
         this.mapper = mapper;
         this.type = type;
@@ -55,11 +55,11 @@ public abstract class UpdateBase<T> {
     }
 
     UpdateBase(Datastore datastore,
-               Mapper mapper,
-               MongoCollection<T> collection,
-               Query<T> query,
-               Class<T> type,
-               List<UpdateOperator> updates) {
+            Mapper mapper,
+            MongoCollection<T> collection,
+            Query<T> query,
+            Class<T> type,
+            List<UpdateOperator> updates) {
         this(datastore, mapper, collection, query, type);
         this.updates.addAll(updates);
     }

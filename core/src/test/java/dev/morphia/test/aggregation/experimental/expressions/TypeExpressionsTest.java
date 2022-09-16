@@ -45,19 +45,19 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
     public void testIsNumber() {
         checkMinServerVersion(4.4);
         insert("examples", List.of(
-            parse("{ '_id' : 1, 'reading' : 42 }"),
-            parse("{ '_id' : 2, 'reading' : 'slowly' }")));
+                parse("{ '_id' : 1, 'reading' : 42 }"),
+                parse("{ '_id' : 2, 'reading' : 'slowly' }")));
 
         List<Document> actual = getDs().aggregate("examples")
-                                       .addFields(addFields()
-                                                      .field("isNumber", isNumber(field("reading")))
-                                                      .field("hasType", type(field("reading"))))
-                                       .execute(Document.class)
-                                       .toList();
+                .addFields(addFields()
+                        .field("isNumber", isNumber(field("reading")))
+                        .field("hasType", type(field("reading"))))
+                .execute(Document.class)
+                .toList();
 
         List<Document> expected = List.of(
-            parse("{ '_id' : 1, 'reading' : 42, 'isNumber' : true, 'hasType' : 'int' }"),
-            parse("{ '_id' : 2, 'reading' : 'slowly', 'isNumber' : false, 'hasType' : 'string' }"));
+                parse("{ '_id' : 1, 'reading' : 42, 'isNumber' : true, 'hasType' : 'int' }"),
+                parse("{ '_id' : 2, 'reading' : 'slowly', 'isNumber' : false, 'hasType' : 'string' }"));
 
         assertListEquals(actual, expected);
     }
@@ -66,7 +66,7 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
     public void testToDate() {
         checkMinServerVersion(4.0);
         Date date = new Date(LocalDate.of(2018, 3, 3)
-                                      .toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.UTC) * 1000);
+                .toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.UTC) * 1000);
         assertAndCheckDocShape("{$toDate: '2018-03-03' }", toDate(value("2018-03-03")), date);
     }
 
@@ -98,7 +98,7 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
     public void testToObjectId() {
         checkMinServerVersion(4.0);
         assertAndCheckDocShape("{$toObjectId: '5ab9cbfa31c2ab715d42129e'}", toObjectId(value("5ab9cbfa31c2ab715d42129e")),
-            new ObjectId("5ab9cbfa31c2ab715d42129e"));
+                new ObjectId("5ab9cbfa31c2ab715d42129e"));
     }
 
     @Test

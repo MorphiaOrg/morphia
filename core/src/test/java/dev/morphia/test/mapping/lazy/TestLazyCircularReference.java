@@ -51,8 +51,8 @@ public class TestLazyCircularReference extends ProxyTestBase {
 
         final Datastore datastore = getDs();
         root = datastore.find(RootEntity.class)
-                        .filter(eq("_id", root.getId()))
-                        .first();
+                .filter(eq("_id", root.getId()))
+                .first();
 
         final ReferencedEntity p = root.r;
 

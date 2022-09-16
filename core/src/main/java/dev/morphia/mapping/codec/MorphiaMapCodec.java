@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 
 /**
- * Maps Map subtypes to/from the database.  This is mostly a pass-through to the driver codec except for the encoding, non-String types
+ * Maps Map subtypes to/from the database. This is mostly a pass-through to the driver codec except for the encoding, non-String types
  * are converted to Strings if possible.
  *
  * @morphia.internal

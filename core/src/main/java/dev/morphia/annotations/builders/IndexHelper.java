@@ -66,12 +66,12 @@ public final class IndexHelper {
 
     private List<Index> collectFieldIndexes(EntityModel entityModel) {
         List<Index> list = entityModel.getProperties(Indexed.class).stream()
-                                      .map(field -> convert(field.getAnnotation(Indexed.class), field.getMappedName()))
-                                      .collect(Collectors.toList());
+                .map(field -> convert(field.getAnnotation(Indexed.class), field.getMappedName()))
+                .collect(Collectors.toList());
 
         list.addAll(entityModel.getProperties(Text.class).stream()
-                               .map(field -> convert(field.getAnnotation(Text.class), field.getMappedName()))
-                               .collect(Collectors.toList()));
+                .map(field -> convert(field.getAnnotation(Text.class), field.getMappedName()))
+                .collect(Collectors.toList()));
 
         return list;
     }
@@ -95,9 +95,9 @@ public final class IndexHelper {
                 List<Field> fields = new ArrayList<>();
                 for (Field field : index.fields()) {
                     fields.add(new FieldBuilder()
-                                   .value(findField(entityModel, index.options(), field.value()))
-                                   .type(field.type())
-                                   .weight(field.weight()));
+                            .value(findField(entityModel, index.options(), field.value()))
+                            .type(field.type())
+                            .weight(field.weight()));
                 }
 
                 list.add(replaceFields(index, fields));
@@ -113,7 +113,7 @@ public final class IndexHelper {
 
     private Index replaceFields(Index original, List<Field> list) {
         return new IndexBuilder(original)
-                   .fields(list);
+                .fields(list);
     }
 
     public Document calculateKeys(EntityModel entityModel, Index index) {
@@ -137,31 +137,31 @@ public final class IndexHelper {
     @Nullable
     public Index convert(@Nullable Indexed indexed, String nameToStore) {
         return indexed == null
-               ? null
-               : new IndexBuilder()
-                     .options(indexed.options())
-                     .fields(singletonList(new FieldBuilder()
-                                               .value(nameToStore)
-                                               .type(fromValue(indexed.value().toIndexValue()))));
+                ? null
+                : new IndexBuilder()
+                        .options(indexed.options())
+                        .fields(singletonList(new FieldBuilder()
+                                .value(nameToStore)
+                                .type(fromValue(indexed.value().toIndexValue()))));
     }
 
     @Nullable
     public Index convert(@Nullable Text text, String nameToStore) {
         return text == null
-               ? null
-               : new IndexBuilder()
-                     .options(text.options())
-                     .fields(singletonList(new FieldBuilder()
-                                               .value(nameToStore)
-                                               .type(IndexType.TEXT)
-                                               .weight(text.value())));
+                ? null
+                : new IndexBuilder()
+                        .options(text.options())
+                        .fields(singletonList(new FieldBuilder()
+                                .value(nameToStore)
+                                .type(IndexType.TEXT)
+                                .weight(text.value())));
     }
 
     public com.mongodb.client.model.IndexOptions convert(IndexOptions options) {
         com.mongodb.client.model.IndexOptions indexOptions = new com.mongodb.client.model.IndexOptions()
-                                                                 .background(options.background())
-                                                                 .sparse(options.sparse())
-                                                                 .unique(options.unique());
+                .background(options.background())
+                .sparse(options.sparse())
+                .unique(options.unique());
 
         if (!options.language().equals("")) {
             indexOptions.defaultLanguage(options.language());
@@ -187,16 +187,16 @@ public final class IndexHelper {
 
     public com.mongodb.client.model.Collation convert(Collation collation) {
         return com.mongodb.client.model.Collation.builder()
-                                                 .locale(collation.locale())
-                                                 .backwards(collation.backwards())
-                                                 .caseLevel(collation.caseLevel())
-                                                 .collationAlternate(collation.alternate())
-                                                 .collationCaseFirst(collation.caseFirst())
-                                                 .collationMaxVariable(collation.maxVariable())
-                                                 .collationStrength(collation.strength())
-                                                 .normalization(collation.normalization())
-                                                 .numericOrdering(collation.numericOrdering())
-                                                 .build();
+                .locale(collation.locale())
+                .backwards(collation.backwards())
+                .caseLevel(collation.caseLevel())
+                .collationAlternate(collation.alternate())
+                .collationCaseFirst(collation.caseFirst())
+                .collationMaxVariable(collation.maxVariable())
+                .collationStrength(collation.strength())
+                .normalization(collation.normalization())
+                .numericOrdering(collation.numericOrdering())
+                .build();
     }
 
     /**

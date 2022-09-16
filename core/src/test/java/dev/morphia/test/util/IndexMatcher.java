@@ -11,7 +11,7 @@ import static java.lang.String.format;
 import static org.testng.Assert.fail;
 
 /**
- * Hamcrest matcher that can be used with a List of Documents representing the indexes on a Collection.  This list, for example, might be
+ * Hamcrest matcher that can be used with a List of Documents representing the indexes on a Collection. This list, for example, might be
  * from a call like {@code getMapper().getCollection(Entity.class).getIndexInfo()}
  */
 public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
@@ -58,7 +58,7 @@ public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
             }
         }
         return (indexFound && indexShouldBePresent) // index is there and it SHOULD be there
-               || (!indexFound && !indexShouldBePresent); // index is not there and it SHOULD NOT be there
+                || (!indexFound && !indexShouldBePresent); // index is not there and it SHOULD NOT be there
     }
 
     @Override

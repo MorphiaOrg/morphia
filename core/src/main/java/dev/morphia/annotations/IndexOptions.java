@@ -15,9 +15,7 @@
  *  under the License.
  */
 
-
 package dev.morphia.annotations;
-
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -32,7 +30,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.ANNOTATION_TYPE})
+@Target({ ElementType.ANNOTATION_TYPE })
 public @interface IndexOptions {
     /**
      * @return if true, create the index in the background

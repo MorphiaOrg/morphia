@@ -16,7 +16,6 @@ public class ArrayExpression extends Expression {
         super(operation, value);
     }
 
-
     @Override
     public void encode(Mapper mapper, BsonWriter writer, EncoderContext encoderContext) {
         super.encode(mapper, writer, encoderContext);

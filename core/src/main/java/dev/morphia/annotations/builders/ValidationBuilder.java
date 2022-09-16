@@ -5,7 +5,7 @@ import com.mongodb.client.model.ValidationLevel;
 import dev.morphia.annotations.Validation;
 
 /**
- * This is an internal class subject to change and removal.  Do not use.
+ * This is an internal class subject to change and removal. Do not use.
  *
  * @morphia.internal
  */

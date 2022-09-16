@@ -36,12 +36,12 @@ public class AnnotationBuilderTest {
     }
 
     private <T extends Annotation> void compareFields(Class<T> annotationType, Class<? extends AnnotationBuilder<T>> builder)
-        throws NoSuchMethodException {
+            throws NoSuchMethodException {
 
         for (Method method : annotationType.getDeclaredMethods()) {
             Method getter = builder.getDeclaredMethod(method.getName(), method.getReturnType());
             assertNotNull(getter, format("Looking for %s.%s(%s) on ", builder.getSimpleName(), method.getName(),
-                method.getReturnType().getSimpleName()));
+                    method.getReturnType().getSimpleName()));
         }
     }
 

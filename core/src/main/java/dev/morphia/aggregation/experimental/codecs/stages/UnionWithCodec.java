@@ -34,7 +34,7 @@ public class UnionWithCodec extends StageCodec<UnionWith> {
     protected void encodeStage(BsonWriter writer, UnionWith unionWith, EncoderContext encoderContext) {
         String name = unionWith.getCollectionName();
         String collectionName = name != null ? name
-                                             : getMapper().getCollection(unionWith.getCollectionType()).getNamespace().getCollectionName();
+                : getMapper().getCollection(unionWith.getCollectionType()).getNamespace().getCollectionName();
 
         document(writer, () -> {
             value(getMapper(), writer, "coll", collectionName, encoderContext);

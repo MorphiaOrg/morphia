@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Datastore interface to get/delete/save objects
  */
-@SuppressWarnings({"UnusedReturnValue", "unused", "removal"})
+@SuppressWarnings({ "UnusedReturnValue", "unused", "removal" })
 public interface Datastore {
     /**
      * Returns a new query bound to the kind (a specific {@link DBCollection})
@@ -186,7 +186,7 @@ public interface Datastore {
     /**
      * Find all instances by type from an alternate collection
      *
-     * @param collection the actual collection to query.  This overrides any mapped on collection on type.
+     * @param collection the actual collection to query. This overrides any mapped on collection on type.
      * @param type       the class to use for mapping the results
      * @param <T>        the type to query
      * @return the query
@@ -232,11 +232,11 @@ public interface Datastore {
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndDelete(Query<T> query, FindAndModifyOptions options) {
         return query.findAndDelete(new FindAndDeleteOptions()
-                                       .writeConcern(options.getWriteConcern())
-                                       .collation(options.getCollation())
-                                       .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
-                                       .sort(options.getSort())
-                                       .projection(options.getProjection()));
+                .writeConcern(options.getWriteConcern())
+                .collation(options.getCollation())
+                .maxTime(options.getMaxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS)
+                .sort(options.getSort())
+                .projection(options.getProjection()));
     }
 
     /**
@@ -270,7 +270,7 @@ public interface Datastore {
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> T findAndModify(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
         return query.modify(operations).execute(new ModifyOptions()
-                                                    .returnDocument(ReturnDocument.AFTER));
+                .returnDocument(ReturnDocument.AFTER));
     }
 
     /**
@@ -361,7 +361,7 @@ public interface Datastore {
      *
      * @param entity the entity to merge back in to the database
      * @param <T>    the type of the entity
-     * @return the new merged entity.  NOTE:  this is a database fetch.
+     * @return the new merged entity. NOTE: this is a database fetch.
      */
     <T> T merge(T entity);
 
@@ -371,7 +371,7 @@ public interface Datastore {
      * @param entity  the entity to merge back in to the database
      * @param options the options to apply
      * @param <T>     the type of the entity
-     * @return the new merged entity.  NOTE:  this is a database fetch.
+     * @return the new merged entity. NOTE: this is a database fetch.
      * @since 2.0
      */
     <T> T merge(T entity, InsertOneOptions options);
@@ -399,7 +399,7 @@ public interface Datastore {
     <T> Query<T> queryByExample(T example);
 
     /**
-     * Refreshes an existing entity to its current state in the database.  Essentially, any existing mapped state is replaced by the
+     * Refreshes an existing entity to its current state in the database. Essentially, any existing mapped state is replaced by the
      * latest persisted state while preserving the entity's reference and object identity.
      *
      * @param entity the entity to refresh
@@ -542,16 +542,16 @@ public interface Datastore {
      * @param operations the update operations to perform
      * @param <T>        the type of the entity
      * @return the results of the updates
-     * @deprecated use {@link Query#update(UpdateOperator, UpdateOperator...)} instead.  Please note the default has changed from multi-
-     * to single-document updates.
+     * @deprecated use {@link Query#update(UpdateOperator, UpdateOperator...)} instead. Please note the default has changed from multi-
+     *             to single-document updates.
      */
     @SuppressWarnings("removal")
     @Deprecated(since = "2.0", forRemoval = true)
     default <T> UpdateResult update(Query<T> query, dev.morphia.query.UpdateOperations<T> operations) {
         return query.update(operations).execute(new UpdateOptions()
-                                                    .upsert(false)
-                                                    .multi(true)
-                                                    .writeConcern(getMapper().getWriteConcern(query.getEntityClass())));
+                .upsert(false)
+                .multi(true)
+                .writeConcern(getMapper().getWriteConcern(query.getEntityClass())));
     }
 
     /**

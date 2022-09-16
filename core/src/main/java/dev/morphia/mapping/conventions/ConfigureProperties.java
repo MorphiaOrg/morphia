@@ -30,8 +30,8 @@ public class ConfigureProperties implements MorphiaConvention {
 
     private static boolean isTransient(PropertyModelBuilder property) {
         return property.hasAnnotation(Transient.class)
-               || property.hasAnnotation(java.beans.Transient.class)
-               || Modifier.isTransient(property.modifiers());
+                || property.hasAnnotation(java.beans.Transient.class)
+                || Modifier.isTransient(property.modifiers());
     }
 
     @Override
@@ -104,7 +104,6 @@ public class ConfigureProperties implements MorphiaConvention {
 
         return isNotConcrete(type);
     }
-
 
     private boolean isNotConcrete(Class<?> type) {
         Class<?> componentType = type;

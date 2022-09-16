@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Polygon;
@@ -19,7 +18,7 @@ import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
 
 /**
- * Represents a document field in a query and presents the operations available to querying against that field.  This is an internal
+ * Represents a document field in a query and presents the operations available to querying against that field. This is an internal
  * class and subject to change without notice.
  *
  * @param <T> the type of the CriteriaContainer
@@ -156,7 +155,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T intersects(com.mongodb.client.model.geojson.Geometry geometry, CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.INTERSECTS, geometry, model, validating)
-                                      .addCoordinateReferenceSystem(crs));
+                .addCoordinateReferenceSystem(crs));
         return target;
     }
 
@@ -174,7 +173,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T mod(long divisor, long remainder) {
-        return addCriteria(FilterOperator.MOD, new long[]{divisor, remainder});
+        return addCriteria(FilterOperator.MOD, new long[] { divisor, remainder });
     }
 
     @Override
@@ -185,8 +184,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T near(double longitude, double latitude, boolean spherical) {
         return addGeoCriteria(spherical
-                              ? FilterOperator.NEAR_SPHERE
-                              : FilterOperator.NEAR, new double[]{longitude, latitude}, new HashMap<>());
+                ? FilterOperator.NEAR_SPHERE
+                : FilterOperator.NEAR, new double[] { longitude, latitude }, new HashMap<>());
     }
 
     @Override
@@ -196,8 +195,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
 
     @Override
     public T near(double longitude, double latitude, double radius, boolean spherical) {
-        return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[]{longitude, latitude},
-            Map.of("$maxDistance", radius));
+        return addGeoCriteria(spherical ? FilterOperator.NEAR_SPHERE : FilterOperator.NEAR, new double[] { longitude, latitude },
+                Map.of("$maxDistance", radius));
     }
 
     @Override
@@ -209,8 +208,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T near(com.mongodb.client.model.geojson.Point point, Double maxDistance, Double minDistance) {
         target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.NEAR, point, model, validating)
-                                      .maxDistance(maxDistance)
-                                      .minDistance(minDistance));
+                .maxDistance(maxDistance)
+                .minDistance(minDistance));
         return target;
     }
 
@@ -222,8 +221,8 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T nearSphere(com.mongodb.client.model.geojson.Point point, @Nullable Double maxDistance, @Nullable Double minDistance) {
         target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.NEAR_SPHERE, point, model, validating)
-                                      .maxDistance(maxDistance)
-                                      .minDistance(minDistance));
+                .maxDistance(maxDistance)
+                .minDistance(minDistance));
         return target;
     }
 
@@ -251,14 +250,14 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T startsWith(String prefix) {
         Assert.parametersNotNull("val", prefix);
-        /*LITERAL*/
+        /* LITERAL */
         return addCriteria(FilterOperator.EQUAL, compile("^" + quote(prefix)));
     }
 
     @Override
     public T startsWithIgnoreCase(String prefix) {
         Assert.parametersNotNull("val", prefix);
-        /*  | LITERAL */
+        /* | LITERAL */
         return addCriteria(FilterOperator.EQUAL, compile("^" + quote(prefix), CASE_INSENSITIVE));
     }
 
@@ -276,7 +275,7 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T within(Polygon boundary) {
         target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundary, model,
-            validating));
+                validating));
         return target;
     }
 
@@ -289,14 +288,14 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     @Override
     public T within(Polygon boundary, CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundary, model, validating)
-                                      .addCoordinateReferenceSystem(crs));
+                .addCoordinateReferenceSystem(crs));
         return target;
     }
 
     @Override
     public T within(MultiPolygon boundaries, CoordinateReferenceSystem crs) {
         target.add(Geo2dSphereCriteria.geo(mapper, field, FilterOperator.GEO_WITHIN, boundaries, model, validating)
-                                      .addCoordinateReferenceSystem(crs));
+                .addCoordinateReferenceSystem(crs));
         return target;
     }
 

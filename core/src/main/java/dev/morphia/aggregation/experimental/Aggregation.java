@@ -25,7 +25,7 @@ import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 
 /**
- * @param <T> The initial type of the aggregation.  Used for collection name resolution.
+ * @param <T> The initial type of the aggregation. Used for collection name resolution.
  * @since 2.0
  */
 public interface Aggregation<T> {
@@ -384,7 +384,7 @@ public interface Aggregation<T> {
     Aggregation<T> unionWith(String collection, Stage first, Stage... others);
 
     /**
-     * Removes/excludes fields from documents.  Names must not start with '$'.
+     * Removes/excludes fields from documents. Names must not start with '$'.
      *
      * @param unset the unset definition
      * @return this

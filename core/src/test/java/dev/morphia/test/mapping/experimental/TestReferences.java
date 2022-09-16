@@ -54,7 +54,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
-@SuppressWarnings({"MismatchedReadAndWriteOfArray", "unchecked", "removal"})
+@SuppressWarnings({ "MismatchedReadAndWriteOfArray", "unchecked", "removal" })
 public class TestReferences extends ProxyTestBase {
 
     @Test
@@ -69,8 +69,8 @@ public class TestReferences extends ProxyTestBase {
 
         // this query throws a NullPointerException
         assertNotNull(getDs().find(Sets.class)
-                             .filter(eq("refs", ref))
-                             .first());
+                .filter(eq("refs", ref))
+                .first());
 
         final MapOfSet map = new MapOfSet();
         map.strings = new HashMap<>();
@@ -86,11 +86,11 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(author);
 
         List<Book> books = List.of(
-            new Book("Sense and Sensibility", author),
-            new Book("Pride and Prejudice", author),
-            new Book("Mansfield Park", author),
-            new Book("Emma", author),
-            new Book("Northanger Abbey", author));
+                new Book("Sense and Sensibility", author),
+                new Book("Pride and Prejudice", author),
+                new Book("Mansfield Park", author),
+                new Book("Emma", author),
+                new Book("Northanger Abbey", author));
         getDs().save(books);
 
         author.setList(books);
@@ -100,23 +100,23 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(author);
 
         Aggregation<Author> aggregation = getDs().aggregate(Author.class)
-                                                 .lookup(lookup(Book.class)
-                                                     .as("set")
-                                                     .foreignField("_id")
-                                                     .localField("set"))
-                                                 .lookup(lookup(Book.class)
-                                                     .as("list")
-                                                     .foreignField("_id")
-                                                     .localField("list"));
+                .lookup(lookup(Book.class)
+                        .as("set")
+                        .foreignField("_id")
+                        .localField("set"))
+                .lookup(lookup(Book.class)
+                        .as("list")
+                        .foreignField("_id")
+                        .localField("list"));
 
         final Author loaded = aggregation
-            //  TODO how to fetch the values from a nested document for cross-referencing?
-            //                                   .lookup(Lookup.from(Book.class)
-            //                                                 .as("map")
-            //                                                 .foreignField("_id")
-            //                                                 .localField("map.$"))
-            .execute(Author.class)
-            .tryNext();
+                //  TODO how to fetch the values from a nested document for cross-referencing?
+                //                                   .lookup(Lookup.from(Book.class)
+                //                                                 .as("map")
+                //                                                 .foreignField("_id")
+                //                                                 .localField("map.$"))
+                .execute(Author.class)
+                .tryNext();
 
         assertListEquals(author.list, loaded.list);
 
@@ -125,13 +125,13 @@ public class TestReferences extends ProxyTestBase {
         //        validateMap(map, loaded);
 
         Book foundBook = getDs().aggregate(Book.class)
-                                .lookup(lookup(Author.class)
-                                    .as("author")
-                                    .foreignField("_id")
-                                    .localField("author"))
-                                .unwind(unwind("author"))
-                                .execute(Book.class)
-                                .next();
+                .lookup(lookup(Author.class)
+                        .as("author")
+                        .foreignField("_id")
+                        .localField("author"))
+                .unwind(unwind("author"))
+                .execute(Book.class)
+                .next();
         assertTrue(foundBook.author.isResolved());
         assertEquals(author, foundBook.author.get());
     }
@@ -148,8 +148,8 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(asList(ref2, ref1, a));
 
         getDs().find(ArrayOfReferences.class)
-               .filter(eq("_id", a.getId()))
-               .first();
+                .filter(eq("_id", a.getId()))
+                .first();
     }
 
     @Test
@@ -166,8 +166,8 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(root);
 
         root = getDs().find(RootEntity.class)
-                      .filter(eq("_id", root.getId()))
-                      .first();
+                .filter(eq("_id", root.getId()))
+                .first();
 
         final ReferencedEntity p = root.r;
 
@@ -201,8 +201,8 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(parent);
 
         ComplexParent loaded = getDs().find(ComplexParent.class)
-                                      .filter(eq("_id", parent.id))
-                                      .first();
+                .filter(eq("_id", parent.id))
+                .first();
         assertEquals(loaded, parent);
     }
 
@@ -216,18 +216,18 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(tom);
 
         Document loaded = getMapper().getCollection(FacebookUser.class)
-                                     .withDocumentClass(Document.class)
-                                     .find(new Document("_id", 1))
-                                     .first();
+                .withDocumentClass(Document.class)
+                .find(new Document("_id", 1))
+                .first();
         ((List<Object>) loaded.get("friends"))
-            .forEach(f -> assertEquals(f.getClass(), DBRef.class));
+                .forEach(f -> assertEquals(f.getClass(), DBRef.class));
     }
 
     @Test
     public void testFetchKeys() {
         List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
-            new Complex(new ChildId("JD", 26), "Dorian"),
-            new Complex(new ChildId("Carla", 29), "Espinosa"));
+                new Complex(new ChildId("JD", 26), "Dorian"),
+                new Complex(new ChildId("Carla", 29), "Espinosa"));
         getDs().save(list);
 
         MongoCursor<Key<Complex>> keys = getDs().find(Complex.class).keys();
@@ -248,8 +248,8 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(container);
 
         assertNotNull(getDs().find(Container.class)
-                             .filter(eq("singleRef", ref)).iterator(new FindOptions().limit(1))
-                             .next());
+                .filter(eq("singleRef", ref)).iterator(new FindOptions().limit(1))
+                .next());
     }
 
     @Test
@@ -266,8 +266,8 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(root);
 
         RootEntity loaded = getDs().find(RootEntity.class)
-                                   .filter(eq("_id", root.getId()))
-                                   .first();
+                .filter(eq("_id", root.getId()))
+                .first();
 
         final ReferencedEntity p = loaded.r;
 
@@ -289,11 +289,11 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(tom);
 
         Document loaded = getMapper().getCollection(HasIdOnly.class)
-                                     .withDocumentClass(Document.class)
-                                     .find(new Document())
-                                     .first();
+                .withDocumentClass(Document.class)
+                .find(new Document())
+                .first();
         ((List<Object>) loaded.get("list"))
-            .forEach(f -> assertEquals(f.getClass(), Long.class));
+                .forEach(f -> assertEquals(f.getClass(), Long.class));
     }
 
     @Test
@@ -336,10 +336,10 @@ public class TestReferences extends ProxyTestBase {
     @Test
     public void testMethodMapping() {
         Datastore datastore = createDatastore(getMongoClient(), TEST_DB_NAME,
-            MapperOptions.builder()
-                         .propertyDiscovery(
-                             PropertyDiscovery.METHODS)
-                         .build());
+                MapperOptions.builder()
+                        .propertyDiscovery(
+                                PropertyDiscovery.METHODS)
+                        .build());
 
         datastore.getMapper().map(MethodMappedUser.class);
         MethodMappedUser user = new MethodMappedUser();
@@ -393,17 +393,17 @@ public class TestReferences extends ProxyTestBase {
         final Ref ref1 = new Ref();
         final Ref ref2 = new Ref();
 
-        a.arrays = new Ref[][][]{
-            new Ref[][]{
-                new Ref[]{ref1, ref2}
-            }
+        a.arrays = new Ref[][][] {
+                new Ref[][] {
+                        new Ref[] { ref1, ref2 }
+                }
         };
         a.lists = List.of(List.of(List.of(ref1), List.of(ref2)));
         getDs().save(asList(ref2, ref1, a));
 
         assertEquals(a, getDs().find(MultiDimArrayOfReferences.class)
-                               .filter(eq("_id", a.getId()))
-                               .first());
+                .filter(eq("_id", a.getId()))
+                .first());
     }
 
     @Test
@@ -483,8 +483,8 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(root);
 
         root = getDs().find(RootEntity.class)
-                      .filter(eq("_id", root.getId()))
-                      .first();
+                .filter(eq("_id", root.getId()))
+                .first();
         assertSame(root.r, root.secondReference);
     }
 
@@ -505,8 +505,8 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(root);
 
         root = getDs().find(RootEntity.class)
-                      .filter(eq("_id", root.getId()))
-                      .first();
+                .filter(eq("_id", root.getId()))
+                .first();
 
         ReferencedEntity referenced = root.r;
 
@@ -521,8 +521,8 @@ public class TestReferences extends ProxyTestBase {
         assertFetched(root.secondReference);
 
         root = getDs().find(RootEntity.class)
-                      .filter(eq("_id", root.getId()))
-                      .first();
+                .filter(eq("_id", root.getId()))
+                .first();
         assertNotFetched(root.r);
         assertNotFetched(root.secondReference);
     }
@@ -711,12 +711,12 @@ public class TestReferences extends ProxyTestBase {
             }
             ComplexParent that = (ComplexParent) o;
             AtomicBoolean equals = new AtomicBoolean(Objects.equals(id, that.id) &&
-                                                     Objects.equals(complex, that.complex) &&
-                                                     Objects.equals(list, that.list));
+                    Objects.equals(complex, that.complex) &&
+                    Objects.equals(list, that.list));
 
             assertEquals(lazyList.size(), that.lazyList.size());
             lazyList.forEach(
-                d -> equals.set(equals.get() && that.lazyList.contains(d)));
+                    d -> equals.set(equals.get() && that.lazyList.contains(d)));
 
             return equals.get();
         }

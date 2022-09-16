@@ -20,10 +20,11 @@ import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.UnknownBlockTagTree;
 import jdk.javadoc.doclet.Taglet;
 
-import javax.lang.model.element.Element;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.lang.model.element.Element;
 
 import static java.util.Arrays.asList;
 import static jdk.javadoc.doclet.Taglet.Location.CONSTRUCTOR;

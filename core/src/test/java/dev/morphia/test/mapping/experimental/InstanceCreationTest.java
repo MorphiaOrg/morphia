@@ -3,7 +3,6 @@ package dev.morphia.test.mapping.experimental;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
@@ -23,16 +22,16 @@ public class InstanceCreationTest extends TestBase {
         getDs().save(author);
 
         final Author loaded = getDs().find(Author.class).iterator(new FindOptions()
-                                                                      .limit(1)).tryNext();
+                .limit(1)).tryNext();
         assertEquals(author, loaded);
     }
 
     @Test
     public void duplicates() {
-        SaveData toSave = new SaveData("id", new double[]{1,2,3}, List.of(
-            new SaveData.ChildData(new double[]{4,5,6}, new ArrayList<>()),
-            new SaveData.ChildData(new double[]{7,8,9}, new ArrayList<>()),
-            new SaveData.ChildData(new double[]{10,11,12}, new ArrayList<>())));
+        SaveData toSave = new SaveData("id", new double[] { 1, 2, 3 }, List.of(
+                new SaveData.ChildData(new double[] { 4, 5, 6 }, new ArrayList<>()),
+                new SaveData.ChildData(new double[] { 7, 8, 9 }, new ArrayList<>()),
+                new SaveData.ChildData(new double[] { 10, 11, 12 }, new ArrayList<>())));
         getDs().save(toSave);
 
         SaveData loadedData = getDs().find(SaveData.class).first();
@@ -77,9 +76,9 @@ public class InstanceCreationTest extends TestBase {
         @Override
         public String toString() {
             return "Author{" +
-                   "id=" + id +
-                   ", name='" + name + '\'' +
-                   '}';
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    '}';
         }
     }
 
@@ -108,10 +107,10 @@ public class InstanceCreationTest extends TestBase {
         @Override
         public String toString() {
             return "SaveData{" +
-                   "saveName='" + saveName + '\'' +
-                   ", position=" + Arrays.toString(position) +
-                   ", elements=" + elements +
-                   '}';
+                    "saveName='" + saveName + '\'' +
+                    ", position=" + Arrays.toString(position) +
+                    ", elements=" + elements +
+                    '}';
         }
 
         @Entity
@@ -127,9 +126,9 @@ public class InstanceCreationTest extends TestBase {
             @Override
             public String toString() {
                 return "\nChildData{" +
-                       "child_position=" + Arrays.toString(child_position) +
-                       ", child_elements=" + child_elements +
-                       '}';
+                        "child_position=" + Arrays.toString(child_position) +
+                        ", child_elements=" + child_elements +
+                        '}';
             }
         }
     }

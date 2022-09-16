@@ -41,9 +41,9 @@ public class LocaleCodec implements Codec<Locale> {
             resultLocale = new Locale(localeString.substring(0, index), localeString.substring(index + 1));
         } else {
             resultLocale = new Locale(
-                localeString.substring(0, index),
-                localeString.substring(index + 1, index2),
-                localeString.substring(index2 + 1));
+                    localeString.substring(0, index),
+                    localeString.substring(index + 1, index2),
+                    localeString.substring(index2 + 1));
 
         }
         return resultLocale;

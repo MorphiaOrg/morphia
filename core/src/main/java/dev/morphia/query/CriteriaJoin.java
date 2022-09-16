@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-
 /**
  * Defines how to combine lists of criteria.
  */
@@ -8,7 +7,6 @@ package dev.morphia.query;
 public enum CriteriaJoin {
     AND,
     OR;
-
 
     @Override
     public String toString() {

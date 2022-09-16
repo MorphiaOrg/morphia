@@ -90,7 +90,6 @@ public class GraphLookup extends Stage {
         return new GraphLookup(from);
     }
 
-
     /**
      * Name of the array field added to each output document. Contains the documents traversed in the $graphLookup stage to reach the
      * document.

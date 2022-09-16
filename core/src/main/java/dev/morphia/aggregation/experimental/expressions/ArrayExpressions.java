@@ -26,7 +26,7 @@ public final class ArrayExpressions {
     }
 
     /**
-     * Creates an array of the given expressions.  This "expression" isn't so much a mongodb expression as it is a convenience method for
+     * Creates an array of the given expressions. This "expression" isn't so much a mongodb expression as it is a convenience method for
      * building pipeline definitions.
      *
      * @param expressions the expressions

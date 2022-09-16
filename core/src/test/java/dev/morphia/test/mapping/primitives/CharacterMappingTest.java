@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.primitives;
 
-
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
@@ -19,20 +18,20 @@ public class CharacterMappingTest extends TestBase {
     public void mapping() {
         getMapper().map(Characters.class);
         final Characters entity = new Characters();
-        entity.listWrapperArray.add(new Character[]{'1', 'g', '#'});
-        entity.listPrimitiveArray.add(new char[]{'1', 'd', 'z'});
+        entity.listWrapperArray.add(new Character[] { '1', 'g', '#' });
+        entity.listPrimitiveArray.add(new char[] { '1', 'd', 'z' });
         entity.listWrapper.addAll(Arrays.asList('*', ' ', '\u8888'));
         entity.singlePrimitive = 'a';
         entity.singleWrapper = 'b';
-        entity.primitiveArray = new char[]{'a', 'b'};
-        entity.wrapperArray = new Character[]{'X', 'y', 'Z'};
-        entity.nestedPrimitiveArray = new char[][]{{'5', '-'}, {'a', 'b'}};
-        entity.nestedWrapperArray = new Character[][]{{'*', '$', '\u4824'}, {'X', 'y', 'Z'}};
+        entity.primitiveArray = new char[] { 'a', 'b' };
+        entity.wrapperArray = new Character[] { 'X', 'y', 'Z' };
+        entity.nestedPrimitiveArray = new char[][] { { '5', '-' }, { 'a', 'b' } };
+        entity.nestedWrapperArray = new Character[][] { { '*', '$', '\u4824' }, { 'X', 'y', 'Z' } };
         getDs().save(entity);
 
         final Characters loaded = getDs().find(Characters.class)
-                                         .filter(eq("_id", entity.id))
-                                         .first();
+                .filter(eq("_id", entity.id))
+                .first();
         Assert.assertNotNull(loaded.id);
         Assert.assertEquals(loaded.listWrapperArray.get(0), entity.listWrapperArray.get(0));
         Assert.assertEquals(loaded.listPrimitiveArray.get(0), entity.listPrimitiveArray.get(0));

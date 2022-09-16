@@ -54,4 +54,3 @@ public class TestLifecycles extends TestBase {
         }
     }
 }
-

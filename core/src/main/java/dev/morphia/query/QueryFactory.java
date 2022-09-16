@@ -18,7 +18,7 @@ public interface QueryFactory {
      * #createQuery(Datastore, Class)} with the last argument being {@code null}.
      *
      * @param datastore  the Datastore to use
-     * @param collection the actual collection to query.  This overrides any mapped on collection on type.
+     * @param collection the actual collection to query. This overrides any mapped on collection on type.
      * @param type       the type of the result
      * @param <T>        the type of the result
      * @return the query

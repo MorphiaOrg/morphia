@@ -26,6 +26,7 @@ public class EmbeddedBuilder extends AnnotationBuilder<Embedded> implements Embe
 
     /**
      * Sets the discriminator value
+     *
      * @param discriminator the discriminator to use
      * @return this
      */
@@ -36,6 +37,7 @@ public class EmbeddedBuilder extends AnnotationBuilder<Embedded> implements Embe
 
     /**
      * Sets the discriminator key
+     *
      * @param discriminatorKey the discriminator key to use
      * @return this
      */
@@ -46,6 +48,7 @@ public class EmbeddedBuilder extends AnnotationBuilder<Embedded> implements Embe
 
     /**
      * Toggles whether or not to use the discriminator
+     *
      * @param use true to use the discriminator
      * @return this
      */

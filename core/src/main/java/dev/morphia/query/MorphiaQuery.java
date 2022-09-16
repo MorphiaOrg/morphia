@@ -94,7 +94,7 @@ class MorphiaQuery<T> implements Query<T> {
         ClientSession session = datastore.findSession(options);
         Document query = getQueryDocument();
         return session == null ? getCollection().countDocuments(query, options)
-                               : getCollection().countDocuments(session, query, options);
+                : getCollection().countDocuments(session, query, options);
     }
 
     @Override
@@ -103,12 +103,12 @@ class MorphiaQuery<T> implements Query<T> {
         ClientSession session = datastore.findSession(options);
         if (options.isMulti()) {
             return session == null
-                   ? collection.deleteMany(getQueryDocument(), options)
-                   : collection.deleteMany(session, getQueryDocument(), options);
+                    ? collection.deleteMany(getQueryDocument(), options)
+                    : collection.deleteMany(session, getQueryDocument(), options);
         } else {
             return session == null
-                   ? collection.deleteOne(getQueryDocument(), options)
-                   : collection.deleteOne(session, getQueryDocument(), options);
+                    ? collection.deleteOne(getQueryDocument(), options)
+                    : collection.deleteOne(session, getQueryDocument(), options);
         }
     }
 
@@ -127,27 +127,27 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
         return tryInvoke(DriverVersion.v4_2_0,
-            () -> {
-                return verbosity == null
-                       ? iterable(options, collection).explain()
-                       : iterable(options, collection).explain(verbosity);
-            },
-            () -> {
-                return new LinkedHashMap<>(datastore.getDatabase()
-                                                    .runCommand(new Document("explain",
-                                                        new Document("find", getCollection().getNamespace().getCollectionName())
-                                                            .append("filter", getQueryDocument()))));
-            });
+                () -> {
+                    return verbosity == null
+                            ? iterable(options, collection).explain()
+                            : iterable(options, collection).explain(verbosity);
+                },
+                () -> {
+                    return new LinkedHashMap<>(datastore.getDatabase()
+                            .runCommand(new Document("explain",
+                                    new Document("find", getCollection().getNamespace().getCollectionName())
+                                            .append("filter", getQueryDocument()))));
+                });
     }
 
     @Override
-    @SuppressWarnings({"removal", "unchecked"})
+    @SuppressWarnings({ "removal", "unchecked" })
     public FieldEnd<? extends Query<T>> field(String name) {
         return new MorphiaQueryFieldEnd(name);
     }
 
     @Override
-    @SuppressWarnings({"removal"})
+    @SuppressWarnings({ "removal" })
     public Query<T> filter(String condition, Object value) {
         final String[] parts = condition.trim().split(" ");
         if (parts.length < 1 || parts.length > 6) {
@@ -163,8 +163,8 @@ class MorphiaQuery<T> implements Query<T> {
     public Query<T> filter(Filter... additional) {
         for (Filter filter : additional) {
             filters.add(filter
-                            .entityType(getEntityClass())
-                            .isValidating(validate));
+                    .entityType(getEntityClass())
+                    .isValidating(validate));
         }
         return this;
     }
@@ -174,8 +174,8 @@ class MorphiaQuery<T> implements Query<T> {
         MongoCollection<T> mongoCollection = options.prepare(getCollection());
         ClientSession session = datastore.findSession(options);
         return session == null
-               ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
-               : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
+                ? mongoCollection.findOneAndDelete(getQueryDocument(), options)
+                : mongoCollection.findOneAndDelete(session, getQueryDocument(), options);
     }
 
     @Override
@@ -208,12 +208,12 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     public MorphiaKeyCursor<T> keys(FindOptions options) {
         FindOptions includeId = new FindOptions().copy(options)
-                                                 .projection()
-                                                 .include("_id");
+                .projection()
+                .include("_id");
 
         return new MorphiaKeyCursor<>(prepareCursor(includeId,
-            datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
-            type, getCollectionName());
+                datastore.getDatabase().getCollection(getCollectionName())), datastore.getMapper(),
+                type, getCollectionName());
     }
 
     @Override
@@ -262,16 +262,16 @@ class MorphiaQuery<T> implements Query<T> {
         }
         final MorphiaQuery<?> query20 = (MorphiaQuery<?>) o;
         return validate == query20.validate
-               && Objects.equals(type, query20.type)
-               && Objects.equals(getCollectionName(), query20.getCollectionName());
+                && Objects.equals(type, query20.type)
+                && Objects.equals(getCollectionName(), query20.getCollectionName());
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", MorphiaQuery.class.getSimpleName() + "[", "]")
-                   .add("clazz=" + type.getSimpleName())
-                   .add("query=" + getQueryDocument())
-                   .toString();
+                .add("clazz=" + type.getSimpleName())
+                .add("query=" + getQueryDocument())
+                .toString();
     }
 
     /**
@@ -295,7 +295,7 @@ class MorphiaQuery<T> implements Query<T> {
         }
 
         if ((findOptions.getCursorType() != null && findOptions.getCursorType() != NonTailable)
-            && (findOptions.getSort() != null)) {
+                && (findOptions.getSort() != null)) {
             LOG.warn("Sorting on tail is not allowed.");
         }
 
@@ -304,8 +304,8 @@ class MorphiaQuery<T> implements Query<T> {
         MongoCollection<E> updated = findOptions.prepare(collection);
 
         FindIterable<E> iterable = clientSession != null
-                                   ? updated.find(clientSession, query)
-                                   : updated.find(query);
+                ? updated.find(clientSession, query)
+                : updated.find(query);
         return iterable;
     }
 
@@ -317,13 +317,13 @@ class MorphiaQuery<T> implements Query<T> {
         }
         try {
             return findOptions
-                       .apply(iterable(findOptions, collection), mapper, type)
-                       .iterator();
+                    .apply(iterable(findOptions, collection), mapper, type)
+                    .iterator();
         } finally {
             if (findOptions.isLogQuery()) {
                 datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
-                                                       .append("slowms", oldProfile.get("slowms"))
-                                                       .append("sampleRate", oldProfile.get("sampleRate")));
+                        .append("slowms", oldProfile.get("slowms"))
+                        .append("sampleRate", oldProfile.get("sampleRate")));
             }
 
         }
@@ -346,7 +346,7 @@ class MorphiaQuery<T> implements Query<T> {
         return query;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Deprecated(since = "2.0", forRemoval = true)
     private class MorphiaQueryFieldEnd extends FieldEndImpl {
         private final String name;

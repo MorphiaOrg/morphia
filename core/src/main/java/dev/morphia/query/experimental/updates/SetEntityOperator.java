@@ -23,7 +23,6 @@ public class SetEntityOperator extends UpdateOperator {
         super("$set", "", value);
     }
 
-
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(null, value()) {

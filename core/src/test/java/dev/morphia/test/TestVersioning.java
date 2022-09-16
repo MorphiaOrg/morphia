@@ -72,7 +72,7 @@ public class TestVersioning extends TestBase {
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("id", entity.getId()));
         query.update(set("name", "Value 3"))
-             .execute();
+                .execute();
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
         assertEquals(entity.getName(), "Value 3");
@@ -103,8 +103,8 @@ public class TestVersioning extends TestBase {
             getDs().save(new Country("Sweden"));
 
             Country first = getDs().find(Country.class)
-                                   .filter(eq("name", "Sweden"))
-                                   .first();
+                    .filter(eq("name", "Sweden"))
+                    .first();
 
             first.name = "USA";
 
@@ -153,7 +153,7 @@ public class TestVersioning extends TestBase {
             assertEquals(a.version, 1);
 
             Query<VersionedType> query = getDs().find(VersionedType.class)
-                                                .filter(eq("_id", a.getId()));
+                    .filter(eq("_id", a.getId()));
             getDs().save(query.iterator().next());
 
             assertEquals(query.iterator().next().version, 2);
@@ -172,9 +172,9 @@ public class TestVersioning extends TestBase {
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("name", "Value 1"));
         entity = query.modify(set("name", "Value 3"))
-                      .execute(new ModifyOptions()
-                                   .returnDocument(ReturnDocument.AFTER)
-                                   .upsert(true));
+                .execute(new ModifyOptions()
+                        .returnDocument(ReturnDocument.AFTER)
+                        .upsert(true));
 
         assertEquals(entity.getName(), "Value 3");
         assertEquals(entity.getVersion().longValue(), 1);
@@ -193,11 +193,11 @@ public class TestVersioning extends TestBase {
         Query<Versioned> query = getDs().find(Versioned.class);
         query.filter(eq("_id", version1.getId()));
         query.update(inc("count"))
-             .execute(new UpdateOptions().upsert(true));
+                .execute(new UpdateOptions().upsert(true));
 
         final Versioned version2 = getDs().find(Versioned.class)
-                                          .filter(eq("_id", version1.getId()))
-                                          .first();
+                .filter(eq("_id", version1.getId()))
+                .first();
 
         assertEquals(version2.getVersion(), Long.valueOf(2));
         assertEquals(version2.getCount(), 1);
@@ -210,7 +210,7 @@ public class TestVersioning extends TestBase {
         getDs().save(Primitive);
 
         InittedPrimitive first = getDs().find(InittedPrimitive.class)
-                                        .first();
+                .first();
 
         assertEquals(first.hubba, Primitive.hubba);
     }
@@ -222,7 +222,7 @@ public class TestVersioning extends TestBase {
         getDs().save(wrapper);
 
         InittedWrapper first = getDs().find(InittedWrapper.class)
-                                      .first();
+                .first();
 
         assertEquals(first.hubba, wrapper.hubba);
 
@@ -263,8 +263,8 @@ public class TestVersioning extends TestBase {
 
             a.text = " foosdfds ";
             final NamedVersion a2 = getDs().find(NamedVersion.class)
-                                           .filter(eq("_id", a.getId()))
-                                           .first();
+                    .filter(eq("_id", a.getId()))
+                    .first();
             getDs().save(a2);
 
             getDs().merge(a);
@@ -274,10 +274,10 @@ public class TestVersioning extends TestBase {
     @Test
     public void testMethodMapping() {
         Datastore datastore = createDatastore(getMongoClient(), TEST_DB_NAME,
-            MapperOptions.builder()
-                         .propertyDiscovery(
-                             PropertyDiscovery.METHODS)
-                         .build());
+                MapperOptions.builder()
+                        .propertyDiscovery(
+                                PropertyDiscovery.METHODS)
+                        .build());
 
         datastore.getMapper().map(MethodMappedUser.class);
 
@@ -315,7 +315,7 @@ public class TestVersioning extends TestBase {
         getDs().save(Primitive);
 
         Primitive first = getDs().find(Primitive.class)
-                                 .first();
+                .first();
 
         assertEquals(first.hubba, Primitive.hubba);
     }
@@ -342,14 +342,14 @@ public class TestVersioning extends TestBase {
         ds.save(initial);
 
         UpdateResult results = ds.find(VersionedType.class)
-                                 .update(set("text", "some new value"))
-                                 .execute();
+                .update(set("text", "some new value"))
+                .execute();
         assertEquals(results.getModifiedCount(), 1);
         List<VersionedType> postUpdate = ds.find(VersionedType.class)
-                                           .filter(eq("text", "some new value"))
-                                           .iterator(new FindOptions()
-                                                         .sort(Sort.ascending("_id")))
-                                           .toList();
+                .filter(eq("text", "some new value"))
+                .iterator(new FindOptions()
+                        .sort(Sort.ascending("_id")))
+                .toList();
 
         for (int i = 0, postUpdateSize = postUpdate.size(); i < postUpdateSize; i++) {
             final VersionedType versionedType = postUpdate.get(i);
@@ -420,7 +420,7 @@ public class TestVersioning extends TestBase {
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("name", "Value 1"));
         query.update(set("name", "Value 3"))
-             .execute(new UpdateOptions().upsert(true));
+                .execute(new UpdateOptions().upsert(true));
 
         entity = datastore.find(Versioned.class).iterator(new FindOptions().limit(1)).tryNext();
         assertEquals(entity.getName(), "Value 3");
@@ -449,7 +449,7 @@ public class TestVersioning extends TestBase {
         getDs().save(wrapper);
 
         Wrapper first = getDs().find(Wrapper.class)
-                               .first();
+                .first();
 
         assertEquals(first.hubba, wrapper.hubba);
     }
@@ -474,7 +474,7 @@ public class TestVersioning extends TestBase {
             }
             InittedPrimitive that = (InittedPrimitive) o;
             return hubba == that.hubba &&
-                   Objects.equals(name, that.name);
+                    Objects.equals(name, that.name);
         }
     }
 
@@ -498,7 +498,7 @@ public class TestVersioning extends TestBase {
             }
             InittedWrapper that = (InittedWrapper) o;
             return Objects.equals(name, that.name) &&
-                   Objects.equals(hubba, that.hubba);
+                    Objects.equals(hubba, that.hubba);
         }
 
     }
@@ -535,7 +535,7 @@ public class TestVersioning extends TestBase {
             }
             final NamedVersion that = (NamedVersion) o;
             return Objects.equals(v, that.v) &&
-                   Objects.equals(text, that.text);
+                    Objects.equals(text, that.text);
         }
     }
 
@@ -559,7 +559,7 @@ public class TestVersioning extends TestBase {
             }
             Primitive primitive = (Primitive) o;
             return hubba == primitive.hubba &&
-                   Objects.equals(name, primitive.name);
+                    Objects.equals(name, primitive.name);
         }
     }
 
@@ -600,7 +600,7 @@ public class TestVersioning extends TestBase {
             }
             Wrapper wrapper = (Wrapper) o;
             return Objects.equals(name, wrapper.name) &&
-                   Objects.equals(hubba, wrapper.hubba);
+                    Objects.equals(hubba, wrapper.hubba);
         }
     }
 }

@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressWarnings("unused")
 public class AggregationOptions implements SessionConfigurable<AggregationOptions>, ReadConfigurable<AggregationOptions>,
-                                               WriteConfigurable<AggregationOptions> {
+        WriteConfigurable<AggregationOptions> {
     private boolean allowDiskUse;
     private Integer batchSize;
     private boolean bypassDocumentValidation;
@@ -63,7 +63,7 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
      * @morphia.internal
      */
     public <S, T> AggregateIterable<S> apply(List<Document> documents, MongoCollection<T> collection,
-                                             Class<S> resultType) {
+            Class<S> resultType) {
         MongoCollection<T> bound = collection;
         if (readConcern != null) {
             bound = bound.withReadConcern(readConcern);
@@ -72,8 +72,8 @@ public class AggregationOptions implements SessionConfigurable<AggregationOption
             bound = bound.withReadPreference(readPreference);
         }
         AggregateIterable<S> aggregate = bound.aggregate(documents, resultType)
-                                              .allowDiskUse(allowDiskUse)
-                                              .bypassDocumentValidation(bypassDocumentValidation);
+                .allowDiskUse(allowDiskUse)
+                .bypassDocumentValidation(bypassDocumentValidation);
         if (batchSize != null) {
             aggregate.batchSize(batchSize);
         }

@@ -100,10 +100,10 @@ public class Inventory {
     @Override
     public String toString() {
         return new StringJoiner(", ", Inventory.class.getSimpleName() + "[", "]")
-                   .add("id=" + id)
-                   .add("sku='" + sku + "'")
-                   .add("description='" + description + "'")
-                   .add("instock=" + instock)
-                   .toString();
+                .add("id=" + id)
+                .add("sku='" + sku + "'")
+                .add("description='" + description + "'")
+                .add("instock=" + instock)
+                .toString();
     }
 }

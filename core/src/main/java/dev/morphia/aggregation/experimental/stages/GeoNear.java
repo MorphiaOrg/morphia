@@ -92,7 +92,7 @@ public class GeoNear extends Stage {
     }
 
     /**
-     * Optional. The factor to multiply all distances returned by the query.  For example, use the distanceMultiplier to convert radians,
+     * Optional. The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians,
      * as returned by a spherical query, to kilometers by multiplying by the radius of the Earth.
      *
      * @param distanceMultiplier the multiplier

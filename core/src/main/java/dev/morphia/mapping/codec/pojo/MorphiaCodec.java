@@ -52,8 +52,8 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * @param discriminatorLookup    the discriminator to type lookup
      */
     public MorphiaCodec(Datastore datastore, EntityModel model,
-                        List<PropertyCodecProvider> propertyCodecProviders,
-                        DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
+            List<PropertyCodecProvider> propertyCodecProviders,
+            DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
         this.mapper = datastore.getMapper();
         this.discriminatorLookup = discriminatorLookup;
 
@@ -145,12 +145,12 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         throw new UnsupportedOperationException();
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void specializePropertyCodecs() {
         EntityModel entityModel = getEntityModel();
         for (PropertyModel propertyModel : entityModel.getProperties()) {
             Codec codec = propertyModel.getCodec() != null ? propertyModel.getCodec()
-                                                           : propertyCodecRegistry.get(propertyModel.getTypeData());
+                    : propertyCodecRegistry.get(propertyModel.getTypeData());
             if (codec != null) {
                 propertyModel.cachedCodec(codec);
             }

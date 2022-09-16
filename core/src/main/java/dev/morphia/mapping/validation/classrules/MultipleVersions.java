@@ -21,8 +21,8 @@ public class MultipleVersions implements ClassConstraint {
         final List<PropertyModel> versionFields = entityModel.getProperties(Version.class);
         if (versionFields.size() > 1) {
             ve.add(new ConstraintViolation(Level.FATAL, entityModel, getClass(),
-                "Multiple @" + Version.class + " annotations are not allowed. ("
-                + new FieldEnumString(versionFields)));
+                    "Multiple @" + Version.class + " annotations are not allowed. ("
+                            + new FieldEnumString(versionFields)));
         }
     }
 }

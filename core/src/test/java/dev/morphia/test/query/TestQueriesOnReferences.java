@@ -1,6 +1,5 @@
 package dev.morphia.test.query;
 
-
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -23,7 +22,6 @@ import static dev.morphia.query.experimental.filters.Filters.exists;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-
 
 public class TestQueriesOnReferences extends TestBase {
     @Test
@@ -68,13 +66,13 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         assertNotNull(getDs().find(ContainsPic.class)
-                             .filter(exists("pic"))
-                             .iterator(new FindOptions().projection().include("pic").limit(1))
-                             .tryNext());
+                .filter(exists("pic"))
+                .iterator(new FindOptions().projection().include("pic").limit(1))
+                .tryNext());
         assertNull(getDs().find(ContainsPic.class)
-                          .filter(exists("pic").not())
-                          .iterator(new FindOptions().projection().include("pic").limit(1))
-                          .tryNext());
+                .filter(exists("pic").not())
+                .iterator(new FindOptions().projection().include("pic").limit(1))
+                .tryNext());
 
         assertNotNull(getDs().find(ContainsPic.class).filter(Filters.eq("pic", p)).first());
     }
@@ -94,13 +92,13 @@ public class TestQueriesOnReferences extends TestBase {
 
         var e1 = getDs().find(Entity1.class).first();
         var e2 = getDs().aggregate(Entity2.class)
-                        .match(Filters.eq("reference", e1))
-                        .execute(Entity2.class)
-                        .tryNext();
+                .match(Filters.eq("reference", e1))
+                .execute(Entity2.class)
+                .tryNext();
         var e2_i = getDs().aggregate(Entity2.class)
-                          .match(Filters.eq("reference", e1.getId()))
-                          .execute(Entity2.class)
-                          .tryNext();
+                .match(Filters.eq("reference", e1.getId()))
+                .execute(Entity2.class)
+                .tryNext();
 
         assertNotNull(e1, "e1");
         assertNotNull(e2, "e2");
@@ -207,4 +205,3 @@ public class TestQueriesOnReferences extends TestBase {
         }
     }
 }
-

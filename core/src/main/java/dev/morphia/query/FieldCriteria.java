@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -22,7 +21,7 @@ class FieldCriteria extends AbstractCriteria {
     private final Mapper mapper;
 
     FieldCriteria(Mapper mapper, String field, FilterOperator op, Object value, EntityModel model,
-                  boolean validating) {
+            boolean validating) {
         this(mapper, field, op, value, false, model, validating);
     }
 

@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.primitives;
 
-
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
@@ -14,25 +13,24 @@ import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
-
 public class LongMappingTest extends TestBase {
     @Test
     public void testMapping() {
         getMapper().map(Longs.class);
         final Longs ent = new Longs();
-        ent.listWrapperArray.add(new Long[]{1L, 2L});
-        ent.listPrimitiveArray.add(new long[]{2, 3, 12});
+        ent.listWrapperArray.add(new Long[] { 1L, 2L });
+        ent.listPrimitiveArray.add(new long[] { 2, 3, 12 });
         ent.listWrapper.addAll(Arrays.asList(1L, 2L));
         ent.singlePrimitive = 100;
         ent.singleWrapper = 47L;
-        ent.primitiveArray = new long[]{5, 93};
-        ent.wrapperArray = new Long[]{55L, 16L, 99L};
-        ent.nestedPrimitiveArray = new long[][]{{0}, {5, 93}};
-        ent.nestedWrapperArray = new Long[][]{{99L, 1L}, {55L, 16L, 99L}};
+        ent.primitiveArray = new long[] { 5, 93 };
+        ent.wrapperArray = new Long[] { 55L, 16L, 99L };
+        ent.nestedPrimitiveArray = new long[][] { { 0 }, { 5, 93 } };
+        ent.nestedWrapperArray = new Long[][] { { 99L, 1L }, { 55L, 16L, 99L } };
         getDs().save(ent);
         final Longs loaded = getDs().find(Longs.class)
-                                    .filter(eq("_id", ent.id))
-                                    .first();
+                .filter(eq("_id", ent.id))
+                .first();
 
         Assert.assertNotNull(loaded.id);
 

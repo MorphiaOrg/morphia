@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @since 2.0
  */
 public class ModifyOptions extends FindOneAndUpdateOptions implements SessionConfigurable<ModifyOptions>,
-                                                                          WriteConfigurable<ModifyOptions> {
+        WriteConfigurable<ModifyOptions> {
     private WriteConcern writeConcern;
     private ClientSession clientSession;
 

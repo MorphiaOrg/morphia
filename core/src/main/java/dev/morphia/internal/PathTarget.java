@@ -105,7 +105,7 @@ public class PathTarget {
     }
 
     /**
-     * Returns the translated path for this context.  If validation is disabled, that path could be the same as the initial value.
+     * Returns the translated path for this context. If validation is disabled, that path could be the same as the initial value.
      *
      * @return the translated path
      */
@@ -119,7 +119,7 @@ public class PathTarget {
     }
 
     /**
-     * Returns the PropertyModel found at the end of a path.  May be null if the path is invalid and validation is disabled.
+     * Returns the PropertyModel found at the end of a path. May be null if the path is invalid and validation is disabled.
      *
      * @return the field
      */
@@ -167,7 +167,7 @@ public class PathTarget {
                 }
                 translate(property.getMappedName());
                 if (property.isMap() && hasNext()) {
-                    next();  // consume the map key segment
+                    next(); // consume the map key segment
                 }
             } else {
                 if (validateNames) {

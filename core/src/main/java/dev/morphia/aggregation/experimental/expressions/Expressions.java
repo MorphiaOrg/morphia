@@ -22,7 +22,7 @@ public final class Expressions {
     }
 
     /**
-     * Creates a field expression for the given value.  If the value does not already start with '$', it will be prepended automatically.
+     * Creates a field expression for the given value. If the value does not already start with '$', it will be prepended automatically.
      *
      * @param name the field name
      * @return the new expression

@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 /**
- * Defines a Creator that uses a full constructor to create an instance rather than field injection.  This requires that a class have a
+ * Defines a Creator that uses a full constructor to create an instance rather than field injection. This requires that a class have a
  * constructor that accepts a parameter for each mapped field on the class.
  *
  * @morphia.internal

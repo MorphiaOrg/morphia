@@ -34,7 +34,7 @@ public class Unset extends Stage {
     @Deprecated(forRemoval = true)
     public static Unset fields(String name, String... names) {
         Unset unset = new Unset()
-                          .add(name);
+                .add(name);
         for (String additional : names) {
             unset.add(additional);
         }
@@ -51,7 +51,7 @@ public class Unset extends Stage {
      */
     public static Unset unset(String name, String... names) {
         Unset unset = new Unset()
-                          .add(name);
+                .add(name);
         for (String additional : names) {
             unset.add(additional);
         }

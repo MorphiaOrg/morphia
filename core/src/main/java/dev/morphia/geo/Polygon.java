@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * This class represents either a simple polygon enclosing an area, or a more complex polygon that contains both an exterior boundary and
- * interior boundaries (holes) within it.  It will be persisted into the database according to <a
+ * interior boundaries (holes) within it. It will be persisted into the database according to <a
  * href="http://geojson.org/geojson-spec.html#id4">the specification</a>.
  * <p/>
  * The factory for creating a Polygon is {@code PolygonBuilder}, which is accessible via the {@code GeoJson.polygonBuilder} method.
@@ -60,7 +60,7 @@ public class Polygon implements Geometry {
     }
 
     /**
-     * Returns a LineString representing the exterior boundary of this Polygon.  Polygons should have an exterior boundary where the end
+     * Returns a LineString representing the exterior boundary of this Polygon. Polygons should have an exterior boundary where the end
      * point is the same as the start point.
      *
      * @return a LineString containing the points that make up the external boundary of this Polygon.
@@ -106,9 +106,9 @@ public class Polygon implements Geometry {
     @Override
     public String toString() {
         return "Polygon{"
-               + "exteriorBoundary=" + exteriorBoundary
-               + ", interiorBoundaries=" + interiorBoundaries
-               + '}';
+                + "exteriorBoundary=" + exteriorBoundary
+                + ", interiorBoundaries=" + interiorBoundaries
+                + '}';
     }
 
     @Override
@@ -117,11 +117,11 @@ public class Polygon implements Geometry {
     }
 
     @Override
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public com.mongodb.client.model.geojson.Polygon convert(@Nullable CoordinateReferenceSystem crs) {
         final List<List<Position>> lists = GeoJson.convertLineStrings(interiorBoundaries);
         final List[] holeArray = lists.toArray(new List[0]);
         return new com.mongodb.client.model.geojson.Polygon(crs != null ? crs.convert() : null,
-            new PolygonCoordinates(exteriorBoundary.convert().getCoordinates(), holeArray));
+                new PolygonCoordinates(exteriorBoundary.convert().getCoordinates(), holeArray));
     }
 }

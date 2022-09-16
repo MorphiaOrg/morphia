@@ -48,6 +48,7 @@ public class EntityModelBuilder {
     private final List<EntityModel> interfaceModels;
     private EntityModel superclass;
     private final Map<String, Map<String, Type>> parameterization;
+
     /**
      * Create a builder
      *
@@ -70,15 +71,15 @@ public class EntityModelBuilder {
         }
 
         this.interfaceModels = interfaces.stream()
-                                         .map(i -> {
-                                             try {
-                                                 return datastore.getMapper().getEntityModel(i);
-                                             } catch (NotMappableException ignored) {
-                                                 return null;
-                                             }
-                                         })
-                                         .filter(Objects::nonNull)
-                                         .collect(Collectors.toList());
+                .map(i -> {
+                    try {
+                        return datastore.getMapper().getEntityModel(i);
+                    } catch (NotMappableException ignored) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
     }
 
@@ -282,9 +283,9 @@ public class EntityModelBuilder {
      */
     public PropertyModelBuilder propertyModelByName(String name) throws NoSuchElementException {
         return propertyModels.stream().filter(f -> f.name().equals(name))
-                             .findFirst()
-                             .orElseThrow(() -> new NoSuchElementException(String.format("No property found named %s.  Valid names are: %s",
-                                 name, propertyModels.stream().map(p -> p.name()).collect(Collectors.toList()))));
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(String.format("No property found named %s.  Valid names are: %s",
+                        name, propertyModels.stream().map(p -> p.name()).collect(Collectors.toList()))));
     }
 
     /**
@@ -349,8 +350,8 @@ public class EntityModelBuilder {
     protected String getCollectionName() {
         Entity entityAn = getAnnotation(Entity.class);
         return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
-               ? entityAn.value()
-               : datastore.getMapper().getOptions().getCollectionNaming().apply(type.getSimpleName());
+                ? entityAn.value()
+                : datastore.getMapper().getOptions().getCollectionNaming().apply(type.getSimpleName());
     }
 
     protected Datastore getDatastore() {
@@ -371,12 +372,11 @@ public class EntityModelBuilder {
         annotations.addAll(Set.of(type.getAnnotations()));
         list.addAll(interfaces);
         list.addAll(interfaces.stream()
-                              .flatMap(i -> findInterfaces(i).stream())
-                              .collect(Collectors.toList()));
+                .flatMap(i -> findInterfaces(i).stream())
+                .collect(Collectors.toList()));
 
         return list;
     }
-
 
     private void propagateTypes() {
         List<Map<String, Type>> parameters = new ArrayList<>(parameterization.values());

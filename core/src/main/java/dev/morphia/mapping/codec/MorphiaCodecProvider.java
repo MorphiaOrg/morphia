@@ -45,7 +45,7 @@ public class MorphiaCodecProvider implements CodecProvider {
         this.mapper = mapper;
 
         propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
-            new MorphiaCollectionPropertyCodecProvider()));
+                new MorphiaCollectionPropertyCodecProvider()));
 
         ServiceLoader<MorphiaPropertyCodecProvider> providers = ServiceLoader.load(MorphiaPropertyCodecProvider.class);
         providers.forEach(propertyCodecProviders::add);

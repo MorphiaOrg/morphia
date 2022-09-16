@@ -29,8 +29,8 @@ class RootState extends WriteState {
     @Override
     public String toString() {
         return documentState == null
-               ? "<<undefined>>"
-               : documentState.toString();
+                ? "<<undefined>>"
+                : documentState.toString();
     }
 
     @Override

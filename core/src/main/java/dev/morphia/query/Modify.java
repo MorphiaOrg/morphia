@@ -18,13 +18,13 @@ public class Modify<T> extends UpdateBase<T> {
 
     @SuppressWarnings("rawtypes")
     Modify(Datastore datastore, Mapper mapper, MongoCollection<T> collection, Query<T> query, Class<T> type,
-           UpdateOpsImpl operations) {
+            UpdateOpsImpl operations) {
         super(datastore, mapper, collection, query, type, operations.getUpdates());
 
     }
 
     Modify(Datastore datastore, Mapper mapper, MongoCollection<T> collection, Query<T> query, Class<T> type,
-           UpdateOperator first, UpdateOperator[] updates) {
+            UpdateOperator first, UpdateOperator[] updates) {
         super(datastore, mapper, collection, query, type, first, updates);
     }
 
@@ -50,7 +50,7 @@ public class Modify<T> extends UpdateBase<T> {
         Document update = toDocument();
 
         return session == null
-               ? options.prepare(getCollection()).findOneAndUpdate(getQuery().toDocument(), update, options)
-               : options.prepare(getCollection()).findOneAndUpdate(session, getQuery().toDocument(), update, options);
+                ? options.prepare(getCollection()).findOneAndUpdate(getQuery().toDocument(), update, options)
+                : options.prepare(getCollection()).findOneAndUpdate(session, getQuery().toDocument(), update, options);
     }
 }

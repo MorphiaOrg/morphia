@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a GeoJSON LineString type.  Will be persisted into the database according to <a href="http://geojson.org/geojson-spec
+ * Represents a GeoJSON LineString type. Will be persisted into the database according to <a href="http://geojson.org/geojson-spec
  * .html#id3">the
  * specification</a>.
  * <p/>
@@ -66,8 +66,8 @@ public class LineString implements Geometry {
     @Override
     public String toString() {
         return "LineString{"
-               + "coordinates=" + coordinates
-               + '}';
+                + "coordinates=" + coordinates
+                + '}';
     }
 
     @Override

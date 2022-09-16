@@ -8,7 +8,7 @@ import org.bson.codecs.pojo.TypeWithTypeParameters;
 import java.util.Collection;
 
 final class CollectionPropertyCodecProvider implements PropertyCodecProvider {
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public <T> Codec<T> get(TypeWithTypeParameters<T> type, PropertyCodecRegistry registry) {
         if (Collection.class.isAssignableFrom(type.getType()) && type.getTypeParameters().size() == 1) {

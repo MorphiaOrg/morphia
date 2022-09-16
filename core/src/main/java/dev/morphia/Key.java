@@ -1,20 +1,25 @@
 package dev.morphia;
 
-
 import com.mongodb.lang.Nullable;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 
 import java.io.Serializable;
 
 /**
- * <p> The key object; this class is take from the app-engine datastore (mostly) implementation. It is also Serializable and GWT-safe,
- * enabling your entity objects to be used for GWT RPC should you so desire. </p> <p/> <p> You may use normal DBRef objects as
+ * <p>
+ * The key object; this class is take from the app-engine datastore (mostly) implementation. It is also Serializable and GWT-safe,
+ * enabling your entity objects to be used for GWT RPC should you so desire.
+ * </p>
+ * <p/>
+ * <p>
+ * You may use normal DBRef objects as
  * relationships
- * in your entities if you desire neither type safety nor GWT-ability. </p>
+ * in your entities if you desire neither type safety nor GWT-ability.
+ * </p>
  *
  * @param <T> The type of the entity
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Deprecated(since = "2.0", forRemoval = true)
 public class Key<T> implements Serializable, Comparable<Key<T>> {
     @Nullable

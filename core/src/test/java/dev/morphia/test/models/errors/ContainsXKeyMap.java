@@ -17,8 +17,8 @@ public class ContainsXKeyMap<T> {
     @Override
     public String toString() {
         return new StringJoiner(", ", ContainsXKeyMap.class.getSimpleName() + "[", "]")
-                   .add("id=" + id)
-                   .add("values=" + values)
-                   .toString();
+                .add("id=" + id)
+                .add("values=" + values)
+                .toString();
     }
 }

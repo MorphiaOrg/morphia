@@ -23,7 +23,7 @@ import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 
 /**
- * Options related to insertion of documents into MongoDB.  The setter methods return {@code this} so that a chaining style can be used.
+ * Options related to insertion of documents into MongoDB. The setter methods return {@code this} so that a chaining style can be used.
  *
  * @since 1.3
  */
@@ -82,7 +82,7 @@ public class InsertManyOptions implements SessionConfigurable<InsertManyOptions>
     }
 
     /**
-     * Gets whether to bypass document validation, or null if unspecified.  The default is null.
+     * Gets whether to bypass document validation, or null if unspecified. The default is null.
      *
      * @return whether to bypass document validation, or null if unspecified.
      * @mongodb.server.release 3.2

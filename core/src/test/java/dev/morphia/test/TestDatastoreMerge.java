@@ -11,9 +11,7 @@
   and limitations under the License.
  */
 
-
 package dev.morphia.test;
-
 
 import dev.morphia.Datastore;
 import dev.morphia.InsertOneOptions;

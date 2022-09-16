@@ -64,16 +64,15 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public <U> Iterator<U> aggregate(Class<U> target, AggregationOptions options,
-                                     ReadPreference readPreference) {
+            ReadPreference readPreference) {
         return aggregate(mapper.getCollection(target).getNamespace().getCollectionName(), target, options, readPreference);
     }
 
     @Override
     public <U> Iterator<U> aggregate(String collectionName, Class<U> target,
-                                     AggregationOptions options,
-                                     ReadPreference readPreference) {
+            AggregationOptions options,
+            ReadPreference readPreference) {
         LOG.debug("stages = " + stages);
-
 
         AggregateIterable<U> cursor = collection.aggregate(stages, target);
         return cursor.iterator();
@@ -159,11 +158,11 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public AggregationPipeline lookup(String from, String localField,
-                                      String foreignField, String as) {
+            String foreignField, String as) {
         stages.add(new Document("$lookup", new Document("from", from)
-                                               .append("localField", localField)
-                                               .append("foreignField", foreignField)
-                                               .append("as", as)));
+                .append("localField", localField)
+                .append("foreignField", foreignField)
+                .append("as", as)));
         return this;
     }
 
@@ -190,7 +189,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
 
     @Override
     public <U> Iterator<U> out(String collectionName, Class<U> target,
-                               AggregationOptions options) {
+            AggregationOptions options) {
         stages.add(new Document("$out", collectionName));
         return aggregate(target, options);
     }
@@ -238,7 +237,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
     @Override
     public AggregationPipeline unwind(String field, UnwindOptions options) {
         Document unwindOptions = new Document("path", "$" + field)
-                                     .append("preserveNullAndEmptyArrays", options.isPreserveNullAndEmptyArrays());
+                .append("preserveNullAndEmptyArrays", options.isPreserveNullAndEmptyArrays());
         String includeArrayIndex = options.getIncludeArrayIndex();
         if (includeArrayIndex != null) {
             unwindOptions.append("includeArrayIndex", includeArrayIndex);
@@ -353,7 +352,7 @@ public class AggregationPipelineImpl implements AggregationPipeline {
                 if (arg instanceof Projection) {
                     Projection projection = (Projection) arg;
                     if (projection.getArguments() != null || projection.getProjections() != null
-                        || projection.getSource() != null) {
+                            || projection.getSource() != null) {
                         result.add(toDocument(projection));
                     } else {
                         result.add("$" + projection.getTarget());

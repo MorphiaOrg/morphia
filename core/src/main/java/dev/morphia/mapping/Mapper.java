@@ -1,6 +1,5 @@
 package dev.morphia.mapping;
 
-
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
@@ -51,14 +50,12 @@ import java.util.stream.Collectors;
 import static dev.morphia.sofia.Sofia.entityOrEmbedded;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 
-
 /**
  * @morphia.internal
  */
-@SuppressWarnings({"unchecked", "rawtypes", "removal"})
+@SuppressWarnings({ "unchecked", "rawtypes", "removal" })
 public class Mapper {
     private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
-
 
     /**
      * Special name that can never be used. Used as default for some fields to indicate default state.
@@ -77,7 +74,6 @@ public class Mapper {
     private final List<EntityInterceptor> interceptors = new LinkedList<>();
     private final MapperOptions options;
     private final DiscriminatorLookup discriminatorLookup;
-
 
     private final MorphiaCodecProvider morphiaCodecProvider;
     private final Datastore datastore;
@@ -98,11 +94,11 @@ public class Mapper {
         discriminatorLookup = new DiscriminatorLookup(options.getClassLoader());
 
         this.codecRegistry = fromProviders(new MorphiaTypesCodecProvider(this),
-            new PrimitiveCodecRegistry(codecRegistry),
-            new EnumCodecProvider(),
-            new AggregationCodecProvider(this),
-            morphiaCodecProvider,
-            codecRegistry);
+                new PrimitiveCodecRegistry(codecRegistry),
+                new EnumCodecProvider(),
+                new AggregationCodecProvider(this),
+                morphiaCodecProvider,
+                codecRegistry);
     }
 
     /**
@@ -151,8 +147,8 @@ public class Mapper {
     public MongoCollection enforceWriteConcern(MongoCollection collection, Class type) {
         WriteConcern applied = getWriteConcern(type);
         return applied != null
-               ? collection.withWriteConcern(applied)
-               : collection;
+                ? collection.withWriteConcern(applied)
+                : collection;
     }
 
     /**
@@ -175,8 +171,8 @@ public class Mapper {
         DocumentReader reader = new DocumentReader(document);
 
         return codecRegistry
-                   .get(aClass)
-                   .decode(reader, DecoderContext.builder().build());
+                .get(aClass)
+                .decode(reader, DecoderContext.builder().build());
     }
 
     /**
@@ -184,7 +180,7 @@ public class Mapper {
      *
      * @param document the document to check
      * @param <T>      the class type
-     * @return the class reference.  might be null
+     * @return the class reference. might be null
      */
     @SuppressWarnings("unchecked")
     @Nullable
@@ -218,9 +214,9 @@ public class Mapper {
         final List<EntityModel> classes = getClassesMappedToCollection(collection);
         if (classes.size() > 1) {
             LOG.warn(Sofia.moreThanOneMapper(collection,
-                classes.stream()
-                       .map(c -> c.getType().getName())
-                       .collect(Collectors.joining(", "))));
+                    classes.stream()
+                            .map(c -> c.getType().getName())
+                            .collect(Collectors.joining(", "))));
         }
         return (Class<T>) classes.get(0).getType();
     }
@@ -286,9 +282,9 @@ public class Mapper {
             }
         }
         return classes.stream()
-                      .map(this::getEntityModel)
-                      .filter(Objects::nonNull)
-                      .collect(Collectors.toList());
+                .map(this::getEntityModel)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -333,7 +329,6 @@ public class Mapper {
 
         return null;
     }
-
 
     /**
      * Gets list of {@link EntityInterceptor}s
@@ -459,12 +454,12 @@ public class Mapper {
     }
 
     /**
-     * Maps an external class.  This is intended for use on types needed in a system but come from an external source where the more
+     * Maps an external class. This is intended for use on types needed in a system but come from an external source where the more
      * traditional approach of decorating the type in source with Morphia annotations is not possible.
      *
-     * @param annotation the annotation to apply.  pass null to apply the defaults.
+     * @param annotation the annotation to apply. pass null to apply the defaults.
      * @param type       the type to map
-     * @param <A>        the annotation to apply.  Currently only {@code @Embedded} is supported
+     * @param <A>        the annotation to apply. Currently only {@code @Embedded} is supported
      * @return the list of mapped classes
      * @morphia.experimental
      * @see EmbeddedBuilder
@@ -481,7 +476,6 @@ public class Mapper {
             model = register(createEntityModel(type, annotation));
         }
 
-
         return model;
     }
 
@@ -493,16 +487,16 @@ public class Mapper {
     public synchronized void mapPackage(String packageName) {
         try {
             getClasses(options.getClassLoader(), packageName, getOptions().isMapSubPackages())
-                .stream()
-                .map(type -> {
-                    try {
-                        return getEntityModel(type);
-                    } catch (NotMappableException e) {
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(type -> {
+                        try {
+                            return getEntityModel(type);
+                        } catch (NotMappableException e) {
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
@@ -516,12 +510,12 @@ public class Mapper {
      */
     private <T> EntityModel createEntityModel(Class<T> clazz) {
         return new EntityModelBuilder(this.datastore, clazz)
-                   .build();
+                .build();
     }
 
     private <T, A extends Annotation> EntityModel createEntityModel(Class<T> clazz, A annotation) {
         return new EntityModelBuilder(this.datastore, annotation, clazz)
-                   .build();
+                .build();
     }
 
     /**
@@ -544,20 +538,20 @@ public class Mapper {
 
         MongoCollection<?> collection = getCollection(entity.getClass());
         PropertyModel idField = getEntityModel(entity.getClass())
-                                    .getIdProperty();
+                .getIdProperty();
         if (idField == null) {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
 
         Document id = collection.find(new Document("_id", idField.getValue(entity)), Document.class)
-                                .iterator()
-                                .next();
+                .iterator()
+                .next();
 
         refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     /**
-     * Converts an entity (POJO) to a Document.  A special field will be added to keep track of the class type.
+     * Converts an entity (POJO) to a Document. A special field will be added to keep track of the class type.
      *
      * @param entity The POJO
      * @return the Document
@@ -568,7 +562,7 @@ public class Mapper {
 
         DocumentWriter writer = new DocumentWriter(this);
         ((Codec) getCodecRegistry().get(entityModel.getType()))
-            .encode(writer, entity, EncoderContext.builder().build());
+                .encode(writer, entity, EncoderContext.builder().build());
 
         return writer.getDocument();
     }
@@ -602,8 +596,8 @@ public class Mapper {
     public void updateQueryWithDiscriminators(EntityModel model, Document query) {
         Entity annotation = model.getEntityAnnotation();
         if (annotation != null && annotation.useDiscriminator()
-            && !query.containsKey("_id")
-            && !query.containsKey(model.getDiscriminatorKey())) {
+                && !query.containsKey("_id")
+                && !query.containsKey(model.getDiscriminatorKey())) {
             List<EntityModel> subtypes = model.getSubtypes();
             List<String> values = new ArrayList<>();
             values.add(model.getDiscriminator());
@@ -613,23 +607,22 @@ public class Mapper {
                 }
             }
             query.put(model.getDiscriminatorKey(),
-                new Document("$in", values));
+                    new Document("$in", values));
         }
     }
 
-
     private String discriminatorKey(Class<?> type) {
         return mappedEntities.get(type)
-                             .getDiscriminatorKey();
+                .getDiscriminatorKey();
     }
 
     private List<Class> getClasses(ClassLoader loader, String packageName, boolean mapSubPackages)
-        throws ClassNotFoundException {
+            throws ClassNotFoundException {
         final Set<Class> classes = new HashSet<>();
 
         ClassGraph classGraph = new ClassGraph()
-                                    .addClassLoader(loader)
-                                    .enableAllInfo();
+                .addClassLoader(loader)
+                .enableAllInfo();
         if (mapSubPackages) {
             classGraph.whitelistPackages(packageName);
             classGraph.whitelistPackages(packageName + ".*");
@@ -653,7 +646,7 @@ public class Mapper {
         }
 
         return clazz.getSuperclass() != null && hasAnnotation(clazz.getSuperclass(), annotations)
-               || Arrays.stream(clazz.getInterfaces())
+                || Arrays.stream(clazz.getInterfaces())
                         .map(i -> hasAnnotation(i, annotations))
                         .reduce(false, (l, r) -> l || r);
     }
@@ -663,12 +656,12 @@ public class Mapper {
         mappedEntities.put(entityModel.getType(), entityModel);
         if (entityModel.getCollectionName() != null) {
             mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                                      .add(entityModel);
+                    .add(entityModel);
         }
 
         if (!entityModel.isInterface()) {
             new MappingValidator()
-                .validate(this, entityModel);
+                    .validate(this, entityModel);
 
         }
 

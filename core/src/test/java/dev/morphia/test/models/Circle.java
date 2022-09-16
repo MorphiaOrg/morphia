@@ -3,7 +3,6 @@ package dev.morphia.test.models;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 
-
 @Entity("shapes")
 public class Circle extends TestEntity implements Shape {
     @Property("r")

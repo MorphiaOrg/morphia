@@ -1,6 +1,5 @@
 package dev.morphia.test.callbacks;
 
-
 import com.mongodb.lang.NonNull;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Entity;
@@ -12,7 +11,6 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 
 public class TestInterceptors extends TestBase {
 

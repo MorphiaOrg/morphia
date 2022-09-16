@@ -36,8 +36,8 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
             return instanceCreator.getInstance();
         } else {
             entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
-                morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
-                         .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
+                    morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
+                    .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
         }
 
         return entity;
@@ -48,7 +48,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     }
 
     protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
-                               MorphiaInstanceCreator instanceCreator, @Nullable PropertyModel model) {
+            MorphiaInstanceCreator instanceCreator, @Nullable PropertyModel model) {
 
         if (model != null) {
             final BsonReaderMark mark = reader.getMark();
@@ -70,7 +70,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     }
 
     protected void decodeProperties(BsonReader reader, DecoderContext decoderContext,
-                                    MorphiaInstanceCreator instanceCreator, EntityModel classModel) {
+            MorphiaInstanceCreator instanceCreator, EntityModel classModel) {
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String name = reader.readName();
@@ -84,8 +84,8 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
     }
 
     protected Codec<?> getCodecFromDocument(BsonReader reader, boolean useDiscriminator, String discriminatorKey,
-                                            CodecRegistry registry, DiscriminatorLookup discriminatorLookup,
-                                            Codec<?> defaultCodec) {
+            CodecRegistry registry, DiscriminatorLookup discriminatorLookup,
+            Codec<?> defaultCodec) {
         Codec<?> codec = null;
         if (useDiscriminator) {
             BsonReaderMark mark = reader.getMark();
@@ -100,7 +100,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
                 }
             } catch (Exception e) {
                 throw new CodecConfigurationException(String.format("Failed to decode '%s'. Decoding errored with: %s",
-                    morphiaCodec.getEntityModel().getName(), e.getMessage()), e);
+                        morphiaCodec.getEntityModel().getName(), e.getMessage()), e);
             } finally {
                 mark.reset();
             }

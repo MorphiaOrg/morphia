@@ -1,6 +1,5 @@
 package dev.morphia.aggregation;
 
-
 import com.mongodb.lang.Nullable;
 
 import java.util.ArrayList;
@@ -222,6 +221,6 @@ public final class Projection {
     @Override
     public String toString() {
         return String.format("Projection{projectedField='%s', sourceField='%s', projections=%s, suppressed=%s}",
-            source, target, projections, suppressed);
+                source, target, projections, suppressed);
     }
 }

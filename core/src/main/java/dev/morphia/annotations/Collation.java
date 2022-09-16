@@ -23,13 +23,14 @@ import com.mongodb.client.model.CollationStrength;
 
 /**
  * Defines the collation options for an index
+ *
  * @since 1.3
  */
 public @interface Collation {
     /**
      * Causes secondary differences to be considered in reverse order, as it is done in the French language
      *
-     * @return  the backwards value
+     * @return the backwards value
      */
     boolean backwards() default false;
 
@@ -48,12 +49,12 @@ public @interface Collation {
     String locale();
 
     /**
-     * @return the normalization value.  If true, normalizes text into Unicode NFD.
+     * @return the normalization value. If true, normalizes text into Unicode NFD.
      */
     boolean normalization() default false;
 
     /**
-     * @return  the numeric ordering.  if true will order numbers based on numerical order and not collation order
+     * @return the numeric ordering. if true will order numbers based on numerical order and not collation order
      */
     boolean numericOrdering() default false;
 

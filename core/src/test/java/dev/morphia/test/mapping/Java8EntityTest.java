@@ -83,10 +83,10 @@ public class Java8EntityTest extends TestBase {
 
         for (int i = 0; i < 10; i++) {
             createEntity(getDs(),
-                instant.plus(i, DAYS),
-                localDate.plus(i, DAYS),
-                localDateTime.plus(i, DAYS),
-                localTime.plus(i, ChronoUnit.HOURS));
+                    instant.plus(i, DAYS),
+                    localDate.plus(i, DAYS),
+                    localDateTime.plus(i, DAYS),
+                    localTime.plus(i, ChronoUnit.HOURS));
         }
         Assert.assertEquals(getDs().find(Java8Entity.class).filter(lte("instant", instant.plus(1, DAYS))).count(), 2L);
         Assert.assertEquals(getDs().find(Java8Entity.class).filter(eq("localDate", localDate.plus(1, DAYS))).count(), 1L);
@@ -96,16 +96,16 @@ public class Java8EntityTest extends TestBase {
 
     private void compare(Datastore datastore, Java8Entity entity, String field, Object value) {
         Query<Java8Entity> query = datastore.find(Java8Entity.class)
-                                            .filter(eq(field, value));
+                .filter(eq(field, value));
         FindOptions options = new FindOptions().logQuery()
-                                               .limit(1);
+                .limit(1);
         Java8Entity actual = query.iterator(options)
-                                  .tryNext();
+                .tryNext();
         Assert.assertEquals(actual, entity, getDs().getLoggedQuery(options));
     }
 
     private Java8Entity createEntity(Datastore ds, Instant instant, LocalDate localDate,
-                                     LocalDateTime localDateTime, LocalTime localTime) {
+            LocalDateTime localDateTime, LocalTime localTime) {
         Java8Entity entity = new Java8Entity();
         entity.setInstant(instant);
         entity.setLocalDate(localDate);
@@ -207,7 +207,7 @@ public class Java8EntityTest extends TestBase {
         @Override
         public String toString() {
             return String.format("Java8Entity{id=%s, instant=%s, localDate=%s, localDateTime=%s, localTime=%s}",
-                id, instant, localDate, localDateTime, localTime);
+                    id, instant, localDate, localDateTime, localTime);
         }
     }
 }

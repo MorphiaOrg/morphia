@@ -34,7 +34,7 @@ import static org.testng.Assert.assertTrue;
  *
  * @mongodb.driver.manual tutorial/aggregation-zip-code-data-set/ Aggregation with the Zip Code Data Set
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Ignore
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
@@ -42,23 +42,21 @@ public class ZipCodeDataSetTest extends TestBase {
     @Test
     public void averageCitySizeByState() {
         Aggregation pipeline = getDs().aggregate(City.class)
-                                      .group(group(id().field("state")
-                                                       .field("city"))
-                                                 .field("pop", sum(field("pop"))))
-                                      .group(group(
-                                          id("_id.state"))
-                                                 .field("avgCityPop", avg(field("pop"))));
+                .group(group(id().field("state")
+                        .field("city"))
+                        .field("pop", sum(field("pop"))))
+                .group(group(
+                        id("_id.state"))
+                        .field("avgCityPop", avg(field("pop"))));
         validate(pipeline.execute(Population.class), "MN", 5372);
     }
 
-
     @Test
     public void populationsAbove10M() {
-        Aggregation pipeline
-            = getDs().aggregate(City.class)
-                     .group(group(id("state"))
-                                .field("totalPop", sum(field("pop"))))
-                     .match(gte("totalPop", 10000000));
+        Aggregation pipeline = getDs().aggregate(City.class)
+                .group(group(id("state"))
+                        .field("totalPop", sum(field("pop"))))
+                .match(gte("totalPop", 10000000));
 
         validate(pipeline.execute(Population.class), "CA", 29754890);
         validate(pipeline.execute(Population.class), "OH", 10846517);
@@ -70,30 +68,30 @@ public class ZipCodeDataSetTest extends TestBase {
 
         Aggregation pipeline = getDs().aggregate(City.class)
 
-                                      .group(group(id().field("state")
-                                                       .field("city"))
-                                                 .field("pop", sum(field("pop"))))
+                .group(group(id().field("state")
+                        .field("city"))
+                        .field("pop", sum(field("pop"))))
 
-                                      .sort(sort().ascending("pop"))
+                .sort(sort().ascending("pop"))
 
-                                      .group(group(
-                                          id("_id.state"))
-                                                 .field("biggestCity", last(field("_id.city")))
-                                                 .field("biggestPop", last(field("pop")))
-                                                 .field("smallestCity", first(field("_id.city")))
-                                                 .field("smallestPop", first(field("pop"))))
+                .group(group(
+                        id("_id.state"))
+                        .field("biggestCity", last(field("_id.city")))
+                        .field("biggestPop", last(field("pop")))
+                        .field("smallestCity", first(field("_id.city")))
+                        .field("smallestPop", first(field("pop"))))
 
-                                      .project(project()
-                                                   .exclude("_id")
-                                                   .include("state", field("_id"))
-                                                   .include("biggestCity",
-                                                       Expressions.of()
-                                                                  .field("name", field("biggestCity"))
-                                                                  .field("pop", field("biggestPop")))
-                                                   .include("smallestCity",
-                                                       Expressions.of()
-                                                                  .field("name", field("smallestCity"))
-                                                                  .field("pop", field("smallestPop"))));
+                .project(project()
+                        .exclude("_id")
+                        .include("state", field("_id"))
+                        .include("biggestCity",
+                                Expressions.of()
+                                        .field("name", field("biggestCity"))
+                                        .field("pop", field("biggestPop")))
+                        .include("smallestCity",
+                                Expressions.of()
+                                        .field("name", field("smallestCity"))
+                                        .field("pop", field("smallestPop"))));
 
         try (MongoCursor<State> cursor = (MongoCursor<State>) pipeline.execute(State.class)) {
             Map<String, State> states = new HashMap<>();

@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.primitives;
 
-
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
@@ -14,25 +13,24 @@ import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
-
 public class ShortMappingTest extends TestBase {
     @Test
     public void testMapping() {
         getMapper().map(Shorts.class);
         final Shorts ent = new Shorts();
-        ent.listWrapperArray.add(new Short[]{1, 2});
-        ent.listPrimitiveArray.add(new short[]{2, 3, 12});
+        ent.listWrapperArray.add(new Short[] { 1, 2 });
+        ent.listPrimitiveArray.add(new short[] { 2, 3, 12 });
         ent.listWrapper.addAll(Arrays.asList((short) 1, (short) 2));
         ent.singlePrimitive = 100;
         ent.singleWrapper = 47;
-        ent.primitiveArray = new short[]{5, 93};
-        ent.wrapperArray = new Short[]{55, 16, 99};
-        ent.nestedPrimitiveArray = new short[][]{{5, 93}, {88}};
-        ent.nestedWrapperArray = new Short[][]{{55, 16, 99}, {-47}};
+        ent.primitiveArray = new short[] { 5, 93 };
+        ent.wrapperArray = new Short[] { 55, 16, 99 };
+        ent.nestedPrimitiveArray = new short[][] { { 5, 93 }, { 88 } };
+        ent.nestedWrapperArray = new Short[][] { { 55, 16, 99 }, { -47 } };
         getDs().save(ent);
         final Shorts loaded = getDs().find(Shorts.class)
-                                     .filter(eq("_id", ent.id))
-                                     .first();
+                .filter(eq("_id", ent.id))
+                .first();
 
         Assert.assertNotNull(loaded.id);
 

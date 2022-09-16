@@ -21,8 +21,8 @@ public class EntityAndEmbed implements ClassConstraint {
     public void check(Mapper mapper, EntityModel entityModel, Set<ConstraintViolation> ve) {
         if (entityModel.getEntityAnnotation() != null && entityModel.getEmbeddedAnnotation() != null) {
             ve.add(new ConstraintViolation(Level.FATAL, entityModel, getClass(),
-                format("Cannot have both @%s and @%s annotation at class level.",
-                    Entity.class.getSimpleName(), Embedded.class.getSimpleName())));
+                    format("Cannot have both @%s and @%s annotation at class level.",
+                            Entity.class.getSimpleName(), Embedded.class.getSimpleName())));
         }
 
     }

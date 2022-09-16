@@ -24,10 +24,10 @@ public abstract class BaseMorphiaSession extends DatastoreImpl implements Morphi
     private final ClientSession session;
 
     BaseMorphiaSession(ClientSession session,
-                       MongoClient mongoClient,
-                       MongoDatabase database,
-                       Mapper mapper,
-                       QueryFactory queryFactory) {
+            MongoClient mongoClient,
+            MongoDatabase database,
+            Mapper mapper,
+            QueryFactory queryFactory) {
         super(database, mongoClient, mapper, queryFactory);
         this.session = session;
     }

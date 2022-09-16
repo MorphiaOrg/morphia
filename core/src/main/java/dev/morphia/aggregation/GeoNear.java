@@ -259,7 +259,7 @@ public final class GeoNear {
          * @return this
          */
         public GeoNearBuilder setNear(double latitude, double longitude) {
-            this.nearLegacy = new double[]{longitude, latitude};
+            this.nearLegacy = new double[] { longitude, latitude };
             return this;
         }
 

@@ -55,7 +55,7 @@ import static org.bson.Document.parse;
  *
  * @morphia.internal
  */
-@SuppressWarnings({"unchecked", "rawtypes", "removal"})
+@SuppressWarnings({ "unchecked", "rawtypes", "removal" })
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(DatastoreImpl.class);
 
@@ -85,7 +85,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @since 2.0
      */
     public DatastoreImpl(MongoDatabase database, MongoClient mongoClient, Mapper mapper,
-                         QueryFactory queryFactory) {
+            QueryFactory queryFactory) {
         this.database = database;
         this.mongoClient = mongoClient;
         this.mapper = mapper;
@@ -126,10 +126,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         Object id = mapper.getId(entity);
         return id != null
-               ? find(entity.getClass())
-                     .filter(eq("_id", id))
-                     .delete(options)
-               : new NoDeleteResult();
+                ? find(entity.getClass())
+                        .filter(eq("_id", id))
+                        .delete(options)
+                : new NoDeleteResult();
     }
 
     @Override
@@ -150,7 +150,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                     final CappedAt cap = entityAnnotation.cap();
                     final String collName = model.getCollectionName();
                     final CreateCollectionOptions dbCapOpts = new CreateCollectionOptions()
-                                                                  .capped(true);
+                            .capped(true);
                     if (cap.value() > 0) {
                         dbCapOpts.sizeInBytes(cap.value());
                     }
@@ -164,7 +164,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                             LOG.debug("MongoCollection already exists and is capped already; doing nothing. " + dbResult);
                         } else {
                             LOG.warn("MongoCollection already exists with same name(" + collName
-                                     + ") and is not capped; not creating capped version!");
+                                    + ") and is not capped; not creating capped version!");
                         }
                     } else {
                         getDatabase().createCollection(collName, dbCapOpts);
@@ -212,8 +212,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Nullable
     public ClientSession findSession(SessionConfigurable<?> configurable) {
         return configurable.clientSession() != null
-               ? configurable.clientSession()
-               : getSession();
+                ? configurable.clientSession()
+                : getSession();
     }
 
     @Override
@@ -231,11 +231,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (options.isLogQuery()) {
             String json = "{}";
             Document first = getDatabase()
-                                 .getCollection("system.profile")
-                                 .find(new Document("command.comment", "logged query: " + options.getQueryLogId()),
-                                     Document.class)
-                                 .projection(new Document("command.filter", 1))
-                                 .first();
+                    .getCollection("system.profile")
+                    .find(new Document("command.comment", "logged query: " + options.getQueryLogId()),
+                            Document.class)
+                    .projection(new Document("command.filter", 1))
+                    .first();
             if (first != null) {
                 Document command = (Document) first.get("command");
                 Document filter = (Document) command.get("filter");
@@ -277,7 +277,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> void insert(T entity) {
         insert(entity, new InsertOneOptions()
-            .writeConcern(mapper.getWriteConcern(entity.getClass())));
+                .writeConcern(mapper.getWriteConcern(entity.getClass())));
     }
 
     @Override
@@ -314,13 +314,13 @@ public class DatastoreImpl implements AdvancedDatastore {
             update = query.update(UpdateOperators.set(entity));
         } else {
             update = ((MergingEncoder<T>) new MergingEncoder(query,
-                (MorphiaCodec) mapper.getCodecRegistry().get(entity.getClass())))
-                .encode(entity);
+                    (MorphiaCodec) mapper.getCodecRegistry().get(entity.getClass())))
+                    .encode(entity);
         }
         UpdateResult execute = update
-            .execute(new UpdateOptions()
-                .clientSession(findSession(options))
-                .writeConcern(options.writeConcern()));
+                .execute(new UpdateOptions()
+                        .clientSession(findSession(options))
+                        .writeConcern(options.writeConcern()));
         if (execute.getModifiedCount() != 1) {
             if (info.versioned) {
                 info.rollbackVersion(entity);
@@ -360,7 +360,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 list.add(entity);
             } else {
                 grouped.computeIfAbsent(type, c -> new ArrayList<>())
-                       .add(entity);
+                        .add(entity);
             }
         }
 
@@ -375,9 +375,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         InsertOneOptions insertOneOptions = new InsertOneOptions()
-                                                .bypassDocumentValidation(options.getBypassDocumentValidation())
-                                                .clientSession(findSession(options))
-                                                .writeConcern(options.writeConcern());
+                .bypassDocumentValidation(options.getBypassDocumentValidation())
+                .clientSession(findSession(options))
+                .writeConcern(options.writeConcern());
         for (T entity : list) {
             save(entity, insertOneOptions);
         }
@@ -387,7 +387,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public <T> T save(T entity) {
         return save(entity, new InsertOneOptions()
-            .writeConcern(mapper.getWriteConcern(entity.getClass())));
+                .writeConcern(mapper.getWriteConcern(entity.getClass())));
     }
 
     @Override
@@ -428,17 +428,17 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         try {
             getDatabase().runCommand(new Document("collMod", collectionName)
-                                         .append("validator", parse(validation.value()))
-                                         .append("validationLevel", validation.level().getValue())
-                                         .append("validationAction", validation.action().getValue()));
+                    .append("validator", parse(validation.value()))
+                    .append("validationLevel", validation.level().getValue())
+                    .append("validationAction", validation.action().getValue()));
         } catch (MongoCommandException e) {
             if (e.getCode() == 26) {
                 getDatabase().createCollection(collectionName,
-                    new CreateCollectionOptions()
-                        .validationOptions(new ValidationOptions()
-                                               .validator(parse(validation.value()))
-                                               .validationLevel(validation.level())
-                                               .validationAction(validation.action())));
+                        new CreateCollectionOptions()
+                                .validationOptions(new ValidationOptions()
+                                        .validator(parse(validation.value()))
+                                        .validationLevel(validation.level())
+                                        .validationAction(validation.action())));
             } else {
                 throw e;
             }
@@ -467,17 +467,17 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (validation != null && collectionName != null) {
             try {
                 getDatabase().runCommand(new Document("collMod", collectionName)
-                                             .append("validator", parse(validation.value()))
-                                             .append("validationLevel", validation.level().getValue())
-                                             .append("validationAction", validation.action().getValue()));
+                        .append("validator", parse(validation.value()))
+                        .append("validationLevel", validation.level().getValue())
+                        .append("validationAction", validation.action().getValue()));
             } catch (MongoCommandException e) {
                 if (e.getCode() == 26) {
                     database.createCollection(collectionName,
-                        new CreateCollectionOptions()
-                            .validationOptions(new ValidationOptions()
-                                                   .validator(parse(validation.value()))
-                                                   .validationLevel(validation.level())
-                                                   .validationAction(validation.action())));
+                            new CreateCollectionOptions()
+                                    .validationOptions(new ValidationOptions()
+                                            .validator(parse(validation.value()))
+                                            .validationLevel(validation.level())
+                                            .validationAction(validation.action())));
                 } else {
                     throw e;
                 }
@@ -500,15 +500,15 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
             } else {
                 ReplaceOptions updateOptions = new ReplaceOptions()
-                    .bypassDocumentValidation(options.getBypassDocumentValidation())
-                    .upsert(!info.versioned);
+                        .bypassDocumentValidation(options.getBypassDocumentValidation())
+                        .upsert(!info.versioned);
                 Document filter = new Document("_id", id);
                 if (info.versioned) {
                     filter.put(info.versionProperty.getMappedName(), info.oldVersion);
                 }
                 UpdateResult updateResult = clientSession == null
-                                            ? options.prepare(collection).replaceOne(filter, entity, updateOptions)
-                                            : options.prepare(collection).replaceOne(clientSession, filter, entity, updateOptions);
+                        ? options.prepare(collection).replaceOne(filter, entity, updateOptions)
+                        : options.prepare(collection).replaceOne(clientSession, filter, entity, updateOptions);
 
                 if (info.versioned && updateResult.getModifiedCount() != 1) {
                     info.rollbackVersion(entity);

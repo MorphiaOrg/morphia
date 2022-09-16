@@ -48,8 +48,8 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
             });
         } else {
             morphiaCodec.getRegistry()
-                        .get((Class<? super Object>) value.getClass())
-                        .encode(writer, value, encoderContext);
+                    .get((Class<? super Object>) value.getClass())
+                    .encode(writer, value, encoderContext);
         }
     }
 
@@ -68,8 +68,8 @@ class EntityEncoder implements org.bson.codecs.Encoder<Object> {
 
     private <S, V> boolean areEquivalentTypes(Class<S> t1, Class<V> t2) {
         return t1.equals(t2)
-               || Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)
-               || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
+                || Collection.class.isAssignableFrom(t1) && Collection.class.isAssignableFrom(t2)
+                || Map.class.isAssignableFrom(t1) && Map.class.isAssignableFrom(t2);
     }
 
     protected void encodeIdProperty(BsonWriter writer, Object instance, EncoderContext encoderContext, @Nullable PropertyModel idModel) {

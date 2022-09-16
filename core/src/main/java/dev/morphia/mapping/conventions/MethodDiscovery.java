@@ -34,8 +34,8 @@ public class MethodDiscovery implements MorphiaConvention {
 
     private List<Annotation> discoverAnnotations(Method getter, Method setter) {
         return List.of(getter, setter).stream()
-                   .flatMap(m -> Arrays.stream(m.getDeclaredAnnotations()))
-                   .collect(Collectors.toList());
+                .flatMap(m -> Arrays.stream(m.getDeclaredAnnotations()))
+                .collect(Collectors.toList());
     }
 
     private void processMethods(Class<?> type) {
@@ -45,34 +45,34 @@ public class MethodDiscovery implements MorphiaConvention {
 
             Methods(List<Method> methods) {
                 List<Method> collect = methods.stream().sorted(Comparator.comparing(Method::getName))
-                                              .collect(Collectors.toList());
+                        .collect(Collectors.toList());
                 getter = collect.get(0);
                 setter = collect.get(1);
             }
         }
 
         Map<String, List<Method>> properties = Arrays.stream(type.getDeclaredMethods())
-                                                     .filter(m -> m.getName().startsWith("get")
-                                                                  || m.getName().startsWith("set")
-                                                                  || m.getName().startsWith("is"))
-                                                     .collect(Collectors.groupingBy(m -> m.getName().startsWith("get")
-                                                                                         || m.getName().startsWith("set")
-                                                                                         ? stripPrefix(m, 3)
-                                                                                         : stripPrefix(m, 2)));
+                .filter(m -> m.getName().startsWith("get")
+                        || m.getName().startsWith("set")
+                        || m.getName().startsWith("is"))
+                .collect(Collectors.groupingBy(m -> m.getName().startsWith("get")
+                        || m.getName().startsWith("set")
+                                ? stripPrefix(m, 3)
+                                : stripPrefix(m, 2)));
 
         for (Entry<String, List<Method>> entry : properties.entrySet()) {
             List<Method> value = entry.getValue();
             if (value.size() == 2) {
                 Methods methods = new Methods(value);
                 TypeData<?> typeData = entityModelBuilder.getTypeData(type, TypeData.newInstance(methods.getter),
-                    methods.getter.getGenericReturnType());
+                        methods.getter.getGenericReturnType());
 
                 entityModelBuilder.addProperty()
-                                  .name(entry.getKey())
-                                  .accessor(new MethodAccessor(methods.getter, methods.setter))
-                                  .annotations(discoverAnnotations(methods.getter, methods.setter))
-                                  .typeData(typeData)
-                                  .discoverMappedName(datastore.getMapper().getOptions());
+                        .name(entry.getKey())
+                        .accessor(new MethodAccessor(methods.getter, methods.setter))
+                        .annotations(discoverAnnotations(methods.getter, methods.setter))
+                        .typeData(typeData)
+                        .discoverMappedName(datastore.getMapper().getOptions());
             }
         }
     }

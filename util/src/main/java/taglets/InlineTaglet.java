@@ -2,9 +2,10 @@ package taglets;
 
 import com.sun.source.doctree.DocTree;
 
-import javax.lang.model.element.Element;
 import java.util.List;
 import java.util.Set;
+
+import javax.lang.model.element.Element;
 
 import static jdk.javadoc.doclet.Taglet.Location.METHOD;
 
@@ -27,7 +28,7 @@ public class InlineTaglet extends DocTaglet {
         }
 
         String text = "<div class=\"block\"><span class=\"deprecatedLabel\">%s.</span>&nbsp;<span "
-                   + "class=\"deprecationComment\">%s</span></div>";
+                + "class=\"deprecationComment\">%s</span></div>";
 
         return String.format(text, getHeader(), getMessage());
     }

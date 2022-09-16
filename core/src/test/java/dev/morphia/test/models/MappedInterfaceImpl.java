@@ -10,10 +10,7 @@ import dev.morphia.utils.IndexType;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 
-@Indexes(
-    @Index(fields = @Field(value = "name", type = IndexType.DESC),
-        options = @IndexOptions(name = "behind_interface",
-            collation = @Collation(locale = "en", strength = SECONDARY))))
+@Indexes(@Index(fields = @Field(value = "name", type = IndexType.DESC), options = @IndexOptions(name = "behind_interface", collation = @Collation(locale = "en", strength = SECONDARY))))
 public class MappedInterfaceImpl implements MappedInterface {
     @Indexed
     private String name;

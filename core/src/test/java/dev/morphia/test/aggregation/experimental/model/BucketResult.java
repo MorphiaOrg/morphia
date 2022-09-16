@@ -26,9 +26,9 @@ public class BucketResult {
     @Override
     public String toString() {
         return "BucketResult{"
-               + "id="
-               + id
-               + ", count=" + count
-               + '}';
+                + "id="
+                + id
+                + ", count=" + count
+                + '}';
     }
 }

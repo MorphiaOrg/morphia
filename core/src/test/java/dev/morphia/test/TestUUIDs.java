@@ -26,8 +26,8 @@ public class TestUUIDs extends TestBase {
         final UUID before = uuid.uuid;
         getDs().save(uuid);
         final ContainsUUID loaded = getDs().find(ContainsUUID.class)
-                                           .iterator(new FindOptions().limit(1))
-                                           .next();
+                .iterator(new FindOptions().limit(1))
+                .next();
         assertNotNull(loaded);
         assertNotNull(loaded.id);
         assertNotNull(loaded.uuid);

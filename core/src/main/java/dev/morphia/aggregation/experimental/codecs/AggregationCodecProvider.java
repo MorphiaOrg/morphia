@@ -66,7 +66,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class AggregationCodecProvider implements CodecProvider {
 
     private final Codec expressionCodec;

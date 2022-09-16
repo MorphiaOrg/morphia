@@ -28,18 +28,18 @@ public class EntityModelTest extends TestBase {
     public void testGenericFields() {
         EntityModel model = getDs().getMapper().map(Base.class).get(0);
         assertEquals(model.getProperties().size(), 3, model.getProperties().stream()
-                                                           .map(PropertyModel::getName)
-                                                           .collect(joining(", ")));
+                .map(PropertyModel::getName)
+                .collect(joining(", ")));
 
         model = getDs().getMapper().map(Parent.class).get(0);
         assertEquals(model.getProperties().size(), 4, model.getProperties().stream()
-                                                           .map(PropertyModel::getName)
-                                                           .collect(joining(", ")));
+                .map(PropertyModel::getName)
+                .collect(joining(", ")));
 
         model = getDs().getMapper().map(Child.class).get(0);
         assertEquals(model.getProperties().size(), 5, model.getProperties().stream()
-                                                           .map(PropertyModel::getName)
-                                                           .collect(joining(", ")));
+                .map(PropertyModel::getName)
+                .collect(joining(", ")));
 
         assertEquals(model.getProperty("t").getType(), String.class);
         assertEquals(model.getProperty("someField").getType(), LocalDate.class);
@@ -61,8 +61,8 @@ public class EntityModelTest extends TestBase {
         assertEquals(model.getProperty("test2").getType(), UUID.class);
 
         getDs().getDatabase()
-               .getCollection("specificEntity")
-               .deleteMany(new Document());
+                .getCollection("specificEntity")
+                .deleteMany(new Document());
     }
 
     @Entity

@@ -197,7 +197,7 @@ public final class PropertyModel {
     @Override
     public int hashCode() {
         return Objects.hash(getName(), getTypeData(), getMappedName(), getCodec(), getAccessor(), serialization,
-            annotationMap.values(), getCachedCodec(), getNormalizedType());
+                annotationMap.values(), getCachedCodec(), getNormalizedType());
     }
 
     /**
@@ -258,13 +258,13 @@ public final class PropertyModel {
         }
         final PropertyModel that = (PropertyModel) o;
         return getName().equals(that.getName())
-               && getTypeData().equals(that.getTypeData())
-               && getMappedName().equals(that.getMappedName())
-               && Objects.equals(getCodec(), that.getCodec())
-               && getAccessor().equals(that.getAccessor())
-               && serialization.equals(that.serialization)
-               && Objects.equals(getCachedCodec(), that.getCachedCodec())
-               && Objects.equals(getNormalizedType(), that.getNormalizedType());
+                && getTypeData().equals(that.getTypeData())
+                && getMappedName().equals(that.getMappedName())
+                && Objects.equals(getCodec(), that.getCodec())
+                && getAccessor().equals(that.getAccessor())
+                && serialization.equals(that.serialization)
+                && Objects.equals(getCachedCodec(), that.getCachedCodec())
+                && Objects.equals(getNormalizedType(), that.getNormalizedType());
     }
 
     /**
@@ -280,11 +280,11 @@ public final class PropertyModel {
     @Override
     public String toString() {
         return new StringJoiner(", ", PropertyModel.class.getSimpleName() + "[", "]")
-                   .add("name='" + name + "'")
-                   .add("mappedName='" + mappedName + "'")
-                   .add("typeData=" + typeData)
-                   .add("annotations=" + annotationMap.values())
-                   .toString();
+                .add("name='" + name + "'")
+                .add("mappedName='" + mappedName + "'")
+                .add("typeData=" + typeData)
+                .add("annotations=" + annotationMap.values())
+                .toString();
     }
 
     /**
@@ -302,8 +302,8 @@ public final class PropertyModel {
         if (handler != null) {
             try {
                 codec = handler.value()
-                               .getDeclaredConstructor(Datastore.class, PropertyModel.class)
-                               .newInstance(datastore, this);
+                        .getDeclaredConstructor(Datastore.class, PropertyModel.class)
+                        .newInstance(datastore, this);
             } catch (ReflectiveOperationException e) {
                 throw new MappingException(e.getMessage(), e);
             }
@@ -360,8 +360,8 @@ public final class PropertyModel {
      */
     public boolean isTransient() {
         return !hasAnnotation(Transient.class)
-               && !hasAnnotation(java.beans.Transient.class)
-               && Modifier.isTransient(getType().getModifiers());
+                && !hasAnnotation(java.beans.Transient.class)
+                && Modifier.isTransient(getType().getModifiers());
     }
 
     @Nullable
@@ -370,8 +370,8 @@ public final class PropertyModel {
 
         if (handler == null) {
             handler = (Handler) annotationMap.values()
-                                             .stream().filter(a -> a.getClass().equals(Handler.class))
-                                             .findFirst().orElse(null);
+                    .stream().filter(a -> a.getClass().equals(Handler.class))
+                    .findFirst().orElse(null);
             if (handler == null) {
                 Iterator<Annotation> iterator = annotationMap.values().iterator();
                 while (handler == null && iterator.hasNext()) {

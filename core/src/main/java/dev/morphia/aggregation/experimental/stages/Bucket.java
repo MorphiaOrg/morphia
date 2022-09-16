@@ -65,7 +65,7 @@ public class Bucket extends Stage {
     }
 
     /**
-     * Optional.  A literal that specifies the _id of an additional bucket that contains all documents whose groupBy expression result does
+     * Optional. A literal that specifies the _id of an additional bucket that contains all documents whose groupBy expression result does
      * not fall into a bucket specified by boundaries.
      * <p>
      * If unspecified, each input document must resolve the groupBy expression to a value within one of the bucket ranges specified by

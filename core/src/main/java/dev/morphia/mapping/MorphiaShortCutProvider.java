@@ -21,8 +21,8 @@ class MorphiaShortCutProvider implements CodecProvider {
     @Override
     public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
         return hasAnnotation(clazz, Entity.class) || hasAnnotation(clazz, Embedded.class) || mapper.isMapped(clazz)
-               ? codecProvider.get(clazz, registry)
-               : null;
+                ? codecProvider.get(clazz, registry)
+                : null;
     }
 
     private <T> boolean hasAnnotation(Class<T> clazz, Class<? extends Annotation> ann) {

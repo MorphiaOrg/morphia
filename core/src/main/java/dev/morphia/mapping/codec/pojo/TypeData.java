@@ -42,14 +42,14 @@ import static org.bson.assertions.Assertions.notNull;
  */
 public class TypeData<T> implements TypeWithTypeParameters<T> {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_CLASS_MAP = Map.of(
-        boolean.class, Boolean.class,
-        byte.class, Byte.class,
-        char.class, Character.class,
-        double.class, Double.class,
-        float.class, Float.class,
-        int.class, Integer.class,
-        long.class, Long.class,
-        short.class, Short.class);
+            boolean.class, Boolean.class,
+            byte.class, Byte.class,
+            char.class, Character.class,
+            double.class, Double.class,
+            float.class, Float.class,
+            int.class, Integer.class,
+            long.class, Long.class,
+            short.class, Short.class);
 
     private final Class<T> type;
     private final List<TypeData<?>> typeParameters;
@@ -70,7 +70,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         return new Builder<>(notNull("type", type));
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private static <T> TypeData<?> getTypeData(Type type) {
         if (type instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) type;
@@ -83,8 +83,8 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
             WildcardType wildcardType = (WildcardType) type;
             Type[] upperBounds = wildcardType.getUpperBounds();
             Type[] bounds = upperBounds != null
-                            ? upperBounds
-                            : wildcardType.getLowerBounds();
+                    ? upperBounds
+                    : wildcardType.getLowerBounds();
             WildCardTypeData.Builder wildCard = WildCardTypeData.builder(upperBounds != null);
             for (Type bound : bounds) {
                 wildCard.addTypeParameter(getTypeData(bound));
@@ -202,11 +202,11 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
     @Override
     public String toString() {
         String typeParams = typeParameters.isEmpty() ? ""
-                                                     : ", typeParameters=[" + nestedTypeParameters(typeParameters) + "]";
+                : ", typeParameters=[" + nestedTypeParameters(typeParameters) + "]";
         return "TypeData{"
-               + "type=" + type.getSimpleName()
-               + typeParams
-               + "}";
+                + "type=" + type.getSimpleName()
+                + typeParams
+                + "}";
     }
 
     /**

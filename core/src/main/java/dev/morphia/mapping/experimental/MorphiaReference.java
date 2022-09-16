@@ -52,7 +52,7 @@ public abstract class MorphiaReference<T> {
     }
 
     /**
-     * @return returns the referenced entity if it exists.  May return null.
+     * @return returns the referenced entity if it exists. May return null.
      */
     @Nullable
     public abstract T get();
@@ -89,12 +89,12 @@ public abstract class MorphiaReference<T> {
     @Override
     public String toString() {
         return new StringJoiner(", ", getClass().getSimpleName() + "<<", ">>")
-                   .add(getIds().toString())
-                   .toString();
+                .add(getIds().toString())
+                .toString();
     }
 
     /**
-     * Instructs Morphia to ignore missing referenced entities.  The default is to throw an exception on missing entities.
+     * Instructs Morphia to ignore missing referenced entities. The default is to throw an exception on missing entities.
      *
      * @param ignoreMissing ignore any missing referenced documents
      * @return this

@@ -15,7 +15,6 @@ import java.time.LocalDate;
 
 import static org.testng.Assert.assertEquals;
 
-
 public class ExpressionsTestBase extends TestBase {
     @BeforeMethod
     public void seed() {
@@ -28,16 +27,16 @@ public class ExpressionsTestBase extends TestBase {
         Document expected = Document.parse(expectedString);
         DocumentWriter writer = new DocumentWriter(getMapper());
         ((Codec) getMapper().getCodecRegistry()
-                            .get(MathExpression.class))
-            .encode(writer, value, EncoderContext.builder().build());
+                .get(MathExpression.class))
+                .encode(writer, value, EncoderContext.builder().build());
         Document actual = writer.getDocument();
         assertDocumentEquals(actual, expected);
 
         Document test = getDs().aggregate(User.class)
-                               .project(Projection.project()
-                                                  .include("test", value))
-                               .execute(Document.class)
-                               .next();
+                .project(Projection.project()
+                        .include("test", value))
+                .execute(Document.class)
+                .next();
         assertEquals(test.get("test"), expectedValue);
     }
 }

@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.validation.classrules;
 
-
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;

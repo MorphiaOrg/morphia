@@ -1,9 +1,7 @@
 package dev.morphia.mapping.validation;
 
-
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)
@@ -25,7 +23,7 @@ public class ConstraintViolation {
      * @param message     the message for the failure
      */
     public ConstraintViolation(Level level, EntityModel entityModel, PropertyModel property,
-                               Class<? extends ClassConstraint> validator, String message) {
+            Class<? extends ClassConstraint> validator, String message) {
         this(level, entityModel, validator, message);
         this.property = property;
     }
@@ -39,7 +37,7 @@ public class ConstraintViolation {
      * @param message     the message for the failure
      */
     public ConstraintViolation(Level level, EntityModel entityModel, Class<? extends ClassConstraint> validator,
-                               String message) {
+            String message) {
         this.level = level;
         this.type = entityModel;
         this.message = message;

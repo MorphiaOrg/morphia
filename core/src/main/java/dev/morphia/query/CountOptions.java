@@ -154,4 +154,3 @@ public class CountOptions extends com.mongodb.client.model.CountOptions implemen
         return this;
     }
 }
-

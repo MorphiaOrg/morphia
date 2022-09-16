@@ -18,12 +18,12 @@ import org.bson.Document;
 public class Update<T> extends UpdateBase<T> {
     @SuppressWarnings("rawtypes")
     Update(Datastore datastore, Mapper mapper, MongoCollection<T> collection,
-           Query<T> query, Class<T> type, UpdateOpsImpl operations) {
+            Query<T> query, Class<T> type, UpdateOpsImpl operations) {
         super(datastore, mapper, collection, query, type, operations.getUpdates());
     }
 
     Update(Datastore datastore, Mapper mapper, MongoCollection<T> collection,
-           Query<T> query, Class<T> type, UpdateOperator first, UpdateOperator[] updates) {
+            Query<T> query, Class<T> type, UpdateOperator first, UpdateOperator[] updates) {
         super(datastore, mapper, collection, query, type, first, updates);
     }
 
@@ -56,11 +56,11 @@ public class Update<T> extends UpdateBase<T> {
         MongoCollection<T> mongoCollection = options.prepare(getCollection());
         if (options.isMulti()) {
             return session == null ? mongoCollection.updateMany(queryObject, updateOperations, options)
-                                   : mongoCollection.updateMany(session, queryObject, updateOperations, options);
+                    : mongoCollection.updateMany(session, queryObject, updateOperations, options);
 
         } else {
             return session == null ? mongoCollection.updateOne(queryObject, updateOperations, options)
-                                   : mongoCollection.updateOne(session, queryObject, updateOperations, options);
+                    : mongoCollection.updateOne(session, queryObject, updateOperations, options);
         }
     }
 }

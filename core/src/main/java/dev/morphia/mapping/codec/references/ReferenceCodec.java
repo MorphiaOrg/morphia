@@ -63,7 +63,7 @@ import static java.lang.String.format;
 /**
  * @morphia.internal
  */
-@SuppressWarnings({"unchecked", "removal"})
+@SuppressWarnings({ "unchecked", "removal" })
 public class ReferenceCodec extends BaseReferenceCodec<Object> implements PropertyHandler {
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
@@ -115,7 +115,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                     return value;
                 }
                 throw new QueryException("No ID value found on referenced entity.  Save referenced entities before defining references to"
-                                         + " them.");
+                        + " them.");
             }
             collection = mapper.getCollection(value.getClass());
         }
@@ -191,12 +191,12 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             Document document = (Document) id;
             if (document.containsKey("$ref")) {
                 id = processId(new DBRef(document.getString("$db"), document.getString("$ref"), document.get("$id")),
-                    mapper, decoderContext);
+                        mapper, decoderContext);
             } else if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
                 try {
                     id = mapper.getCodecRegistry()
-                               .get(mapper.getClass(document))
-                               .decode(new DocumentReader(document), decoderContext);
+                            .get(mapper.getClass(document))
+                            .decode(new DocumentReader(document), decoderContext);
                 } catch (CodecConfigurationException e) {
                     throw new MappingException(Sofia.cannotFindTypeInDocument(), e);
                 }
@@ -207,8 +207,8 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             Object refId = ref.getId();
             if (refId instanceof Document) {
                 refId = mapper.getCodecRegistry()
-                              .get(Object.class)
-                              .decode(new DocumentReader((Document) refId), decoderContext);
+                        .get(Object.class)
+                        .decode(new DocumentReader((Document) refId), decoderContext);
             }
             id = new DBRef(ref.getDatabaseName(), ref.getCollectionName(), refId);
         }
@@ -219,8 +219,8 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     @Override
     public Object decode(BsonReader reader, DecoderContext decoderContext) {
         Object decode = getDatastore().getMapper().getCodecRegistry()
-                                      .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
-                                      .decode(reader, decoderContext);
+                .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
+                .decode(reader, decoderContext);
         decode = processId(decode, getDatastore().getMapper(), decoderContext);
         return fetch(decode);
     }
@@ -316,9 +316,9 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         PropertyModel propertyModel = getPropertyModel();
         Class<?> type = propertyModel.getType();
         Builder<?> builder = new ByteBuddy()
-            .subclass(type)
-            .implement(MorphiaProxy.class)
-            .name(format("%s$%s$$ReferenceProxy", propertyModel.getEntityModel().getName(), propertyModel.getName()));
+                .subclass(type)
+                .implement(MorphiaProxy.class)
+                .name(format("%s$%s$$ReferenceProxy", propertyModel.getEntityModel().getName(), propertyModel.getName()));
 
         Junction<ByteCodeElement> matcher = ElementMatchers.isDeclaredBy(type);
         if (!type.isInterface()) {
@@ -330,12 +330,12 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         }
 
         return (Class<T>) builder
-            .invokable(matcher.or(ElementMatchers.isDeclaredBy(MorphiaProxy.class)))
-            .intercept(InvocationHandlerAdapter.toField(FIELD_INVOCATION_HANDLER))
-            .defineField(FIELD_INVOCATION_HANDLER, InvocationHandler.class, Visibility.PRIVATE)
-            .make()
-            .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
-            .getLoaded();
+                .invokable(matcher.or(ElementMatchers.isDeclaredBy(MorphiaProxy.class)))
+                .intercept(InvocationHandlerAdapter.toField(FIELD_INVOCATION_HANDLER))
+                .defineField(FIELD_INVOCATION_HANDLER, InvocationHandler.class, Visibility.PRIVATE)
+                .make()
+                .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
+                .getLoaded();
     }
 
     @Nullable
@@ -364,23 +364,23 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         Mapper mapper = getDatastore().getMapper();
         Codec<?> codec = mapper.getCodecRegistry().get(getEntityModelForField().getType());
         return value.stream()
-                    .filter(v -> v instanceof Document && ((Document) v).containsKey("_id"))
-                    .map(d -> codec.decode(new DocumentReader((Document) d), DecoderContext.builder().build()))
-                    .collect(Collectors.toList());
+                .filter(v -> v instanceof Document && ((Document) v).containsKey("_id"))
+                .map(d -> codec.decode(new DocumentReader((Document) d), DecoderContext.builder().build()))
+                .collect(Collectors.toList());
     }
 
     MorphiaReference<?> readDocument(Document value) {
         Mapper mapper = getDatastore().getMapper();
         final Object id = mapper.getCodecRegistry().get(Object.class)
-                                .decode(new DocumentReader(value), DecoderContext.builder().build());
+                .decode(new DocumentReader(value), DecoderContext.builder().build());
         return readSingle(id);
     }
 
     MorphiaReference<?> readList(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
-               ? new ListReference<>(getDatastore(), getEntityModelForField(), value)
-               : new ListReference<>(mapped);
+                ? new ListReference<>(getDatastore(), getEntityModelForField(), value)
+                : new ListReference<>(mapped);
     }
 
     @SuppressWarnings("rawtypes")
@@ -397,12 +397,11 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     MorphiaReference<?> readSet(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
-               ? new SetReference<>(getDatastore(), getEntityModelForField(), value)
-               : new SetReference<>(new LinkedHashSet<>(mapped));
+                ? new SetReference<>(getDatastore(), getEntityModelForField(), value)
+                : new SetReference<>(new LinkedHashSet<>(mapped));
     }
 
     MorphiaReference<?> readSingle(Object value) {
         return new SingleReference<>(getDatastore(), getEntityModelForField(), value);
     }
 }
-

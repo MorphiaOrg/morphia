@@ -49,6 +49,7 @@ public class NearFilter extends Filter {
 
     /**
      * Sets the max distance to consider
+     *
      * @param maxDistance the max
      * @return this
      */
@@ -59,6 +60,7 @@ public class NearFilter extends Filter {
 
     /**
      * Sets the min distance to consider
+     *
      * @param minDistance the min
      * @return this
      */
@@ -69,6 +71,7 @@ public class NearFilter extends Filter {
 
     /**
      * Sets the coordinate reference system to use
+     *
      * @param crs the crs
      * @return this
      */

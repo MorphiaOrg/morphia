@@ -17,8 +17,7 @@ open class TestKotlinMapping : TestBase() {
         assertFalse(list.isEmpty())
         val myClass = MyClass(ObjectId(), 42)
         ds.save(myClass)
-        val loaded = ds.find(MyClass::class.java)
-            .first()
+        val loaded = ds.find(MyClass::class.java).first()
 
         assertEquals(loaded, myClass)
     }
@@ -28,8 +27,7 @@ open class TestKotlinMapping : TestBase() {
         ds.mapper.map(VersionedDataClass::class.java)
         val versioned = VersionedDataClass(null, "temp")
         ds.save(versioned)
-        val loaded = ds.find(VersionedDataClass::class.java)
-            .first()
+        val loaded = ds.find(VersionedDataClass::class.java).first()
 
         assertEquals(loaded, versioned)
         assertEquals(loaded?.version, 1L)
@@ -41,11 +39,9 @@ open class TestKotlinMapping : TestBase() {
         val delegated = DelegatedNull()
         delegated.status = "I'm all set"
         ds.save(delegated)
-        val first = ds.find(DelegatedNull::class.java)
-            .first()
+        val first = ds.find(DelegatedNull::class.java).first()
 
         assertNotNull(first)
         assertEquals(first?.status, delegated.status)
     }
 }
-

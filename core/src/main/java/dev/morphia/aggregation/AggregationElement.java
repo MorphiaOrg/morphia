@@ -20,7 +20,7 @@ import org.bson.Document;
 
 interface AggregationElement {
     /**
-     * This is an internal method and subject to change or removal.  Do not use.
+     * This is an internal method and subject to change or removal. Do not use.
      *
      * @return the Document form of the the element
      */

@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-
 import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.Nullable;
@@ -20,7 +19,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static dev.morphia.query.MorphiaQuery.legacyOperation;
-
 
 /**
  * @param <T> The java type to query against
@@ -88,7 +86,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
-     * Deletes documents matching this query.  Optionally deleting the first or all matched documents.
+     * Deletes documents matching this query. Optionally deleting the first or all matched documents.
      *
      * @param options the options to apply
      * @return the results
@@ -183,13 +181,19 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
-     * Create a filter based on the specified condition and value. </p>
+     * Create a filter based on the specified condition and value.
+     * </p>
      *
-     * <p><b>Note</b>: Property is in the form of "name op" ("age &gt;").
+     * <p>
+     * <b>Note</b>: Property is in the form of "name op" ("age &gt;").
      * <p/>
-     * <p>Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"] </p>
+     * <p>
+     * Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"]
+     * </p>
      * <p/>
-     * <p>Examples:</p>
+     * <p>
+     * Examples:
+     * </p>
      * <p/>
      * <ul>
      * <li>{@code filter("yearsOfOperation >", 5)}</li>
@@ -205,7 +209,8 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * <li>{@code filter("customers.loyaltyYears in", yearsList)}</li>
      * </ul>
      * <p/>
-     * <p>You can filter on id properties <strong>if</strong> this query is restricted to a Class<T>.
+     * <p>
+     * You can filter on id properties <strong>if</strong> this query is restricted to a Class<T>.
      *
      * @param condition the condition to apply
      * @param value     the value to apply against
@@ -218,7 +223,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
-     * Adds filters to this query.  This operation is cumulative.
+     * Adds filters to this query. This operation is cumulative.
      *
      * @param filters the filters to add
      * @return this
@@ -272,7 +277,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     T findAndDelete(FindAndDeleteOptions options);
 
     /**
-     * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
+     * Gets the first entity in the result set. Obeys the {@link Query} offset value.
      *
      * @return the only instance in the result, or null if the result set is empty.
      * @since 1.5
@@ -281,7 +286,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     T first();
 
     /**
-     * Gets the first entity in the result set.  Obeys the {@link Query} offset value.
+     * Gets the first entity in the result set. Obeys the {@link Query} offset value.
      *
      * @param options the options to apply to the find operation
      * @return the only instance in the result, or null if the result set is empty.

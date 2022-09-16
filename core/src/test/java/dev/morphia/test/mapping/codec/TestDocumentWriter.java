@@ -28,7 +28,7 @@ public class TestDocumentWriter extends TestBase {
         });
 
         Assert.assertEquals(writer.getDocument(), new Document("stuff", asList("hello", 42))
-                                                      .append("next", "something simple"));
+                .append("next", "something simple"));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class TestDocumentWriter extends TestBase {
     @Test
     public void nesting() throws JSONException {
         String expected = "{$group : {_id : {$dateToString: {format: \"%Y-%m-%d\", date: \"$date\"}}, totalSaleAmount: {$sum: "
-                          + "{$multiply: [ \"$price\", \"$quantity\" ]}}, averageQuantity: {$avg: \"$quantity\"},count: {$sum: 1}}}";
+                + "{$multiply: [ \"$price\", \"$quantity\" ]}}, averageQuantity: {$avg: \"$quantity\"},count: {$sum: 1}}}";
 
         DocumentWriter writer = new DocumentWriter(getMapper());
         document(writer, () -> {

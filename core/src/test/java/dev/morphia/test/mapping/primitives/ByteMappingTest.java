@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping.primitives;
 
-
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -15,22 +14,21 @@ import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 
-
 public class ByteMappingTest extends TestBase {
 
     @Test
     public void testMapping() {
         getMapper().map(Bytes.class);
         final Bytes ent = new Bytes();
-        ent.listWrapperArray.add(new Byte[]{1, 2});
-        ent.listPrimitiveArray.add(new byte[]{2, 3, 12});
+        ent.listWrapperArray.add(new Byte[] { 1, 2 });
+        ent.listPrimitiveArray.add(new byte[] { 2, 3, 12 });
         ent.listWrapper.addAll(Arrays.asList((byte) 148, (byte) 6, (byte) 255));
         ent.singlePrimitive = 100;
         ent.singleWrapper = 47;
-        ent.primitiveArray = new byte[]{5, 93};
-        ent.wrapperArray = new Byte[]{55, 16, 99};
-        ent.nestedPrimitiveArray = new byte[][]{{1, 2}, {3, 4}};
-        ent.nestedWrapperArray = new Byte[][]{{1, 2}, {3, 4}};
+        ent.primitiveArray = new byte[] { 5, 93 };
+        ent.wrapperArray = new Byte[] { 55, 16, 99 };
+        ent.nestedPrimitiveArray = new byte[][] { { 1, 2 }, { 3, 4 } };
+        ent.nestedWrapperArray = new Byte[][] { { 1, 2 }, { 3, 4 } };
         getDs().save(ent);
         final Datastore datastore = getDs();
 

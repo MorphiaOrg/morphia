@@ -11,7 +11,7 @@ public class IndexStats extends Stage {
     }
 
     /**
-     * Creates the new stage.  There is nothing to configure as the collection is determined as part of the pipeline execution.
+     * Creates the new stage. There is nothing to configure as the collection is determined as part of the pipeline execution.
      *
      * @return the new stage
      * @since 2.2
@@ -21,7 +21,7 @@ public class IndexStats extends Stage {
     }
 
     /**
-     * Creates the new stage.  There is nothing to configure as the collection is determined as part of the pipeline execution.
+     * Creates the new stage. There is nothing to configure as the collection is determined as part of the pipeline execution.
      *
      * @return the new stage
      * @deprecated use {@link #indexStats()}

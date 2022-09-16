@@ -1,6 +1,5 @@
 package dev.morphia.mapping.validation.fieldrules;
 
-
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -23,11 +22,11 @@ public class IdDoesNotMix extends PropertyConstraint {
     protected void check(Mapper mapper, EntityModel entityModel, PropertyModel propertyModel, Set<ConstraintViolation> ve) {
         // an @Id field can not be a Value, Reference, or Embedded
         if (propertyModel.hasAnnotation(Id.class)
-            && (propertyModel.hasAnnotation(Reference.class)
-                || propertyModel.hasAnnotation(Embedded.class)
-                || propertyModel.hasAnnotation(Property.class))) {
+                && (propertyModel.hasAnnotation(Reference.class)
+                        || propertyModel.hasAnnotation(Embedded.class)
+                        || propertyModel.hasAnnotation(Property.class))) {
             ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
-                Sofia.invalidAnnotationCombination(propertyModel.getFullName(), Id.class.getSimpleName())));
+                    Sofia.invalidAnnotationCombination(propertyModel.getFullName(), Id.class.getSimpleName())));
         }
     }
 }

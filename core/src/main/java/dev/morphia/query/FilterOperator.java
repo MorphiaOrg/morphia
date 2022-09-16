@@ -42,7 +42,7 @@ public enum FilterOperator {
         public Filter apply(String prop, Object value) {
             if (!(value instanceof Point[])) {
                 throw new IllegalArgumentException(Sofia.illegalArgument(value.getClass().getCanonicalName(),
-                    Point[].class.getCanonicalName()));
+                        Point[].class.getCanonicalName()));
             }
             Point[] points = (Point[]) value;
             return Filters.box(prop, points[0], points[1]);

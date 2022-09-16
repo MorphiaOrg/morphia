@@ -38,7 +38,7 @@ import java.util.List;
  * @since 1.3
  */
 public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
-    implements SessionConfigurable<UpdateOptions>, WriteConfigurable<UpdateOptions> {
+        implements SessionConfigurable<UpdateOptions>, WriteConfigurable<UpdateOptions> {
     private WriteConcern writeConcern;
     private boolean multi;
     private ClientSession clientSession;
@@ -164,7 +164,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     }
 
     /**
-     * The write concern to use for the insertion.  By default the write concern configured for the MongoCollection instance will be used.
+     * The write concern to use for the insertion. By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
      */

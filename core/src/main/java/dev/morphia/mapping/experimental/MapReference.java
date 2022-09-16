@@ -23,7 +23,7 @@ import static dev.morphia.query.experimental.filters.Filters.in;
  * @param <T>
  * @morphia.internal
  */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private Map<String, Object> ids;
     private Map<Object, T> values;
@@ -61,7 +61,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      * @return the entities
      */
     public static MapReference decode(Datastore datastore, Mapper mapper, PropertyModel property,
-                                      Document document) {
+            Document document) {
         final Class subType = property.getTypeData().getTypeParameters().get(0).getType();
 
         final Map<String, Object> ids = (Map<String, Object>) property.getDocumentValue(document);
@@ -107,8 +107,8 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         if (ids == null) {
             ids = new LinkedHashMap<>();
             values.entrySet().stream()
-                  .forEach(e -> ids.put(e.getKey().toString(),
-                      ReferenceCodec.encodeId(mapper, e.getValue(), field)));
+                    .forEach(e -> ids.put(e.getKey().toString(),
+                            ReferenceCodec.encodeId(mapper, e.getValue(), field)));
         }
         return ids;
     }
@@ -124,7 +124,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private void readFromSingleCollection(String collection, List<Object> collectionIds) {
 
         try (MongoCursor<T> cursor = (MongoCursor<T>) getDatastore().find(collection)
-                                                                    .filter(in("_id", collectionIds)).iterator()) {
+                .filter(in("_id", collectionIds)).iterator()) {
             final Map<Object, T> idMap = new HashMap<>();
             while (cursor.hasNext()) {
                 final T entity = cursor.next();

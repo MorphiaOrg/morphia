@@ -23,7 +23,7 @@ public class MultipleId implements ClassConstraint {
 
         if (properties.size() > 1) {
             ve.add(new ConstraintViolation(Level.FATAL, entityModel, getClass(),
-                Sofia.multipleIdPropertiesFound(new FieldEnumString(properties))));
+                    Sofia.multipleIdPropertiesFound(new FieldEnumString(properties))));
         }
     }
 

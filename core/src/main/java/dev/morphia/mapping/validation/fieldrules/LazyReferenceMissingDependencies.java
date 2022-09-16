@@ -23,7 +23,7 @@ public class LazyReferenceMissingDependencies extends PropertyConstraint {
             if (ref.lazy()) {
                 if (!proxyClassesPresent()) {
                     ve.add(new ConstraintViolation(Level.SEVERE, entityModel, propertyModel, getClass(),
-                        "Lazy references need ByteBuddy on the classpath."));
+                            "Lazy references need ByteBuddy on the classpath."));
                 }
             }
         }

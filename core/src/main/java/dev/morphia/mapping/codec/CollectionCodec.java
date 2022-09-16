@@ -16,6 +16,7 @@ import static java.lang.String.format;
 
 /**
  * A codec for Collection type
+ *
  * @param <T> parameterized type of the Collection
  */
 public class CollectionCodec<T> implements Codec<Collection<T>> {

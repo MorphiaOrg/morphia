@@ -37,7 +37,7 @@ public final class UpdateOperators {
 
     /**
      * The $addToSet operator adds a value to an array unless the value is already present, in which case $addToSet does nothing to that
-     * array.  By default, this operator will use $each to add each element in the given list to the stored array in the document.
+     * array. By default, this operator will use $each to add each element in the given list to the stored array in the document.
      *
      * @param field  the field to updated
      * @param values the values to add
@@ -104,7 +104,7 @@ public final class UpdateOperators {
     }
 
     /**
-     * Increments the value of the field  by one.
+     * Increments the value of the field by one.
      *
      * @param field the field to increment
      * @return the update operator

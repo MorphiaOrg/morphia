@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping;
 
-
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.Entity;
@@ -30,8 +29,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-
-@SuppressWarnings({"ConstantConditions", "unused"})
+@SuppressWarnings({ "ConstantConditions", "unused" })
 public class TestMapperOptions extends TestBase {
 
     @Test
@@ -117,11 +115,11 @@ public class TestMapperOptions extends TestBase {
         getDs().save(List.of(entityDiscriminator, entityDiscriminator2));
 
         Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class)
-                                                   .filter(ne("name", "hi"));
+                .filter(ne("name", "hi"));
         FindOptions options = new FindOptions()
-                                  .logQuery();
+                .logQuery();
         List<EntityDiscriminator2> list = query.iterator(options)
-                                               .toList();
+                .toList();
         assertEquals(list.size(), 1, getDs().getLoggedQuery(options));
     }
 
@@ -158,9 +156,9 @@ public class TestMapperOptions extends TestBase {
     @Test
     public void discriminator() {
         Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
-            MapperOptions.builder()
-                         .discriminator(DiscriminatorFunction.lowerSimpleName())
-                         .build());
+                MapperOptions.builder()
+                        .discriminator(DiscriminatorFunction.lowerSimpleName())
+                        .build());
         datastore.getMapper().map(EntityDiscriminator.class, EmbeddedDiscriminator.class, HasMap.class);
 
         EntityModel entityModel = datastore.getMapper().getEntityModel(EntityDiscriminator.class);
@@ -185,7 +183,7 @@ public class TestMapperOptions extends TestBase {
 
         Builder builder = MapperOptions.builder(getMapper().getOptions());
         final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
-            builder.collectionNaming(NamingStrategy.lowerCase()).build());
+                builder.collectionNaming(NamingStrategy.lowerCase()).build());
 
         collectionName = datastore.getMapper().getEntityModel(entity.getClass()).getCollectionName();
         assertEquals(collectionName, "dummyentity", "lowercase");
@@ -202,7 +200,7 @@ public class TestMapperOptions extends TestBase {
     private Datastore empties(boolean storeEmpties) {
         Builder builder = MapperOptions.builder(getMapper().getOptions());
         return Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
-            builder.storeEmpties(storeEmpties).build());
+                builder.storeEmpties(storeEmpties).build());
     }
 
     private void shouldFindField(Datastore datastore, HasMap hl, Map<String, String> expected) {
@@ -211,14 +209,13 @@ public class TestMapperOptions extends TestBase {
         document = getDocumentCollection(HasMap.class).find().first();
         assertTrue(document.containsKey("properties"), "Should find the field");
         assertEquals(datastore.find(HasMap.class).iterator(new FindOptions().limit(1))
-                              .tryNext()
-                         .properties, expected);
+                .tryNext().properties, expected);
         cleanup();
     }
 
     private void shouldFindField(Datastore datastore,
-                                 HasCollectionValuedMap hm,
-                                 Map<String, Collection<String>> expected) {
+            HasCollectionValuedMap hm,
+            Map<String, Collection<String>> expected) {
         final Document document;
         datastore.save(hm);
         document = getDocumentCollection(HasCollectionValuedMap.class).find().first();
@@ -265,7 +262,7 @@ public class TestMapperOptions extends TestBase {
         Document document = getDocumentCollection(HasList.class).find().first();
         assertFalse(document.containsKey("names"), "field should not exist, value = " + document.get("names"));
         HasList hasList = datastore.find(HasList.class).iterator(new FindOptions().limit(1))
-                                   .tryNext();
+                .tryNext();
         assertNull(hasList.names);
         cleanup();
     }
@@ -273,7 +270,7 @@ public class TestMapperOptions extends TestBase {
     private Datastore nulls(boolean storeNulls) {
         Builder builder = MapperOptions.builder(getMapper().getOptions());
         return Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
-            builder.storeNulls(storeNulls).build());
+                builder.storeNulls(storeNulls).build());
     }
 
     @Entity

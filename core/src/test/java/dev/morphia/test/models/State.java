@@ -61,9 +61,9 @@ public class State {
         }
         final State state1 = (State) o;
         return Objects.equals(id, state1.id) &&
-               Objects.equals(state, state1.state) &&
-               Objects.equals(biggest, state1.biggest) &&
-               Objects.equals(smallest, state1.smallest);
+                Objects.equals(state, state1.state) &&
+                Objects.equals(biggest, state1.biggest) &&
+                Objects.equals(smallest, state1.smallest);
     }
 
     @Override

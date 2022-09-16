@@ -65,7 +65,7 @@ public class DocumentWriter implements BsonWriter {
      */
     public DocumentWriter encode(CodecRegistry codecRegistry, Object value, EncoderContext encoderContext) {
         ((Codec) codecRegistry.get(value.getClass()))
-            .encode(this, value, encoderContext);
+                .encode(this, value, encoderContext);
 
         return this;
     }
@@ -75,7 +75,7 @@ public class DocumentWriter implements BsonWriter {
     }
 
     /**
-     * @return the root, or output, of this writer.  usually a Document.
+     * @return the root, or output, of this writer. usually a Document.
      */
     public Document getDocument() {
         return root.getDocument();

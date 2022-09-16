@@ -23,19 +23,19 @@ public class FieldDiscovery implements MorphiaConvention {
 
                 TypeData<?> typeData = builder.getTypeData(type, TypeData.newInstance(field), field.getGenericType());
                 builder.addProperty()
-                       .name(field.getName())
-                       .typeData(typeData)
-                       .annotations(List.of(field.getDeclaredAnnotations()))
-                       .accessor(getAccessor(field, typeData))
-                       .modifiers(field.getModifiers())
-                       .discoverMappedName(datastore.getMapper().getOptions());
+                        .name(field.getName())
+                        .typeData(typeData)
+                        .annotations(List.of(field.getDeclaredAnnotations()))
+                        .accessor(getAccessor(field, typeData))
+                        .modifiers(field.getModifiers())
+                        .discoverMappedName(datastore.getMapper().getOptions());
             }
         }
     }
 
     private PropertyAccessor<? super Object> getAccessor(Field field, TypeData<?> typeData) {
         return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
-               ? new ArrayFieldAccessor(typeData, field)
-               : new FieldAccessor(field);
+                ? new ArrayFieldAccessor(typeData, field)
+                : new FieldAccessor(field);
     }
 }

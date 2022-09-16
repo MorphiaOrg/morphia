@@ -59,7 +59,7 @@ public class CityPopulation {
         }
         final CityPopulation that = (CityPopulation) o;
         return Objects.equals(name, that.name) &&
-               Objects.equals(population, that.population);
+                Objects.equals(population, that.population);
     }
 
     @Override

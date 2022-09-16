@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 /**
  * Defines a regular expression filter
+ *
  * @since 2.0
  */
 public class RegexFilter extends Filter {

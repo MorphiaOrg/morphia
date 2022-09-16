@@ -6,7 +6,7 @@ import dev.morphia.sofia.Sofia;
 import java.util.ConcurrentModificationException;
 
 /**
- * This exception is thrown when a version field does not match the expected state in the database.  It's thrown when a versioned entity
+ * This exception is thrown when a version field does not match the expected state in the database. It's thrown when a versioned entity
  * is changed by another process after it was loaded but before any changes were written back to the database.
  *
  * @since 2.2

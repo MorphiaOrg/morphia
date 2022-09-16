@@ -1,6 +1,5 @@
 package dev.morphia.utils;
 
-
 /**
  * Defines the "direction" of an index.
  */

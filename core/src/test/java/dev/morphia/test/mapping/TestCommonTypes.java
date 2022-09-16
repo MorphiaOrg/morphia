@@ -26,11 +26,11 @@ public class TestCommonTypes extends TestBase {
         assertNotNull(getDs().find(Money.class).first());
 
         MongoCollection<Document> collection = getMapper()
-                                                   .getCollection(Money.class)
-                                                   .withDocumentClass(Document.class);
+                .getCollection(Money.class)
+                .withDocumentClass(Document.class);
         Document document = new Document("_id", new ObjectId())
-                                .append("_t", "Money")
-                                .append("amount", "123456.7890");
+                .append("_t", "Money")
+                .append("amount", "123456.7890");
         collection.insertOne(document);
 
         List<Money> monies = getDs().find(Money.class).iterator().toList();
