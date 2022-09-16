@@ -357,7 +357,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use the driver-provided types instead</div>
 </div>
-<div class="block">Factory class for creating GeoJSON types.  See <a href="http://docs.mongodb
+<div class="block">Factory class for creating GeoJSON types. See <a href="http://docs.mongodb
  .org/manual/applications/geospatial-indexes/#geojson-objects">the
  documentation</a> for all the types.</div>
 </li>
@@ -484,10 +484,10 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <pre class="methodSignature">public static&nbsp;<a href="Polygon.html" title="class in dev.morphia.geo">Polygon</a>&nbsp;polygon​(<a href="Point.html" title="class in dev.morphia.geo">Point</a>...&nbsp;points)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Create a new Polygon representing a GeoJSON Polygon type. This helper method uses <a href="#polygon(dev.morphia.geo.LineString,dev.morphia.geo.LineString...)"><code>polygon(LineString, LineString...)</code></a> to
- create the Polygon.  If you need to create Polygons with interior rings (holes), use that method.</div>
+ create the Polygon. If you need to create Polygons with interior rings (holes), use that method.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>points</code> - an ordered series of Points that make up the polygon.  The first and last points should be the same to close the
+<dd><code>points</code> - an ordered series of Points that make up the polygon. The first and last points should be the same to close the
                polygon</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a Polygon as defined by the points.</dd>
@@ -531,7 +531,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
  rings.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>exteriorBoundary</code> - a LineString that contains a series of Points that make up the polygon.  The first and last points should
+<dd><code>exteriorBoundary</code> - a LineString that contains a series of Points that make up the polygon. The first and last points should
                            be the same to close the polygon</dd>
 <dd><code>interiorBoundaries</code> - optional varargs that let you define the boundaries for any holes inside the polygon</dd>
 <dt><span class="returnLabel">Returns:</span></dt>

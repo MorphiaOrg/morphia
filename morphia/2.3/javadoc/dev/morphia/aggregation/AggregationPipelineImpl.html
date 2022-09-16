@@ -718,7 +718,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <div class="block">Executes the pipeline and aggregates the output in to the type mapped by the target type using
  the default options as defined in <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/AggregationOptions.html?is-external=true" title="class or interface in com.mongodb" class="externalLink"><code>AggregationOptions</code></a>.
 
- <b>Note:  This return type will change to <code>MongoCursor</code> in 2.0 to allow for finer-grained control of iteration and
+ <b>Note: This return type will change to <code>MongoCursor</code> in 2.0 to allow for finer-grained control of iteration and
  resource management.</b></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -744,7 +744,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#aggregate(java.lang.Class,com.mongodb.AggregationOptions)">AggregationPipeline</a></code></span></div>
 <div class="block">Executes the pipeline and aggregates the output in to the type mapped by the target type.
 
- <b>Note:  This return type will change to <code>MongoCursor</code> in 2.0 to allow for finer-grained control of iteration and
+ <b>Note: This return type will change to <code>MongoCursor</code> in 2.0 to allow for finer-grained control of iteration and
  resource management.</b></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -772,7 +772,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#aggregate(java.lang.Class,com.mongodb.AggregationOptions,com.mongodb.ReadPreference)">AggregationPipeline</a></code></span></div>
 <div class="block">Executes the pipeline and aggregates the output in to the type mapped by the target type.
 
- <b>Note:  This return type will change to <code>MongoCursor</code> in 2.0 to allow for finer-grained control of iteration and
+ <b>Note: This return type will change to <code>MongoCursor</code> in 2.0 to allow for finer-grained control of iteration and
  resource management.</b></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -802,7 +802,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#aggregate(java.lang.String,java.lang.Class,com.mongodb.AggregationOptions,com.mongodb.ReadPreference)">AggregationPipeline</a></code></span></div>
 <div class="block">Executes the pipeline and aggregates the output in to the type mapped by the target type.
 
- <b>Note:  This return type will change to <code>MongoCursor</code> in 2.0 to allow for finer-grained control of iteration and
+ <b>Note: This return type will change to <code>MongoCursor</code> in 2.0 to allow for finer-grained control of iteration and
  resource management.</b></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -975,7 +975,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#group(dev.morphia.aggregation.Group...)">AggregationPipeline</a></code></span></div>
 <div class="block">Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group
  . Consumes all input documents and outputs one document per each distinct group. The output documents only contain the identifier
- field and, if specified, accumulated fields.  The ID for this group is null.</div>
+ field and, if specified, accumulated fields. The ID for this group is null.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="AggregationPipeline.html#group(dev.morphia.aggregation.Group...)">group</a></code>&nbsp;in interface&nbsp;<code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></dd>
@@ -1068,7 +1068,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#lookup(java.lang.String,java.lang.String,java.lang.String,java.lang.String)">AggregationPipeline</a></code></span></div>
 <div class="block">Performs a left outer join to an unsharded collection in the same database to filter in documents from the "joined" collection for
  processing. The $lookup stage does an equality match between a field from the input documents with a field from the documents of
- the “joined” collection.  To each input document, the $lookup stage adds a new array field whose elements are the matching
+ the “joined” collection. To each input document, the $lookup stage adds a new array field whose elements are the matching
  documents from the “joined” collection. The $lookup stage passes these reshaped documents to the next stage.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>

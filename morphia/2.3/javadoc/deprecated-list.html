@@ -340,7 +340,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AbstractEntityInterceptor.html" title="class in dev.morphia">dev.morphia.AbstractEntityInterceptor</a></th>
 <td class="colLast">
-<div class="deprecationComment">the noop default methods have been moved to the interface.  This class is now vestigial.</div>
+<div class="deprecationComment">the noop default methods have been moved to the interface. This class is now vestigial.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -691,14 +691,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.preLoad​(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.preLoad(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
- necessary</div>
+             necessary</div>
 </td>
 </tr>
 <tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.prePersist​(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.prePersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
- necessary</div>
+             necessary</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -860,8 +860,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/experimental/MorphiaReference.html" title="class in dev.morphia.mapping.experimental">dev.morphia.mapping.experimental.MorphiaReference</a></th>
 <td class="colLast">
-<div class="deprecationComment">use @<a href="dev/morphia/annotations/Reference.html" title="annotation in dev.morphia.annotations"><code>Reference</code></a> instead.  See issue
- <a href="https://github.com/MorphiaOrg/morphia/issues/1864">1864</a> for more.</div>
+<div class="deprecationComment">use @<a href="dev/morphia/annotations/Reference.html" title="annotation in dev.morphia.annotations"><code>Reference</code></a> instead. See issue
+             <a href="https://github.com/MorphiaOrg/morphia/issues/1864">1864</a> for more.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -1150,9 +1150,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#within(dev.morphia.query.Shape)">dev.morphia.query.FieldEnd.within​(Shape)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a>, <a href="dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a>,
- <a href="dev/morphia/query/filters/Filters.html#box(java.lang.String,com.mongodb.client.model.geojson.Point,com.mongodb.client.model.geojson.Point)"><code>Filters.box(String, Point, Point)</code></a>, <a href="dev/morphia/query/filters/Filters.html#center(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.center(String, Point, double)</code></a>,
- <a href="dev/morphia/query/filters/Filters.html#centerSphere(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.centerSphere(String, Point, double)</code></a>, or <a href="dev/morphia/query/filters/Filters.html#polygon(java.lang.String,com.mongodb.client.model.geojson.Point...)"><code>Filters.polygon(String, Point[])</code></a> instead
- instead</div>
+             <a href="dev/morphia/query/filters/Filters.html#box(java.lang.String,com.mongodb.client.model.geojson.Point,com.mongodb.client.model.geojson.Point)"><code>Filters.box(String, Point, Point)</code></a>, <a href="dev/morphia/query/filters/Filters.html#center(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.center(String, Point, double)</code></a>,
+             <a href="dev/morphia/query/filters/Filters.html#centerSphere(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.centerSphere(String, Point, double)</code></a>, or <a href="dev/morphia/query/filters/Filters.html#polygon(java.lang.String,com.mongodb.client.model.geojson.Point...)"><code>Filters.polygon(String, Point[])</code></a> instead
+             instead</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -1320,9 +1320,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">dev.morphia.query.Query.modify​(UpdateOperator, UpdateOperator...)</a></th>
 <td class="colLast">
-<div class="deprecationComment">consider <a href="dev/morphia/query/Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>Query.modify(ModifyOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will
- match the other's return type such that this will be the terminal call for a modify.  The only change needed then will be to
- remove the <a href="dev/morphia/query/Modify.html#execute()"><code>Modify.execute()</code></a> call.</div>
+<div class="deprecationComment">consider <a href="dev/morphia/query/Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>Query.modify(ModifyOptions, UpdateOperator...)</code></a> instead. In the next major version, this return type will
+             match the other's return type such that this will be the terminal call for a modify. The only change needed then will be
+             to
+             remove the <a href="dev/morphia/query/Modify.html#execute()"><code>Modify.execute()</code></a> call.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -1363,7 +1364,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/UpdateOperations.html" title="interface in dev.morphia.query">dev.morphia.query.UpdateOperations</a></th>
 <td class="colLast">
 <div class="deprecationComment">updates should be performed using the <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead
- of this class directly</div>
+             of this class directly</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -1432,7 +1433,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/UpdateOperations.html" title="interface in dev.morphia.query">dev.morphia.query.UpdateOperations</a></th>
 <td class="colLast">
 <div class="deprecationComment">updates should be performed using the <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead
- of this class directly</div>
+             of this class directly</div>
 </td>
 </tr>
 </tbody>
@@ -1454,7 +1455,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AbstractEntityInterceptor.html" title="class in dev.morphia">dev.morphia.AbstractEntityInterceptor</a></th>
 <td class="colLast">
-<div class="deprecationComment">the noop default methods have been moved to the interface.  This class is now vestigial.</div>
+<div class="deprecationComment">the noop default methods have been moved to the interface. This class is now vestigial.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -1586,8 +1587,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/experimental/MorphiaReference.html" title="class in dev.morphia.mapping.experimental">dev.morphia.mapping.experimental.MorphiaReference</a></th>
 <td class="colLast">
-<div class="deprecationComment">use @<a href="dev/morphia/annotations/Reference.html" title="annotation in dev.morphia.annotations"><code>Reference</code></a> instead.  See issue
- <a href="https://github.com/MorphiaOrg/morphia/issues/1864">1864</a> for more.</div>
+<div class="deprecationComment">use @<a href="dev/morphia/annotations/Reference.html" title="annotation in dev.morphia.annotations"><code>Reference</code></a> instead. See issue
+             <a href="https://github.com/MorphiaOrg/morphia/issues/1864">1864</a> for more.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -1719,7 +1720,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/annotations/Embedded.html" title="annotation in dev.morphia.annotations">dev.morphia.annotations.Embedded</a></th>
 <td class="colLast">
-<div class="deprecationComment">It is now possible to use @Entity everywhere.  If a type is only for use as an embedded value, no @Id field is necessary.</div>
+<div class="deprecationComment">It is now possible to use @Entity everywhere. If a type is only for use as an embedded value, no @Id field is necessary.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -2060,14 +2061,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.preLoad​(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.preLoad(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
- necessary</div>
+             necessary</div>
 </td>
 </tr>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.prePersist​(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.prePersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
- necessary</div>
+             necessary</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -2348,9 +2349,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#within(dev.morphia.query.Shape)">dev.morphia.query.FieldEnd.within​(Shape)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a>, <a href="dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a>,
- <a href="dev/morphia/query/filters/Filters.html#box(java.lang.String,com.mongodb.client.model.geojson.Point,com.mongodb.client.model.geojson.Point)"><code>Filters.box(String, Point, Point)</code></a>, <a href="dev/morphia/query/filters/Filters.html#center(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.center(String, Point, double)</code></a>,
- <a href="dev/morphia/query/filters/Filters.html#centerSphere(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.centerSphere(String, Point, double)</code></a>, or <a href="dev/morphia/query/filters/Filters.html#polygon(java.lang.String,com.mongodb.client.model.geojson.Point...)"><code>Filters.polygon(String, Point[])</code></a> instead
- instead</div>
+             <a href="dev/morphia/query/filters/Filters.html#box(java.lang.String,com.mongodb.client.model.geojson.Point,com.mongodb.client.model.geojson.Point)"><code>Filters.box(String, Point, Point)</code></a>, <a href="dev/morphia/query/filters/Filters.html#center(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.center(String, Point, double)</code></a>,
+             <a href="dev/morphia/query/filters/Filters.html#centerSphere(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.centerSphere(String, Point, double)</code></a>, or <a href="dev/morphia/query/filters/Filters.html#polygon(java.lang.String,com.mongodb.client.model.geojson.Point...)"><code>Filters.polygon(String, Point[])</code></a> instead
+             instead</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -2504,9 +2505,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <tr class="rowColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">dev.morphia.query.Query.modify​(UpdateOperator, UpdateOperator...)</a></th>
 <td class="colLast">
-<div class="deprecationComment">consider <a href="dev/morphia/query/Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>Query.modify(ModifyOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will
- match the other's return type such that this will be the terminal call for a modify.  The only change needed then will be to
- remove the <a href="dev/morphia/query/Modify.html#execute()"><code>Modify.execute()</code></a> call.</div>
+<div class="deprecationComment">consider <a href="dev/morphia/query/Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>Query.modify(ModifyOptions, UpdateOperator...)</code></a> instead. In the next major version, this return type will
+             match the other's return type such that this will be the terminal call for a modify. The only change needed then will be
+             to
+             remove the <a href="dev/morphia/query/Modify.html#execute()"><code>Modify.execute()</code></a> call.</div>
 </td>
 </tr>
 <tr class="altColor">

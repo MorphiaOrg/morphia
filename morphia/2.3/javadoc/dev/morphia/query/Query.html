@@ -811,7 +811,7 @@ default&nbsp;<a href="FieldEnd.html" title="interface in dev.morphia.query">Fiel
 <li class="blockList">
 <h4>filter</h4>
 <pre class="methodSignature">default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;filter​(<a href="filters/Filter.html" title="class in dev.morphia.query.filters">Filter</a>...&nbsp;filters)</pre>
-<div class="block">Adds filters to this query.  This operation is cumulative.</div>
+<div class="block">Adds filters to this query. This operation is cumulative.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>filters</code> - the filters to add</dd>
@@ -880,7 +880,7 @@ default&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" ti
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/result/DeleteResult.html?is-external=true" title="class or interface in com.mongodb.client.result" class="externalLink">DeleteResult</a>&nbsp;delete​(<a href="../DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</pre>
-<div class="block">Deletes documents matching this query.  Optionally deleting the first or all matched documents.</div>
+<div class="block">Deletes documents matching this query. Optionally deleting the first or all matched documents.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>options</code> - the options to apply</dd>
@@ -1049,13 +1049,19 @@ default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="#filter(dev.morphia.query.filters.Filter...)"><code>filter(Filter...)</code></a> instead</div>
 </div>
-<div class="block">Create a filter based on the specified condition and value. <p></p>
+<div class="block">Create a filter based on the specified condition and value.
+ <p></p>
 
- <p><b>Note</b>: Property is in the form of "name op" ("age &gt;").
- </p><p>
- </p><p>Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"] </p>
  <p>
- </p><p>Examples:</p>
+ <b>Note</b>: Property is in the form of "name op" ("age &gt;").
+ </p><p>
+ </p><p>
+ Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"]
+ </p>
+ <p>
+ </p><p>
+ Examples:
+ </p>
  <p>
  </p><ul>
  <li><code>filter("yearsOfOperation &gt;", 5)</code></li>
@@ -1071,7 +1077,8 @@ default&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</
  <li><code>filter("customers.loyaltyYears in", yearsList)</code></li>
  </ul>
  <p>
- </p><p>You can filter on id properties <strong>if</strong> this query is restricted to a Class<t>.</t></p></div>
+ </p><p>
+ You can filter on id properties <strong>if</strong> this query is restricted to a Class<t>.</t></p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>condition</code> - the condition to apply</dd>
@@ -1179,7 +1186,7 @@ default&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" ti
 <h4>first</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
 <a href="Query.html" title="type parameter in Query">T</a>&nbsp;first()</pre>
-<div class="block">Gets the first entity in the result set.  Obeys the <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> offset value.</div>
+<div class="block">Gets the first entity in the result set. Obeys the <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> offset value.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the only instance in the result, or null if the result set is empty.</dd>
@@ -1196,7 +1203,7 @@ default&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" ti
 <h4>first</h4>
 <pre class="methodSignature"><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
 <a href="Query.html" title="type parameter in Query">T</a>&nbsp;first​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
-<div class="block">Gets the first entity in the result set.  Obeys the <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> offset value.</div>
+<div class="block">Gets the first entity in the result set. Obeys the <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> offset value.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>options</code> - the options to apply to the find operation</dd>
@@ -1232,9 +1239,10 @@ default&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="Query.html" ti
 <a href="Modify.html" title="class in dev.morphia.query">Modify</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;modify​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
                  <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">consider <a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>modify(ModifyOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will
- match the other's return type such that this will be the terminal call for a modify.  The only change needed then will be to
- remove the <a href="Modify.html#execute()"><code>Modify.execute()</code></a> call.</div>
+<div class="deprecationComment">consider <a href="#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>modify(ModifyOptions, UpdateOperator...)</code></a> instead. In the next major version, this return type will
+             match the other's return type such that this will be the terminal call for a modify. The only change needed then will be
+             to
+             remove the <a href="Modify.html#execute()"><code>Modify.execute()</code></a> call.</div>
 </div>
 <div class="block">Create a modify operation based on this query</div>
 <dl>
@@ -1511,9 +1519,10 @@ default&nbsp;<a href="Update.html" title="class in dev.morphia.query">Update</a>
 <a href="Update.html" title="class in dev.morphia.query">Update</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;update​(<a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>&nbsp;first,
                  <a href="updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a>...&nbsp;updates)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecationComment">use <a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOptions, UpdateOperator...)</code></a> instead.  In the next major version, this return type will match
- the other's return type such that this will be the terminal call for an update.  The only change needed then will be to remove the
- <a href="Update.html#execute()"><code>Update.execute()</code></a> call.</div>
+<div class="deprecationComment">use <a href="#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)"><code>update(UpdateOptions, UpdateOperator...)</code></a> instead. In the next major version, this return type will match
+             the other's return type such that this will be the terminal call for an update. The only change needed then will be to
+             remove the
+             <a href="Update.html#execute()"><code>Update.execute()</code></a> call.</div>
 </div>
 <div class="block">Creates an update operation based on this query</div>
 <dl>

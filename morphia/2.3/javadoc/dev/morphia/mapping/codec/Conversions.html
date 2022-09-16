@@ -353,8 +353,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre>@MorphiaInternal
 public final class <span class="typeNameLabel">Conversions</span>
 extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></pre>
-<div class="block">Defines basic type conversions.  This class is mostly intended for internal use only but its methods are public so that when cases
- arise where certain conversions are missing, users can add their in between releases.  However, this must be done with the understand
+<div class="block">Defines basic type conversions. This class is mostly intended for internal use only but its methods are public so that when cases
+ arise where certain conversions are missing, users can add their in between releases. However, this must be done with the understand
  that, however unlikely, this API is subject to change and any uses might break at some point.</div>
 <dl><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
 </li>
@@ -437,7 +437,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <pre class="methodSignature">public static&nbsp;&lt;S,​T&gt;&nbsp;void&nbsp;register​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;S&gt;&nbsp;source,
                                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;target,
                                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;S,​T&gt;&nbsp;function)</pre>
-<div class="block">Register a conversion between two types.  For example, to register the conversion of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Date.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Date</code></a> to a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Long</code></a>, this method
+<div class="block">Register a conversion between two types. For example, to register the conversion of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Date.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Date</code></a> to a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Long</code></a>, this method
  could be invoked as follows:
 
  <code>
@@ -450,7 +450,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>source</code> - the source type</dd>
 <dd><code>target</code> - the target type</dd>
-<dd><code>function</code> - the function that performs the conversion.  This is often just a method reference.</dd>
+<dd><code>function</code> - the function that performs the conversion. This is often just a method reference.</dd>
 </dl>
 </li>
 </ul>
@@ -487,7 +487,7 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;convert​(<a href="https://mongodb.git
                                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Function.html?is-external=true" title="class or interface in java.util.function" class="externalLink">Function</a>&lt;S,​T&gt;&nbsp;function,
                                         <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
                                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;warning)</pre>
-<div class="block">Register a conversion between two types.  For example, to register the conversion of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Date.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Date</code></a> to a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Long</code></a>, this method
+<div class="block">Register a conversion between two types. For example, to register the conversion of <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Date.html?is-external=true" title="class or interface in java.util" class="externalLink"><code>Date</code></a> to a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink"><code>Long</code></a>, this method
  could be invoked as follows:
 
  <code>
@@ -500,7 +500,7 @@ public static&nbsp;&lt;T&gt;&nbsp;T&nbsp;convert​(<a href="https://mongodb.git
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>source</code> - the source type</dd>
 <dd><code>target</code> - the target type</dd>
-<dd><code>function</code> - the function that performs the conversion.  This is often just a method reference.</dd>
+<dd><code>function</code> - the function that performs the conversion. This is often just a method reference.</dd>
 <dd><code>warning</code> - if non-null, this will be the message logged on the WARN level indicating the conversion is taking place.</dd>
 </dl>
 </li>

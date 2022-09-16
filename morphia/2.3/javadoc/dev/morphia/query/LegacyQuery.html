@@ -974,7 +974,7 @@ public&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="LegacyQuery.htm
 <h4>delete</h4>
 <pre class="methodSignature">public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/result/DeleteResult.html?is-external=true" title="class or interface in com.mongodb.client.result" class="externalLink">DeleteResult</a>&nbsp;delete​(<a href="../DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#delete(dev.morphia.DeleteOptions)">Query</a></code></span></div>
-<div class="block">Deletes documents matching this query.  Optionally deleting the first or all matched documents.</div>
+<div class="block">Deletes documents matching this query. Optionally deleting the first or all matched documents.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Query.html#delete(dev.morphia.DeleteOptions)">delete</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
@@ -1106,13 +1106,19 @@ public&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="LegacyQuery.htm
 <pre class="methodSignature">public&nbsp;<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;&nbsp;filter​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;condition,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#filter(java.lang.String,java.lang.Object)">Query</a></code></span></div>
-<div class="block">Create a filter based on the specified condition and value. <p></p>
+<div class="block">Create a filter based on the specified condition and value.
+ <p></p>
 
- <p><b>Note</b>: Property is in the form of "name op" ("age &gt;").
- </p><p>
- </p><p>Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"] </p>
  <p>
- </p><p>Examples:</p>
+ <b>Note</b>: Property is in the form of "name op" ("age &gt;").
+ </p><p>
+ </p><p>
+ Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"]
+ </p>
+ <p>
+ </p><p>
+ Examples:
+ </p>
  <p>
  </p><ul>
  <li><code>filter("yearsOfOperation &gt;", 5)</code></li>
@@ -1128,7 +1134,8 @@ public&nbsp;dev.morphia.query.internal.MorphiaCursor&lt;<a href="LegacyQuery.htm
  <li><code>filter("customers.loyaltyYears in", yearsList)</code></li>
  </ul>
  <p>
- </p><p>You can filter on id properties <strong>if</strong> this query is restricted to a Class<t>.</t></p></div>
+ </p><p>
+ You can filter on id properties <strong>if</strong> this query is restricted to a Class<t>.</t></p></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Query.html#filter(java.lang.String,java.lang.Object)">filter</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
@@ -1183,7 +1190,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <h4>first</h4>
 <pre class="methodSignature">public&nbsp;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&nbsp;first()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#first()">Query</a></code></span></div>
-<div class="block">Gets the first entity in the result set.  Obeys the <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> offset value.</div>
+<div class="block">Gets the first entity in the result set. Obeys the <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> offset value.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Query.html#first()">first</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>
@@ -1200,7 +1207,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <h4>first</h4>
 <pre class="methodSignature">public&nbsp;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&nbsp;first​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Query.html#first(dev.morphia.query.FindOptions)">Query</a></code></span></div>
-<div class="block">Gets the first entity in the result set.  Obeys the <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> offset value.</div>
+<div class="block">Gets the first entity in the result set. Obeys the <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> offset value.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Query.html#first(dev.morphia.query.FindOptions)">first</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="LegacyQuery.html" title="type parameter in LegacyQuery">T</a>&gt;</code></dd>

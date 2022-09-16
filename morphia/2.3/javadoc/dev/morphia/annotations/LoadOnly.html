@@ -337,8 +337,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation" class="externalLink">FIELD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation" class="externalLink">METHOD</a>})
 public @interface <span class="memberNameLabel">LoadOnly</span></pre>
-<div class="block"><p>When placed on an entity field, the field will not be written to mongodb. It will, however, be loaded normally.  This is particularly
- useful in concert with <code>@PostLoad</code> and <code>@PrePersist</code> to transform your data.</p></div>
+<div class="block"><p>
+ When placed on an entity field, the field will not be written to mongodb. It will, however, be loaded normally. This is particularly
+ useful in concert with <code>@PostLoad</code> and <code>@PrePersist</code> to transform your data.
+ </p></div>
 </li>
 </ul>
 </div>

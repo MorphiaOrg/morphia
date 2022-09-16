@@ -337,10 +337,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Retention.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/RetentionPolicy.html?is-external=true#RUNTIME" title="class or interface in java.lang.annotation" class="externalLink">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Target.html?is-external=true" title="class or interface in java.lang.annotation" class="externalLink">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#FIELD" title="class or interface in java.lang.annotation" class="externalLink">FIELD</a>,<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/ElementType.html?is-external=true#METHOD" title="class or interface in java.lang.annotation" class="externalLink">METHOD</a>})
 public @interface <span class="memberNameLabel">AlsoLoad</span></pre>
-<div class="block"><p>Annotation which helps migrate schemas by loading one of several possible properties in the document into fields or methods.  This is
- typically used when a field is renamed, allowing the field to be populated by both its current name and any prior names.</p>
+<div class="block"><p>
+ Annotation which helps migrate schemas by loading one of several possible properties in the document into fields or methods. This is
+ typically used when a field is renamed, allowing the field to be populated by both its current name and any prior names.
+ </p>
  <p>
- When placed on a field, the additional names (document field) will be checked when this field is loaded.  If the document contains data
+ When placed on a field, the additional names (document field) will be checked when this field is loaded. If the document contains data
  for more than one of the names, an exception will be thrown.</p></div>
 </li>
 </ul>

@@ -1075,7 +1075,7 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;T&gt;&nbsp;type,
                          <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;nativeQuery)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#find(java.lang.Class,org.bson.Document)">Datastore</a></code></span></div>
-<div class="block">Find instances of a type using a native query.  This method is intended as an aid when copying queries from external sources such
+<div class="block">Find instances of a type using a native query. This method is intended as an aid when copying queries from external sources such
  as the shell or Compass whose structure is already in json form.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1106,7 +1106,7 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the type to query</dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>collection</code> - the actual collection to query.  This overrides any mapped on collection on type.</dd>
+<dd><code>collection</code> - the actual collection to query. This overrides any mapped on collection on type.</dd>
 <dd><code>type</code> - the class to use for mapping the results</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the query</dd>
@@ -1261,7 +1261,7 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <dd><code>entity</code> - the entity to merge back in to the database</dd>
 <dd><code>options</code> - the options to apply</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new merged entity.  NOTE:  this is a database fetch.</dd>
+<dd>the new merged entity. NOTE: this is a database fetch.</dd>
 </dl>
 </li>
 </ul>
@@ -1323,7 +1323,7 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>entity</code> - the entity to merge back in to the database</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the new merged entity.  NOTE:  this is a database fetch.</dd>
+<dd>the new merged entity. NOTE: this is a database fetch.</dd>
 </dl>
 </li>
 </ul>
@@ -1392,7 +1392,7 @@ public&nbsp;&lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/
 <h4>refresh</h4>
 <pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;void&nbsp;refresh​(T&nbsp;entity)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="Datastore.html#refresh(T)">Datastore</a></code></span></div>
-<div class="block">Refreshes an existing entity to its current state in the database.  Essentially, any existing mapped state is replaced by the
+<div class="block">Refreshes an existing entity to its current state in the database. Essentially, any existing mapped state is replaced by the
  latest persisted state while preserving the entity's reference and object identity.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
