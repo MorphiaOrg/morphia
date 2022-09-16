@@ -10,10 +10,10 @@ class OperationAuditTest {
         var created = 0
 
         with(
-            OperationAudit
-                .parse(taglet = "@query.filter")
+            OperationAudit.parse(taglet = "@query.filter")
                 .audit(
-                    "query-filters", "https://docs.mongodb.com/manual/reference/operator/query/",
+                    "query-filters",
+                    "https://docs.mongodb.com/manual/reference/operator/query/",
                     listOf("$", "\$rand")
                 )
         ) {
@@ -22,10 +22,10 @@ class OperationAuditTest {
         }
 
         with(
-            OperationAudit
-                .parse(taglet = "@update.operator")
+            OperationAudit.parse(taglet = "@update.operator")
                 .audit(
-                    "update-operators", "https://docs.mongodb.com/manual/reference/operator/update/",
+                    "update-operators",
+                    "https://docs.mongodb.com/manual/reference/operator/update/",
                     listOf("$", "$[]", "$[<identifier>]", "\$position", "\$slice", "\$sort")
                 )
         ) {
@@ -34,11 +34,16 @@ class OperationAuditTest {
         }
 
         with(
-            OperationAudit
-                .parse(taglet = "@aggregation.expression")
+            OperationAudit.parse(taglet = "@aggregation.expression")
                 .audit(
-                    "aggregation-pipeline", "https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline",
-                    listOf("$", "\$listSessions", "\$listLocalSessions", "\$search" /* not terribly well doc'd.  atlas only? */)
+                    "aggregation-pipeline",
+                    "https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline",
+                    listOf(
+                        "$",
+                        "\$listSessions",
+                        "\$listLocalSessions",
+                        "\$search" /* not terribly well doc'd.  atlas only? */
+                    )
                 )
         ) {
             remaining += first
@@ -46,10 +51,10 @@ class OperationAuditTest {
         }
 
         with(
-            OperationAudit
-                .parse(taglet = "@aggregation.expression")
+            OperationAudit.parse(taglet = "@aggregation.expression")
                 .audit(
-                    "aggregation-expressions", "https://docs.mongodb.com/manual/reference/operator/aggregation/index.html",
+                    "aggregation-expressions",
+                    "https://docs.mongodb.com/manual/reference/operator/aggregation/index.html",
                     listOf("$", "\$addFields", "\$group", "\$project")
                 )
         ) {

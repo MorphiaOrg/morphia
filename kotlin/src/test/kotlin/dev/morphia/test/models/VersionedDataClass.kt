@@ -6,4 +6,8 @@ import dev.morphia.annotations.Version
 import org.bson.types.ObjectId
 
 @Entity
-data class VersionedDataClass(@Id val id: ObjectId?, val name: String, @Version val version: Long = 0)
+data class VersionedDataClass(
+    @Id val id: ObjectId?,
+    val name: String,
+    @Version val version: Long = 0
+)

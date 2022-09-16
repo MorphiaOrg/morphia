@@ -11,7 +11,8 @@ class SinceAuditTest {
 
         since.processApis()
         val method =
-            since.methodHistory["dev.morphia.query.LegacyQuery#execute()Ldev/morphia/query/internal/MorphiaCursor;"]
+            since.methodHistory[
+                    "dev.morphia.query.LegacyQuery#execute()Ldev/morphia/query/internal/MorphiaCursor;"]
 
         method as MorphiaMethod
         Assert.assertEquals(State.DEPRECATED, method.versions[Version.v2_1_0_SNAPSHOT])

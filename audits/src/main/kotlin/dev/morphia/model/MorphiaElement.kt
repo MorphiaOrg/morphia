@@ -6,8 +6,8 @@ import java.net.URL
 import java.util.jar.JarFile
 
 class MorphiaClass(val pkgName: String, val name: String) {
-    var versions: MutableMap<Version, State> = Version.values().map { it to State.ABSENT }
-        .toMap().toMutableMap()
+    var versions: MutableMap<Version, State> =
+        Version.values().map { it to State.ABSENT }.toMap().toMutableMap()
 
     override fun toString(): String {
         return "MorphiaClass(pkgName='$pkgName', name='$name')"
@@ -27,16 +27,12 @@ class MorphiaMethod(val pkgName: String, val className: String, name: String) {
 
     private fun migrateTypes(name: String): String {
         var updated = name
-        typeMigrations.forEach { (old, new) ->
-            updated = updated.replace(old, new)
-        }
+        typeMigrations.forEach { (old, new) -> updated = updated.replace(old, new) }
         return updated
     }
 
-    var versions: MutableMap<Version, State> = Version.values()
-        .map { it to State.ABSENT }
-        .toMap()
-        .toMutableMap()
+    var versions: MutableMap<Version, State> =
+        Version.values().map { it to State.ABSENT }.toMap().toMutableMap()
 
     override fun toString(): String {
         return "MorphiaMethod(name='${pkgName}.${className}#${name}', versions=$versions)"
@@ -79,8 +75,9 @@ enum class State {
     DEPRECATED
 }
 
-val typeMigrations = mapOf(
-    "Lcom/mongodb/DBObject;" to "Lorg/bson/Document;",
-    "Lcom/mongodb/WriteResult;" to "Lcom/mongodb/client/result/DeleteResult;",
-    "Ldev/morphia/query/UpdateResults;" to "Lcom/mongodb/client/result/UpdateResult;"
-)
+val typeMigrations =
+    mapOf(
+        "Lcom/mongodb/DBObject;" to "Lorg/bson/Document;",
+        "Lcom/mongodb/WriteResult;" to "Lcom/mongodb/client/result/DeleteResult;",
+        "Ldev/morphia/query/UpdateResults;" to "Lcom/mongodb/client/result/UpdateResult;"
+    )
