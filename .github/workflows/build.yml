@@ -5,10 +5,14 @@ name: Morphia Build
 
 on: [ push, pull_request, workflow_dispatch ]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   Build:
-    runs-on: ubuntu-latest
     name: "Build"
+    runs-on: ubuntu-latest
     if: "github.repository == 'MorphiaOrg/morphia' && startsWith(github.ref, 'refs/heads/')"
     steps:
       - name: Checkout
@@ -30,6 +34,7 @@ jobs:
             **/target/**
           retention-days: 5
   Tests:
+    name: "Test on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
     runs-on: ubuntu-latest
     needs: Build
     strategy:
@@ -37,7 +42,6 @@ jobs:
         java: [ 11, 17, 18 ]
         mongo: [ 6.0.0, 5.0.10, 4.2.20 ]
         driver: [ 4.2.3, 4.0.6 ]
-    name: "Test on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -85,12 +89,11 @@ jobs:
 
   Snapshots:
     name: Publish Snapshot Artifacts
+    runs-on: ubuntu-latest
     if: "github.repository == 'MorphiaOrg/morphia' && github.ref == 'refs/heads/master' && github.event_name == 'push'"
     needs:
       - Tests
       - Quality
-    runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -123,9 +126,9 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
   Docs:
     name: Update Documentation
+    runs-on: ubuntu-latest
     needs:
       - Snapshots
-    runs-on: ubuntu-latest
     steps:
       - name: Invoke antora build
         uses: benc-uk/workflow-dispatch@v1
@@ -134,3 +137,21 @@ jobs:
           repo: MorphiaOrg/morphia-docs
           token: ${{ secrets.PUSH_TOKEN }}
           ref: refs/heads/master
+  dependabot:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' && github.repository == 'MorphiaOrg/morphia' && github.ref == 'refs/heads/master' 
+      && github.event_name == 'pull_request' }}
+    needs:
+      - Tests
+      - Quality
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.1.1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
