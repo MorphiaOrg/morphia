@@ -135,8 +135,7 @@ jobs:
           ref: refs/heads/master
   dependabot:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' && github.repository == 'MorphiaOrg/morphia' && github.ref == 'refs/heads/master' 
-      && github.event_name == 'pull_request' }}
+    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
     needs:
       - Tests
       - Quality
