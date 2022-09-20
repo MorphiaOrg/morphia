@@ -1,241 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../../../../index.html">Getting Started</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../migrating.html">Migrating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../quicktour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Features</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../kotlin.html">Kotlin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../sharding.html">Sharding</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../queries.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../updates.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../deletes.html">Deleting</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../aggregations.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../textSearches.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../references.html">References</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../schemaValidation.html">Schema Validation</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text"><em>Support</em></span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version is-current">
-          <a href="../../../../../index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
-  <div class="version-menu">
-    <a class="version is-current" href="Merge.html">2.3-SNAPSHOT</a>
-    <a class="version is-missing" href="../../../../../../2.2/index.html">2.2</a>
-    <a class="version is-missing" href="../../../../../../2.1/index.html">2.1</a>
-    <a class="version is-missing" href="../../../../../../2.0/index.html">2.0</a>
-    <a class="version is-missing" href="../../../../../../1.6/index.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.16.1) on Tue Sep 20 04:28:49 UTC 2022 -->
+<title>Merge (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2022-09-20">
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../../script.js"></script>
+<script type="text/javascript" src="../../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -377,7 +159,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier</th>
 <th class="colSecond" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
@@ -389,21 +171,21 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected </code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.Class)">Merge</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;type)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.Class)">Merge</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String)">Merge</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String)">Merge</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>protected </code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.String)">Merge</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;database,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.String)">Merge</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;database,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -416,7 +198,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
@@ -442,7 +224,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&gt;</code></td>
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getVariables()">getVariables</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -463,21 +245,21 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>static &lt;M&gt;&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#into(java.lang.Class)">into</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;M&gt;&nbsp;type)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#into(java.lang.Class)">into</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;M&gt;&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block">Creates a new stage targeting the collection mapped for the given type</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#into(java.lang.String)">into</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#into(java.lang.String)">into</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block">Creates a new stage targeting the collection</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#into(java.lang.String,java.lang.String)">into</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;database,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#into(java.lang.String,java.lang.String)">into</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;database,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block">Creates a new stage targeting the database and collection</div>
@@ -485,7 +267,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#let(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)">let</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;variable,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#let(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)">let</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;variable,
    <a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Specifies a variable accessible for use in the whenMatched pipeline</div>
@@ -493,7 +275,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#on(java.lang.String,java.lang.String...)">on</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#on(java.lang.String,java.lang.String...)">on</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;fields)</code></th>
 <td class="colLast">
 <div class="block">Optional.</div>
@@ -501,26 +283,26 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#whenMatched(com.mongodb.client.model.MergeOptions.WhenMatched)">whenMatched</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenMatched.html?is-external=true" title="class or interface in com.mongodb.client.model" class="externalLink">MergeOptions.WhenMatched</a>&nbsp;whenMatched)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#whenMatched(com.mongodb.client.model.MergeOptions.WhenMatched)">whenMatched</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenMatched.html?is-external=true" title="class or interface in com.mongodb.client.model" class="externalLink">MergeOptions.WhenMatched</a>&nbsp;whenMatched)</code></th>
 <td class="colLast">
 <div class="block">Optional.</div>
 </td>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#whenMatched(java.util.List)">whenMatched</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;pipeline)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#whenMatched(java.util.List)">whenMatched</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;pipeline)</code></th>
 <td class="colLast">
 <div class="block">Optional.</div>
 </td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#whenNotMatched(com.mongodb.client.model.MergeOptions.WhenNotMatched)">whenNotMatched</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenNotMatched.html?is-external=true" title="class or interface in com.mongodb.client.model" class="externalLink">MergeOptions.WhenNotMatched</a>&nbsp;whenNotMatched)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#whenNotMatched(com.mongodb.client.model.MergeOptions.WhenNotMatched)">whenNotMatched</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenNotMatched.html?is-external=true" title="class or interface in com.mongodb.client.model" class="externalLink">MergeOptions.WhenNotMatched</a>&nbsp;whenNotMatched)</code></th>
 <td class="colLast">
 <div class="block">Optional.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.dev.morphia.aggregation.stages.Stage">
 <!--   -->
@@ -551,16 +333,16 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(java.lang.Class)">
+<a id="&lt;init&gt;(java.lang.Class)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>Merge</h4>
-<pre>protected&nbsp;Merge​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;type)</pre>
+<pre>protected&nbsp;Merge&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;type)</pre>
 </li>
 </ul>
-<a id="<init>()">
+<a id="&lt;init&gt;()">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -569,22 +351,22 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <pre>protected&nbsp;Merge()</pre>
 </li>
 </ul>
-<a id="<init>(java.lang.String)">
+<a id="&lt;init&gt;(java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>Merge</h4>
-<pre>protected&nbsp;Merge​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
+<pre>protected&nbsp;Merge&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
 </li>
 </ul>
-<a id="<init>(java.lang.String,java.lang.String)">
+<a id="&lt;init&gt;(java.lang.String,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>Merge</h4>
-<pre>protected&nbsp;Merge​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;database,
+<pre>protected&nbsp;Merge&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;database,
                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
 </li>
 </ul>
@@ -604,7 +386,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <ul class="blockList">
 <li class="blockList">
 <h4>into</h4>
-<pre class="methodSignature">public static&nbsp;&lt;M&gt;&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;&nbsp;into​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;M&gt;&nbsp;type)</pre>
+<pre class="methodSignature">public static&nbsp;&lt;M&gt;&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;&nbsp;into&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;M&gt;&nbsp;type)</pre>
 <div class="block">Creates a new stage targeting the collection mapped for the given type</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -622,7 +404,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <ul class="blockList">
 <li class="blockList">
 <h4>into</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;&nbsp;into​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;&nbsp;into&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
 <div class="block">Creates a new stage targeting the collection</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -638,7 +420,7 @@ extends <a href="Stage.html" title="class in dev.morphia.aggregation.stages">Sta
 <ul class="blockList">
 <li class="blockList">
 <h4>into</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;&nbsp;into​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;database,
+<pre class="methodSignature">public static&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;&nbsp;into&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;database,
                             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collection)</pre>
 <div class="block">Creates a new stage targeting the database and collection</div>
 <dl>
@@ -715,7 +497,7 @@ public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.bas
 <li class="blockList">
 <h4>getVariables</h4>
 <pre class="methodSignature">@MorphiaInternal
-public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&gt;&nbsp;getVariables()</pre>
+public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&gt;&nbsp;getVariables()</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the value</dd>
@@ -770,7 +552,7 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 <ul class="blockList">
 <li class="blockList">
 <h4>let</h4>
-<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;let​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;variable,
+<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;let&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;variable,
                     <a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Specifies a variable accessible for use in the whenMatched pipeline</div>
 <dl>
@@ -788,7 +570,7 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 <ul class="blockList">
 <li class="blockList">
 <h4>on</h4>
-<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;on​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;on&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>...&nbsp;fields)</pre>
 <div class="block">Optional. Field or fields that act as a unique identifier for a document. The identifier determines if a results document matches
  an already existing document in the output collection.</div>
@@ -807,7 +589,7 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 <ul class="blockList">
 <li class="blockList">
 <h4>whenMatched</h4>
-<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;whenMatched​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenMatched.html?is-external=true" title="class or interface in com.mongodb.client.model" class="externalLink">MergeOptions.WhenMatched</a>&nbsp;whenMatched)</pre>
+<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;whenMatched&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenMatched.html?is-external=true" title="class or interface in com.mongodb.client.model" class="externalLink">MergeOptions.WhenMatched</a>&nbsp;whenMatched)</pre>
 <div class="block">Optional. The behavior of $merge if a result document and an existing document in the collection have the same value for the
  specified on field(s).</div>
 <dl>
@@ -824,7 +606,7 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 <ul class="blockList">
 <li class="blockList">
 <h4>whenMatched</h4>
-<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;whenMatched​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;pipeline)</pre>
+<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;whenMatched&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;pipeline)</pre>
 <div class="block">Optional. An aggregation pipeline to update the document in the collection.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -840,7 +622,7 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 <ul class="blockListLast">
 <li class="blockList">
 <h4>whenNotMatched</h4>
-<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;whenNotMatched​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenNotMatched.html?is-external=true" title="class or interface in com.mongodb.client.model" class="externalLink">MergeOptions.WhenNotMatched</a>&nbsp;whenNotMatched)</pre>
+<pre class="methodSignature">public&nbsp;<a href="Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="Merge.html" title="type parameter in Merge">M</a>&gt;&nbsp;whenNotMatched&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenNotMatched.html?is-external=true" title="class or interface in com.mongodb.client.model" class="externalLink">MergeOptions.WhenNotMatched</a>&nbsp;whenNotMatched)</pre>
 <div class="block">Optional. The behavior of $merge if a result document does not match an existing document in the out collection.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -919,20 +701,7 @@ public&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mon
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2022. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

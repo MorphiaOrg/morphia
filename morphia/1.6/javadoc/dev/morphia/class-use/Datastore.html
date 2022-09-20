@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../2.3/javadoc/dev/morphia/class-use/Datastore.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/class-use/Datastore.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/class-use/Datastore.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/class-use/Datastore.html">2.0</a>
-    <a class="version is-current" href="Datastore.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>Uses of Interface dev.morphia.Datastore (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -277,11 +102,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="useSummary">
 <caption><span>Packages that use <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Package</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="#dev.morphia">dev.morphia</a></th>
 <td class="colLast">&nbsp;</td>
@@ -326,12 +151,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../package-summary.html">dev.morphia</a></h3>
 <table class="useSummary">
 <caption><span>Subinterfaces of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../package-summary.html">dev.morphia</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Interface</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>interface&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../AdvancedDatastore.html" title="interface in dev.morphia">AdvancedDatastore</a></span></code></th>
@@ -343,12 +168,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Classes in <a href="../package-summary.html">dev.morphia</a> that implement <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a></span></code></th>
@@ -362,15 +187,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Methods in <a href="../package-summary.html">dev.morphia</a> that return <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#createDatastore(com.mongodb.MongoClient,dev.morphia.mapping.Mapper,java.lang.String)">createDatastore</a></span>​(com.mongodb.MongoClient&nbsp;mongoClient,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#createDatastore(com.mongodb.MongoClient,dev.morphia.mapping.Mapper,java.lang.String)">createDatastore</a></span>&#8203;(com.mongodb.MongoClient&nbsp;mongoClient,
                <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                java.lang.String&nbsp;dbName)</code></th>
 <td class="colLast">
@@ -379,7 +204,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#createDatastore(com.mongodb.MongoClient,java.lang.String)">createDatastore</a></span>​(com.mongodb.MongoClient&nbsp;mongoClient,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#createDatastore(com.mongodb.MongoClient,java.lang.String)">createDatastore</a></span>&#8203;(com.mongodb.MongoClient&nbsp;mongoClient,
                java.lang.String&nbsp;dbName)</code></th>
 <td class="colLast">
 <div class="block">It is best to use a Mongo singleton instance here.</div>
@@ -389,15 +214,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Methods in <a href="../package-summary.html">dev.morphia</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#fromDBObject(dev.morphia.Datastore,java.lang.Class,com.mongodb.DBObject)">fromDBObject</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#fromDBObject(dev.morphia.Datastore,java.lang.Class,com.mongodb.DBObject)">fromDBObject</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
             java.lang.Class&lt;T&gt;&nbsp;entityClass,
             com.mongodb.DBObject&nbsp;dbObject)</code></th>
 <td class="colLast">
@@ -406,7 +231,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#fromDBObject(dev.morphia.Datastore,java.lang.Class,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache)">fromDBObject</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Morphia.</span><code><span class="memberNameLink"><a href="../Morphia.html#fromDBObject(dev.morphia.Datastore,java.lang.Class,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache)">fromDBObject</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
             java.lang.Class&lt;T&gt;&nbsp;entityClass,
             com.mongodb.DBObject&nbsp;dbObject,
             <a href="../mapping/cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache)</code></th>
@@ -416,7 +241,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MapreduceResults.</span><code><span class="memberNameLink"><a href="../MapreduceResults.html#setInlineRequiredOptions(dev.morphia.Datastore,java.lang.Class,dev.morphia.mapping.Mapper,dev.morphia.mapping.cache.EntityCache)">setInlineRequiredOptions</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">MapreduceResults.</span><code><span class="memberNameLink"><a href="../MapreduceResults.html#setInlineRequiredOptions(dev.morphia.Datastore,java.lang.Class,dev.morphia.mapping.Mapper,dev.morphia.mapping.cache.EntityCache)">setInlineRequiredOptions</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                         java.lang.Class&lt;<a href="../MapreduceResults.html" title="type parameter in MapreduceResults">T</a>&gt;&nbsp;clazz,
                         <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                         <a href="../mapping/cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache)</code></th>
@@ -429,13 +254,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Constructors in <a href="../package-summary.html">dev.morphia</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DAO.html#%3Cinit%3E(java.lang.Class,dev.morphia.Datastore)">DAO</a></span>​(java.lang.Class&lt;<a href="../DAO.html" title="type parameter in DAO">T</a>&gt;&nbsp;entityClass,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../DAO.html#%3Cinit%3E(java.lang.Class,dev.morphia.Datastore)">DAO</a></span>&#8203;(java.lang.Class&lt;<a href="../DAO.html" title="type parameter in DAO">T</a>&gt;&nbsp;entityClass,
    <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;ds)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -452,12 +277,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../dao/package-summary.html">dev.morphia.dao</a></h3>
 <table class="useSummary">
 <caption><span>Methods in <a href="../dao/package-summary.html">dev.morphia.dao</a> that return <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../dao/BasicDAO.html#getDatastore()">getDatastore</a></span>()</code></th>
@@ -476,19 +301,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Constructors in <a href="../dao/package-summary.html">dev.morphia.dao</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../dao/BasicDAO.html#%3Cinit%3E(dev.morphia.Datastore)">BasicDAO</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;ds)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../dao/BasicDAO.html#%3Cinit%3E(dev.morphia.Datastore)">BasicDAO</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;ds)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../dao/BasicDAO.html#%3Cinit%3E(java.lang.Class,dev.morphia.Datastore)">BasicDAO</a></span>​(java.lang.Class&lt;<a href="../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&nbsp;entityClass,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../dao/BasicDAO.html#%3Cinit%3E(java.lang.Class,dev.morphia.Datastore)">BasicDAO</a></span>&#8203;(java.lang.Class&lt;<a href="../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&nbsp;entityClass,
         <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;ds)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -506,15 +331,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../mapping/package-summary.html">dev.morphia.mapping</a></h3>
 <table class="useSummary">
 <caption><span>Methods in <a href="../mapping/package-summary.html">dev.morphia.mapping</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Mapper.</span><code><span class="memberNameLink"><a href="../mapping/Mapper.html#fromDb(dev.morphia.Datastore,com.mongodb.DBObject,T,dev.morphia.mapping.cache.EntityCache)">fromDb</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Mapper.</span><code><span class="memberNameLink"><a href="../mapping/Mapper.html#fromDb(dev.morphia.Datastore,com.mongodb.DBObject,T,dev.morphia.mapping.cache.EntityCache)">fromDb</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       com.mongodb.DBObject&nbsp;dbObject,
       T&nbsp;entity,
       <a href="../mapping/cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache)</code></th>
@@ -526,7 +351,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CustomMapper.</span><code><span class="memberNameLink"><a href="../mapping/CustomMapper.html#fromDBObject(dev.morphia.Datastore,com.mongodb.DBObject,dev.morphia.mapping.MappedField,java.lang.Object,dev.morphia.mapping.cache.EntityCache,dev.morphia.mapping.Mapper)">fromDBObject</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">CustomMapper.</span><code><span class="memberNameLink"><a href="../mapping/CustomMapper.html#fromDBObject(dev.morphia.Datastore,com.mongodb.DBObject,dev.morphia.mapping.MappedField,java.lang.Object,dev.morphia.mapping.cache.EntityCache,dev.morphia.mapping.Mapper)">fromDBObject</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
             com.mongodb.DBObject&nbsp;dbObject,
             <a href="../mapping/MappedField.html" title="class in dev.morphia.mapping">MappedField</a>&nbsp;mf,
             java.lang.Object&nbsp;entity,
@@ -539,7 +364,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Mapper.</span><code><span class="memberNameLink"><a href="../mapping/Mapper.html#fromDBObject(dev.morphia.Datastore,java.lang.Class,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache)">fromDBObject</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Mapper.</span><code><span class="memberNameLink"><a href="../mapping/Mapper.html#fromDBObject(dev.morphia.Datastore,java.lang.Class,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache)">fromDBObject</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
             java.lang.Class&lt;T&gt;&nbsp;entityClass,
             com.mongodb.DBObject&nbsp;dbObject,
             <a href="../mapping/cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache)</code></th>
@@ -551,7 +376,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Mapper.</span><code><span class="memberNameLink"><a href="../mapping/Mapper.html#updateKeyAndVersionInfo(dev.morphia.Datastore,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache,java.lang.Object)">updateKeyAndVersionInfo</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Mapper.</span><code><span class="memberNameLink"><a href="../mapping/Mapper.html#updateKeyAndVersionInfo(dev.morphia.Datastore,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache,java.lang.Object)">updateKeyAndVersionInfo</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                        com.mongodb.DBObject&nbsp;dbObj,
                        <a href="../mapping/cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache,
                        java.lang.Object&nbsp;entity)</code></th>
@@ -571,15 +396,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../mapping/experimental/package-summary.html">dev.morphia.mapping.experimental</a></h3>
 <table class="useSummary">
 <caption><span>Methods in <a href="../mapping/experimental/package-summary.html">dev.morphia.mapping.experimental</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../mapping/experimental/MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CollectionReference.</span><code><span class="memberNameLink"><a href="../mapping/experimental/CollectionReference.html#decode(dev.morphia.Datastore,dev.morphia.mapping.Mapper,dev.morphia.mapping.MappedField,java.lang.Class,com.mongodb.DBObject)">decode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">CollectionReference.</span><code><span class="memberNameLink"><a href="../mapping/experimental/CollectionReference.html#decode(dev.morphia.Datastore,dev.morphia.mapping.Mapper,dev.morphia.mapping.MappedField,java.lang.Class,com.mongodb.DBObject)">decode</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
       <a href="../mapping/MappedField.html" title="class in dev.morphia.mapping">MappedField</a>&nbsp;mappedField,
       java.lang.Class&nbsp;paramType,
@@ -590,7 +415,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static <a href="../mapping/experimental/MapReference.html" title="class in dev.morphia.mapping.experimental">MapReference</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">MapReference.</span><code><span class="memberNameLink"><a href="../mapping/experimental/MapReference.html#decode(dev.morphia.Datastore,dev.morphia.mapping.Mapper,dev.morphia.mapping.MappedField,com.mongodb.DBObject)">decode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">MapReference.</span><code><span class="memberNameLink"><a href="../mapping/experimental/MapReference.html#decode(dev.morphia.Datastore,dev.morphia.mapping.Mapper,dev.morphia.mapping.MappedField,com.mongodb.DBObject)">decode</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
       <a href="../mapping/MappedField.html" title="class in dev.morphia.mapping">MappedField</a>&nbsp;mappedField,
       com.mongodb.DBObject&nbsp;dbObject)</code></th>
@@ -600,7 +425,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static <a href="../mapping/experimental/MorphiaReference.html" title="class in dev.morphia.mapping.experimental">MorphiaReference</a>&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">SingleReference.</span><code><span class="memberNameLink"><a href="../mapping/experimental/SingleReference.html#decode(dev.morphia.Datastore,dev.morphia.mapping.Mapper,dev.morphia.mapping.MappedField,java.lang.Class,com.mongodb.DBObject)">decode</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">SingleReference.</span><code><span class="memberNameLink"><a href="../mapping/experimental/SingleReference.html#decode(dev.morphia.Datastore,dev.morphia.mapping.Mapper,dev.morphia.mapping.MappedField,java.lang.Class,com.mongodb.DBObject)">decode</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
       <a href="../mapping/MappedField.html" title="class in dev.morphia.mapping">MappedField</a>&nbsp;mappedField,
       java.lang.Class&nbsp;paramType,
@@ -620,12 +445,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../mapping/lazy/package-summary.html">dev.morphia.mapping.lazy</a></h3>
 <table class="useSummary">
 <caption><span>Methods in <a href="../mapping/lazy/package-summary.html">dev.morphia.mapping.lazy</a> that return <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreProvider.</span><code><span class="memberNameLink"><a href="../mapping/lazy/DatastoreProvider.html#get()">get</a></span>()</code></th>
@@ -637,15 +462,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Methods in <a href="../mapping/lazy/package-summary.html">dev.morphia.mapping.lazy</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T extends java.util.Collection&gt;<br>T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CGLibLazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/CGLibLazyProxyFactory.html#createListProxy(dev.morphia.Datastore,T,java.lang.Class,boolean)">createListProxy</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">CGLibLazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/CGLibLazyProxyFactory.html#createListProxy(dev.morphia.Datastore,T,java.lang.Class,boolean)">createListProxy</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                T&nbsp;listToProxy,
                java.lang.Class&nbsp;referenceObjClass,
                boolean&nbsp;ignoreMissing)</code></th>
@@ -653,7 +478,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T extends java.util.Collection&gt;<br>T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/LazyProxyFactory.html#createListProxy(dev.morphia.Datastore,T,java.lang.Class,boolean)">createListProxy</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">LazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/LazyProxyFactory.html#createListProxy(dev.morphia.Datastore,T,java.lang.Class,boolean)">createListProxy</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                T&nbsp;listToProxy,
                java.lang.Class&nbsp;referenceObjClass,
                boolean&nbsp;ignoreMissing)</code></th>
@@ -663,7 +488,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T extends java.util.Map&gt;<br>T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CGLibLazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/CGLibLazyProxyFactory.html#createMapProxy(dev.morphia.Datastore,T,java.lang.Class,boolean)">createMapProxy</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">CGLibLazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/CGLibLazyProxyFactory.html#createMapProxy(dev.morphia.Datastore,T,java.lang.Class,boolean)">createMapProxy</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
               T&nbsp;mapToProxy,
               java.lang.Class&nbsp;referenceObjClass,
               boolean&nbsp;ignoreMissing)</code></th>
@@ -671,7 +496,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T extends java.util.Map&gt;<br>T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/LazyProxyFactory.html#createMapProxy(dev.morphia.Datastore,T,java.lang.Class,boolean)">createMapProxy</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">LazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/LazyProxyFactory.html#createMapProxy(dev.morphia.Datastore,T,java.lang.Class,boolean)">createMapProxy</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
               T&nbsp;mapToProxy,
               java.lang.Class&nbsp;referenceObjClass,
               boolean&nbsp;ignoreMissing)</code></th>
@@ -681,7 +506,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">CGLibLazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/CGLibLazyProxyFactory.html#createProxy(dev.morphia.Datastore,java.lang.Class,dev.morphia.Key,boolean)">createProxy</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">CGLibLazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/CGLibLazyProxyFactory.html#createProxy(dev.morphia.Datastore,java.lang.Class,dev.morphia.Key,boolean)">createProxy</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            java.lang.Class&lt;T&gt;&nbsp;targetClass,
            <a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
            boolean&nbsp;ignoreMissing)</code></th>
@@ -689,7 +514,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">LazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/LazyProxyFactory.html#createProxy(dev.morphia.Datastore,java.lang.Class,dev.morphia.Key,boolean)">createProxy</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">LazyProxyFactory.</span><code><span class="memberNameLink"><a href="../mapping/lazy/LazyProxyFactory.html#createProxy(dev.morphia.Datastore,java.lang.Class,dev.morphia.Key,boolean)">createProxy</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            java.lang.Class&lt;T&gt;&nbsp;targetClass,
            <a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
            boolean&nbsp;ignoreMissing)</code></th>
@@ -699,7 +524,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreProvider.</span><code><span class="memberNameLink"><a href="../mapping/lazy/DatastoreProvider.html#register(dev.morphia.Datastore)">register</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;ds)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreProvider.</span><code><span class="memberNameLink"><a href="../mapping/lazy/DatastoreProvider.html#register(dev.morphia.Datastore)">register</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;ds)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Registers a Datastore with this provider</div>
@@ -716,12 +541,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../mapping/lazy/proxy/package-summary.html">dev.morphia.mapping.lazy.proxy</a></h3>
 <table class="useSummary">
 <caption><span>Methods in <a href="../mapping/lazy/proxy/package-summary.html">dev.morphia.mapping.lazy.proxy</a> that return <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">AbstractReference.</span><code><span class="memberNameLink"><a href="../mapping/lazy/proxy/AbstractReference.html#getDatastore()">getDatastore</a></span>()</code></th>
@@ -731,19 +556,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Constructors in <a href="../mapping/lazy/proxy/package-summary.html">dev.morphia.mapping.lazy.proxy</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../mapping/lazy/proxy/AbstractReference.html#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class,boolean)">AbstractReference</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../mapping/lazy/proxy/AbstractReference.html#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class,boolean)">AbstractReference</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                  java.lang.Class&nbsp;referenceObjClass,
                  boolean&nbsp;ignoreMissing)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../mapping/lazy/proxy/CollectionObjectReference.html#%3Cinit%3E(java.util.Collection,java.lang.Class,boolean,dev.morphia.Datastore)">CollectionObjectReference</a></span>​(java.util.Collection&lt;<a href="../mapping/lazy/proxy/CollectionObjectReference.html" title="type parameter in CollectionObjectReference">T</a>&gt;&nbsp;type,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../mapping/lazy/proxy/CollectionObjectReference.html#%3Cinit%3E(java.util.Collection,java.lang.Class,boolean,dev.morphia.Datastore)">CollectionObjectReference</a></span>&#8203;(java.util.Collection&lt;<a href="../mapping/lazy/proxy/CollectionObjectReference.html" title="type parameter in CollectionObjectReference">T</a>&gt;&nbsp;type,
                          java.lang.Class&lt;<a href="../mapping/lazy/proxy/CollectionObjectReference.html" title="type parameter in CollectionObjectReference">T</a>&gt;&nbsp;referenceObjClass,
                          boolean&nbsp;ignoreMissing,
                          <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
@@ -752,7 +577,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../mapping/lazy/proxy/EntityObjectReference.html#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class,dev.morphia.Key,boolean)">EntityObjectReference</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../mapping/lazy/proxy/EntityObjectReference.html#%3Cinit%3E(dev.morphia.Datastore,java.lang.Class,dev.morphia.Key,boolean)">EntityObjectReference</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                      java.lang.Class&nbsp;targetClass,
                      <a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key,
                      boolean&nbsp;ignoreMissing)</code></th>
@@ -761,7 +586,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../mapping/lazy/proxy/MapObjectReference.html#%3Cinit%3E(dev.morphia.Datastore,java.util.Map,java.lang.Class,boolean)">MapObjectReference</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../mapping/lazy/proxy/MapObjectReference.html#%3Cinit%3E(dev.morphia.Datastore,java.util.Map,java.lang.Class,boolean)">MapObjectReference</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                   java.util.Map&nbsp;mapToProxy,
                   java.lang.Class&nbsp;referenceObjClass,
                   boolean&nbsp;ignoreMissing)</code></th>
@@ -780,27 +605,27 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../query/package-summary.html">dev.morphia.query</a></h3>
 <table class="useSummary">
 <caption><span>Methods in <a href="../query/package-summary.html">dev.morphia.query</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">AbstractQueryFactory.</span><code><span class="memberNameLink"><a href="../query/AbstractQueryFactory.html#createQuery(dev.morphia.Datastore)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">AbstractQueryFactory.</span><code><span class="memberNameLink"><a href="../query/AbstractQueryFactory.html#createQuery(dev.morphia.Datastore)">createQuery</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">AbstractQueryFactory.</span><code><span class="memberNameLink"><a href="../query/AbstractQueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">AbstractQueryFactory.</span><code><span class="memberNameLink"><a href="../query/AbstractQueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class)">createQuery</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            com.mongodb.DBCollection&nbsp;collection,
            java.lang.Class&lt;T&gt;&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DefaultQueryFactory.</span><code><span class="memberNameLink"><a href="../query/DefaultQueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DefaultQueryFactory.</span><code><span class="memberNameLink"><a href="../query/DefaultQueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            com.mongodb.DBCollection&nbsp;collection,
            java.lang.Class&lt;T&gt;&nbsp;type,
            com.mongodb.DBObject&nbsp;query)</code></th>
@@ -808,14 +633,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../query/QueryFactory.html#createQuery(dev.morphia.Datastore)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../query/QueryFactory.html#createQuery(dev.morphia.Datastore)">createQuery</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore)</code></th>
 <td class="colLast">
 <div class="block">Creates an unvalidated <a href="../query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> typically for use in aggregation pipelines.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../query/QueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../query/QueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class)">createQuery</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            com.mongodb.DBCollection&nbsp;collection,
            java.lang.Class&lt;T&gt;&nbsp;type)</code></th>
 <td class="colLast">
@@ -824,7 +649,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../query/QueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><span class="typeNameLabel">QueryFactory.</span><code><span class="memberNameLink"><a href="../query/QueryFactory.html#createQuery(dev.morphia.Datastore,com.mongodb.DBCollection,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
            com.mongodb.DBCollection&nbsp;collection,
            java.lang.Class&lt;T&gt;&nbsp;type,
            com.mongodb.DBObject&nbsp;query)</code></th>
@@ -836,13 +661,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Constructors in <a href="../query/package-summary.html">dev.morphia.query</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/MorphiaIterator.html#%3Cinit%3E(dev.morphia.Datastore,java.util.Iterator,dev.morphia.mapping.Mapper,java.lang.Class,java.lang.String,dev.morphia.mapping.cache.EntityCache)">MorphiaIterator</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/MorphiaIterator.html#%3Cinit%3E(dev.morphia.Datastore,java.util.Iterator,dev.morphia.mapping.Mapper,java.lang.Class,java.lang.String,dev.morphia.mapping.cache.EntityCache)">MorphiaIterator</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                java.util.Iterator&lt;com.mongodb.DBObject&gt;&nbsp;it,
                <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                java.lang.Class&lt;<a href="../query/MorphiaIterator.html" title="type parameter in MorphiaIterator">T</a>&gt;&nbsp;clazz,
@@ -854,7 +679,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/MorphiaKeyIterator.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.DBCursor,dev.morphia.mapping.Mapper,java.lang.Class,java.lang.String)">MorphiaKeyIterator</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/MorphiaKeyIterator.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.DBCursor,dev.morphia.mapping.Mapper,java.lang.Class,java.lang.String)">MorphiaKeyIterator</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                   com.mongodb.DBCursor&nbsp;cursor,
                   <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                   java.lang.Class&lt;<a href="../query/MorphiaKeyIterator.html" title="type parameter in MorphiaKeyIterator">T</a>&gt;&nbsp;clazz,
@@ -865,7 +690,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/QueryImpl.html#%3Cinit%3E(java.lang.Class,com.mongodb.DBCollection,dev.morphia.Datastore)">QueryImpl</a></span>​(java.lang.Class&lt;<a href="../query/QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/QueryImpl.html#%3Cinit%3E(java.lang.Class,com.mongodb.DBCollection,dev.morphia.Datastore)">QueryImpl</a></span>&#8203;(java.lang.Class&lt;<a href="../query/QueryImpl.html" title="type parameter in QueryImpl">T</a>&gt;&nbsp;clazz,
          com.mongodb.DBCollection&nbsp;coll,
          <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;ds)</code></th>
 <td class="colLast">
@@ -883,13 +708,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a> in <a href="../query/internal/package-summary.html">dev.morphia.query.internal</a></h3>
 <table class="useSummary">
 <caption><span>Constructors in <a href="../query/internal/package-summary.html">dev.morphia.query.internal</a> with parameters of type <a href="../Datastore.html" title="interface in dev.morphia">Datastore</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/internal/MorphiaCursor.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.Cursor,dev.morphia.mapping.Mapper,java.lang.Class,dev.morphia.mapping.cache.EntityCache)">MorphiaCursor</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/internal/MorphiaCursor.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.Cursor,dev.morphia.mapping.Mapper,java.lang.Class,dev.morphia.mapping.cache.EntityCache)">MorphiaCursor</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
              com.mongodb.Cursor&nbsp;cursor,
              <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
              java.lang.Class&lt;<a href="../query/internal/MorphiaCursor.html" title="type parameter in MorphiaCursor">T</a>&gt;&nbsp;clazz,
@@ -899,7 +724,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/internal/MorphiaKeyCursor.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.Cursor,dev.morphia.mapping.Mapper,java.lang.Class,java.lang.String)">MorphiaKeyCursor</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../query/internal/MorphiaKeyCursor.html#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.Cursor,dev.morphia.mapping.Mapper,java.lang.Class,java.lang.String)">MorphiaKeyCursor</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                 com.mongodb.Cursor&nbsp;cursor,
                 <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                 java.lang.Class&lt;<a href="../query/internal/MorphiaKeyCursor.html" title="type parameter in MorphiaKeyCursor">T</a>&gt;&nbsp;clazz,
@@ -962,20 +787,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

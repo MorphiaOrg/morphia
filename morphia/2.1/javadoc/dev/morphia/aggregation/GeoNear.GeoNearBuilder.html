@@ -1,216 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.1">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../textSearch.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.1</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../../index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.1</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../2.3/javadoc/dev/morphia/aggregation/GeoNear.GeoNearBuilder.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/aggregation/GeoNear.GeoNearBuilder.html">2.2</a>
-    <a class="version is-current" href="GeoNear.GeoNearBuilder.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/aggregation/GeoNear.GeoNearBuilder.html">2.0</a>
-    <a class="version" href="../../../../../1.6/javadoc/dev/morphia/aggregation/GeoNear.GeoNearBuilder.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.10) on Sun Jun 13 22:40:19 EDT 2021 -->
+<title>GeoNear.GeoNearBuilder (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2021-06-13">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -350,17 +157,17 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String)">GeoNearBuilder</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;distanceField)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String)">GeoNearBuilder</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;distanceField)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -373,7 +180,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
@@ -387,7 +194,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDistanceMultiplier(java.lang.Double)">setDistanceMultiplier</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;distanceMultiplier)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDistanceMultiplier(java.lang.Double)">setDistanceMultiplier</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;distanceMultiplier)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">The factor to multiply all distances returned by the query.</div>
@@ -395,7 +202,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setIncludeLocations(java.lang.String)">setIncludeLocations</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;includeLocations)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setIncludeLocations(java.lang.String)">setIncludeLocations</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;includeLocations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">This specifies the output field that identifies the location used to calculate the distance.</div>
@@ -403,7 +210,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setLimit(java.lang.Long)">setLimit</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>&nbsp;limit)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setLimit(java.lang.Long)">setLimit</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>&nbsp;limit)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">The maximum number of documents to return.</div>
@@ -411,7 +218,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setMaxDistance(java.lang.Double)">setMaxDistance</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setMaxDistance(java.lang.Double)">setMaxDistance</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">A distance from the center point.</div>
@@ -419,7 +226,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setMaxDocuments(java.lang.Long)">setMaxDocuments</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>&nbsp;num)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setMaxDocuments(java.lang.Long)">setMaxDocuments</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>&nbsp;num)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">The maxDocuments option provides the same function as the limit option.</div>
@@ -427,7 +234,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setNear(double,double)">setNear</a></span>​(double&nbsp;latitude,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setNear(double,double)">setNear</a></span>&#8203;(double&nbsp;latitude,
        double&nbsp;longitude)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -436,7 +243,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setNear(com.mongodb.client.model.geojson.Point)">setNear</a></span>​(com.mongodb.client.model.geojson.Point&nbsp;point)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setNear(com.mongodb.client.model.geojson.Point)">setNear</a></span>&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Sets the point for which to find the closest documents.</div>
@@ -444,7 +251,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setNear(dev.morphia.geo.Point)">setNear</a></span>​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setNear(dev.morphia.geo.Point)">setNear</a></span>&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use the driver-provided types instead</div>
@@ -453,7 +260,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setQuery(dev.morphia.query.Query)">setQuery</a></span>​(<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setQuery(dev.morphia.query.Query)">setQuery</a></span>&#8203;(<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Limits the results to the documents that match the query.</div>
@@ -461,13 +268,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setSpherical(java.lang.Boolean)">setSpherical</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;spherical)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setSpherical(java.lang.Boolean)">setSpherical</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;spherical)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">If true, MongoDB references points using a spherical surface.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -491,13 +298,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(java.lang.String)">
+<a id="&lt;init&gt;(java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>GeoNearBuilder</h4>
-<pre>public&nbsp;GeoNearBuilder​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;distanceField)</pre>
+<pre>public&nbsp;GeoNearBuilder&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;distanceField)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -538,7 +345,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>setDistanceMultiplier</h4>
-<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setDistanceMultiplier​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;distanceMultiplier)</pre>
+<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setDistanceMultiplier&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;distanceMultiplier)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">The factor to multiply all distances returned by the query. For example, use the distanceMultiplier to convert radians, as
  returned by a spherical query, to kilometers by multiplying by the radius of the Earth.</div>
@@ -556,7 +363,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>setIncludeLocations</h4>
-<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setIncludeLocations​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;includeLocations)</pre>
+<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setIncludeLocations&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;includeLocations)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">This specifies the output field that identifies the location used to calculate the distance. This option is useful when a
  location field contains multiple locations. To specify a field within a subdocument, use dot notation.</div>
@@ -576,7 +383,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>setLimit</h4>
-<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setLimit​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>&nbsp;limit)</pre>
+<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setLimit&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>&nbsp;limit)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">The maximum number of documents to return. The default value is 100.</div>
 <dl>
@@ -593,7 +400,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>setMaxDistance</h4>
-<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setMaxDistance​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance)</pre>
+<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setMaxDistance&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">A distance from the center point. Specify the distance in radians. MongoDB limits the results to those documents that fall
  within
@@ -612,7 +419,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>setMaxDocuments</h4>
-<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setMaxDocuments​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>&nbsp;num)</pre>
+<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setMaxDocuments&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Long.html?is-external=true" title="class or interface in java.lang" class="externalLink">Long</a>&nbsp;num)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">The maxDocuments option provides the same function as the limit option. Both define the maximum number of documents to return.
  If
@@ -631,7 +438,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>setNear</h4>
-<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setNear​(double&nbsp;latitude,
+<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setNear&#8203;(double&nbsp;latitude,
                                       double&nbsp;longitude)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Sets the point for which to find the closest documents.</div>
@@ -652,7 +459,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h4>setNear</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setNear​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</pre>
+public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setNear&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use the driver-provided types instead</div>
 </div>
@@ -671,7 +478,7 @@ public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>setNear</h4>
-<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setNear​(com.mongodb.client.model.geojson.Point&nbsp;point)</pre>
+<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setNear&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Sets the point for which to find the closest documents.</div>
 <dl>
@@ -688,7 +495,7 @@ public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>setQuery</h4>
-<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setQuery​(<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</pre>
+<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setQuery&#8203;(<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Limits the results to the documents that match the query. The query syntax is the usual MongoDB read operation query syntax.</div>
 <dl>
@@ -696,8 +503,8 @@ public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.ag
 <dd><code>query</code> - the query used to limit the documents to consider</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/tutorial/query-documents/">read operation query syntax</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/tutorial/query-documents/'>read operation query syntax</a></dd></dl>
+</li>
 </ul>
 <a id="setSpherical(java.lang.Boolean)">
 <!--   -->
@@ -705,7 +512,7 @@ public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.ag
 <ul class="blockListLast">
 <li class="blockList">
 <h4>setSpherical</h4>
-<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setSpherical​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;spherical)</pre>
+<pre class="methodSignature">public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.aggregation">GeoNear.GeoNearBuilder</a>&nbsp;setSpherical&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang" class="externalLink">Boolean</a>&nbsp;spherical)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">If true, MongoDB references points using a spherical surface. The default value is false.</div>
 <dl>
@@ -785,20 +592,7 @@ public&nbsp;<a href="GeoNear.GeoNearBuilder.html" title="class in dev.morphia.ag
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2021. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2021. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

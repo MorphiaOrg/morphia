@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../2.3/javadoc/dev/morphia/AdvancedDatastore.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../2.2/javadoc/dev/morphia/AdvancedDatastore.html">2.2</a>
-    <a class="version" href="../../../../2.1/javadoc/dev/morphia/AdvancedDatastore.html">2.1</a>
-    <a class="version" href="../../../../2.0/javadoc/dev/morphia/AdvancedDatastore.html">2.0</a>
-    <a class="version is-current" href="AdvancedDatastore.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>AdvancedDatastore (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../script.js"></script>
+<script type="text/javascript" src="../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -331,14 +156,14 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createAggregation(java.lang.String,java.lang.Class)">createAggregation</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createAggregation(java.lang.String,java.lang.Class)">createAggregation</a></span>&#8203;(java.lang.String&nbsp;collection,
                  java.lang.Class&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block">Returns an <a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation"><code>AggregationPipeline</code></a> bound to the given collection and class.</div>
@@ -346,13 +171,13 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createQuery(java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createQuery(java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
            com.mongodb.DBObject&nbsp;q)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createQuery(java.lang.String,java.lang.Class)">createQuery</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createQuery(java.lang.String,java.lang.Class)">createQuery</a></span>&#8203;(java.lang.String&nbsp;collection,
            java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -362,7 +187,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createQuery(java.lang.String,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createQuery(java.lang.String,java.lang.Class,com.mongodb.DBObject)">createQuery</a></span>&#8203;(java.lang.String&nbsp;collection,
            java.lang.Class&lt;T&gt;&nbsp;clazz,
            com.mongodb.DBObject&nbsp;q)</code></th>
 <td class="colLast">
@@ -372,8 +197,8 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>com.mongodb.DBRef</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createRef(java.lang.Class,V)">createRef</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>com.mongodb.DBRef</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createRef(java.lang.Class,V)">createRef</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
          V&nbsp;id)</code></th>
 <td class="colLast">
 <div class="block">Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)</div>
@@ -381,22 +206,22 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;com.mongodb.DBRef</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createRef(T)">createRef</a></span>​(T&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createRef(T)">createRef</a></span>&#8203;(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">createUpdateOperations</a></span>​(java.lang.Class&lt;T&gt;&nbsp;type,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">createUpdateOperations</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;type,
                       com.mongodb.DBObject&nbsp;ops)</code></th>
 <td class="colLast">
 <div class="block">Creates an UpdateOperations instance for the given type.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.String,java.lang.Class,V)">delete</a></span>​(java.lang.String&nbsp;kind,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.String,java.lang.Class,V)">delete</a></span>&#8203;(java.lang.String&nbsp;kind,
       java.lang.Class&lt;T&gt;&nbsp;clazz,
       V&nbsp;id)</code></th>
 <td class="colLast">
@@ -406,8 +231,8 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.String,java.lang.Class,V,com.mongodb.WriteConcern)">delete</a></span>​(java.lang.String&nbsp;kind,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.String,java.lang.Class,V,com.mongodb.WriteConcern)">delete</a></span>&#8203;(java.lang.String&nbsp;kind,
       java.lang.Class&lt;T&gt;&nbsp;clazz,
       V&nbsp;id,
       com.mongodb.WriteConcern&nbsp;wc)</code></th>
@@ -418,8 +243,8 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.String,java.lang.Class,V,dev.morphia.DeleteOptions)">delete</a></span>​(java.lang.String&nbsp;kind,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.String,java.lang.Class,V,dev.morphia.DeleteOptions)">delete</a></span>&#8203;(java.lang.String&nbsp;kind,
       java.lang.Class&lt;T&gt;&nbsp;clazz,
       V&nbsp;id,
       <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</code></th>
@@ -431,7 +256,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndex(java.lang.String,java.lang.Class,java.lang.String)">ensureIndex</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndex(java.lang.String,java.lang.Class,java.lang.String)">ensureIndex</a></span>&#8203;(java.lang.String&nbsp;collection,
            java.lang.Class&lt;T&gt;&nbsp;clazz,
            java.lang.String&nbsp;fields)</code></th>
 <td class="colLast">
@@ -442,7 +267,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndex(java.lang.String,java.lang.Class,java.lang.String,java.lang.String,boolean,boolean)">ensureIndex</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndex(java.lang.String,java.lang.Class,java.lang.String,java.lang.String,boolean,boolean)">ensureIndex</a></span>&#8203;(java.lang.String&nbsp;collection,
            java.lang.Class&lt;T&gt;&nbsp;clazz,
            java.lang.String&nbsp;name,
            java.lang.String&nbsp;fields,
@@ -456,7 +281,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.String,java.lang.Class)">ensureIndexes</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.String,java.lang.Class)">ensureIndexes</a></span>&#8203;(java.lang.String&nbsp;collection,
              java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -466,7 +291,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.String,java.lang.Class,boolean)">ensureIndexes</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.String,java.lang.Class,boolean)">ensureIndexes</a></span>&#8203;(java.lang.String&nbsp;collection,
              java.lang.Class&lt;T&gt;&nbsp;clazz,
              boolean&nbsp;background)</code></th>
 <td class="colLast">
@@ -477,7 +302,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="Key.html" title="class in dev.morphia">Key</a>&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#exists(java.lang.Object,com.mongodb.ReadPreference)">exists</a></span>​(java.lang.Object&nbsp;keyOrEntity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#exists(java.lang.Object,com.mongodb.ReadPreference)">exists</a></span>&#8203;(java.lang.Object&nbsp;keyOrEntity,
       com.mongodb.ReadPreference&nbsp;readPreference)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -487,7 +312,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.String,java.lang.Class)">find</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.String,java.lang.Class)">find</a></span>&#8203;(java.lang.String&nbsp;collection,
     java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -496,8 +321,8 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </td>
 </tr>
 <tr id="i16" class="altColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br><a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.String,java.lang.Class,java.lang.String,V,int,int)">find</a></span>​(java.lang.String&nbsp;collection,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br><a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.String,java.lang.Class,java.lang.String,V,int,int)">find</a></span>&#8203;(java.lang.String&nbsp;collection,
     java.lang.Class&lt;T&gt;&nbsp;clazz,
     java.lang.String&nbsp;property,
     V&nbsp;value,
@@ -511,7 +336,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.Class,com.mongodb.DBRef)">get</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.Class,com.mongodb.DBRef)">get</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
    com.mongodb.DBRef&nbsp;ref)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -520,8 +345,8 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </td>
 </tr>
 <tr id="i18" class="altColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.String,java.lang.Class,V)">get</a></span>​(java.lang.String&nbsp;collection,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>T</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.String,java.lang.Class,V)">get</a></span>&#8203;(java.lang.String&nbsp;collection,
    java.lang.Class&lt;T&gt;&nbsp;clazz,
    V&nbsp;id)</code></th>
 <td class="colLast">
@@ -532,7 +357,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(java.lang.String)">getCount</a></span>​(java.lang.String&nbsp;collection)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(java.lang.String)">getCount</a></span>&#8203;(java.lang.String&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html#count()"><code>Query.count()</code></a> instead</div>
@@ -550,7 +375,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.Iterable)">insert</a></span>​(java.lang.Iterable&lt;T&gt;&nbsp;entities)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.Iterable)">insert</a></span>&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#insert(java.util.List)"><code>insert(List)</code></a></div>
@@ -559,7 +384,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.Iterable,com.mongodb.WriteConcern)">insert</a></span>​(java.lang.Iterable&lt;T&gt;&nbsp;entities,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.Iterable,com.mongodb.WriteConcern)">insert</a></span>&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities,
       com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -569,7 +394,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.Iterable,dev.morphia.InsertOptions)">insert</a></span>​(java.lang.Iterable&lt;T&gt;&nbsp;entities,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.Iterable,dev.morphia.InsertOptions)">insert</a></span>&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities,
       <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -579,7 +404,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,java.lang.Iterable)">insert</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,java.lang.Iterable)">insert</a></span>&#8203;(java.lang.String&nbsp;collection,
       java.lang.Iterable&lt;T&gt;&nbsp;entities)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -589,7 +414,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,java.lang.Iterable,com.mongodb.WriteConcern)">insert</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,java.lang.Iterable,com.mongodb.WriteConcern)">insert</a></span>&#8203;(java.lang.String&nbsp;collection,
       java.lang.Iterable&lt;T&gt;&nbsp;entities,
       com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
@@ -600,7 +425,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,java.lang.Iterable,dev.morphia.InsertOptions)">insert</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,java.lang.Iterable,dev.morphia.InsertOptions)">insert</a></span>&#8203;(java.lang.String&nbsp;collection,
       java.lang.Iterable&lt;T&gt;&nbsp;entities,
       <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -611,7 +436,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,T)">insert</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,T)">insert</a></span>&#8203;(java.lang.String&nbsp;collection,
       T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -621,7 +446,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,T,dev.morphia.InsertOptions)">insert</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.lang.String,T,dev.morphia.InsertOptions)">insert</a></span>&#8203;(java.lang.String&nbsp;collection,
       T&nbsp;entity,
       <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -632,14 +457,14 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.util.List)">insert</a></span>​(java.util.List&lt;T&gt;&nbsp;entities)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.util.List)">insert</a></span>&#8203;(java.util.List&lt;T&gt;&nbsp;entities)</code></th>
 <td class="colLast">
 <div class="block">Inserts entities in to the mapped collection.</div>
 </td>
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.util.List,dev.morphia.InsertOptions)">insert</a></span>​(java.util.List&lt;T&gt;&nbsp;entities,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(java.util.List,dev.morphia.InsertOptions)">insert</a></span>&#8203;(java.util.List&lt;T&gt;&nbsp;entities,
       <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Inserts entities in to the mapped collection.</div>
@@ -647,14 +472,14 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T)">insert</a></span>​(T&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T)">insert</a></span>&#8203;(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Inserts an entity in to the mapped collection.</div>
 </td>
 </tr>
 <tr id="i32" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T...)">insert</a></span>​(T...&nbsp;entities)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T...)">insert</a></span>&#8203;(T...&nbsp;entities)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#insert(java.lang.Iterable)"><code>insert(Iterable)</code></a> instead</div>
@@ -663,7 +488,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i33" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T,com.mongodb.WriteConcern)">insert</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T,com.mongodb.WriteConcern)">insert</a></span>&#8203;(T&nbsp;entity,
       com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -673,7 +498,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i34" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T,dev.morphia.InsertOptions)">insert</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insert(T,dev.morphia.InsertOptions)">insert</a></span>&#8203;(T&nbsp;entity,
       <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Inserts an entity in to the mapped collection.</div>
@@ -681,7 +506,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i35" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(java.lang.String,T)">queryByExample</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(java.lang.String,T)">queryByExample</a></span>&#8203;(java.lang.String&nbsp;collection,
               T&nbsp;example)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query based on the example object</div>
@@ -689,7 +514,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.String,T)">save</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.String,T)">save</a></span>&#8203;(java.lang.String&nbsp;collection,
     T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -699,7 +524,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.String,T,com.mongodb.WriteConcern)">save</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.String,T,com.mongodb.WriteConcern)">save</a></span>&#8203;(java.lang.String&nbsp;collection,
     T&nbsp;entity,
     com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
@@ -710,7 +535,7 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i38" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.String,T,dev.morphia.InsertOptions)">save</a></span>​(java.lang.String&nbsp;collection,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.String,T,dev.morphia.InsertOptions)">save</a></span>&#8203;(java.lang.String&nbsp;collection,
     T&nbsp;entity,
     <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -721,14 +546,14 @@ extends <a href="Datastore.html" title="interface in dev.morphia">Datastore</a><
 </tr>
 <tr id="i39" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDecoderFact(com.mongodb.DBDecoderFactory)">setDecoderFact</a></span>​(com.mongodb.DBDecoderFactory&nbsp;fact)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDecoderFact(com.mongodb.DBDecoderFactory)">setDecoderFact</a></span>&#8203;(com.mongodb.DBDecoderFactory&nbsp;fact)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">unused in 2.0 and will be removed</div>
 </div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.dev.morphia.Datastore">
 <!--   -->
@@ -779,7 +604,7 @@ com.mongodb.DBDecoderFactory&nbsp;getDecoderFact()</pre>
 <li class="blockList">
 <h4>setDecoderFact</h4>
 <pre class="methodSignature">@Deprecated
-void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
+void&nbsp;setDecoderFact&#8203;(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">unused in 2.0 and will be removed</div>
 </div>
@@ -796,7 +621,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>createAggregation</h4>
-<pre class="methodSignature"><a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;createAggregation​(java.lang.String&nbsp;collection,
+<pre class="methodSignature"><a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;createAggregation&#8203;(java.lang.String&nbsp;collection,
                                       java.lang.Class&lt;?&gt;&nbsp;clazz)</pre>
 <div class="block">Returns an <a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation"><code>AggregationPipeline</code></a> bound to the given collection and class.</div>
 <dl>
@@ -815,7 +640,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>createQuery</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery&#8203;(java.lang.String&nbsp;collection,
                          java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">this feature is being removed.  no replacement is planned.  see issue #1331</div>
@@ -837,7 +662,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>createQuery</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                          com.mongodb.DBObject&nbsp;q)</pre>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -857,7 +682,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>createQuery</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery&#8203;(java.lang.String&nbsp;collection,
                          java.lang.Class&lt;T&gt;&nbsp;clazz,
                          com.mongodb.DBObject&nbsp;q)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -883,7 +708,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>createRef</h4>
-<pre class="methodSignature">&lt;T,​V&gt;&nbsp;com.mongodb.DBRef&nbsp;createRef​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<pre class="methodSignature">&lt;T,&#8203;V&gt;&nbsp;com.mongodb.DBRef&nbsp;createRef&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                                         V&nbsp;id)</pre>
 <div class="block">Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)</div>
 <dl>
@@ -906,7 +731,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>createRef</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.DBRef&nbsp;createRef​(T&nbsp;entity)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.DBRef&nbsp;createRef&#8203;(T&nbsp;entity)</pre>
 <div class="block">Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -924,7 +749,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>createUpdateOperations</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;createUpdateOperations​(java.lang.Class&lt;T&gt;&nbsp;type,
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;createUpdateOperations&#8203;(java.lang.Class&lt;T&gt;&nbsp;type,
                                                com.mongodb.DBObject&nbsp;ops)</pre>
 <div class="block">Creates an UpdateOperations instance for the given type.</div>
 <dl>
@@ -947,7 +772,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(java.lang.String&nbsp;kind,
+&lt;T,&#8203;V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(java.lang.String&nbsp;kind,
                                            java.lang.Class&lt;T&gt;&nbsp;clazz,
                                            V&nbsp;id)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -980,7 +805,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(java.lang.String&nbsp;kind,
+&lt;T,&#8203;V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(java.lang.String&nbsp;kind,
                                            java.lang.Class&lt;T&gt;&nbsp;clazz,
                                            V&nbsp;id,
                                            <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</pre>
@@ -1017,7 +842,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(java.lang.String&nbsp;kind,
+&lt;T,&#8203;V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(java.lang.String&nbsp;kind,
                                            java.lang.Class&lt;T&gt;&nbsp;clazz,
                                            V&nbsp;id,
                                            com.mongodb.WriteConcern&nbsp;wc)</pre>
@@ -1050,7 +875,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>ensureIndex</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;void&nbsp;ensureIndex​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;void&nbsp;ensureIndex&#8203;(java.lang.String&nbsp;collection,
                      java.lang.Class&lt;T&gt;&nbsp;clazz,
                      java.lang.String&nbsp;fields)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1079,7 +904,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>ensureIndex</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;void&nbsp;ensureIndex​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;void&nbsp;ensureIndex&#8203;(java.lang.String&nbsp;collection,
                      java.lang.Class&lt;T&gt;&nbsp;clazz,
                      java.lang.String&nbsp;name,
                      java.lang.String&nbsp;fields,
@@ -1115,7 +940,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>ensureIndexes</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;void&nbsp;ensureIndexes​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;void&nbsp;ensureIndexes&#8203;(java.lang.String&nbsp;collection,
                        java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">this feature is being removed.  no replacement is planned.  see issue #1331</div>
@@ -1138,7 +963,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>ensureIndexes</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;void&nbsp;ensureIndexes​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;void&nbsp;ensureIndexes&#8203;(java.lang.String&nbsp;collection,
                        java.lang.Class&lt;T&gt;&nbsp;clazz,
                        boolean&nbsp;background)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1163,7 +988,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>exists</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Key.html" title="class in dev.morphia">Key</a>&lt;?&gt;&nbsp;exists​(java.lang.Object&nbsp;keyOrEntity,
+<a href="Key.html" title="class in dev.morphia">Key</a>&lt;?&gt;&nbsp;exists&#8203;(java.lang.Object&nbsp;keyOrEntity,
               com.mongodb.ReadPreference&nbsp;readPreference)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <code>MongoIterable.first()</code> instead</div>
@@ -1188,7 +1013,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>find</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find&#8203;(java.lang.String&nbsp;collection,
                   java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">this feature is being removed.  no replacement is planned.  see issue #1331</div>
@@ -1214,7 +1039,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>find</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(java.lang.String&nbsp;collection,
+&lt;T,&#8203;V&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find&#8203;(java.lang.String&nbsp;collection,
                           java.lang.Class&lt;T&gt;&nbsp;clazz,
                           java.lang.String&nbsp;property,
                           V&nbsp;value,
@@ -1248,7 +1073,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>get</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;T&nbsp;get​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T&gt;&nbsp;T&nbsp;get&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
           com.mongodb.DBRef&nbsp;ref)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="Datastore.html#find(java.lang.Class)"><code>Datastore.find(Class)</code></a> instead</div>
@@ -1274,7 +1099,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>get</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;T&nbsp;get​(java.lang.String&nbsp;collection,
+&lt;T,&#8203;V&gt;&nbsp;T&nbsp;get&#8203;(java.lang.String&nbsp;collection,
                   java.lang.Class&lt;T&gt;&nbsp;clazz,
                   V&nbsp;id)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1301,7 +1126,7 @@ void&nbsp;setDecoderFact​(com.mongodb.DBDecoderFactory&nbsp;fact)</pre>
 <li class="blockList">
 <h4>getCount</h4>
 <pre class="methodSignature">@Deprecated
-long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
+long&nbsp;getCount&#8203;(java.lang.String&nbsp;collection)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html#count()"><code>Query.count()</code></a> instead</div>
 </div>
@@ -1322,7 +1147,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>insert</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert​(T&nbsp;entity)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert&#8203;(T&nbsp;entity)</pre>
 <div class="block">Inserts an entity in to the mapped collection.
 
  <i>The return type will change in 2.0</i></div>
@@ -1345,7 +1170,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert​(T&nbsp;entity,
+&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert&#8203;(T&nbsp;entity,
                   com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#insert(T,dev.morphia.InsertOptions)"><code>insert(Object, InsertOptions)</code></a></div>
@@ -1372,7 +1197,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>insert</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert​(T&nbsp;entity,
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert&#8203;(T&nbsp;entity,
                   <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</pre>
 <div class="block">Inserts an entity in to the mapped collection.
 
@@ -1399,7 +1224,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert&#8203;(java.lang.String&nbsp;collection,
                   T&nbsp;entity)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">this feature is being removed.  no replacement is planned.  see issue #1331</div>
@@ -1425,7 +1250,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;insert&#8203;(java.lang.String&nbsp;collection,
                   T&nbsp;entity,
                   <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1455,7 +1280,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert​(T...&nbsp;entities)</pre>
+&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert&#8203;(T...&nbsp;entities)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#insert(java.lang.Iterable)"><code>insert(Iterable)</code></a> instead</div>
 </div>
@@ -1477,7 +1302,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert​(java.lang.Iterable&lt;T&gt;&nbsp;entities)</pre>
+&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#insert(java.util.List)"><code>insert(List)</code></a></div>
 </div>
@@ -1500,7 +1325,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>insert</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert​(java.util.List&lt;T&gt;&nbsp;entities)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert&#8203;(java.util.List&lt;T&gt;&nbsp;entities)</pre>
 <div class="block">Inserts entities in to the mapped collection.
 
  <i>The return type will change in 2.0</i></div>
@@ -1523,7 +1348,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert​(java.lang.Iterable&lt;T&gt;&nbsp;entities,
+&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities,
                                       com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#insert(java.util.List,dev.morphia.InsertOptions)"><code>insert(List, InsertOptions)</code></a></div>
@@ -1547,7 +1372,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert​(java.lang.Iterable&lt;T&gt;&nbsp;entities,
+&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities,
                                       <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#insert(java.util.List,dev.morphia.InsertOptions)"><code>insert(List, InsertOptions)</code></a></div>
@@ -1574,7 +1399,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>insert</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert​(java.util.List&lt;T&gt;&nbsp;entities,
+<pre class="methodSignature">&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert&#8203;(java.util.List&lt;T&gt;&nbsp;entities,
                                       <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</pre>
 <div class="block">Inserts entities in to the mapped collection.
 
@@ -1599,7 +1424,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert&#8203;(java.lang.String&nbsp;collection,
                                       java.lang.Iterable&lt;T&gt;&nbsp;entities)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">this feature is being removed.  no replacement is planned.  see issue #1331</div>
@@ -1623,7 +1448,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert&#8203;(java.lang.String&nbsp;collection,
                                       java.lang.Iterable&lt;T&gt;&nbsp;entities,
                                       com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1651,7 +1476,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>insert</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;insert&#8203;(java.lang.String&nbsp;collection,
                                       java.lang.Iterable&lt;T&gt;&nbsp;entities,
                                       <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1680,7 +1505,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>queryByExample</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;queryByExample​(java.lang.String&nbsp;collection,
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;queryByExample&#8203;(java.lang.String&nbsp;collection,
                             T&nbsp;example)</pre>
 <div class="block">Returns a new query based on the example object</div>
 <dl>
@@ -1703,7 +1528,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>save</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save&#8203;(java.lang.String&nbsp;collection,
                 T&nbsp;entity)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">this feature is being removed.  no replacement is planned.  see issue #1331</div>
@@ -1729,7 +1554,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>save</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save&#8203;(java.lang.String&nbsp;collection,
                 T&nbsp;entity,
                 com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1757,7 +1582,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 <li class="blockList">
 <h4>save</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save​(java.lang.String&nbsp;collection,
+&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save&#8203;(java.lang.String&nbsp;collection,
                 T&nbsp;entity,
                 <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1845,20 +1670,7 @@ long&nbsp;getCount​(java.lang.String&nbsp;collection)</pre>
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../_/js/site.js"></script>
-<script async src="../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

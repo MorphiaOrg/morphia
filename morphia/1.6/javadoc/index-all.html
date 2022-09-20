@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="./module-search-index.js"></script>
-    <script async type="text/javascript" src="./package-search-index.js"></script>
-    <script async type="text/javascript" src="./type-search-index.js"></script>
-    <script async type="text/javascript" src="./member-search-index.js"></script>
-    <script async type="text/javascript" src="./tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../2.3/javadoc/index-all.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../2.2/javadoc/index-all.html">2.2</a>
-    <a class="version" href="../../2.1/javadoc/index-all.html">2.1</a>
-    <a class="version" href="../../2.0/javadoc/index-all.html">2.0</a>
-    <a class="version is-current" href="index-all.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>Index (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript" src="jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -676,7 +501,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Causes secondary differences to be considered in reverse order, as it is done in the French language</div>
 </dd>
-<dt><a href="dev/morphia/dao/BasicDAO.html" title="class in dev.morphia.dao"><span class="typeNameLink">BasicDAO</span></a>&lt;<a href="dev/morphia/dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>,​<a href="dev/morphia/dao/BasicDAO.html" title="type parameter in BasicDAO">K</a>&gt; - Class in <a href="dev/morphia/dao/package-summary.html">dev.morphia.dao</a></dt>
+<dt><a href="dev/morphia/dao/BasicDAO.html" title="class in dev.morphia.dao"><span class="typeNameLink">BasicDAO</span></a>&lt;<a href="dev/morphia/dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>,&#8203;<a href="dev/morphia/dao/BasicDAO.html" title="type parameter in BasicDAO">K</a>&gt; - Class in <a href="dev/morphia/dao/package-summary.html">dev.morphia.dao</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">This interface poorly tracks Datastore's API.  Use Datastore directly or wrap in an application specific DAO</div>
@@ -1113,7 +938,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html#containsKey(java.lang.Object)">containsKey(Object)</a></span> - Method in class relocated.morphia.org.apache.commons.collections.<a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html" title="class in relocated.morphia.org.apache.commons.collections">ReferenceMap</a></dt>
 <dd>
-<div class="block">Returns <code>true</code> if this map contains the given key.</div>
+<div class="block">Returns <Code>true</Code> if this map contains the given key.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/InsertOptions.html#continueOnError(boolean)">continueOnError(boolean)</a></span> - Method in class dev.morphia.<a href="dev/morphia/InsertOptions.html" title="class in dev.morphia">InsertOptions</a></dt>
 <dd>
@@ -1574,13 +1399,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">D</h2>
 <dl>
-<dt><a href="dev/morphia/DAO.html" title="class in dev.morphia"><span class="typeNameLink">DAO</span></a>&lt;<a href="dev/morphia/DAO.html" title="type parameter in DAO">T</a>,​<a href="dev/morphia/DAO.html" title="type parameter in DAO">K</a>&gt; - Class in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
+<dt><a href="dev/morphia/DAO.html" title="class in dev.morphia"><span class="typeNameLink">DAO</span></a>&lt;<a href="dev/morphia/DAO.html" title="type parameter in DAO">T</a>,&#8203;<a href="dev/morphia/DAO.html" title="type parameter in DAO">K</a>&gt; - Class in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use dev.morphia.dao.BasicDAO</div>
 </div>
 </dd>
-<dt><a href="dev/morphia/dao/DAO.html" title="interface in dev.morphia.dao"><span class="typeNameLink">DAO</span></a>&lt;<a href="dev/morphia/dao/DAO.html" title="type parameter in DAO">T</a>,​<a href="dev/morphia/dao/DAO.html" title="type parameter in DAO">K</a>&gt; - Interface in <a href="dev/morphia/dao/package-summary.html">dev.morphia.dao</a></dt>
+<dt><a href="dev/morphia/dao/DAO.html" title="interface in dev.morphia.dao"><span class="typeNameLink">DAO</span></a>&lt;<a href="dev/morphia/dao/DAO.html" title="type parameter in DAO">T</a>,&#8203;<a href="dev/morphia/dao/DAO.html" title="type parameter in DAO">K</a>&gt; - Interface in <a href="dev/morphia/dao/package-summary.html">dev.morphia.dao</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">This interface poorly tracks Datastore's API.  Use Datastore directly or wrap in an application specific DAO</div>
@@ -1829,11 +1654,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="relocated/morphia/org/apache/commons/collections/DefaultMapEntry.html#%3Cinit%3E()">DefaultMapEntry()</a></span> - Constructor for class relocated.morphia.org.apache.commons.collections.<a href="relocated/morphia/org/apache/commons/collections/DefaultMapEntry.html" title="class in relocated.morphia.org.apache.commons.collections">DefaultMapEntry</a></dt>
 <dd>
-<div class="block">Constructs a new <code>DefaultMapEntry</code> with a null key and null value.</div>
+<div class="block">Constructs a new <Code>DefaultMapEntry</Code> with a null key and null value.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="relocated/morphia/org/apache/commons/collections/DefaultMapEntry.html#%3Cinit%3E(java.lang.Object,java.lang.Object)">DefaultMapEntry(Object, Object)</a></span> - Constructor for class relocated.morphia.org.apache.commons.collections.<a href="relocated/morphia/org/apache/commons/collections/DefaultMapEntry.html" title="class in relocated.morphia.org.apache.commons.collections">DefaultMapEntry</a></dt>
 <dd>
-<div class="block">Constructs a new <code>DefaultMapEntry</code> with the given key and given value.</div>
+<div class="block">Constructs a new <Code>DefaultMapEntry</Code> with the given key and given value.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.Builder.html#defaultMapper(dev.morphia.mapping.CustomMapper)">defaultMapper(CustomMapper)</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -3005,7 +2830,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/dao/DAO.html#findIds(java.lang.String,java.lang.Object)">findIds(String, Object)</a></span> - Method in interface dev.morphia.dao.<a href="dev/morphia/dao/DAO.html" title="interface in dev.morphia.dao">DAO</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">Finds the entities Key<t> by the criteria {key:value}</t></div>
+<div class="block">Finds the entities Key<T> by the criteria {key:value}</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/dao/BasicDAO.html#findOne(dev.morphia.query.Query)">findOne(Query&lt;T&gt;)</a></span> - Method in class dev.morphia.dao.<a href="dev/morphia/dao/BasicDAO.html" title="class in dev.morphia.dao">BasicDAO</a></dt>
 <dd>
@@ -5040,7 +4865,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html#isEmpty()">isEmpty()</a></span> - Method in class relocated.morphia.org.apache.commons.collections.<a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html" title="class in relocated.morphia.org.apache.commons.collections">ReferenceMap</a></dt>
 <dd>
-<div class="block">Returns <code>true</code> if this map is empty.</div>
+<div class="block">Returns <Code>true</Code> if this map is empty.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/logging/jdk/FastestJDKLogger.html#isErrorEnabled()">isErrorEnabled()</a></span> - Method in class dev.morphia.logging.jdk.<a href="dev/morphia/logging/jdk/FastestJDKLogger.html" title="class in dev.morphia.logging.jdk">FastestJDKLogger</a></dt>
 <dd>&nbsp;</dd>
@@ -5341,7 +5166,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="dev/morphia/dao/BasicDAO.html#keysToIds(java.util.List)">keysToIds(List&lt;Key&lt;T&gt;&gt;)</a></span> - Method in class dev.morphia.dao.<a href="dev/morphia/dao/BasicDAO.html" title="class in dev.morphia.dao">BasicDAO</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">Converts from a List<key> to their id values</key></div>
+<div class="block">Converts from a List<Key> to their id values</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/Mapper.html#keyToDBRef(dev.morphia.Key)">keyToDBRef(Key)</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a></dt>
 <dd>
@@ -5691,7 +5516,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Creates an exception with a message and a cause</div>
 </dd>
-<dt><a href="dev/morphia/query/internal/MappingIterable.html" title="class in dev.morphia.query.internal"><span class="typeNameLink">MappingIterable</span></a>&lt;<a href="dev/morphia/query/internal/MappingIterable.html" title="type parameter in MappingIterable">U</a>,​<a href="dev/morphia/query/internal/MappingIterable.html" title="type parameter in MappingIterable">V</a>&gt; - Class in <a href="dev/morphia/query/internal/package-summary.html">dev.morphia.query.internal</a></dt>
+<dt><a href="dev/morphia/query/internal/MappingIterable.html" title="class in dev.morphia.query.internal"><span class="typeNameLink">MappingIterable</span></a>&lt;<a href="dev/morphia/query/internal/MappingIterable.html" title="type parameter in MappingIterable">U</a>,&#8203;<a href="dev/morphia/query/internal/MappingIterable.html" title="type parameter in MappingIterable">V</a>&gt; - Class in <a href="dev/morphia/query/internal/package-summary.html">dev.morphia.query.internal</a></dt>
 <dd>
 <div class="block">Copied from the Java driver</div>
 </dd>
@@ -5935,7 +5760,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Creates a MorphiaCursor</div>
 </dd>
-<dt><a href="dev/morphia/query/MorphiaIterator.html" title="class in dev.morphia.query"><span class="typeNameLink">MorphiaIterator</span></a>&lt;<a href="dev/morphia/query/MorphiaIterator.html" title="type parameter in MorphiaIterator">T</a>,​<a href="dev/morphia/query/MorphiaIterator.html" title="type parameter in MorphiaIterator">V</a>&gt; - Class in <a href="dev/morphia/query/package-summary.html">dev.morphia.query</a></dt>
+<dt><a href="dev/morphia/query/MorphiaIterator.html" title="class in dev.morphia.query"><span class="typeNameLink">MorphiaIterator</span></a>&lt;<a href="dev/morphia/query/MorphiaIterator.html" title="type parameter in MorphiaIterator">T</a>,&#8203;<a href="dev/morphia/query/MorphiaIterator.html" title="type parameter in MorphiaIterator">V</a>&gt; - Class in <a href="dev/morphia/query/package-summary.html">dev.morphia.query</a></dt>
 <dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">this is being replaced by <code>MongoCursor</code></div>
@@ -6791,15 +6616,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html#%3Cinit%3E()">ReferenceMap()</a></span> - Constructor for class relocated.morphia.org.apache.commons.collections.<a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html" title="class in relocated.morphia.org.apache.commons.collections">ReferenceMap</a></dt>
 <dd>
-<div class="block">Constructs a new <code>ReferenceMap</code> that will use hard references to keys and soft references to values.</div>
+<div class="block">Constructs a new <Code>ReferenceMap</Code> that will use hard references to keys and soft references to values.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html#%3Cinit%3E(int,int)">ReferenceMap(int, int)</a></span> - Constructor for class relocated.morphia.org.apache.commons.collections.<a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html" title="class in relocated.morphia.org.apache.commons.collections">ReferenceMap</a></dt>
 <dd>
-<div class="block">Constructs a new <code>ReferenceMap</code> that will use the specified types of references.</div>
+<div class="block">Constructs a new <Code>ReferenceMap</Code> that will use the specified types of references.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html#%3Cinit%3E(int,int,int,float)">ReferenceMap(int, int, int, float)</a></span> - Constructor for class relocated.morphia.org.apache.commons.collections.<a href="relocated/morphia/org/apache/commons/collections/ReferenceMap.html" title="class in relocated.morphia.org.apache.commons.collections">ReferenceMap</a></dt>
 <dd>
-<div class="block">Constructs a new <code>ReferenceMap</code> with the specified reference types, load factor and initial capacity.</div>
+<div class="block">Constructs a new <Code>ReferenceMap</Code> with the specified reference types, load factor and initial capacity.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="dev/morphia/mapping/MapperOptions.Builder.html#referenceMapper(dev.morphia.mapping.CustomMapper)">referenceMapper(CustomMapper)</a></span> - Method in class dev.morphia.mapping.<a href="dev/morphia/mapping/MapperOptions.Builder.html" title="class in dev.morphia.mapping">MapperOptions.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -8565,20 +8390,7 @@ the order they are declared.</div>
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../_/js/site.js"></script>
-<script async src="../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

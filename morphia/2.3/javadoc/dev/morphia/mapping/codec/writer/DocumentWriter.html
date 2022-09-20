@@ -1,241 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../../../../../index.html">Getting Started</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../migrating.html">Migrating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../quicktour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Features</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../kotlin.html">Kotlin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../sharding.html">Sharding</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../queries.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../updates.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../deletes.html">Deleting</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../aggregations.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../textSearches.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../references.html">References</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../schemaValidation.html">Schema Validation</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text"><em>Support</em></span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version is-current">
-          <a href="../../../../../../index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
-  <div class="version-menu">
-    <a class="version is-current" href="DocumentWriter.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../../../2.2/javadoc/dev/morphia/mapping/codec/writer/DocumentWriter.html">2.2</a>
-    <a class="version is-missing" href="../../../../../../../2.1/index.html">2.1</a>
-    <a class="version is-missing" href="../../../../../../../2.0/index.html">2.0</a>
-    <a class="version is-missing" href="../../../../../../../1.6/index.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.16.1) on Tue Sep 20 04:28:49 UTC 2022 -->
+<title>DocumentWriter (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2022-09-20">
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../../../script.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -375,24 +157,24 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper)">DocumentWriter</a></span>​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper)">DocumentWriter</a></span>&#8203;(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
 <td class="colLast">
 <div class="block">Creates a new Writer</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper,org.bson.Document)">DocumentWriter</a></span>​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper,org.bson.Document)">DocumentWriter</a></span>&#8203;(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
               <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;seed)</code></th>
 <td class="colLast">
 <div class="block">Creates a new Writer with a seeded Document</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -405,14 +187,14 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="DocumentWriter.html" title="class in dev.morphia.mapping.codec.writer">DocumentWriter</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(org.bson.codecs.configuration.CodecRegistry,java.lang.Object,org.bson.codecs.EncoderContext)">encode</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/configuration/CodecRegistry.html?is-external=true" title="class or interface in org.bson.codecs.configuration" class="externalLink">CodecRegistry</a>&nbsp;codecRegistry,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#encode(org.bson.codecs.configuration.CodecRegistry,java.lang.Object,org.bson.codecs.EncoderContext)">encode</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/configuration/CodecRegistry.html?is-external=true" title="class or interface in org.bson.codecs.configuration" class="externalLink">CodecRegistry</a>&nbsp;codecRegistry,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
       <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</code></th>
 <td class="colLast">
@@ -431,7 +213,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pipe(org.bson.BsonReader)">pipe</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonReader.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonReader</a>&nbsp;reader)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pipe(org.bson.BsonReader)">pipe</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonReader.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonReader</a>&nbsp;reader)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
@@ -446,67 +228,67 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeBinaryData(java.lang.String,org.bson.BsonBinary)">writeBinaryData</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeBinaryData(java.lang.String,org.bson.BsonBinary)">writeBinaryData</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonBinary.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonBinary</a>&nbsp;binary)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeBinaryData(org.bson.BsonBinary)">writeBinaryData</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonBinary.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonBinary</a>&nbsp;binary)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeBinaryData(org.bson.BsonBinary)">writeBinaryData</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonBinary.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonBinary</a>&nbsp;binary)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeBoolean(boolean)">writeBoolean</a></span>​(boolean&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeBoolean(boolean)">writeBoolean</a></span>&#8203;(boolean&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeBoolean(java.lang.String,boolean)">writeBoolean</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeBoolean(java.lang.String,boolean)">writeBoolean</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
             boolean&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDateTime(long)">writeDateTime</a></span>​(long&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDateTime(long)">writeDateTime</a></span>&#8203;(long&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDateTime(java.lang.String,long)">writeDateTime</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDateTime(java.lang.String,long)">writeDateTime</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
              long&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDBPointer(java.lang.String,org.bson.BsonDbPointer)">writeDBPointer</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDBPointer(java.lang.String,org.bson.BsonDbPointer)">writeDBPointer</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
               <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonDbPointer.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonDbPointer</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDBPointer(org.bson.BsonDbPointer)">writeDBPointer</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonDbPointer.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonDbPointer</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDBPointer(org.bson.BsonDbPointer)">writeDBPointer</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonDbPointer.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonDbPointer</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDecimal128(java.lang.String,org.bson.types.Decimal128)">writeDecimal128</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDecimal128(java.lang.String,org.bson.types.Decimal128)">writeDecimal128</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/Decimal128.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">Decimal128</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDecimal128(org.bson.types.Decimal128)">writeDecimal128</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/Decimal128.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">Decimal128</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDecimal128(org.bson.types.Decimal128)">writeDecimal128</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/Decimal128.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">Decimal128</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDouble(double)">writeDouble</a></span>​(double&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDouble(double)">writeDouble</a></span>&#8203;(double&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDouble(java.lang.String,double)">writeDouble</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeDouble(java.lang.String,double)">writeDouble</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
            double&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -522,45 +304,45 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeInt32(int)">writeInt32</a></span>​(int&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeInt32(int)">writeInt32</a></span>&#8203;(int&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeInt32(java.lang.String,int)">writeInt32</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeInt32(java.lang.String,int)">writeInt32</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
           int&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeInt64(long)">writeInt64</a></span>​(long&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeInt64(long)">writeInt64</a></span>&#8203;(long&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeInt64(java.lang.String,long)">writeInt64</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeInt64(java.lang.String,long)">writeInt64</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
           long&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeJavaScript(java.lang.String)">writeJavaScript</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeJavaScript(java.lang.String)">writeJavaScript</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeJavaScript(java.lang.String,java.lang.String)">writeJavaScript</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeJavaScript(java.lang.String,java.lang.String)">writeJavaScript</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeJavaScriptWithScope(java.lang.String)">writeJavaScriptWithScope</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeJavaScriptWithScope(java.lang.String)">writeJavaScriptWithScope</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeJavaScriptWithScope(java.lang.String,java.lang.String)">writeJavaScriptWithScope</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeJavaScriptWithScope(java.lang.String,java.lang.String)">writeJavaScriptWithScope</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -571,7 +353,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeMaxKey(java.lang.String)">writeMaxKey</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeMaxKey(java.lang.String)">writeMaxKey</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i30" class="altColor">
@@ -581,12 +363,12 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeMinKey(java.lang.String)">writeMinKey</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeMinKey(java.lang.String)">writeMinKey</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i32" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeName(java.lang.String)">writeName</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeName(java.lang.String)">writeName</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i33" class="rowColor">
@@ -596,29 +378,29 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </tr>
 <tr id="i34" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeNull(java.lang.String)">writeNull</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeNull(java.lang.String)">writeNull</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i35" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeObjectId(java.lang.String,org.bson.types.ObjectId)">writeObjectId</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeObjectId(java.lang.String,org.bson.types.ObjectId)">writeObjectId</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
              <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/ObjectId.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">ObjectId</a>&nbsp;objectId)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeObjectId(org.bson.types.ObjectId)">writeObjectId</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/ObjectId.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">ObjectId</a>&nbsp;objectId)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeObjectId(org.bson.types.ObjectId)">writeObjectId</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/ObjectId.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">ObjectId</a>&nbsp;objectId)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeRegularExpression(java.lang.String,org.bson.BsonRegularExpression)">writeRegularExpression</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeRegularExpression(java.lang.String,org.bson.BsonRegularExpression)">writeRegularExpression</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                       <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonRegularExpression.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonRegularExpression</a>&nbsp;regularExpression)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i38" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeRegularExpression(org.bson.BsonRegularExpression)">writeRegularExpression</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonRegularExpression.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonRegularExpression</a>&nbsp;regularExpression)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeRegularExpression(org.bson.BsonRegularExpression)">writeRegularExpression</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonRegularExpression.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonRegularExpression</a>&nbsp;regularExpression)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i39" class="rowColor">
@@ -628,7 +410,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </tr>
 <tr id="i40" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeStartArray(java.lang.String)">writeStartArray</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeStartArray(java.lang.String)">writeStartArray</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i41" class="rowColor">
@@ -638,40 +420,40 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </tr>
 <tr id="i42" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeStartDocument(java.lang.String)">writeStartDocument</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeStartDocument(java.lang.String)">writeStartDocument</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeString(java.lang.String)">writeString</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeString(java.lang.String)">writeString</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i44" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeString(java.lang.String,java.lang.String)">writeString</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeString(java.lang.String,java.lang.String)">writeString</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i45" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeSymbol(java.lang.String)">writeSymbol</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeSymbol(java.lang.String)">writeSymbol</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i46" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeSymbol(java.lang.String,java.lang.String)">writeSymbol</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeSymbol(java.lang.String,java.lang.String)">writeSymbol</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i47" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeTimestamp(java.lang.String,org.bson.BsonTimestamp)">writeTimestamp</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeTimestamp(java.lang.String,org.bson.BsonTimestamp)">writeTimestamp</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
               <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonTimestamp.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonTimestamp</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i48" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeTimestamp(org.bson.BsonTimestamp)">writeTimestamp</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonTimestamp.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonTimestamp</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeTimestamp(org.bson.BsonTimestamp)">writeTimestamp</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonTimestamp.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonTimestamp</a>&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i49" class="rowColor">
@@ -681,10 +463,10 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </tr>
 <tr id="i50" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeUndefined(java.lang.String)">writeUndefined</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeUndefined(java.lang.String)">writeUndefined</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -708,13 +490,13 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.mapping.Mapper)">
+<a id="&lt;init&gt;(dev.morphia.mapping.Mapper)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>DocumentWriter</h4>
-<pre>public&nbsp;DocumentWriter​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
+<pre>public&nbsp;DocumentWriter&#8203;(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
 <div class="block">Creates a new Writer</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -722,13 +504,13 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </dl>
 </li>
 </ul>
-<a id="<init>(dev.morphia.mapping.Mapper,org.bson.Document)">
+<a id="&lt;init&gt;(dev.morphia.mapping.Mapper,org.bson.Document)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DocumentWriter</h4>
-<pre>public&nbsp;DocumentWriter​(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
+<pre>public&nbsp;DocumentWriter&#8203;(<a href="../../Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                       <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;seed)</pre>
 <div class="block">Creates a new Writer with a seeded Document</div>
 <dl>
@@ -754,7 +536,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>encode</h4>
-<pre class="methodSignature">public&nbsp;<a href="DocumentWriter.html" title="class in dev.morphia.mapping.codec.writer">DocumentWriter</a>&nbsp;encode​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/configuration/CodecRegistry.html?is-external=true" title="class or interface in org.bson.codecs.configuration" class="externalLink">CodecRegistry</a>&nbsp;codecRegistry,
+<pre class="methodSignature">public&nbsp;<a href="DocumentWriter.html" title="class in dev.morphia.mapping.codec.writer">DocumentWriter</a>&nbsp;encode&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/configuration/CodecRegistry.html?is-external=true" title="class or interface in org.bson.codecs.configuration" class="externalLink">CodecRegistry</a>&nbsp;codecRegistry,
                              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
                              <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/codecs/EncoderContext.html?is-external=true" title="class or interface in org.bson.codecs" class="externalLink">EncoderContext</a>&nbsp;encoderContext)</pre>
 <div class="block">Encodes a value in to this Writer</div>
@@ -813,7 +595,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeBinaryData</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeBinaryData​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonBinary.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonBinary</a>&nbsp;binary)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeBinaryData&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonBinary.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonBinary</a>&nbsp;binary)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeBinaryData(org.bson.BsonBinary)" title="class or interface in org.bson" class="externalLink">writeBinaryData</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -826,7 +608,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeBinaryData</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeBinaryData​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeBinaryData&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                             <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonBinary.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonBinary</a>&nbsp;binary)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -840,7 +622,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeBoolean</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeBoolean​(boolean&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeBoolean&#8203;(boolean&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeBoolean(boolean)" title="class or interface in org.bson" class="externalLink">writeBoolean</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -853,7 +635,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeBoolean</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeBoolean​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeBoolean&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                          boolean&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -867,7 +649,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeDateTime</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeDateTime​(long&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeDateTime&#8203;(long&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeDateTime(long)" title="class or interface in org.bson" class="externalLink">writeDateTime</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -880,7 +662,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeDateTime</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeDateTime​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeDateTime&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                           long&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -894,7 +676,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeDBPointer</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeDBPointer​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonDbPointer.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonDbPointer</a>&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeDBPointer&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonDbPointer.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonDbPointer</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeDBPointer(org.bson.BsonDbPointer)" title="class or interface in org.bson" class="externalLink">writeDBPointer</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -907,7 +689,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeDBPointer</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeDBPointer​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeDBPointer&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                            <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonDbPointer.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonDbPointer</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -921,7 +703,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeDouble</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeDouble​(double&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeDouble&#8203;(double&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeDouble(double)" title="class or interface in org.bson" class="externalLink">writeDouble</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -934,7 +716,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeDouble</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeDouble​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeDouble&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                         double&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -974,7 +756,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeInt32</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeInt32​(int&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeInt32&#8203;(int&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeInt32(int)" title="class or interface in org.bson" class="externalLink">writeInt32</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -987,7 +769,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeInt32</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeInt32​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeInt32&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                        int&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1001,7 +783,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeInt64</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeInt64​(long&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeInt64&#8203;(long&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeInt64(long)" title="class or interface in org.bson" class="externalLink">writeInt64</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1014,7 +796,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeInt64</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeInt64​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeInt64&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                        long&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1028,7 +810,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeDecimal128</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeDecimal128​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/Decimal128.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">Decimal128</a>&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeDecimal128&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/Decimal128.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">Decimal128</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeDecimal128(org.bson.types.Decimal128)" title="class or interface in org.bson" class="externalLink">writeDecimal128</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1041,7 +823,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeDecimal128</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeDecimal128​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeDecimal128&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                             <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/Decimal128.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">Decimal128</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1055,7 +837,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeJavaScript</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeJavaScript​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeJavaScript&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeJavaScript(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeJavaScript</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1068,7 +850,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeMaxKey</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeMaxKey​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeMaxKey&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeMaxKey(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeMaxKey</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1081,7 +863,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeJavaScript</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeJavaScript​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeJavaScript&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1095,7 +877,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeMinKey</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeMinKey​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeMinKey&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeMinKey(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeMinKey</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1108,7 +890,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeJavaScriptWithScope</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeJavaScriptWithScope​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeJavaScriptWithScope&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeJavaScriptWithScope(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeJavaScriptWithScope</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1121,7 +903,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeJavaScriptWithScope</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeJavaScriptWithScope​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeJavaScriptWithScope&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;code)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1161,7 +943,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeName</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeName​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeName&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeName(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeName</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1187,7 +969,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeNull</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeNull​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeNull&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeNull(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeNull</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1200,7 +982,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeObjectId</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeObjectId​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/ObjectId.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">ObjectId</a>&nbsp;objectId)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeObjectId&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/ObjectId.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">ObjectId</a>&nbsp;objectId)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeObjectId(org.bson.types.ObjectId)" title="class or interface in org.bson" class="externalLink">writeObjectId</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1213,7 +995,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeStartArray</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeStartArray​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeStartArray&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeStartArray(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeStartArray</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1226,7 +1008,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeObjectId</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeObjectId​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeObjectId&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                           <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/types/ObjectId.html?is-external=true" title="class or interface in org.bson.types" class="externalLink">ObjectId</a>&nbsp;objectId)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1240,7 +1022,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeRegularExpression</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeRegularExpression​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonRegularExpression.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonRegularExpression</a>&nbsp;regularExpression)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeRegularExpression&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonRegularExpression.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonRegularExpression</a>&nbsp;regularExpression)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeRegularExpression(org.bson.BsonRegularExpression)" title="class or interface in org.bson" class="externalLink">writeRegularExpression</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1253,7 +1035,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeRegularExpression</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeRegularExpression​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeRegularExpression&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                                    <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonRegularExpression.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonRegularExpression</a>&nbsp;regularExpression)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1293,7 +1075,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeSymbol</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeSymbol​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeSymbol&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1307,7 +1089,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeStartDocument</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeStartDocument​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeStartDocument&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeStartDocument(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeStartDocument</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1320,7 +1102,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeString</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeString​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeString&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeString(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeString</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1333,7 +1115,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeString</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeString​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeString&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1347,7 +1129,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeUndefined</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeUndefined​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeUndefined&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeUndefined(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeUndefined</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1360,7 +1142,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>pipe</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;pipe​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonReader.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonReader</a>&nbsp;reader)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;pipe&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonReader.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonReader</a>&nbsp;reader)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#pipe(org.bson.BsonReader)" title="class or interface in org.bson" class="externalLink">pipe</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1373,7 +1155,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeSymbol</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeSymbol​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeSymbol&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeSymbol(java.lang.String)" title="class or interface in org.bson" class="externalLink">writeSymbol</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1386,7 +1168,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeTimestamp</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeTimestamp​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonTimestamp.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonTimestamp</a>&nbsp;value)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;writeTimestamp&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonTimestamp.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonTimestamp</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true#writeTimestamp(org.bson.BsonTimestamp)" title="class or interface in org.bson" class="externalLink">writeTimestamp</a></code>&nbsp;in interface&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonWriter.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonWriter</a></code></dd>
@@ -1399,7 +1181,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 <ul class="blockList">
 <li class="blockList">
 <h4>writeTimestamp</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;writeTimestamp​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
+<pre class="methodSignature">public&nbsp;void&nbsp;writeTimestamp&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;name,
                            <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/BsonTimestamp.html?is-external=true" title="class or interface in org.bson" class="externalLink">BsonTimestamp</a>&nbsp;value)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -1502,20 +1284,7 @@ implements <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2022. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

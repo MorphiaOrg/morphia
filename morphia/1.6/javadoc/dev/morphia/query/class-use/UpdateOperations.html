@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../../2.3/javadoc/dev/morphia/query/class-use/UpdateOperations.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../../2.2/javadoc/dev/morphia/query/class-use/UpdateOperations.html">2.2</a>
-    <a class="version" href="../../../../../../2.1/javadoc/dev/morphia/query/class-use/UpdateOperations.html">2.1</a>
-    <a class="version" href="../../../../../../2.0/javadoc/dev/morphia/query/class-use/UpdateOperations.html">2.0</a>
-    <a class="version is-current" href="UpdateOperations.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>Uses of Interface dev.morphia.query.UpdateOperations (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../../script.js"></script>
+<script type="text/javascript" src="../../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -277,11 +102,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="useSummary">
 <caption><span>Packages that use <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Package</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <th class="colFirst" scope="row"><a href="#dev.morphia">dev.morphia</a></th>
 <td class="colLast">&nbsp;</td>
@@ -306,15 +131,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a> in <a href="../../package-summary.html">dev.morphia</a></h3>
 <table class="useSummary">
 <caption><span>Methods in <a href="../../package-summary.html">dev.morphia</a> that return <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">AdvancedDatastore.</span><code><span class="memberNameLink"><a href="../../AdvancedDatastore.html#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">createUpdateOperations</a></span>​(java.lang.Class&lt;T&gt;&nbsp;type,
+<th class="colSecond" scope="row"><span class="typeNameLabel">AdvancedDatastore.</span><code><span class="memberNameLink"><a href="../../AdvancedDatastore.html#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">createUpdateOperations</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;type,
                       com.mongodb.DBObject&nbsp;ops)</code></th>
 <td class="colLast">
 <div class="block">Creates an UpdateOperations instance for the given type.</div>
@@ -322,21 +147,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#createUpdateOperations(java.lang.Class)">createUpdateOperations</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#createUpdateOperations(java.lang.Class)">createUpdateOperations</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block">The builder for all update operations</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#createUpdateOperations(java.lang.Class)">createUpdateOperations</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#createUpdateOperations(java.lang.Class)">createUpdateOperations</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 &nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">createUpdateOperations</a></span>​(java.lang.Class&lt;T&gt;&nbsp;type,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">createUpdateOperations</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;type,
                       com.mongodb.DBObject&nbsp;ops)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -346,15 +171,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Methods in <a href="../../package-summary.html">dev.morphia</a> with parameters of type <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block">Find the first Entity from the Query, and modify it.</div>
@@ -362,7 +187,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">findAndModify</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">findAndModify</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
              boolean&nbsp;oldVersion)</code></th>
 <td class="colLast">
@@ -373,7 +198,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,boolean)">findAndModify</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,boolean)">findAndModify</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
              boolean&nbsp;oldVersion,
              boolean&nbsp;createIfMissing)</code></th>
@@ -385,7 +210,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
              <a href="../../FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -394,7 +219,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -402,7 +227,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">findAndModify</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">findAndModify</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
              boolean&nbsp;oldVersion)</code></th>
 <td class="colLast">
@@ -411,7 +236,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,boolean)">findAndModify</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,boolean)">findAndModify</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
              boolean&nbsp;oldVersion,
              boolean&nbsp;createIfMissing)</code></th>
@@ -421,7 +246,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
              <a href="../../FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -430,7 +255,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.Key,dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.Key,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(<a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -440,7 +265,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block">Updates all entities found with the operations; this is an atomic operation per entity</div>
@@ -448,7 +273,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
       boolean&nbsp;createIfMissing)</code></th>
 <td class="colLast">
@@ -460,7 +285,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
       boolean&nbsp;createIfMissing,
       com.mongodb.WriteConcern&nbsp;wc)</code></th>
@@ -473,7 +298,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
       <a href="../../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -482,7 +307,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(T,dev.morphia.query.UpdateOperations)">update</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#update(T,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(T&nbsp;entity,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -492,7 +317,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.Key,dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.Key,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(<a href="../../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -500,7 +325,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -508,7 +333,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
       boolean&nbsp;createIfMissing)</code></th>
 <td class="colLast">
@@ -517,7 +342,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
       boolean&nbsp;createIfMissing,
       com.mongodb.WriteConcern&nbsp;wc)</code></th>
@@ -527,7 +352,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
       <a href="../../UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -536,7 +361,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(T,dev.morphia.query.UpdateOperations)">update</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#update(T,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(T&nbsp;entity,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -544,7 +369,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -554,7 +379,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">updateFirst</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">updateFirst</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
            boolean&nbsp;createIfMissing)</code></th>
 <td class="colLast">
@@ -565,7 +390,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">updateFirst</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">Datastore.</span><code><span class="memberNameLink"><a href="../../Datastore.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">updateFirst</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
            boolean&nbsp;createIfMissing,
            com.mongodb.WriteConcern&nbsp;wc)</code></th>
@@ -577,7 +402,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -585,7 +410,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">updateFirst</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">updateFirst</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
            boolean&nbsp;createIfMissing)</code></th>
 <td class="colLast">
@@ -594,7 +419,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">updateFirst</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DatastoreImpl.</span><code><span class="memberNameLink"><a href="../../DatastoreImpl.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">updateFirst</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
            boolean&nbsp;createIfMissing,
            com.mongodb.WriteConcern&nbsp;wc)</code></th>
@@ -613,12 +438,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a> in <a href="../../dao/package-summary.html">dev.morphia.dao</a></h3>
 <table class="useSummary">
 <caption><span>Methods in <a href="../../dao/package-summary.html">dev.morphia.dao</a> that return <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#createUpdateOperations()">createUpdateOperations</a></span>()</code></th>
@@ -638,15 +463,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Methods in <a href="../../dao/package-summary.html">dev.morphia.dao</a> with parameters of type <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&nbsp;ops)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -654,7 +479,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&nbsp;query,
       <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&nbsp;ops)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -663,7 +488,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">BasicDAO.</span><code><span class="memberNameLink"><a href="../../dao/BasicDAO.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&nbsp;query,
            <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../../dao/BasicDAO.html" title="type parameter in BasicDAO">T</a>&gt;&nbsp;ops)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -671,7 +496,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>​(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&nbsp;query,
+<th class="colSecond" scope="row"><span class="typeNameLabel">DAO.</span><code><span class="memberNameLink"><a href="../../dao/DAO.html#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>&#8203;(<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&nbsp;query,
            <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../../dao/DAO.html" title="type parameter in DAO">T</a>&gt;&nbsp;ops)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -689,12 +514,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Uses of <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a> in <a href="../package-summary.html">dev.morphia.query</a></h3>
 <table class="useSummary">
 <caption><span>Classes in <a href="../package-summary.html">dev.morphia.query</a> that implement <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code>class&nbsp;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html" title="class in dev.morphia.query">UpdateOpsImpl</a>&lt;T&gt;</span></code></th>
@@ -704,15 +529,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </table>
 <table class="useSummary">
 <caption><span>Methods in <a href="../package-summary.html">dev.morphia.query</a> that return <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a></span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#add(java.lang.String,java.lang.Object)">add</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#add(java.lang.String,java.lang.Object)">add</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -722,7 +547,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#add(java.lang.String,java.lang.Object,boolean)">add</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#add(java.lang.String,java.lang.Object,boolean)">add</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Object&nbsp;value,
    boolean&nbsp;addDups)</code></th>
 <td class="colLast">
@@ -733,7 +558,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#add(java.lang.String,java.lang.Object)">add</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#add(java.lang.String,java.lang.Object)">add</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -741,7 +566,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#add(java.lang.String,java.lang.Object,boolean)">add</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#add(java.lang.String,java.lang.Object,boolean)">add</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Object&nbsp;value,
    boolean&nbsp;addDups)</code></th>
 <td class="colLast">
@@ -750,7 +575,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#addAll(java.lang.String,java.util.List,boolean)">addAll</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#addAll(java.lang.String,java.util.List,boolean)">addAll</a></span>&#8203;(java.lang.String&nbsp;field,
       java.util.List&lt;?&gt;&nbsp;values,
       boolean&nbsp;addDups)</code></th>
 <td class="colLast">
@@ -761,7 +586,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#addAll(java.lang.String,java.util.List,boolean)">addAll</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#addAll(java.lang.String,java.util.List,boolean)">addAll</a></span>&#8203;(java.lang.String&nbsp;field,
       java.util.List&lt;?&gt;&nbsp;values,
       boolean&nbsp;addDups)</code></th>
 <td class="colLast">
@@ -770,7 +595,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#addToSet(java.lang.String,java.lang.Iterable)">addToSet</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#addToSet(java.lang.String,java.lang.Iterable)">addToSet</a></span>&#8203;(java.lang.String&nbsp;field,
         java.lang.Iterable&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block">adds the values to an array field if they doesn't already exist in the array</div>
@@ -778,7 +603,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#addToSet(java.lang.String,java.lang.Object)">addToSet</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#addToSet(java.lang.String,java.lang.Object)">addToSet</a></span>&#8203;(java.lang.String&nbsp;field,
         java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">adds the value to an array field if it doesn't already exist in the array</div>
@@ -786,7 +611,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#addToSet(java.lang.String,java.util.List)">addToSet</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#addToSet(java.lang.String,java.util.List)">addToSet</a></span>&#8203;(java.lang.String&nbsp;field,
         java.util.List&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block">adds the values to an array field if they doesn't already exist in the array</div>
@@ -794,32 +619,32 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#addToSet(java.lang.String,java.lang.Iterable)">addToSet</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#addToSet(java.lang.String,java.lang.Iterable)">addToSet</a></span>&#8203;(java.lang.String&nbsp;field,
         java.lang.Iterable&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#addToSet(java.lang.String,java.lang.Object)">addToSet</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#addToSet(java.lang.String,java.lang.Object)">addToSet</a></span>&#8203;(java.lang.String&nbsp;field,
         java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#addToSet(java.lang.String,java.util.List)">addToSet</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#addToSet(java.lang.String,java.util.List)">addToSet</a></span>&#8203;(java.lang.String&nbsp;field,
         java.util.List&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#dec(java.lang.String)">dec</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#dec(java.lang.String)">dec</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block">Decrements the numeric field by 1</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#dec(java.lang.String,java.lang.Number)">dec</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#dec(java.lang.String,java.lang.Number)">dec</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Number&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Decrements the numeric field by value (must be a positive Double,
@@ -828,12 +653,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#dec(java.lang.String)">dec</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#dec(java.lang.String)">dec</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#dec(java.lang.String,java.lang.Number)">dec</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#dec(java.lang.String,java.lang.Number)">dec</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Number&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -863,14 +688,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#inc(java.lang.String)">inc</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#inc(java.lang.String)">inc</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block">Increments the numeric field by 1</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#inc(java.lang.String,java.lang.Number)">inc</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#inc(java.lang.String,java.lang.Number)">inc</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Number&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">increments the numeric field by value (negatives are allowed)</div>
@@ -878,12 +703,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#inc(java.lang.String)">inc</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#inc(java.lang.String)">inc</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#inc(java.lang.String,java.lang.Number)">inc</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#inc(java.lang.String,java.lang.Number)">inc</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Number&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -903,7 +728,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#max(java.lang.String,java.lang.Number)">max</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#max(java.lang.String,java.lang.Number)">max</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Number&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Sets the numeric field to value if it is greater than the current value.</div>
@@ -911,13 +736,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#max(java.lang.String,java.lang.Number)">max</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#max(java.lang.String,java.lang.Number)">max</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Number&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#min(java.lang.String,java.lang.Number)">min</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#min(java.lang.String,java.lang.Number)">min</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Number&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">sets the numeric field to value if it is less than the current value.</div>
@@ -925,13 +750,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#min(java.lang.String,java.lang.Number)">min</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#min(java.lang.String,java.lang.Number)">min</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Number&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#push(java.lang.String,java.lang.Object)">push</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#push(java.lang.String,java.lang.Object)">push</a></span>&#8203;(java.lang.String&nbsp;field,
     java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Adds new values to an array field.</div>
@@ -939,7 +764,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#push(java.lang.String,java.lang.Object,dev.morphia.query.PushOptions)">push</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#push(java.lang.String,java.lang.Object,dev.morphia.query.PushOptions)">push</a></span>&#8203;(java.lang.String&nbsp;field,
     java.lang.Object&nbsp;value,
     <a href="../PushOptions.html" title="class in dev.morphia.query">PushOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -948,7 +773,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#push(java.lang.String,java.util.List)">push</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#push(java.lang.String,java.util.List)">push</a></span>&#8203;(java.lang.String&nbsp;field,
     java.util.List&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block">Adds new values to an array field.</div>
@@ -956,7 +781,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#push(java.lang.String,java.util.List,dev.morphia.query.PushOptions)">push</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#push(java.lang.String,java.util.List,dev.morphia.query.PushOptions)">push</a></span>&#8203;(java.lang.String&nbsp;field,
     java.util.List&lt;?&gt;&nbsp;values,
     <a href="../PushOptions.html" title="class in dev.morphia.query">PushOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -965,39 +790,39 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#push(java.lang.String,java.lang.Object)">push</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#push(java.lang.String,java.lang.Object)">push</a></span>&#8203;(java.lang.String&nbsp;field,
     java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#push(java.lang.String,java.lang.Object,dev.morphia.query.PushOptions)">push</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#push(java.lang.String,java.lang.Object,dev.morphia.query.PushOptions)">push</a></span>&#8203;(java.lang.String&nbsp;field,
     java.lang.Object&nbsp;value,
     <a href="../PushOptions.html" title="class in dev.morphia.query">PushOptions</a>&nbsp;options)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#push(java.lang.String,java.util.List)">push</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#push(java.lang.String,java.util.List)">push</a></span>&#8203;(java.lang.String&nbsp;field,
     java.util.List&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#push(java.lang.String,java.util.List,dev.morphia.query.PushOptions)">push</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#push(java.lang.String,java.util.List,dev.morphia.query.PushOptions)">push</a></span>&#8203;(java.lang.String&nbsp;field,
     java.util.List&lt;?&gt;&nbsp;values,
     <a href="../PushOptions.html" title="class in dev.morphia.query">PushOptions</a>&nbsp;options)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#remove(java.lang.String,boolean)">remove</a></span>​(java.lang.String&nbsp;fieldExpr,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#remove(java.lang.String,boolean)">remove</a></span>&#8203;(java.lang.String&nbsp;fieldExpr,
       boolean&nbsp;firstNotLast)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#removeAll(java.lang.String,java.lang.Object)">removeAll</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#removeAll(java.lang.String,java.lang.Object)">removeAll</a></span>&#8203;(java.lang.String&nbsp;field,
          java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">removes the value from the array field</div>
@@ -1005,7 +830,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#removeAll(java.lang.String,java.util.List)">removeAll</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#removeAll(java.lang.String,java.util.List)">removeAll</a></span>&#8203;(java.lang.String&nbsp;field,
          java.util.List&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block">removes the values from the array field</div>
@@ -1013,43 +838,43 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#removeAll(java.lang.String,java.lang.Object)">removeAll</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#removeAll(java.lang.String,java.lang.Object)">removeAll</a></span>&#8203;(java.lang.String&nbsp;field,
          java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#removeAll(java.lang.String,java.util.List)">removeAll</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#removeAll(java.lang.String,java.util.List)">removeAll</a></span>&#8203;(java.lang.String&nbsp;field,
          java.util.List&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#removeFirst(java.lang.String)">removeFirst</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#removeFirst(java.lang.String)">removeFirst</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block">removes the first value from the array</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#removeFirst(java.lang.String)">removeFirst</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#removeFirst(java.lang.String)">removeFirst</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#removeLast(java.lang.String)">removeLast</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#removeLast(java.lang.String)">removeLast</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block">removes the last value from the array</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#removeLast(java.lang.String)">removeLast</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#removeLast(java.lang.String)">removeLast</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#set(java.lang.String,java.lang.Object)">set</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#set(java.lang.String,java.lang.Object)">set</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">sets the field value</div>
@@ -1057,13 +882,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#set(java.lang.String,java.lang.Object)">set</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#set(java.lang.String,java.lang.Object)">set</a></span>&#8203;(java.lang.String&nbsp;field,
    java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#setOnInsert(java.lang.String,java.lang.Object)">setOnInsert</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#setOnInsert(java.lang.String,java.lang.Object)">setOnInsert</a></span>&#8203;(java.lang.String&nbsp;field,
            java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">sets the field on insert.</div>
@@ -1071,20 +896,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#setOnInsert(java.lang.String,java.lang.Object)">setOnInsert</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#setOnInsert(java.lang.String,java.lang.Object)">setOnInsert</a></span>&#8203;(java.lang.String&nbsp;field,
            java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOperations.html" title="type parameter in UpdateOperations">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#unset(java.lang.String)">unset</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOperations.</span><code><span class="memberNameLink"><a href="../UpdateOperations.html#unset(java.lang.String)">unset</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block">removes the field</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="../UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="../UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#unset(java.lang.String)">unset</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><span class="typeNameLabel">UpdateOpsImpl.</span><code><span class="memberNameLink"><a href="../UpdateOpsImpl.html#unset(java.lang.String)">unset</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </tbody>
@@ -1141,20 +966,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

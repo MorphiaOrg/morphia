@@ -1,216 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.1">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../textSearch.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.1</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../../index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.1</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../2.3/javadoc/dev/morphia/query/FindOptions.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/query/FindOptions.html">2.2</a>
-    <a class="version is-current" href="FindOptions.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/query/FindOptions.html">2.0</a>
-    <a class="version" href="../../../../../1.6/javadoc/dev/morphia/query/FindOptions.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.10) on Sun Jun 13 22:40:19 EDT 2021 -->
+<title>FindOptions (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2021-06-13">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -352,7 +159,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
@@ -362,7 +169,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <div class="block">Creates an instance with default values</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -375,21 +182,21 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;com.mongodb.client.FindIterable&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#apply(com.mongodb.client.FindIterable,dev.morphia.mapping.Mapper,java.lang.Class)">apply</a></span>​(com.mongodb.client.FindIterable&lt;T&gt;&nbsp;iterable,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#apply(com.mongodb.client.FindIterable,dev.morphia.mapping.Mapper,java.lang.Class)">apply</a></span>&#8203;(com.mongodb.client.FindIterable&lt;T&gt;&nbsp;iterable,
      <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#batchSize(int)">batchSize</a></span>​(int&nbsp;batchSize)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#batchSize(int)">batchSize</a></span>&#8203;(int&nbsp;batchSize)</code></th>
 <td class="colLast">
 <div class="block">Sets the batch size</div>
 </td>
@@ -403,21 +210,21 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#clientSession(com.mongodb.client.ClientSession)">clientSession</a></span>​(com.mongodb.client.ClientSession&nbsp;clientSession)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#clientSession(com.mongodb.client.ClientSession)">clientSession</a></span>&#8203;(com.mongodb.client.ClientSession&nbsp;clientSession)</code></th>
 <td class="colLast">
 <div class="block">Set the client session to use for the insert.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collation(com.mongodb.client.model.Collation)">collation</a></span>​(com.mongodb.client.model.Collation&nbsp;collation)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collation(com.mongodb.client.model.Collation)">collation</a></span>&#8203;(com.mongodb.client.model.Collation&nbsp;collation)</code></th>
 <td class="colLast">
 <div class="block">Sets the collation to use</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#comment(java.lang.String)">comment</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;comment)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#comment(java.lang.String)">comment</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;comment)</code></th>
 <td class="colLast">
 <div class="block">Sets the comment to log with the query</div>
 </td>
@@ -429,21 +236,21 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#copy(dev.morphia.query.FindOptions)">copy</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;original)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#copy(dev.morphia.query.FindOptions)">copy</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;original)</code></th>
 <td class="colLast">
 <div class="block">Creates an copy of the given options</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#cursorType(com.mongodb.CursorType)">cursorType</a></span>​(com.mongodb.CursorType&nbsp;cursorType)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#cursorType(com.mongodb.CursorType)">cursorType</a></span>&#8203;(com.mongodb.CursorType&nbsp;cursorType)</code></th>
 <td class="colLast">
 <div class="block">Sets the cursor type</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equals(java.lang.Object)">equals</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;o)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;o)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
@@ -483,12 +290,12 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxAwaitTime(java.util.concurrent.TimeUnit)">getMaxAwaitTime</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxAwaitTime(java.util.concurrent.TimeUnit)">getMaxAwaitTime</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxTime(java.util.concurrent.TimeUnit)">getMaxTime</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxTime(java.util.concurrent.TimeUnit)">getMaxTime</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i19" class="rowColor">
@@ -535,28 +342,28 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(com.mongodb.DBObject)">hint</a></span>​(com.mongodb.DBObject&nbsp;hint)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(com.mongodb.DBObject)">hint</a></span>&#8203;(com.mongodb.DBObject&nbsp;hint)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </td>
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(java.lang.String)">hint</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;hint)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(java.lang.String)">hint</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;hint)</code></th>
 <td class="colLast">
 <div class="block">Defines the index hint value</div>
 </td>
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(org.bson.Document)">hint</a></span>​(org.bson.Document&nbsp;hint)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(org.bson.Document)">hint</a></span>&#8203;(org.bson.Document&nbsp;hint)</code></th>
 <td class="colLast">
 <div class="block">Sets the index hint</div>
 </td>
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hintString(java.lang.String)">hintString</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;hint)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hintString(java.lang.String)">hintString</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;hint)</code></th>
 <td class="colLast">
 <div class="block">Defines the index hint value</div>
 </td>
@@ -595,7 +402,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 </tr>
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#limit(int)">limit</a></span>​(int&nbsp;limit)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#limit(int)">limit</a></span>&#8203;(int&nbsp;limit)</code></th>
 <td class="colLast">
 <div class="block">Sets the limit</div>
 </td>
@@ -609,21 +416,21 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 </tr>
 <tr id="i39" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max(com.mongodb.DBObject)">max</a></span>​(com.mongodb.DBObject&nbsp;max)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max(com.mongodb.DBObject)">max</a></span>&#8203;(com.mongodb.DBObject&nbsp;max)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </td>
 </tr>
 <tr id="i40" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max(org.bson.Document)">max</a></span>​(org.bson.Document&nbsp;max)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max(org.bson.Document)">max</a></span>&#8203;(org.bson.Document&nbsp;max)</code></th>
 <td class="colLast">
 <div class="block">Sets the max index value</div>
 </td>
 </tr>
 <tr id="i41" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxAwaitTime(long,java.util.concurrent.TimeUnit)">maxAwaitTime</a></span>​(long&nbsp;maxAwaitTime,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxAwaitTime(long,java.util.concurrent.TimeUnit)">maxAwaitTime</a></span>&#8203;(long&nbsp;maxAwaitTime,
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</code></th>
 <td class="colLast">
 <div class="block">Sets the max await time</div>
@@ -631,7 +438,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 </tr>
 <tr id="i42" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>​(long&nbsp;maxTime,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>&#8203;(long&nbsp;maxTime,
        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</code></th>
 <td class="colLast">
 <div class="block">Sets the max time</div>
@@ -639,35 +446,35 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min(com.mongodb.DBObject)">min</a></span>​(com.mongodb.DBObject&nbsp;min)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min(com.mongodb.DBObject)">min</a></span>&#8203;(com.mongodb.DBObject&nbsp;min)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </td>
 </tr>
 <tr id="i44" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min(org.bson.Document)">min</a></span>​(org.bson.Document&nbsp;min)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min(org.bson.Document)">min</a></span>&#8203;(org.bson.Document&nbsp;min)</code></th>
 <td class="colLast">
 <div class="block">Sets the min index value</div>
 </td>
 </tr>
 <tr id="i45" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#noCursorTimeout(boolean)">noCursorTimeout</a></span>​(boolean&nbsp;noCursorTimeout)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#noCursorTimeout(boolean)">noCursorTimeout</a></span>&#8203;(boolean&nbsp;noCursorTimeout)</code></th>
 <td class="colLast">
 <div class="block">Sets whether to disable cursor time out</div>
 </td>
 </tr>
 <tr id="i46" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#oplogReplay(boolean)">oplogReplay</a></span>​(boolean&nbsp;oplogReplay)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#oplogReplay(boolean)">oplogReplay</a></span>&#8203;(boolean&nbsp;oplogReplay)</code></th>
 <td class="colLast">
 <div class="block">Users should not set this under normal circumstances.</div>
 </td>
 </tr>
 <tr id="i47" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#partial(boolean)">partial</a></span>​(boolean&nbsp;partial)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#partial(boolean)">partial</a></span>&#8203;(boolean&nbsp;partial)</code></th>
 <td class="colLast">
 <div class="block">Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).</div>
 </td>
@@ -679,56 +486,56 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 </tr>
 <tr id="i49" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readConcern(com.mongodb.ReadConcern)">readConcern</a></span>​(com.mongodb.ReadConcern&nbsp;readConcern)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readConcern(com.mongodb.ReadConcern)">readConcern</a></span>&#8203;(com.mongodb.ReadConcern&nbsp;readConcern)</code></th>
 <td class="colLast">
 <div class="block">Sets the read concern to apply</div>
 </td>
 </tr>
 <tr id="i50" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readPreference(com.mongodb.ReadPreference)">readPreference</a></span>​(com.mongodb.ReadPreference&nbsp;readPreference)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readPreference(com.mongodb.ReadPreference)">readPreference</a></span>&#8203;(com.mongodb.ReadPreference&nbsp;readPreference)</code></th>
 <td class="colLast">
 <div class="block">Sets the read preference to apply</div>
 </td>
 </tr>
 <tr id="i51" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#returnKey(boolean)">returnKey</a></span>​(boolean&nbsp;returnKey)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#returnKey(boolean)">returnKey</a></span>&#8203;(boolean&nbsp;returnKey)</code></th>
 <td class="colLast">
 <div class="block">Sets if only the key value should be returned</div>
 </td>
 </tr>
 <tr id="i52" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showRecordId(boolean)">showRecordId</a></span>​(boolean&nbsp;showRecordId)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showRecordId(boolean)">showRecordId</a></span>&#8203;(boolean&nbsp;showRecordId)</code></th>
 <td class="colLast">
 <div class="block">Sets if the record ID should be returned</div>
 </td>
 </tr>
 <tr id="i53" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#skip(int)">skip</a></span>​(int&nbsp;skip)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#skip(int)">skip</a></span>&#8203;(int&nbsp;skip)</code></th>
 <td class="colLast">
 <div class="block">Sets how many documents to skip</div>
 </td>
 </tr>
 <tr id="i54" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(dev.morphia.query.Meta)">sort</a></span>​(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;meta)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(dev.morphia.query.Meta)">sort</a></span>&#8203;(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;meta)</code></th>
 <td class="colLast">
 <div class="block">Sets to the sort to use</div>
 </td>
 </tr>
 <tr id="i55" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(dev.morphia.query.Sort...)">sort</a></span>​(<a href="Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(dev.morphia.query.Sort...)">sort</a></span>&#8203;(<a href="Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</code></th>
 <td class="colLast">
 <div class="block">Sets to the sort to use</div>
 </td>
 </tr>
 <tr id="i56" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(org.bson.Document)">sort</a></span>​(org.bson.Document&nbsp;sort)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(org.bson.Document)">sort</a></span>&#8203;(org.bson.Document&nbsp;sort)</code></th>
 <td class="colLast">
 <div class="block">Sets to the sort to use</div>
 </td>
@@ -738,7 +545,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -769,7 +576,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>()">
+<a id="&lt;init&gt;()">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -795,7 +602,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>apply</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.FindIterable&lt;T&gt;&nbsp;apply​(com.mongodb.client.FindIterable&lt;T&gt;&nbsp;iterable,
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;com.mongodb.client.FindIterable&lt;T&gt;&nbsp;apply&#8203;(com.mongodb.client.FindIterable&lt;T&gt;&nbsp;iterable,
                                                     <a href="../mapping/Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper,
                                                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;?&gt;&nbsp;type)</pre>
 <dl>
@@ -816,7 +623,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>batchSize</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;batchSize​(int&nbsp;batchSize)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;batchSize&#8203;(int&nbsp;batchSize)</pre>
 <div class="block">Sets the batch size</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -832,7 +639,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>clientSession</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;clientSession​(com.mongodb.client.ClientSession&nbsp;clientSession)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;clientSession&#8203;(com.mongodb.client.ClientSession&nbsp;clientSession)</pre>
 <div class="block">Set the client session to use for the insert.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -870,7 +677,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>collation</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;collation​(com.mongodb.client.model.Collation&nbsp;collation)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;collation&#8203;(com.mongodb.client.model.Collation&nbsp;collation)</pre>
 <div class="block">Sets the collation to use</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -886,7 +693,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>comment</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;comment​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;comment)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;comment&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;comment)</pre>
 <div class="block">Sets the comment to log with the query</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -915,7 +722,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>copy</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;copy​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;original)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;copy&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;original)</pre>
 <div class="block">Creates an copy of the given options</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -931,7 +738,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>cursorType</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;cursorType​(com.mongodb.CursorType&nbsp;cursorType)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;cursorType&#8203;(com.mongodb.CursorType&nbsp;cursorType)</pre>
 <div class="block">Sets the cursor type</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1038,7 +845,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getMaxAwaitTime</h4>
-<pre class="methodSignature">public&nbsp;long&nbsp;getMaxAwaitTime​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</pre>
+<pre class="methodSignature">public&nbsp;long&nbsp;getMaxAwaitTime&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>timeUnit</code> - the time unit to apply</dd>
@@ -1053,7 +860,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>getMaxTime</h4>
-<pre class="methodSignature">public&nbsp;long&nbsp;getMaxTime​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</pre>
+<pre class="methodSignature">public&nbsp;long&nbsp;getMaxTime&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>timeUnit</code> - the time unit to apply</dd>
@@ -1139,7 +946,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>readConcern</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readConcern​(com.mongodb.ReadConcern&nbsp;readConcern)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readConcern&#8203;(com.mongodb.ReadConcern&nbsp;readConcern)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code>dev.morphia.internal.ReadConfigurable</code></span></div>
 <div class="block">Sets the read concern to apply</div>
 <dl>
@@ -1158,7 +965,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>readPreference</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readPreference​(com.mongodb.ReadPreference&nbsp;readPreference)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readPreference&#8203;(com.mongodb.ReadPreference&nbsp;readPreference)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code>dev.morphia.internal.ReadConfigurable</code></span></div>
 <div class="block">Sets the read preference to apply</div>
 <dl>
@@ -1203,7 +1010,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>hint</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hint​(org.bson.Document&nbsp;hint)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hint&#8203;(org.bson.Document&nbsp;hint)</pre>
 <div class="block">Sets the index hint</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1219,7 +1026,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <ul class="blockList">
 <li class="blockList">
 <h4>hint</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hint​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;hint)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hint&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;hint)</pre>
 <div class="block">Defines the index hint value</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1250,7 +1057,7 @@ implements dev.morphia.internal.SessionConfigurable&lt;<a href="FindOptions.html
 <h4>hint</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hint​(com.mongodb.DBObject&nbsp;hint)</pre>
+public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hint&#8203;(com.mongodb.DBObject&nbsp;hint)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Defines the index hint value</div>
 <dl>
@@ -1346,7 +1153,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>limit</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;limit​(int&nbsp;limit)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;limit&#8203;(int&nbsp;limit)</pre>
 <div class="block">Sets the limit</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1376,7 +1183,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>max</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;max​(org.bson.Document&nbsp;max)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;max&#8203;(org.bson.Document&nbsp;max)</pre>
 <div class="block">Sets the max index value</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1392,7 +1199,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>hintString</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hintString​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;hint)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hintString&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;hint)</pre>
 <div class="block">Defines the index hint value</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1408,7 +1215,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>maxAwaitTime</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;maxAwaitTime​(long&nbsp;maxAwaitTime,
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;maxAwaitTime&#8203;(long&nbsp;maxAwaitTime,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</pre>
 <div class="block">Sets the max await time</div>
 <dl>
@@ -1426,7 +1233,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>maxTime</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;maxTime​(long&nbsp;maxTime,
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;maxTime&#8203;(long&nbsp;maxTime,
                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/TimeUnit.html?is-external=true" title="class or interface in java.util.concurrent" class="externalLink">TimeUnit</a>&nbsp;timeUnit)</pre>
 <div class="block">Sets the max time</div>
 <dl>
@@ -1444,7 +1251,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>min</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;min​(org.bson.Document&nbsp;min)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;min&#8203;(org.bson.Document&nbsp;min)</pre>
 <div class="block">Sets the min index value</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1462,7 +1269,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <h4>max</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;max​(com.mongodb.DBObject&nbsp;max)</pre>
+public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;max&#8203;(com.mongodb.DBObject&nbsp;max)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Defines the max value</div>
 <dl>
@@ -1479,7 +1286,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>noCursorTimeout</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;noCursorTimeout​(boolean&nbsp;noCursorTimeout)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;noCursorTimeout&#8203;(boolean&nbsp;noCursorTimeout)</pre>
 <div class="block">Sets whether to disable cursor time out</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1495,7 +1302,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>oplogReplay</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;oplogReplay​(boolean&nbsp;oplogReplay)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;oplogReplay&#8203;(boolean&nbsp;oplogReplay)</pre>
 <div class="block">Users should not set this under normal circumstances.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1511,7 +1318,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>partial</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;partial​(boolean&nbsp;partial)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;partial&#8203;(boolean&nbsp;partial)</pre>
 <div class="block">Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1542,7 +1349,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <h4>min</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;min​(com.mongodb.DBObject&nbsp;min)</pre>
+public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;min&#8203;(com.mongodb.DBObject&nbsp;min)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Defines the min value</div>
 <dl>
@@ -1572,7 +1379,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>equals</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;equals​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;o)</pre>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;equals&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;o)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true#equals(java.lang.Object)" title="class or interface in java.lang" class="externalLink">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a></code></dd>
@@ -1585,7 +1392,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>returnKey</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;returnKey​(boolean&nbsp;returnKey)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;returnKey&#8203;(boolean&nbsp;returnKey)</pre>
 <div class="block">Sets if only the key value should be returned</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1601,7 +1408,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>showRecordId</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;showRecordId​(boolean&nbsp;showRecordId)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;showRecordId&#8203;(boolean&nbsp;showRecordId)</pre>
 <div class="block">Sets if the record ID should be returned</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1617,7 +1424,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>skip</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;skip​(int&nbsp;skip)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;skip&#8203;(int&nbsp;skip)</pre>
 <div class="block">Sets how many documents to skip</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1633,7 +1440,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>sort</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;sort​(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;meta)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;sort&#8203;(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;meta)</pre>
 <div class="block">Sets to the sort to use</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1651,7 +1458,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockList">
 <li class="blockList">
 <h4>sort</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;sort​(org.bson.Document&nbsp;sort)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;sort&#8203;(org.bson.Document&nbsp;sort)</pre>
 <div class="block">Sets to the sort to use</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1667,7 +1474,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 <ul class="blockListLast">
 <li class="blockList">
 <h4>sort</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;sort​(<a href="Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;sort&#8203;(<a href="Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</pre>
 <div class="block">Sets to the sort to use</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1746,20 +1553,7 @@ public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOp
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2021. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2021. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

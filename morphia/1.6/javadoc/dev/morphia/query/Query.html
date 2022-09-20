@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../2.3/javadoc/dev/morphia/query/Query.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/query/Query.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/query/Query.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/query/Query.html">2.0</a>
-    <a class="version is-current" href="Query.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>Query (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -329,14 +154,14 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#and(dev.morphia.query.Criteria...)">and</a></span>​(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#and(dev.morphia.query.Criteria...)">and</a></span>&#8203;(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
 <td class="colLast">
 <div class="block">Creates a container to hold 'and' clauses</div>
 </td>
@@ -352,7 +177,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#asKeyList(dev.morphia.query.FindOptions)">asKeyList</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#asKeyList(dev.morphia.query.FindOptions)">asKeyList</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#keys(dev.morphia.query.FindOptions)"><code>keys(FindOptions)</code></a></div>
@@ -370,7 +195,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>java.util.List&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#asList(dev.morphia.query.FindOptions)">asList</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#asList(dev.morphia.query.FindOptions)">asList</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#find(dev.morphia.query.FindOptions)"><code>find(FindOptions)</code></a></div>
@@ -379,7 +204,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#batchSize(int)">batchSize</a></span>​(int&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#batchSize(int)">batchSize</a></span>&#8203;(int&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly</div>
@@ -397,7 +222,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#comment(java.lang.String)">comment</a></span>​(java.lang.String&nbsp;comment)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#comment(java.lang.String)">comment</a></span>&#8203;(java.lang.String&nbsp;comment)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly.</div>
@@ -413,7 +238,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#count(dev.morphia.query.CountOptions)">count</a></span>​(<a href="CountOptions.html" title="class in dev.morphia.query">CountOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#count(dev.morphia.query.CountOptions)">count</a></span>&#8203;(<a href="CountOptions.html" title="class in dev.morphia.query">CountOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Count the total number of values in the result, ignoring limit and offset</div>
 </td>
@@ -429,7 +254,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#criteria(java.lang.String)">criteria</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#criteria(java.lang.String)">criteria</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block">Creates a criteria to apply against a field</div>
 </td>
@@ -467,21 +292,21 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </td>
 </tr>
 <tr id="i16" class="altColor">
-<td class="colFirst"><code>java.util.Map&lt;java.lang.String,​java.lang.Object&gt;</code></td>
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#explain()">explain</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Provides information on the query plan.</div>
 </td>
 </tr>
 <tr id="i17" class="rowColor">
-<td class="colFirst"><code>java.util.Map&lt;java.lang.String,​java.lang.Object&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#explain(dev.morphia.query.FindOptions)">explain</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#explain(dev.morphia.query.FindOptions)">explain</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Provides information on the query plan.</div>
 </td>
 </tr>
 <tr id="i18" class="altColor">
-<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetch()">fetch</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -490,8 +315,8 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </td>
 </tr>
 <tr id="i19" class="rowColor">
-<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetch(dev.morphia.query.FindOptions)">fetch</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetch(dev.morphia.query.FindOptions)">fetch</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#find(dev.morphia.query.FindOptions)"><code>find(FindOptions)</code></a> instead</div>
@@ -499,7 +324,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </td>
 </tr>
 <tr id="i20" class="altColor">
-<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchEmptyEntities()">fetchEmptyEntities</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -508,8 +333,8 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </td>
 </tr>
 <tr id="i21" class="rowColor">
-<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchEmptyEntities(dev.morphia.query.FindOptions)">fetchEmptyEntities</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchEmptyEntities(dev.morphia.query.FindOptions)">fetchEmptyEntities</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#keys(dev.morphia.query.FindOptions)"><code>keys(FindOptions)</code></a> instead</div>
@@ -527,7 +352,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="MorphiaKeyIterator.html" title="class in dev.morphia.query">MorphiaKeyIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchKeys(dev.morphia.query.FindOptions)">fetchKeys</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchKeys(dev.morphia.query.FindOptions)">fetchKeys</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#keys(dev.morphia.query.FindOptions)"><code>keys(FindOptions)</code></a></div>
@@ -536,14 +361,14 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#field(java.lang.String)">field</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#field(java.lang.String)">field</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block">Fluent query interface: <code>createQuery(Ent.class).field("count").greaterThan(7)...</code></div>
 </td>
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filter(java.lang.String,java.lang.Object)">filter</a></span>​(java.lang.String&nbsp;condition,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filter(java.lang.String,java.lang.Object)">filter</a></span>&#8203;(java.lang.String&nbsp;condition,
       java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Create a filter based on the specified condition and value.</div>
@@ -558,14 +383,14 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="internal/MorphiaCursor.html" title="class in dev.morphia.query.internal">MorphiaCursor</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(dev.morphia.query.FindOptions)">find</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(dev.morphia.query.FindOptions)">find</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Execute the query and get the results.</div>
 </td>
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="type parameter in Query">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#first(dev.morphia.query.FindOptions)">first</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#first(dev.morphia.query.FindOptions)">first</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Gets the first entity in the result set.</div>
 </td>
@@ -581,7 +406,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="type parameter in Query">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(dev.morphia.query.FindOptions)">get</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(dev.morphia.query.FindOptions)">get</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#first(dev.morphia.query.FindOptions)"><code>first(FindOptions)</code></a></div>
@@ -631,7 +456,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code><a href="../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(dev.morphia.query.FindOptions)">getKey</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(dev.morphia.query.FindOptions)">getKey</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <code>MongoIterable.first()</code> instead</div>
@@ -672,7 +497,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i41" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hintIndex(java.lang.String)">hintIndex</a></span>​(java.lang.String&nbsp;idxName)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hintIndex(java.lang.String)">hintIndex</a></span>&#8203;(java.lang.String&nbsp;idxName)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly.</div>
@@ -688,14 +513,14 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><code><a href="internal/MorphiaKeyCursor.html" title="class in dev.morphia.query.internal">MorphiaKeyCursor</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys(dev.morphia.query.FindOptions)">keys</a></span>​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keys(dev.morphia.query.FindOptions)">keys</a></span>&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Execute the query and get the results (as a <code>MorphiaCursor&lt;Key&lt;T&gt;&gt;</code>)</div>
 </td>
 </tr>
 <tr id="i44" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#limit(int)">limit</a></span>​(int&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#limit(int)">limit</a></span>&#8203;(int&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly</div>
@@ -704,7 +529,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i45" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lowerIndexBound(com.mongodb.DBObject)">lowerIndexBound</a></span>​(com.mongodb.DBObject&nbsp;lowerBound)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lowerIndexBound(com.mongodb.DBObject)">lowerIndexBound</a></span>&#8203;(com.mongodb.DBObject&nbsp;lowerBound)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly.</div>
@@ -713,7 +538,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i46" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxScan(int)">maxScan</a></span>​(int&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxScan(int)">maxScan</a></span>&#8203;(int&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
@@ -722,7 +547,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i47" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>​(long&nbsp;maxTime,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>&#8203;(long&nbsp;maxTime,
        java.util.concurrent.TimeUnit&nbsp;maxTimeUnit)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -732,7 +557,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i48" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#offset(int)">offset</a></span>​(int&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#offset(int)">offset</a></span>&#8203;(int&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly</div>
@@ -741,28 +566,28 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i49" class="rowColor">
 <td class="colFirst"><code><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#or(dev.morphia.query.Criteria...)">or</a></span>​(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#or(dev.morphia.query.Criteria...)">or</a></span>&#8203;(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</code></th>
 <td class="colLast">
 <div class="block">Creates a container to hold 'or' clauses</div>
 </td>
 </tr>
 <tr id="i50" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#order(dev.morphia.query.Meta)">order</a></span>​(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;sort)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#order(dev.morphia.query.Meta)">order</a></span>&#8203;(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;sort)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </td>
 </tr>
 <tr id="i51" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#order(dev.morphia.query.Sort...)">order</a></span>​(<a href="Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#order(dev.morphia.query.Sort...)">order</a></span>&#8203;(<a href="Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </td>
 </tr>
 <tr id="i52" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#order(java.lang.String)">order</a></span>​(java.lang.String&nbsp;sort)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#order(java.lang.String)">order</a></span>&#8203;(java.lang.String&nbsp;sort)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#order(dev.morphia.query.Sort...)"><code>order(Sort...)</code></a></div>
@@ -771,14 +596,14 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i53" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#project(dev.morphia.query.Meta)">project</a></span>​(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;meta)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#project(dev.morphia.query.Meta)">project</a></span>&#8203;(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;meta)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </td>
 </tr>
 <tr id="i54" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#project(java.lang.String,boolean)">project</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#project(java.lang.String,boolean)">project</a></span>&#8203;(java.lang.String&nbsp;field,
        boolean&nbsp;include)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -786,7 +611,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i55" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#project(java.lang.String,dev.morphia.query.ArraySlice)">project</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#project(java.lang.String,dev.morphia.query.ArraySlice)">project</a></span>&#8203;(java.lang.String&nbsp;field,
        <a href="ArraySlice.html" title="class in dev.morphia.query">ArraySlice</a>&nbsp;slice)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -812,7 +637,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i58" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#retrievedFields(boolean,java.lang.String...)">retrievedFields</a></span>​(boolean&nbsp;include,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#retrievedFields(boolean,java.lang.String...)">retrievedFields</a></span>&#8203;(boolean&nbsp;include,
                java.lang.String...&nbsp;fields)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -838,21 +663,21 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i61" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#search(java.lang.String)">search</a></span>​(java.lang.String&nbsp;text)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#search(java.lang.String)">search</a></span>&#8203;(java.lang.String&nbsp;text)</code></th>
 <td class="colLast">
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 </td>
 </tr>
 <tr id="i62" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#search(java.lang.String,java.lang.String)">search</a></span>​(java.lang.String&nbsp;text,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#search(java.lang.String,java.lang.String)">search</a></span>&#8203;(java.lang.String&nbsp;text,
       java.lang.String&nbsp;language)</code></th>
 <td class="colLast">
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 </td>
 </tr>
 <tr id="i63" class="rowColor">
-<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tail()">tail</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -861,8 +686,8 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </td>
 </tr>
 <tr id="i64" class="altColor">
-<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tail(boolean)">tail</a></span>​(boolean&nbsp;awaitData)</code></th>
+<td class="colFirst"><code><a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tail(boolean)">tail</a></span>&#8203;(boolean&nbsp;awaitData)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">set the CursorType on <a href="FindOptions.html" title="class in dev.morphia.query"><code>FindOptions</code></a>  and use <a href="#find(dev.morphia.query.FindOptions)"><code>find(FindOptions)</code></a> instead.</div>
@@ -871,7 +696,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i65" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#upperIndexBound(com.mongodb.DBObject)">upperIndexBound</a></span>​(com.mongodb.DBObject&nbsp;upperBound)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#upperIndexBound(com.mongodb.DBObject)">upperIndexBound</a></span>&#8203;(com.mongodb.DBObject&nbsp;upperBound)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly.</div>
@@ -880,7 +705,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i66" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#useReadPreference(com.mongodb.ReadPreference)">useReadPreference</a></span>​(com.mongodb.ReadPreference&nbsp;readPref)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#useReadPreference(com.mongodb.ReadPreference)">useReadPreference</a></span>&#8203;(com.mongodb.ReadPreference&nbsp;readPref)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly</div>
@@ -889,7 +714,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i67" class="rowColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#where(java.lang.String)">where</a></span>​(java.lang.String&nbsp;js)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#where(java.lang.String)">where</a></span>&#8203;(java.lang.String&nbsp;js)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
@@ -898,14 +723,14 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 </tr>
 <tr id="i68" class="altColor">
 <td class="colFirst"><code><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#where(org.bson.types.CodeWScope)">where</a></span>​(org.bson.types.CodeWScope&nbsp;js)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#where(org.bson.types.CodeWScope)">where</a></span>&#8203;(org.bson.types.CodeWScope&nbsp;js)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
 </div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Iterable">
 <!--   -->
@@ -942,7 +767,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <ul class="blockList">
 <li class="blockList">
 <h4>and</h4>
-<pre class="methodSignature"><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&nbsp;and​(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</pre>
+<pre class="methodSignature"><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&nbsp;and&#8203;(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</pre>
 <div class="block">Creates a container to hold 'and' clauses</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -959,7 +784,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <li class="blockList">
 <h4>batchSize</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;batchSize​(int&nbsp;value)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;batchSize&#8203;(int&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly</div>
 </div>
@@ -1001,7 +826,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <li class="blockList">
 <h4>comment</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;comment​(java.lang.String&nbsp;comment)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;comment&#8203;(java.lang.String&nbsp;comment)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly. This can be replicated with <a href="FindOptions.html#comment(java.lang.String)"><code>FindOptions.comment(String)</code></a></div>
 </div>
@@ -1014,9 +839,9 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <dd>the Query to enable chaining of commands</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/meta/comment $comment</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/meta/comment $comment</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="criteria(java.lang.String)">
 <!--   -->
@@ -1024,7 +849,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <ul class="blockList">
 <li class="blockList">
 <h4>criteria</h4>
-<pre class="methodSignature"><a href="FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&gt;&nbsp;criteria​(java.lang.String&nbsp;field)</pre>
+<pre class="methodSignature"><a href="FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&gt;&nbsp;criteria&#8203;(java.lang.String&nbsp;field)</pre>
 <div class="block">Creates a criteria to apply against a field</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1108,7 +933,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <ul class="blockList">
 <li class="blockList">
 <h4>explain</h4>
-<pre class="methodSignature">java.util.Map&lt;java.lang.String,​java.lang.Object&gt;&nbsp;explain()</pre>
+<pre class="methodSignature">java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;explain()</pre>
 <div class="block">Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
  may be useful when optimizing a query.</div>
 <dl>
@@ -1116,9 +941,9 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <dd>Map describing the process used to return the query results.</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/meta/explain/ explain</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/meta/explain/ explain</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="explain(dev.morphia.query.FindOptions)">
 <!--   -->
@@ -1126,7 +951,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <ul class="blockList">
 <li class="blockList">
 <h4>explain</h4>
-<pre class="methodSignature">java.util.Map&lt;java.lang.String,​java.lang.Object&gt;&nbsp;explain​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<pre class="methodSignature">java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;explain&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="block">Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
  may be useful when optimizing a query.</div>
 <dl>
@@ -1138,9 +963,9 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <dd>1.3</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/meta/explain/ explain</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/meta/explain/ explain</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="field(java.lang.String)">
 <!--   -->
@@ -1148,7 +973,7 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <ul class="blockList">
 <li class="blockList">
 <h4>field</h4>
-<pre class="methodSignature"><a href="FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&gt;&nbsp;field​(java.lang.String&nbsp;field)</pre>
+<pre class="methodSignature"><a href="FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;? extends <a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&gt;&nbsp;field&#8203;(java.lang.String&nbsp;field)</pre>
 <div class="block">Fluent query interface: <code>createQuery(Ent.class).field("count").greaterThan(7)...</code></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1164,17 +989,17 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
 <ul class="blockList">
 <li class="blockList">
 <h4>filter</h4>
-<pre class="methodSignature"><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;filter​(java.lang.String&nbsp;condition,
+<pre class="methodSignature"><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;filter&#8203;(java.lang.String&nbsp;condition,
                 java.lang.Object&nbsp;value)</pre>
-<div class="block">Create a filter based on the specified condition and value. <p></p>
+<div class="block">Create a filter based on the specified condition and value. </p>
 
  <p><b>Note</b>: Property is in the form of "name op" ("age &gt;").
- </p><p>
- </p><p>Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"] </p>
- <p>
- </p><p>Examples:</p>
- <p>
- </p><ul>
+ <p/>
+ <p>Valid operators are ["=", "==","!=", "&lt;&gt;", "&gt;", "&lt;", "&gt;=", "&lt;=", "in", "nin", "all", "size", "exists"] </p>
+ <p/>
+ <p>Examples:</p>
+ <p/>
+ <ul>
  <li><code>filter("yearsOfOperation &gt;", 5)</code></li>
  <li><code>filter("rooms.maxBeds &gt;=", 2)</code></li>
  <li><code>filter("rooms.bathrooms exists", 1)</code></li>
@@ -1187,8 +1012,8 @@ extends <a href="QueryResults.html" title="interface in dev.morphia.query">Query
  <li><code>filter("age in", ageList)</code></li>
  <li><code>filter("customers.loyaltyYears in", yearsList)</code></li>
  </ul>
- <p>
- </p><p>You can filter on id properties <strong>if</strong> this query is restricted to a Class<t>.</t></p></div>
+ <p/>
+ <p>You can filter on id properties <strong>if</strong> this query is restricted to a Class<T>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>condition</code> - the condition to apply</dd>
@@ -1342,7 +1167,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>hintIndex</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;hintIndex​(java.lang.String&nbsp;idxName)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;hintIndex&#8203;(java.lang.String&nbsp;idxName)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly. This can be replicated with <code>options.modifier("$hint", idxName)</code></div>
 </div>
@@ -1364,7 +1189,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>limit</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;limit​(int&nbsp;value)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;limit&#8203;(int&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly</div>
 </div>
@@ -1387,11 +1212,11 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>lowerIndexBound</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;lowerIndexBound​(com.mongodb.DBObject&nbsp;lowerBound)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;lowerIndexBound&#8203;(com.mongodb.DBObject&nbsp;lowerBound)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly.</div>
 </div>
-<div class="block"><p> Specify the inclusive lower bound for a specific index in order to constrain the results of this query. </p><p> You can chain
+<div class="block"><p> Specify the inclusive lower bound for a specific index in order to constrain the results of this query. <p/> You can chain
  key/value pairs to build a constraint for a compound index. For instance: </p> <p> <code>query.lowerIndexBound(new
  BasicDBObject("a", 1).append("b", 2)); </code> </p> <p> to build a constraint on index <code>{"a", "b"}</code> </p></div>
 <dl>
@@ -1403,9 +1228,9 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <dd><a href="FindOptions.html#min(com.mongodb.DBObject)"><code>FindOptions.min(DBObject)</code></a></dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/meta/min/ $min</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/meta/min/ $min</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="maxScan(int)">
 <!--   -->
@@ -1414,7 +1239,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>maxScan</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;maxScan​(int&nbsp;value)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;maxScan&#8203;(int&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
 </div>
@@ -1426,9 +1251,9 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <dd>this</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/meta/maxScan/#op._S_maxScan $maxScan</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/meta/maxScan/#op._S_maxScan $maxScan</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="maxTime(long,java.util.concurrent.TimeUnit)">
 <!--   -->
@@ -1437,7 +1262,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>maxTime</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;maxTime​(long&nbsp;maxTime,
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;maxTime&#8203;(long&nbsp;maxTime,
                  java.util.concurrent.TimeUnit&nbsp;maxTimeUnit)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="FindOptions.html#maxTime(long,java.util.concurrent.TimeUnit)"><code>FindOptions.maxTime(long, TimeUnit)</code></a> instead</div>
@@ -1461,7 +1286,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>offset</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;offset​(int&nbsp;value)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;offset&#8203;(int&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly</div>
 </div>
@@ -1482,7 +1307,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>or</h4>
-<pre class="methodSignature"><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&nbsp;or​(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</pre>
+<pre class="methodSignature"><a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&nbsp;or&#8203;(<a href="Criteria.html" title="interface in dev.morphia.query">Criteria</a>...&nbsp;criteria)</pre>
 <div class="block">Creates a container to hold 'or' clauses</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1499,13 +1324,13 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>order</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;order​(java.lang.String&nbsp;sort)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;order&#8203;(java.lang.String&nbsp;sort)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#order(dev.morphia.query.Sort...)"><code>order(Sort...)</code></a></div>
 </div>
 <div class="block">Sorts based on a property (defines return order).  Examples:
- <p>
- </p><ul>
+ <p/>
+ <ul>
  <li><code>order("age")</code></li>
  <li><code>order("-age")</code> (descending order)</li>
  <li><code>order("age, date")</code></li>
@@ -1526,7 +1351,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>order</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;order​(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;sort)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;order&#8203;(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;sort)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Sorts based on a metadata (defines return order). Example:
  <code>order(Meta.textScore())</code>  ({textScore : { $meta: "textScore" }})</div>
@@ -1545,7 +1370,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>order</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;order​(<a href="Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;order&#8203;(<a href="Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Sorts based on a specified sort keys (defines return order).</div>
 <dl>
@@ -1563,7 +1388,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>project</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;project​(java.lang.String&nbsp;field,
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;project&#8203;(java.lang.String&nbsp;field,
                  boolean&nbsp;include)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Adds a field to the projection clause.  Passing true for include will include the field in the results.  Projected fields must all
@@ -1587,7 +1412,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>project</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;project​(java.lang.String&nbsp;field,
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;project&#8203;(java.lang.String&nbsp;field,
                  <a href="ArraySlice.html" title="class in dev.morphia.query">ArraySlice</a>&nbsp;slice)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Adds an sliced array field to a projection.</div>
@@ -1601,9 +1426,9 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <dd><a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a></dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">/reference/operator/projection/slice/ $slice</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>/reference/operator/projection/slice/ $slice</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="project(dev.morphia.query.Meta)">
 <!--   -->
@@ -1612,7 +1437,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>project</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;project​(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;meta)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;project&#8203;(<a href="Meta.html" title="class in dev.morphia.query">Meta</a>&nbsp;meta)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Adds a metadata field to a projection.</div>
 <dl>
@@ -1624,9 +1449,9 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <dd><a href="https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/">Project Fields to Return from Query</a></dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/projection/meta/ $meta</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/projection/meta/ $meta</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="queryNonPrimary()">
 <!--   -->
@@ -1696,7 +1521,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>retrievedFields</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;retrievedFields​(boolean&nbsp;include,
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;retrievedFields&#8203;(boolean&nbsp;include,
                          java.lang.String...&nbsp;fields)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#project(java.lang.String,boolean)"><code>project(String, boolean)</code></a> instead</div>
@@ -1731,9 +1556,9 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <dd><a href="FindOptions.html#returnKey(boolean)"><code>FindOptions.returnKey(boolean)</code></a></dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/meta/returnKey/#op._S_returnKey $returnKey</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/meta/returnKey/#op._S_returnKey $returnKey</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="search(java.lang.String)">
 <!--   -->
@@ -1741,7 +1566,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>search</h4>
-<pre class="methodSignature"><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;search​(java.lang.String&nbsp;text)</pre>
+<pre class="methodSignature"><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;search&#8203;(java.lang.String&nbsp;text)</pre>
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1750,9 +1575,9 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <dd>the Query to enable chaining of commands</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/query/text/ $text</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/query/text/ $text</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="search(java.lang.String,java.lang.String)">
 <!--   -->
@@ -1760,7 +1585,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>search</h4>
-<pre class="methodSignature"><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;search​(java.lang.String&nbsp;text,
+<pre class="methodSignature"><a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;search&#8203;(java.lang.String&nbsp;text,
                 java.lang.String&nbsp;language)</pre>
 <div class="block">Perform a text search on the content of the fields indexed with a text index..</div>
 <dl>
@@ -1771,9 +1596,9 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <dd>the Query to enable chaining of commands</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/query/text/ $text</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/query/text/ $text</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="upperIndexBound(com.mongodb.DBObject)">
 <!--   -->
@@ -1782,11 +1607,11 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>upperIndexBound</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;upperIndexBound​(com.mongodb.DBObject&nbsp;upperBound)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;upperIndexBound&#8203;(com.mongodb.DBObject&nbsp;upperBound)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly.</div>
 </div>
-<div class="block"><p> Specify the exclusive upper bound for a specific index in order to constrain the results of this query. </p><p> You can chain
+<div class="block"><p> Specify the exclusive upper bound for a specific index in order to constrain the results of this query. <p/> You can chain
  key/value pairs to build a constraint for a compound index. For instance: </p> <p> <code>query.upperIndexBound(new
  BasicDBObject("a", 1).append("b", 2)); </code> </p> <p> to build a constraint on index <code>{"a", "b"}</code> </p></div>
 <dl>
@@ -1798,9 +1623,9 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <dd><a href="FindOptions.html#max(com.mongodb.DBObject)"><code>FindOptions.max(DBObject)</code></a></dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/meta/max/ $max</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/meta/max/ $max</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="useReadPreference(com.mongodb.ReadPreference)">
 <!--   -->
@@ -1809,7 +1634,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>useReadPreference</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;useReadPreference​(com.mongodb.ReadPreference&nbsp;readPref)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;useReadPreference&#8203;(com.mongodb.ReadPreference&nbsp;readPref)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use the methods that accept Options directly</div>
 </div>
@@ -1832,7 +1657,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>where</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;where​(java.lang.String&nbsp;js)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;where&#8203;(java.lang.String&nbsp;js)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
 </div>
@@ -1852,7 +1677,7 @@ com.mongodb.DBObject&nbsp;getSortObject()</pre>
 <li class="blockList">
 <h4>where</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;where​(org.bson.types.CodeWScope&nbsp;js)</pre>
+<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;where&#8203;(org.bson.types.CodeWScope&nbsp;js)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
 </div>
@@ -1890,7 +1715,7 @@ java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;
 <li class="blockList">
 <h4>asKeyList</h4>
 <pre class="methodSignature">@Deprecated
-java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&gt;&nbsp;asKeyList​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&gt;&nbsp;asKeyList&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#keys(dev.morphia.query.FindOptions)"><code>keys(FindOptions)</code></a></div>
 </div>
@@ -1925,7 +1750,7 @@ java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;
 <ul class="blockList">
 <li class="blockList">
 <h4>keys</h4>
-<pre class="methodSignature"><a href="internal/MorphiaKeyCursor.html" title="class in dev.morphia.query.internal">MorphiaKeyCursor</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;keys​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<pre class="methodSignature"><a href="internal/MorphiaKeyCursor.html" title="class in dev.morphia.query.internal">MorphiaKeyCursor</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;keys&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="block">Execute the query and get the results (as a <code>MorphiaCursor&lt;Key&lt;T&gt;&gt;</code>)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1962,7 +1787,7 @@ java.util.List&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;
 <li class="blockList">
 <h4>asList</h4>
 <pre class="methodSignature">@Deprecated
-java.util.List&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;asList​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+java.util.List&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;asList&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#find(dev.morphia.query.FindOptions)"><code>find(FindOptions)</code></a></div>
 </div>
@@ -2017,7 +1842,7 @@ long&nbsp;countAll()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>count</h4>
-<pre class="methodSignature">long&nbsp;count​(<a href="CountOptions.html" title="class in dev.morphia.query">CountOptions</a>&nbsp;options)</pre>
+<pre class="methodSignature">long&nbsp;count&#8203;(<a href="CountOptions.html" title="class in dev.morphia.query">CountOptions</a>&nbsp;options)</pre>
 <div class="block">Count the total number of values in the result, ignoring limit and offset</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -2036,7 +1861,7 @@ long&nbsp;countAll()</pre>
 <li class="blockList">
 <h4>fetch</h4>
 <pre class="methodSignature">@Deprecated
-<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetch()</pre>
+<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetch()</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#find(dev.morphia.query.FindOptions)"><code>find(FindOptions)</code></a> instead</div>
 </div>
@@ -2054,7 +1879,7 @@ long&nbsp;countAll()</pre>
 <li class="blockList">
 <h4>fetch</h4>
 <pre class="methodSignature">@Deprecated
-<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetch​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetch&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#find(dev.morphia.query.FindOptions)"><code>find(FindOptions)</code></a> instead</div>
 </div>
@@ -2095,7 +1920,7 @@ long&nbsp;countAll()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>find</h4>
-<pre class="methodSignature"><a href="internal/MorphiaCursor.html" title="class in dev.morphia.query.internal">MorphiaCursor</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;find​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<pre class="methodSignature"><a href="internal/MorphiaCursor.html" title="class in dev.morphia.query.internal">MorphiaCursor</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;find&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="block">Execute the query and get the results.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -2114,7 +1939,7 @@ long&nbsp;countAll()</pre>
 <li class="blockList">
 <h4>fetchEmptyEntities</h4>
 <pre class="methodSignature">@Deprecated
-<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetchEmptyEntities()</pre>
+<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetchEmptyEntities()</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#keys()"><code>keys()</code></a> instead</div>
 </div>
@@ -2133,7 +1958,7 @@ long&nbsp;countAll()</pre>
 <li class="blockList">
 <h4>fetchEmptyEntities</h4>
 <pre class="methodSignature">@Deprecated
-<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetchEmptyEntities​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetchEmptyEntities&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#keys(dev.morphia.query.FindOptions)"><code>keys(FindOptions)</code></a> instead</div>
 </div>
@@ -2176,7 +2001,7 @@ long&nbsp;countAll()</pre>
 <li class="blockList">
 <h4>fetchKeys</h4>
 <pre class="methodSignature">@Deprecated
-<a href="MorphiaKeyIterator.html" title="class in dev.morphia.query">MorphiaKeyIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetchKeys​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<a href="MorphiaKeyIterator.html" title="class in dev.morphia.query">MorphiaKeyIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;fetchKeys&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#keys(dev.morphia.query.FindOptions)"><code>keys(FindOptions)</code></a></div>
 </div>
@@ -2197,7 +2022,7 @@ long&nbsp;countAll()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>first</h4>
-<pre class="methodSignature"><a href="Query.html" title="type parameter in Query">T</a>&nbsp;first​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<pre class="methodSignature"><a href="Query.html" title="type parameter in Query">T</a>&nbsp;first&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="block">Gets the first entity in the result set.  Obeys the <a href="Query.html" title="interface in dev.morphia.query"><code>Query</code></a> offset value.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -2234,7 +2059,7 @@ long&nbsp;countAll()</pre>
 <li class="blockList">
 <h4>get</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Query.html" title="type parameter in Query">T</a>&nbsp;get​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<a href="Query.html" title="type parameter in Query">T</a>&nbsp;get&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#first(dev.morphia.query.FindOptions)"><code>first(FindOptions)</code></a></div>
 </div>
@@ -2274,7 +2099,7 @@ long&nbsp;countAll()</pre>
 <li class="blockList">
 <h4>getKey</h4>
 <pre class="methodSignature">@Deprecated
-<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;getKey​(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
+<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;getKey&#8203;(<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <code>MongoIterable.first()</code> instead</div>
 </div>
@@ -2296,7 +2121,7 @@ long&nbsp;countAll()</pre>
 <li class="blockList">
 <h4>tail</h4>
 <pre class="methodSignature">@Deprecated
-<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;tail()</pre>
+<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;tail()</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">set the CursorType on <a href="FindOptions.html" title="class in dev.morphia.query"><code>FindOptions</code></a> and use <a href="#find(dev.morphia.query.FindOptions)"><code>find(FindOptions)</code></a> instead</div>
 </div>
@@ -2316,7 +2141,7 @@ long&nbsp;countAll()</pre>
 <li class="blockList">
 <h4>tail</h4>
 <pre class="methodSignature">@Deprecated
-<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,​<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;tail​(boolean&nbsp;awaitData)</pre>
+<a href="MorphiaIterator.html" title="class in dev.morphia.query">MorphiaIterator</a>&lt;<a href="Query.html" title="type parameter in Query">T</a>,&#8203;<a href="Query.html" title="type parameter in Query">T</a>&gt;&nbsp;tail&#8203;(boolean&nbsp;awaitData)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">set the CursorType on <a href="FindOptions.html" title="class in dev.morphia.query"><code>FindOptions</code></a>  and use <a href="#find(dev.morphia.query.FindOptions)"><code>find(FindOptions)</code></a> instead. This can be replicated using
  <code>findOptions.cursorType (awaitData ? TailableAwait : Tailable)</code></div>
@@ -2401,20 +2226,7 @@ long&nbsp;countAll()</pre>
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

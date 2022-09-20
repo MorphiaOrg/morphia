@@ -1,241 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../migrating.html">Migrating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../quicktour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Features</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../kotlin.html">Kotlin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../sharding.html">Sharding</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../queries.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../updates.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../deletes.html">Deleting</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../aggregations.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../textSearches.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../references.html">References</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../schemaValidation.html">Schema Validation</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text"><em>Support</em></span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version is-current">
-          <a href="../../../../index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
-  <div class="version-menu">
-    <a class="version is-current" href="FieldEndImpl.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/query/FieldEndImpl.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/query/FieldEndImpl.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/query/FieldEndImpl.html">2.0</a>
-    <a class="version" href="../../../../../1.6/javadoc/dev/morphia/query/FieldEndImpl.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.16.1) on Tue Sep 20 04:28:49 UTC 2022 -->
+<title>FieldEndImpl (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2022-09-20">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -383,14 +165,14 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier</th>
 <th class="colSecond" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected </code></td>
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,java.lang.String,T,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">FieldEndImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,java.lang.String,T,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">FieldEndImpl</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
             <a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;target,
             <a href="../mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model,
@@ -400,7 +182,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <div class="block">Creates a FieldEnd for a particular field.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -413,14 +195,14 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>protected <a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addCriteria(dev.morphia.query.FilterOperator,java.lang.Object)">addCriteria</a></span>​(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addCriteria(dev.morphia.query.FilterOperator,java.lang.Object)">addCriteria</a></span>&#8203;(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -428,7 +210,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected <a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addCriteria(dev.morphia.query.FilterOperator,java.lang.Object,boolean)">addCriteria</a></span>​(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addCriteria(dev.morphia.query.FilterOperator,java.lang.Object,boolean)">addCriteria</a></span>&#8203;(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val,
            boolean&nbsp;not)</code></th>
 <td class="colLast">
@@ -437,16 +219,16 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>protected <a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addGeoCriteria(dev.morphia.query.FilterOperator,java.lang.Object,java.util.Map)">addGeoCriteria</a></span>​(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addGeoCriteria(dev.morphia.query.FilterOperator,java.lang.Object,java.util.Map)">addGeoCriteria</a></span>&#8203;(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val,
-              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;opts)</code></th>
+              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;opts)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 &nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#contains(java.lang.String)">contains</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#contains(java.lang.String)">contains</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks if a field contains a value</div>
@@ -454,7 +236,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containsIgnoreCase(java.lang.String)">containsIgnoreCase</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containsIgnoreCase(java.lang.String)">containsIgnoreCase</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks if a field contains a value ignoring the case of the values</div>
@@ -470,7 +252,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#elemMatch(dev.morphia.query.Query)">elemMatch</a></span>​(<a href="Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#elemMatch(dev.morphia.query.Query)">elemMatch</a></span>&#8203;(<a href="Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field matches the provided query definition</div>
@@ -478,7 +260,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#endsWith(java.lang.String)">endsWith</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#endsWith(java.lang.String)">endsWith</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field ends with a value</div>
@@ -486,7 +268,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#endsWithIgnoreCase(java.lang.String)">endsWithIgnoreCase</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#endsWithIgnoreCase(java.lang.String)">endsWithIgnoreCase</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field ends with a value ignoring the case of the values</div>
@@ -494,7 +276,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equal(java.lang.Object)">equal</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equal(java.lang.Object)">equal</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field equals a value</div>
@@ -502,7 +284,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equalIgnoreCase(java.lang.Object)">equalIgnoreCase</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equalIgnoreCase(java.lang.Object)">equalIgnoreCase</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field equals a value</div>
@@ -525,7 +307,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#greaterThan(java.lang.Object)">greaterThan</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#greaterThan(java.lang.Object)">greaterThan</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field is greater than the value given</div>
@@ -533,7 +315,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#greaterThanOrEq(java.lang.Object)">greaterThanOrEq</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#greaterThanOrEq(java.lang.Object)">greaterThanOrEq</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field is greater than or equal to the value given</div>
@@ -541,7 +323,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasAllOf(java.lang.Iterable)">hasAllOf</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasAllOf(java.lang.Iterable)">hasAllOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field has all of the values listed.</div>
@@ -549,7 +331,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasAnyOf(java.lang.Iterable)">hasAnyOf</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasAnyOf(java.lang.Iterable)">hasAnyOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field has any of the values listed.</div>
@@ -557,7 +339,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasNoneOf(java.lang.Iterable)">hasNoneOf</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasNoneOf(java.lang.Iterable)">hasNoneOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field has none of the values listed.</div>
@@ -565,7 +347,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasThisOne(java.lang.Object)">hasThisOne</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasThisOne(java.lang.Object)">hasThisOne</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field has the value listed.</div>
@@ -573,7 +355,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#in(java.lang.Iterable)">in</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#in(java.lang.Iterable)">in</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Synonym for <a href="FieldEnd.html#hasAnyOf(java.lang.Iterable)"><code>FieldEnd.hasAnyOf(Iterable)</code></a></div>
@@ -581,7 +363,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(com.mongodb.client.model.geojson.Geometry)">intersects</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Geometry.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Geometry</a>&nbsp;geometry)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(com.mongodb.client.model.geojson.Geometry)">intersects</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Geometry.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Geometry</a>&nbsp;geometry)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
@@ -590,7 +372,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(com.mongodb.client.model.geojson.Geometry,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">intersects</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Geometry.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Geometry</a>&nbsp;geometry,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(com.mongodb.client.model.geojson.Geometry,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">intersects</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Geometry.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Geometry</a>&nbsp;geometry,
           <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/CoordinateReferenceSystem.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">CoordinateReferenceSystem</a>&nbsp;crs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -607,7 +389,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessThan(java.lang.Object)">lessThan</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessThan(java.lang.Object)">lessThan</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field is less than the value given</div>
@@ -615,7 +397,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessThanOrEq(java.lang.Object)">lessThanOrEq</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessThanOrEq(java.lang.Object)">lessThanOrEq</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field is less than or equal to the value given</div>
@@ -623,7 +405,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mod(long,long)">mod</a></span>​(long&nbsp;divisor,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mod(long,long)">mod</a></span>&#8203;(long&nbsp;divisor,
    long&nbsp;remainder)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -632,7 +414,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double)">near</a></span>​(double&nbsp;longitude,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double)">near</a></span>&#8203;(double&nbsp;longitude,
     double&nbsp;latitude)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -641,7 +423,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,boolean)">near</a></span>​(double&nbsp;longitude,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,boolean)">near</a></span>&#8203;(double&nbsp;longitude,
     double&nbsp;latitude,
     boolean&nbsp;spherical)</code></th>
 <td class="colLast">
@@ -651,7 +433,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,double)">near</a></span>​(double&nbsp;longitude,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,double)">near</a></span>&#8203;(double&nbsp;longitude,
     double&nbsp;latitude,
     double&nbsp;radius)</code></th>
 <td class="colLast">
@@ -661,7 +443,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,double,boolean)">near</a></span>​(double&nbsp;longitude,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,double,boolean)">near</a></span>&#8203;(double&nbsp;longitude,
     double&nbsp;latitude,
     double&nbsp;radius,
     boolean&nbsp;spherical)</code></th>
@@ -672,7 +454,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(com.mongodb.client.model.geojson.Point)">near</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(com.mongodb.client.model.geojson.Point)">near</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">This runs a $near query to check for documents geographically close to the given Point - this Point represents a GeoJSON point type.</div>
@@ -680,7 +462,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">near</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">near</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</code></th>
 <td class="colLast">
@@ -690,7 +472,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(com.mongodb.client.model.geojson.Point)">nearSphere</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(com.mongodb.client.model.geojson.Point)">nearSphere</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Specifies a point for which a geospatial query returns the documents from nearest to farthest.</div>
@@ -698,7 +480,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i33" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">nearSphere</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">nearSphere</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point,
           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</code></th>
 <td class="colLast">
@@ -716,7 +498,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i35" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notEqual(java.lang.Object)">notEqual</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notEqual(java.lang.Object)">notEqual</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field doesn't equal a value</div>
@@ -724,7 +506,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notIn(java.lang.Iterable)">notIn</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notIn(java.lang.Iterable)">notIn</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Synonym for <a href="FieldEnd.html#hasNoneOf(java.lang.Iterable)"><code>FieldEnd.hasNoneOf(Iterable)</code></a></div>
@@ -732,7 +514,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sizeEq(int)">sizeEq</a></span>​(int&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sizeEq(int)">sizeEq</a></span>&#8203;(int&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks the size of a field.</div>
@@ -740,7 +522,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i38" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startsWith(java.lang.String)">startsWith</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startsWith(java.lang.String)">startsWith</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field starts with a value</div>
@@ -748,7 +530,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i39" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startsWithIgnoreCase(java.lang.String)">startsWithIgnoreCase</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startsWithIgnoreCase(java.lang.String)">startsWithIgnoreCase</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks that a field starts with a value ignoring the case of the values</div>
@@ -756,7 +538,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i40" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#type(dev.morphia.query.Type)">type</a></span>​(<a href="Type.html" title="enum in dev.morphia.query">Type</a>&nbsp;type)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#type(dev.morphia.query.Type)">type</a></span>&#8203;(<a href="Type.html" title="enum in dev.morphia.query">Type</a>&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Checks the type of a field</div>
@@ -764,7 +546,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i41" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.MultiPolygon)">within</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/MultiPolygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">MultiPolygon</a>&nbsp;boundaries)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.MultiPolygon)">within</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/MultiPolygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">MultiPolygon</a>&nbsp;boundaries)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries.</div>
@@ -772,7 +554,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i42" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.MultiPolygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">within</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/MultiPolygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">MultiPolygon</a>&nbsp;boundaries,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.MultiPolygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">within</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/MultiPolygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">MultiPolygon</a>&nbsp;boundaries,
       <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/CoordinateReferenceSystem.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">CoordinateReferenceSystem</a>&nbsp;crs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -781,7 +563,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.Polygon)">within</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Polygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Polygon</a>&nbsp;boundary)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.Polygon)">within</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Polygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Polygon</a>&nbsp;boundary)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundary.</div>
@@ -789,7 +571,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i44" class="altColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.Polygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">within</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Polygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Polygon</a>&nbsp;boundary,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.Polygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">within</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Polygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Polygon</a>&nbsp;boundary,
       <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/CoordinateReferenceSystem.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">CoordinateReferenceSystem</a>&nbsp;crs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -798,13 +580,13 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </tr>
 <tr id="i45" class="rowColor">
 <td class="colFirst"><code><a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.query.Shape)">within</a></span>​(<a href="Shape.html" title="class in dev.morphia.query">Shape</a>&nbsp;shape)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.query.Shape)">within</a></span>&#8203;(<a href="Shape.html" title="class in dev.morphia.query">Shape</a>&nbsp;shape)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">This implements the $geoWithin operator and is only compatible with mongo 2.4 or greater.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -835,15 +617,15 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.Datastore,java.lang.String,dev.morphia.query.CriteriaContainer,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">
+<a id="&lt;init&gt;(dev.morphia.Datastore,java.lang.String,dev.morphia.query.CriteriaContainer,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">
 <!--   -->
-</a><a id="<init>(dev.morphia.Datastore,java.lang.String,T,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">
+</a><a id="&lt;init&gt;(dev.morphia.Datastore,java.lang.String,T,dev.morphia.mapping.codec.pojo.EntityModel,boolean)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>FieldEndImpl</h4>
-<pre>protected&nbsp;FieldEndImpl​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<pre>protected&nbsp;FieldEndImpl&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                        <a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;target,
                        <a href="../mapping/codec/pojo/EntityModel.html" title="class in dev.morphia.mapping.codec.pojo">EntityModel</a>&nbsp;model,
@@ -875,7 +657,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>contains</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;contains​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;contains&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#contains(java.lang.String)">FieldEnd</a></code></span></div>
 <div class="block">Checks if a field contains a value</div>
@@ -895,7 +677,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>containsIgnoreCase</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;containsIgnoreCase​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;containsIgnoreCase&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#containsIgnoreCase(java.lang.String)">FieldEnd</a></code></span></div>
 <div class="block">Checks if a field contains a value ignoring the case of the values</div>
@@ -933,7 +715,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>endsWith</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;endsWith​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;endsWith&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#endsWith(java.lang.String)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field ends with a value</div>
@@ -953,7 +735,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>endsWithIgnoreCase</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;endsWithIgnoreCase​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;endsWithIgnoreCase&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#endsWithIgnoreCase(java.lang.String)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field ends with a value ignoring the case of the values</div>
@@ -973,7 +755,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>equal</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;equal​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;equal&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#equal(java.lang.Object)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field equals a value</div>
@@ -993,7 +775,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>equalIgnoreCase</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;equalIgnoreCase​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;equalIgnoreCase&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#equalIgnoreCase(java.lang.Object)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field equals a value</div>
@@ -1031,7 +813,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>greaterThan</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;greaterThan​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;greaterThan&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#greaterThan(java.lang.Object)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field is greater than the value given</div>
@@ -1051,7 +833,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>greaterThanOrEq</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;greaterThanOrEq​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;greaterThanOrEq&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#greaterThanOrEq(java.lang.Object)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field is greater than or equal to the value given</div>
@@ -1071,7 +853,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>hasAllOf</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;hasAllOf​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;hasAllOf&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#hasAllOf(java.lang.Iterable)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field has all of the values listed.</div>
@@ -1091,7 +873,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>hasAnyOf</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;hasAnyOf​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;hasAnyOf&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#hasAnyOf(java.lang.Iterable)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field has any of the values listed.</div>
@@ -1111,7 +893,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>hasNoneOf</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;hasNoneOf​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;hasNoneOf&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#hasNoneOf(java.lang.Iterable)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field has none of the values listed.</div>
@@ -1131,7 +913,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>elemMatch</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;elemMatch​(<a href="Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;elemMatch&#8203;(<a href="Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#elemMatch(dev.morphia.query.Query)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field matches the provided query definition</div>
@@ -1151,7 +933,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>hasThisOne</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;hasThisOne​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;hasThisOne&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#hasThisOne(java.lang.Object)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field has the value listed.</div>
@@ -1171,7 +953,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>in</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;in​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;in&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#in(java.lang.Iterable)">FieldEnd</a></code></span></div>
 <div class="block">Synonym for <a href="FieldEnd.html#hasAnyOf(java.lang.Iterable)"><code>FieldEnd.hasAnyOf(Iterable)</code></a></div>
@@ -1191,7 +973,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>intersects</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;intersects​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Geometry.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Geometry</a>&nbsp;geometry)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;intersects&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Geometry.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Geometry</a>&nbsp;geometry)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#intersects(com.mongodb.client.model.geojson.Geometry)">FieldEnd</a></code></span></div>
 <div class="block">This performs a $geoIntersects query, searching documents containing any sort of GeoJson field and returning those where the given
@@ -1212,7 +994,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>intersects</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;intersects​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Geometry.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Geometry</a>&nbsp;geometry,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;intersects&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Geometry.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Geometry</a>&nbsp;geometry,
                     <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/CoordinateReferenceSystem.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">CoordinateReferenceSystem</a>&nbsp;crs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#intersects(com.mongodb.client.model.geojson.Geometry,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">FieldEnd</a></code></span></div>
@@ -1235,7 +1017,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>lessThan</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;lessThan​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;lessThan&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#lessThan(java.lang.Object)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field is less than the value given</div>
@@ -1255,7 +1037,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>lessThanOrEq</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;lessThanOrEq​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;lessThanOrEq&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#lessThanOrEq(java.lang.Object)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field is less than or equal to the value given</div>
@@ -1275,7 +1057,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>mod</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;mod​(long&nbsp;divisor,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;mod&#8203;(long&nbsp;divisor,
              long&nbsp;remainder)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#mod(long,long)">FieldEnd</a></code></span></div>
@@ -1298,7 +1080,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>near</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near​(double&nbsp;longitude,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near&#8203;(double&nbsp;longitude,
               double&nbsp;latitude)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#near(double,double)">FieldEnd</a></code></span></div>
@@ -1320,7 +1102,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>near</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near​(double&nbsp;longitude,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near&#8203;(double&nbsp;longitude,
               double&nbsp;latitude,
               boolean&nbsp;spherical)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -1344,7 +1126,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>near</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near​(double&nbsp;longitude,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near&#8203;(double&nbsp;longitude,
               double&nbsp;latitude,
               double&nbsp;radius)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -1368,7 +1150,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>near</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near​(double&nbsp;longitude,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near&#8203;(double&nbsp;longitude,
               double&nbsp;latitude,
               double&nbsp;radius,
               boolean&nbsp;spherical)</pre>
@@ -1394,7 +1176,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>near</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#near(com.mongodb.client.model.geojson.Point)">FieldEnd</a></code></span></div>
 <div class="block">This runs a $near query to check for documents geographically close to the given Point - this Point represents a GeoJSON point type.
@@ -1415,7 +1197,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>near</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;near&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point,
               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
               <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -1439,7 +1221,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>nearSphere</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;nearSphere​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;nearSphere&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#nearSphere(com.mongodb.client.model.geojson.Point)">FieldEnd</a></code></span></div>
 <div class="block">Specifies a point for which a geospatial query returns the documents from nearest to farthest.</div>
@@ -1459,7 +1241,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>nearSphere</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;nearSphere​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;nearSphere&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Point.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Point</a>&nbsp;point,
                     <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
                     <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/lang/Nullable.html?is-external=true" title="class or interface in com.mongodb.lang" class="externalLink">@Nullable</a>
@@ -1503,7 +1285,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>notEqual</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;notEqual​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;notEqual&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#notEqual(java.lang.Object)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field doesn't equal a value</div>
@@ -1523,7 +1305,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>notIn</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;notIn​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;notIn&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#notIn(java.lang.Iterable)">FieldEnd</a></code></span></div>
 <div class="block">Synonym for <a href="FieldEnd.html#hasNoneOf(java.lang.Iterable)"><code>FieldEnd.hasNoneOf(Iterable)</code></a></div>
@@ -1543,7 +1325,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>sizeEq</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;sizeEq​(int&nbsp;val)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;sizeEq&#8203;(int&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#sizeEq(int)">FieldEnd</a></code></span></div>
 <div class="block">Checks the size of a field.</div>
@@ -1563,7 +1345,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>startsWith</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;startsWith​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;startsWith&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#startsWith(java.lang.String)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field starts with a value</div>
@@ -1583,7 +1365,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>startsWithIgnoreCase</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;startsWithIgnoreCase​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;startsWithIgnoreCase&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#startsWithIgnoreCase(java.lang.String)">FieldEnd</a></code></span></div>
 <div class="block">Checks that a field starts with a value ignoring the case of the values</div>
@@ -1603,7 +1385,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>type</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;type​(<a href="Type.html" title="enum in dev.morphia.query">Type</a>&nbsp;type)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;type&#8203;(<a href="Type.html" title="enum in dev.morphia.query">Type</a>&nbsp;type)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#type(dev.morphia.query.Type)">FieldEnd</a></code></span></div>
 <div class="block">Checks the type of a field</div>
@@ -1623,7 +1405,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>within</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within​(<a href="Shape.html" title="class in dev.morphia.query">Shape</a>&nbsp;shape)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within&#8203;(<a href="Shape.html" title="class in dev.morphia.query">Shape</a>&nbsp;shape)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#within(dev.morphia.query.Shape)">FieldEnd</a></code></span></div>
 <div class="block">This implements the $geoWithin operator and is only compatible with mongo 2.4 or greater.</div>
@@ -1643,7 +1425,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>within</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Polygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Polygon</a>&nbsp;boundary)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Polygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Polygon</a>&nbsp;boundary)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#within(com.mongodb.client.model.geojson.Polygon)">FieldEnd</a></code></span></div>
 <div class="block">This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundary. When determining
@@ -1664,7 +1446,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>within</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/MultiPolygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">MultiPolygon</a>&nbsp;boundaries)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/MultiPolygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">MultiPolygon</a>&nbsp;boundaries)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#within(com.mongodb.client.model.geojson.MultiPolygon)">FieldEnd</a></code></span></div>
 <div class="block">This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
@@ -1686,7 +1468,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>within</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Polygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Polygon</a>&nbsp;boundary,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/Polygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">Polygon</a>&nbsp;boundary,
                 <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/CoordinateReferenceSystem.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">CoordinateReferenceSystem</a>&nbsp;crs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#within(com.mongodb.client.model.geojson.Polygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">FieldEnd</a></code></span></div>
@@ -1709,15 +1491,15 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>within</h4>
-<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/MultiPolygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">MultiPolygon</a>&nbsp;boundaries,
+<pre class="methodSignature">public&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;within&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/MultiPolygon.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">MultiPolygon</a>&nbsp;boundaries,
                 <a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/mongodb-driver-core/com/mongodb/client/model/geojson/CoordinateReferenceSystem.html?is-external=true" title="class or interface in com.mongodb.client.model.geojson" class="externalLink">CoordinateReferenceSystem</a>&nbsp;crs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="FieldEnd.html#within(com.mongodb.client.model.geojson.MultiPolygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">FieldEnd</a></code></span></div>
 <div class="block">This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
  determining inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point
  numbers.
- <p>
- These queries are only compatible with MongoDB 2.6 or greater.</p></div>
+ <p/>
+ These queries are only compatible with MongoDB 2.6 or greater.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="FieldEnd.html#within(com.mongodb.client.model.geojson.MultiPolygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">within</a></code>&nbsp;in interface&nbsp;<code><a href="FieldEnd.html" title="interface in dev.morphia.query">FieldEnd</a>&lt;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a> extends <a href="CriteriaContainer.html" title="interface in dev.morphia.query">CriteriaContainer</a>&gt;</code></dd>
@@ -1735,7 +1517,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>addCriteria</h4>
-<pre class="methodSignature">protected&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;addCriteria​(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
+<pre class="methodSignature">protected&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;addCriteria&#8203;(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </li>
@@ -1746,7 +1528,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>addCriteria</h4>
-<pre class="methodSignature">protected&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;addCriteria​(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
+<pre class="methodSignature">protected&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;addCriteria&#8203;(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
                         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val,
                         boolean&nbsp;not)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -1758,9 +1540,9 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 <ul class="blockList">
 <li class="blockList">
 <h4>addGeoCriteria</h4>
-<pre class="methodSignature">protected&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;addGeoCriteria​(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
+<pre class="methodSignature">protected&nbsp;<a href="FieldEndImpl.html" title="type parameter in FieldEndImpl">T</a>&nbsp;addGeoCriteria&#8203;(<a href="FilterOperator.html" title="enum in dev.morphia.query">FilterOperator</a>&nbsp;op,
                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val,
-                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,​<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;opts)</pre>
+                           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Map.html?is-external=true" title="class or interface in java.util" class="externalLink">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&gt;&nbsp;opts)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </li>
 </ul>
@@ -1853,20 +1635,7 @@ implements <a href="FieldEnd.html" title="interface in dev.morphia.query">FieldE
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2022. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

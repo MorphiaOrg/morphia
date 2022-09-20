@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../2.3/javadoc/dev/morphia/FindAndModifyOptions.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../2.2/javadoc/dev/morphia/FindAndModifyOptions.html">2.2</a>
-    <a class="version" href="../../../../2.1/javadoc/dev/morphia/FindAndModifyOptions.html">2.1</a>
-    <a class="version" href="../../../../2.0/javadoc/dev/morphia/FindAndModifyOptions.html">2.0</a>
-    <a class="version is-current" href="FindAndModifyOptions.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>FindAndModifyOptions (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../script.js"></script>
+<script type="text/javascript" src="../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -330,7 +155,7 @@ extends java.lang.Object</pre>
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
@@ -340,7 +165,7 @@ extends java.lang.Object</pre>
 <div class="block">Creates a new options instance.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -353,21 +178,21 @@ extends java.lang.Object</pre>
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bypassDocumentValidation(java.lang.Boolean)">bypassDocumentValidation</a></span>​(java.lang.Boolean&nbsp;bypassDocumentValidation)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bypassDocumentValidation(java.lang.Boolean)">bypassDocumentValidation</a></span>&#8203;(java.lang.Boolean&nbsp;bypassDocumentValidation)</code></th>
 <td class="colLast">
 <div class="block">Sets the bypassDocumentValidation</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collation(com.mongodb.client.model.Collation)">collation</a></span>​(com.mongodb.client.model.Collation&nbsp;collation)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collation(com.mongodb.client.model.Collation)">collation</a></span>&#8203;(com.mongodb.client.model.Collation&nbsp;collation)</code></th>
 <td class="colLast">
 <div class="block">Sets the collation</div>
 </td>
@@ -388,7 +213,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxTime(java.util.concurrent.TimeUnit)">getMaxTime</a></span>​(java.util.concurrent.TimeUnit&nbsp;timeUnit)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxTime(java.util.concurrent.TimeUnit)">getMaxTime</a></span>&#8203;(java.util.concurrent.TimeUnit&nbsp;timeUnit)</code></th>
 <td class="colLast">
 <div class="block">Gets the maximum execution time on the server for this operation.</div>
 </td>
@@ -423,7 +248,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>​(long&nbsp;maxTime,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>&#8203;(long&nbsp;maxTime,
        java.util.concurrent.TimeUnit&nbsp;timeUnit)</code></th>
 <td class="colLast">
 <div class="block">Sets the maximum execution time on the server for this operation.</div>
@@ -431,7 +256,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(boolean)">remove</a></span>​(boolean&nbsp;remove)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(boolean)">remove</a></span>&#8203;(boolean&nbsp;remove)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">This will be removed in 2.0.</div>
@@ -440,26 +265,26 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#returnNew(boolean)">returnNew</a></span>​(boolean&nbsp;returnNew)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#returnNew(boolean)">returnNew</a></span>&#8203;(boolean&nbsp;returnNew)</code></th>
 <td class="colLast">
 <div class="block">Sets the returnNew</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#upsert(boolean)">upsert</a></span>​(boolean&nbsp;upsert)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#upsert(boolean)">upsert</a></span>&#8203;(boolean&nbsp;upsert)</code></th>
 <td class="colLast">
 <div class="block">Indicates that an upsert should be performed</div>
 </td>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>​(com.mongodb.WriteConcern&nbsp;writeConcern)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#writeConcern(com.mongodb.WriteConcern)">writeConcern</a></span>&#8203;(com.mongodb.WriteConcern&nbsp;writeConcern)</code></th>
 <td class="colLast">
 <div class="block">Sets the writeConcern</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -483,7 +308,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>()">
+<a id="&lt;init&gt;()">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -524,7 +349,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>remove</h4>
 <pre class="methodSignature">@Deprecated
-public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;remove​(boolean&nbsp;remove)</pre>
+public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;remove&#8203;(boolean&nbsp;remove)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">This will be removed in 2.0.  use <a href="Datastore.html#findAndDelete(dev.morphia.query.Query)"><code>Datastore.findAndDelete(Query)</code></a> to remove items.</div>
 </div>
@@ -557,7 +382,7 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <ul class="blockList">
 <li class="blockList">
 <h4>upsert</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;upsert​(boolean&nbsp;upsert)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;upsert&#8203;(boolean&nbsp;upsert)</pre>
 <div class="block">Indicates that an upsert should be performed</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -566,9 +391,9 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <dd>this</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/db.collection.update/#upsert-behavior upsert</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/db.collection.update/#upsert-behavior upsert</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="isReturnNew()">
 <!--   -->
@@ -590,7 +415,7 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <ul class="blockList">
 <li class="blockList">
 <h4>returnNew</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;returnNew​(boolean&nbsp;returnNew)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;returnNew&#8203;(boolean&nbsp;returnNew)</pre>
 <div class="block">Sets the returnNew</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -620,7 +445,7 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <ul class="blockList">
 <li class="blockList">
 <h4>bypassDocumentValidation</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;bypassDocumentValidation​(java.lang.Boolean&nbsp;bypassDocumentValidation)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;bypassDocumentValidation&#8203;(java.lang.Boolean&nbsp;bypassDocumentValidation)</pre>
 <div class="block">Sets the bypassDocumentValidation</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -636,7 +461,7 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <ul class="blockList">
 <li class="blockList">
 <h4>getMaxTime</h4>
-<pre class="methodSignature">public&nbsp;long&nbsp;getMaxTime​(java.util.concurrent.TimeUnit&nbsp;timeUnit)</pre>
+<pre class="methodSignature">public&nbsp;long&nbsp;getMaxTime&#8203;(java.util.concurrent.TimeUnit&nbsp;timeUnit)</pre>
 <div class="block">Gets the maximum execution time on the server for this operation.  The default is 0, which places no limit on the execution time.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -645,9 +470,9 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <dd>the maximum execution time in the given time unit</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="maxTime(long,java.util.concurrent.TimeUnit)">
 <!--   -->
@@ -655,7 +480,7 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <ul class="blockList">
 <li class="blockList">
 <h4>maxTime</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;maxTime​(long&nbsp;maxTime,
+<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;maxTime&#8203;(long&nbsp;maxTime,
                                     java.util.concurrent.TimeUnit&nbsp;timeUnit)</pre>
 <div class="block">Sets the maximum execution time on the server for this operation.</div>
 <dl>
@@ -666,9 +491,9 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <dd>this</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getWriteConcern()">
 <!--   -->
@@ -683,9 +508,9 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <dd>the writeConcern</dd>
 
 <dl><dt><span class="strong">Since server release</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/release-notes/@mongodb.server.release">3.2</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/release-notes/@mongodb.server.release'>3.2</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="writeConcern(com.mongodb.WriteConcern)">
 <!--   -->
@@ -693,7 +518,7 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <ul class="blockList">
 <li class="blockList">
 <h4>writeConcern</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;writeConcern​(com.mongodb.WriteConcern&nbsp;writeConcern)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;writeConcern&#8203;(com.mongodb.WriteConcern&nbsp;writeConcern)</pre>
 <div class="block">Sets the writeConcern</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -702,9 +527,9 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <dd>this</dd>
 
 <dl><dt><span class="strong">Since server release</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/release-notes/@mongodb.server.release">3.2</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/release-notes/@mongodb.server.release'>3.2</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getCollation()">
 <!--   -->
@@ -719,9 +544,9 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <dd>the collation options</dd>
 
 <dl><dt><span class="strong">Since server release</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/release-notes/@mongodb.server.release">3.4</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/release-notes/@mongodb.server.release'>3.4</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="collation(com.mongodb.client.model.Collation)">
 <!--   -->
@@ -729,7 +554,7 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <ul class="blockListLast">
 <li class="blockList">
 <h4>collation</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;collation​(com.mongodb.client.model.Collation&nbsp;collation)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;collation&#8203;(com.mongodb.client.model.Collation&nbsp;collation)</pre>
 <div class="block">Sets the collation</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -738,9 +563,9 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 <dd>this</dd>
 
 <dl><dt><span class="strong">Since server release</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/release-notes/@mongodb.server.release">3.4</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/release-notes/@mongodb.server.release'>3.4</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 </li>
 </ul>
@@ -811,20 +636,7 @@ public&nbsp;<a href="FindAndModifyOptions.html" title="class in dev.morphia">Fin
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../_/js/site.js"></script>
-<script async src="../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

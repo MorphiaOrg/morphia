@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../2.3/javadoc/dev/morphia/mapping/Mapper.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/mapping/Mapper.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/mapping/Mapper.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/mapping/Mapper.html">2.0</a>
-    <a class="version is-current" href="Mapper.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>Mapper (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -330,7 +155,7 @@ extends java.lang.Object</pre>
 <h3>Field Summary</h3>
 <table class="memberSummary">
 <caption><span>Fields</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Field</th>
 <th class="colLast" scope="col">Description</th>
@@ -359,7 +184,7 @@ extends java.lang.Object</pre>
 <div class="block">Special name that can never be used.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -372,7 +197,7 @@ extends java.lang.Object</pre>
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
@@ -384,21 +209,21 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.MapperOptions)">Mapper</a></span>​(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;opts)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.MapperOptions)">Mapper</a></span>&#8203;(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;opts)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a Mapper with the given options.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.MapperOptions,dev.morphia.mapping.Mapper)">Mapper</a></span>​(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.mapping.MapperOptions,dev.morphia.mapping.Mapper)">Mapper</a></span>&#8203;(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options,
       <a href="Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a new Mapper with the given options and a Mapper to copy.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -411,14 +236,14 @@ extends java.lang.Object</pre>
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addInterceptor(dev.morphia.EntityInterceptor)">addInterceptor</a></span>​(<a href="../EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a>&nbsp;ei)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addInterceptor(dev.morphia.EntityInterceptor)">addInterceptor</a></span>&#8203;(<a href="../EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a>&nbsp;ei)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Adds an <a href="../EntityInterceptor.html" title="interface in dev.morphia"><code>EntityInterceptor</code></a></div>
@@ -426,7 +251,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addMappedClass(java.lang.Class)">addMappedClass</a></span>​(java.lang.Class&nbsp;c)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addMappedClass(java.lang.Class)">addMappedClass</a></span>&#8203;(java.lang.Class&nbsp;c)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a MappedClass and validates it.</div>
@@ -442,7 +267,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fromDb(dev.morphia.Datastore,com.mongodb.DBObject,T,dev.morphia.mapping.cache.EntityCache)">fromDb</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fromDb(dev.morphia.Datastore,com.mongodb.DBObject,T,dev.morphia.mapping.cache.EntityCache)">fromDb</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
       com.mongodb.DBObject&nbsp;dbObject,
       T&nbsp;entity,
       <a href="cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache)</code></th>
@@ -454,7 +279,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fromDBObject(dev.morphia.Datastore,java.lang.Class,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache)">fromDBObject</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fromDBObject(dev.morphia.Datastore,java.lang.Class,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache)">fromDBObject</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
             java.lang.Class&lt;T&gt;&nbsp;entityClass,
             com.mongodb.DBObject&nbsp;dbObject,
             <a href="cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache)</code></th>
@@ -466,7 +291,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.lang.Class&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClassFromCollection(java.lang.String)">getClassFromCollection</a></span>​(java.lang.String&nbsp;collection)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getClassFromCollection(java.lang.String)">getClassFromCollection</a></span>&#8203;(java.lang.String&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
@@ -475,7 +300,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCollectionName(java.lang.Object)">getCollectionName</a></span>​(java.lang.Object&nbsp;object)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCollectionName(java.lang.Object)">getCollectionName</a></span>&#8203;(java.lang.Object&nbsp;object)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
@@ -491,14 +316,14 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getId(java.lang.Object)">getId</a></span>​(java.lang.Object&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getId(java.lang.Object)">getId</a></span>&#8203;(java.lang.Object&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the ID value for an entity</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>java.util.Map&lt;java.lang.Class,​java.lang.Object&gt;</code></td>
+<td class="colFirst"><code>java.util.Map&lt;java.lang.Class,&#8203;java.lang.Object&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInstanceCache()">getInstanceCache</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -516,7 +341,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(T)">getKey</a></span>​(T&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(T)">getKey</a></span>&#8203;(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the Key for an entity</div>
@@ -524,7 +349,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(T,java.lang.String)">getKey</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(T,java.lang.String)">getKey</a></span>&#8203;(T&nbsp;entity,
       java.lang.String&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -533,7 +358,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKeysByManualRefs(java.lang.Class,java.util.List)">getKeysByManualRefs</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKeysByManualRefs(java.lang.Class,java.util.List)">getKeysByManualRefs</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                    java.util.List&lt;java.lang.Object&gt;&nbsp;refs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -542,7 +367,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKeysByRefs(java.util.List)">getKeysByRefs</a></span>​(java.util.List&lt;com.mongodb.DBRef&gt;&nbsp;refs)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKeysByRefs(java.util.List)">getKeysByRefs</a></span>&#8203;(java.util.List&lt;com.mongodb.DBRef&gt;&nbsp;refs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the Keys for a list of objects</div>
@@ -550,7 +375,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMappedClass(java.lang.Object)">getMappedClass</a></span>​(java.lang.Object&nbsp;obj)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMappedClass(java.lang.Object)">getMappedClass</a></span>&#8203;(java.lang.Object&nbsp;obj)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the <a href="MappedClass.html" title="class in dev.morphia.mapping"><code>MappedClass</code></a> for the object (type).</div>
@@ -564,7 +389,7 @@ extends java.lang.Object</pre>
 &nbsp;</td>
 </tr>
 <tr id="i17" class="rowColor">
-<td class="colFirst"><code>java.util.Map&lt;java.lang.String,​<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMCMap()">getMCMap</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -586,7 +411,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code>java.util.List&lt;<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSubTypes(dev.morphia.mapping.MappedClass)">getSubTypes</a></span>​(<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;mc)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSubTypes(dev.morphia.mapping.MappedClass)">getSubTypes</a></span>&#8203;(<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;mc)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Finds any subtypes for the given MappedClass.</div>
@@ -594,7 +419,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isMapped(java.lang.Class)">isMapped</a></span>​(java.lang.Class&nbsp;c)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isMapped(java.lang.Class)">isMapped</a></span>&#8203;(java.lang.Class&nbsp;c)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Checks to see if a Class has been mapped.</div>
@@ -602,7 +427,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>com.mongodb.DBRef</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keyToDBRef(dev.morphia.Key)">keyToDBRef</a></span>​(<a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#keyToDBRef(dev.morphia.Key)">keyToDBRef</a></span>&#8203;(<a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Converts a Key to a DBRef</div>
@@ -610,7 +435,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#manualRefToKey(java.lang.Class,java.lang.Object)">manualRefToKey</a></span>​(java.lang.Class&lt;T&gt;&nbsp;type,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#manualRefToKey(java.lang.Class,java.lang.Object)">manualRefToKey</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;type,
               java.lang.Object&nbsp;id)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -619,7 +444,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#refToKey(com.mongodb.DBRef)">refToKey</a></span>​(com.mongodb.DBRef&nbsp;ref)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#refToKey(com.mongodb.DBRef)">refToKey</a></span>&#8203;(com.mongodb.DBRef&nbsp;ref)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Converts a DBRef to a Key</div>
@@ -627,7 +452,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOptions(dev.morphia.mapping.MapperOptions)">setOptions</a></span>​(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOptions(dev.morphia.mapping.MapperOptions)">setOptions</a></span>&#8203;(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Sets the options this Mapper should use</div>
@@ -635,7 +460,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code>com.mongodb.DBObject</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDBObject(java.lang.Object)">toDBObject</a></span>​(java.lang.Object&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDBObject(java.lang.Object)">toDBObject</a></span>&#8203;(java.lang.Object&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">/**
@@ -644,8 +469,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>com.mongodb.DBObject</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDBObject(java.lang.Object,java.util.Map)">toDBObject</a></span>​(java.lang.Object&nbsp;entity,
-          java.util.Map&lt;java.lang.Object,​com.mongodb.DBObject&gt;&nbsp;involvedObjects)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDBObject(java.lang.Object,java.util.Map)">toDBObject</a></span>&#8203;(java.lang.Object&nbsp;entity,
+          java.util.Map&lt;java.lang.Object,&#8203;com.mongodb.DBObject&gt;&nbsp;involvedObjects)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Converts an entity (POJO) to a DBObject.</div>
@@ -653,7 +478,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code>java.lang.Object</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toMongoObject(dev.morphia.mapping.MappedField,dev.morphia.mapping.MappedClass,java.lang.Object)">toMongoObject</a></span>​(<a href="MappedField.html" title="class in dev.morphia.mapping">MappedField</a>&nbsp;mf,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toMongoObject(dev.morphia.mapping.MappedField,dev.morphia.mapping.MappedClass,java.lang.Object)">toMongoObject</a></span>&#8203;(<a href="MappedField.html" title="class in dev.morphia.mapping">MappedField</a>&nbsp;mf,
              <a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;mc,
              java.lang.Object&nbsp;value)</code></th>
 <td class="colLast">
@@ -663,7 +488,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateCollection(dev.morphia.Key)">updateCollection</a></span>​(<a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateCollection(dev.morphia.Key)">updateCollection</a></span>&#8203;(<a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Updates the collection value on a Key with the mapped value on the Key's type Class</div>
@@ -671,7 +496,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateKeyAndVersionInfo(dev.morphia.Datastore,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache,java.lang.Object)">updateKeyAndVersionInfo</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateKeyAndVersionInfo(dev.morphia.Datastore,com.mongodb.DBObject,dev.morphia.mapping.cache.EntityCache,java.lang.Object)">updateKeyAndVersionInfo</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                        com.mongodb.DBObject&nbsp;dbObj,
                        <a href="cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache,
                        java.lang.Object&nbsp;entity)</code></th>
@@ -680,7 +505,7 @@ extends java.lang.Object</pre>
 <div class="block">Updates the @<a href="../annotations/Id.html" title="annotation in dev.morphia.annotations"><code>Id</code></a> and @<a href="../annotations/Version.html" title="annotation in dev.morphia.annotations"><code>Version</code></a> fields.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -764,13 +589,13 @@ public static final&nbsp;java.lang.String CLASS_NAME_FIELDNAME</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.mapping.MapperOptions)">
+<a id="&lt;init&gt;(dev.morphia.mapping.MapperOptions)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>Mapper</h4>
-<pre>public&nbsp;Mapper​(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;opts)</pre>
+<pre>public&nbsp;Mapper&#8203;(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;opts)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a Mapper with the given options.</div>
 <dl>
@@ -779,7 +604,7 @@ public static final&nbsp;java.lang.String CLASS_NAME_FIELDNAME</pre>
 </dl>
 </li>
 </ul>
-<a id="<init>()">
+<a id="&lt;init&gt;()">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -794,13 +619,13 @@ public static final&nbsp;java.lang.String CLASS_NAME_FIELDNAME</pre>
 </dl>
 </li>
 </ul>
-<a id="<init>(dev.morphia.mapping.MapperOptions,dev.morphia.mapping.Mapper)">
+<a id="&lt;init&gt;(dev.morphia.mapping.MapperOptions,dev.morphia.mapping.Mapper)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>Mapper</h4>
-<pre>public&nbsp;Mapper​(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options,
+<pre>public&nbsp;Mapper&#8203;(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options,
               <a href="Mapper.html" title="class in dev.morphia.mapping">Mapper</a>&nbsp;mapper)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a new Mapper with the given options and a Mapper to copy.  This is effectively a copy constructor that allows a developer
@@ -828,7 +653,7 @@ public static final&nbsp;java.lang.String CLASS_NAME_FIELDNAME</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>addInterceptor</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;addInterceptor​(<a href="../EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a>&nbsp;ei)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;addInterceptor&#8203;(<a href="../EntityInterceptor.html" title="interface in dev.morphia">EntityInterceptor</a>&nbsp;ei)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Adds an <a href="../EntityInterceptor.html" title="interface in dev.morphia"><code>EntityInterceptor</code></a></div>
 <dl>
@@ -843,7 +668,7 @@ public static final&nbsp;java.lang.String CLASS_NAME_FIELDNAME</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>addMappedClass</h4>
-<pre class="methodSignature">public&nbsp;<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;addMappedClass​(java.lang.Class&nbsp;c)</pre>
+<pre class="methodSignature">public&nbsp;<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;addMappedClass&#8203;(java.lang.Class&nbsp;c)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a MappedClass and validates it.</div>
 <dl>
@@ -876,7 +701,7 @@ public static final&nbsp;java.lang.String CLASS_NAME_FIELDNAME</pre>
 <li class="blockList">
 <h4>fromDBObject</h4>
 <pre class="methodSignature">@Deprecated
-public&nbsp;&lt;T&gt;&nbsp;T&nbsp;fromDBObject​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+public&nbsp;&lt;T&gt;&nbsp;T&nbsp;fromDBObject&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                           java.lang.Class&lt;T&gt;&nbsp;entityClass,
                           com.mongodb.DBObject&nbsp;dbObject,
                           <a href="cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache)</pre>
@@ -903,7 +728,7 @@ public&nbsp;&lt;T&gt;&nbsp;T&nbsp;fromDBObject​(<a href="../Datastore.html" ti
 <ul class="blockList">
 <li class="blockList">
 <h4>getSubTypes</h4>
-<pre class="methodSignature">public&nbsp;java.util.List&lt;<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&gt;&nbsp;getSubTypes​(<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;mc)</pre>
+<pre class="methodSignature">public&nbsp;java.util.List&lt;<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&gt;&nbsp;getSubTypes&#8203;(<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;mc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Finds any subtypes for the given MappedClass.</div>
 <dl>
@@ -925,7 +750,7 @@ public&nbsp;&lt;T&gt;&nbsp;T&nbsp;fromDBObject​(<a href="../Datastore.html" ti
 <li class="blockList">
 <h4>fromDb</h4>
 <pre class="methodSignature">@Deprecated
-public&nbsp;&lt;T&gt;&nbsp;T&nbsp;fromDb​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+public&nbsp;&lt;T&gt;&nbsp;T&nbsp;fromDb&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                     com.mongodb.DBObject&nbsp;dbObject,
                     T&nbsp;entity,
                     <a href="cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache)</pre>
@@ -953,7 +778,7 @@ public&nbsp;&lt;T&gt;&nbsp;T&nbsp;fromDb​(<a href="../Datastore.html" title="i
 <li class="blockList">
 <h4>getClassFromCollection</h4>
 <pre class="methodSignature">@Deprecated
-public&nbsp;java.lang.Class&lt;?&gt;&nbsp;getClassFromCollection​(java.lang.String&nbsp;collection)</pre>
+public&nbsp;java.lang.Class&lt;?&gt;&nbsp;getClassFromCollection&#8203;(java.lang.String&nbsp;collection)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
 </div>
@@ -973,7 +798,7 @@ public&nbsp;java.lang.Class&lt;?&gt;&nbsp;getClassFromCollection​(java.lang.St
 <li class="blockList">
 <h4>getCollectionName</h4>
 <pre class="methodSignature">@Deprecated
-public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;object)</pre>
+public&nbsp;java.lang.String&nbsp;getCollectionName&#8203;(java.lang.Object&nbsp;object)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
 </div>
@@ -1006,7 +831,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>getId</h4>
-<pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;getId​(java.lang.Object&nbsp;entity)</pre>
+<pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;getId&#8203;(java.lang.Object&nbsp;entity)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the ID value for an entity</div>
 <dl>
@@ -1023,7 +848,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>getInstanceCache</h4>
-<pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.Class,​java.lang.Object&gt;&nbsp;getInstanceCache()</pre>
+<pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.Class,&#8203;java.lang.Object&gt;&nbsp;getInstanceCache()</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">no replacement is planned</div>
 </div>
@@ -1056,7 +881,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>getKey</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;getKey​(T&nbsp;entity)</pre>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;getKey&#8203;(T&nbsp;entity)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the Key for an entity</div>
 <dl>
@@ -1077,7 +902,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>getKey</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;getKey​(T&nbsp;entity,
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;getKey&#8203;(T&nbsp;entity,
                          java.lang.String&nbsp;collection)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the Key for an entity and a specific collection</div>
@@ -1098,7 +923,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>getKeysByManualRefs</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;getKeysByManualRefs​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;getKeysByManualRefs&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                                                       java.util.List&lt;java.lang.Object&gt;&nbsp;refs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the Keys for a list of objects</div>
@@ -1119,7 +944,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>getKeysByRefs</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;getKeysByRefs​(java.util.List&lt;com.mongodb.DBRef&gt;&nbsp;refs)</pre>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;java.util.List&lt;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;getKeysByRefs&#8203;(java.util.List&lt;com.mongodb.DBRef&gt;&nbsp;refs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the Keys for a list of objects</div>
 <dl>
@@ -1138,7 +963,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>getMCMap</h4>
-<pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.String,​<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&gt;&nbsp;getMCMap()</pre>
+<pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.String,&#8203;<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&gt;&nbsp;getMCMap()</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -1152,7 +977,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>getMappedClass</h4>
-<pre class="methodSignature">public&nbsp;<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;getMappedClass​(java.lang.Object&nbsp;obj)</pre>
+<pre class="methodSignature">public&nbsp;<a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;getMappedClass&#8203;(java.lang.Object&nbsp;obj)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Gets the <a href="MappedClass.html" title="class in dev.morphia.mapping"><code>MappedClass</code></a> for the object (type). If it isn't mapped, create a new class and cache it (without validating).</div>
 <dl>
@@ -1197,7 +1022,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>setOptions</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setOptions​(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;setOptions&#8203;(<a href="MapperOptions.html" title="class in dev.morphia.mapping">MapperOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Sets the options this Mapper should use</div>
 <dl>
@@ -1212,7 +1037,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>isMapped</h4>
-<pre class="methodSignature">public&nbsp;boolean&nbsp;isMapped​(java.lang.Class&nbsp;c)</pre>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isMapped&#8203;(java.lang.Class&nbsp;c)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Checks to see if a Class has been mapped.</div>
 <dl>
@@ -1229,7 +1054,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>keyToDBRef</h4>
-<pre class="methodSignature">public&nbsp;com.mongodb.DBRef&nbsp;keyToDBRef​(<a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key)</pre>
+<pre class="methodSignature">public&nbsp;com.mongodb.DBRef&nbsp;keyToDBRef&#8203;(<a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Converts a Key to a DBRef</div>
 <dl>
@@ -1246,7 +1071,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>manualRefToKey</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;manualRefToKey​(java.lang.Class&lt;T&gt;&nbsp;type,
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;manualRefToKey&#8203;(java.lang.Class&lt;T&gt;&nbsp;type,
                                  java.lang.Object&nbsp;id)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a Key for a type and an ID value</div>
@@ -1267,7 +1092,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>refToKey</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;refToKey​(com.mongodb.DBRef&nbsp;ref)</pre>
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;<a href="../Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;refToKey&#8203;(com.mongodb.DBRef&nbsp;ref)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Converts a DBRef to a Key</div>
 <dl>
@@ -1286,7 +1111,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>toDBObject</h4>
-<pre class="methodSignature">public&nbsp;com.mongodb.DBObject&nbsp;toDBObject​(java.lang.Object&nbsp;entity)</pre>
+<pre class="methodSignature">public&nbsp;com.mongodb.DBObject&nbsp;toDBObject&#8203;(java.lang.Object&nbsp;entity)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">/**
  Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.</div>
@@ -1304,8 +1129,8 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>toDBObject</h4>
-<pre class="methodSignature">public&nbsp;com.mongodb.DBObject&nbsp;toDBObject​(java.lang.Object&nbsp;entity,
-                                       java.util.Map&lt;java.lang.Object,​com.mongodb.DBObject&gt;&nbsp;involvedObjects)</pre>
+<pre class="methodSignature">public&nbsp;com.mongodb.DBObject&nbsp;toDBObject&#8203;(java.lang.Object&nbsp;entity,
+                                       java.util.Map&lt;java.lang.Object,&#8203;com.mongodb.DBObject&gt;&nbsp;involvedObjects)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Converts an entity (POJO) to a DBObject.  A special field will be added to keep track of the class type.</div>
 <dl>
@@ -1323,7 +1148,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>toMongoObject</h4>
-<pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;toMongoObject​(<a href="MappedField.html" title="class in dev.morphia.mapping">MappedField</a>&nbsp;mf,
+<pre class="methodSignature">public&nbsp;java.lang.Object&nbsp;toMongoObject&#8203;(<a href="MappedField.html" title="class in dev.morphia.mapping">MappedField</a>&nbsp;mf,
                                       <a href="MappedClass.html" title="class in dev.morphia.mapping">MappedClass</a>&nbsp;mc,
                                       java.lang.Object&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
@@ -1344,7 +1169,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>updateCollection</h4>
-<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;updateCollection​(<a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key)</pre>
+<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;updateCollection&#8203;(<a href="../Key.html" title="class in dev.morphia">Key</a>&nbsp;key)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Updates the collection value on a Key with the mapped value on the Key's type Class</div>
 <dl>
@@ -1361,7 +1186,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 <ul class="blockList">
 <li class="blockList">
 <h4>updateKeyAndVersionInfo</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;updateKeyAndVersionInfo​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<pre class="methodSignature">public&nbsp;void&nbsp;updateKeyAndVersionInfo&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                                     com.mongodb.DBObject&nbsp;dbObj,
                                     <a href="cache/EntityCache.html" title="interface in dev.morphia.mapping.cache">EntityCache</a>&nbsp;cache,
                                     java.lang.Object&nbsp;entity)</pre>
@@ -1455,20 +1280,7 @@ public&nbsp;java.lang.String&nbsp;getCollectionName​(java.lang.Object&nbsp;obj
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

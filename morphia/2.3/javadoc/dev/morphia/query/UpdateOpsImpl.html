@@ -1,241 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../migrating.html">Migrating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../quicktour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Features</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../kotlin.html">Kotlin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../sharding.html">Sharding</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../queries.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../updates.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../deletes.html">Deleting</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../aggregations.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../textSearches.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../references.html">References</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../schemaValidation.html">Schema Validation</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text"><em>Support</em></span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version is-current">
-          <a href="../../../../index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
-  <div class="version-menu">
-    <a class="version is-current" href="UpdateOpsImpl.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/query/UpdateOpsImpl.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/query/UpdateOpsImpl.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/query/UpdateOpsImpl.html">2.0</a>
-    <a class="version" href="../../../../../1.6/javadoc/dev/morphia/query/UpdateOpsImpl.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.16.1) on Tue Sep 20 04:28:49 UTC 2022 -->
+<title>UpdateOpsImpl (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2022-09-20">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -386,19 +168,19 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.DatastoreImpl,java.lang.Class)">UpdateOpsImpl</a></span>​(<a href="../DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>&nbsp;datastore,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.DatastoreImpl,java.lang.Class)">UpdateOpsImpl</a></span>&#8203;(<a href="../DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>&nbsp;datastore,
              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Creates an UpdateOpsImpl for the type given.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -411,14 +193,14 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addToSet(java.lang.String,java.lang.Iterable)">addToSet</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addToSet(java.lang.String,java.lang.Iterable)">addToSet</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -427,7 +209,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addToSet(java.lang.String,java.lang.Object)">addToSet</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addToSet(java.lang.String,java.lang.Object)">addToSet</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -436,7 +218,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addToSet(java.lang.String,java.util.List)">addToSet</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addToSet(java.lang.String,java.util.List)">addToSet</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
         <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -445,7 +227,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dec(java.lang.String)">dec</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dec(java.lang.String)">dec</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Decrements the numeric field by 1</div>
@@ -453,7 +235,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dec(java.lang.String,java.lang.Number)">dec</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dec(java.lang.String,java.lang.Number)">dec</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -486,7 +268,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#inc(java.lang.String)">inc</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#inc(java.lang.String)">inc</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Increments the numeric field by 1</div>
@@ -494,7 +276,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#inc(java.lang.String,java.lang.Number)">inc</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#inc(java.lang.String,java.lang.Number)">inc</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -503,7 +285,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max(java.lang.String,java.lang.Number)">max</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max(java.lang.String,java.lang.Number)">max</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -512,7 +294,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min(java.lang.String,java.lang.Number)">min</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min(java.lang.String,java.lang.Number)">min</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -521,7 +303,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push(java.lang.String,java.lang.Object)">push</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push(java.lang.String,java.lang.Object)">push</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -530,7 +312,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push(java.lang.String,java.lang.Object,dev.morphia.query.PushOptions)">push</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push(java.lang.String,java.lang.Object,dev.morphia.query.PushOptions)">push</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
     <a href="PushOptions.html" title="class in dev.morphia.query">PushOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -540,7 +322,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push(java.lang.String,java.util.List)">push</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push(java.lang.String,java.util.List)">push</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -549,7 +331,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push(java.lang.String,java.util.List,dev.morphia.query.PushOptions)">push</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#push(java.lang.String,java.util.List,dev.morphia.query.PushOptions)">push</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;values,
     <a href="PushOptions.html" title="class in dev.morphia.query">PushOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -559,7 +341,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>protected <a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(java.lang.String,boolean)">remove</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldExpr,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#remove(java.lang.String,boolean)">remove</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldExpr,
       boolean&nbsp;firstNotLast)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -567,7 +349,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeAll(java.lang.String,java.lang.Object)">removeAll</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeAll(java.lang.String,java.lang.Object)">removeAll</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -576,7 +358,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeAll(java.lang.String,java.util.List)">removeAll</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeAll(java.lang.String,java.util.List)">removeAll</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -585,7 +367,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeFirst(java.lang.String)">removeFirst</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeFirst(java.lang.String)">removeFirst</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">removes the first value from the array</div>
@@ -593,7 +375,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeLast(java.lang.String)">removeLast</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeLast(java.lang.String)">removeLast</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">removes the last value from the array</div>
@@ -601,7 +383,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#set(java.lang.String,java.lang.Object)">set</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#set(java.lang.String,java.lang.Object)">set</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -610,7 +392,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOnInsert(java.lang.String,java.lang.Object)">setOnInsert</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOnInsert(java.lang.String,java.lang.Object)">setOnInsert</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -619,7 +401,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOps(org.bson.Document)">setOps</a></span>​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;ops)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setOps(org.bson.Document)">setOps</a></span>&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;ops)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Sets the operations for this UpdateOpsImpl</div>
@@ -627,13 +409,13 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unset(java.lang.String)">unset</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unset(java.lang.String)">unset</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">removes the field</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.dev.morphia.query.UpdateBase">
 <!--   -->
@@ -664,13 +446,13 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.DatastoreImpl,java.lang.Class)">
+<a id="&lt;init&gt;(dev.morphia.DatastoreImpl,java.lang.Class)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>UpdateOpsImpl</h4>
-<pre>public&nbsp;UpdateOpsImpl​(<a href="../DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>&nbsp;datastore,
+<pre>public&nbsp;UpdateOpsImpl&#8203;(<a href="../DatastoreImpl.html" title="class in dev.morphia">DatastoreImpl</a>&nbsp;datastore,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;type)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Creates an UpdateOpsImpl for the type given.</div>
@@ -697,7 +479,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>addToSet</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;addToSet​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;addToSet&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#addToSet(java.lang.String,java.lang.Object)">UpdateOperations</a></code></span></div>
@@ -719,7 +501,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>addToSet</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;addToSet​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;addToSet&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#addToSet(java.lang.String,java.util.List)">UpdateOperations</a></code></span></div>
@@ -741,7 +523,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>addToSet</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;addToSet​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;addToSet&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#addToSet(java.lang.String,java.lang.Iterable)">UpdateOperations</a></code></span></div>
@@ -763,7 +545,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>dec</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;dec​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;dec&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#dec(java.lang.String)">UpdateOperations</a></code></span></div>
 <div class="block">Decrements the numeric field by 1</div>
@@ -783,7 +565,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>dec</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;dec​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;dec&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#dec(java.lang.String,java.lang.Number)">UpdateOperations</a></code></span></div>
@@ -842,7 +624,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>inc</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;inc​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;inc&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#inc(java.lang.String)">UpdateOperations</a></code></span></div>
 <div class="block">Increments the numeric field by 1</div>
@@ -862,7 +644,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>inc</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;inc​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;inc&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#inc(java.lang.String,java.lang.Number)">UpdateOperations</a></code></span></div>
@@ -884,7 +666,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>max</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;max​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;max&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#max(java.lang.String,java.lang.Number)">UpdateOperations</a></code></span></div>
@@ -906,7 +688,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>min</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;min​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;min&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Number.html?is-external=true" title="class or interface in java.lang" class="externalLink">Number</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#min(java.lang.String,java.lang.Number)">UpdateOperations</a></code></span></div>
@@ -928,7 +710,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>push</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;push​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;push&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#push(java.lang.String,java.lang.Object)">UpdateOperations</a></code></span></div>
@@ -950,7 +732,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>push</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;push​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;push&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value,
                                 <a href="PushOptions.html" title="class in dev.morphia.query">PushOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -974,7 +756,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>push</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;push​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;push&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#push(java.lang.String,java.util.List)">UpdateOperations</a></code></span></div>
@@ -996,7 +778,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>push</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;push​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;push&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                 <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;values,
                                 <a href="PushOptions.html" title="class in dev.morphia.query">PushOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -1020,7 +802,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>removeAll</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;removeAll​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;removeAll&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#removeAll(java.lang.String,java.lang.Object)">UpdateOperations</a></code></span></div>
@@ -1042,7 +824,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>removeAll</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;removeAll​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;removeAll&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#removeAll(java.lang.String,java.util.List)">UpdateOperations</a></code></span></div>
@@ -1064,7 +846,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>removeFirst</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;removeFirst​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;removeFirst&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#removeFirst(java.lang.String)">UpdateOperations</a></code></span></div>
 <div class="block">removes the first value from the array</div>
@@ -1084,7 +866,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>removeLast</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;removeLast​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;removeLast&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#removeLast(java.lang.String)">UpdateOperations</a></code></span></div>
 <div class="block">removes the last value from the array</div>
@@ -1104,7 +886,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>set</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;set​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;set&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#set(java.lang.String,java.lang.Object)">UpdateOperations</a></code></span></div>
@@ -1126,7 +908,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>setOnInsert</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;setOnInsert​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;setOnInsert&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#setOnInsert(java.lang.String,java.lang.Object)">UpdateOperations</a></code></span></div>
@@ -1148,7 +930,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>unset</h4>
-<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;unset​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
+<pre class="methodSignature">public&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;unset&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="UpdateOperations.html#unset(java.lang.String)">UpdateOperations</a></code></span></div>
 <div class="block">removes the field</div>
@@ -1182,7 +964,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockList">
 <li class="blockList">
 <h4>setOps</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setOps​(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;ops)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;setOps&#8203;(<a href="https://mongodb.github.io/mongo-java-driver/4.6/apidocs/bson/org/bson/Document.html?is-external=true" title="class or interface in org.bson" class="externalLink">Document</a>&nbsp;ops)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Sets the operations for this UpdateOpsImpl</div>
 <dl>
@@ -1197,7 +979,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 <ul class="blockListLast">
 <li class="blockList">
 <h4>remove</h4>
-<pre class="methodSignature">protected&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;remove​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldExpr,
+<pre class="methodSignature">protected&nbsp;<a href="UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;<a href="UpdateOpsImpl.html" title="type parameter in UpdateOpsImpl">T</a>&gt;&nbsp;remove&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;fieldExpr,
                                      boolean&nbsp;firstNotLast)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 </li>
@@ -1271,20 +1053,7 @@ implements <a href="UpdateOperations.html" title="interface in dev.morphia.query
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2022. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

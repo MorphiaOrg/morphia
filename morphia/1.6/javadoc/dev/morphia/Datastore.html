@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../2.3/javadoc/dev/morphia/Datastore.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../2.2/javadoc/dev/morphia/Datastore.html">2.2</a>
-    <a class="version" href="../../../../2.1/javadoc/dev/morphia/Datastore.html">2.1</a>
-    <a class="version" href="../../../../2.0/javadoc/dev/morphia/Datastore.html">2.0</a>
-    <a class="version is-current" href="Datastore.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>Datastore (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../script.js"></script>
+<script type="text/javascript" src="../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -329,42 +154,42 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createAggregation(java.lang.Class)">createAggregation</a></span>​(java.lang.Class&nbsp;source)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createAggregation(java.lang.Class)">createAggregation</a></span>&#8203;(java.lang.Class&nbsp;source)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createQuery(java.lang.Class)">createQuery</a></span>​(java.lang.Class&lt;T&gt;&nbsp;collection)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createQuery(java.lang.Class)">createQuery</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;collection)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query bound to the collection (a specific <code>DBCollection</code>)</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createUpdateOperations(java.lang.Class)">createUpdateOperations</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createUpdateOperations(java.lang.Class)">createUpdateOperations</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block">The builder for all update operations</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(dev.morphia.query.Query)">delete</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(dev.morphia.query.Query)">delete</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block">Deletes entities based on the query</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(dev.morphia.query.Query,com.mongodb.WriteConcern)">delete</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(dev.morphia.query.Query,com.mongodb.WriteConcern)">delete</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -374,15 +199,15 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(dev.morphia.query.Query,dev.morphia.DeleteOptions)">delete</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(dev.morphia.query.Query,dev.morphia.DeleteOptions)">delete</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Deletes entities based on the query</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.Class,java.lang.Iterable)">delete</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.Class,java.lang.Iterable)">delete</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
       java.lang.Iterable&lt;V&gt;&nbsp;ids)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -391,8 +216,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.Class,java.lang.Iterable,dev.morphia.DeleteOptions)">delete</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.Class,java.lang.Iterable,dev.morphia.DeleteOptions)">delete</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
       java.lang.Iterable&lt;V&gt;&nbsp;ids,
       <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -402,8 +227,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.Class,V)">delete</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.Class,V)">delete</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
       V&nbsp;id)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -412,8 +237,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.Class,V,dev.morphia.DeleteOptions)">delete</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>com.mongodb.WriteResult</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(java.lang.Class,V,dev.morphia.DeleteOptions)">delete</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
       V&nbsp;id,
       <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -424,14 +249,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(T)">delete</a></span>​(T&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(T)">delete</a></span>&#8203;(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Deletes the given entity (by @Id)</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(T,com.mongodb.WriteConcern)">delete</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(T,com.mongodb.WriteConcern)">delete</a></span>&#8203;(T&nbsp;entity,
       com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -441,7 +266,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;com.mongodb.WriteResult</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(T,dev.morphia.DeleteOptions)">delete</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#delete(T,dev.morphia.DeleteOptions)">delete</a></span>&#8203;(T&nbsp;entity,
       <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Deletes the given entity (by @Id), with the WriteConcern</div>
@@ -463,7 +288,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndex(java.lang.Class,java.lang.String)">ensureIndex</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndex(java.lang.Class,java.lang.String)">ensureIndex</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
            java.lang.String&nbsp;fields)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -473,7 +298,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndex(java.lang.Class,java.lang.String,java.lang.String,boolean,boolean)">ensureIndex</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndex(java.lang.Class,java.lang.String,java.lang.String,boolean,boolean)">ensureIndex</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
            java.lang.String&nbsp;name,
            java.lang.String&nbsp;fields,
            boolean&nbsp;unique,
@@ -493,7 +318,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(boolean)">ensureIndexes</a></span>​(boolean&nbsp;background)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(boolean)">ensureIndexes</a></span>&#8203;(boolean&nbsp;background)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#ensureIndexes()"><code>ensureIndexes()</code></a> instead</div>
@@ -502,14 +327,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.Class)">ensureIndexes</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.Class)">ensureIndexes</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block">Ensures (creating if necessary) the indexes found during class mapping</div>
 </td>
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.Class,boolean)">ensureIndexes</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ensureIndexes(java.lang.Class,boolean)">ensureIndexes</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
              boolean&nbsp;background)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -519,7 +344,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="Key.html" title="class in dev.morphia">Key</a>&lt;?&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#exists(java.lang.Object)">exists</a></span>​(java.lang.Object&nbsp;keyOrEntity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#exists(java.lang.Object)">exists</a></span>&#8203;(java.lang.Object&nbsp;keyOrEntity)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <code>MongoIterable.first()</code> instead</div>
@@ -528,14 +353,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.Class)">find</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.Class)">find</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block">Find all instances by type</div>
 </td>
 </tr>
 <tr id="i23" class="rowColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br><a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.Class,java.lang.String,V)">find</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br><a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.Class,java.lang.String,V)">find</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
     java.lang.String&nbsp;property,
     V&nbsp;value)</code></th>
 <td class="colLast">
@@ -545,8 +370,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i24" class="altColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br><a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.Class,java.lang.String,V,int,int)">find</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br><a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#find(java.lang.Class,java.lang.String,V,int,int)">find</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
     java.lang.String&nbsp;property,
     V&nbsp;value,
     int&nbsp;offset,
@@ -559,14 +384,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndDelete(dev.morphia.query.Query)">findAndDelete</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndDelete(dev.morphia.query.Query)">findAndDelete</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block">Deletes the given entities based on the query (first item only).</div>
 </td>
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndDelete(dev.morphia.query.Query,dev.morphia.FindAndModifyOptions)">findAndDelete</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndDelete(dev.morphia.query.Query,dev.morphia.FindAndModifyOptions)">findAndDelete</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Deletes the given entities based on the query (first item only).</div>
@@ -574,7 +399,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">findAndModify</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block">Find the first Entity from the Query, and modify it.</div>
@@ -582,7 +407,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">findAndModify</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">findAndModify</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
              boolean&nbsp;oldVersion)</code></th>
 <td class="colLast">
@@ -593,7 +418,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,boolean)">findAndModify</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,boolean)">findAndModify</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
              boolean&nbsp;oldVersion,
              boolean&nbsp;createIfMissing)</code></th>
@@ -605,7 +430,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">findAndModify</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
              <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
              <a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -613,8 +438,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i31" class="rowColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br><a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.Class,java.lang.Iterable)">get</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br><a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.Class,java.lang.Iterable)">get</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
    java.lang.Iterable&lt;V&gt;&nbsp;ids)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -623,8 +448,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i32" class="altColor">
-<td class="colFirst"><code>&lt;T,​V&gt;<br>T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.Class,V)">get</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<td class="colFirst"><code>&lt;T,&#8203;V&gt;<br>T</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(java.lang.Class,V)">get</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
    V&nbsp;id)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -634,7 +459,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i33" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(T)">get</a></span>​(T&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#get(T)">get</a></span>&#8203;(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead</div>
@@ -643,7 +468,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i34" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getByKey(java.lang.Class,dev.morphia.Key)">getByKey</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getByKey(java.lang.Class,dev.morphia.Key)">getByKey</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
         <a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -653,7 +478,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i35" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.List&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getByKeys(java.lang.Class,java.lang.Iterable)">getByKeys</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getByKeys(java.lang.Class,java.lang.Iterable)">getByKeys</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
          java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;keys)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -663,7 +488,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.List&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getByKeys(java.lang.Iterable)">getByKeys</a></span>​(java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;keys)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getByKeys(java.lang.Iterable)">getByKeys</a></span>&#8203;(java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;keys)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use a <a href="query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead</div>
@@ -672,7 +497,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code>com.mongodb.DBCollection</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCollection(java.lang.Class)">getCollection</a></span>​(java.lang.Class&lt;?&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCollection(java.lang.Class)">getCollection</a></span>&#8203;(java.lang.Class&lt;?&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">the return type for this method will change in 2.0</div>
@@ -681,7 +506,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i38" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(dev.morphia.query.Query)">getCount</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(dev.morphia.query.Query)">getCount</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html#count()"><code>Query.count()</code></a> instead</div>
@@ -690,7 +515,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i39" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(dev.morphia.query.Query,dev.morphia.query.CountOptions)">getCount</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(dev.morphia.query.Query,dev.morphia.query.CountOptions)">getCount</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
         <a href="query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -700,7 +525,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i40" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(java.lang.Class)">getCount</a></span>​(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(java.lang.Class)">getCount</a></span>&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html#count()"><code>Query.count()</code></a> instead</div>
@@ -709,7 +534,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i41" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(T)">getCount</a></span>​(T&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCount(T)">getCount</a></span>&#8203;(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html#count()"><code>Query.count()</code></a> instead</div>
@@ -739,7 +564,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i45" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(T)">getKey</a></span>​(T&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getKey(T)">getKey</a></span>&#8203;(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </td>
@@ -765,7 +590,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i49" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapReduce(dev.morphia.MapReduceOptions)">mapReduce</a></span>​(<a href="MapReduceOptions.html" title="class in dev.morphia">MapReduceOptions</a>&lt;T&gt;&nbsp;options)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapReduce(dev.morphia.MapReduceOptions)">mapReduce</a></span>&#8203;(<a href="MapReduceOptions.html" title="class in dev.morphia">MapReduceOptions</a>&lt;T&gt;&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">This feature will not be supported in 2.0</div>
@@ -774,7 +599,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i50" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapReduce(dev.morphia.MapreduceType,dev.morphia.query.Query,java.lang.Class,com.mongodb.MapReduceCommand)">mapReduce</a></span>​(<a href="MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&nbsp;type,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapReduce(dev.morphia.MapreduceType,dev.morphia.query.Query,java.lang.Class,com.mongodb.MapReduceCommand)">mapReduce</a></span>&#8203;(<a href="MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&nbsp;type,
          <a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;q,
          java.lang.Class&lt;T&gt;&nbsp;outputType,
          com.mongodb.MapReduceCommand&nbsp;baseCommand)</code></th>
@@ -786,12 +611,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i51" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapReduce(dev.morphia.MapreduceType,dev.morphia.query.Query,java.lang.String,java.lang.String,java.lang.String,java.util.Map,java.lang.Class)">mapReduce</a></span>​(<a href="MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&nbsp;type,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mapReduce(dev.morphia.MapreduceType,dev.morphia.query.Query,java.lang.String,java.lang.String,java.lang.String,java.util.Map,java.lang.Class)">mapReduce</a></span>&#8203;(<a href="MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&nbsp;type,
          <a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;q,
          java.lang.String&nbsp;map,
          java.lang.String&nbsp;reduce,
          java.lang.String&nbsp;finalize,
-         java.util.Map&lt;java.lang.String,​java.lang.Object&gt;&nbsp;scopeFields,
+         java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;scopeFields,
          java.lang.Class&lt;T&gt;&nbsp;outputType)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -801,14 +626,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i52" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T)">merge</a></span>​(T&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T)">merge</a></span>&#8203;(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 </td>
 </tr>
 <tr id="i53" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T,com.mongodb.WriteConcern)">merge</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#merge(T,com.mongodb.WriteConcern)">merge</a></span>&#8203;(T&nbsp;entity,
      com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
@@ -816,14 +641,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i54" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(T)">queryByExample</a></span>​(T&nbsp;example)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryByExample(T)">queryByExample</a></span>&#8203;(T&nbsp;example)</code></th>
 <td class="colLast">
 <div class="block">Returns a new query based on the example object</div>
 </td>
 </tr>
 <tr id="i55" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.Iterable)">save</a></span>​(java.lang.Iterable&lt;T&gt;&nbsp;entities)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.Iterable)">save</a></span>&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities)</code></th>
 <td class="colLast">
 <div class="block">Saves the entities (Objects) and updates the @Id field
 
@@ -832,7 +657,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i56" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.Iterable,com.mongodb.WriteConcern)">save</a></span>​(java.lang.Iterable&lt;T&gt;&nbsp;entities,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.Iterable,com.mongodb.WriteConcern)">save</a></span>&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities,
     com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -842,7 +667,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i57" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.Iterable,dev.morphia.InsertOptions)">save</a></span>​(java.lang.Iterable&lt;T&gt;&nbsp;entities,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(java.lang.Iterable,dev.morphia.InsertOptions)">save</a></span>&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities,
     <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Saves the entities (Objects) and updates the @Id field, with the WriteConcern
@@ -852,7 +677,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i58" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T)">save</a></span>​(T&nbsp;entity)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T)">save</a></span>&#8203;(T&nbsp;entity)</code></th>
 <td class="colLast">
 <div class="block">Saves an entity (Object) and updates the @Id field
 
@@ -861,7 +686,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i59" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T...)">save</a></span>​(T...&nbsp;entities)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T...)">save</a></span>&#8203;(T...&nbsp;entities)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#save(java.lang.Iterable,dev.morphia.InsertOptions)"><code>save(Iterable, InsertOptions)</code></a> instead</div>
@@ -870,7 +695,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i60" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T,com.mongodb.WriteConcern)">save</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T,com.mongodb.WriteConcern)">save</a></span>&#8203;(T&nbsp;entity,
     com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -880,7 +705,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i61" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T,dev.morphia.InsertOptions)">save</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#save(T,dev.morphia.InsertOptions)">save</a></span>&#8203;(T&nbsp;entity,
     <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block">Saves an entity (Object) and updates the @Id field
@@ -890,7 +715,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i62" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDefaultWriteConcern(com.mongodb.WriteConcern)">setDefaultWriteConcern</a></span>​(com.mongodb.WriteConcern&nbsp;wc)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setDefaultWriteConcern(com.mongodb.WriteConcern)">setDefaultWriteConcern</a></span>&#8203;(com.mongodb.WriteConcern&nbsp;wc)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment"><code>MongoClient#setWriteConcern(WriteConcern)</code></div>
@@ -899,14 +724,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i63" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setQueryFactory(dev.morphia.query.QueryFactory)">setQueryFactory</a></span>​(<a href="query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&nbsp;queryFactory)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setQueryFactory(dev.morphia.query.QueryFactory)">setQueryFactory</a></span>&#8203;(<a href="query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&nbsp;queryFactory)</code></th>
 <td class="colLast">
 <div class="block">Replaces the current <a href="query/QueryFactory.html" title="interface in dev.morphia.query"><code>QueryFactory</code></a> with the given value.</div>
 </td>
 </tr>
 <tr id="i64" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.Key,dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.Key,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
       <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -916,7 +741,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i65" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block">Updates all entities found with the operations; this is an atomic operation per entity</div>
@@ -924,7 +749,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i66" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">update</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">update</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
       boolean&nbsp;createIfMissing)</code></th>
 <td class="colLast">
@@ -936,7 +761,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i67" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">update</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">update</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
       boolean&nbsp;createIfMissing,
       com.mongodb.WriteConcern&nbsp;wc)</code></th>
@@ -949,7 +774,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i68" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">update</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
       <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
       <a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -958,7 +783,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i69" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(T,dev.morphia.query.UpdateOperations)">update</a></span>​(T&nbsp;entity,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#update(T,dev.morphia.query.UpdateOperations)">update</a></span>&#8203;(T&nbsp;entity,
       <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -968,7 +793,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i70" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)">updateFirst</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -978,7 +803,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i71" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">updateFirst</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean)">updateFirst</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
            boolean&nbsp;createIfMissing)</code></th>
 <td class="colLast">
@@ -989,7 +814,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i72" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">updateFirst</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFirst(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,boolean,com.mongodb.WriteConcern)">updateFirst</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
            boolean&nbsp;createIfMissing,
            com.mongodb.WriteConcern&nbsp;wc)</code></th>
@@ -1001,7 +826,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i73" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFirst(dev.morphia.query.Query,T,boolean)">updateFirst</a></span>​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateFirst(dev.morphia.query.Query,T,boolean)">updateFirst</a></span>&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
            T&nbsp;entity,
            boolean&nbsp;createIfMissing)</code></th>
 <td class="colLast">
@@ -1010,7 +835,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -1033,7 +858,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>createAggregation</h4>
-<pre class="methodSignature"><a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;createAggregation​(java.lang.Class&nbsp;source)</pre>
+<pre class="methodSignature"><a href="aggregation/AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;createAggregation&#8203;(java.lang.Class&nbsp;source)</pre>
 <div class="block">Returns a new query bound to the kind (a specific <code>DBCollection</code>)</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1049,7 +874,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>createQuery</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery​(java.lang.Class&lt;T&gt;&nbsp;collection)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;createQuery&#8203;(java.lang.Class&lt;T&gt;&nbsp;collection)</pre>
 <div class="block">Returns a new query bound to the collection (a specific <code>DBCollection</code>)</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1067,7 +892,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>createUpdateOperations</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;createUpdateOperations​(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;createUpdateOperations&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
 <div class="block">The builder for all update operations</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1088,7 +913,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T,&#8203;V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                                            V&nbsp;id)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#delete(dev.morphia.query.Query)"><code>delete(Query)</code></a> instead</div>
@@ -1115,7 +940,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T,&#8203;V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                                            V&nbsp;id,
                                            <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1144,7 +969,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T,&#8203;V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                                            java.lang.Iterable&lt;V&gt;&nbsp;ids)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#delete(dev.morphia.query.Query)"><code>delete(Query)</code></a> instead</div>
@@ -1169,7 +994,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T,&#8203;V&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                                            java.lang.Iterable&lt;V&gt;&nbsp;ids,
                                            <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1197,7 +1022,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>delete</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</pre>
 <div class="block">Deletes entities based on the query</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1215,7 +1040,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>delete</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                                    <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</pre>
 <div class="block">Deletes entities based on the query</div>
 <dl>
@@ -1238,7 +1063,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                                    com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#delete(dev.morphia.query.Query,dev.morphia.DeleteOptions)"><code>delete(Query, DeleteOptions)</code></a> instead</div>
@@ -1263,7 +1088,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>delete</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(T&nbsp;entity)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(T&nbsp;entity)</pre>
 <div class="block">Deletes the given entity (by @Id)</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1283,7 +1108,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <ul class="blockList">
 <li class="blockList">
 <h4>delete</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(T&nbsp;entity,
+<pre class="methodSignature">&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(T&nbsp;entity,
                                    <a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a>&nbsp;options)</pre>
 <div class="block">Deletes the given entity (by @Id), with the WriteConcern</div>
 <dl>
@@ -1308,7 +1133,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>delete</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete​(T&nbsp;entity,
+&lt;T&gt;&nbsp;com.mongodb.WriteResult&nbsp;delete&#8203;(T&nbsp;entity,
                                    com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#delete(dev.morphia.query.Query,dev.morphia.DeleteOptions)"><code>delete(Query, DeleteOptions)</code></a> instead</div>
@@ -1348,9 +1173,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>1.3</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">core/document-validation/</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>core/document-validation/</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="ensureIndex(java.lang.Class,java.lang.String)">
 <!--   -->
@@ -1359,7 +1184,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>ensureIndex</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;void&nbsp;ensureIndex​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T&gt;&nbsp;void&nbsp;ensureIndex&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                      java.lang.String&nbsp;fields)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">This method uses the legacy approach for defining indexes.  Switch to using annotations on entity classes or the
@@ -1385,7 +1210,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>ensureIndex</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;void&nbsp;ensureIndex​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T&gt;&nbsp;void&nbsp;ensureIndex&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                      java.lang.String&nbsp;name,
                      java.lang.String&nbsp;fields,
                      boolean&nbsp;unique,
@@ -1433,7 +1258,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>ensureIndexes</h4>
 <pre class="methodSignature">@Deprecated
-void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
+void&nbsp;ensureIndexes&#8203;(boolean&nbsp;background)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#ensureIndexes()"><code>ensureIndexes()</code></a> instead</div>
 </div>
@@ -1456,7 +1281,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>ensureIndexes</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;void&nbsp;ensureIndexes​(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;void&nbsp;ensureIndexes&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
 <div class="block">Ensures (creating if necessary) the indexes found during class mapping</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1477,7 +1302,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>ensureIndexes</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;void&nbsp;ensureIndexes​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T&gt;&nbsp;void&nbsp;ensureIndexes&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                        boolean&nbsp;background)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#ensureIndexes(java.lang.Class)"><code>ensureIndexes(Class)</code></a> instead</div>
@@ -1504,7 +1329,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>exists</h4>
 <pre class="methodSignature">@Deprecated
-<a href="Key.html" title="class in dev.morphia">Key</a>&lt;?&gt;&nbsp;exists​(java.lang.Object&nbsp;keyOrEntity)</pre>
+<a href="Key.html" title="class in dev.morphia">Key</a>&lt;?&gt;&nbsp;exists&#8203;(java.lang.Object&nbsp;keyOrEntity)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <code>MongoIterable.first()</code> instead</div>
 </div>
@@ -1523,7 +1348,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>find</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
 <div class="block">Find all instances by type</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1544,7 +1369,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>find</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T,&#8203;V&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                           java.lang.String&nbsp;property,
                           V&nbsp;value)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1574,7 +1399,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>find</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T,&#8203;V&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;find&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                           java.lang.String&nbsp;property,
                           V&nbsp;value,
                           int&nbsp;offset,
@@ -1605,7 +1430,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>findAndDelete</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;findAndDelete​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;findAndDelete&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</pre>
 <div class="block">Deletes the given entities based on the query (first item only).</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -1623,7 +1448,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>findAndDelete</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;findAndDelete​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;findAndDelete&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                     <a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;options)</pre>
 <div class="block">Deletes the given entities based on the query (first item only).</div>
 <dl>
@@ -1645,7 +1470,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>findAndModify</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;findAndModify&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                     <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
                     <a href="FindAndModifyOptions.html" title="class in dev.morphia">FindAndModifyOptions</a>&nbsp;options)</pre>
 <div class="block">Find the first Entity from the Query, and modify it.</div>
@@ -1669,7 +1494,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>findAndModify</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<pre class="methodSignature">&lt;T&gt;&nbsp;T&nbsp;findAndModify&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                     <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</pre>
 <div class="block">Find the first Entity from the Query, and modify it.</div>
 <dl>
@@ -1690,7 +1515,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>findAndModify</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;T&nbsp;findAndModify&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                     <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
                     boolean&nbsp;oldVersion)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -1716,7 +1541,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>findAndModify</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;T&nbsp;findAndModify​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;T&nbsp;findAndModify&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                     <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
                     boolean&nbsp;oldVersion,
                     boolean&nbsp;createIfMissing)</pre>
@@ -1744,7 +1569,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>get</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;get​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T,&#8203;V&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;get&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                          java.lang.Iterable&lt;V&gt;&nbsp;ids)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead.</div>
@@ -1771,7 +1596,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>get</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T,​V&gt;&nbsp;T&nbsp;get​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T,&#8203;V&gt;&nbsp;T&nbsp;get&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                   V&nbsp;id)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead</div>
@@ -1798,7 +1623,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>get</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;T&nbsp;get​(T&nbsp;entity)</pre>
+&lt;T&gt;&nbsp;T&nbsp;get&#8203;(T&nbsp;entity)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead</div>
 </div>
@@ -1820,7 +1645,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>getByKey</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;T&nbsp;getByKey​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T&gt;&nbsp;T&nbsp;getByKey&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                <a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use a <a href="query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead</div>
@@ -1844,7 +1669,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>getByKeys</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.util.List&lt;T&gt;&nbsp;getByKeys​(java.lang.Class&lt;T&gt;&nbsp;clazz,
+&lt;T&gt;&nbsp;java.util.List&lt;T&gt;&nbsp;getByKeys&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz,
                                 java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;keys)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use a <a href="query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead</div>
@@ -1868,7 +1693,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>getByKeys</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.util.List&lt;T&gt;&nbsp;getByKeys​(java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;keys)</pre>
+&lt;T&gt;&nbsp;java.util.List&lt;T&gt;&nbsp;getByKeys&#8203;(java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;keys)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use a <a href="query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> instead</div>
 </div>
@@ -1890,7 +1715,7 @@ void&nbsp;ensureIndexes​(boolean&nbsp;background)</pre>
 <li class="blockList">
 <h4>getCollection</h4>
 <pre class="methodSignature">@Deprecated
-com.mongodb.DBCollection&nbsp;getCollection​(java.lang.Class&lt;?&gt;&nbsp;clazz)</pre>
+com.mongodb.DBCollection&nbsp;getCollection&#8203;(java.lang.Class&lt;?&gt;&nbsp;clazz)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">the return type for this method will change in 2.0</div>
 </div>
@@ -1911,7 +1736,7 @@ com.mongodb.DBCollection&nbsp;getCollection​(java.lang.Class&lt;?&gt;&nbsp;cla
 <li class="blockList">
 <h4>getCount</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;long&nbsp;getCount​(T&nbsp;entity)</pre>
+&lt;T&gt;&nbsp;long&nbsp;getCount&#8203;(T&nbsp;entity)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html#count()"><code>Query.count()</code></a> instead</div>
 </div>
@@ -1933,7 +1758,7 @@ com.mongodb.DBCollection&nbsp;getCollection​(java.lang.Class&lt;?&gt;&nbsp;cla
 <li class="blockList">
 <h4>getCount</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;long&nbsp;getCount​(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
+&lt;T&gt;&nbsp;long&nbsp;getCount&#8203;(java.lang.Class&lt;T&gt;&nbsp;clazz)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html#count()"><code>Query.count()</code></a> instead</div>
 </div>
@@ -1955,7 +1780,7 @@ com.mongodb.DBCollection&nbsp;getCollection​(java.lang.Class&lt;?&gt;&nbsp;cla
 <li class="blockList">
 <h4>getCount</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;long&nbsp;getCount​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</pre>
+&lt;T&gt;&nbsp;long&nbsp;getCount&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html#count()"><code>Query.count()</code></a> instead</div>
 </div>
@@ -1977,7 +1802,7 @@ com.mongodb.DBCollection&nbsp;getCollection​(java.lang.Class&lt;?&gt;&nbsp;cla
 <li class="blockList">
 <h4>getCount</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;long&nbsp;getCount​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;long&nbsp;getCount&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                   <a href="query/CountOptions.html" title="class in dev.morphia.query">CountOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="query/Query.html#count(dev.morphia.query.CountOptions)"><code>Query.count(CountOptions)</code></a> instead</div>
@@ -2054,7 +1879,7 @@ com.mongodb.WriteConcern&nbsp;getDefaultWriteConcern()</pre>
 <li class="blockList">
 <h4>setDefaultWriteConcern</h4>
 <pre class="methodSignature">@Deprecated
-void&nbsp;setDefaultWriteConcern​(com.mongodb.WriteConcern&nbsp;wc)</pre>
+void&nbsp;setDefaultWriteConcern&#8203;(com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment"><code>MongoClient#setWriteConcern(WriteConcern)</code></div>
 </div>
@@ -2074,7 +1899,7 @@ void&nbsp;setDefaultWriteConcern​(com.mongodb.WriteConcern&nbsp;wc)</pre>
 <li class="blockList">
 <h4>getKey</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;getKey​(T&nbsp;entity)</pre>
+&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;getKey&#8203;(T&nbsp;entity)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Creates a (type-safe) reference to the entity; if stored this will become a <code>DBRef</code></div>
 <dl>
@@ -2126,7 +1951,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>setQueryFactory</h4>
-<pre class="methodSignature">void&nbsp;setQueryFactory​(<a href="query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&nbsp;queryFactory)</pre>
+<pre class="methodSignature">void&nbsp;setQueryFactory&#8203;(<a href="query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a>&nbsp;queryFactory)</pre>
 <div class="block">Replaces the current <a href="query/QueryFactory.html" title="interface in dev.morphia.query"><code>QueryFactory</code></a> with the given value.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -2143,7 +1968,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>mapReduce</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;&nbsp;mapReduce​(<a href="MapReduceOptions.html" title="class in dev.morphia">MapReduceOptions</a>&lt;T&gt;&nbsp;options)</pre>
+&lt;T&gt;&nbsp;<a href="MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;&nbsp;mapReduce&#8203;(<a href="MapReduceOptions.html" title="class in dev.morphia">MapReduceOptions</a>&lt;T&gt;&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">This feature will not be supported in 2.0</div>
 </div>
@@ -2167,12 +1992,12 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>mapReduce</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;&nbsp;mapReduce​(<a href="MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&nbsp;type,
+&lt;T&gt;&nbsp;<a href="MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;&nbsp;mapReduce&#8203;(<a href="MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&nbsp;type,
                                   <a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;q,
                                   java.lang.String&nbsp;map,
                                   java.lang.String&nbsp;reduce,
                                   java.lang.String&nbsp;finalize,
-                                  java.util.Map&lt;java.lang.String,​java.lang.Object&gt;&nbsp;scopeFields,
+                                  java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;scopeFields,
                                   java.lang.Class&lt;T&gt;&nbsp;outputType)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">This feature will not be supported in 2.0</div>
@@ -2201,7 +2026,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>mapReduce</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;&nbsp;mapReduce​(<a href="MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&nbsp;type,
+&lt;T&gt;&nbsp;<a href="MapreduceResults.html" title="class in dev.morphia">MapreduceResults</a>&lt;T&gt;&nbsp;mapReduce&#8203;(<a href="MapreduceType.html" title="enum in dev.morphia">MapreduceType</a>&nbsp;type,
                                   <a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;q,
                                   java.lang.Class&lt;T&gt;&nbsp;outputType,
                                   com.mongodb.MapReduceCommand&nbsp;baseCommand)</pre>
@@ -2230,7 +2055,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>merge</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;merge​(T&nbsp;entity)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;merge&#8203;(T&nbsp;entity)</pre>
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -2250,7 +2075,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>merge</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;merge​(T&nbsp;entity,
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;merge&#8203;(T&nbsp;entity,
                  com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="block">Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.</div>
 <dl>
@@ -2272,7 +2097,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>queryByExample</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;queryByExample​(T&nbsp;example)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;queryByExample&#8203;(T&nbsp;example)</pre>
 <div class="block">Returns a new query based on the example object</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -2290,7 +2115,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>save</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;save​(java.lang.Iterable&lt;T&gt;&nbsp;entities)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;save&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities)</pre>
 <div class="block">Saves the entities (Objects) and updates the @Id field
 
  <i>The return type will change in 2.0</i></div>
@@ -2311,7 +2136,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>save</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;save​(java.lang.Iterable&lt;T&gt;&nbsp;entities,
+&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;save&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities,
                                     com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#save(java.lang.Iterable,dev.morphia.InsertOptions)"><code>save(Iterable, InsertOptions)</code></a> instead</div>
@@ -2334,7 +2159,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>save</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;save​(java.lang.Iterable&lt;T&gt;&nbsp;entities,
+<pre class="methodSignature">&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;save&#8203;(java.lang.Iterable&lt;T&gt;&nbsp;entities,
                                     <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</pre>
 <div class="block">Saves the entities (Objects) and updates the @Id field, with the WriteConcern
 
@@ -2359,7 +2184,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>save</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;save​(T...&nbsp;entities)</pre>
+&lt;T&gt;&nbsp;java.lang.Iterable&lt;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&gt;&nbsp;save&#8203;(T...&nbsp;entities)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#save(java.lang.Iterable,dev.morphia.InsertOptions)"><code>save(Iterable, InsertOptions)</code></a> instead</div>
 </div>
@@ -2382,7 +2207,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>save</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save​(T&nbsp;entity)</pre>
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save&#8203;(T&nbsp;entity)</pre>
 <div class="block">Saves an entity (Object) and updates the @Id field
 
  <i>The return type will change in 2.0</i></div>
@@ -2405,7 +2230,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>save</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save​(T&nbsp;entity,
+&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save&#8203;(T&nbsp;entity,
                 com.mongodb.WriteConcern&nbsp;wc)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#save(T,dev.morphia.InsertOptions)"><code>save(Object, InsertOptions)</code></a> instead</div>
@@ -2430,7 +2255,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>save</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save​(T&nbsp;entity,
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;save&#8203;(T&nbsp;entity,
                 <a href="InsertOptions.html" title="class in dev.morphia">InsertOptions</a>&nbsp;options)</pre>
 <div class="block">Saves an entity (Object) and updates the @Id field
 
@@ -2455,7 +2280,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update​(T&nbsp;entity,
+&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update&#8203;(T&nbsp;entity,
                          <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)"><code>update(Query, UpdateOperations)</code></a> instead</div>
@@ -2481,7 +2306,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update​(<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
+&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update&#8203;(<a href="Key.html" title="class in dev.morphia">Key</a>&lt;T&gt;&nbsp;key,
                          <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations)"><code>update(Query, UpdateOperations)</code></a> instead</div>
@@ -2506,7 +2331,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>update</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                          <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</pre>
 <div class="block">Updates all entities found with the operations; this is an atomic operation per entity</div>
 <dl>
@@ -2526,7 +2351,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>update</h4>
-<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+<pre class="methodSignature">&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                          <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
                          <a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a>&nbsp;options)</pre>
 <div class="block">Updates all entities found with the operations; this is an atomic operation per entity</div>
@@ -2551,7 +2376,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                          <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
                          boolean&nbsp;createIfMissing)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -2580,7 +2405,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>update</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;update&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                          <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
                          boolean&nbsp;createIfMissing,
                          com.mongodb.WriteConcern&nbsp;wc)</pre>
@@ -2611,7 +2436,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>updateFirst</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;updateFirst​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;updateFirst&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                               <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
 <div class="deprecationComment">use <a href="#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)"><code>update(Query, UpdateOperations, UpdateOptions)</code></a></div>
@@ -2635,7 +2460,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>updateFirst</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;updateFirst​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;updateFirst&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                               <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
                               boolean&nbsp;createIfMissing)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -2661,7 +2486,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>updateFirst</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;updateFirst​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;updateFirst&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                               <a href="query/UpdateOperations.html" title="interface in dev.morphia.query">UpdateOperations</a>&lt;T&gt;&nbsp;operations,
                               boolean&nbsp;createIfMissing,
                               com.mongodb.WriteConcern&nbsp;wc)</pre>
@@ -2691,7 +2516,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <li class="blockList">
 <h4>updateFirst</h4>
 <pre class="methodSignature">@Deprecated
-&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;updateFirst​(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
+&lt;T&gt;&nbsp;<a href="query/UpdateResults.html" title="class in dev.morphia.query">UpdateResults</a>&nbsp;updateFirst&#8203;(<a href="query/Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;&nbsp;query,
                               T&nbsp;entity,
                               boolean&nbsp;createIfMissing)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated.</span>
@@ -2700,7 +2525,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 <div class="block">updates the first entity found using the entity as a template, if nothing is found insert the update as an entity if
  "createIfMissing" is true.
  <p>
- If the entity is a versioned entity, an UnsupportedOperationException is thrown.</p></div>
+ If the entity is a versioned entity, an UnsupportedOperationException is thrown.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
 <dd><code>T</code> - the type of the entity</dd>
@@ -2797,20 +2622,7 @@ com.mongodb.MongoClient&nbsp;getMongo()</pre>
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../_/js/site.js"></script>
-<script async src="../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

@@ -1,241 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../../../../index.html">Getting Started</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../migrating.html">Migrating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../quicktour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Features</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../kotlin.html">Kotlin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../sharding.html">Sharding</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../queries.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../updates.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../deletes.html">Deleting</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../aggregations.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../textSearches.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../references.html">References</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../schemaValidation.html">Schema Validation</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text"><em>Support</em></span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version is-current">
-          <a href="../../../../../index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
-  <div class="version-menu">
-    <a class="version is-current" href="DateExpressions.html">2.3-SNAPSHOT</a>
-    <a class="version is-missing" href="../../../../../../2.2/index.html">2.2</a>
-    <a class="version is-missing" href="../../../../../../2.1/index.html">2.1</a>
-    <a class="version is-missing" href="../../../../../../2.0/index.html">2.0</a>
-    <a class="version is-missing" href="../../../../../../1.6/index.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.16.1) on Tue Sep 20 04:28:49 UTC 2022 -->
+<title>DateExpressions (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2022-09-20">
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../../script.js"></script>
+<script type="text/javascript" src="../../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -372,7 +154,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>Nested Class Summary</h3>
 <table class="memberSummary">
 <caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
@@ -384,7 +166,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <div class="block">Base class for the date expressions</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -397,14 +179,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDeltaExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateAdd(dev.morphia.aggregation.expressions.impls.Expression,long,dev.morphia.aggregation.expressions.TimeUnit)">dateAdd</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateAdd(dev.morphia.aggregation.expressions.impls.Expression,long,dev.morphia.aggregation.expressions.TimeUnit)">dateAdd</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
        long&nbsp;amount,
        <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</code></th>
 <td class="colLast">
@@ -413,7 +195,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/DateDiffExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDiffExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateDiff(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.TimeUnit)">dateDiff</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateDiff(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.TimeUnit)">dateDiff</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
         <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;endDate,
         <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</code></th>
 <td class="colLast">
@@ -436,7 +218,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDeltaExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateSubtract(dev.morphia.aggregation.expressions.impls.Expression,long,dev.morphia.aggregation.expressions.TimeUnit)">dateSubtract</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateSubtract(dev.morphia.aggregation.expressions.impls.Expression,long,dev.morphia.aggregation.expressions.TimeUnit)">dateSubtract</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
             long&nbsp;amount,
             <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</code></th>
 <td class="colLast">
@@ -445,7 +227,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/DateToParts.html" title="class in dev.morphia.aggregation.expressions.impls">DateToParts</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateToParts(dev.morphia.aggregation.expressions.impls.Expression)">dateToParts</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateToParts(dev.morphia.aggregation.expressions.impls.Expression)">dateToParts</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date)</code></th>
 <td class="colLast">
 <div class="block">Constructs and returns a Date object given the date’s constituent properties.</div>
 </td>
@@ -459,7 +241,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateTruncExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateTrunc(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.TimeUnit)">dateTrunc</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dateTrunc(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.TimeUnit)">dateTrunc</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date,
          <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</code></th>
 <td class="colLast">
 <div class="block">Truncates a date.</div>
@@ -467,105 +249,105 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dayOfMonth(dev.morphia.aggregation.expressions.impls.Expression)">dayOfMonth</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dayOfMonth(dev.morphia.aggregation.expressions.impls.Expression)">dayOfMonth</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the day of the month for a date as a number between 1 and 31.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dayOfWeek(dev.morphia.aggregation.expressions.impls.Expression)">dayOfWeek</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dayOfWeek(dev.morphia.aggregation.expressions.impls.Expression)">dayOfWeek</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the day of the week for a date as a number between 1 (Sunday) and 7 (Saturday).</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dayOfYear(dev.morphia.aggregation.expressions.impls.Expression)">dayOfYear</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#dayOfYear(dev.morphia.aggregation.expressions.impls.Expression)">dayOfYear</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the day of the year for a date as a number between 1 and 366 (leap year).</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hour(dev.morphia.aggregation.expressions.impls.Expression)">hour</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hour(dev.morphia.aggregation.expressions.impls.Expression)">hour</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the hour for a date as a number between 0 and 23.</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isoDayOfWeek(dev.morphia.aggregation.expressions.impls.Expression)">isoDayOfWeek</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isoDayOfWeek(dev.morphia.aggregation.expressions.impls.Expression)">isoDayOfWeek</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the weekday number in ISO 8601 format, ranging from 1 (for Monday) to 7 (for Sunday).</div>
 </td>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isoWeek(dev.morphia.aggregation.expressions.impls.Expression)">isoWeek</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isoWeek(dev.morphia.aggregation.expressions.impls.Expression)">isoWeek</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the week number in ISO 8601 format, ranging from 1 to 53.</div>
 </td>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isoWeekYear(dev.morphia.aggregation.expressions.impls.Expression)">isoWeekYear</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isoWeekYear(dev.morphia.aggregation.expressions.impls.Expression)">isoWeekYear</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the year number in ISO 8601 format.</div>
 </td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#milliseconds(dev.morphia.aggregation.expressions.impls.Expression)">milliseconds</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#milliseconds(dev.morphia.aggregation.expressions.impls.Expression)">milliseconds</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the milliseconds of a date as a number between 0 and 999.</div>
 </td>
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#minute(dev.morphia.aggregation.expressions.impls.Expression)">minute</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#minute(dev.morphia.aggregation.expressions.impls.Expression)">minute</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the minute for a date as a number between 0 and 59.</div>
 </td>
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#month(dev.morphia.aggregation.expressions.impls.Expression)">month</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#month(dev.morphia.aggregation.expressions.impls.Expression)">month</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the month for a date as a number between 1 (January) and 12 (December).</div>
 </td>
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#second(dev.morphia.aggregation.expressions.impls.Expression)">second</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#second(dev.morphia.aggregation.expressions.impls.Expression)">second</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the seconds for a date as a number between 0 and 60 (leap seconds).</div>
 </td>
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDate(dev.morphia.aggregation.expressions.impls.Expression)">toDate</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDate(dev.morphia.aggregation.expressions.impls.Expression)">toDate</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Converts a value to a date.</div>
 </td>
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tsIncrement(dev.morphia.aggregation.expressions.impls.Expression)">tsIncrement</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tsIncrement(dev.morphia.aggregation.expressions.impls.Expression)">tsIncrement</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</code></th>
 <td class="colLast">
 <div class="block">Returns the incrementing ordinal from a timestamp as a long.</div>
 </td>
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tsSecond(dev.morphia.aggregation.expressions.impls.Expression)">tsSecond</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#tsSecond(dev.morphia.aggregation.expressions.impls.Expression)">tsSecond</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</code></th>
 <td class="colLast">
 <div class="block">Returns the seconds from a timestamp as a long.</div>
 </td>
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#week(dev.morphia.aggregation.expressions.impls.Expression)">week</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#week(dev.morphia.aggregation.expressions.impls.Expression)">week</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the year) and 53
  (leap year).</div>
@@ -573,12 +355,12 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code>static <a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#year(dev.morphia.aggregation.expressions.impls.Expression)">year</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#year(dev.morphia.aggregation.expressions.impls.Expression)">year</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the year for a date as a number (e.g.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -608,7 +390,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>dateAdd</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDeltaExpression</a>&nbsp;dateAdd​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
+<pre class="methodSignature">public static&nbsp;<a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDeltaExpression</a>&nbsp;dateAdd&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
                                           long&nbsp;amount,
                                           <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</pre>
 <div class="block">Increments a Date object by a specified number of time units.</div>
@@ -622,8 +404,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd>the new expression</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
-<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateAdd">Aggregration Expression:  $dateAdd</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/5.0'>5.0</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dateAdd'>Aggregration Expression:  $dateAdd</a></dd></dl>
+</li>
 </ul>
 <a id="dateDiff(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.TimeUnit)">
 <!--   -->
@@ -631,7 +413,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>dateDiff</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/DateDiffExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDiffExpression</a>&nbsp;dateDiff​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
+<pre class="methodSignature">public static&nbsp;<a href="impls/DateDiffExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDiffExpression</a>&nbsp;dateDiff&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
                                           <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;endDate,
                                           <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</pre>
 <div class="block">Returns the difference between two dates.</div>
@@ -646,8 +428,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd>the new expression</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
-<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateDiff">Aggregration Expression:  $dateDiff</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/5.0'>5.0</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dateDiff'>Aggregration Expression:  $dateDiff</a></dd></dl>
+</li>
 </ul>
 <a id="dateFromParts()">
 <!--   -->
@@ -660,8 +442,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateFromParts">Aggregration Expression:  $dateFromParts</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dateFromParts'>Aggregration Expression:  $dateFromParts</a></dd></dl>
+</li>
 </ul>
 <a id="dateFromString()">
 <!--   -->
@@ -674,8 +456,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateFromString">Aggregration Expression:  $dateFromString</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dateFromString'>Aggregration Expression:  $dateFromString</a></dd></dl>
+</li>
 </ul>
 <a id="dateSubtract(dev.morphia.aggregation.expressions.impls.Expression,long,dev.morphia.aggregation.expressions.TimeUnit)">
 <!--   -->
@@ -683,7 +465,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>dateSubtract</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDeltaExpression</a>&nbsp;dateSubtract​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
+<pre class="methodSignature">public static&nbsp;<a href="impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDeltaExpression</a>&nbsp;dateSubtract&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;startDate,
                                                long&nbsp;amount,
                                                <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</pre>
 <div class="block">Decrements a Date object by a specified number of time units.</div>
@@ -697,8 +479,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd>the new expression</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
-<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateSubtract">Aggregration Expression:  $dateSubtract</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/5.0'>5.0</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dateSubtract'>Aggregration Expression:  $dateSubtract</a></dd></dl>
+</li>
 </ul>
 <a id="dateToParts(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -706,15 +488,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>dateToParts</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/DateToParts.html" title="class in dev.morphia.aggregation.expressions.impls">DateToParts</a>&nbsp;dateToParts​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/DateToParts.html" title="class in dev.morphia.aggregation.expressions.impls">DateToParts</a>&nbsp;dateToParts&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date)</pre>
 <div class="block">Constructs and returns a Date object given the date’s constituent properties.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>date</code> - The input date for which to return parts.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateToParts">Aggregration Expression:  $dateToParts</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dateToParts'>Aggregration Expression:  $dateToParts</a></dd></dl>
+</li>
 </ul>
 <a id="dateToString()">
 <!--   -->
@@ -727,8 +509,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateToString">Aggregration Expression:  $dateToString</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dateToString'>Aggregration Expression:  $dateToString</a></dd></dl>
+</li>
 </ul>
 <a id="dateTrunc(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.TimeUnit)">
 <!--   -->
@@ -736,7 +518,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>dateTrunc</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateTruncExpression</a>&nbsp;dateTrunc​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date,
+<pre class="methodSignature">public static&nbsp;<a href="impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateTruncExpression</a>&nbsp;dateTrunc&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;date,
                                             <a href="TimeUnit.html" title="enum in dev.morphia.aggregation.expressions">TimeUnit</a>&nbsp;unit)</pre>
 <div class="block">Truncates a date.</div>
 <dl>
@@ -748,8 +530,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd>the new expression</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
-<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.0">5.0</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dateTrunc">Aggregration Expression:  $dateTrunc</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/5.0'>5.0</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dateTrunc'>Aggregration Expression:  $dateTrunc</a></dd></dl>
+</li>
 </ul>
 <a id="dayOfMonth(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -757,15 +539,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>dayOfMonth</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;dayOfMonth​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;dayOfMonth&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the day of the month for a date as a number between 1 and 31.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dayOfMonth">Aggregration Expression:  $dayOfMonth</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dayOfMonth'>Aggregration Expression:  $dayOfMonth</a></dd></dl>
+</li>
 </ul>
 <a id="dayOfWeek(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -773,15 +555,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>dayOfWeek</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;dayOfWeek​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;dayOfWeek&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the day of the week for a date as a number between 1 (Sunday) and 7 (Saturday).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dayOfWeek">Aggregration Expression:  $dayOfWeek</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dayOfWeek'>Aggregration Expression:  $dayOfWeek</a></dd></dl>
+</li>
 </ul>
 <a id="dayOfYear(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -789,15 +571,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>dayOfYear</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;dayOfYear​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;dayOfYear&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the day of the year for a date as a number between 1 and 366 (leap year).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/dayOfYear">Aggregration Expression:  $dayOfYear</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/dayOfYear'>Aggregration Expression:  $dayOfYear</a></dd></dl>
+</li>
 </ul>
 <a id="hour(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -805,15 +587,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>hour</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;hour​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;hour&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the hour for a date as a number between 0 and 23.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/hour">Aggregration Expression:  $hour</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/hour'>Aggregration Expression:  $hour</a></dd></dl>
+</li>
 </ul>
 <a id="isoDayOfWeek(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -821,15 +603,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>isoDayOfWeek</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a>&nbsp;isoDayOfWeek​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a>&nbsp;isoDayOfWeek&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the weekday number in ISO 8601 format, ranging from 1 (for Monday) to 7 (for Sunday).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/isoDayOfWeek">Aggregration Expression:  $isoDayOfWeek</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/isoDayOfWeek'>Aggregration Expression:  $isoDayOfWeek</a></dd></dl>
+</li>
 </ul>
 <a id="isoWeek(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -837,7 +619,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>isoWeek</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a>&nbsp;isoWeek​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a>&nbsp;isoWeek&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the week number in ISO 8601 format, ranging from 1 to 53. Week numbers start at 1 with the week (Monday through Sunday) that
  contains the year’s first Thursday.</div>
 <dl>
@@ -845,8 +627,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/isoWeek">Aggregration Expression:  $isoWeek</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/isoWeek'>Aggregration Expression:  $isoWeek</a></dd></dl>
+</li>
 </ul>
 <a id="isoWeekYear(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -854,7 +636,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>isoWeekYear</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a>&nbsp;isoWeekYear​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a>&nbsp;isoWeekYear&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the year number in ISO 8601 format. The year starts with the Monday of week 1 (ISO 8601) and ends with the Sunday of the
  last
  week (ISO 8601).</div>
@@ -863,8 +645,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/isoWeekYear">Aggregration Expression:  $isoWeekYear</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/isoWeekYear'>Aggregration Expression:  $isoWeekYear</a></dd></dl>
+</li>
 </ul>
 <a id="milliseconds(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -872,15 +654,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>milliseconds</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;milliseconds​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;milliseconds&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the milliseconds of a date as a number between 0 and 999.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/millisecond">Aggregration Expression:  $millisecond</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/millisecond'>Aggregration Expression:  $millisecond</a></dd></dl>
+</li>
 </ul>
 <a id="minute(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -888,15 +670,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>minute</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;minute​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;minute&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the minute for a date as a number between 0 and 59.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/minute">Aggregration Expression:  $minute</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/minute'>Aggregration Expression:  $minute</a></dd></dl>
+</li>
 </ul>
 <a id="month(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -904,15 +686,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>month</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;month​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;month&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the month for a date as a number between 1 (January) and 12 (December).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/month">Aggregration Expression:  $month</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/month'>Aggregration Expression:  $month</a></dd></dl>
+</li>
 </ul>
 <a id="second(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -920,15 +702,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>second</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;second​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;second&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the seconds for a date as a number between 0 and 60 (leap seconds).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/second">Aggregration Expression:  $second</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/second'>Aggregration Expression:  $second</a></dd></dl>
+</li>
 </ul>
 <a id="toDate(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -936,7 +718,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>toDate</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;toDate​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;toDate&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Converts a value to a date. If the value cannot be converted to a date, $toDate errors. If the value is null or missing,
  $toDate returns null.</div>
 <dl>
@@ -944,8 +726,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/toDate">Aggregration Expression:  $toDate</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/toDate'>Aggregration Expression:  $toDate</a></dd></dl>
+</li>
 </ul>
 <a id="tsIncrement(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -953,7 +735,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>tsIncrement</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;tsIncrement​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;tsIncrement&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</pre>
 <div class="block">Returns the incrementing ordinal from a timestamp as a long.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -962,8 +744,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd>the new expression</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
-<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.1">5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/tsIncrement">Aggregration Expression:  $tsIncrement</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/5.1'>5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/tsIncrement'>Aggregration Expression:  $tsIncrement</a></dd></dl>
+</li>
 </ul>
 <a id="tsSecond(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -971,7 +753,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>tsSecond</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;tsSecond​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;tsSecond&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;expression)</pre>
 <div class="block">Returns the seconds from a timestamp as a long.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -980,8 +762,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd>the new expression</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.3</dd>
-<dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/5.1">5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/tsSecond">Aggregration Expression:  $tsSecond</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/5.1'>5.1</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/tsSecond'>Aggregration Expression:  $tsSecond</a></dd></dl>
+</li>
 </ul>
 <a id="week(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -989,7 +771,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>week</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;week​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;week&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the week number for a date as a number between 0 (the partial week that precedes the first Sunday of the year) and 53
  (leap year).</div>
 <dl>
@@ -997,8 +779,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/week">Aggregration Expression:  $week</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/week'>Aggregration Expression:  $week</a></dd></dl>
+</li>
 </ul>
 <a id="year(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -1006,15 +788,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockListLast">
 <li class="blockList">
 <h4>year</h4>
-<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;year​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="DateExpressions.DateExpression.html" title="class in dev.morphia.aggregation.expressions">DateExpressions.DateExpression</a>&nbsp;year&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the year for a date as a number (e.g. 2014).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the expression containing the date value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/year">Aggregration Expression:  $year</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/year'>Aggregration Expression:  $year</a></dd></dl>
+</li>
 </ul>
 </li>
 </ul>
@@ -1085,20 +867,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2022. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

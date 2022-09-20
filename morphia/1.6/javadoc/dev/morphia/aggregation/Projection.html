@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../2.3/javadoc/dev/morphia/aggregation/Projection.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/aggregation/Projection.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/aggregation/Projection.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/aggregation/Projection.html">2.0</a>
-    <a class="version is-current" href="Projection.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>Projection (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -313,9 +138,9 @@ extends java.lang.Object</pre>
 <div class="block">Defines a projection for use in aggregation</div>
 <dl>
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/aggregation/project/ $project</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/aggregation/project/ $project</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 </div>
 <div class="summary">
@@ -330,21 +155,21 @@ extends java.lang.Object</pre>
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#add(java.lang.Object...)">add</a></span>​(java.lang.Object...&nbsp;args)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#add(java.lang.Object...)">add</a></span>&#8203;(java.lang.Object...&nbsp;args)</code></th>
 <td class="colLast">
 <div class="block">Creates an addition projection</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#divide(java.lang.Object,java.lang.Object)">divide</a></span>​(java.lang.Object&nbsp;arg1,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#divide(java.lang.Object,java.lang.Object)">divide</a></span>&#8203;(java.lang.Object&nbsp;arg1,
       java.lang.Object&nbsp;arg2)</code></th>
 <td class="colLast">
 <div class="block">Creates a division projection</div>
@@ -352,7 +177,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#expression(java.lang.String,java.lang.Object...)">expression</a></span>​(java.lang.String&nbsp;operator,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#expression(java.lang.String,java.lang.Object...)">expression</a></span>&#8203;(java.lang.String&nbsp;operator,
           java.lang.Object...&nbsp;args)</code></th>
 <td class="colLast">
 <div class="block">Provides access to arbitrary expressions taking an array of arguments, such as $concat</div>
@@ -385,14 +210,14 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#list(java.lang.Object...)">list</a></span>​(java.lang.Object...&nbsp;args)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#list(java.lang.Object...)">list</a></span>&#8203;(java.lang.Object...&nbsp;args)</code></th>
 <td class="colLast">
 <div class="block">Creates a list projection</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mod(java.lang.Object,java.lang.Object)">mod</a></span>​(java.lang.Object&nbsp;arg1,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mod(java.lang.Object,java.lang.Object)">mod</a></span>&#8203;(java.lang.Object&nbsp;arg1,
    java.lang.Object&nbsp;arg2)</code></th>
 <td class="colLast">
 <div class="block">Creates a modulo projection</div>
@@ -400,21 +225,21 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#multiply(java.lang.Object...)">multiply</a></span>​(java.lang.Object...&nbsp;args)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#multiply(java.lang.Object...)">multiply</a></span>&#8203;(java.lang.Object...&nbsp;args)</code></th>
 <td class="colLast">
 <div class="block">Creates a multiplication projection</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#projection(java.lang.String)">projection</a></span>​(java.lang.String&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#projection(java.lang.String)">projection</a></span>&#8203;(java.lang.String&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block">Creates a projection on a field</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#projection(java.lang.String,dev.morphia.aggregation.Projection,dev.morphia.aggregation.Projection...)">projection</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#projection(java.lang.String,dev.morphia.aggregation.Projection,dev.morphia.aggregation.Projection...)">projection</a></span>&#8203;(java.lang.String&nbsp;field,
           <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;projection,
           <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>...&nbsp;subsequent)</code></th>
 <td class="colLast">
@@ -423,7 +248,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#projection(java.lang.String,java.lang.String)">projection</a></span>​(java.lang.String&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#projection(java.lang.String,java.lang.String)">projection</a></span>&#8203;(java.lang.String&nbsp;field,
           java.lang.String&nbsp;projectedField)</code></th>
 <td class="colLast">
 <div class="block">Creates a projection on a field and renames it</div>
@@ -431,14 +256,14 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size(java.lang.Object)">size</a></span>​(java.lang.Object&nbsp;expression)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#size(java.lang.Object)">size</a></span>&#8203;(java.lang.Object&nbsp;expression)</code></th>
 <td class="colLast">
 <div class="block">Counts and returns the total the number of items in an array</div>
 </td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#subtract(java.lang.Object,java.lang.Object)">subtract</a></span>​(java.lang.Object&nbsp;arg1,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#subtract(java.lang.Object,java.lang.Object)">subtract</a></span>&#8203;(java.lang.Object&nbsp;arg1,
         java.lang.Object&nbsp;arg2)</code></th>
 <td class="colLast">
 <div class="block">Creates a subtraction projection</div>
@@ -456,7 +281,7 @@ extends java.lang.Object</pre>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -486,7 +311,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>projection</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;projection​(java.lang.String&nbsp;field)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;projection&#8203;(java.lang.String&nbsp;field)</pre>
 <div class="block">Creates a projection on a field</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -502,7 +327,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>projection</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;projection​(java.lang.String&nbsp;field,
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;projection&#8203;(java.lang.String&nbsp;field,
                                     java.lang.String&nbsp;projectedField)</pre>
 <div class="block">Creates a projection on a field and renames it</div>
 <dl>
@@ -520,7 +345,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>projection</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;projection​(java.lang.String&nbsp;field,
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;projection&#8203;(java.lang.String&nbsp;field,
                                     <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;projection,
                                     <a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>...&nbsp;subsequent)</pre>
 <div class="block">Creates a projection on a field with subsequent projects applied.</div>
@@ -540,7 +365,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>expression</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;expression​(java.lang.String&nbsp;operator,
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;expression&#8203;(java.lang.String&nbsp;operator,
                                     java.lang.Object...&nbsp;args)</pre>
 <div class="block">Provides access to arbitrary expressions taking an array of arguments, such as $concat</div>
 <dl>
@@ -558,7 +383,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>list</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;list​(java.lang.Object...&nbsp;args)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;list&#8203;(java.lang.Object...&nbsp;args)</pre>
 <div class="block">Creates a list projection</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -574,7 +399,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>add</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;add​(java.lang.Object...&nbsp;args)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;add&#8203;(java.lang.Object...&nbsp;args)</pre>
 <div class="block">Creates an addition projection</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -583,9 +408,9 @@ extends java.lang.Object</pre>
 <dd>the projection</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/aggregation/add $add</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/aggregation/add $add</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="subtract(java.lang.Object,java.lang.Object)">
 <!--   -->
@@ -593,7 +418,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>subtract</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;subtract​(java.lang.Object&nbsp;arg1,
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;subtract&#8203;(java.lang.Object&nbsp;arg1,
                                   java.lang.Object&nbsp;arg2)</pre>
 <div class="block">Creates a subtraction projection</div>
 <dl>
@@ -604,9 +429,9 @@ extends java.lang.Object</pre>
 <dd>the projection</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/aggregation/subtract $subtract</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/aggregation/subtract $subtract</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="multiply(java.lang.Object...)">
 <!--   -->
@@ -614,7 +439,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>multiply</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;multiply​(java.lang.Object...&nbsp;args)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;multiply&#8203;(java.lang.Object...&nbsp;args)</pre>
 <div class="block">Creates a multiplication projection</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -623,9 +448,9 @@ extends java.lang.Object</pre>
 <dd>the projection</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/aggregation/multiply $multiply</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/aggregation/multiply $multiply</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="divide(java.lang.Object,java.lang.Object)">
 <!--   -->
@@ -633,7 +458,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>divide</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;divide​(java.lang.Object&nbsp;arg1,
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;divide&#8203;(java.lang.Object&nbsp;arg1,
                                 java.lang.Object&nbsp;arg2)</pre>
 <div class="block">Creates a division projection</div>
 <dl>
@@ -644,9 +469,9 @@ extends java.lang.Object</pre>
 <dd>the projection</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/aggregation/divide $divide</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/aggregation/divide $divide</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="size(java.lang.Object)">
 <!--   -->
@@ -654,7 +479,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>size</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;size​(java.lang.Object&nbsp;expression)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;size&#8203;(java.lang.Object&nbsp;expression)</pre>
 <div class="block">Counts and returns the total the number of items in an array</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -663,9 +488,9 @@ extends java.lang.Object</pre>
 <dd>the projection</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/aggregation/size $size</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/aggregation/size $size</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="mod(java.lang.Object,java.lang.Object)">
 <!--   -->
@@ -673,7 +498,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>mod</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;mod​(java.lang.Object&nbsp;arg1,
+<pre class="methodSignature">public static&nbsp;<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>&nbsp;mod&#8203;(java.lang.Object&nbsp;arg1,
                              java.lang.Object&nbsp;arg2)</pre>
 <div class="block">Creates a modulo projection</div>
 <dl>
@@ -684,9 +509,9 @@ extends java.lang.Object</pre>
 <dd>the projection</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/operator/aggregation/mod $mod</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/operator/aggregation/mod $mod</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getArguments()">
 <!--   -->
@@ -849,20 +674,7 @@ extends java.lang.Object</pre>
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

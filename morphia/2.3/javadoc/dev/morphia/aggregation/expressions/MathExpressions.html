@@ -1,241 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../../../../index.html">Getting Started</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../migrating.html">Migrating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../quicktour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Features</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../kotlin.html">Kotlin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../sharding.html">Sharding</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../queries.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../updates.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../deletes.html">Deleting</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../aggregations.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../textSearches.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../references.html">References</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../schemaValidation.html">Schema Validation</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text"><em>Support</em></span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version is-current">
-          <a href="../../../../../index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
-  <div class="version-menu">
-    <a class="version is-current" href="MathExpressions.html">2.3-SNAPSHOT</a>
-    <a class="version is-missing" href="../../../../../../2.2/index.html">2.2</a>
-    <a class="version is-missing" href="../../../../../../2.1/index.html">2.1</a>
-    <a class="version is-missing" href="../../../../../../2.0/index.html">2.0</a>
-    <a class="version is-missing" href="../../../../../../1.6/index.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.16.1) on Tue Sep 20 04:28:49 UTC 2022 -->
+<title>MathExpressions (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2022-09-20">
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../../script.js"></script>
+<script type="text/javascript" src="../../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -372,7 +154,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier</th>
 <th class="colSecond" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
@@ -382,7 +164,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E()">MathExpressions</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -395,21 +177,21 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#abs(dev.morphia.aggregation.expressions.impls.Expression)">abs</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#abs(dev.morphia.aggregation.expressions.impls.Expression)">abs</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the absolute value of a number.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/MathExpression.html" title="class in dev.morphia.aggregation.expressions.impls">MathExpression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#add(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression...)">add</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;first,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#add(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression...)">add</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;first,
    <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
 <td class="colLast">
 <div class="block">Adds numbers together or adds numbers and a date.</div>
@@ -417,14 +199,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ceil(dev.morphia.aggregation.expressions.impls.Expression)">ceil</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ceil(dev.morphia.aggregation.expressions.impls.Expression)">ceil</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the smallest integer greater than or equal to the specified number.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#divide(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">divide</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;numerator,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#divide(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">divide</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;numerator,
       <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;divisor)</code></th>
 <td class="colLast">
 <div class="block">Returns the result of dividing the first number by the second.</div>
@@ -432,28 +214,28 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#exp(dev.morphia.aggregation.expressions.impls.Expression)">exp</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#exp(dev.morphia.aggregation.expressions.impls.Expression)">exp</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Raises e to the specified exponent.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#floor(dev.morphia.aggregation.expressions.impls.Expression)">floor</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#floor(dev.morphia.aggregation.expressions.impls.Expression)">floor</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Returns the largest integer less than or equal to the specified number.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ln(dev.morphia.aggregation.expressions.impls.Expression)">ln</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#ln(dev.morphia.aggregation.expressions.impls.Expression)">ln</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Calculates the natural log of a number.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#log(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">log</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#log(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">log</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
    <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;base)</code></th>
 <td class="colLast">
 <div class="block">Calculates the log of a number in the specified base.</div>
@@ -461,14 +243,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#log10(dev.morphia.aggregation.expressions.impls.Expression)">log10</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#log10(dev.morphia.aggregation.expressions.impls.Expression)">log10</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Calculates the log base 10 of a number.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mod(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">mod</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;dividend,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mod(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">mod</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;dividend,
    <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;divisor)</code></th>
 <td class="colLast">
 <div class="block">Returns the remainder of the first number divided by the second.</div>
@@ -476,7 +258,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#multiply(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression...)">multiply</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;first,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#multiply(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression...)">multiply</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;first,
         <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>...&nbsp;additional)</code></th>
 <td class="colLast">
 <div class="block">Multiplies numbers together and returns the result.</div>
@@ -484,7 +266,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pow(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">pow</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pow(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">pow</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
    <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;exponent)</code></th>
 <td class="colLast">
 <div class="block">Raises a number to the specified exponent.</div>
@@ -492,7 +274,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#round(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">round</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#round(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">round</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
      <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;place)</code></th>
 <td class="colLast">
 <div class="block">Rounds a number to to a whole integer or to a specified decimal place.</div>
@@ -500,14 +282,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sqrt(dev.morphia.aggregation.expressions.impls.Expression)">sqrt</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sqrt(dev.morphia.aggregation.expressions.impls.Expression)">sqrt</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Calculates the square root.</div>
 </td>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#subtract(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">subtract</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;minuend,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#subtract(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">subtract</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;minuend,
         <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;subtrahend)</code></th>
 <td class="colLast">
 <div class="block">Returns the result of subtracting the second value from the first.</div>
@@ -515,13 +297,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#trunc(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">trunc</a></span>​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#trunc(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">trunc</a></span>&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
      <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;place)</code></th>
 <td class="colLast">
 <div class="block">Truncates a number to a whole integer or to a specified decimal place.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -545,7 +327,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>()">
+<a id="&lt;init&gt;()">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -570,15 +352,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>abs</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;abs​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;abs&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the absolute value of a number.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/abs">Aggregration Expression:  $abs</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/abs'>Aggregration Expression:  $abs</a></dd></dl>
+</li>
 </ul>
 <a id="add(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression...)">
 <!--   -->
@@ -586,7 +368,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>add</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/MathExpression.html" title="class in dev.morphia.aggregation.expressions.impls">MathExpression</a>&nbsp;add​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;first,
+<pre class="methodSignature">public static&nbsp;<a href="impls/MathExpression.html" title="class in dev.morphia.aggregation.expressions.impls">MathExpression</a>&nbsp;add&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;first,
                                  <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>...&nbsp;additional)</pre>
 <div class="block">Adds numbers together or adds numbers and a date. If one of the arguments is a date, $add treats the other arguments as
  milliseconds to add to the date.</div>
@@ -596,8 +378,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>additional</code> - any subsequent expressions to include in the sum</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/add">Aggregration Expression:  $add</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/add'>Aggregration Expression:  $add</a></dd></dl>
+</li>
 </ul>
 <a id="ceil(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -605,15 +387,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>ceil</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;ceil​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;ceil&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the smallest integer greater than or equal to the specified number.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/ceil">Aggregration Expression:  $ceil</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/ceil'>Aggregration Expression:  $ceil</a></dd></dl>
+</li>
 </ul>
 <a id="divide(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -621,7 +403,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>divide</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;divide​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;numerator,
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;divide&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;numerator,
                                 <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;divisor)</pre>
 <div class="block">Returns the result of dividing the first number by the second. Accepts two argument expressions.</div>
 <dl>
@@ -630,8 +412,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>divisor</code> - the divisor</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/divide">Aggregration Expression:  $divide</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/divide'>Aggregration Expression:  $divide</a></dd></dl>
+</li>
 </ul>
 <a id="exp(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -639,15 +421,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>exp</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;exp​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;exp&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Raises e to the specified exponent.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/exp">Aggregration Expression:  $exp</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/exp'>Aggregration Expression:  $exp</a></dd></dl>
+</li>
 </ul>
 <a id="floor(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -655,15 +437,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>floor</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;floor​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;floor&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Returns the largest integer less than or equal to the specified number.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/floor">Aggregration Expression:  $floor</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/floor'>Aggregration Expression:  $floor</a></dd></dl>
+</li>
 </ul>
 <a id="ln(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -671,15 +453,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>ln</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;ln​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;ln&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Calculates the natural log of a number.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/ln">Aggregration Expression:  $ln</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/ln'>Aggregration Expression:  $ln</a></dd></dl>
+</li>
 </ul>
 <a id="log(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -687,7 +469,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>log</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;log​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;log&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
                              <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;base)</pre>
 <div class="block">Calculates the log of a number in the specified base.</div>
 <dl>
@@ -696,8 +478,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>base</code> - the base to use</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/log">Aggregration Expression:  $log</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/log'>Aggregration Expression:  $log</a></dd></dl>
+</li>
 </ul>
 <a id="log10(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -705,15 +487,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>log10</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;log10​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;log10&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Calculates the log base 10 of a number.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/log10">Aggregration Expression:  $log10</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/log10'>Aggregration Expression:  $log10</a></dd></dl>
+</li>
 </ul>
 <a id="mod(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -721,7 +503,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>mod</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;mod​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;dividend,
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;mod&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;dividend,
                              <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;divisor)</pre>
 <div class="block">Returns the remainder of the first number divided by the second. Accepts two argument expressions.</div>
 <dl>
@@ -730,8 +512,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>divisor</code> - the divisor</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/mod">Aggregration Expression:  $mod</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/mod'>Aggregration Expression:  $mod</a></dd></dl>
+</li>
 </ul>
 <a id="multiply(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression...)">
 <!--   -->
@@ -739,7 +521,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>multiply</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;multiply​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;first,
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;multiply&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;first,
                                   <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>...&nbsp;additional)</pre>
 <div class="block">Multiplies numbers together and returns the result. Pass the arguments to $multiply in an array.</div>
 <dl>
@@ -748,8 +530,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>additional</code> - any additional expressions</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/multiply">Aggregration Expression:  $multiply</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/multiply'>Aggregration Expression:  $multiply</a></dd></dl>
+</li>
 </ul>
 <a id="pow(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -757,7 +539,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>pow</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;pow​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;pow&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
                              <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;exponent)</pre>
 <div class="block">Raises a number to the specified exponent.</div>
 <dl>
@@ -766,8 +548,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>exponent</code> - the exponent</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/pow">Aggregration Expression:  $pow</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/pow'>Aggregration Expression:  $pow</a></dd></dl>
+</li>
 </ul>
 <a id="round(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -775,7 +557,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>round</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;round​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;round&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
                                <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;place)</pre>
 <div class="block">Rounds a number to to a whole integer or to a specified decimal place.</div>
 <dl>
@@ -784,8 +566,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>place</code> - the place to round to</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/round">Aggregration Expression:  $round</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/round'>Aggregration Expression:  $round</a></dd></dl>
+</li>
 </ul>
 <a id="sqrt(dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -793,15 +575,15 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>sqrt</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;sqrt​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;sqrt&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</pre>
 <div class="block">Calculates the square root.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - the value</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/sqrt">Aggregration Expression:  $sqrt</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/sqrt'>Aggregration Expression:  $sqrt</a></dd></dl>
+</li>
 </ul>
 <a id="subtract(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -809,7 +591,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockList">
 <li class="blockList">
 <h4>subtract</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;subtract​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;minuend,
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;subtract&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;minuend,
                                   <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;subtrahend)</pre>
 <div class="block">Returns the result of subtracting the second value from the first. If the two values are numbers, return the difference. If the two
  values are dates, return the difference in milliseconds. If the two values are a date and a number in milliseconds, return the
@@ -821,8 +603,8 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <dd><code>subtrahend</code> - the number to subtract</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/subtract">Aggregration Expression:  $subtract</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/subtract'>Aggregration Expression:  $subtract</a></dd></dl>
+</li>
 </ul>
 <a id="trunc(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)">
 <!--   -->
@@ -830,19 +612,19 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <ul class="blockListLast">
 <li class="blockList">
 <h4>trunc</h4>
-<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;trunc​(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
+<pre class="methodSignature">public static&nbsp;<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;trunc&#8203;(<a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;number,
                                <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;place)</pre>
 <div class="block">Truncates a number to a whole integer or to a specified decimal place.
  <p>
- NOTE: Prior to 4.2, the place value wasn't available. Pass null if your server is older than 4.2.</p></div>
+ NOTE: Prior to 4.2, the place value wasn't available. Pass null if your server is older than 4.2.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>number</code> - the value</dd>
 <dd><code>place</code> - the place to trunc to</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new expression</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/trunc">Aggregration Expression:  $trunc</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/trunc'>Aggregration Expression:  $trunc</a></dd></dl>
+</li>
 </ul>
 </li>
 </ul>
@@ -913,20 +695,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2022. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

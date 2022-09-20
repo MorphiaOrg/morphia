@@ -1,238 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.2">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../migrating.html">Migrating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../quicktour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Features</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../kotlin.html">Kotlin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../queries.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../updates.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../deletes.html">Deleting</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../aggregations.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../textSearches.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../references.html">References</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../schemaValidation.html">Schema Validation</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text"><em>Support</em></span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.2</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-current is-latest">
-          <a href="../../../../index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.2</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../2.3/javadoc/dev/morphia/aggregation/AggregationPipelineImpl.html">2.3-SNAPSHOT</a>
-    <a class="version is-current" href="AggregationPipelineImpl.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/aggregation/AggregationPipelineImpl.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/aggregation/AggregationPipelineImpl.html">2.0</a>
-    <a class="version" href="../../../../../1.6/javadoc/dev/morphia/aggregation/AggregationPipelineImpl.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.16.1) on Wed Sep 14 02:29:10 UTC 2022 -->
+<title>AggregationPipelineImpl (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2022-09-14">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -373,12 +158,12 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.client.MongoCollection,java.lang.Class)">AggregationPipelineImpl</a></span>​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(dev.morphia.Datastore,com.mongodb.client.MongoCollection,java.lang.Class)">AggregationPipelineImpl</a></span>&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                        com.mongodb.client.MongoCollection&nbsp;collection,
                        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;source)</code></th>
 <td class="colLast">
@@ -386,7 +171,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <div class="block">Creates an AggregationPipeline</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -399,14 +184,14 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.Class)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.Class)">aggregate</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Executes the pipeline and aggregates the output in to the type mapped by the target type using
@@ -415,7 +200,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.Class,com.mongodb.AggregationOptions)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.Class,com.mongodb.AggregationOptions)">aggregate</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
          com.mongodb.AggregationOptions&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -424,7 +209,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.Class,com.mongodb.AggregationOptions,com.mongodb.ReadPreference)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.Class,com.mongodb.AggregationOptions,com.mongodb.ReadPreference)">aggregate</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
          com.mongodb.AggregationOptions&nbsp;options,
          com.mongodb.ReadPreference&nbsp;readPreference)</code></th>
 <td class="colLast">
@@ -434,7 +219,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.String,java.lang.Class,com.mongodb.AggregationOptions,com.mongodb.ReadPreference)">aggregate</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#aggregate(java.lang.String,java.lang.Class,com.mongodb.AggregationOptions,com.mongodb.ReadPreference)">aggregate</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
          <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
          com.mongodb.AggregationOptions&nbsp;options,
          com.mongodb.ReadPreference&nbsp;readPreference)</code></th>
@@ -445,7 +230,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bucket(java.lang.String,java.util.List)">bucket</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bucket(java.lang.String,java.util.List)">bucket</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;boundaries)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -455,7 +240,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bucket(java.lang.String,java.util.List,dev.morphia.query.BucketOptions)">bucket</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bucket(java.lang.String,java.util.List,dev.morphia.query.BucketOptions)">bucket</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;boundaries,
       <a href="../query/BucketOptions.html" title="class in dev.morphia.query">BucketOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -466,7 +251,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bucketAuto(java.lang.String,int)">bucketAuto</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bucketAuto(java.lang.String,int)">bucketAuto</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
           int&nbsp;bucketCount)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -476,7 +261,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bucketAuto(java.lang.String,int,dev.morphia.query.BucketAutoOptions)">bucketAuto</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bucketAuto(java.lang.String,int,dev.morphia.query.BucketAutoOptions)">bucketAuto</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
           int&nbsp;bucketCount,
           <a href="../query/BucketAutoOptions.html" title="class in dev.morphia.query">BucketAutoOptions</a>&nbsp;options)</code></th>
 <td class="colLast">
@@ -487,7 +272,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#geoNear(dev.morphia.aggregation.GeoNear)">geoNear</a></span>​(<a href="GeoNear.html" title="class in dev.morphia.aggregation">GeoNear</a>&nbsp;geoNear)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#geoNear(dev.morphia.aggregation.GeoNear)">geoNear</a></span>&#8203;(<a href="GeoNear.html" title="class in dev.morphia.aggregation">GeoNear</a>&nbsp;geoNear)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Returns an ordered stream of documents based on the proximity to a geospatial point.</div>
@@ -502,7 +287,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#group(dev.morphia.aggregation.Group...)">group</a></span>​(<a href="Group.html" title="class in dev.morphia.aggregation">Group</a>...&nbsp;groupings)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#group(dev.morphia.aggregation.Group...)">group</a></span>&#8203;(<a href="Group.html" title="class in dev.morphia.aggregation">Group</a>...&nbsp;groupings)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group
@@ -511,7 +296,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#group(java.lang.String,dev.morphia.aggregation.Group...)">group</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;id,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#group(java.lang.String,dev.morphia.aggregation.Group...)">group</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;id,
      <a href="Group.html" title="class in dev.morphia.aggregation">Group</a>...&nbsp;groupings)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -520,7 +305,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#group(java.util.List,dev.morphia.aggregation.Group...)">group</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Group.html" title="class in dev.morphia.aggregation">Group</a>&gt;&nbsp;id,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#group(java.util.List,dev.morphia.aggregation.Group...)">group</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Group.html" title="class in dev.morphia.aggregation">Group</a>&gt;&nbsp;id,
      <a href="Group.html" title="class in dev.morphia.aggregation">Group</a>...&nbsp;groupings)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -528,7 +313,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#limit(int)">limit</a></span>​(int&nbsp;count)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#limit(int)">limit</a></span>&#8203;(int&nbsp;count)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Passes the first n documents unmodified to the pipeline where n is the specified limit.</div>
@@ -536,7 +321,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lookup(java.lang.String,java.lang.String,java.lang.String,java.lang.String)">lookup</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;from,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lookup(java.lang.String,java.lang.String,java.lang.String,java.lang.String)">lookup</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;from,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;localField,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;foreignField,
       <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;as)</code></th>
@@ -548,7 +333,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#match(dev.morphia.query.Query)">match</a></span>​(<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#match(dev.morphia.query.Query)">match</a></span>&#8203;(<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage.</div>
@@ -556,7 +341,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#out(java.lang.Class)">out</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#out(java.lang.Class)">out</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Places the output of the aggregation in the collection mapped by the target type using the default options as defined in
@@ -565,7 +350,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code>&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#out(java.lang.Class,com.mongodb.AggregationOptions)">out</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#out(java.lang.Class,com.mongodb.AggregationOptions)">out</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
    com.mongodb.AggregationOptions&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -574,7 +359,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code>&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#out(java.lang.String,java.lang.Class)">out</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#out(java.lang.String,java.lang.Class)">out</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -584,7 +369,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#out(java.lang.String,java.lang.Class,com.mongodb.AggregationOptions)">out</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#out(java.lang.String,java.lang.Class,com.mongodb.AggregationOptions)">out</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
    <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
    com.mongodb.AggregationOptions&nbsp;options)</code></th>
 <td class="colLast">
@@ -594,7 +379,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#project(dev.morphia.aggregation.Projection...)">project</a></span>​(<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>...&nbsp;projections)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#project(dev.morphia.aggregation.Projection...)">project</a></span>&#8203;(<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>...&nbsp;projections)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Reshapes each document in the stream, such as by adding new fields or removing existing fields.</div>
@@ -602,7 +387,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sample(int)">sample</a></span>​(int&nbsp;sampleSize)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sample(int)">sample</a></span>&#8203;(int&nbsp;sampleSize)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Randomly selects the specified number of documents from the previous pipeline stage.</div>
@@ -610,7 +395,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#skip(int)">skip</a></span>​(int&nbsp;count)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#skip(int)">skip</a></span>&#8203;(int&nbsp;count)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline.</div>
@@ -618,7 +403,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(dev.morphia.query.Sort...)">sort</a></span>​(<a href="../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sort(dev.morphia.query.Sort...)">sort</a></span>&#8203;(<a href="../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Reorders the document stream by a specified sort key.</div>
@@ -626,7 +411,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByCount(java.lang.String)">sortByCount</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByCount(java.lang.String)">sortByCount</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Groups incoming documents based on the value of a specified expression, then computes the count
@@ -642,7 +427,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unwind(java.lang.String)">unwind</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unwind(java.lang.String)">unwind</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Deconstructs an array field from the input documents to output a document for each element.</div>
@@ -650,14 +435,14 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unwind(java.lang.String,com.mongodb.client.model.UnwindOptions)">unwind</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unwind(java.lang.String,com.mongodb.client.model.UnwindOptions)">unwind</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
       com.mongodb.client.model.UnwindOptions&nbsp;options)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Deconstructs an array field from the input documents to output a document for each element.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -681,13 +466,13 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>(dev.morphia.Datastore,com.mongodb.client.MongoCollection,java.lang.Class)">
+<a id="&lt;init&gt;(dev.morphia.Datastore,com.mongodb.client.MongoCollection,java.lang.Class)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>AggregationPipelineImpl</h4>
-<pre>public&nbsp;AggregationPipelineImpl​(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+<pre>public&nbsp;AggregationPipelineImpl&#8203;(<a href="../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
                                com.mongodb.client.MongoCollection&nbsp;collection,
                                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&nbsp;source)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -716,7 +501,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>aggregate</h4>
-<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</pre>
+<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;aggregate&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#aggregate(java.lang.Class)">AggregationPipeline</a></code></span></div>
 <div class="block">Executes the pipeline and aggregates the output in to the type mapped by the target type using
@@ -742,7 +527,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>aggregate</h4>
-<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
+<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;aggregate&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
                                  com.mongodb.AggregationOptions&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#aggregate(java.lang.Class,com.mongodb.AggregationOptions)">AggregationPipeline</a></code></span></div>
@@ -769,7 +554,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>aggregate</h4>
-<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
+<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;aggregate&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
                                  com.mongodb.AggregationOptions&nbsp;options,
                                  com.mongodb.ReadPreference&nbsp;readPreference)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -798,7 +583,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>aggregate</h4>
-<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;aggregate​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
+<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;aggregate&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
                                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
                                  com.mongodb.AggregationOptions&nbsp;options,
                                  com.mongodb.ReadPreference&nbsp;readPreference)</pre>
@@ -829,7 +614,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>bucket</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;bucket​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;bucket&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;boundaries)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#bucket(java.lang.String,java.util.List)">AggregationPipeline</a></code></span></div>
@@ -839,7 +624,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
  Each bucket is represented as a document in the output. The document for each bucket contains
  an _id field, whose value specifies the inclusive lower bound of the bucket and a count field
  that contains the number of documents in the bucket. The count field is included by default
- when the output is not specified.</p></div>
+ when the output is not specified.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="AggregationPipeline.html#bucket(java.lang.String,java.util.List)">bucket</a></code>&nbsp;in interface&nbsp;<code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></dd>
@@ -859,7 +644,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>bucket</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;bucket​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;bucket&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;?&gt;&nbsp;boundaries,
                                   <a href="../query/BucketOptions.html" title="class in dev.morphia.query">BucketOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -870,7 +655,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
  Each bucket is represented as a document in the output. The document for each bucket contains
  an _id field, whose value specifies the inclusive lower bound of the bucket and a count field
  that contains the number of documents in the bucket. The count field is included by default
- when the output is not specified.</p></div>
+ when the output is not specified.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="AggregationPipeline.html#bucket(java.lang.String,java.util.List,dev.morphia.query.BucketOptions)">bucket</a></code>&nbsp;in interface&nbsp;<code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></dd>
@@ -892,7 +677,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>bucketAuto</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;bucketAuto​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;bucketAuto&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                       int&nbsp;bucketCount)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#bucketAuto(java.lang.String,int)">AggregationPipeline</a></code></span></div>
@@ -903,7 +688,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
  Each bucket is represented as a document in the output. The document for each bucket contains
  an _id field, whose value specifies the inclusive lower bound and the exclusive upper bound for
  the bucket, and a count field that contains the number of documents in the bucket. The count
- field is included by default when the output is not specified.</p></div>
+ field is included by default when the output is not specified.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="AggregationPipeline.html#bucketAuto(java.lang.String,int)">bucketAuto</a></code>&nbsp;in interface&nbsp;<code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></dd>
@@ -921,7 +706,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>bucketAuto</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;bucketAuto​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;bucketAuto&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                       int&nbsp;bucketCount,
                                       <a href="../query/BucketAutoOptions.html" title="class in dev.morphia.query">BucketAutoOptions</a>&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -933,7 +718,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
  Each bucket is represented as a document in the output. The document for each bucket contains
  an _id field, whose value specifies the inclusive lower bound and the exclusive upper bound for
  the bucket, and a count field that contains the number of documents in the bucket. The count
- field is included by default when the output is not specified.</p></div>
+ field is included by default when the output is not specified.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="AggregationPipeline.html#bucketAuto(java.lang.String,int,dev.morphia.query.BucketAutoOptions)">bucketAuto</a></code>&nbsp;in interface&nbsp;<code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></dd>
@@ -952,7 +737,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>geoNear</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;geoNear​(<a href="GeoNear.html" title="class in dev.morphia.aggregation">GeoNear</a>&nbsp;geoNear)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;geoNear&#8203;(<a href="GeoNear.html" title="class in dev.morphia.aggregation">GeoNear</a>&nbsp;geoNear)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#geoNear(dev.morphia.aggregation.GeoNear)">AggregationPipeline</a></code></span></div>
 <div class="block">Returns an ordered stream of documents based on the proximity to a geospatial point. Incorporates the functionality of $match,
@@ -974,7 +759,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>group</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;group​(<a href="Group.html" title="class in dev.morphia.aggregation">Group</a>...&nbsp;groupings)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;group&#8203;(<a href="Group.html" title="class in dev.morphia.aggregation">Group</a>...&nbsp;groupings)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#group(dev.morphia.aggregation.Group...)">AggregationPipeline</a></code></span></div>
 <div class="block">Groups input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group
@@ -996,7 +781,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>group</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;group​(@Nullable
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;group&#8203;(@Nullable
                                  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;id,
                                  <a href="Group.html" title="class in dev.morphia.aggregation">Group</a>...&nbsp;groupings)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -1021,7 +806,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>group</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;group​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Group.html" title="class in dev.morphia.aggregation">Group</a>&gt;&nbsp;id,
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;group&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Group.html" title="class in dev.morphia.aggregation">Group</a>&gt;&nbsp;id,
                                  <a href="Group.html" title="class in dev.morphia.aggregation">Group</a>...&nbsp;groupings)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <dl>
@@ -1043,7 +828,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>limit</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;limit​(int&nbsp;count)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;limit&#8203;(int&nbsp;count)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#limit(int)">AggregationPipeline</a></code></span></div>
 <div class="block">Passes the first n documents unmodified to the pipeline where n is the specified limit. For each input document, outputs either
@@ -1064,7 +849,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>lookup</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;lookup​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;from,
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;lookup&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;from,
                                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;localField,
                                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;foreignField,
                                   <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;as)</pre>
@@ -1093,7 +878,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>match</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;match​(<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;match&#8203;(<a href="../query/Query.html" title="interface in dev.morphia.query">Query</a>&nbsp;query)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#match(dev.morphia.query.Query)">AggregationPipeline</a></code></span></div>
 <div class="block">Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. $match uses standard
@@ -1114,7 +899,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>out</h4>
-<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;out​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</pre>
+<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;out&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#out(java.lang.Class)">AggregationPipeline</a></code></span></div>
 <div class="block">Places the output of the aggregation in the collection mapped by the target type using the default options as defined in
@@ -1137,7 +922,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>out</h4>
-<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;out​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
+<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;out&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
                            com.mongodb.AggregationOptions&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#out(java.lang.Class,com.mongodb.AggregationOptions)">AggregationPipeline</a></code></span></div>
@@ -1161,7 +946,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>out</h4>
-<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;out​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
+<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;out&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#out(java.lang.String,java.lang.Class)">AggregationPipeline</a></code></span></div>
@@ -1186,7 +971,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>out</h4>
-<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;out​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
+<pre class="methodSignature">public&nbsp;&lt;U&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Iterator.html?is-external=true" title="class or interface in java.util" class="externalLink">Iterator</a>&lt;U&gt;&nbsp;out&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;collectionName,
                            <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html?is-external=true" title="class or interface in java.lang" class="externalLink">Class</a>&lt;U&gt;&nbsp;target,
                            com.mongodb.AggregationOptions&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
@@ -1212,7 +997,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>project</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;project​(<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>...&nbsp;projections)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;project&#8203;(<a href="Projection.html" title="class in dev.morphia.aggregation">Projection</a>...&nbsp;projections)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#project(dev.morphia.aggregation.Projection...)">AggregationPipeline</a></code></span></div>
 <div class="block">Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one
@@ -1233,7 +1018,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>sample</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;sample​(int&nbsp;sampleSize)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;sample&#8203;(int&nbsp;sampleSize)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#sample(int)">AggregationPipeline</a></code></span></div>
 <div class="block">Randomly selects the specified number of documents from the previous pipeline stage.</div>
@@ -1253,7 +1038,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>skip</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;skip​(int&nbsp;count)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;skip&#8203;(int&nbsp;count)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#skip(int)">AggregationPipeline</a></code></span></div>
 <div class="block">Skips the first n documents where n is the specified skip number and passes the remaining documents unmodified to the pipeline. For
@@ -1274,7 +1059,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>sort</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;sort​(<a href="../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;sort&#8203;(<a href="../query/Sort.html" title="class in dev.morphia.query">Sort</a>...&nbsp;sorts)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#sort(dev.morphia.query.Sort...)">AggregationPipeline</a></code></span></div>
 <div class="block">Reorders the document stream by a specified sort key. Only the order changes; the documents remain unmodified. For each input
@@ -1295,14 +1080,14 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>sortByCount</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;sortByCount​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;sortByCount&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#sortByCount(java.lang.String)">AggregationPipeline</a></code></span></div>
 <div class="block">Groups incoming documents based on the value of a specified expression, then computes the count
  of documents in each distinct group.
  <p>
  Each output document contains two fields: an _id field containing the distinct grouping value,
- and a count field containing the number of documents belonging to that grouping or category.</p></div>
+ and a count field containing the number of documents belonging to that grouping or category.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="AggregationPipeline.html#sortByCount(java.lang.String)">sortByCount</a></code>&nbsp;in interface&nbsp;<code><a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a></code></dd>
@@ -1319,7 +1104,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>unwind</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;unwind​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;unwind&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field,
                                   com.mongodb.client.model.UnwindOptions&nbsp;options)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#unwind(java.lang.String,com.mongodb.client.model.UnwindOptions)">AggregationPipeline</a></code></span></div>
@@ -1343,7 +1128,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 <ul class="blockList">
 <li class="blockList">
 <h4>unwind</h4>
-<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;unwind​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
+<pre class="methodSignature">public&nbsp;<a href="AggregationPipeline.html" title="interface in dev.morphia.aggregation">AggregationPipeline</a>&nbsp;unwind&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;field)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="AggregationPipeline.html#unwind(java.lang.String)">AggregationPipeline</a></code></span></div>
 <div class="block">Deconstructs an array field from the input documents to output a document for each element. Each output document replaces the array
@@ -1456,20 +1241,7 @@ implements <a href="AggregationPipeline.html" title="interface in dev.morphia.ag
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2022. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

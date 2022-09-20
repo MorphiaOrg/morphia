@@ -1,238 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.2">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../migrating.html">Migrating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../quicktour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Features</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../kotlin.html">Kotlin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../queries.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../updates.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../deletes.html">Deleting</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../aggregations.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../textSearches.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../references.html">References</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../schemaValidation.html">Schema Validation</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text"><em>Support</em></span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.2</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-current is-latest">
-          <a href="../../../../index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.2</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../2.3/javadoc/dev/morphia/query/FieldEnd.html">2.3-SNAPSHOT</a>
-    <a class="version is-current" href="FieldEnd.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/query/FieldEnd.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/query/FieldEnd.html">2.0</a>
-    <a class="version" href="../../../../../1.6/javadoc/dev/morphia/query/FieldEnd.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.16.1) on Wed Sep 14 02:29:10 UTC 2022 -->
+<title>FieldEnd (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2022-09-14">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -367,14 +152,14 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t3" class="tableTab"><span><a href="javascript:show(4);">Abstract Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t5" class="tableTab"><span><a href="javascript:show(16);">Default Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#contains(java.lang.String)">contains</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#contains(java.lang.String)">contains</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
@@ -383,7 +168,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containsIgnoreCase(java.lang.String)">containsIgnoreCase</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#containsIgnoreCase(java.lang.String)">containsIgnoreCase</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
@@ -401,7 +186,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#elemMatch(dev.morphia.query.Query)">elemMatch</a></span>​(<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;?&gt;&nbsp;query)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#elemMatch(dev.morphia.query.Query)">elemMatch</a></span>&#8203;(<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;?&gt;&nbsp;query)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#elemMatch(java.lang.String,dev.morphia.query.experimental.filters.Filter...)"><code>Filters.elemMatch(String, Filter...)</code></a> instead</div>
@@ -410,7 +195,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#endsWith(java.lang.String)">endsWith</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#endsWith(java.lang.String)">endsWith</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
@@ -419,7 +204,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#endsWithIgnoreCase(java.lang.String)">endsWithIgnoreCase</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#endsWithIgnoreCase(java.lang.String)">endsWithIgnoreCase</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
@@ -428,7 +213,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equal(java.lang.Object)">equal</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equal(java.lang.Object)">equal</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
@@ -437,7 +222,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equalIgnoreCase(java.lang.Object)">equalIgnoreCase</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#equalIgnoreCase(java.lang.Object)">equalIgnoreCase</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
@@ -455,7 +240,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#greaterThan(java.lang.Object)">greaterThan</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#greaterThan(java.lang.Object)">greaterThan</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#gt(java.lang.String,java.lang.Object)"><code>Filters.gt(String, Object)</code></a> instead</div>
@@ -464,7 +249,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#greaterThanOrEq(java.lang.Object)">greaterThanOrEq</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#greaterThanOrEq(java.lang.Object)">greaterThanOrEq</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#gte(java.lang.String,java.lang.Object)"><code>Filters.gte(String, Object)</code></a> instead</div>
@@ -473,7 +258,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasAllOf(java.lang.Iterable)">hasAllOf</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasAllOf(java.lang.Iterable)">hasAllOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#all(java.lang.String,java.lang.Object)"><code>Filters.all(String, Object)</code></a> instead</div>
@@ -482,7 +267,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasAnyOf(java.lang.Iterable)">hasAnyOf</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasAnyOf(java.lang.Iterable)">hasAnyOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#in(java.lang.String,java.lang.Iterable)"><code>Filters.in(String, Iterable)</code></a> instead</div>
@@ -491,7 +276,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasNoneOf(java.lang.Iterable)">hasNoneOf</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasNoneOf(java.lang.Iterable)">hasNoneOf</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#nin(java.lang.String,java.lang.Object)"><code>Filters.nin(String, Object)</code></a> instead</div>
@@ -500,7 +285,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasThisOne(java.lang.Object)">hasThisOne</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hasThisOne(java.lang.Object)">hasThisOne</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
@@ -509,7 +294,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#in(java.lang.Iterable)">in</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#in(java.lang.Iterable)">in</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#in(java.lang.String,java.lang.Iterable)"><code>Filters.in(String, Iterable)</code></a> instead</div>
@@ -518,7 +303,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(com.mongodb.client.model.geojson.Geometry)">intersects</a></span>​(com.mongodb.client.model.geojson.Geometry&nbsp;geometry)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(com.mongodb.client.model.geojson.Geometry)">intersects</a></span>&#8203;(com.mongodb.client.model.geojson.Geometry&nbsp;geometry)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoIntersects(java.lang.String,com.mongodb.client.model.geojson.Geometry)"><code>Filters.geoIntersects(String, com.mongodb.client.model.geojson.Geometry)</code></a> instead</div>
@@ -527,7 +312,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(com.mongodb.client.model.geojson.Geometry,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">intersects</a></span>​(com.mongodb.client.model.geojson.Geometry&nbsp;geometry,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(com.mongodb.client.model.geojson.Geometry,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">intersects</a></span>&#8203;(com.mongodb.client.model.geojson.Geometry&nbsp;geometry,
           com.mongodb.client.model.geojson.CoordinateReferenceSystem&nbsp;crs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -537,7 +322,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i18" class="altColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(dev.morphia.geo.Geometry)">intersects</a></span>​(<a href="../geo/Geometry.html" title="interface in dev.morphia.geo">Geometry</a>&nbsp;geometry)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(dev.morphia.geo.Geometry)">intersects</a></span>&#8203;(<a href="../geo/Geometry.html" title="interface in dev.morphia.geo">Geometry</a>&nbsp;geometry)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoIntersects(java.lang.String,com.mongodb.client.model.geojson.Geometry)"><code>Filters.geoIntersects(String, com.mongodb.client.model.geojson.Geometry)</code></a> instead</div>
@@ -546,7 +331,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(dev.morphia.geo.Geometry,dev.morphia.geo.CoordinateReferenceSystem)">intersects</a></span>​(<a href="../geo/Geometry.html" title="interface in dev.morphia.geo">Geometry</a>&nbsp;geometry,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#intersects(dev.morphia.geo.Geometry,dev.morphia.geo.CoordinateReferenceSystem)">intersects</a></span>&#8203;(<a href="../geo/Geometry.html" title="interface in dev.morphia.geo">Geometry</a>&nbsp;geometry,
           <a href="../geo/CoordinateReferenceSystem.html" title="class in dev.morphia.geo">CoordinateReferenceSystem</a>&nbsp;crs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -556,7 +341,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessThan(java.lang.Object)">lessThan</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessThan(java.lang.Object)">lessThan</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#lt(java.lang.String,java.lang.Object)"><code>Filters.lt(String, Object)</code></a> instead</div>
@@ -565,7 +350,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessThanOrEq(java.lang.Object)">lessThanOrEq</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessThanOrEq(java.lang.Object)">lessThanOrEq</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#lte(java.lang.String,java.lang.Object)"><code>Filters.lte(String, Object)</code></a> instead</div>
@@ -574,7 +359,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mod(long,long)">mod</a></span>​(long&nbsp;divisor,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#mod(long,long)">mod</a></span>&#8203;(long&nbsp;divisor,
    long&nbsp;remainder)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -584,7 +369,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double)">near</a></span>​(double&nbsp;longitude,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double)">near</a></span>&#8203;(double&nbsp;longitude,
     double&nbsp;latitude)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -594,7 +379,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,boolean)">near</a></span>​(double&nbsp;longitude,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,boolean)">near</a></span>&#8203;(double&nbsp;longitude,
     double&nbsp;latitude,
     boolean&nbsp;spherical)</code></th>
 <td class="colLast">
@@ -605,7 +390,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,double)">near</a></span>​(double&nbsp;longitude,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,double)">near</a></span>&#8203;(double&nbsp;longitude,
     double&nbsp;latitude,
     double&nbsp;radius)</code></th>
 <td class="colLast">
@@ -616,7 +401,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,double,boolean)">near</a></span>​(double&nbsp;longitude,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(double,double,double,boolean)">near</a></span>&#8203;(double&nbsp;longitude,
     double&nbsp;latitude,
     double&nbsp;radius,
     boolean&nbsp;spherical)</code></th>
@@ -628,7 +413,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(com.mongodb.client.model.geojson.Point)">near</a></span>​(com.mongodb.client.model.geojson.Point&nbsp;point)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(com.mongodb.client.model.geojson.Point)">near</a></span>&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#near(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.near(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
@@ -637,7 +422,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">near</a></span>​(com.mongodb.client.model.geojson.Point&nbsp;point,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">near</a></span>&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</code></th>
 <td class="colLast">
@@ -648,7 +433,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(dev.morphia.geo.Point)">near</a></span>​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(dev.morphia.geo.Point)">near</a></span>&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#near(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.near(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
@@ -657,7 +442,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(dev.morphia.geo.Point,java.lang.Double,java.lang.Double)">near</a></span>​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#near(dev.morphia.geo.Point,java.lang.Double,java.lang.Double)">near</a></span>&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
     <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</code></th>
 <td class="colLast">
@@ -668,7 +453,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(com.mongodb.client.model.geojson.Point)">nearSphere</a></span>​(com.mongodb.client.model.geojson.Point&nbsp;point)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(com.mongodb.client.model.geojson.Point)">nearSphere</a></span>&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#nearSphere(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.nearSphere(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
@@ -677,7 +462,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">nearSphere</a></span>​(com.mongodb.client.model.geojson.Point&nbsp;point,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">nearSphere</a></span>&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point,
           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</code></th>
 <td class="colLast">
@@ -688,7 +473,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i33" class="rowColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(dev.morphia.geo.Point)">nearSphere</a></span>​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(dev.morphia.geo.Point)">nearSphere</a></span>&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#nearSphere(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.nearSphere(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
@@ -697,7 +482,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i34" class="altColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(dev.morphia.geo.Point,java.lang.Double,java.lang.Double)">nearSphere</a></span>​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#nearSphere(dev.morphia.geo.Point,java.lang.Double,java.lang.Double)">nearSphere</a></span>&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point,
           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
           <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</code></th>
 <td class="colLast">
@@ -715,7 +500,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notEqual(java.lang.Object)">notEqual</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notEqual(java.lang.Object)">notEqual</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#ne(java.lang.String,java.lang.Object)"><code>Filters.ne(String, Object)</code></a> instead</div>
@@ -724,7 +509,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notIn(java.lang.Iterable)">notIn</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#notIn(java.lang.Iterable)">notIn</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#nin(java.lang.String,java.lang.Object)"><code>Filters.nin(String, Object)</code></a> instead</div>
@@ -733,7 +518,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i38" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sizeEq(int)">sizeEq</a></span>​(int&nbsp;val)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sizeEq(int)">sizeEq</a></span>&#8203;(int&nbsp;val)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#size(java.lang.String,int)"><code>Filters.size(String, int)</code></a> instead</div>
@@ -742,7 +527,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i39" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startsWith(java.lang.String)">startsWith</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startsWith(java.lang.String)">startsWith</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
@@ -751,7 +536,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i40" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startsWithIgnoreCase(java.lang.String)">startsWithIgnoreCase</a></span>​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#startsWithIgnoreCase(java.lang.String)">startsWithIgnoreCase</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
@@ -760,7 +545,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i41" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#type(dev.morphia.query.Type)">type</a></span>​(<a href="Type.html" title="enum in dev.morphia.query">Type</a>&nbsp;type)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#type(dev.morphia.query.Type)">type</a></span>&#8203;(<a href="Type.html" title="enum in dev.morphia.query">Type</a>&nbsp;type)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#type(java.lang.String,dev.morphia.query.Type)"><code>Filters.type(String, Type)</code></a> instead</div>
@@ -769,7 +554,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i42" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.MultiPolygon)">within</a></span>​(com.mongodb.client.model.geojson.MultiPolygon&nbsp;boundaries)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.MultiPolygon)">within</a></span>&#8203;(com.mongodb.client.model.geojson.MultiPolygon&nbsp;boundaries)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a> instead</div>
@@ -778,7 +563,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i43" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.MultiPolygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">within</a></span>​(com.mongodb.client.model.geojson.MultiPolygon&nbsp;boundaries,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.MultiPolygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">within</a></span>&#8203;(com.mongodb.client.model.geojson.MultiPolygon&nbsp;boundaries,
       com.mongodb.client.model.geojson.CoordinateReferenceSystem&nbsp;crs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -788,7 +573,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i44" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.Polygon)">within</a></span>​(com.mongodb.client.model.geojson.Polygon&nbsp;boundary)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.Polygon)">within</a></span>&#8203;(com.mongodb.client.model.geojson.Polygon&nbsp;boundary)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a> instead</div>
@@ -797,7 +582,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i45" class="rowColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.Polygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">within</a></span>​(com.mongodb.client.model.geojson.Polygon&nbsp;boundary,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(com.mongodb.client.model.geojson.Polygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">within</a></span>&#8203;(com.mongodb.client.model.geojson.Polygon&nbsp;boundary,
       com.mongodb.client.model.geojson.CoordinateReferenceSystem&nbsp;crs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -807,7 +592,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i46" class="altColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.geo.MultiPolygon)">within</a></span>​(<a href="../geo/MultiPolygon.html" title="class in dev.morphia.geo">MultiPolygon</a>&nbsp;boundaries)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.geo.MultiPolygon)">within</a></span>&#8203;(<a href="../geo/MultiPolygon.html" title="class in dev.morphia.geo">MultiPolygon</a>&nbsp;boundaries)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a> instead</div>
@@ -816,7 +601,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i47" class="rowColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.geo.MultiPolygon,dev.morphia.geo.CoordinateReferenceSystem)">within</a></span>​(<a href="../geo/MultiPolygon.html" title="class in dev.morphia.geo">MultiPolygon</a>&nbsp;boundaries,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.geo.MultiPolygon,dev.morphia.geo.CoordinateReferenceSystem)">within</a></span>&#8203;(<a href="../geo/MultiPolygon.html" title="class in dev.morphia.geo">MultiPolygon</a>&nbsp;boundaries,
       <a href="../geo/CoordinateReferenceSystem.html" title="class in dev.morphia.geo">CoordinateReferenceSystem</a>&nbsp;crs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -826,7 +611,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i48" class="altColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.geo.Polygon)">within</a></span>​(<a href="../geo/Polygon.html" title="class in dev.morphia.geo">Polygon</a>&nbsp;boundary)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.geo.Polygon)">within</a></span>&#8203;(<a href="../geo/Polygon.html" title="class in dev.morphia.geo">Polygon</a>&nbsp;boundary)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a> instead</div>
@@ -835,7 +620,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i49" class="rowColor">
 <td class="colFirst"><code>default <a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.geo.Polygon,dev.morphia.geo.CoordinateReferenceSystem)">within</a></span>​(<a href="../geo/Polygon.html" title="class in dev.morphia.geo">Polygon</a>&nbsp;boundary,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.geo.Polygon,dev.morphia.geo.CoordinateReferenceSystem)">within</a></span>&#8203;(<a href="../geo/Polygon.html" title="class in dev.morphia.geo">Polygon</a>&nbsp;boundary,
       <a href="../geo/CoordinateReferenceSystem.html" title="class in dev.morphia.geo">CoordinateReferenceSystem</a>&nbsp;crs)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -845,7 +630,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </tr>
 <tr id="i50" class="altColor">
 <td class="colFirst"><code><a href="FieldEnd.html" title="type parameter in FieldEnd">T</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.query.Shape)">within</a></span>​(<a href="Shape.html" title="class in dev.morphia.query">Shape</a>&nbsp;shape)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#within(dev.morphia.query.Shape)">within</a></span>&#8203;(<a href="Shape.html" title="class in dev.morphia.query">Shape</a>&nbsp;shape)</code></th>
 <td class="colLast">
 <div class="block"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a>, <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a>,
@@ -855,7 +640,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 </div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -880,7 +665,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>contains</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;contains​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;contains&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </div>
@@ -890,8 +675,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>string</code> - the value to check for</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/regex/">$regex</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/regex/'>$regex</a></dd></dl>
+</li>
 </ul>
 <a id="containsIgnoreCase(java.lang.String)">
 <!--   -->
@@ -901,7 +686,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>containsIgnoreCase</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;containsIgnoreCase​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;containsIgnoreCase&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;string)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </div>
@@ -911,8 +696,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>string</code> - the value to check for</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/regex/">$regex</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/regex/'>$regex</a></dd></dl>
+</li>
 </ul>
 <a id="doesNotExist()">
 <!--   -->
@@ -930,8 +715,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/exists/">$exists</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/exists/'>$exists</a></dd></dl>
+</li>
 </ul>
 <a id="endsWith(java.lang.String)">
 <!--   -->
@@ -941,7 +726,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>endsWith</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;endsWith​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;endsWith&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </div>
@@ -951,8 +736,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>suffix</code> - the value to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/regex/">$regex</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/regex/'>$regex</a></dd></dl>
+</li>
 </ul>
 <a id="endsWithIgnoreCase(java.lang.String)">
 <!--   -->
@@ -962,7 +747,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>endsWithIgnoreCase</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;endsWithIgnoreCase​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;endsWithIgnoreCase&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;suffix)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </div>
@@ -972,8 +757,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>suffix</code> - the value to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/regex/">$regex</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/regex/'>$regex</a></dd></dl>
+</li>
 </ul>
 <a id="equal(java.lang.Object)">
 <!--   -->
@@ -983,7 +768,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>equal</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;equal​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;equal&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
 </div>
@@ -993,8 +778,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>val</code> - the value to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/eq/">$eq</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/eq/'>$eq</a></dd></dl>
+</li>
 </ul>
 <a id="equalIgnoreCase(java.lang.Object)">
 <!--   -->
@@ -1004,7 +789,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>equalIgnoreCase</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;equalIgnoreCase​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;equalIgnoreCase&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
 </div>
@@ -1014,8 +799,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>val</code> - the value to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/eq/">$eq</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/eq/'>$eq</a></dd></dl>
+</li>
 </ul>
 <a id="elemMatch(dev.morphia.query.Query)">
 <!--   -->
@@ -1025,7 +810,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>elemMatch</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;elemMatch​(<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;?&gt;&nbsp;query)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;elemMatch&#8203;(<a href="Query.html" title="interface in dev.morphia.query">Query</a>&lt;?&gt;&nbsp;query)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#elemMatch(java.lang.String,dev.morphia.query.experimental.filters.Filter...)"><code>Filters.elemMatch(String, Filter...)</code></a> instead</div>
 </div>
@@ -1035,8 +820,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>query</code> - the query to find certain field values</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/elemMatch/">$elemMatch</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/elemMatch/'>$elemMatch</a></dd></dl>
+</li>
 </ul>
 <a id="greaterThan(java.lang.Object)">
 <!--   -->
@@ -1046,7 +831,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>greaterThan</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;greaterThan​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;greaterThan&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#gt(java.lang.String,java.lang.Object)"><code>Filters.gt(String, Object)</code></a> instead</div>
 </div>
@@ -1056,8 +841,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>val</code> - the value to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/gt/">$gt</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/gt/'>$gt</a></dd></dl>
+</li>
 </ul>
 <a id="greaterThanOrEq(java.lang.Object)">
 <!--   -->
@@ -1067,7 +852,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>greaterThanOrEq</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;greaterThanOrEq​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;greaterThanOrEq&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#gte(java.lang.String,java.lang.Object)"><code>Filters.gte(String, Object)</code></a> instead</div>
 </div>
@@ -1077,8 +862,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>val</code> - the value to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/gte/">$gte</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/gte/'>$gte</a></dd></dl>
+</li>
 </ul>
 <a id="hasAllOf(java.lang.Iterable)">
 <!--   -->
@@ -1088,7 +873,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>hasAllOf</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;hasAllOf​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;hasAllOf&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#all(java.lang.String,java.lang.Object)"><code>Filters.all(String, Object)</code></a> instead</div>
 </div>
@@ -1098,8 +883,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>values</code> - the values to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/all/">$all</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/all/'>$all</a></dd></dl>
+</li>
 </ul>
 <a id="hasAnyOf(java.lang.Iterable)">
 <!--   -->
@@ -1109,7 +894,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>hasAnyOf</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;hasAnyOf​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;hasAnyOf&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#in(java.lang.String,java.lang.Iterable)"><code>Filters.in(String, Iterable)</code></a> instead</div>
 </div>
@@ -1119,8 +904,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>values</code> - the values to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/in/">$in</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/in/'>$in</a></dd></dl>
+</li>
 </ul>
 <a id="hasNoneOf(java.lang.Iterable)">
 <!--   -->
@@ -1130,7 +915,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>hasNoneOf</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;hasNoneOf​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;hasNoneOf&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#nin(java.lang.String,java.lang.Object)"><code>Filters.nin(String, Object)</code></a> instead</div>
 </div>
@@ -1140,8 +925,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>values</code> - the values to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/nin/">$nin</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/nin/'>$nin</a></dd></dl>
+</li>
 </ul>
 <a id="exists()">
 <!--   -->
@@ -1159,8 +944,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/exists/">$exists</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/exists/'>$exists</a></dd></dl>
+</li>
 </ul>
 <a id="hasThisOne(java.lang.Object)">
 <!--   -->
@@ -1170,7 +955,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>hasThisOne</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;hasThisOne​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;hasThisOne&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
 </div>
@@ -1180,8 +965,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>val</code> - the value to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/eq/">$eq</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/eq/'>$eq</a></dd></dl>
+</li>
 </ul>
 <a id="in(java.lang.Iterable)">
 <!--   -->
@@ -1191,7 +976,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>in</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;in​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;in&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#in(java.lang.String,java.lang.Iterable)"><code>Filters.in(String, Iterable)</code></a> instead</div>
 </div>
@@ -1201,8 +986,8 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <dd><code>values</code> - the values to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/in/">$in</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/in/'>$in</a></dd></dl>
+</li>
 </ul>
 <a id="intersects(dev.morphia.geo.Geometry)">
 <!--   -->
@@ -1212,7 +997,7 @@ public interface <span class="typeNameLabel">FieldEnd&lt;T&gt;</span></pre>
 <h4>intersects</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;intersects​(<a href="../geo/Geometry.html" title="interface in dev.morphia.geo">Geometry</a>&nbsp;geometry)</pre>
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;intersects&#8203;(<a href="../geo/Geometry.html" title="interface in dev.morphia.geo">Geometry</a>&nbsp;geometry)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoIntersects(java.lang.String,com.mongodb.client.model.geojson.Geometry)"><code>Filters.geoIntersects(String, com.mongodb.client.model.geojson.Geometry)</code></a> instead</div>
 </div>
@@ -1223,8 +1008,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>geometry</code> - the shape to use to query for any stored shapes that intersect</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoIntersects/">$geoIntersects</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.4">2.4</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.4'>2.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoIntersects/'>$geoIntersects</a></dd></dl>
+</li>
 </ul>
 <a id="intersects(com.mongodb.client.model.geojson.Geometry)">
 <!--   -->
@@ -1234,7 +1019,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>intersects</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;intersects​(com.mongodb.client.model.geojson.Geometry&nbsp;geometry)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;intersects&#8203;(com.mongodb.client.model.geojson.Geometry&nbsp;geometry)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoIntersects(java.lang.String,com.mongodb.client.model.geojson.Geometry)"><code>Filters.geoIntersects(String, com.mongodb.client.model.geojson.Geometry)</code></a> instead</div>
 </div>
@@ -1247,8 +1032,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoIntersects/">$geoIntersects</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.4">2.4</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.4'>2.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoIntersects/'>$geoIntersects</a></dd></dl>
+</li>
 </ul>
 <a id="intersects(dev.morphia.geo.Geometry,dev.morphia.geo.CoordinateReferenceSystem)">
 <!--   -->
@@ -1258,7 +1043,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>intersects</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;intersects​(<a href="../geo/Geometry.html" title="interface in dev.morphia.geo">Geometry</a>&nbsp;geometry,
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;intersects&#8203;(<a href="../geo/Geometry.html" title="interface in dev.morphia.geo">Geometry</a>&nbsp;geometry,
                      <a href="../geo/CoordinateReferenceSystem.html" title="class in dev.morphia.geo">CoordinateReferenceSystem</a>&nbsp;crs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geometry(java.lang.String,java.lang.Object)"><code>Filters.geometry(String, Object)</code></a> instead</div>
@@ -1271,8 +1056,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>crs</code> - the coordinate reference system to use with the query</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geometry">$geometry</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.4">2.4</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.4'>2.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geometry'>$geometry</a></dd></dl>
+</li>
 </ul>
 <a id="intersects(com.mongodb.client.model.geojson.Geometry,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">
 <!--   -->
@@ -1282,7 +1067,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>intersects</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;intersects​(com.mongodb.client.model.geojson.Geometry&nbsp;geometry,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;intersects&#8203;(com.mongodb.client.model.geojson.Geometry&nbsp;geometry,
              com.mongodb.client.model.geojson.CoordinateReferenceSystem&nbsp;crs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geometry(java.lang.String,java.lang.Object)"><code>Filters.geometry(String, Object)</code></a> instead</div>
@@ -1297,8 +1082,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geometry">$geometry</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.4">2.4</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.4'>2.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geometry'>$geometry</a></dd></dl>
+</li>
 </ul>
 <a id="lessThan(java.lang.Object)">
 <!--   -->
@@ -1308,7 +1093,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>lessThan</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;lessThan​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;lessThan&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#lt(java.lang.String,java.lang.Object)"><code>Filters.lt(String, Object)</code></a> instead</div>
 </div>
@@ -1318,8 +1103,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>val</code> - the value to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/lt/">$lt</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/lt/'>$lt</a></dd></dl>
+</li>
 </ul>
 <a id="lessThanOrEq(java.lang.Object)">
 <!--   -->
@@ -1329,7 +1114,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>lessThanOrEq</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;lessThanOrEq​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;lessThanOrEq&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#lte(java.lang.String,java.lang.Object)"><code>Filters.lte(String, Object)</code></a> instead</div>
 </div>
@@ -1339,8 +1124,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>val</code> - the value to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/lte/">$lte</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/lte/'>$lte</a></dd></dl>
+</li>
 </ul>
 <a id="mod(long,long)">
 <!--   -->
@@ -1350,7 +1135,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>mod</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;mod​(long&nbsp;divisor,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;mod&#8203;(long&nbsp;divisor,
       long&nbsp;remainder)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#mod(java.lang.String,long,long)"><code>Filters.mod(String, long, long)</code></a> instead</div>
@@ -1363,8 +1148,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>remainder</code> - the remainder to check for</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/mod/">$mod</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/mod/'>$mod</a></dd></dl>
+</li>
 </ul>
 <a id="near(double,double)">
 <!--   -->
@@ -1374,7 +1159,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>near</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near​(double&nbsp;longitude,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near&#8203;(double&nbsp;longitude,
        double&nbsp;latitude)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#near(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.near(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
@@ -1386,8 +1171,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>latitude</code> - the latitude</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/near/">$near</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/near/'>$near</a></dd></dl>
+</li>
 </ul>
 <a id="near(double,double,boolean)">
 <!--   -->
@@ -1397,7 +1182,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>near</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near​(double&nbsp;longitude,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near&#8203;(double&nbsp;longitude,
        double&nbsp;latitude,
        boolean&nbsp;spherical)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -1411,8 +1196,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>spherical</code> - if true, will use spherical geometry ($nearSphere) when analyzing documents</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/near/">$near</a></dd><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/nearSphere/">$nearSphere</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/near/'>$near</a></dd><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/nearSphere/'>$nearSphere</a></dd></dl>
+</li>
 </ul>
 <a id="near(double,double,double)">
 <!--   -->
@@ -1422,7 +1207,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>near</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near​(double&nbsp;longitude,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near&#8203;(double&nbsp;longitude,
        double&nbsp;latitude,
        double&nbsp;radius)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -1436,8 +1221,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>radius</code> - the max distance to consider</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/near/">$near</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/near/'>$near</a></dd></dl>
+</li>
 </ul>
 <a id="near(double,double,double,boolean)">
 <!--   -->
@@ -1447,7 +1232,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>near</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near​(double&nbsp;longitude,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near&#8203;(double&nbsp;longitude,
        double&nbsp;latitude,
        double&nbsp;radius,
        boolean&nbsp;spherical)</pre>
@@ -1463,8 +1248,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>spherical</code> - if true, will use spherical geometry ($nearSphere) when analyzing documents</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/near/">$near</a></dd><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/nearSphere/">$nearSphere</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/near/'>$near</a></dd><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/nearSphere/'>$nearSphere</a></dd></dl>
+</li>
 </ul>
 <a id="near(dev.morphia.geo.Point)">
 <!--   -->
@@ -1474,7 +1259,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>near</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</pre>
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#near(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.near(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
 </div>
@@ -1485,8 +1270,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>point</code> - the point to find results close to</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/near/">$near</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/near/'>$near</a></dd></dl>
+</li>
 </ul>
 <a id="near(com.mongodb.client.model.geojson.Point)">
 <!--   -->
@@ -1496,7 +1281,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>near</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near​(com.mongodb.client.model.geojson.Point&nbsp;point)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#near(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.near(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
 </div>
@@ -1509,8 +1294,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/near/">$near</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/near/'>$near</a></dd></dl>
+</li>
 </ul>
 <a id="near(dev.morphia.geo.Point,java.lang.Double,java.lang.Double)">
 <!--   -->
@@ -1520,7 +1305,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>near</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point,
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
                <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -1536,8 +1321,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.5</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/near/">$near</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/near/'>$near</a></dd></dl>
+</li>
 </ul>
 <a id="near(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">
 <!--   -->
@@ -1547,7 +1332,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>near</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near​(com.mongodb.client.model.geojson.Point&nbsp;point,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;near&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point,
        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
        <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -1563,8 +1348,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/near/">$near</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/near/'>$near</a></dd></dl>
+</li>
 </ul>
 <a id="nearSphere(dev.morphia.geo.Point)">
 <!--   -->
@@ -1574,7 +1359,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>nearSphere</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;nearSphere​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</pre>
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;nearSphere&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#nearSphere(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.nearSphere(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
 </div>
@@ -1586,8 +1371,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.5</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/nearSphere/">$nearSphere</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/nearSphere/'>$nearSphere</a></dd></dl>
+</li>
 </ul>
 <a id="nearSphere(com.mongodb.client.model.geojson.Point)">
 <!--   -->
@@ -1597,7 +1382,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>nearSphere</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;nearSphere​(com.mongodb.client.model.geojson.Point&nbsp;point)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;nearSphere&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#nearSphere(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.nearSphere(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
 </div>
@@ -1609,8 +1394,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/nearSphere/">$nearSphere</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/nearSphere/'>$nearSphere</a></dd></dl>
+</li>
 </ul>
 <a id="nearSphere(dev.morphia.geo.Point,java.lang.Double,java.lang.Double)">
 <!--   -->
@@ -1620,7 +1405,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>nearSphere</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;nearSphere​(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point,
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;nearSphere&#8203;(<a href="../geo/Point.html" title="class in dev.morphia.geo">Point</a>&nbsp;point,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
                      <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -1636,8 +1421,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>1.5</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/nearSphere/">$nearSphere</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/nearSphere/'>$nearSphere</a></dd></dl>
+</li>
 </ul>
 <a id="nearSphere(com.mongodb.client.model.geojson.Point,java.lang.Double,java.lang.Double)">
 <!--   -->
@@ -1647,7 +1432,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>nearSphere</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;nearSphere​(com.mongodb.client.model.geojson.Point&nbsp;point,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;nearSphere&#8203;(com.mongodb.client.model.geojson.Point&nbsp;point,
              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;maxDistance,
              <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&nbsp;minDistance)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
@@ -1663,8 +1448,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/nearSphere/">$nearSphere</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/nearSphere/'>$nearSphere</a></dd></dl>
+</li>
 </ul>
 <a id="not()">
 <!--   -->
@@ -1691,7 +1476,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>notEqual</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;notEqual​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;notEqual&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">Object</a>&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#ne(java.lang.String,java.lang.Object)"><code>Filters.ne(String, Object)</code></a> instead</div>
 </div>
@@ -1701,8 +1486,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>val</code> - the value to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/ne/">$ne</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/ne/'>$ne</a></dd></dl>
+</li>
 </ul>
 <a id="notIn(java.lang.Iterable)">
 <!--   -->
@@ -1712,7 +1497,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>notIn</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;notIn​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;notIn&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html?is-external=true" title="class or interface in java.lang" class="externalLink">Iterable</a>&lt;?&gt;&nbsp;values)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#nin(java.lang.String,java.lang.Object)"><code>Filters.nin(String, Object)</code></a> instead</div>
 </div>
@@ -1722,8 +1507,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>values</code> - the values to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/nin/">$nin</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/nin/'>$nin</a></dd></dl>
+</li>
 </ul>
 <a id="sizeEq(int)">
 <!--   -->
@@ -1733,7 +1518,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>sizeEq</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;sizeEq​(int&nbsp;val)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;sizeEq&#8203;(int&nbsp;val)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#size(java.lang.String,int)"><code>Filters.size(String, int)</code></a> instead</div>
 </div>
@@ -1743,8 +1528,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>val</code> - the value to check against</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/size/">$size</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/size/'>$size</a></dd></dl>
+</li>
 </ul>
 <a id="startsWith(java.lang.String)">
 <!--   -->
@@ -1754,7 +1539,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>startsWith</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;startsWith​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;startsWith&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </div>
@@ -1764,8 +1549,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>prefix</code> - the value to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/regex/">$regex</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/regex/'>$regex</a></dd></dl>
+</li>
 </ul>
 <a id="startsWithIgnoreCase(java.lang.String)">
 <!--   -->
@@ -1775,7 +1560,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>startsWithIgnoreCase</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;startsWithIgnoreCase​(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;startsWithIgnoreCase&#8203;(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;prefix)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </div>
@@ -1785,8 +1570,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>prefix</code> - the value to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/regex/">$regex</a></dd></dl>
-</dl></li>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/regex/'>$regex</a></dd></dl>
+</li>
 </ul>
 <a id="type(dev.morphia.query.Type)">
 <!--   -->
@@ -1796,7 +1581,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>type</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;type​(<a href="Type.html" title="enum in dev.morphia.query">Type</a>&nbsp;type)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;type&#8203;(<a href="Type.html" title="enum in dev.morphia.query">Type</a>&nbsp;type)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#type(java.lang.String,dev.morphia.query.Type)"><code>Filters.type(String, Type)</code></a> instead</div>
 </div>
@@ -1817,7 +1602,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>within</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within​(<a href="Shape.html" title="class in dev.morphia.query">Shape</a>&nbsp;shape)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within&#8203;(<a href="Shape.html" title="class in dev.morphia.query">Shape</a>&nbsp;shape)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a>, <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a>,
  <a href="experimental/filters/Filters.html#box(java.lang.String,com.mongodb.client.model.geojson.Point,com.mongodb.client.model.geojson.Point)"><code>Filters.box(String, Point, Point)</code></a>, <a href="experimental/filters/Filters.html#center(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.center(String, Point, double)</code></a>,
@@ -1830,8 +1615,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>shape</code> - the shape to check within</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoWithin/">$geoWithin</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.4">2.4</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.4'>2.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoWithin/'>$geoWithin</a></dd></dl>
+</li>
 </ul>
 <a id="within(dev.morphia.geo.Polygon)">
 <!--   -->
@@ -1841,7 +1626,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>within</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within​(<a href="../geo/Polygon.html" title="class in dev.morphia.geo">Polygon</a>&nbsp;boundary)</pre>
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within&#8203;(<a href="../geo/Polygon.html" title="class in dev.morphia.geo">Polygon</a>&nbsp;boundary)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a> instead</div>
 </div>
@@ -1852,8 +1637,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>boundary</code> - a polygon describing the boundary to search within.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoWithin/">$geoWithin</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.4">2.4</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.4'>2.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoWithin/'>$geoWithin</a></dd></dl>
+</li>
 </ul>
 <a id="within(com.mongodb.client.model.geojson.Polygon)">
 <!--   -->
@@ -1863,7 +1648,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>within</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within​(com.mongodb.client.model.geojson.Polygon&nbsp;boundary)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within&#8203;(com.mongodb.client.model.geojson.Polygon&nbsp;boundary)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a> instead</div>
 </div>
@@ -1876,8 +1661,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoWithin/">$geoWithin</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.4">2.4</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.4'>2.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoWithin/'>$geoWithin</a></dd></dl>
+</li>
 </ul>
 <a id="within(dev.morphia.geo.MultiPolygon)">
 <!--   -->
@@ -1887,7 +1672,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>within</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within​(<a href="../geo/MultiPolygon.html" title="class in dev.morphia.geo">MultiPolygon</a>&nbsp;boundaries)</pre>
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within&#8203;(<a href="../geo/MultiPolygon.html" title="class in dev.morphia.geo">MultiPolygon</a>&nbsp;boundaries)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a> instead</div>
 </div>
@@ -1899,8 +1684,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>boundaries</code> - a multi-polygon describing the areas to search within.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoWithin/">$geoWithin</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.6">2.6</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.6'>2.6</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoWithin/'>$geoWithin</a></dd></dl>
+</li>
 </ul>
 <a id="within(com.mongodb.client.model.geojson.MultiPolygon)">
 <!--   -->
@@ -1910,7 +1695,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>within</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within​(com.mongodb.client.model.geojson.MultiPolygon&nbsp;boundaries)</pre>
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within&#8203;(com.mongodb.client.model.geojson.MultiPolygon&nbsp;boundaries)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a> instead</div>
 </div>
@@ -1924,8 +1709,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoWithin/">$geoWithin</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.6">2.6</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.6'>2.6</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoWithin/'>$geoWithin</a></dd></dl>
+</li>
 </ul>
 <a id="within(dev.morphia.geo.Polygon,dev.morphia.geo.CoordinateReferenceSystem)">
 <!--   -->
@@ -1935,7 +1720,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>within</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within​(<a href="../geo/Polygon.html" title="class in dev.morphia.geo">Polygon</a>&nbsp;boundary,
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within&#8203;(<a href="../geo/Polygon.html" title="class in dev.morphia.geo">Polygon</a>&nbsp;boundary,
                  <a href="../geo/CoordinateReferenceSystem.html" title="class in dev.morphia.geo">CoordinateReferenceSystem</a>&nbsp;crs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a> instead</div>
@@ -1948,8 +1733,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd><code>crs</code> - the coordinate reference system to use</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoWithin/">$geoWithin</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.4">2.4</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.4'>2.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoWithin/'>$geoWithin</a></dd></dl>
+</li>
 </ul>
 <a id="within(com.mongodb.client.model.geojson.Polygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">
 <!--   -->
@@ -1959,7 +1744,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>within</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within​(com.mongodb.client.model.geojson.Polygon&nbsp;boundary,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within&#8203;(com.mongodb.client.model.geojson.Polygon&nbsp;boundary,
          com.mongodb.client.model.geojson.CoordinateReferenceSystem&nbsp;crs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a> instead</div>
@@ -1974,8 +1759,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoWithin/">$geoWithin</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.4">2.4</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.4'>2.4</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoWithin/'>$geoWithin</a></dd></dl>
+</li>
 </ul>
 <a id="within(dev.morphia.geo.MultiPolygon,dev.morphia.geo.CoordinateReferenceSystem)">
 <!--   -->
@@ -1985,7 +1770,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>within</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within​(<a href="../geo/MultiPolygon.html" title="class in dev.morphia.geo">MultiPolygon</a>&nbsp;boundaries,
+default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within&#8203;(<a href="../geo/MultiPolygon.html" title="class in dev.morphia.geo">MultiPolygon</a>&nbsp;boundaries,
                  <a href="../geo/CoordinateReferenceSystem.html" title="class in dev.morphia.geo">CoordinateReferenceSystem</a>&nbsp;crs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a> instead</div>
@@ -1993,16 +1778,16 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <div class="block">This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
  determining inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point
  numbers.
- <p>
- These queries are only compatible with MongoDB 2.6 or greater.</p></div>
+ <p/>
+ These queries are only compatible with MongoDB 2.6 or greater.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>boundaries</code> - a multi-polygon describing the areas to search within.</dd>
 <dd><code>crs</code> - the coordinate reference system to use</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>T</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoWithin/">$geoWithin</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.6">2.6</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.6'>2.6</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoWithin/'>$geoWithin</a></dd></dl>
+</li>
 </ul>
 <a id="within(com.mongodb.client.model.geojson.MultiPolygon,com.mongodb.client.model.geojson.CoordinateReferenceSystem)">
 <!--   -->
@@ -2012,7 +1797,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <h4>within</h4>
 <pre class="methodSignature"><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true" title="class or interface in java.lang" class="externalLink">@Deprecated</a>(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#since()" title="class or interface in java.lang" class="externalLink">since</a>="2.0",
             <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Deprecated.html?is-external=true#forRemoval()" title="class or interface in java.lang" class="externalLink">forRemoval</a>=true)
-<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within​(com.mongodb.client.model.geojson.MultiPolygon&nbsp;boundaries,
+<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nbsp;within&#8203;(com.mongodb.client.model.geojson.MultiPolygon&nbsp;boundaries,
          com.mongodb.client.model.geojson.CoordinateReferenceSystem&nbsp;crs)</pre>
 <div class="deprecationBlock"><span class="deprecatedLabel">Deprecated, for removal: This API element is subject to removal in a future version.</span>
 <div class="deprecationComment">use <a href="experimental/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a> instead</div>
@@ -2020,8 +1805,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <div class="block">This runs the $geoWithin query, returning documents with GeoJson fields whose area falls within the given boundaries. When
  determining inclusion, MongoDB considers the border of a shape to be part of the shape, subject to the precision of floating point
  numbers.
- <p>
- These queries are only compatible with MongoDB 2.6 or greater.</p></div>
+ <p/>
+ These queries are only compatible with MongoDB 2.6 or greater.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>boundaries</code> - a multi-polygon describing the areas to search within.</dd>
@@ -2030,8 +1815,8 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 <dd>T</dd>
 <dt><span class="simpleTagLabel">Since:</span></dt>
 <dd>2.0</dd>
-<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href="http://docs.mongodb.org/manual/reference/operator/query/geoWithin/">$geoWithin</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href="http://docs.mongodb.org/manual/release-notes/2.6">2.6</a></dd></dl>
-</dl></dl></li>
+<dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/2.6'>2.6</a></dd><dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/query/geoWithin/'>$geoWithin</a></dd></dl>
+</li>
 </ul>
 </li>
 </ul>
@@ -2102,20 +1887,7 @@ default&nbsp;<a href="FieldEnd.html" title="type parameter in FieldEnd">T</a>&nb
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2022. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

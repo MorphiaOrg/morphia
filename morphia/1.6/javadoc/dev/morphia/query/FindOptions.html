@@ -1,199 +1,24 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="../../../module-search-index.js"></script>
-    <script async type="text/javascript" src="../../../package-search-index.js"></script>
-    <script async type="text/javascript" src="../../../type-search-index.js"></script>
-    <script async type="text/javascript" src="../../../member-search-index.js"></script>
-    <script async type="text/javascript" src="../../../tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../../../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="1.6">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../../../../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../quick-tour.html">Quick Tour</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../migration.html">Migrating to 2.0</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../jrebel.html">JRebel</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../../validationExtension.html">Validation Extension</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="../../../index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">1.6</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../../../2.3/index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../../../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version is-current">
-          <a href="../../../../index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">1.6</button>
-  <div class="version-menu">
-    <a class="version" href="../../../../../2.3/javadoc/dev/morphia/query/FindOptions.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../../../../2.2/javadoc/dev/morphia/query/FindOptions.html">2.2</a>
-    <a class="version" href="../../../../../2.1/javadoc/dev/morphia/query/FindOptions.html">2.1</a>
-    <a class="version" href="../../../../../2.0/javadoc/dev/morphia/query/FindOptions.html">2.0</a>
-    <a class="version is-current" href="FindOptions.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.6) on Wed Nov 25 19:39:54 EST 2020 -->
+<title>FindOptions (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2020-11-25">
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="../../../jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="../../../script.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="../../../jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="../../../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-migrate-3.0.1.js"></script>
+<script type="text/javascript" src="../../../jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -316,10 +141,10 @@ extends java.lang.Object</pre>
 <dd>1.3</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">tutorial/query-documents/ Find</a></dd>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">../meta-driver/latest/legacy/mongodb-wire-protocol/#op-query OP_QUERY</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>tutorial/query-documents/ Find</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>../meta-driver/latest/legacy/mongodb-wire-protocol/#op-query OP_QUERY</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 </div>
 <div class="summary">
@@ -334,7 +159,7 @@ extends java.lang.Object</pre>
 <h3>Constructor Summary</h3>
 <table class="memberSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
@@ -344,7 +169,7 @@ extends java.lang.Object</pre>
 <div class="block">Creates an empty options instance.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 </li>
 </ul>
 </section>
@@ -357,28 +182,28 @@ extends java.lang.Object</pre>
 <h3>Method Summary</h3>
 <table class="memberSummary">
 <caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#batchSize(int)">batchSize</a></span>​(int&nbsp;batchSize)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#batchSize(int)">batchSize</a></span>&#8203;(int&nbsp;batchSize)</code></th>
 <td class="colLast">
 <div class="block">Sets the number of documents to return per batch.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collation(com.mongodb.client.model.Collation)">collation</a></span>​(com.mongodb.client.model.Collation&nbsp;collation)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#collation(com.mongodb.client.model.Collation)">collation</a></span>&#8203;(com.mongodb.client.model.Collation&nbsp;collation)</code></th>
 <td class="colLast">
 <div class="block">Sets the collation</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#comment(java.lang.String)">comment</a></span>​(java.lang.String&nbsp;comment)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#comment(java.lang.String)">comment</a></span>&#8203;(java.lang.String&nbsp;comment)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -390,7 +215,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#cursorType(com.mongodb.CursorType)">cursorType</a></span>​(com.mongodb.CursorType&nbsp;cursorType)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#cursorType(com.mongodb.CursorType)">cursorType</a></span>&#8203;(com.mongodb.CursorType&nbsp;cursorType)</code></th>
 <td class="colLast">
 <div class="block">Sets the cursor type.</div>
 </td>
@@ -440,7 +265,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxAwaitTime(java.util.concurrent.TimeUnit)">getMaxAwaitTime</a></span>​(java.util.concurrent.TimeUnit&nbsp;timeUnit)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxAwaitTime(java.util.concurrent.TimeUnit)">getMaxAwaitTime</a></span>&#8203;(java.util.concurrent.TimeUnit&nbsp;timeUnit)</code></th>
 <td class="colLast">
 <div class="block">The maximum amount of time for the server to wait on new documents to satisfy a tailable cursor
  query.</div>
@@ -448,7 +273,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>long</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxTime(java.util.concurrent.TimeUnit)">getMaxTime</a></span>​(java.util.concurrent.TimeUnit&nbsp;timeUnit)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMaxTime(java.util.concurrent.TimeUnit)">getMaxTime</a></span>&#8203;(java.util.concurrent.TimeUnit&nbsp;timeUnit)</code></th>
 <td class="colLast">
 <div class="block">Gets the maximum execution time on the server for this operation.</div>
 </td>
@@ -486,12 +311,12 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(com.mongodb.DBObject)">hint</a></span>​(com.mongodb.DBObject&nbsp;hint)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hint(com.mongodb.DBObject)">hint</a></span>&#8203;(com.mongodb.DBObject&nbsp;hint)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hintString(java.lang.String)">hintString</a></span>​(java.lang.String&nbsp;hint)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hintString(java.lang.String)">hintString</a></span>&#8203;(java.lang.String&nbsp;hint)</code></th>
 <td class="colLast">
 <div class="block">Defines the index hint value</div>
 </td>
@@ -530,19 +355,19 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#limit(int)">limit</a></span>​(int&nbsp;limit)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#limit(int)">limit</a></span>&#8203;(int&nbsp;limit)</code></th>
 <td class="colLast">
 <div class="block">Sets the limit to apply.</div>
 </td>
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max(com.mongodb.DBObject)">max</a></span>​(com.mongodb.DBObject&nbsp;max)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#max(com.mongodb.DBObject)">max</a></span>&#8203;(com.mongodb.DBObject&nbsp;max)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxAwaitTime(long,java.util.concurrent.TimeUnit)">maxAwaitTime</a></span>​(long&nbsp;maxAwaitTime,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxAwaitTime(long,java.util.concurrent.TimeUnit)">maxAwaitTime</a></span>&#8203;(long&nbsp;maxAwaitTime,
             java.util.concurrent.TimeUnit&nbsp;timeUnit)</code></th>
 <td class="colLast">
 <div class="block">Sets the maximum await execution time on the server for this operation.</div>
@@ -550,7 +375,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>​(long&nbsp;maxTime,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxTime(long,java.util.concurrent.TimeUnit)">maxTime</a></span>&#8203;(long&nbsp;maxTime,
        java.util.concurrent.TimeUnit&nbsp;timeUnit)</code></th>
 <td class="colLast">
 <div class="block">Sets the maximum execution time on the server for this operation.</div>
@@ -558,12 +383,12 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i30" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min(com.mongodb.DBObject)">min</a></span>​(com.mongodb.DBObject&nbsp;min)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#min(com.mongodb.DBObject)">min</a></span>&#8203;(com.mongodb.DBObject&nbsp;min)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#noCursorTimeout(boolean)">noCursorTimeout</a></span>​(boolean&nbsp;noCursorTimeout)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#noCursorTimeout(boolean)">noCursorTimeout</a></span>&#8203;(boolean&nbsp;noCursorTimeout)</code></th>
 <td class="colLast">
 <div class="block">The server normally times out idle cursors after an inactivity period (10 minutes)
  to prevent excess memory use.</div>
@@ -571,50 +396,50 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i32" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#oplogReplay(boolean)">oplogReplay</a></span>​(boolean&nbsp;oplogReplay)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#oplogReplay(boolean)">oplogReplay</a></span>&#8203;(boolean&nbsp;oplogReplay)</code></th>
 <td class="colLast">
 <div class="block">Users should not set this under normal circumstances.</div>
 </td>
 </tr>
 <tr id="i33" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#partial(boolean)">partial</a></span>​(boolean&nbsp;partial)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#partial(boolean)">partial</a></span>&#8203;(boolean&nbsp;partial)</code></th>
 <td class="colLast">
 <div class="block">Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).</div>
 </td>
 </tr>
 <tr id="i34" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readConcern(com.mongodb.ReadConcern)">readConcern</a></span>​(com.mongodb.ReadConcern&nbsp;readConcern)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readConcern(com.mongodb.ReadConcern)">readConcern</a></span>&#8203;(com.mongodb.ReadConcern&nbsp;readConcern)</code></th>
 <td class="colLast">
 <div class="block">Sets the readConcern</div>
 </td>
 </tr>
 <tr id="i35" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readPreference(com.mongodb.ReadPreference)">readPreference</a></span>​(com.mongodb.ReadPreference&nbsp;readPreference)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#readPreference(com.mongodb.ReadPreference)">readPreference</a></span>&#8203;(com.mongodb.ReadPreference&nbsp;readPreference)</code></th>
 <td class="colLast">
 <div class="block">Sets the readPreference</div>
 </td>
 </tr>
 <tr id="i36" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#returnKey(boolean)">returnKey</a></span>​(boolean&nbsp;returnKey)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#returnKey(boolean)">returnKey</a></span>&#8203;(boolean&nbsp;returnKey)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i37" class="rowColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showRecordId(boolean)">showRecordId</a></span>​(boolean&nbsp;showRecordId)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showRecordId(boolean)">showRecordId</a></span>&#8203;(boolean&nbsp;showRecordId)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i38" class="altColor">
 <td class="colFirst"><code><a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#skip(int)">skip</a></span>​(int&nbsp;skip)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#skip(int)">skip</a></span>&#8203;(int&nbsp;skip)</code></th>
 <td class="colLast">
 <div class="block">Sets the number of documents to skip.</div>
 </td>
 </tr>
-</tbody></table>
+</table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -638,7 +463,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="<init>()">
+<a id="&lt;init&gt;()">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -664,7 +489,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>batchSize</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;batchSize​(int&nbsp;batchSize)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;batchSize&#8203;(int&nbsp;batchSize)</pre>
 <div class="block">Sets the number of documents to return per batch.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -673,9 +498,9 @@ extends java.lang.Object</pre>
 <dd>this</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.batchSize/#cursor.batchSize Batch Size</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.batchSize/#cursor.batchSize Batch Size</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="collation(com.mongodb.client.model.Collation)">
 <!--   -->
@@ -683,7 +508,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>collation</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;collation​(com.mongodb.client.model.Collation&nbsp;collation)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;collation&#8203;(com.mongodb.client.model.Collation&nbsp;collation)</pre>
 <div class="block">Sets the collation</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -692,9 +517,9 @@ extends java.lang.Object</pre>
 <dd>this</dd>
 
 <dl><dt><span class="strong">Since server release</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/release-notes/@mongodb.server.release">3.4</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/release-notes/@mongodb.server.release'>3.4</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="comment(java.lang.String)">
 <!--   -->
@@ -702,7 +527,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>comment</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;comment​(java.lang.String&nbsp;comment)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;comment&#8203;(java.lang.String&nbsp;comment)</pre>
 </li>
 </ul>
 <a id="copy()">
@@ -725,7 +550,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>cursorType</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;cursorType​(com.mongodb.CursorType&nbsp;cursorType)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;cursorType&#8203;(com.mongodb.CursorType&nbsp;cursorType)</pre>
 <div class="block">Sets the cursor type.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -749,9 +574,9 @@ extends java.lang.Object</pre>
 <dd>the batch size, which may be null</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.batchSize/#cursor.batchSize Batch Size</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.batchSize/#cursor.batchSize Batch Size</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getCollation()">
 <!--   -->
@@ -766,9 +591,9 @@ extends java.lang.Object</pre>
 <dd>the collation options</dd>
 
 <dl><dt><span class="strong">Since server release</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/release-notes/@mongodb.server.release">3.4</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/release-notes/@mongodb.server.release'>3.4</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getComment()">
 <!--   -->
@@ -817,9 +642,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getHint()</pre>
 <dd>the limit</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.limit/#cursor.limit Limit</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.limit/#cursor.limit Limit</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getMax()">
 <!--   -->
@@ -837,17 +662,17 @@ public&nbsp;com.mongodb.DBObject&nbsp;getMax()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getMaxAwaitTime</h4>
-<pre class="methodSignature">public&nbsp;long&nbsp;getMaxAwaitTime​(java.util.concurrent.TimeUnit&nbsp;timeUnit)</pre>
+<pre class="methodSignature">public&nbsp;long&nbsp;getMaxAwaitTime&#8203;(java.util.concurrent.TimeUnit&nbsp;timeUnit)</pre>
 <div class="block">The maximum amount of time for the server to wait on new documents to satisfy a tailable cursor
  query. This only applies to a TAILABLE_AWAIT cursor. When the cursor is not a TAILABLE_AWAIT cursor,
  this option is ignored.
  <p>
  On servers &gt;= 3.2, this option will be specified on the getMore command as "maxTimeMS". The default
  is no value: no "maxTimeMS" is sent to the server with the getMore command.
- </p><p>
+ <p>
  On servers &lt; 3.2, this option is ignored, and indicates that the driver should respect the server's default value
- </p><p>
- A zero value will be ignored.</p></div>
+ <p>
+ A zero value will be ignored.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>timeUnit</code> - the time unit to return the result in</dd>
@@ -855,9 +680,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getMax()</pre>
 <dd>the maximum await execution time in the given time unit</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getMaxTime(java.util.concurrent.TimeUnit)">
 <!--   -->
@@ -865,7 +690,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getMax()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getMaxTime</h4>
-<pre class="methodSignature">public&nbsp;long&nbsp;getMaxTime​(java.util.concurrent.TimeUnit&nbsp;timeUnit)</pre>
+<pre class="methodSignature">public&nbsp;long&nbsp;getMaxTime&#8203;(java.util.concurrent.TimeUnit&nbsp;timeUnit)</pre>
 <div class="block">Gets the maximum execution time on the server for this operation.  The default is 0, which places no limit on the execution time.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -874,9 +699,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getMax()</pre>
 <dd>the maximum execution time in the given time unit</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getMin()">
 <!--   -->
@@ -901,9 +726,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getMin()</pre>
 <dd>the readConcern</dd>
 
 <dl><dt><span class="strong">Since server release</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/release-notes/@mongodb.server.release">3.2</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/release-notes/@mongodb.server.release'>3.2</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getReadPreference()">
 <!--   -->
@@ -932,9 +757,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getMin()</pre>
 <dd>the number of documents to skip, which may be null</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.skip/#cursor.skip Skip</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.skip/#cursor.skip Skip</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="getSort()">
 <!--   -->
@@ -952,7 +777,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>hint</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hint​(com.mongodb.DBObject&nbsp;hint)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hint&#8203;(com.mongodb.DBObject&nbsp;hint)</pre>
 </li>
 </ul>
 <a id="hintString(java.lang.String)">
@@ -961,7 +786,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>hintString</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hintString​(java.lang.String&nbsp;hint)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;hintString&#8203;(java.lang.String&nbsp;hint)</pre>
 <div class="block">Defines the index hint value</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1038,7 +863,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>limit</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;limit​(int&nbsp;limit)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;limit&#8203;(int&nbsp;limit)</pre>
 <div class="block">Sets the limit to apply.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1047,9 +872,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <dd>this</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.limit/#cursor.limit Limit</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.limit/#cursor.limit Limit</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="max(com.mongodb.DBObject)">
 <!--   -->
@@ -1057,7 +882,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>max</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;max​(com.mongodb.DBObject&nbsp;max)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;max&#8203;(com.mongodb.DBObject&nbsp;max)</pre>
 </li>
 </ul>
 <a id="maxAwaitTime(long,java.util.concurrent.TimeUnit)">
@@ -1066,7 +891,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>maxAwaitTime</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;maxAwaitTime​(long&nbsp;maxAwaitTime,
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;maxAwaitTime&#8203;(long&nbsp;maxAwaitTime,
                                 java.util.concurrent.TimeUnit&nbsp;timeUnit)</pre>
 <div class="block">Sets the maximum await execution time on the server for this operation.</div>
 <dl>
@@ -1078,9 +903,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <dd>this</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="maxTime(long,java.util.concurrent.TimeUnit)">
 <!--   -->
@@ -1088,7 +913,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>maxTime</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;maxTime​(long&nbsp;maxTime,
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;maxTime&#8203;(long&nbsp;maxTime,
                            java.util.concurrent.TimeUnit&nbsp;timeUnit)</pre>
 <div class="block">Sets the maximum execution time on the server for this operation.</div>
 <dl>
@@ -1099,9 +924,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <dd>this</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.maxTimeMS/#cursor.maxTimeMS Max Time</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="min(com.mongodb.DBObject)">
 <!--   -->
@@ -1109,7 +934,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>min</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;min​(com.mongodb.DBObject&nbsp;min)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;min&#8203;(com.mongodb.DBObject&nbsp;min)</pre>
 </li>
 </ul>
 <a id="noCursorTimeout(boolean)">
@@ -1118,7 +943,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>noCursorTimeout</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;noCursorTimeout​(boolean&nbsp;noCursorTimeout)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;noCursorTimeout&#8203;(boolean&nbsp;noCursorTimeout)</pre>
 <div class="block">The server normally times out idle cursors after an inactivity period (10 minutes)
  to prevent excess memory use. Set this option to prevent that.</div>
 <dl>
@@ -1135,7 +960,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>oplogReplay</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;oplogReplay​(boolean&nbsp;oplogReplay)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;oplogReplay&#8203;(boolean&nbsp;oplogReplay)</pre>
 <div class="block">Users should not set this under normal circumstances.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1151,7 +976,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>partial</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;partial​(boolean&nbsp;partial)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;partial&#8203;(boolean&nbsp;partial)</pre>
 <div class="block">Get partial results from a sharded cluster if one or more shards are unreachable (instead of throwing an error).</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1167,7 +992,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>readConcern</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readConcern​(com.mongodb.ReadConcern&nbsp;readConcern)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readConcern&#8203;(com.mongodb.ReadConcern&nbsp;readConcern)</pre>
 <div class="block">Sets the readConcern</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1176,9 +1001,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <dd>this</dd>
 
 <dl><dt><span class="strong">Since server release</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/release-notes/@mongodb.server.release">3.2</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/release-notes/@mongodb.server.release'>3.2</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 <a id="readPreference(com.mongodb.ReadPreference)">
 <!--   -->
@@ -1186,7 +1011,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>readPreference</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readPreference​(com.mongodb.ReadPreference&nbsp;readPreference)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;readPreference&#8203;(com.mongodb.ReadPreference&nbsp;readPreference)</pre>
 <div class="block">Sets the readPreference</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1202,7 +1027,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>returnKey</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;returnKey​(boolean&nbsp;returnKey)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;returnKey&#8203;(boolean&nbsp;returnKey)</pre>
 </li>
 </ul>
 <a id="showRecordId(boolean)">
@@ -1211,7 +1036,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>showRecordId</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;showRecordId​(boolean&nbsp;showRecordId)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;showRecordId&#8203;(boolean&nbsp;showRecordId)</pre>
 </li>
 </ul>
 <a id="skip(int)">
@@ -1220,7 +1045,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>skip</h4>
-<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;skip​(int&nbsp;skip)</pre>
+<pre class="methodSignature">public&nbsp;<a href="FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;skip&#8203;(int&nbsp;skip)</pre>
 <div class="block">Sets the number of documents to skip.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -1229,9 +1054,9 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 <dd>this</dd>
 
 <dl><dt><span class="strong">MongoDB documentation</span></dt>
-   <dd><a href="http://docs.mongodb.org/manual/@mongodb.driver.manual">reference/method/cursor.skip/#cursor.skip Skip</a></dd>
+   <dd><a href='http://docs.mongodb.org/manual/@mongodb.driver.manual'>reference/method/cursor.skip/#cursor.skip Skip</a></dd>
 </dl>
-</dl></li>
+</li>
 </ul>
 </li>
 </ul>
@@ -1302,20 +1127,7 @@ public&nbsp;com.mongodb.DBObject&nbsp;getSort()</pre>
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2020. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2020. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../../../../_/js/site.js"></script>
-<script async src="../../../../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>

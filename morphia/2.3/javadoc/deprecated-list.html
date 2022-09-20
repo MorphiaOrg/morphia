@@ -1,241 +1,23 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
+<!-- NewPage -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
-    <link rel="stylesheet" href="../../../_/css/javadoc.css">
-    <script async type="text/javascript" src="./module-search-index.js"></script>
-    <script async type="text/javascript" src="./package-search-index.js"></script>
-    <script async type="text/javascript" src="./type-search-index.js"></script>
-    <script async type="text/javascript" src="./member-search-index.js"></script>
-    <script async type="text/javascript" src="./tag-search-index.js"></script>
-    <script type="text/javascript" src="../../../_/js/vendor/script.js"></script> <!-- This one is GPL -->
-    <script type="text/javascript" src="../../../_/js/vendor/javadoc.js"></script>
-    <script type="text/javascript" src="../../../_/js/vendor/search.js"></script> <!-- This one is GPL -->
-  </head>
-  <body class="article">
-<header class="header" role="banner">
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img height="80%" src="../../../_/img/logo.png">
-        </div>
-        <div class="navbar-brand">
-            <div class="navbar-item">
-                <a href="https://morphia.dev">Morphia</a>
-                <span class="separator">//</span>
-                <a href="../../..">Docs</a>
-            </div>
-            <button class="navbar-burger" data-target="topbar-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-        <div id="topbar-nav" class="navbar-menu">
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Projects</div>
-                    <div class="navbar-dropdown">
-                        <div class="navbar-item"><strong>Core</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
-                        <hr class="navbar-divider">
-                        <div class="navbar-item"><strong>Critter</strong></div>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
-                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
-                        <!--                        <hr class="navbar-divider">-->
-                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
-                    </div>
-                </div>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <div class="navbar-link">Community</div>
-                    <div class="navbar-dropdown is-right">
-                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
-                            ODMs chat</a>
-                    </div>
-                </div>
-
-                <a class="navbar-item" href="https://twitter.com/evanchooly">
-                    <span class="icon">
-                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path fill="#57aaee"
-                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
-                        </svg>
-                    </span>
-                </a>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
-  <aside class="nav">
-    <div class="panels">
-<div class="nav-panel-menu is-active" data-panel="menu">
-  <nav class="nav-menu">
-    <h3 class="title"><a href="../index.html">Morphia</a></h3>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../index.html">Getting Started</a>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../migrating.html">Migrating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../quicktour.html">Quick Tour</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Features</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../kotlin.html">Kotlin</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../mapping.html">Mapping</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../indexing.html">Indexing</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../sharding.html">Sharding</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../queries.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../updates.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../deletes.html">Deleting</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../aggregations.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../textSearches.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../references.html">References</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../lifeCycleMethods.html">Life Cycle Methods</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../schemaValidation.html">Schema Validation</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text"><em>Support</em></span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../issues-help.html">Issues &amp; Support</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="index.html">Javadoc</a>
-  </li>
-</ul>
-  </li>
-</ul>
-  </nav>
-</div>
-<div class="nav-panel-explore" data-panel="explore">
-  <div class="context">
-    <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
-  </div>
-  <ul class="components">
-    <li class="component">
-      <span class="title">Critter</span>
-      <ul class="versions">
-        <li class="version">
-          <a href="../../../critter/4.2/index.html">4.2-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../../critter/4.1/index.html">4.1</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component">
-      <span class="title">Home</span>
-      <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../../landing/index.html">landing</a>
-        </li>
-      </ul>
-    </li>
-    <li class="component is-current">
-      <span class="title">Morphia</span>
-      <ul class="versions">
-        <li class="version is-current">
-          <a href="../index.html">2.3-SNAPSHOT</a>
-        </li>
-        <li class="version is-latest">
-          <a href="../../2.2/index.html">2.2</a>
-        </li>
-        <li class="version">
-          <a href="../../2.1/index.html">2.1</a>
-        </li>
-        <li class="version">
-          <a href="../../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
-          <a href="../../1.6/index.html">1.6</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</div>
-    </div>
-  </aside>
-</div>
-<main>
-<div class="toolbar" role="navigation">
-<button class="nav-toggle"></button>
-  <a href="../../../landing/index.html" class="home-link"></a>
-<nav class="breadcrumbs" aria-label="breadcrumbs">
-</nav>
-<div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
-  <div class="version-menu">
-    <a class="version is-current" href="deprecated-list.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../../2.2/javadoc/deprecated-list.html">2.2</a>
-    <a class="version" href="../../2.1/javadoc/deprecated-list.html">2.1</a>
-    <a class="version" href="../../2.0/javadoc/deprecated-list.html">2.0</a>
-    <a class="version" href="../../1.6/javadoc/deprecated-list.html">1.6</a>
-  </div>
-</div>
-</div>
-    <article class="javadoc">
-        
+<head>
+<!-- Generated by javadoc (11.0.16.1) on Tue Sep 20 04:28:49 UTC 2022 -->
+<title>Deprecated List (Morphia)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="dc.created" content="2022-09-20">
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<link rel="stylesheet" type="text/css" href="jquery/jquery-ui.css" title="Style">
+<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript" src="jquery/jszip/dist/jszip.min.js"></script>
+<script type="text/javascript" src="jquery/jszip-utils/dist/jszip-utils.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript" src="jquery/jszip-utils/dist/jszip-utils-ie.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="jquery/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="jquery/jquery-ui.js"></script>
+</head>
+<body>
 <script type="text/javascript"><!--
     try {
         if (location.href.indexOf('is-external=true') == -1) {
@@ -332,11 +114,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="deprecatedSummary">
 <caption><span>For Removal</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Element</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AbstractEntityInterceptor.html" title="class in dev.morphia">dev.morphia.AbstractEntityInterceptor</a></th>
 <td class="colLast">
@@ -348,31 +130,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createAggregation(java.lang.String,java.lang.Class)">dev.morphia.AdvancedDatastore.createAggregation​(String, Class&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createAggregation(java.lang.String,java.lang.Class)">dev.morphia.AdvancedDatastore.createAggregation&#8203;(String, Class&lt;?&gt;)</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createQuery(java.lang.Class,org.bson.Document)">dev.morphia.AdvancedDatastore.createQuery​(Class&lt;T&gt;, Document)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createQuery(java.lang.Class,org.bson.Document)">dev.morphia.AdvancedDatastore.createQuery&#8203;(Class&lt;T&gt;, Document)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createRef(java.lang.Class,V)">dev.morphia.AdvancedDatastore.createRef​(Class&lt;T&gt;, V)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createRef(java.lang.Class,V)">dev.morphia.AdvancedDatastore.createRef&#8203;(Class&lt;T&gt;, V)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">dev.morphia.AdvancedDatastore.createUpdateOperations​(Class&lt;T&gt;, DBObject)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">dev.morphia.AdvancedDatastore.createUpdateOperations&#8203;(Class&lt;T&gt;, DBObject)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#insert(T,dev.morphia.InsertOptions)">dev.morphia.AdvancedDatastore.insert​(T, InsertOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#insert(T,dev.morphia.InsertOptions)">dev.morphia.AdvancedDatastore.insert&#8203;(T, InsertOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#insert(T,dev.morphia.InsertOneOptions)"><code>Datastore.insert(Object, InsertOneOptions)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#queryByExample(java.lang.String,T)">dev.morphia.AdvancedDatastore.queryByExample​(String, T)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#queryByExample(java.lang.String,T)">dev.morphia.AdvancedDatastore.queryByExample&#8203;(String, T)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
@@ -424,7 +206,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/GeoNear.GeoNearBuilder.html#setNear(dev.morphia.geo.Point)">dev.morphia.aggregation.GeoNear.GeoNearBuilder.setNear​(Point)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/GeoNear.GeoNearBuilder.html#setNear(dev.morphia.geo.Point)">dev.morphia.aggregation.GeoNear.GeoNearBuilder.setNear&#8203;(Point)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use the driver-provided types instead</div>
 </td>
@@ -478,19 +260,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/GeoNear.html#to(com.mongodb.client.model.geojson.Point)">dev.morphia.aggregation.stages.GeoNear.to​(Point)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/GeoNear.html#to(com.mongodb.client.model.geojson.Point)">dev.morphia.aggregation.stages.GeoNear.to&#8203;(Point)</a></th>
 <td class="colLast">
 <div class="deprecationComment">user <a href="dev/morphia/aggregation/stages/GeoNear.html#geoNear(com.mongodb.client.model.geojson.Point)"><code>GeoNear.geoNear(Point)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/GraphLookup.html#from(java.lang.String)">dev.morphia.aggregation.stages.GraphLookup.from​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/GraphLookup.html#from(java.lang.String)">dev.morphia.aggregation.stages.GraphLookup.from&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">user <a href="dev/morphia/aggregation/stages/GraphLookup.html#graphLookup(java.lang.String)"><code>GraphLookup.graphLookup(String)</code></a></div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Group.html#of(dev.morphia.aggregation.stages.Group.GroupId)">dev.morphia.aggregation.stages.Group.of​(Group.GroupId)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Group.html#of(dev.morphia.aggregation.stages.Group.GroupId)">dev.morphia.aggregation.stages.Group.of&#8203;(Group.GroupId)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Group.html#group(dev.morphia.aggregation.stages.Group.GroupId)"><code>Group.group(GroupId)</code></a></div>
 </td>
@@ -502,19 +284,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Limit.html#of(long)">dev.morphia.aggregation.stages.Limit.of​(long)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Limit.html#of(long)">dev.morphia.aggregation.stages.Limit.of&#8203;(long)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Limit.html#limit(long)"><code>Limit.limit(long)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Lookup.html#from(java.lang.Class)">dev.morphia.aggregation.stages.Lookup.from​(Class&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Lookup.html#from(java.lang.Class)">dev.morphia.aggregation.stages.Lookup.from&#8203;(Class&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Lookup.html#lookup(java.lang.Class)"><code>Lookup.lookup(Class)</code></a></div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Match.html#on(dev.morphia.query.filters.Filter...)">dev.morphia.aggregation.stages.Match.on​(Filter...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Match.html#on(dev.morphia.query.filters.Filter...)">dev.morphia.aggregation.stages.Match.on&#8203;(Filter...)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Match.html#match(dev.morphia.query.filters.Filter...)"><code>Match.match(Filter...)</code></a></div>
 </td>
@@ -532,7 +314,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Redact.html#on(dev.morphia.aggregation.expressions.impls.Expression)">dev.morphia.aggregation.stages.Redact.on​(Expression)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Redact.html#on(dev.morphia.aggregation.expressions.impls.Expression)">dev.morphia.aggregation.stages.Redact.on&#8203;(Expression)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Redact.html#redact(dev.morphia.aggregation.expressions.impls.Expression)"><code>Redact.redact(Expression)</code></a></div>
 </td>
@@ -550,13 +332,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Sample.html#of(long)">dev.morphia.aggregation.stages.Sample.of​(long)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Sample.html#of(long)">dev.morphia.aggregation.stages.Sample.of&#8203;(long)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Sample.html#sample(long)"><code>Sample.sample(long)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Skip.html#of(long)">dev.morphia.aggregation.stages.Skip.of​(long)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Skip.html#of(long)">dev.morphia.aggregation.stages.Skip.of&#8203;(long)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Skip.html#skip(long)"><code>Skip.skip(long)</code></a></div>
 </td>
@@ -568,19 +350,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/SortByCount.html#on(dev.morphia.aggregation.expressions.impls.Expression)">dev.morphia.aggregation.stages.SortByCount.on​(Expression)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/SortByCount.html#on(dev.morphia.aggregation.expressions.impls.Expression)">dev.morphia.aggregation.stages.SortByCount.on&#8203;(Expression)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/SortByCount.html#sortByCount(dev.morphia.aggregation.expressions.impls.Expression)"><code>SortByCount.sortByCount(Expression)</code></a></div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Unset.html#fields(java.lang.String,java.lang.String...)">dev.morphia.aggregation.stages.Unset.fields​(String, String...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Unset.html#fields(java.lang.String,java.lang.String...)">dev.morphia.aggregation.stages.Unset.fields&#8203;(String, String...)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Unset.html#unset(java.lang.String,java.lang.String...)"><code>Unset.unset(String, String...)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Unwind.html#on(java.lang.String)">dev.morphia.aggregation.stages.Unwind.on​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Unwind.html#on(java.lang.String)">dev.morphia.aggregation.stages.Unwind.on&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Unwind.html#unwind(java.lang.String)"><code>Unwind.unwind(String)</code></a></div>
 </td>
@@ -606,67 +388,67 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createAggregation(java.lang.Class)">dev.morphia.Datastore.createAggregation​(Class&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createAggregation(java.lang.Class)">dev.morphia.Datastore.createAggregation&#8203;(Class&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#aggregate(java.lang.Class)"><code>Datastore.aggregate(Class)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createQuery(java.lang.Class)">dev.morphia.Datastore.createQuery​(Class&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createQuery(java.lang.Class)">dev.morphia.Datastore.createQuery&#8203;(Class&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#find(java.lang.Class)"><code>Datastore.find(Class)</code></a></div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createUpdateOperations(java.lang.Class)">dev.morphia.Datastore.createUpdateOperations​(Class&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createUpdateOperations(java.lang.Class)">dev.morphia.Datastore.createUpdateOperations&#8203;(Class&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#delete(dev.morphia.query.Query)">dev.morphia.Datastore.delete​(Query&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#delete(dev.morphia.query.Query)">dev.morphia.Datastore.delete&#8203;(Query&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#delete()"><code>Query.delete()</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#find(java.lang.String,java.lang.Class)">dev.morphia.Datastore.find​(String, Class&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#find(java.lang.String,java.lang.Class)">dev.morphia.Datastore.find&#8203;(String, Class&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/FindOptions.html#collection(java.lang.String)"><code>FindOptions.collection(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#findAndDelete(dev.morphia.query.Query)">dev.morphia.Datastore.findAndDelete​(Query&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#findAndDelete(dev.morphia.query.Query)">dev.morphia.Datastore.findAndDelete&#8203;(Query&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#findAndDelete()"><code>Query.findAndDelete()</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">dev.morphia.Datastore.findAndModify​(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, FindAndModifyOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">dev.morphia.Datastore.findAndModify&#8203;(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, FindAndModifyOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#modify(dev.morphia.query.UpdateOperations)"><code>Query.modify(UpdateOperations)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#getLoggedQuery(dev.morphia.query.FindOptions)">dev.morphia.Datastore.getLoggedQuery​(FindOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#getLoggedQuery(dev.morphia.query.FindOptions)">dev.morphia.Datastore.getLoggedQuery&#8203;(FindOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Use <a href="dev/morphia/query/Query.html#getLoggedQuery()"><code>Query.getLoggedQuery()</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#merge(T,com.mongodb.WriteConcern)">dev.morphia.Datastore.merge​(T, WriteConcern)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#merge(T,com.mongodb.WriteConcern)">dev.morphia.Datastore.merge&#8203;(T, WriteConcern)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#merge(T,dev.morphia.InsertOneOptions)"><code>Datastore.merge(Object, InsertOneOptions)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#save(java.lang.Iterable)">dev.morphia.Datastore.save​(Iterable&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#save(java.lang.Iterable)">dev.morphia.Datastore.save&#8203;(Iterable&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#save(java.util.List)"><code>Datastore.save(List)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">dev.morphia.Datastore.update​(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, UpdateOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">dev.morphia.Datastore.update&#8203;(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, UpdateOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </td>
@@ -676,26 +458,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postLoad​(Object, Document, Mapper)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postLoad&#8203;(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postPersist​(Object, Document, Mapper)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postPersist&#8203;(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.preLoad​(Object, Document, Mapper)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.preLoad&#8203;(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.preLoad(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
              necessary</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.prePersist​(Object, Document, Mapper)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.prePersist&#8203;(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.prePersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
              necessary</div>
@@ -708,7 +490,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/FindAndModifyOptions.html#returnNew(boolean)">dev.morphia.FindAndModifyOptions.returnNew​(boolean)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/FindAndModifyOptions.html#returnNew(boolean)">dev.morphia.FindAndModifyOptions.returnNew&#8203;(boolean)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
@@ -877,39 +659,39 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#getKey(T)">dev.morphia.mapping.Mapper.getKey​(T)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#getKey(T)">dev.morphia.mapping.Mapper.getKey&#8203;(T)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#setOptions(dev.morphia.mapping.MapperOptions)">dev.morphia.mapping.Mapper.setOptions​(MapperOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#setOptions(dev.morphia.mapping.MapperOptions)">dev.morphia.mapping.Mapper.setOptions&#8203;(MapperOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">no longer used</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#updateCollection(dev.morphia.Key)">dev.morphia.mapping.Mapper.updateCollection​(Key)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#updateCollection(dev.morphia.Key)">dev.morphia.mapping.Mapper.updateCollection&#8203;(Key)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#disableEmbeddedIndexes(boolean)">dev.morphia.mapping.MapperOptions.Builder.disableEmbeddedIndexes​(boolean)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#disableEmbeddedIndexes(boolean)">dev.morphia.mapping.MapperOptions.Builder.disableEmbeddedIndexes&#8203;(boolean)</a></th>
 <td class="colLast">
 <div class="deprecationComment">unused</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#fieldNaming(dev.morphia.mapping.NamingStrategy)">dev.morphia.mapping.MapperOptions.Builder.fieldNaming​(NamingStrategy)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#fieldNaming(dev.morphia.mapping.NamingStrategy)">dev.morphia.mapping.MapperOptions.Builder.fieldNaming&#8203;(NamingStrategy)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/mapping/MapperOptions.Builder.html#propertyNaming(dev.morphia.mapping.NamingStrategy)"><code>MapperOptions.Builder.propertyNaming(NamingStrategy)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#useLowerCaseCollectionNames(boolean)">dev.morphia.mapping.MapperOptions.Builder.useLowerCaseCollectionNames​(boolean)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#useLowerCaseCollectionNames(boolean)">dev.morphia.mapping.MapperOptions.Builder.useLowerCaseCollectionNames&#8203;(boolean)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/mapping/MapperOptions.Builder.html#collectionNaming(dev.morphia.mapping.NamingStrategy)"><code>MapperOptions.Builder.collectionNaming(NamingStrategy)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#uuidRepresentation(org.bson.UuidRepresentation)">dev.morphia.mapping.MapperOptions.Builder.uuidRepresentation​(UuidRepresentation)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#uuidRepresentation(org.bson.UuidRepresentation)">dev.morphia.mapping.MapperOptions.Builder.uuidRepresentation&#8203;(UuidRepresentation)</a></th>
 <td class="colLast">
 <div class="deprecationComment">This should be configured in the MongoClient given to Morphia</div>
 </td>
@@ -927,7 +709,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Morphia.html#createDatastore(java.lang.String)">dev.morphia.Morphia.createDatastore​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Morphia.html#createDatastore(java.lang.String)">dev.morphia.Morphia.createDatastore&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient,java.lang.String)"><code>Morphia.createDatastore(MongoClient, String)</code></a></div>
 </td>
@@ -955,7 +737,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/CountOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">dev.morphia.query.CountOptions.getMaxTime​(TimeUnit)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/CountOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">dev.morphia.query.CountOptions.getMaxTime&#8203;(TimeUnit)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
@@ -975,13 +757,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#contains(java.lang.String)">dev.morphia.query.FieldEnd.contains​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#contains(java.lang.String)">dev.morphia.query.FieldEnd.contains&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#containsIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.containsIgnoreCase​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#containsIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.containsIgnoreCase&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
@@ -993,31 +775,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#elemMatch(dev.morphia.query.Query)">dev.morphia.query.FieldEnd.elemMatch​(Query&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#elemMatch(dev.morphia.query.Query)">dev.morphia.query.FieldEnd.elemMatch&#8203;(Query&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#elemMatch(java.lang.String,dev.morphia.query.filters.Filter...)"><code>Filters.elemMatch(String, Filter...)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#endsWith(java.lang.String)">dev.morphia.query.FieldEnd.endsWith​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#endsWith(java.lang.String)">dev.morphia.query.FieldEnd.endsWith&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#endsWithIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.endsWithIgnoreCase​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#endsWithIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.endsWithIgnoreCase&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#equal(java.lang.Object)">dev.morphia.query.FieldEnd.equal​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#equal(java.lang.Object)">dev.morphia.query.FieldEnd.equal&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#equalIgnoreCase(java.lang.Object)">dev.morphia.query.FieldEnd.equalIgnoreCase​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#equalIgnoreCase(java.lang.Object)">dev.morphia.query.FieldEnd.equalIgnoreCase&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
 </td>
@@ -1029,79 +811,79 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#greaterThan(java.lang.Object)">dev.morphia.query.FieldEnd.greaterThan​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#greaterThan(java.lang.Object)">dev.morphia.query.FieldEnd.greaterThan&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#gt(java.lang.String,java.lang.Object)"><code>Filters.gt(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#greaterThanOrEq(java.lang.Object)">dev.morphia.query.FieldEnd.greaterThanOrEq​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#greaterThanOrEq(java.lang.Object)">dev.morphia.query.FieldEnd.greaterThanOrEq&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#gte(java.lang.String,java.lang.Object)"><code>Filters.gte(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasAllOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasAllOf​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasAllOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasAllOf&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#all(java.lang.String,java.lang.Object)"><code>Filters.all(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasAnyOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasAnyOf​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasAnyOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasAnyOf&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#in(java.lang.String,java.lang.Iterable)"><code>Filters.in(String, Iterable)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasNoneOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasNoneOf​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasNoneOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasNoneOf&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#nin(java.lang.String,java.lang.Object)"><code>Filters.nin(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasThisOne(java.lang.Object)">dev.morphia.query.FieldEnd.hasThisOne​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasThisOne(java.lang.Object)">dev.morphia.query.FieldEnd.hasThisOne&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#in(java.lang.Iterable)">dev.morphia.query.FieldEnd.in​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#in(java.lang.Iterable)">dev.morphia.query.FieldEnd.in&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#in(java.lang.String,java.lang.Iterable)"><code>Filters.in(String, Iterable)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#intersects(dev.morphia.geo.Geometry)">dev.morphia.query.FieldEnd.intersects​(Geometry)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#intersects(dev.morphia.geo.Geometry)">dev.morphia.query.FieldEnd.intersects&#8203;(Geometry)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#geoIntersects(java.lang.String,com.mongodb.client.model.geojson.Geometry)"><code>Filters.geoIntersects(String, com.mongodb.client.model.geojson.Geometry)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#lessThan(java.lang.Object)">dev.morphia.query.FieldEnd.lessThan​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#lessThan(java.lang.Object)">dev.morphia.query.FieldEnd.lessThan&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#lt(java.lang.String,java.lang.Object)"><code>Filters.lt(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#lessThanOrEq(java.lang.Object)">dev.morphia.query.FieldEnd.lessThanOrEq​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#lessThanOrEq(java.lang.Object)">dev.morphia.query.FieldEnd.lessThanOrEq&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#lte(java.lang.String,java.lang.Object)"><code>Filters.lte(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#mod(long,long)">dev.morphia.query.FieldEnd.mod​(long, long)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#mod(long,long)">dev.morphia.query.FieldEnd.mod&#8203;(long, long)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#mod(java.lang.String,long,long)"><code>Filters.mod(String, long, long)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#near(double,double)">dev.morphia.query.FieldEnd.near​(double, double)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#near(double,double)">dev.morphia.query.FieldEnd.near&#8203;(double, double)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#near(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.near(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#nearSphere(dev.morphia.geo.Point)">dev.morphia.query.FieldEnd.nearSphere​(Point)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#nearSphere(dev.morphia.geo.Point)">dev.morphia.query.FieldEnd.nearSphere&#8203;(Point)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#nearSphere(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.nearSphere(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
 </td>
@@ -1111,43 +893,43 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#notEqual(java.lang.Object)">dev.morphia.query.FieldEnd.notEqual​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#notEqual(java.lang.Object)">dev.morphia.query.FieldEnd.notEqual&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#ne(java.lang.String,java.lang.Object)"><code>Filters.ne(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#notIn(java.lang.Iterable)">dev.morphia.query.FieldEnd.notIn​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#notIn(java.lang.Iterable)">dev.morphia.query.FieldEnd.notIn&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#nin(java.lang.String,java.lang.Object)"><code>Filters.nin(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#sizeEq(int)">dev.morphia.query.FieldEnd.sizeEq​(int)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#sizeEq(int)">dev.morphia.query.FieldEnd.sizeEq&#8203;(int)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#size(java.lang.String,int)"><code>Filters.size(String, int)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#startsWith(java.lang.String)">dev.morphia.query.FieldEnd.startsWith​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#startsWith(java.lang.String)">dev.morphia.query.FieldEnd.startsWith&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#startsWithIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.startsWithIgnoreCase​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#startsWithIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.startsWithIgnoreCase&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#type(dev.morphia.query.Type)">dev.morphia.query.FieldEnd.type​(Type)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#type(dev.morphia.query.Type)">dev.morphia.query.FieldEnd.type&#8203;(Type)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#type(java.lang.String,dev.morphia.query.Type)"><code>Filters.type(String, Type)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#within(dev.morphia.query.Shape)">dev.morphia.query.FieldEnd.within​(Shape)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#within(dev.morphia.query.Shape)">dev.morphia.query.FieldEnd.within&#8203;(Shape)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a>, <a href="dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a>,
              <a href="dev/morphia/query/filters/Filters.html#box(java.lang.String,com.mongodb.client.model.geojson.Point,com.mongodb.client.model.geojson.Point)"><code>Filters.box(String, Point, Point)</code></a>, <a href="dev/morphia/query/filters/Filters.html#center(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.center(String, Point, double)</code></a>,
@@ -1166,7 +948,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/filters/Filters.html#jsonSchema(java.lang.String,java.lang.Object)">dev.morphia.query.filters.Filters.jsonSchema​(String, Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/filters/Filters.html#jsonSchema(java.lang.String,java.lang.Object)">dev.morphia.query.filters.Filters.jsonSchema&#8203;(String, Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#jsonSchema(org.bson.Document)"><code>Filters.jsonSchema(Document)</code></a> instead</div>
 </td>
@@ -1204,11 +986,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#getMaxAwaitTime(java.util.concurrent.TimeUnit)">dev.morphia.query.FindOptions.getMaxAwaitTime​(TimeUnit)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#getMaxAwaitTime(java.util.concurrent.TimeUnit)">dev.morphia.query.FindOptions.getMaxAwaitTime&#8203;(TimeUnit)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">dev.morphia.query.FindOptions.getMaxTime​(TimeUnit)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">dev.morphia.query.FindOptions.getMaxTime&#8203;(TimeUnit)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
@@ -1228,7 +1010,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#hint(com.mongodb.DBObject)">dev.morphia.query.FindOptions.hint​(DBObject)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#hint(com.mongodb.DBObject)">dev.morphia.query.FindOptions.hint&#8203;(DBObject)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
@@ -1252,11 +1034,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#max(com.mongodb.DBObject)">dev.morphia.query.FindOptions.max​(DBObject)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#max(com.mongodb.DBObject)">dev.morphia.query.FindOptions.max&#8203;(DBObject)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#min(com.mongodb.DBObject)">dev.morphia.query.FindOptions.min​(DBObject)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#min(com.mongodb.DBObject)">dev.morphia.query.FindOptions.min&#8203;(DBObject)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
@@ -1268,11 +1050,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/LegacyQuery.html#update(dev.morphia.query.UpdateOperations)">dev.morphia.query.LegacyQuery.update​(UpdateOperations&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/LegacyQuery.html#update(dev.morphia.query.UpdateOperations)">dev.morphia.query.LegacyQuery.update&#8203;(UpdateOperations&lt;T&gt;)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Meta.html#%3Cinit%3E(dev.morphia.query.Meta.MetaDataKeyword)">dev.morphia.query.Meta​(Meta.MetaDataKeyword)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Meta.html#%3Cinit%3E(dev.morphia.query.Meta.MetaDataKeyword)">dev.morphia.query.Meta&#8203;(Meta.MetaDataKeyword)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
@@ -1284,11 +1066,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#and(dev.morphia.query.Criteria...)">dev.morphia.query.Query.and​(Criteria...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#and(dev.morphia.query.Criteria...)">dev.morphia.query.Query.and&#8203;(Criteria...)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#criteria(java.lang.String)">dev.morphia.query.Query.criteria​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#criteria(java.lang.String)">dev.morphia.query.Query.criteria&#8203;(String)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
@@ -1296,11 +1078,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#field(java.lang.String)">dev.morphia.query.Query.field​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#field(java.lang.String)">dev.morphia.query.Query.field&#8203;(String)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#filter(java.lang.String,java.lang.Object)">dev.morphia.query.Query.filter​(String, Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#filter(java.lang.String,java.lang.Object)">dev.morphia.query.Query.filter&#8203;(String, Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#filter(dev.morphia.query.filters.Filter...)"><code>Query.filter(Filter...)</code></a> instead</div>
 </td>
@@ -1318,7 +1100,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">dev.morphia.query.Query.modify​(UpdateOperator, UpdateOperator...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">dev.morphia.query.Query.modify&#8203;(UpdateOperator, UpdateOperator...)</a></th>
 <td class="colLast">
 <div class="deprecationComment">consider <a href="dev/morphia/query/Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>Query.modify(ModifyOptions, UpdateOperator...)</code></a> instead. In the next major version, this return type will
              match the other's return type such that this will be the terminal call for a modify. The only change needed then will be
@@ -1327,7 +1109,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#or(dev.morphia.query.Criteria...)">dev.morphia.query.Query.or​(Criteria...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#or(dev.morphia.query.Criteria...)">dev.morphia.query.Query.or&#8203;(Criteria...)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
@@ -1337,19 +1119,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#search(java.lang.String)">dev.morphia.query.Query.search​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#search(java.lang.String)">dev.morphia.query.Query.search&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#update(java.util.List)">dev.morphia.query.Query.update​(List&lt;UpdateOperator&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#update(java.util.List)">dev.morphia.query.Query.update&#8203;(List&lt;UpdateOperator&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore)">dev.morphia.query.QueryFactory.createQuery​(Datastore)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore)">dev.morphia.query.QueryFactory.createQuery&#8203;(Datastore)</a></th>
 <td class="colLast">
 <div class="deprecationComment">this method is no longer used</div>
 </td>
@@ -1372,7 +1154,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Updates.html#removeAll(java.lang.String,java.lang.Object)">dev.morphia.query.Updates.removeAll​(String, Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Updates.html#removeAll(java.lang.String,java.lang.Object)">dev.morphia.query.Updates.removeAll&#8203;(String, Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Updates.html#pull(java.lang.String,java.lang.Object)"><code>Updates.pull(String, Object)</code></a> instead</div>
 </td>
@@ -1396,11 +1178,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="deprecatedSummary">
 <caption><span>Interfaces</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Interface</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html" title="interface in dev.morphia">dev.morphia.AdvancedDatastore</a></th>
 <td class="colLast">&nbsp;</td>
@@ -1447,11 +1229,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="deprecatedSummary">
 <caption><span>Classes</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Class</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AbstractEntityInterceptor.html" title="class in dev.morphia">dev.morphia.AbstractEntityInterceptor</a></th>
 <td class="colLast">
@@ -1666,11 +1448,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="deprecatedSummary">
 <caption><span>Enums</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Enum</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/geo/CoordinateReferenceSystemType.html" title="enum in dev.morphia.geo">dev.morphia.geo.CoordinateReferenceSystemType</a></th>
 <td class="colLast">
@@ -1708,11 +1490,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="deprecatedSummary">
 <caption><span>Annotation Types</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Annotation Type</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/annotations/Converters.html" title="annotation in dev.morphia.annotations">dev.morphia.annotations.Converters</a></th>
 <td class="colLast"></td>
@@ -1746,41 +1528,41 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="deprecatedSummary">
 <caption><span>Methods</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createAggregation(java.lang.String,java.lang.Class)">dev.morphia.AdvancedDatastore.createAggregation​(String, Class&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createAggregation(java.lang.String,java.lang.Class)">dev.morphia.AdvancedDatastore.createAggregation&#8203;(String, Class&lt;?&gt;)</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createQuery(java.lang.Class,org.bson.Document)">dev.morphia.AdvancedDatastore.createQuery​(Class&lt;T&gt;, Document)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createQuery(java.lang.Class,org.bson.Document)">dev.morphia.AdvancedDatastore.createQuery&#8203;(Class&lt;T&gt;, Document)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createRef(java.lang.Class,V)">dev.morphia.AdvancedDatastore.createRef​(Class&lt;T&gt;, V)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createRef(java.lang.Class,V)">dev.morphia.AdvancedDatastore.createRef&#8203;(Class&lt;T&gt;, V)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">dev.morphia.AdvancedDatastore.createUpdateOperations​(Class&lt;T&gt;, DBObject)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#createUpdateOperations(java.lang.Class,com.mongodb.DBObject)">dev.morphia.AdvancedDatastore.createUpdateOperations&#8203;(Class&lt;T&gt;, DBObject)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#insert(T,dev.morphia.InsertOptions)">dev.morphia.AdvancedDatastore.insert​(T, InsertOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#insert(T,dev.morphia.InsertOptions)">dev.morphia.AdvancedDatastore.insert&#8203;(T, InsertOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#insert(T,dev.morphia.InsertOneOptions)"><code>Datastore.insert(Object, InsertOneOptions)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#queryByExample(java.lang.String,T)">dev.morphia.AdvancedDatastore.queryByExample​(String, T)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/AdvancedDatastore.html#queryByExample(java.lang.String,T)">dev.morphia.AdvancedDatastore.queryByExample&#8203;(String, T)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/Aggregation.html#set(dev.morphia.aggregation.stages.AddFields)">dev.morphia.aggregation.Aggregation.set​(AddFields)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/Aggregation.html#set(dev.morphia.aggregation.stages.AddFields)">dev.morphia.aggregation.Aggregation.set&#8203;(AddFields)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/Aggregation.html#addFields(dev.morphia.aggregation.stages.AddFields)"><code>Aggregation.addFields(AddFields)</code></a></div>
 </td>
@@ -1816,13 +1598,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/expressions/StringExpressions.html#substr(dev.morphia.aggregation.expressions.impls.Expression,int,int)">dev.morphia.aggregation.expressions.StringExpressions.substr​(Expression, int, int)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/expressions/StringExpressions.html#substr(dev.morphia.aggregation.expressions.impls.Expression,int,int)">dev.morphia.aggregation.expressions.StringExpressions.substr&#8203;(Expression, int, int)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Deprecated since version 3.4: $substr is now an alias for <a href="dev/morphia/aggregation/expressions/StringExpressions.html#substrBytes(dev.morphia.aggregation.expressions.impls.Expression,int,int)"><code>StringExpressions.substrBytes(Expression, int, int)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/GeoNear.GeoNearBuilder.html#setNear(dev.morphia.geo.Point)">dev.morphia.aggregation.GeoNear.GeoNearBuilder.setNear​(Point)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/GeoNear.GeoNearBuilder.html#setNear(dev.morphia.geo.Point)">dev.morphia.aggregation.GeoNear.GeoNearBuilder.setNear&#8203;(Point)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use the driver-provided types instead</div>
 </td>
@@ -1864,19 +1646,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/GeoNear.html#to(com.mongodb.client.model.geojson.Point)">dev.morphia.aggregation.stages.GeoNear.to​(Point)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/GeoNear.html#to(com.mongodb.client.model.geojson.Point)">dev.morphia.aggregation.stages.GeoNear.to&#8203;(Point)</a></th>
 <td class="colLast">
 <div class="deprecationComment">user <a href="dev/morphia/aggregation/stages/GeoNear.html#geoNear(com.mongodb.client.model.geojson.Point)"><code>GeoNear.geoNear(Point)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/GraphLookup.html#from(java.lang.String)">dev.morphia.aggregation.stages.GraphLookup.from​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/GraphLookup.html#from(java.lang.String)">dev.morphia.aggregation.stages.GraphLookup.from&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">user <a href="dev/morphia/aggregation/stages/GraphLookup.html#graphLookup(java.lang.String)"><code>GraphLookup.graphLookup(String)</code></a></div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Group.html#of(dev.morphia.aggregation.stages.Group.GroupId)">dev.morphia.aggregation.stages.Group.of​(Group.GroupId)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Group.html#of(dev.morphia.aggregation.stages.Group.GroupId)">dev.morphia.aggregation.stages.Group.of&#8203;(Group.GroupId)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Group.html#group(dev.morphia.aggregation.stages.Group.GroupId)"><code>Group.group(GroupId)</code></a></div>
 </td>
@@ -1888,19 +1670,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Limit.html#of(long)">dev.morphia.aggregation.stages.Limit.of​(long)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Limit.html#of(long)">dev.morphia.aggregation.stages.Limit.of&#8203;(long)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Limit.html#limit(long)"><code>Limit.limit(long)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Lookup.html#from(java.lang.Class)">dev.morphia.aggregation.stages.Lookup.from​(Class&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Lookup.html#from(java.lang.Class)">dev.morphia.aggregation.stages.Lookup.from&#8203;(Class&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Lookup.html#lookup(java.lang.Class)"><code>Lookup.lookup(Class)</code></a></div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Match.html#on(dev.morphia.query.filters.Filter...)">dev.morphia.aggregation.stages.Match.on​(Filter...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Match.html#on(dev.morphia.query.filters.Filter...)">dev.morphia.aggregation.stages.Match.on&#8203;(Filter...)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Match.html#match(dev.morphia.query.filters.Filter...)"><code>Match.match(Filter...)</code></a></div>
 </td>
@@ -1918,7 +1700,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Redact.html#on(dev.morphia.aggregation.expressions.impls.Expression)">dev.morphia.aggregation.stages.Redact.on​(Expression)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Redact.html#on(dev.morphia.aggregation.expressions.impls.Expression)">dev.morphia.aggregation.stages.Redact.on&#8203;(Expression)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Redact.html#redact(dev.morphia.aggregation.expressions.impls.Expression)"><code>Redact.redact(Expression)</code></a></div>
 </td>
@@ -1936,13 +1718,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Sample.html#of(long)">dev.morphia.aggregation.stages.Sample.of​(long)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Sample.html#of(long)">dev.morphia.aggregation.stages.Sample.of&#8203;(long)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Sample.html#sample(long)"><code>Sample.sample(long)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Skip.html#of(long)">dev.morphia.aggregation.stages.Skip.of​(long)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Skip.html#of(long)">dev.morphia.aggregation.stages.Skip.of&#8203;(long)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Skip.html#skip(long)"><code>Skip.skip(long)</code></a></div>
 </td>
@@ -1954,19 +1736,19 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/SortByCount.html#on(dev.morphia.aggregation.expressions.impls.Expression)">dev.morphia.aggregation.stages.SortByCount.on​(Expression)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/SortByCount.html#on(dev.morphia.aggregation.expressions.impls.Expression)">dev.morphia.aggregation.stages.SortByCount.on&#8203;(Expression)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/SortByCount.html#sortByCount(dev.morphia.aggregation.expressions.impls.Expression)"><code>SortByCount.sortByCount(Expression)</code></a></div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Unset.html#fields(java.lang.String,java.lang.String...)">dev.morphia.aggregation.stages.Unset.fields​(String, String...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Unset.html#fields(java.lang.String,java.lang.String...)">dev.morphia.aggregation.stages.Unset.fields&#8203;(String, String...)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Unset.html#unset(java.lang.String,java.lang.String...)"><code>Unset.unset(String, String...)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Unwind.html#on(java.lang.String)">dev.morphia.aggregation.stages.Unwind.on​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/aggregation/stages/Unwind.html#on(java.lang.String)">dev.morphia.aggregation.stages.Unwind.on&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/aggregation/stages/Unwind.html#unwind(java.lang.String)"><code>Unwind.unwind(String)</code></a></div>
 </td>
@@ -1976,67 +1758,67 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createAggregation(java.lang.Class)">dev.morphia.Datastore.createAggregation​(Class&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createAggregation(java.lang.Class)">dev.morphia.Datastore.createAggregation&#8203;(Class&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#aggregate(java.lang.Class)"><code>Datastore.aggregate(Class)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createQuery(java.lang.Class)">dev.morphia.Datastore.createQuery​(Class&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createQuery(java.lang.Class)">dev.morphia.Datastore.createQuery&#8203;(Class&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#find(java.lang.Class)"><code>Datastore.find(Class)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createUpdateOperations(java.lang.Class)">dev.morphia.Datastore.createUpdateOperations​(Class&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#createUpdateOperations(java.lang.Class)">dev.morphia.Datastore.createUpdateOperations&#8203;(Class&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#delete(dev.morphia.query.Query)">dev.morphia.Datastore.delete​(Query&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#delete(dev.morphia.query.Query)">dev.morphia.Datastore.delete&#8203;(Query&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#delete()"><code>Query.delete()</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#find(java.lang.String,java.lang.Class)">dev.morphia.Datastore.find​(String, Class&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#find(java.lang.String,java.lang.Class)">dev.morphia.Datastore.find&#8203;(String, Class&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/FindOptions.html#collection(java.lang.String)"><code>FindOptions.collection(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#findAndDelete(dev.morphia.query.Query)">dev.morphia.Datastore.findAndDelete​(Query&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#findAndDelete(dev.morphia.query.Query)">dev.morphia.Datastore.findAndDelete&#8203;(Query&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#findAndDelete()"><code>Query.findAndDelete()</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">dev.morphia.Datastore.findAndModify​(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, FindAndModifyOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#findAndModify(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.FindAndModifyOptions)">dev.morphia.Datastore.findAndModify&#8203;(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, FindAndModifyOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#modify(dev.morphia.query.UpdateOperations)"><code>Query.modify(UpdateOperations)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#getLoggedQuery(dev.morphia.query.FindOptions)">dev.morphia.Datastore.getLoggedQuery​(FindOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#getLoggedQuery(dev.morphia.query.FindOptions)">dev.morphia.Datastore.getLoggedQuery&#8203;(FindOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Use <a href="dev/morphia/query/Query.html#getLoggedQuery()"><code>Query.getLoggedQuery()</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#merge(T,com.mongodb.WriteConcern)">dev.morphia.Datastore.merge​(T, WriteConcern)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#merge(T,com.mongodb.WriteConcern)">dev.morphia.Datastore.merge&#8203;(T, WriteConcern)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#merge(T,dev.morphia.InsertOneOptions)"><code>Datastore.merge(Object, InsertOneOptions)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#save(java.lang.Iterable)">dev.morphia.Datastore.save​(Iterable&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#save(java.lang.Iterable)">dev.morphia.Datastore.save&#8203;(Iterable&lt;T&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/Datastore.html#save(java.util.List)"><code>Datastore.save(List)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">dev.morphia.Datastore.update​(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, UpdateOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Datastore.html#update(dev.morphia.query.Query,dev.morphia.query.UpdateOperations,dev.morphia.UpdateOptions)">dev.morphia.Datastore.update&#8203;(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, UpdateOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </td>
@@ -2046,33 +1828,33 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postLoad​(Object, Document, Mapper)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postLoad&#8203;(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postPersist​(Object, Document, Mapper)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.postPersist&#8203;(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#postPersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.postPersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.preLoad​(Object, Document, Mapper)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.preLoad&#8203;(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#preLoad(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.preLoad(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
              necessary</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.prePersist​(Object, Document, Mapper)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.mapping.Mapper)">dev.morphia.EntityInterceptor.prePersist&#8203;(Object, Document, Mapper)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/EntityInterceptor.html#prePersist(java.lang.Object,org.bson.Document,dev.morphia.Datastore)"><code>EntityInterceptor.prePersist(Object, Document, Datastore)</code></a> instead and access the Mapper via <a href="dev/morphia/Datastore.html#getMapper()"><code>Datastore.getMapper()</code></a> if
              necessary</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/FindAndModifyOptions.html#returnNew(boolean)">dev.morphia.FindAndModifyOptions.returnNew​(boolean)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/FindAndModifyOptions.html#returnNew(boolean)">dev.morphia.FindAndModifyOptions.returnNew&#8203;(boolean)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
@@ -2108,45 +1890,45 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#getKey(T)">dev.morphia.mapping.Mapper.getKey​(T)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#getKey(T)">dev.morphia.mapping.Mapper.getKey&#8203;(T)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#setOptions(dev.morphia.mapping.MapperOptions)">dev.morphia.mapping.Mapper.setOptions​(MapperOptions)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#setOptions(dev.morphia.mapping.MapperOptions)">dev.morphia.mapping.Mapper.setOptions&#8203;(MapperOptions)</a></th>
 <td class="colLast">
 <div class="deprecationComment">no longer used</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#updateCollection(dev.morphia.Key)">dev.morphia.mapping.Mapper.updateCollection​(Key)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/Mapper.html#updateCollection(dev.morphia.Key)">dev.morphia.mapping.Mapper.updateCollection&#8203;(Key)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#dateForm(dev.morphia.mapping.DateStorage)">dev.morphia.mapping.MapperOptions.Builder.dateForm​(DateStorage)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#dateForm(dev.morphia.mapping.DateStorage)">dev.morphia.mapping.MapperOptions.Builder.dateForm&#8203;(DateStorage)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/mapping/MapperOptions.Builder.html#dateStorage(dev.morphia.mapping.DateStorage)"><code>MapperOptions.Builder.dateStorage(DateStorage)</code></a> instead.</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#disableEmbeddedIndexes(boolean)">dev.morphia.mapping.MapperOptions.Builder.disableEmbeddedIndexes​(boolean)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#disableEmbeddedIndexes(boolean)">dev.morphia.mapping.MapperOptions.Builder.disableEmbeddedIndexes&#8203;(boolean)</a></th>
 <td class="colLast">
 <div class="deprecationComment">unused</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#fieldNaming(dev.morphia.mapping.NamingStrategy)">dev.morphia.mapping.MapperOptions.Builder.fieldNaming​(NamingStrategy)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#fieldNaming(dev.morphia.mapping.NamingStrategy)">dev.morphia.mapping.MapperOptions.Builder.fieldNaming&#8203;(NamingStrategy)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/mapping/MapperOptions.Builder.html#propertyNaming(dev.morphia.mapping.NamingStrategy)"><code>MapperOptions.Builder.propertyNaming(NamingStrategy)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#useLowerCaseCollectionNames(boolean)">dev.morphia.mapping.MapperOptions.Builder.useLowerCaseCollectionNames​(boolean)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#useLowerCaseCollectionNames(boolean)">dev.morphia.mapping.MapperOptions.Builder.useLowerCaseCollectionNames&#8203;(boolean)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/mapping/MapperOptions.Builder.html#collectionNaming(dev.morphia.mapping.NamingStrategy)"><code>MapperOptions.Builder.collectionNaming(NamingStrategy)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#uuidRepresentation(org.bson.UuidRepresentation)">dev.morphia.mapping.MapperOptions.Builder.uuidRepresentation​(UuidRepresentation)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/mapping/MapperOptions.Builder.html#uuidRepresentation(org.bson.UuidRepresentation)">dev.morphia.mapping.MapperOptions.Builder.uuidRepresentation&#8203;(UuidRepresentation)</a></th>
 <td class="colLast">
 <div class="deprecationComment">This should be configured in the MongoClient given to Morphia</div>
 </td>
@@ -2164,23 +1946,23 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Morphia.html#createDatastore(java.lang.String)">dev.morphia.Morphia.createDatastore​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/Morphia.html#createDatastore(java.lang.String)">dev.morphia.Morphia.createDatastore&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">Please use <a href="dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient,java.lang.String)"><code>Morphia.createDatastore(MongoClient, String)</code></a></div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/CountOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">dev.morphia.query.CountOptions.getMaxTime​(TimeUnit)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/CountOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">dev.morphia.query.CountOptions.getMaxTime&#8203;(TimeUnit)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#contains(java.lang.String)">dev.morphia.query.FieldEnd.contains​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#contains(java.lang.String)">dev.morphia.query.FieldEnd.contains&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#containsIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.containsIgnoreCase​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#containsIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.containsIgnoreCase&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
@@ -2192,31 +1974,31 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#elemMatch(dev.morphia.query.Query)">dev.morphia.query.FieldEnd.elemMatch​(Query&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#elemMatch(dev.morphia.query.Query)">dev.morphia.query.FieldEnd.elemMatch&#8203;(Query&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#elemMatch(java.lang.String,dev.morphia.query.filters.Filter...)"><code>Filters.elemMatch(String, Filter...)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#endsWith(java.lang.String)">dev.morphia.query.FieldEnd.endsWith​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#endsWith(java.lang.String)">dev.morphia.query.FieldEnd.endsWith&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#endsWithIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.endsWithIgnoreCase​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#endsWithIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.endsWithIgnoreCase&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#equal(java.lang.Object)">dev.morphia.query.FieldEnd.equal​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#equal(java.lang.Object)">dev.morphia.query.FieldEnd.equal&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#equalIgnoreCase(java.lang.Object)">dev.morphia.query.FieldEnd.equalIgnoreCase​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#equalIgnoreCase(java.lang.Object)">dev.morphia.query.FieldEnd.equalIgnoreCase&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
 </td>
@@ -2228,79 +2010,79 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#greaterThan(java.lang.Object)">dev.morphia.query.FieldEnd.greaterThan​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#greaterThan(java.lang.Object)">dev.morphia.query.FieldEnd.greaterThan&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#gt(java.lang.String,java.lang.Object)"><code>Filters.gt(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#greaterThanOrEq(java.lang.Object)">dev.morphia.query.FieldEnd.greaterThanOrEq​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#greaterThanOrEq(java.lang.Object)">dev.morphia.query.FieldEnd.greaterThanOrEq&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#gte(java.lang.String,java.lang.Object)"><code>Filters.gte(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasAllOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasAllOf​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasAllOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasAllOf&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#all(java.lang.String,java.lang.Object)"><code>Filters.all(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasAnyOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasAnyOf​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasAnyOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasAnyOf&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#in(java.lang.String,java.lang.Iterable)"><code>Filters.in(String, Iterable)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasNoneOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasNoneOf​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasNoneOf(java.lang.Iterable)">dev.morphia.query.FieldEnd.hasNoneOf&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#nin(java.lang.String,java.lang.Object)"><code>Filters.nin(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasThisOne(java.lang.Object)">dev.morphia.query.FieldEnd.hasThisOne​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#hasThisOne(java.lang.Object)">dev.morphia.query.FieldEnd.hasThisOne&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#eq(java.lang.String,java.lang.Object)"><code>Filters.eq(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#in(java.lang.Iterable)">dev.morphia.query.FieldEnd.in​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#in(java.lang.Iterable)">dev.morphia.query.FieldEnd.in&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#in(java.lang.String,java.lang.Iterable)"><code>Filters.in(String, Iterable)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#intersects(dev.morphia.geo.Geometry)">dev.morphia.query.FieldEnd.intersects​(Geometry)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#intersects(dev.morphia.geo.Geometry)">dev.morphia.query.FieldEnd.intersects&#8203;(Geometry)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#geoIntersects(java.lang.String,com.mongodb.client.model.geojson.Geometry)"><code>Filters.geoIntersects(String, com.mongodb.client.model.geojson.Geometry)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#lessThan(java.lang.Object)">dev.morphia.query.FieldEnd.lessThan​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#lessThan(java.lang.Object)">dev.morphia.query.FieldEnd.lessThan&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#lt(java.lang.String,java.lang.Object)"><code>Filters.lt(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#lessThanOrEq(java.lang.Object)">dev.morphia.query.FieldEnd.lessThanOrEq​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#lessThanOrEq(java.lang.Object)">dev.morphia.query.FieldEnd.lessThanOrEq&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#lte(java.lang.String,java.lang.Object)"><code>Filters.lte(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#mod(long,long)">dev.morphia.query.FieldEnd.mod​(long, long)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#mod(long,long)">dev.morphia.query.FieldEnd.mod&#8203;(long, long)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#mod(java.lang.String,long,long)"><code>Filters.mod(String, long, long)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#near(double,double)">dev.morphia.query.FieldEnd.near​(double, double)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#near(double,double)">dev.morphia.query.FieldEnd.near&#8203;(double, double)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#near(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.near(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#nearSphere(dev.morphia.geo.Point)">dev.morphia.query.FieldEnd.nearSphere​(Point)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#nearSphere(dev.morphia.geo.Point)">dev.morphia.query.FieldEnd.nearSphere&#8203;(Point)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#nearSphere(java.lang.String,com.mongodb.client.model.geojson.Point)"><code>Filters.nearSphere(String, com.mongodb.client.model.geojson.Point)</code></a> instead</div>
 </td>
@@ -2310,43 +2092,43 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#notEqual(java.lang.Object)">dev.morphia.query.FieldEnd.notEqual​(Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#notEqual(java.lang.Object)">dev.morphia.query.FieldEnd.notEqual&#8203;(Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#ne(java.lang.String,java.lang.Object)"><code>Filters.ne(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#notIn(java.lang.Iterable)">dev.morphia.query.FieldEnd.notIn​(Iterable&lt;?&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#notIn(java.lang.Iterable)">dev.morphia.query.FieldEnd.notIn&#8203;(Iterable&lt;?&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#nin(java.lang.String,java.lang.Object)"><code>Filters.nin(String, Object)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#sizeEq(int)">dev.morphia.query.FieldEnd.sizeEq​(int)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#sizeEq(int)">dev.morphia.query.FieldEnd.sizeEq&#8203;(int)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#size(java.lang.String,int)"><code>Filters.size(String, int)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#startsWith(java.lang.String)">dev.morphia.query.FieldEnd.startsWith​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#startsWith(java.lang.String)">dev.morphia.query.FieldEnd.startsWith&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#startsWithIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.startsWithIgnoreCase​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#startsWithIgnoreCase(java.lang.String)">dev.morphia.query.FieldEnd.startsWithIgnoreCase&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#regex(java.lang.String)"><code>Filters.regex(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#type(dev.morphia.query.Type)">dev.morphia.query.FieldEnd.type​(Type)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#type(dev.morphia.query.Type)">dev.morphia.query.FieldEnd.type&#8203;(Type)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#type(java.lang.String,dev.morphia.query.Type)"><code>Filters.type(String, Type)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#within(dev.morphia.query.Shape)">dev.morphia.query.FieldEnd.within​(Shape)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FieldEnd.html#within(dev.morphia.query.Shape)">dev.morphia.query.FieldEnd.within&#8203;(Shape)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)"><code>Filters.geoWithin(String, Polygon)</code></a>, <a href="dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)"><code>Filters.geoWithin(String, MultiPolygon)</code></a>,
              <a href="dev/morphia/query/filters/Filters.html#box(java.lang.String,com.mongodb.client.model.geojson.Point,com.mongodb.client.model.geojson.Point)"><code>Filters.box(String, Point, Point)</code></a>, <a href="dev/morphia/query/filters/Filters.html#center(java.lang.String,com.mongodb.client.model.geojson.Point,double)"><code>Filters.center(String, Point, double)</code></a>,
@@ -2355,7 +2137,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/filters/Filters.html#jsonSchema(java.lang.String,java.lang.Object)">dev.morphia.query.filters.Filters.jsonSchema​(String, Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/filters/Filters.html#jsonSchema(java.lang.String,java.lang.Object)">dev.morphia.query.filters.Filters.jsonSchema&#8203;(String, Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#jsonSchema(org.bson.Document)"><code>Filters.jsonSchema(Document)</code></a> instead</div>
 </td>
@@ -2393,11 +2175,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#getMaxAwaitTime(java.util.concurrent.TimeUnit)">dev.morphia.query.FindOptions.getMaxAwaitTime​(TimeUnit)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#getMaxAwaitTime(java.util.concurrent.TimeUnit)">dev.morphia.query.FindOptions.getMaxAwaitTime&#8203;(TimeUnit)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">dev.morphia.query.FindOptions.getMaxTime​(TimeUnit)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#getMaxTime(java.util.concurrent.TimeUnit)">dev.morphia.query.FindOptions.getMaxTime&#8203;(TimeUnit)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
@@ -2417,7 +2199,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#hint(com.mongodb.DBObject)">dev.morphia.query.FindOptions.hint​(DBObject)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#hint(com.mongodb.DBObject)">dev.morphia.query.FindOptions.hint&#8203;(DBObject)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
@@ -2441,11 +2223,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#max(com.mongodb.DBObject)">dev.morphia.query.FindOptions.max​(DBObject)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#max(com.mongodb.DBObject)">dev.morphia.query.FindOptions.max&#8203;(DBObject)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#min(com.mongodb.DBObject)">dev.morphia.query.FindOptions.min​(DBObject)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/FindOptions.html#min(com.mongodb.DBObject)">dev.morphia.query.FindOptions.min&#8203;(DBObject)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
@@ -2457,11 +2239,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/LegacyQuery.html#modify(dev.morphia.query.UpdateOperations)">dev.morphia.query.LegacyQuery.modify​(UpdateOperations&lt;T&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/LegacyQuery.html#modify(dev.morphia.query.UpdateOperations)">dev.morphia.query.LegacyQuery.modify&#8203;(UpdateOperations&lt;T&gt;)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/LegacyQuery.html#update(java.util.List)">dev.morphia.query.LegacyQuery.update​(List&lt;UpdateOperator&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/LegacyQuery.html#update(java.util.List)">dev.morphia.query.LegacyQuery.update&#8203;(List&lt;UpdateOperator&gt;)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
@@ -2469,11 +2251,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#and(dev.morphia.query.Criteria...)">dev.morphia.query.Query.and​(Criteria...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#and(dev.morphia.query.Criteria...)">dev.morphia.query.Query.and&#8203;(Criteria...)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#criteria(java.lang.String)">dev.morphia.query.Query.criteria​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#criteria(java.lang.String)">dev.morphia.query.Query.criteria&#8203;(String)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
@@ -2481,11 +2263,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#field(java.lang.String)">dev.morphia.query.Query.field​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#field(java.lang.String)">dev.morphia.query.Query.field&#8203;(String)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#filter(java.lang.String,java.lang.Object)">dev.morphia.query.Query.filter​(String, Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#filter(java.lang.String,java.lang.Object)">dev.morphia.query.Query.filter&#8203;(String, Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#filter(dev.morphia.query.filters.Filter...)"><code>Query.filter(Filter...)</code></a> instead</div>
 </td>
@@ -2503,7 +2285,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">dev.morphia.query.Query.modify​(UpdateOperator, UpdateOperator...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">dev.morphia.query.Query.modify&#8203;(UpdateOperator, UpdateOperator...)</a></th>
 <td class="colLast">
 <div class="deprecationComment">consider <a href="dev/morphia/query/Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator...)"><code>Query.modify(ModifyOptions, UpdateOperator...)</code></a> instead. In the next major version, this return type will
              match the other's return type such that this will be the terminal call for a modify. The only change needed then will be
@@ -2512,7 +2294,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#or(dev.morphia.query.Criteria...)">dev.morphia.query.Query.or​(Criteria...)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#or(dev.morphia.query.Criteria...)">dev.morphia.query.Query.or&#8203;(Criteria...)</a></th>
 <td class="colLast"></td>
 </tr>
 <tr class="rowColor">
@@ -2522,25 +2304,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#search(java.lang.String)">dev.morphia.query.Query.search​(String)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#search(java.lang.String)">dev.morphia.query.Query.search&#8203;(String)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/filters/Filters.html#text(java.lang.String)"><code>Filters.text(String)</code></a> instead</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#update(java.util.List)">dev.morphia.query.Query.update​(List&lt;UpdateOperator&gt;)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Query.html#update(java.util.List)">dev.morphia.query.Query.update&#8203;(List&lt;UpdateOperator&gt;)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)"><code>Query.update(UpdateOperator, UpdateOperator...)</code></a> instead</div>
 </td>
 </tr>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore)">dev.morphia.query.QueryFactory.createQuery​(Datastore)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore)">dev.morphia.query.QueryFactory.createQuery&#8203;(Datastore)</a></th>
 <td class="colLast">
 <div class="deprecationComment">this method is no longer used</div>
 </td>
 </tr>
 <tr class="rowColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Updates.html#removeAll(java.lang.String,java.lang.Object)">dev.morphia.query.Updates.removeAll​(String, Object)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Updates.html#removeAll(java.lang.String,java.lang.Object)">dev.morphia.query.Updates.removeAll&#8203;(String, Object)</a></th>
 <td class="colLast">
 <div class="deprecationComment">use <a href="dev/morphia/query/Updates.html#pull(java.lang.String,java.lang.Object)"><code>Updates.pull(String, Object)</code></a> instead</div>
 </td>
@@ -2560,13 +2342,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="deprecatedSummary">
 <caption><span>Constructors</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Constructor</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
-<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Meta.html#%3Cinit%3E(dev.morphia.query.Meta.MetaDataKeyword)">dev.morphia.query.Meta​(Meta.MetaDataKeyword)</a></th>
+<th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/query/Meta.html#%3Cinit%3E(dev.morphia.query.Meta.MetaDataKeyword)">dev.morphia.query.Meta&#8203;(Meta.MetaDataKeyword)</a></th>
 <td class="colLast"></td>
 </tr>
 </tbody>
@@ -2580,11 +2362,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <table class="deprecatedSummary">
 <caption><span>Annotation Type Elements</span><span class="tabEnd">&nbsp;</span></caption>
-<tbody><tr>
+<tr>
 <th class="colFirst" scope="col">Annotation Type Element</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
-</tbody><tbody>
+<tbody>
 <tr class="altColor">
 <th class="colDeprecatedItemName" scope="row"><a href="dev/morphia/annotations/Embedded.html#value()">dev.morphia.annotations.Embedded.value()</a></th>
 <td class="colLast">&nbsp;</td>
@@ -2640,20 +2422,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a></div>
 <!-- ======== END OF BOTTOM NAVBAR ======= -->
 </nav>
-<p class="legalCopy"><small>Copyright © 2022. All rights reserved.</small></p>
+<p class="legalCopy"><small>Copyright &#169; 2022. All rights reserved.</small></p>
 </footer>
-
-
-
-    </article>
-</main>
-</div>
-<!--
-<footer class="footer">
-    <p>Copyright (C) 2020-2022
-</footer>
--->
-<script src="../../../_/js/site.js"></script>
-<script async src="../../../_/js/vendor/highlight.js"></script>
-  </body>
+</body>
 </html>
