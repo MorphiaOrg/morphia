@@ -19,4 +19,4 @@
 '''
 
 * xref:issues-help.adoc[Issues & Support]
-* xref:javadoc:index.html#[Javadoc]
+* xref:javadoc/index.adoc[Javadoc]
