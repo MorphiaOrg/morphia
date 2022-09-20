@@ -14,4 +14,4 @@
 * xref:jrebel.adoc[JRebel]
 * xref:validationExtension.adoc[Validation Extension]
 
-* xref:javadoc:index.html#[Javadoc]
+* xref:javadoc/index.adoc[Javadoc]
