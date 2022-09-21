@@ -5,16 +5,16 @@ However not every data model or application can adhere to this philosophy in its
 As such, MongoDB supports
 {docsRef}/reference/database-references/[database references].Morphia supports two styles of defining references:
 
-1. the xref:javadoc:dev/morphia/annotations/Reference.html#[`@Reference`] annotation
-2. an experimental wrapper type xref:javadoc:dev/morphia/mapping/experimental/MorphiaReference.html#[`MorphiaReference`].
+1. the link:javadoc/dev/morphia/annotations/Reference.html[`@Reference`] annotation
+2. an experimental wrapper type link:javadoc/dev/morphia/mapping/experimental/MorphiaReference.html[`MorphiaReference`].
 
 === Using the annotation
 
 The annotation based approach is the traditional approach.
-The xref:javadoc:dev/morphia/annotations/Reference.html#[`@Reference`] can be applied to any property whose type is a mappable Entity type.
+The link:javadoc/dev/morphia/annotations/Reference.html[`@Reference`] can be applied to any property whose type is a mappable Entity type.
 When this is done, instead of storing that objects information as a subdocument in the larger document sent to the database, a reference will be stored instead which points to where the document is actually stored.
 The referenced types are stored according to the mapping information configured by their
-xref:javadoc:dev/morphia/annotations/Entity.html#[`@Entity`] annotations.
+link:javadoc/dev/morphia/annotations/Entity.html[`@Entity`] annotations.
 
 [NOTE]
 ====
@@ -45,7 +45,7 @@ However, users are encouraged to experiment with the API and provide as much fee
 ====
 
 An alternative to the traditional annotation-based approach is the
-xref:javadoc:dev/morphia/mapping/experimental/MorphiaReference.html#[`MorphiaReference`] wrapper.
+link:javadoc/dev/morphia/mapping/experimental/MorphiaReference.html[`MorphiaReference`] wrapper.
 This type can not be instantiated directly.
 Instead a `wrap()` method is provided that will construct the proper type and track the necessary state.
 Currently, four different types of values are supported by `wrap()`: a reference to a single entity, a List of references to entities, a Set, and a Map.  `wrap()`

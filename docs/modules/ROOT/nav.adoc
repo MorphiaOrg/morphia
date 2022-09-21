@@ -23,4 +23,4 @@
 ** xref:issues-help.adoc[Issues & Support]
 ** https://github.com/MorphiaOrg/morphia/[GitHub Repository]
 
-* xref:javadoc/index.adoc[Javadoc]
+* link:javadoc/index.html[Javadoc]

@@ -1,6 +1,6 @@
 == Queries
 
-Morphia provides xref:javadoc:dev/morphia/query/Query.html#[`Query<T>`] class to build a query and map the results back to instances of your entity classes and attempts to provide as much type safety and validation as possible.
+Morphia provides link:javadoc/dev/morphia/query/Query.html[`Query<T>`] class to build a query and map the results back to instances of your entity classes and attempts to provide as much type safety and validation as possible.
 To create the `Query`, we invoke the following code:
 
 [source,java]
@@ -26,7 +26,7 @@ If you encounter and bugs or usability issues, please file an
 https://github.com/MorphiaOrg/morphia/issues[issue]
 ====
 
-The filters can be accessed via the xref:javadoc:dev/morphia/query/experimental/filters/Filters.html#[Filters] class.
+The filters can be accessed via the link:javadoc/dev/morphia/query/experimental/filters/Filters.html[Filters] class.
 The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia's API. For example, to query for products whose prices is greater than or equal to 1000, you would write this:
 
 [source,java]
@@ -100,7 +100,7 @@ It's also worth noting that this projection works with both the mapped document 
 While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database for this entity will be removed.
 To save such instances back consider using
-xref:javadoc:dev/morphia/Datastore.html#merge(T)#[`Datastore#merge(T)`]
+link:++javadoc/dev/morphia/Datastore.html#merge(T)++[`Datastore#merge(T)`]
 ====
 
 === Limiting and Skipping
@@ -125,7 +125,7 @@ See the {docsRef}/reference/method/cursor.skip[skip] documentation for more deta
 === Ordering
 
 Ordering the results of a query is done via
-xref:javadoc:dev/morphia/query/FindOptions.html#sort(dev.morphia.query.Sort...)#[`FindOptions.sort(Sort...)`], etc.
+link:++javadoc/dev/morphia/query/FindOptions.html#sort(dev.morphia.query.Sort...)++[`FindOptions.sort(Sort...)`], etc.
 For example, to sort by `age` (youngest to oldest) and then `income` (highest to lowest), you would use this:
 
 [source,java]
