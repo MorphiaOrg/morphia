@@ -4,9 +4,9 @@ There are two basic ways to update your data: insert/save a whole Entity or issu
 
 == Updating (on the server)
 
-The update method on xref:javadoc:dev/morphia/Datastore.html#[Datastore] is used to issue a command to the server to change existing documents.
+The update method on link:javadoc/dev/morphia/Datastore.html[Datastore] is used to issue a command to the server to change existing documents.
 The effects of the update command are defined via
-xref:javadoc:dev/morphia/query/UpdateOperations.html#[UpdateOperations] methods.
+link:javadoc/dev/morphia/query/UpdateOperations.html[UpdateOperations] methods.
 
 == The Field Expression
 
@@ -137,7 +137,7 @@ datastore.update(updateQuery, ops);
 
 `push()` and `addToSet()` can take either single values or a `List` of values.
 The `push()` methods can also optionally take a
-xref:javadoc:dev/morphia/query/PushOptions.html#[PushOptions] instance allowing for tweaking how the values are added to the list.
+link:javadoc/dev/morphia/query/PushOptions.html[PushOptions] instance allowing for tweaking how the values are added to the list.
 See {docsRef}/reference/operator/update/push/#modifiers[the manual] for more information about the various modifiers available.
 
 === removeFirst()/removeLast()/removeAll()

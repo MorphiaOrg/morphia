@@ -90,4 +90,4 @@ Because we're using `out()` instead of `aggregate()`, Morphia will use the mappe
 `Author` as the output collection for the pipeline.
 If you'd like to use an alternate collection but still return a cursor of `Author`
 instances, you can use
-xref:javadoc:dev/morphia/aggregation/AggregationPipeline.html#out-java.lang.String-java.lang.Class-com.mongodb.AggregationOptions-#[`out(String,Class,AggregationOptions)`](/javadoc/).
+link:++javadoc/dev/morphia/aggregation/AggregationPipeline.html#out(java.lang.String,java.lang.Class,com.mongodb.AggregationOptions)++[`out(String,Class,AggregationOptions)`].

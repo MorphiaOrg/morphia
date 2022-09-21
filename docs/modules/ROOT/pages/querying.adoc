@@ -148,7 +148,7 @@ Which version you use is largely a question of preference.
 [TIP]
 ====
 Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-xref:javadoc:dev/morphia/annotations/Property.html#[`@Property`] annotation on the field.
+link:javadoc/dev/morphia/annotations/Property.html[`@Property`] annotation on the field.
 Morphia will normalize the name and validate the name such that a query with a bad field name will result in an error.
 ====
 
@@ -272,7 +272,7 @@ It's also worth noting that this project works with both the mapped document fie
 ====
 While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database for this entity will be removed.
-To save such instances back consider using xref:javadoc:dev/morphia/Datastore#merge-T-.html#[`Datastore#merge(T)`]
+To save such instances back consider using link:++javadoc/dev/morphia/Datastore#merge-T-.html++[`Datastore#merge(T)`]
 ====
 
 === Limiting and Skipping
@@ -296,7 +296,7 @@ See the {docsRef}/reference/method/cursor.skip[skip] documentation for more deta
 
 === Ordering
 
-Ordering the results of a query is done via xref:javadoc:dev/morphia/query/Query.html#order-java.lang.String-#[`Query.order(String)`].
+Ordering the results of a query is done via link:++javadoc/dev/morphia/query/Query.html#order-java.lang.String-++[`Query.order(String)`].
 The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.
 To reverse the sort order for a particular field simply prefix that field with a `-`.
 For example, to sort by age (youngest to oldest) and then income (highest to lowest), you would use this:

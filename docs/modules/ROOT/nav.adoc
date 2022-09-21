@@ -1,6 +1,6 @@
 * xref:index.adoc[Getting Started]
 * xref:quick-tour.adoc[Quick Tour]
-* xref:migration.adoc[Migrating to 2.0]
+* xref:migration.adoc[Migrating to 1.6]
 
 * xref:querying.adoc[Querying]
 * xref:updating.adoc[Updating]
@@ -14,4 +14,4 @@
 * xref:jrebel.adoc[JRebel]
 * xref:validationExtension.adoc[Validation Extension]
 
-* xref:javadoc/index.adoc[Javadoc]
+* link:javadoc/index.html[Javadoc]
