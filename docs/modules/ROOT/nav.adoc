@@ -1,22 +1,21 @@
 * xref:index.adoc[Getting Started]
-* xref:quick-tour.adoc[Quick Tour]
-* xref:migration.adoc[Migrating to 2.0]
+** xref:quick-tour.adoc[Quick Tour]
+** xref:migration.adoc[Migrating to 2.0]
 
-'''
+* Features
+** xref:configuration.adoc[Configuration]
+** xref:indexing.adoc[Indexing]
+** xref:querying.adoc[Querying]
+** xref:querying-old.adoc[Querying (Legacy)]
+** xref:textSearch.adoc[Text Search]
+** xref:updating.adoc[Updating]
+** xref:updating-old.adoc[Updating (Legacy)]
+** xref:aggregation.adoc[Aggregation]
+** xref:transactions.adoc[Transactions]
+** xref:annotations.adoc[Annotations]
+** xref:indexing.adoc[Indexing]
+** xref:lifeCycleMethods.adoc[Life Cycle Methods]
 
-* xref:configuration.adoc[Configuration]
-* xref:querying.adoc[Querying]
-* xref:querying-old.adoc[Querying (Legacy)]
-* xref:textSearch.adoc[Text Search]
-* xref:updating.adoc[Updating]
-* xref:updating-old.adoc[Updating (Legacy)]
-* xref:aggregation.adoc[Aggregation]
-* xref:transactions.adoc[Transactions]
-* xref:annotations.adoc[Annotations]
-* xref:indexing.adoc[Indexing]
-* xref:lifeCycleMethods.adoc[Life Cycle Methods]
-
-'''
-
-* xref:issues-help.adoc[Issues & Support]
-* xref:javadoc/index.adoc[Javadoc]
+* Support
+** xref:issues-help.adoc[Issues & Support]
+** link:javadoc/index.html[Javadoc]

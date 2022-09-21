@@ -3,7 +3,7 @@
 Updates in 2.0, are issued off of a `Query` instance in contrast to the [old approach](updates-old.md) of using `Datastore#update()` in previous versions.
 These update operations are executed on the server without pulling any documents in to your application.
 Update operations are defined using a set of functions as defined on
-xref:javadoc:dev/morphia/query/experimental/updates/UpdateOperators.html#[UpdateOperators]  In our examples, we'll be using the following model:
+link:javadoc/dev/morphia/query/experimental/updates/UpdateOperators.html[UpdateOperators]  In our examples, we'll be using the following model:
 
 [source,java]
 ----
@@ -48,7 +48,7 @@ datastore
     .execute();
 ----
 
-The `execute()` can optionally take xref:javadoc:dev/morphia/UpdateOptions.html#[UpdateOptions] if there are any options you might want to apply to your update statement.
+The `execute()` can optionally take link:javadoc/dev/morphia/UpdateOptions.html[UpdateOptions] if there are any options you might want to apply to your update statement.
 
 Embedded documents are updated the same way.
 To change the name of the city in the address, one would use something like this:
@@ -77,7 +77,7 @@ After this update, the name of the hotel would be `null` when the entity is load
 
 By default, an update operation will only update the first document matching the query.
 This behavior can be modified via the optional
-xref:javadoc:dev/morphia/UpdateOptions.html#[UpdateOptions] parameter on `execute()`:
+link:javadoc/dev/morphia/UpdateOptions.html[UpdateOptions] parameter on `execute()`:
 
 [source,java]
 ----
@@ -118,7 +118,7 @@ Using this class, you can get specific numbers from the update operation as well
 
 There are times when a document needs to be updated and also fetched from the database.
 In the server documentation, this is referred to as {docsRef}/reference/method/db.collection.findAndModify/[`findAndModify`].
-In Morphia, this functionality is exposed through the xref:javadoc:dev/morphia/query/Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator...)#[Query#modify()]
+In Morphia, this functionality is exposed through the link:++javadoc/dev/morphia/query/Query.html#modify(dev.morphia.query.experimental.updates.UpdateOperator, dev.morphia.query.experimental.updates.UpdateOperator...)++[Query#modify()]
 method.
 With this method, you can choose to return the updated entity in either the state before or after the update.
 The default is to return the entity in the _after_ state.

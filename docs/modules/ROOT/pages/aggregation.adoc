@@ -1,10 +1,9 @@
 = Aggregation
 
-The {docsRef}/aggregation[aggregation framework] in MongoDB allows you to define a series (called a pipeline) of operations (called stages) against the data in a collection.
-These pipelines can be used for analytics or they can be used to convert your data from one form to another.
-This guide will not go in to the details of how aggregation works, however.
-The official MongoDB {docsRef}/aggregation[documentation] has extensive tutorials on such details.
-Rather, this guide will focus on the Morphia API. The examples shown here are taken from the
+The {docsRef}/aggregation[aggregation framework] in MongoDB allows you to define a series (called a pipeline) of operations (called
+stages) against the data in a collection. These pipelines can be used for analytics or to convert your data from one form to another.
+This guide will not go in to the details of how aggregation works, however. The official MongoDB {docsRef}/aggregation[documentation] has
+extensive tutorials on such details. Rather, this guide will focus on the Morphia API. The examples shown here are taken from the
 {srcRef}/morphia/src/test/java/dev/morphia/aggregation/AggregationTest.java[tests] in Morphia itself.
 
 Writing an aggregation pipeline starts just like writing a standard query.
@@ -50,7 +49,7 @@ This method takes a `Class` reference for the target type of your aggregation.
 Given this type, Morphia will map each document in the results and return it.
 Additionally, you can also include some options to `execute()`.
 We can use the various options on the
-xref:javadoc:dev/morphia/aggregation/experimental/AggregationOptions.html#[`AggregationOptions`] class to configure how we want the pipeline to execute.
+link:javadoc/dev/morphia/aggregation/experimental/AggregationOptions.html[`AggregationOptions`] class to configure how we want the pipeline to execute.
 
 === $out
 

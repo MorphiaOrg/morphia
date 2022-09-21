@@ -28,7 +28,7 @@ If you encounter and bugs or usability issues, please file an
 https://github.com/MorphiaOrg/morphia/issues[issue]
 ====
 
-The filters can be accessed via the xref:javadoc:dev/morphia/query/experimental/filters/Filters.html#[Filters] class.
+The filters can be accessed via the link:javadoc/dev/morphia/query/experimental/filters/Filters.html[Filters] class.
 The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia's API.
 For example, to query for products whose prices is greater than or equal to 1000, you would write this:
 
@@ -103,7 +103,7 @@ It's also worth noting that this project works with both the mapped document fie
 While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database for this entity will be removed.
 To save such instances back consider using
-xref:javadoc:dev/morphia/Datastore.html#merge(T)#[`Datastore#merge(T)`]
+link:++javadoc/dev/morphia/Datastore.html#merge(T)++[`Datastore#merge(T)`]
 ====
 
 === Limiting and Skipping
@@ -172,7 +172,7 @@ In this version of the unit test, we tail the cursor waiting to pull out objects
 
 Queries are also used to delete documents from the database as well.
 Using
-xref:javadoc:dev/morphia/query/Query.html#delete()#[`Query#delete()`], we can delete documents matching the query.
+link:++javadoc/dev/morphia/query/Query.html#delete()++[`Query#delete()`], we can delete documents matching the query.
 The default operation will only delete the first matching document.
 However, you can opt to delete all matches by passing in the appropriate options:
 

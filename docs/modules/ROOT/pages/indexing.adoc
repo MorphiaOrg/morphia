@@ -13,8 +13,8 @@ There are two ways to define indexes: at the class level and at the field level.
 
 == Class Level Indexes
 
-Class level indexing begins with the xref:javadoc:dev/morphia/annotations/Indexes.html#[@Indexes] annotation.
-This is a container annotation whose sole purpose is to hold a number of xref:javadoc:dev/morphia/annotations/Index.html#[@Index] annotations.
+Class level indexing begins with the link:javadoc/dev/morphia/annotations/Indexes.html[@Indexes] annotation.
+This is a container annotation whose sole purpose is to hold a number of link:javadoc/dev/morphia/annotations/Index.html[@Index] annotations.
 This annotation has two primary components to cover here:  `fields` and `options`.
 An index definition would take the following form:
 
@@ -41,14 +41,14 @@ public class IndexExample {
 
 === Fields
 
-The fields to use in an index definition are defined with the xref:javadoc:dev/morphia/annotations/Field.html#[`@Field`] annotation.
-An arbitrary number of xref:javadoc:dev/morphia/annotations/Field.html#[`@Field`]s can be given but at least one must be present.
+The fields to use in an index definition are defined with the link:javadoc/dev/morphia/annotations/Field.html[`@Field`] annotation.
+An arbitrary number of link:javadoc/dev/morphia/annotations/Field.html[`@Field`]s can be given but at least one must be present.
 
 ==== value()
 
 Indicates which field to use for indexing.
-The name used for the field can be either the Java field name or the mapped document field name as defined in the class's mapping via, e.g., the xref:javadoc:dev/morphia/annotations/Property.html#[`@Property`] or
-xref:javadoc:dev/morphia/annotations/Embedded.html#[`@Embedded`] annotations.
+The name used for the field can be either the Java field name or the mapped document field name as defined in the class's mapping via, e.g., the link:javadoc/dev/morphia/annotations/Property.html[`@Property`] or
+link:javadoc/dev/morphia/annotations/Embedded.html[`@Embedded`] annotations.
 For most index types, this value is validated by default.
 An exception is made for <<_text_indexing,text indexes>> as discussed below.
 
@@ -58,7 +58,7 @@ An exception is made for <<_text_indexing,text indexes>> as discussed below.
 
 Indicates the "type" of the index (ascending, descending, geo2D, geo2d sphere, or text) to create on the field.
 
-*See xref:javadoc:dev/morphia/utils/IndexType.html#[`@IndexType`]*
+*See link:javadoc/dev/morphia/utils/IndexType.html[`@IndexType`]*
 
 ==== weight()
 
@@ -69,7 +69,7 @@ This value only makes sense when direction is `IndexType.TEXT`.
 
 === Index Options
 
-Options for an index are defined on the xref:javadoc:dev/morphia/annotations/IndexOptions.html#[`@IndexOptions`].
+Options for an index are defined on the link:javadoc/dev/morphia/annotations/IndexOptions.html[`@IndexOptions`].
 More complete coverage can be found in the {docsRef}/reference/method/db.collection.createIndex/#options[manual] but we'll provide some basic coverage here as well.
 
 ==== background()
@@ -161,15 +161,15 @@ A partial filter is defined using a query as shown here:
 *Optional*
 
 Collation allows users to specify language-specific rules for string comparison, such as rules for lettercase and accent marks.
-A collation can be defined using the `collation()` property on xref:javadoc:dev/morphia/annotations/IndexOptions.html#[`@IndexOptions`] and takes an
-xref:javadoc:dev/morphia/annotations/Collation.html#[`@Collation`] instance.
+A collation can be defined using the `collation()` property on link:javadoc/dev/morphia/annotations/IndexOptions.html[`@IndexOptions`] and takes an
+link:javadoc/dev/morphia/annotations/Collation.html[`@Collation`] instance.
 
 == Field Level Indexes
 
 Field level indexing is a simpler approach to defining a basic, single key index.
 These indexes are defined by applying the
-xref:javadoc:dev/morphia/annotations/Indexed.html#[`@Indexed`] annotation to a particular field on a class.
-Because the index definition is applied at the field level, the index is created using only that field and so the xref:javadoc:dev/morphia/annotations/Field.html#[`@Field`]
+link:javadoc/dev/morphia/annotations/Indexed.html[`@Indexed`] annotation to a particular field on a class.
+Because the index definition is applied at the field level, the index is created using only that field and so the link:javadoc/dev/morphia/annotations/Field.html[`@Field`]
 annotations are unnecessary.
 The options for the index are the same as defined <<options,above>>.
 A field level index definition would look like this:

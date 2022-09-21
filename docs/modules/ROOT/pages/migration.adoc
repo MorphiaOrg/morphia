@@ -12,14 +12,14 @@ If you find any missing or unclear items please file an https://github.com/Morph
 
 * Default mapping options have been changed for a more modern, configurable feel.
 In 1.6, the standard builder for `MapperOptions` was
-xref:1.6.0@morphia:javadoc:dev/morphia/mapping/MapperOptions.html#builder()[deprecated] in favor of the
-xref:1.6.0@morphia:javadoc:dev/morphia/mapping/MapperOptions.html#legacy()[legacy()] method instead.
+link:++../1.6/javadoc/dev/morphia/mapping/MapperOptions.html#builder()++[deprecated] in favor of the
+link:++../1.6/javadoc/dev/morphia/mapping/MapperOptions.html#legacy()++[legacy()] method instead.
 If you made this change nothing should be different when upgrading.
 However, if you did not or if you never explicitly configured your `Mapper` then you will run in to some migration issues.
 * The default discriminator is now `_t` rather than `className` with a value that is the simple name of the class name.
-This is configurable using xref:javadoc:dev/morphia/mapping/MapperOptions.Builder.html#discriminatorKey(java.lang.String)#[MapperOptions.Builder.html#discriminatorKey()]
-and xref:javadoc:dev/morphia/mapping/MapperOptions.Builder.html#discriminator(dev.morphia.mapping.DiscriminatorFunction)#[MapperOptions.Builder.html#discriminator()].
-The latter allows you pass in an existing xref:javadoc:dev/morphia/mapping/DiscriminatorFunction.html#[discriminator function] or to supply your own custom function.
+This is configurable using link:++javadoc/dev/morphia/mapping/MapperOptions.Builder.html#discriminatorKey(java.lang.String)++[MapperOptions.Builder.html#discriminatorKey()]
+and link:++javadoc/dev/morphia/mapping/MapperOptions.Builder.html#discriminator(dev.morphia.mapping.DiscriminatorFunction)++[MapperOptions.Builder.html#discriminator()].
+The latter allows you pass in an existing link:javadoc/dev/morphia/mapping/DiscriminatorFunction.html[discriminator function] or to supply your own custom function.
 * Collection mapping now defaults to the camel case form of the class's simple name.
 * `@Entity` now defaults to using discriminator values when saving documents.
 * `@Embedded` is now only allowed on the embedded type and not fields using an embedded type.
@@ -62,8 +62,8 @@ See the https://docs.mongodb.com/manual/reference/method/db.collection.update/[`
 Lists are easier to work with and `List.of()` makes creating them from arrays, e.g., trivial
 * Lifecycle events on nested types are only called when instances of those embedded types are being persisted.
 * Keys are no longer allowed as fields.
-Use xref:javadoc:dev/morphia/annotations/Reference.html#[`@Reference`] or
-xref:javadoc:dev/morphia/mapping/experimental/MorphiaReference.html#[`MorphiaReference`] instead.
+Use link:javadoc/dev/morphia/annotations/Reference.html[`@Reference`] or
+link:javadoc/dev/morphia/mapping/experimental/MorphiaReference.html[`MorphiaReference`] instead.
 * Polymorphic queries across collections are not currently supported.
 That is, if you have entities A and B each mapped to separate collections, a query against type A will not automatically look in the collection mapped for B to find your entities.
 * The default option when calling `modify()` is to return the before state of the entity.
