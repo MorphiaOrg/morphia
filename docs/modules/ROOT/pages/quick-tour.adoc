@@ -31,7 +31,7 @@ However, outside of tests this isn't usually enough.
 There are two other items you might pass in as well: a `MongoClient` reference to use when connecting to the database and a `MapperOptions`
 reference to configure how the mapping is done.
 
-With the second line we're telling Morphia to look at every class in the package we've given and find every class annotated with xref:javadoc:dev/morphia/annotations/Entity.html#[`@Entity`] (which we'll cover shortly) or xref:javadoc:dev/morphia/annotations/Embedded.html#[`@Embedded`] and register the mapping metadata we've put on our classes.
+With the second line we're telling Morphia to look at every class in the package we've given and find every class annotated with link:javadoc/dev/morphia/annotations/Entity.html[`@Entity`] (which we'll cover shortly) or link:javadoc/dev/morphia/annotations/Embedded.html[`@Embedded`] and register the mapping metadata we've put on our classes.
 This method can be called multiple times to cover all your entities wherever they might live in your application.
 
 == Mapping Options
@@ -50,10 +50,10 @@ There are a few other options to configure on
 
 There are two ways that Morphia can handle your classes: as top level entities or embedded in others.
 Any class annotated with
-xref:javadoc:dev/morphia/annotations/Entity.html#[`@Entity`] is treated as a top level document stored directly in a collection.
-Any class with xref:javadoc:dev/morphia/annotations/Entity.html#[`@Entity`] must have a field annotated with
-xref:javadoc:dev/morphia/annotations/Id.html#[`@Id`] to define which field to use as the `_id` value in the document written to MongoDB.  xref:javadoc:dev/morphia/annotations/Embedded.html#[`@Embedded`] indicates that the class will result in a subdocument inside another document.  xref:javadoc:dev/morphia/annotations/Embedded.html#[`@Embedded`] classes do not require the presence of an
-xref:javadoc:dev/morphia/annotations/Id.html#[`@Id `] field.
+link:javadoc/dev/morphia/annotations/Entity.html[`@Entity`] is treated as a top level document stored directly in a collection.
+Any class with link:javadoc/dev/morphia/annotations/Entity.html[`@Entity`] must have a field annotated with
+link:javadoc/dev/morphia/annotations/Id.html[`@Id`] to define which field to use as the `_id` value in the document written to MongoDB.  link:javadoc/dev/morphia/annotations/Embedded.html[`@Embedded`] indicates that the class will result in a subdocument inside another document.  link:javadoc/dev/morphia/annotations/Embedded.html[`@Embedded`] classes do not require the presence of an
+link:javadoc/dev/morphia/annotations/Id.html[`@Id `] field.
 
 [NOTE]
 ====
@@ -84,7 +84,7 @@ class Employee {
 
 There are a few things here to discuss and others we'll defer to later sections.
 This class is annotated with the
-xref:javadoc:dev/morphia/annotations/Entity.html#[`@Entity`] annotation so we know that it will be a top level document.
+link:javadoc/dev/morphia/annotations/Entity.html[`@Entity`] annotation so we know that it will be a top level document.
 In the annotation, you'll see `"employees"`.
 By default, Morphia will use the camel case class name as the collection name.
 If you pass a String instead, it will use that value for the collection name.
@@ -92,7 +92,7 @@ In this case, all `Employee` instances will be saved in to the `employees`
 collection instead.
 There is a little more to this annotation but the xref:annotations.adoc#_entity[annotations guide] covers those details.
 
-The xref:javadoc:dev/morphia/annotations/Indexes.html#[`@Indexes`] annotation lists which indexes Morphia should create.
+The link:javadoc/dev/morphia/annotations/Indexes.html[`@Indexes`] annotation lists which indexes Morphia should create.
 In this instance, we're defining an index named `salary` on the field salary with the default ordering of ascending.
 More information on indexing can found xref:annotations.adoc#_indexes[here].
 
@@ -101,15 +101,15 @@ In this instance we're using the Java driver type of `ObjectId` as the ID type.
 The ID can be any type you'd like but is generally something like `ObjectId` or `long`.
 There are two other annotations to cover but it should be pointed out now that other than transient and static fields, Morphia will attempt to copy every field to a document bound for the database.
 
-The simplest of the two remaining annotations is xref:javadoc:dev/morphia/annotations/Property.html#[`@Property`].
+The simplest of the two remaining annotations is link:javadoc/dev/morphia/annotations/Property.html[`@Property`].
 This annotation is entirely optional.
 If you leave this annotation off, Morphia will use the Java field name as the document field name.
 Often times this is fine.
 However, some times you'll want to change the document field name.
 In those cases, you can use
-xref:javadoc:dev/morphia/annotations/Property.html#[`@Property`] and pass it the name to be used when this class is serialized out to the database.
+link:javadoc/dev/morphia/annotations/Property.html[`@Property`] and pass it the name to be used when this class is serialized out to the database.
 
-This just leaves xref:javadoc:dev/morphia/annotations/Reference.html#[`@Reference`].
+This just leaves link:javadoc/dev/morphia/annotations/Reference.html[`@Reference`].
 This annotation is telling Morphia that this field refers to other Morphia mapped entities.
 In this case Morphia will store what MongoDB calls a
 {docsRef}/reference/database-references/#dbrefs[`DBRef`] which is just a collection name and key value.
@@ -184,7 +184,7 @@ underpaid = datastore.createQuery(Employee.class)
 
 Morphia supports all the query filters defined in the Mongodb query language.
 You can find helper methods for all these filers on the
-xref:javadoc:dev/morphia/query/experimental/filters/Filters.html#[Filters class].
+link:javadoc/dev/morphia/query/experimental/filters/Filters.html[Filters class].
 The `filter()` method can take as many `Filter`
 references as you need to define your query.
 It can also be called multiple times as any subsequent calls are cumulative with the rest of the filters already defined.

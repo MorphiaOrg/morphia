@@ -1,7 +1,7 @@
 = References
 
-Morphia supports two styles of defining references: the xref:javadoc:dev/morphia/annotations/Reference.html#[`@Reference`] annotation and the experimental
-xref:javadoc:dev/morphia/mapping/experimental/MorphiaReference.html#[`MorphiaReference`].
+Morphia supports two styles of defining references: the link:javadoc/dev/morphia/annotations/Reference.html[`@Reference`] annotation and the experimental
+link:javadoc/dev/morphia/mapping/experimental/MorphiaReference.html[`MorphiaReference`].
 The annotation based approach is discussed
 xref:annotations.adoc#_reference[here].
 This guide will cover the wrapper based approach.
@@ -14,7 +14,7 @@ However, users are encouraged to experiment with the API and provide as much fee
 ====
 
 An alternative to the traditional annotation-based approach is the
-xref:javadoc:dev/morphia/mapping/experimental/MorphiaReference.html#[`MorphiaReference`] wrapper.
+link:javadoc/dev/morphia/mapping/experimental/MorphiaReference.html[`MorphiaReference`] wrapper.
 This type can not be instantiated directly.
 Instead a `wrap()`
 method is provided that will construct the proper type and track the necessary state.
