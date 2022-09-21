@@ -4,7 +4,7 @@ Morphia provides annotations that allow developers to define document validation
 Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.
 
 Below we have a basic entity definition.
-Note the new annotation xref:javadoc:dev/morphia/annotations/Validation.html#[@Validation].
+Note the new annotation link:javadoc/dev/morphia/annotations/Validation.html[@Validation].
 
 [source,java]
 ----

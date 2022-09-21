@@ -5,7 +5,7 @@
 This page describes the older approach to querying.
 While this older API is still supported, efforts should be made to update to the new API as outlined in the other xref:queries.adoc[querying] guide.
 This old API is active using the xref:configuration.adoc#_legacy[legacy configuration].
-The new API will attempt to redirect most calls to use the new xref:javadoc:dev/morphia/query/filters/Filters.html#[Filters] based approach.
+The new API will attempt to redirect most calls to use the new link:javadoc/dev/morphia/query/filters/Filters.html[Filters] based approach.
 
 Note that at this time complex queries using `and` or `or` clauses can not be correctly transparently translated and will require manual effort to update to the new API.
 ====
@@ -159,7 +159,7 @@ Which version you use is largely a question of preference.
 [TIP]
 ====
 Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-xref:javadoc:dev/morphia/annotations/Property.html#[@Property] annotation on the field.
+link:javadoc/dev/morphia/annotations/Property.html[@Property] annotation on the field.
 Morphia will normalize the name and validate the name such that a query with a bad field name will result in an error.
 ====
 
@@ -285,7 +285,7 @@ While projections can be a nice performance win in some cases, it's important to
 Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database for this entity will be removed.
 To save such instances back consider using
-xref:javadoc:dev/morphia/Datastore.html#merge(T)#[Datastore#merge(T)]
+link:++javadoc/dev/morphia/Datastore.html#merge(T)++[Datastore#merge(T)]
 ====
 
 === Limiting and Skipping

@@ -8,5 +8,6 @@ nav:
 
 asciidoc:
   attributes:
+    short-version: 2.3
     version: 2.3.0-SNAPSHOT
     srcRef: https://github.com/MorphiaOrg/morphia/blob/master
