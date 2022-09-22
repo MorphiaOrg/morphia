@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Querying :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
+    <meta name="generator" content="Antora 3.0.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
 
@@ -82,7 +82,7 @@
     <a class="nav-link" href="quick-tour.html">Quick Tour</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="migration.html">Migrating to 2.0</a>
+    <a class="nav-link" href="migration.html">Migrating to 1.6</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
     <a class="nav-link" href="querying.html">Querying</a>
@@ -156,9 +156,6 @@
         <li class="version">
           <a href="../2.1/index.html">2.1</a>
         </li>
-        <li class="version">
-          <a href="../2.0/index.html">2.0</a>
-        </li>
         <li class="version is-current">
           <a href="index.html">1.6</a>
         </li>
@@ -185,7 +182,6 @@
     <a class="version is-missing" href="../2.3/index.html">2.3-SNAPSHOT</a>
     <a class="version is-missing" href="../2.2/index.html">2.2</a>
     <a class="version" href="../2.1/querying.html">2.1</a>
-    <a class="version" href="../2.0/querying.html">2.0</a>
     <a class="version is-current" href="querying.html">1.6</a>
   </div>
 </div>
@@ -397,7 +393,7 @@ Which version you use is largely a question of preference.</p>
 <td class="content">
 <div class="paragraph">
 <p>Regardless of the approach used, the field name given can be either the Java field name or the document field name as defined by the
-<a href="#javadoc:dev/morphia/annotations/Property.html" class="page unresolved"><code>@Property</code></a> annotation on the field.
+<a href="javadoc/dev/morphia/annotations/Property.html"><code>@Property</code></a> annotation on the field.
 Morphia will normalize the name and validate the name such that a query with a bad field name will result in an error.</p>
 </div>
 </td>
@@ -552,7 +548,7 @@ It&#8217;s also worth noting that this project works with both the mapped docume
 <div class="paragraph">
 <p>While projections can be a nice performance win in some cases, it&#8217;s important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if <code>found</code> is saved back to MongoDB, the <code>last_name</code> field that currently exists in the database for this entity will be removed.
-To save such instances back consider using <a href="#javadoc:dev/morphia/Datastore.adoc#merge-T-.html#" class="page unresolved"><code>Datastore#merge(T)</code></a></p>
+To save such instances back consider using <a href="javadoc/dev/morphia/Datastore#merge-T-.html"><code>Datastore#merge(T)</code></a></p>
 </div>
 </td>
 </tr>
@@ -584,7 +580,7 @@ See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip">sk
 <div class="sect2">
 <h3 id="_ordering"><a class="anchor" href="#_ordering"></a>Ordering</h3>
 <div class="paragraph">
-<p>Ordering the results of a query is done via <a href="#javadoc:dev/morphia/query/Query.html#order-java.lang.String-#" class="page unresolved"><code>Query.order(String)</code></a>.
+<p>Ordering the results of a query is done via <a href="javadoc/dev/morphia/query/Query.html#order-java.lang.String-"><code>Query.order(String)</code></a>.
 The javadoc has complete examples but this String consists of a list of comma delimited fields to order by.
 To reverse the sort order for a particular field simply prefix that field with a <code>-</code>.
 For example, to sort by age (youngest to oldest) and then income (highest to lowest), you would use this:</p>
@@ -646,7 +642,7 @@ Using your regular <code>Datastore</code> reference, you can cast to <code>Advan
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>DBObject query = BasicDBObjectBuilder.start()
+<pre class="highlightjs highlight"><code class="language-none hljs">DBObject query = BasicDBObjectBuilder.start()
 	.add("albums",
             new BasicDBObject("$elemMatch",
                     new BasicDBObject("$and", new BasicDBObject[] {

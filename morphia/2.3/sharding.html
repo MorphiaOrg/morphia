@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
+    <meta name="generator" content="Antora 3.0.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
 
@@ -199,9 +199,6 @@
           <a href="../2.1/index.html">2.1</a>
         </li>
         <li class="version">
-          <a href="../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
           <a href="../1.6/index.html">1.6</a>
         </li>
       </ul>
@@ -228,7 +225,6 @@
     <a class="version is-current" href="sharding.html">2.3-SNAPSHOT</a>
     <a class="version is-missing" href="../2.2/index.html">2.2</a>
     <a class="version is-missing" href="../2.1/index.html">2.1</a>
-    <a class="version is-missing" href="../2.0/index.html">2.0</a>
     <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
@@ -265,8 +261,8 @@ You don&#8217;t need to use Morphia to shard your collections, but if your colle
 <div class="sect2">
 <h3 id="_shard_definition"><a class="anchor" href="#_shard_definition"></a>Shard Definition</h3>
 <div class="paragraph">
-<p>Sharding definitions are driven by the <a href="#javadoc:dev/morphia/annotations/ShardKeys.html" class="page unresolved">@ShardKeys</a> annotation.
-This annotation takes two values: the shard keys themselves as defined by the <a href="#javadoc:dev/morphia/annotations/ShardKey.html" class="page unresolved">@ShardKey</a> annotation and the options to apply when sharding the collection via the <a href="#javadoc:dev/morphia/annotations/ShardOptions.html" class="page unresolved">@ShardOptions</a>
+<p>Sharding definitions are driven by the <a href="javadoc/dev/morphia/annotations/ShardKeys.html">@ShardKeys</a> annotation.
+This annotation takes two values: the shard keys themselves as defined by the <a href="javadoc/dev/morphia/annotations/ShardKey.html">@ShardKey</a> annotation and the options to apply when sharding the collection via the <a href="javadoc/dev/morphia/annotations/ShardOptions.html">@ShardOptions</a>
 annotation.</p>
 </div>
 <div class="paragraph">
@@ -330,7 +326,7 @@ If you find yourself needing to mutate one of those properties, consult the <a h
 <div class="sect2">
 <h3 id="_sharding_options"><a class="anchor" href="#_sharding_options"></a>Sharding Options</h3>
 <div class="paragraph">
-<p><code>@ShardKeys</code> also has an <code>options</code> field which takes a <a href="#javadoc:dev/morphia/annotations/ShardOptions.html" class="page unresolved">@ShardOptions</a>.
+<p><code>@ShardKeys</code> also has an <code>options</code> field which takes a <a href="javadoc/dev/morphia/annotations/ShardOptions.html">@ShardOptions</a>.
 Using this annotation, you can configure the number of initial shards, <a href="http://docs.mongodb.org/manual/core/hashed-sharding/#shard-an-empty-collection">presplit the hashed zones</a>, or <a href="http://docs.mongodb.org/manual/core/sharding-shard-key/#unique-indexes">enforce uniqueness</a> in your shard key.</p>
 </div>
 </div>
@@ -338,8 +334,8 @@ Using this annotation, you can configure the number of initial shards, <a href="
 <h3 id="_how_is_it_used"><a class="anchor" href="#_how_is_it_used"></a>How is it used?</h3>
 <div class="paragraph">
 <p>Once you have your sharding configured, you have the choice of manually sharding it via the mongo shell or having Morphia shard it for you.
-For the latter, there is a new method <a href="#javadoc:dev/morphia/Datastore.html#shardCollections()" class="page unresolved">shardCollections()</a> that will do this for you.
-It should be noted here that if your collection is not empty, there are certain administrative tasks you must perform on the collection first that Morphia does <strong>not</strong> handle.
+For the latter, there is a new method <a href="javadoc/dev/morphia/Datastore.html#shardCollections()">shardCollections()</a> that will do
+thisfor you. It should be noted here that if your collection is not empty, there are certain administrative tasks you must perform on the collection first that Morphia does <strong>not</strong> handle.
 You can find those details in the server documentation.</p>
 </div>
 <div class="paragraph">

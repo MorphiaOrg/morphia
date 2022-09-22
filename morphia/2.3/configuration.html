@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
+    <meta name="generator" content="Antora 3.0.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
 
@@ -199,9 +199,6 @@
           <a href="../2.1/index.html">2.1</a>
         </li>
         <li class="version">
-          <a href="../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
           <a href="../1.6/index.html">1.6</a>
         </li>
       </ul>
@@ -228,7 +225,6 @@
     <a class="version is-current" href="configuration.html">2.3-SNAPSHOT</a>
     <a class="version" href="../2.2/configuration.html">2.2</a>
     <a class="version" href="../2.1/configuration.html">2.1</a>
-    <a class="version" href="../2.0/configuration.html">2.0</a>
     <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
@@ -341,7 +337,8 @@ However, there are invariably times when more control is needed.</p>
 <p>Starting with 2.3, you can provide your own <code>CodecProvider</code> to customize how Morphia handles the types you&#8217;re interested.
 It&#8217;s not advised to write custom codecs for your entities (why mark them as entities at that point?) but if you&#8217;re comfortable taking that on, then it is, of course, your prerogative.
 You can register your custom <code>CodecProvider</code> implementation via the
-<a href="#javadoc:dev/morphia/mapping/MapperOptions.Builder.html#codecProvider()" class="page unresolved">MapperOptions.Builder#codecProvider(org.bson.codecs.configuration.CodecProvider)</a>
+<a href="javadoc/dev/morphia/mapping/MapperOptions.Builder.html#codecProvider()">MapperOptions.Builder#codecProvider(org.bson.codecs
+.configuration.CodecProvider)</a>
 method.
 For details on how to write a <code>Codec</code> and a <code>CodecProvider</code>, please consult
 <a href="https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/data-formats/codecs/">the driver&#8217;s documentation</a>.

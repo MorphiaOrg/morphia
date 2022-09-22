@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Untitled :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
+    <meta name="generator" content="Antora 3.0.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
 
@@ -196,9 +196,6 @@
           <a href="../2.1/index.html">2.1</a>
         </li>
         <li class="version">
-          <a href="../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
           <a href="../1.6/index.html">1.6</a>
         </li>
       </ul>
@@ -225,7 +222,6 @@
     <a class="version" href="../2.3/references.html">2.3-SNAPSHOT</a>
     <a class="version is-current" href="references.html">2.2</a>
     <a class="version" href="../2.1/references.html">2.1</a>
-    <a class="version" href="../2.0/references.html">2.0</a>
     <a class="version" href="../1.6/references.html">1.6</a>
   </div>
 </div>
@@ -245,10 +241,10 @@ As such, MongoDB supports
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>the <a href="#javadoc:dev/morphia/annotations/Reference.html" class="page unresolved"><code>@Reference</code></a> annotation</p>
+<p>the <a href="javadoc/dev/morphia/annotations/Reference.html"><code>@Reference</code></a> annotation</p>
 </li>
 <li>
-<p>an experimental wrapper type <a href="#javadoc:dev/morphia/mapping/experimental/MorphiaReference.html" class="page unresolved"><code>MorphiaReference</code></a>.</p>
+<p>an experimental wrapper type <a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html"><code>MorphiaReference</code></a>.</p>
 </li>
 </ol>
 </div>
@@ -256,10 +252,10 @@ As such, MongoDB supports
 <h3 id="_using_the_annotation"><a class="anchor" href="#_using_the_annotation"></a>Using the annotation</h3>
 <div class="paragraph">
 <p>The annotation based approach is the traditional approach.
-The <a href="#javadoc:dev/morphia/annotations/Reference.html" class="page unresolved"><code>@Reference</code></a> can be applied to any property whose type is a mappable Entity type.
+The <a href="javadoc/dev/morphia/annotations/Reference.html"><code>@Reference</code></a> can be applied to any property whose type is a mappable Entity type.
 When this is done, instead of storing that objects information as a subdocument in the larger document sent to the database, a reference will be stored instead which points to where the document is actually stored.
 The referenced types are stored according to the mapping information configured by their
-<a href="#javadoc:dev/morphia/annotations/Entity.html" class="page unresolved"><code>@Entity</code></a> annotations.</p>
+<a href="javadoc/dev/morphia/annotations/Entity.html"><code>@Entity</code></a> annotations.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -321,7 +317,7 @@ However, users are encouraged to experiment with the API and provide as much fee
 </div>
 <div class="paragraph">
 <p>An alternative to the traditional annotation-based approach is the
-<a href="#javadoc:dev/morphia/mapping/experimental/MorphiaReference.html" class="page unresolved"><code>MorphiaReference</code></a> wrapper.
+<a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html"><code>MorphiaReference</code></a> wrapper.
 This type can not be instantiated directly.
 Instead a <code>wrap()</code> method is provided that will construct the proper type and track the necessary state.
 Currently, four different types of values are supported by <code>wrap()</code>: a reference to a single entity, a List of references to entities, a Set, and a Map.  <code>wrap()</code>

@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Untitled :: Morphia Docs</title>
     <meta name="generator" content="Antora 2.3.3">
-<link rel="stylesheet" href="../_/css/site.css">
-<link rel="stylesheet" href="../_/css/morphia.css">
+    <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/morphia.css">
+    <style>
+        .container {
+            width: 80%;
+            /*max-width: 900px;*/
+            margin: 2em auto;
 
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 20px;
+        }
+    </style>
 </head>
 <body class="article">
 <header class="header" role="banner">
@@ -65,88 +75,62 @@
     </nav>
 </header>
 
-<div class="body home-page">
-    <div class="openblock card-row">
-<div class="content">
-<div class="openblock column">
-<div class="content">
-<h2 class="discrete">Morphia&#8201;&#8212;&#8201;MongoDB Object Document Mapping for the JVM.</h2>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Bidirectional mapping to and from the database</dt>
-<dd>
-<p>Transparently map your Java entities to MongoDB documents and back.</p>
-</dd>
-<dt class="hdlist1">Extensible Type Conversion</dt>
-<dd>
-<p>Easily add support for custom types</p>
-</dd>
-<dt class="hdlist1">Robust Query and Update APIs</dt>
-<dt class="hdlist1">Full Aggregation Support</dt>
-<dd>
-<p>Use MongoDB&#8217;s <a href="http://docs.mongodb.org/manual/aggregation/">aggregation framework</a> with your application&#8217;s Java classes.</p>
-</dd>
-<dt class="hdlist1">Annotation driven indexing</dt>
-<dt class="hdlist1">Geospatial Queries</dt>
-</dl>
-</div>
-<div class="openblock card-row">
-<div class="content">
-<div class="openblock column">
-<div class="content">
-<div class="paragraph">
-<p><a href="../morphia/2.2/index.html" class="page btn-mongo">Latest documentation</a></p>
-</div>
-</div>
-</div>
-<div class="openblock column">
-<div class="content">
-<div class="paragraph">
-<p><a href="https://github.com/MorphiaOrg/morphia/" class="btn-mongo">Source Code</a></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="openblock column">
-<div class="content">
-<h2 class="discrete">Critter&#8201;&#8212;&#8201;Type safe criteria-builder for use with Morphia-based projects.</h2>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Build time query generated helpers</dt>
-<dd>
-<p>Check your query definitions at build time</p>
-</dd>
-<dt class="hdlist1">Curated query and update operators</dt>
-<dd>
-<p>Only operations that make sense for the field&#8217;s type are exposed</p>
-</dd>
-</dl>
-</div>
-<div class="openblock card-row">
-<div class="content">
-<div class="openblock column">
-<div class="content">
-<div class="paragraph">
-<p><a href="../critter/4.1/index.html" class="page btn-mongo">Latest documentation</a></p>
-</div>
-</div>
-</div>
-<div class="openblock column">
-<div class="content">
-<div class="paragraph">
-<p><a href="https://github.com/MorphiaOrg/critter/" class="btn-mongo">Source Code</a></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<div class="container">
+    <div class="content">
+        <h2 class="discrete">Morphia</h2>
+        <h3 class="discrete">MongoDB Object Document Mapping for the JVM.</h3>
+        <div class="dlist">
+            <dl>
+                <dt class="hdlist1">Bidirectional mapping to and from the database</dt>
+                <dd>
+                    <p>Transparently map your Java entities to MongoDB documents and back.</p>
+                </dd>
+                <dt class="hdlist1">Extensible Type Conversion</dt>
+                <dd>
+                    <p>Easily add support for custom types</p>
+                </dd>
+                <dt class="hdlist1">Robust Query and Update APIs</dt>
+                <dt class="hdlist1">Full Aggregation Support</dt>
+                <dd>
+                    <p>Use MongoDB's <a href="http://docs.mongodb.org/manual/aggregation/">aggregation framework</a> with your application's Java classes.</p>
+                </dd>
+                <dt class="hdlist1">Annotation driven indexing</dt>
+                <dt class="hdlist1">Geospatial Queries</dt>
+            </dl>
+        </div>
+        <div class="container">
+            <div class="paragraph">
+                <p><a href="../morphia/2.2/index.html" class="page btn-mongo">Latest documentation</a></p>
+            </div>
+            <div class="paragraph">
+                <p><a href="https://github.com/MorphiaOrg/morphia/" class="btn-mongo">Source Code</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <h2 class="discrete">Critter</h2>
+        <h3>Type safe criteria-builder for use with Morphia-based projects.</h3>
+        <div class="dlist">
+            <dl>
+                <dt class="hdlist1">Build time query generated helpers</dt>
+                <dd>
+                    <p>Check your query definitions at build time</p>
+                </dd>
+                <dt class="hdlist1">Curated query and update operators</dt>
+                <dd>
+                    <p>Only operations that make sense for the field&#8217;s type are exposed</p>
+                </dd>
+            </dl>
+        </div>
+        <div class="container">
+            <div class="paragraph">
+                <p><a href="../critter/4.1/index.html" class="page btn-mongo">Latest documentation</a></p>
+            </div>
+            <div class="paragraph">
+                <p><a href="https://github.com/MorphiaOrg/critter/" class="page btn-mongo">Source Code</a></p>
+            </div>
+        </div>
+    </div>
 </div><!--
 <footer class="footer">
     <p>Copyright (C) 2020-2022

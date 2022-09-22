@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>References :: Morphia Docs</title>
-    <meta name="generator" content="Antora 2.3.3">
+    <meta name="generator" content="Antora 3.0.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
 
@@ -76,60 +76,70 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Getting Started</a>
-  </li>
-  <li class="nav-item" data-depth="1">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="quick-tour.html">Quick Tour</a>
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Features</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="configuration.html">Configuration</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="mapping.html">Mapping</a>
   </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="querying.html">Querying</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="querying-old.html">Querying (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="textSearch.html">Text Search</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="updating.html">Updating</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="updating-old.html">Updating (Legacy)</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="aggregation.html">Aggregation</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="transactions.html">Transactions</a>
-  </li>
-  <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="annotations.html">Annotations</a>
-  </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="indexing.html">Indexing</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="querying.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="querying-old.html">Querying (Legacy)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="textSearch.html">Text Search</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="updating.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="updating-old.html">Updating (Legacy)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="aggregation.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="annotations.html">Annotations</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="0">
-<ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text"><em>Support</em></span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -174,9 +184,6 @@
           <a href="index.html">2.1</a>
         </li>
         <li class="version">
-          <a href="../2.0/index.html">2.0</a>
-        </li>
-        <li class="version">
           <a href="../1.6/index.html">1.6</a>
         </li>
       </ul>
@@ -202,7 +209,6 @@
     <a class="version" href="../2.3/references.html">2.3-SNAPSHOT</a>
     <a class="version" href="../2.2/references.html">2.2</a>
     <a class="version is-current" href="references.html">2.1</a>
-    <a class="version" href="../2.0/references.html">2.0</a>
     <a class="version" href="../1.6/references.html">1.6</a>
   </div>
 </div>
@@ -212,10 +218,10 @@
 <article class="doc">
 <h1 class="page">References</h1>
 <div class="paragraph">
-<p>Morphia supports two styles of defining references: the <a href="#javadoc:dev/morphia/annotations/Reference.html" class="page unresolved"><code>@Reference</code></a> annotation and the experimental
-<a href="#javadoc:dev/morphia/mapping/experimental/MorphiaReference.html" class="page unresolved"><code>MorphiaReference</code></a>.
+<p>Morphia supports two styles of defining references: the <a href="javadoc/dev/morphia/annotations/Reference.html"><code>@Reference</code></a> annotation and the experimental
+<a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html"><code>MorphiaReference</code></a>.
 The annotation based approach is discussed
-<a href="annotations.html#_reference" class="page">here</a>.
+<a href="annotations.html#_reference" class="xref page">here</a>.
 This guide will cover the wrapper based approach.</p>
 </div>
 <div class="admonitionblock note">
@@ -236,7 +242,7 @@ However, users are encouraged to experiment with the API and provide as much fee
 </div>
 <div class="paragraph">
 <p>An alternative to the traditional annotation-based approach is the
-<a href="#javadoc:dev/morphia/mapping/experimental/MorphiaReference.html" class="page unresolved"><code>MorphiaReference</code></a> wrapper.
+<a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html"><code>MorphiaReference</code></a> wrapper.
 This type can not be instantiated directly.
 Instead a <code>wrap()</code>
 method is provided that will construct the proper type and track the necessary state.
