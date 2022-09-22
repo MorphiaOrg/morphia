@@ -138,7 +138,7 @@ jobs:
       - name: Invoke critter build
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: "Tests and Style Checks"
+          workflow: "Tests"
           repo: MorphiaOrg/critter
           token: ${{ secrets.PUSH_TOKEN }}
           ref: refs/heads/master
