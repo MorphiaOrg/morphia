@@ -7,20 +7,17 @@ on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
     name: "Build"
-    if: "github.repository == 'MorphiaOrg/morphia' && startsWith(github.ref, 'refs/heads/')"
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: 11
           distribution: 'temurin'
           cache: 'maven'
-
       - name: Compile Code
         run: mvn install -DskipTests
       - uses: actions/upload-artifact@v3
@@ -30,6 +27,7 @@ jobs:
             **/target/**
           retention-days: 5
   Tests:
+    name: "Test on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
     runs-on: ubuntu-latest
     needs: Build
     strategy:
@@ -37,7 +35,6 @@ jobs:
         java: [ 11, 17, 18 ]
         mongo: [ 6.0.0, 5.0.10, 4.2.20 ]
         driver: [ 4.6.1, 4.7.1 ]
-    name: "Test on JDK ${{ matrix.java }}, MDB: ${{ matrix.mongo }}, Driver: ${{ matrix.driver }})"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -67,7 +64,6 @@ jobs:
   Quality:
     name: Style Checks
     runs-on: ubuntu-latest
-    if: "github.repository == 'MorphiaOrg/morphia' && startsWith(github.ref, 'refs/heads/')"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -85,12 +81,11 @@ jobs:
 
   Snapshots:
     name: Publish Snapshot Artifacts
+    runs-on: ubuntu-latest
     if: "github.repository == 'MorphiaOrg/morphia' && github.ref == 'refs/heads/master' && github.event_name == 'push'"
     needs:
       - Tests
       - Quality
-    runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -123,9 +118,9 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
   Docs:
     name: Update Documentation
+    runs-on: ubuntu-latest
     needs:
       - Snapshots
-    runs-on: ubuntu-latest
     steps:
       - name: Invoke antora build
         uses: benc-uk/workflow-dispatch@v1
