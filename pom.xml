@@ -39,7 +39,7 @@
         <impsort-maven-plugin.version>1.7.0</impsort-maven-plugin.version>
         <json.assert.version>1.5.1</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
-        <kotlin.version>1.7.10</kotlin.version>
+        <kotlin.version>1.7.20</kotlin.version>
         <maven.version>3.8.6</maven.version>
         <revapi.maven.plugin.version>0.14.7</revapi.maven.plugin.version>
         <revapi.java.version>0.27.0</revapi.java.version>
