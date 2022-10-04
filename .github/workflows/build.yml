@@ -26,6 +26,8 @@ jobs:
         mongo: [ 6.0.0, 5.0.10, 4.2.20 ]
         driver: [ 4.6.1, 4.7.1 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    needs:
+      - Build
     with:
       java: ${{ matrix.java }}
       archive-name:  "tests-${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}"
