@@ -10,12 +10,25 @@ jobs:
   Build:
     strategy:
       matrix:
+        java: [ 11 ]
+        mongo: [ 6.0.0 ]
+        driver: [ 4.7.1 ]
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    with:
+      java: ${{ matrix.java }}
+      base-build: true
+      archive-name: "basebuild-${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}"
+      maven-flags: "-Ddriver.version=${{ matrix.driver }} -DMONGODB=${{ matrix.mongo }}"
+  Tests:
+    strategy:
+      matrix:
         java: [ 11, 17, 19 ]
         mongo: [ 6.0.0, 5.0.10, 4.2.20 ]
         driver: [ 4.6.1, 4.7.1 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: ${{ matrix.java }}
+      archive-name:  "tests-${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}"
       maven-flags: "-Ddriver.version=${{ matrix.driver }} -DMONGODB=${{ matrix.mongo }}"
 
   Quality:
