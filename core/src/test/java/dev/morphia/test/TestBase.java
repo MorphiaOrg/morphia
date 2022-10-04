@@ -117,7 +117,7 @@ public abstract class TestBase {
     }
 
     private void startMongo() {
-        String mongodb = System.getenv("MONGODB");
+        String mongodb = System.getProperty("MONGODB");
         Builder builder = MongoClientSettings.builder()
                 .uuidRepresentation(mapperOptions.getUuidRepresentation());
 
