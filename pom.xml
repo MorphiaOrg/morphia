@@ -33,7 +33,7 @@
         <awaitility.version>1.7.0</awaitility.version>
         <bottlerocket.version>0.41.0</bottlerocket.version>
         <dokka.version>1.7.10</dokka.version>
-        <driver.version>4.7.1</driver.version>
+        <driver.version>4.7.2</driver.version>
         <driver.minor.version>4.6</driver.minor.version>
         <formatter-maven-plugin.version>2.20.0</formatter-maven-plugin.version>
         <impsort-maven-plugin.version>1.7.0</impsort-maven-plugin.version>
