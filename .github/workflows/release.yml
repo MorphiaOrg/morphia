@@ -7,36 +7,10 @@ on:
 
 jobs:
   release:
-    name: Release
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2.3.4
-
-      - name: Setup Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: 11
-          distribution: 'temurin'
-          cache: 'maven'
-          server-id: central
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_CENTRAL_TOKEN
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-
-      - name: Configure the job
-        run: |
-          mkdir -p ~/.m2
-          curl -o github.properties https://ghactions:${{ secrets.GH_PASSWD }}@evanchooly.com/private/files/github.properties
-      - name: Publish
-        run: |
-          export GPG_TTY=$(tty)
-          mvn --no-transfer-progress -B --file pom.xml -Dgpg.passphrase=${{ secrets.MAVEN_GPG_PASSPHRASE }} \
-            -Drepository.url=https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
-            -Dmaven.site.skip=true -Drelease=true -DskipTests deploy
-        env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+    uses: evanchooly/workflows/.github/workflows/release.yml@master
+    secrets:
+      SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+      MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
