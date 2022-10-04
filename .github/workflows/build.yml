@@ -8,32 +8,22 @@ on:
 
 jobs:
   Build:
-    name: "Build"
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         java: [ 11, 17, 19 ]
         mongo: [ 6.0.0, 5.0.10, 4.2.20 ]
         driver: [ 4.6.1, 4.7.1 ]
-    steps:
-      - uses: evanchooly/workflows/.github/workflows/build.yml@master
-        with:
-          java: ${{ matrix.java }}
-          maven-flags: "-Ddriver.version=${{ matrix.driver }} -DMONGODB=${{ matrix.mongo }}"
-      - uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: logs-${{matrix.java}}-${{matrix.mongo}}-${{matrix.driver}}
-          path: |
-            **/target/**/*.log
-            **/target/**/*.err
-          retention-days: 5
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    with:
+      java: ${{ matrix.java }}
+      maven-flags: "-Ddriver.version=${{ matrix.driver }} -DMONGODB=${{ matrix.mongo }}"
 
   Quality:
     name: Style Checks
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       maven-flags: "-Pquality -DskipTests"
+
   Snapshots:
     needs:
       - Build
@@ -44,6 +34,7 @@ jobs:
       MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   Docs:
     name: Update Documentation
     runs-on: ubuntu-latest
@@ -57,6 +48,7 @@ jobs:
           repo: MorphiaOrg/morphia-docs
           token: ${{ secrets.PUSH_TOKEN }}
           ref: refs/heads/master
+
   Critter:
     name: Build Critter snapshot
     needs:
