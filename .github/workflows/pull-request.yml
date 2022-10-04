@@ -6,7 +6,16 @@ on:
       - '.github/**'
 
 jobs:
+  Quality:
+    name: Style Checks
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    with:
+      maven-flags: "-Pquality -DskipTests"
+
   Build:
+    needs:
+      - Quality
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
     with:
-      maven-flags: "-DMONGODB=6.0.1"
+      maven-flags: "-DMONGODB=6.0.2"
+
