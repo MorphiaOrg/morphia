@@ -14,7 +14,6 @@ jobs:
         mongo: [ 6.0.0, 5.0.10, 4.2.20 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
-      base-build: true
       java: ${{ matrix.java }}
       archive-name: "${{matrix.mongo}}-${{matrix.java}}"
       maven-flags: "-DMONGODB=${{ matrix.mongo }}"
