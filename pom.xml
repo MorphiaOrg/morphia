@@ -21,14 +21,6 @@
         <url>git@github.com:MorphiaOrg/morphia.git</url>
     </scm>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>snapshots</id>
-            <name>Maven Central Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
         <bottlerocket.version>0.41.0</bottlerocket.version>
@@ -214,7 +206,7 @@
                     <configuration>
                         <configLocation>../config/checkstyle.xml</configLocation>
                         <suppressionsLocation>../config/checkstyle-exclude.xml</suppressionsLocation>
-                        <encoding>UTF-8</encoding>
+                        <inputEncoding>UTF-8</inputEncoding>
                         <linkXRef>false</linkXRef>
                     </configuration>
                 </plugin>
