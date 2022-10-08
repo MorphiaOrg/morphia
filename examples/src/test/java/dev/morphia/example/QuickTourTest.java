@@ -13,6 +13,7 @@ import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.query.Query;
+import dev.morphia.test.TestBase;
 import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -29,53 +30,10 @@ import static org.testng.Assert.assertEquals;
 /**
  * This class is used in the Quick Tour documentation and is used to demonstrate various Morphia features.
  */
-public class QuickTourTest {
-    private static MongoClient mongoClient;
-    private static MongoCluster cluster;
-
-    @BeforeClass
-    public static void setupDb() {
-        String mongodb = System.getProperty("MONGODB");
-        Builder builder = MongoClientSettings.builder();
-
-        if (mongodb != null) {
-            File mongodbRoot = new File("target/mongo");
-            try {
-                FileUtils.deleteDirectory(mongodbRoot);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-            Version version = Version.valueOf(mongodb);
-            cluster = version.lessThan(Version.valueOf("4.0.0"))
-                    ? new SingleNode(version, "morphia_test", mongodbRoot)
-                    : new ReplicaSet(version, "morphia_test", mongodbRoot);
-
-            cluster.configure(c -> {
-                c.systemLog(s -> {
-                    s.setTraceAllExceptions(true);
-                    s.setVerbosity(Verbosity.FIVE);
-                    return null;
-                });
-                return null;
-            });
-            cluster.clean();
-            cluster.start();
-            mongoClient = cluster.getClient(builder);
-        } else {
-            mongoClient = MongoClients.create(builder.build());
-        }
-    }
-
-    @AfterClass
-    public static void stopDb() {
-        if (cluster != null) {
-            cluster.shutdown();
-        }
-    }
-
+public class QuickTourTest extends TestBase {
     @Test
     public void demo() {
-        final Datastore datastore = Morphia.createDatastore(mongoClient, "morphia_example");
+        final Datastore datastore = Morphia.createDatastore(getMongoClient(), "morphia_example");
 
         // tell morphia where to find your classes
         // can be called multiple times with different packages or classes
