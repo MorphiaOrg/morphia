@@ -9,7 +9,7 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       saveBuild: morphia-build
-      maven-flags: "-Dmongodb=6.0.2"
+      maven-flags: "-Dmongodb=6.0.2 -Pquality"
   Test:
     needs:
       - Build
@@ -25,17 +25,10 @@ jobs:
       archive-name: "${{matrix.mongo}}-${{matrix.java}}"
       maven-flags: "-Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
-  Quality:
-    name: Style Checks
-    uses: evanchooly/workflows/.github/workflows/build.yml@master
-    with:
-      maven-flags: "-Pquality -DskipTests"
-
   Snapshots:
     if: github.ref_type == 'branch'
     needs:
       - Test
-      - Quality
     uses: evanchooly/workflows/.github/workflows/release.yml@master
     secrets:
       SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
