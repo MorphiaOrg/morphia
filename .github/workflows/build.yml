@@ -10,9 +10,7 @@ jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
-      java: ${{ matrix.java }}
       saveBuild: morphia-build
-      archive-name: "${{matrix.mongo}}-${{matrix.java}}"
       maven-flags: "-DMONGODB=6.0.2"
   Test:
     needs:
