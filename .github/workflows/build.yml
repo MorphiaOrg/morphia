@@ -2,8 +2,6 @@ name: Build Project
 
 on:
   push:
-    tags-ignore:
-      - r[0-9]*
   workflow_dispatch:
 
 jobs:
@@ -11,7 +9,7 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       saveBuild: morphia-build
-      maven-flags: "-DMONGODB=6.0.2"
+      maven-flags: "-Dmongodb=6.0.2"
   Test:
     needs:
       - Build
@@ -25,7 +23,7 @@ jobs:
       java: ${{ matrix.java }}
       reuseBuild: morphia-build
       archive-name: "${{matrix.mongo}}-${{matrix.java}}"
-      maven-flags: "-DMONGODB=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
+      maven-flags: "-Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
   Quality:
     name: Style Checks
@@ -34,6 +32,7 @@ jobs:
       maven-flags: "-Pquality -DskipTests"
 
   Snapshots:
+    if: github.ref_type == 'branch'
     needs:
       - Test
       - Quality

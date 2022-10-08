@@ -17,5 +17,5 @@ jobs:
       - Quality
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
     with:
-      maven-flags: "-DMONGODB=6.0.2"
+      maven-flags: "-Dmongodb=6.0.2"
 
