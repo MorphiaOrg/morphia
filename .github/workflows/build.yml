@@ -8,15 +8,26 @@ on:
 
 jobs:
   Build:
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    with:
+      java: ${{ matrix.java }}
+      saveBuild: morphia-build
+      archive-name: "${{matrix.mongo}}-${{matrix.java}}"
+      maven-flags: "-DMONGODB=6.0.2"
+  Test:
+    needs:
+      - Build
     strategy:
       matrix:
         java: [ 11, 17, 19 ]
         mongo: [ 6.0.2, 5.0.13, 4.4.17, 4.2.23 ]
+        driver: [ 4.6.1, 4.7.1 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: ${{ matrix.java }}
+      reuseBuild: morphia-build
       archive-name: "${{matrix.mongo}}-${{matrix.java}}"
-      maven-flags: "-DMONGODB=${{ matrix.mongo }}"
+      maven-flags: "-DMONGODB=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
   Quality:
     name: Style Checks
@@ -26,7 +37,7 @@ jobs:
 
   Snapshots:
     needs:
-      - Build
+      - Test
       - Quality
     uses: evanchooly/workflows/.github/workflows/release.yml@master
     secrets:

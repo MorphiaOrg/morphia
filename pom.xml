@@ -560,7 +560,7 @@
                 <maven.test.skip>true</maven.test.skip>
             </properties>
             <build>
-                <defaultGoal>verify</defaultGoal>
+                <defaultGoal>install</defaultGoal>
             </build>
         </profile>
         <profile>
@@ -628,7 +628,9 @@
         <profile>
             <id>format-kotlin</id>
             <activation>
-                <file><exists>src/main/kotlin</exists></file>
+                <file>
+                    <exists>src/main/kotlin</exists>
+                </file>
             </activation>
             <build>
                 <plugins>

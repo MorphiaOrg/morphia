@@ -21,12 +21,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class BuildConfigTest {
     final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
@@ -36,16 +36,22 @@ public class BuildConfigTest {
         try (InputStream inputStream = new FileInputStream("../.github/workflows/build.yml")) {
             map = objectMapper.readValue(inputStream, LinkedHashMap.class);
         }
-        map = walk(map, List.of("jobs", "Build", "strategy", "matrix"));
-        var mongo = (List<String>)map.get("mongo");
-        checkForVersions(mongo, Versions.Version60, Versions.Version50, Versions.Version44, Versions.Version42);
+
+        assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
+                "-DMONGODB=" + Versions.Version60.version());
+
+        checkForVersions(walk(map, of("jobs", "Test", "strategy", "matrix", "mongo")),
+                Versions.Version60, Versions.Version50, Versions.Version44, Versions.Version42);
     }
 
-    private static Map walk(Map map, List<String> steps) {
-        for(String step : steps) {
-            map = (Map) map.get(step);
+    private static <T> T walk(Map map, List<String> steps) {
+        Object value = map;
+        for (String step : steps) {
+            if (value instanceof Map) {
+                value = ((Map<?, ?>) value).get(step);
+            }
         }
-        return map;
+        return (T) value;
     }
 
     @Test
@@ -64,18 +70,17 @@ public class BuildConfigTest {
             assertNull(map.get("prerelease"));
         }
 
-
         assertEquals(version, format("%s.%s", pomVersion.getMajorVersion(), pomVersion.getMinorVersion()));
-        map = walk(map, List.of("asciidoc", "attributes"));
+        map = walk(map, of("asciidoc", "attributes"));
         version = (String) map.get("version");
-        var srcRef = (String)map.get("srcRef");
+        var srcRef = (String) map.get("srcRef");
         if (master) {
             assertEquals(version, pomVersion.toString());
             assertTrue(srcRef.endsWith("/blob/master"));
         } else {
             var branch = format("%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
             Version released = Version.forIntegers(pomVersion.getMajorVersion(), pomVersion.getMinorVersion(),
-                pomVersion.getPatchVersion() - 1);
+                    pomVersion.getPatchVersion() - 1);
             assertTrue(srcRef.endsWith(format("/tree/%s", branch)));
             assertEquals(version, released.toString());
         }
@@ -90,11 +95,10 @@ public class BuildConfigTest {
         return pomVersion;
     }
 
-
     private static void checkForVersions(List<String> mongo, Versions... versions) {
         List<String> expected = Arrays.stream(versions)
-                                      .map(v -> v.version().toString())
-                                      .collect(Collectors.toList());
+                .map(v -> v.version().toString())
+                .collect(Collectors.toList());
         assertEquals(mongo, expected);
     }
 
