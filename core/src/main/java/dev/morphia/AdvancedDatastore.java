@@ -2,6 +2,7 @@ package dev.morphia;
 
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.query.Query;
@@ -28,7 +29,10 @@ public interface AdvancedDatastore extends Datastore {
      * @param collection the collection to query
      * @param clazz      The class to create aggregation against
      * @return the aggregation pipeline
-     * @deprecated
+     * @deprecated use {@link #aggregate(Class)} and pass the alternate collection via the options on
+     * {@link dev.morphia.aggregation.Aggregation#execute(Class, AggregationOptions)}
+     * @see dev.morphia.aggregation.Aggregation
+     * @see dev.morphia.aggregation.AggregationOptions
      */
     @Deprecated(since = "2.0", forRemoval = true)
     AggregationPipeline createAggregation(String collection, Class<?> clazz);
@@ -38,6 +42,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param type the class of objects to be returned
      * @param q    the query which will be passed to a {@link dev.morphia.query.QueryFactory}
      * @return Query for the specified class type
+     * @deprecated use {@link #find(Class, Document)}
      */
     @Deprecated(since = "2.0", forRemoval = true)
     <T> Query<T> createQuery(Class<T> type, Document q);
