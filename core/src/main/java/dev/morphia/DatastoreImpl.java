@@ -283,7 +283,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     public <T> void ensureIndexes(Class<T> type) {
         EntityModel model = mapper.getEntityModel(type);
         final IndexHelper indexHelper = new IndexHelper(mapper);
-        indexHelper.createIndex(getCollection(type), model);
+        if (model.getIdProperty() != null) {
+            indexHelper.createIndex(getCollection(type), model);
+        }
     }
 
     @Override
