@@ -351,6 +351,7 @@ public class TestIndexes extends TestBase {
         private boolean active;
     }
 
+    @Entity("circles")
     @Indexes(@Index(fields = @Field("radius")))
     private static class Circle extends Shape {
         private final double radius = 1;
