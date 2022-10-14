@@ -1,22 +1,31 @@
 package dev.morphia.query.updates;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityEncoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.MorphiaCodec;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
+import dev.morphia.query.internal.DatastoreAware;
+import org.bson.codecs.EncoderContext;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 /**
  * @morphia.internal
  * @since 2.0
  */
 @MorphiaInternal
-public class SetOnInsertOperator extends UpdateOperator {
+public class SetOnInsertOperator extends UpdateOperator implements DatastoreAware {
     private final Map<String, Object> insertValues;
+    private DatastoreImpl datastore;
 
     /**
      * @param values the values
@@ -29,19 +38,30 @@ public class SetOnInsertOperator extends UpdateOperator {
     }
 
     @Override
+    public void setDatastore(DatastoreImpl datastore) {
+        this.datastore = datastore;
+    }
+
+    @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
-        Map<String, Object> mappedNames = new LinkedHashMap<>();
         Mapper mapper = pathTarget.mapper();
         EntityModel model = mapper.getEntityModel(pathTarget.root().getType());
-        insertValues.forEach((key, value) -> {
-            PathTarget keyTarget = new PathTarget(mapper, model, key, true);
-            mappedNames.put(keyTarget.translatedPath(), value);
+        MorphiaCodec codec = (MorphiaCodec) datastore.getCodecRegistry().get(model.getType());
+        EntityEncoder encoder = codec.getEncoder();
+        DocumentWriter writer = new DocumentWriter(mapper);
+        document(writer, () -> {
+            insertValues.forEach((key, value) -> {
+                PathTarget keyTarget = new PathTarget(mapper, model, key, true);
+                writer.writeName(keyTarget.translatedPath());
+                encoder.encode(writer, value, EncoderContext.builder().build());
+
+            });
         });
 
         return new OperationTarget(null, null) {
             @Override
             public Object encode(Datastore datastore) {
-                return mappedNames;
+                return writer.getDocument();
             }
         };
     }

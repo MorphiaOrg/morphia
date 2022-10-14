@@ -47,7 +47,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
                     if (propertyModel.equals(idModel)) {
                         continue;
                     }
-                    encodeValue(writer, encoderContext, propertyModel, propertyModel.getAccessor().get(value));
+                    encodeProperty(writer, propertyModel, value, encoderContext);
                 }
             });
         } else {
@@ -55,6 +55,10 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
                     .get((Class) value.getClass())
                     .encode(writer, value, encoderContext);
         }
+    }
+
+    public void encodeProperty(BsonWriter writer, PropertyModel propertyModel, Object value, EncoderContext encoderContext) {
+        encodeValue(writer, encoderContext, propertyModel, propertyModel.getAccessor().get(value));
     }
 
     @Override

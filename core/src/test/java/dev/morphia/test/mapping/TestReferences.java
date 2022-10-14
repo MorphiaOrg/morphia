@@ -2,8 +2,10 @@ package dev.morphia.test.mapping;
 
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.ReturnDocument;
 import dev.morphia.Datastore;
 import dev.morphia.Key;
+import dev.morphia.ModifyOptions;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -44,6 +46,7 @@ import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.in;
+import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
@@ -430,6 +433,29 @@ public class TestReferences extends ProxyTestBase {
         }
     }
 
+    private void testFirstDatastore(Datastore datastore) {
+        final FacebookUser user = datastore.find(FacebookUser.class).filter(eq("id", 1)).first();
+        assertNotNull(user);
+        assertNotNull(datastore.find(FacebookUser.class).filter(eq("id", 3)).first());
+
+        assertEquals(user.friends.size(), 1, "Should find 1 friend");
+        assertEquals(user.friends.get(0).id, 3, "Should find the right friend");
+
+        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 2)).first());
+        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 4)).first());
+    }
+
+    private void testSecondDatastore(Datastore datastore) {
+        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 1)).first());
+        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 3)).first());
+
+        final FacebookUser db2FoundUser = datastore.find(FacebookUser.class).filter(eq("id", 2)).first();
+        assertNotNull(db2FoundUser);
+        assertNotNull(datastore.find(FacebookUser.class).filter(eq("id", 4)).first());
+        assertEquals(db2FoundUser.friends.size(), 1, "Should find 1 friend");
+        assertEquals(db2FoundUser.friends.get(0).id, 4, "Should find the right friend");
+    }
+
     @Test(groups = "references")
     public void testReference() {
         getMapper().map(CompoundIdEntity.class, CompoundId.class);
@@ -486,6 +512,23 @@ public class TestReferences extends ProxyTestBase {
     }
 
     @Test
+    public void testSetOnInsert() {
+        getMapper().map(ParentOnInsert.class, ChildOnInsert.class);
+        var child = getDs().save(new ChildOnInsert("Bob"));
+        var id = new ObjectId();
+        ParentOnInsert parent = getDs().find(ParentOnInsert.class)
+                .disableValidation()
+                .filter(eq("_id", id))
+                .modify(new ModifyOptions()
+                        .returnDocument(ReturnDocument.AFTER)
+                        .upsert(true),
+                        setOnInsert(Map.of("unique", id, "child", child)));
+
+        assertEquals(parent.unique, id.toString());
+        assertEquals(parent.child.name, child.name);
+    }
+
+    @Test
     public final void testShortcutInterface() {
         checkForProxyTypes();
 
@@ -524,29 +567,6 @@ public class TestReferences extends ProxyTestBase {
         assertNotFetched(root.secondReference);
     }
 
-    private void testFirstDatastore(Datastore datastore) {
-        final FacebookUser user = datastore.find(FacebookUser.class).filter(eq("id", 1)).first();
-        assertNotNull(user);
-        assertNotNull(datastore.find(FacebookUser.class).filter(eq("id", 3)).first());
-
-        assertEquals(user.friends.size(), 1, "Should find 1 friend");
-        assertEquals(user.friends.get(0).id, 3, "Should find the right friend");
-
-        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 2)).first());
-        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 4)).first());
-    }
-
-    private void testSecondDatastore(Datastore datastore) {
-        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 1)).first());
-        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 3)).first());
-
-        final FacebookUser db2FoundUser = datastore.find(FacebookUser.class).filter(eq("id", 2)).first();
-        assertNotNull(db2FoundUser);
-        assertNotNull(datastore.find(FacebookUser.class).filter(eq("id", 4)).first());
-        assertEquals(db2FoundUser.friends.size(), 1, "Should find 1 friend");
-        assertEquals(db2FoundUser.friends.get(0).id, 4, "Should find the right friend");
-    }
-
     private static class ArrayOfReferences extends TestEntity {
         @Reference
         private final Ref[] refs = new Ref[2];
@@ -572,15 +592,19 @@ public class TestReferences extends ProxyTestBase {
             this.age = age;
         }
 
-        public String getName() {
-            return name;
-        }
-
         @Override
         public int hashCode() {
             int result = getName() != null ? getName().hashCode() : 0;
             result = 31 * result + getAge();
             return result;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        int getAge() {
+            return age;
         }
 
         @Override
@@ -600,9 +624,18 @@ public class TestReferences extends ProxyTestBase {
             return getName() != null ? getName().equals(childId.getName()) : childId.getName() == null;
 
         }
+    }
 
-        int getAge() {
-            return age;
+    @Entity("child")
+    private static class ChildOnInsert {
+        @Id
+        private ObjectId id;
+
+        @Property("name")
+        private String name;
+
+        public ChildOnInsert(String name) {
+            this.name = name;
         }
     }
 
@@ -621,6 +654,13 @@ public class TestReferences extends ProxyTestBase {
             this.value = value;
         }
 
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
+            return result;
+        }
+
         public ChildId getId() {
             return id;
         }
@@ -635,13 +675,6 @@ public class TestReferences extends ProxyTestBase {
 
         public void setValue(String value) {
             this.value = value;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = getId() != null ? getId().hashCode() : 0;
-            result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
-            return result;
         }
 
         @Override
@@ -1034,6 +1067,20 @@ public class TestReferences extends ProxyTestBase {
 
     }
 
+    @Entity("parent")
+    private static class ParentOnInsert {
+
+        @Id
+        private ObjectId id;
+
+        @Property("unique")
+        private String unique;
+
+        @Reference("child")
+        private ChildOnInsert child;
+
+    }
+
     @Entity(useDiscriminator = false)
     private static class Plan {
 
@@ -1062,17 +1109,17 @@ public class TestReferences extends ProxyTestBase {
             this.id = id;
         }
 
+        @Override
+        public int hashCode() {
+            return getId() != null ? getId().hashCode() : 0;
+        }
+
         public String getId() {
             return id;
         }
 
         public void setId(String id) {
             this.id = id;
-        }
-
-        @Override
-        public int hashCode() {
-            return getId() != null ? getId().hashCode() : 0;
         }
 
         @Override
@@ -1098,14 +1145,6 @@ public class TestReferences extends ProxyTestBase {
     public static class ReferencedEntity extends TestEntity {
         private String foo;
 
-        public String getFoo() {
-            return foo;
-        }
-
-        public void setFoo(String string) {
-            foo = string;
-        }
-
         @Override
         @IdGetter
         public ObjectId getId() {
@@ -1115,6 +1154,14 @@ public class TestReferences extends ProxyTestBase {
         @Override
         public int hashCode() {
             return getFoo() != null ? getFoo().hashCode() : 0;
+        }
+
+        public String getFoo() {
+            return foo;
+        }
+
+        public void setFoo(String string) {
+            foo = string;
         }
 
         @Override

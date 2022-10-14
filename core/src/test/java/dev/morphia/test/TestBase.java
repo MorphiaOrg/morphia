@@ -118,6 +118,9 @@ public abstract class TestBase {
 
     private void startMongo() {
         String mongodb = System.getProperty("mongodb");
+        if (mongodb == null) {
+            LOG.info("No mongodb property specified. Using already running server.");
+        }
         Builder builder = MongoClientSettings.builder()
                 .uuidRepresentation(mapperOptions.getUuidRepresentation());
 
