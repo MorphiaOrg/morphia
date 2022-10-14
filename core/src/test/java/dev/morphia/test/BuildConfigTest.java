@@ -38,7 +38,7 @@ public class BuildConfigTest {
         }
 
         assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
-            String.format("-Dmongodb=%s -Dquality", Versions.Version60.version()));
+                String.format("-Dmongodb=%s -Dcode-audits", Versions.Version60.version()));
 
         checkForVersions(walk(map, of("jobs", "Test", "strategy", "matrix", "mongo")),
                 Versions.Version60, Versions.Version50, Versions.Version44, Versions.Version42);
@@ -48,7 +48,7 @@ public class BuildConfigTest {
         }
 
         assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
-            String.format("-Dmongodb=%s -Dquality", Versions.Version60.version()));
+                String.format("-Dmongodb=%s -Dcode-audits", Versions.Version60.version()));
     }
 
     private static <T> T walk(Map map, List<String> steps) {

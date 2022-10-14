@@ -11,6 +11,7 @@ import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.internal.DatastoreAware;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.codecs.EncoderContext;
 
 import java.util.LinkedHashMap;
@@ -38,6 +39,7 @@ public class SetOnInsertOperator extends UpdateOperator implements DatastoreAwar
     }
 
     @Override
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void setDatastore(DatastoreImpl datastore) {
         this.datastore = datastore;
     }

@@ -1,26 +1,11 @@
 package dev.morphia.example;
 
-import com.antwerkz.bottlerocket.clusters.MongoCluster;
-import com.antwerkz.bottlerocket.clusters.ReplicaSet;
-import com.antwerkz.bottlerocket.clusters.SingleNode;
-import com.antwerkz.bottlerocket.configuration.types.Verbosity;
-import com.github.zafarkhaja.semver.Version;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoClientSettings.Builder;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.query.Query;
 import dev.morphia.test.TestBase;
-import org.apache.commons.io.FileUtils;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 import static dev.morphia.query.filters.Filters.gt;
 import static dev.morphia.query.filters.Filters.lte;

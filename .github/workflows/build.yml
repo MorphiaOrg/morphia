@@ -9,7 +9,7 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       saveBuild: morphia-build
-      maven-flags: "-Dmongodb=6.0.2 -Dquality"
+      maven-flags: "-Dmongodb=6.0.2 -Dcode-audits"
   Test:
     needs:
       - Build

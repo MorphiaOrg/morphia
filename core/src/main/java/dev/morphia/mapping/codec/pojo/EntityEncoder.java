@@ -57,6 +57,16 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         }
     }
 
+    /**
+     * Encodes a property on the model
+     * @param writer the writer
+     * @param propertyModel the property to encode
+     * @param value the value of the property
+     * @param encoderContext the context
+     * @since 2.3
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public void encodeProperty(BsonWriter writer, PropertyModel propertyModel, Object value, EncoderContext encoderContext) {
         encodeValue(writer, encoderContext, propertyModel, propertyModel.getAccessor().get(value));
     }

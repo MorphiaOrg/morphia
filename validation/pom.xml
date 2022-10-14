@@ -75,10 +75,10 @@
 
     <profiles>
         <profile>
-            <id>quality</id>
+            <id>code-audits</id>
             <activation>
                 <property>
-                    <name>quality</name>
+                    <name>code-audits</name>
                 </property>
             </activation>
             <build>
