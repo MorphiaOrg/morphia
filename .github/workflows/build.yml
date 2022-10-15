@@ -2,8 +2,6 @@ name: Build Project
 
 on:
   push:
-    tags-ignore:
-      - r[0-9]*
   workflow_dispatch:
 
 jobs:
@@ -25,6 +23,7 @@ jobs:
       maven-flags: "-Pquality -DskipTests"
 
   Snapshots:
+    if: github.ref_type == 'branch'
     needs:
       - Build
       - Quality
