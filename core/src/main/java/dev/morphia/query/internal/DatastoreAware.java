@@ -12,6 +12,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public interface DatastoreAware {
     /**
      * @param datastore the datastore
+     * @morphia.internal
      */
     void setDatastore(DatastoreImpl datastore);
 }

@@ -38,6 +38,9 @@ public class SetOnInsertOperator extends UpdateOperator implements DatastoreAwar
         insertValues = new LinkedHashMap<>(values);
     }
 
+    /**
+     * @morphia.internal
+     */
     @Override
     @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void setDatastore(DatastoreImpl datastore) {
