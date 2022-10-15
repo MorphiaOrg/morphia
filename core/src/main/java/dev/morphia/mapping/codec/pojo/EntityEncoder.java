@@ -17,7 +17,7 @@ import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.docum
  * @morphia.internal
  * @since 2.0
  */
-class EntityEncoder implements org.bson.codecs.Encoder<Object> {
+public class EntityEncoder implements org.bson.codecs.Encoder<Object> {
     public static final ObjectIdGenerator OBJECT_ID_GENERATOR = new ObjectIdGenerator();
     private final MorphiaCodec morphiaCodec;
     private IdGenerator idGenerator;
