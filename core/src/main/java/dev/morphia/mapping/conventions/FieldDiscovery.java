@@ -12,8 +12,8 @@ import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.PropertyAccessor;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @MorphiaInternal
 public class FieldDiscovery implements MorphiaConvention {
@@ -21,8 +21,8 @@ public class FieldDiscovery implements MorphiaConvention {
     @Override
     public void apply(Mapper mapper, EntityModelBuilder builder) {
         if (builder.propertyModels().isEmpty()) {
-            List<Class<?>> list = new ArrayList<>(List.of(builder.type()));
-            list.addAll(builder.classHierarchy());
+            Set<Class<?>> list = builder.classHierarchy();
+            list.add(builder.type());
 
             for (Class<?> type : list) {
                 for (Field field : type.getDeclaredFields()) {

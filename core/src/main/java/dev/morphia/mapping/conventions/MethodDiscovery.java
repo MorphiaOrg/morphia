@@ -9,16 +9,20 @@ import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.sofia.Sofia;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 
 @MorphiaInternal
 public class MethodDiscovery implements MorphiaConvention {
@@ -30,18 +34,96 @@ public class MethodDiscovery implements MorphiaConvention {
         if (builder.propertyModels().isEmpty()) {
             this.entityModelBuilder = builder;
 
-            List<Class<?>> list = new ArrayList<>(List.of(builder.type()));
-            list.addAll(builder.classHierarchy());
-            for (Class<?> type : list) {
-                processMethods(builder, type);
+            Set<Class<?>> hierarchy = new LinkedHashSet<>(Set.of(builder.type()));
+            hierarchy.addAll(builder.classHierarchy());
+
+            Set<Methods> properties = new LinkedHashSet<>();
+
+            for (Class<?> type : hierarchy) {
+                properties.addAll(processMethods(type));
             }
+
+            addProperties(builder, properties);
         }
     }
 
+    private List<Methods> processMethods(Class<?> type) {
+        return stream(type.getDeclaredMethods())
+                   .filter(MethodDiscovery::isGetterSetter)
+                   .filter(m -> !m.isSynthetic()) // overloaded parent methods are synthetic on the child types
+                   .collect(Collectors.groupingBy(this::stripPrefix))
+                   .entrySet().stream()
+                   .filter(entry -> entry.getValue().size() == 2)
+                   .map(entry -> new Methods(entry.getKey(), type, entry.getValue()))
+                   .collect(toList());
+
+    }
+
+    private void addProperties(EntityModelBuilder builder, Set<Methods> properties) {
+        for (Methods methods : properties) {
+            TypeData<?> typeData = entityModelBuilder.getTypeData(methods.type, TypeData.newInstance(methods.getter),
+                methods.getter.getGenericReturnType());
+
+            entityModelBuilder.addProperty()
+                              .name(methods.property)
+                              .accessor(new MethodAccessor(getTargetMethod(builder, methods.getter),
+                                  getTargetMethod(builder, methods.setter)))
+                              .annotations(discoverAnnotations(methods.getter, methods.setter))
+                              .typeData(typeData)
+                              .discoverMappedName();
+        }
+    }
+    private static class Methods {
+        private final Method getter;
+        private final Method setter;
+        private final String property;
+        private final Class<?> type;
+
+        Methods(String property, Class<?> type, List<Method> methods) {
+            this.property = property;
+            this.type = type;
+            List<Method> collect = methods.stream().sorted(Comparator.comparing(Method::getName))
+                                          .collect(toList());
+            getter = collect.get(0);
+            setter = collect.get(1);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Methods)) {
+                return false;
+            }
+            Methods methods = (Methods) o;
+            return property.equals(methods.property);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(property);
+        }
+    }
+
+    @NotNull
+    private String stripPrefix(Method m) {
+        return m.getName().startsWith("get")
+               || m.getName().startsWith("set")
+               ? stripPrefix(m, 3)
+               : stripPrefix(m, 2);
+    }
+
+    private static boolean isGetterSetter(Method m) {
+        return m.getName().startsWith("get")
+               || m.getName().startsWith("set")
+               || m.getName().startsWith("is");
+    }
+
     private List<Annotation> discoverAnnotations(Method getter, Method setter) {
-        return List.of(getter, setter).stream()
-                .flatMap(m -> Arrays.stream(m.getDeclaredAnnotations()))
-                .collect(Collectors.toList());
+        return Stream.of(getter, setter)
+                     .flatMap(m -> stream(m.getDeclaredAnnotations()))
+                     .collect(toList());
     }
 
     @NonNull
@@ -54,46 +136,6 @@ public class MethodDiscovery implements MorphiaConvention {
         } catch (ReflectiveOperationException e) {
             throw new MappingException(Sofia.mismatchedMethodOnExternalType(method.getName(),
                     method.getParameterTypes(), builder.type().getName(), builder.targetType().getName()));
-        }
-    }
-
-    private void processMethods(EntityModelBuilder builder, Class<?> type) {
-        class Methods {
-            private final Method getter;
-            private final Method setter;
-
-            Methods(List<Method> methods) {
-                List<Method> collect = methods.stream().sorted(Comparator.comparing(Method::getName))
-                        .collect(Collectors.toList());
-                getter = collect.get(0);
-                setter = collect.get(1);
-            }
-        }
-
-        Map<String, List<Method>> properties = Arrays.stream(type.getDeclaredMethods())
-                .filter(m -> m.getName().startsWith("get")
-                        || m.getName().startsWith("set")
-                        || m.getName().startsWith("is"))
-                .collect(Collectors.groupingBy(m -> m.getName().startsWith("get")
-                        || m.getName().startsWith("set")
-                                ? stripPrefix(m, 3)
-                                : stripPrefix(m, 2)));
-
-        for (Entry<String, List<Method>> entry : properties.entrySet()) {
-            List<Method> value = entry.getValue();
-            if (value.size() == 2) {
-                Methods methods = new Methods(value);
-                TypeData<?> typeData = entityModelBuilder.getTypeData(type, TypeData.newInstance(methods.getter),
-                        methods.getter.getGenericReturnType());
-
-                entityModelBuilder.addProperty()
-                        .name(entry.getKey())
-                        .accessor(new MethodAccessor(getTargetMethod(builder, methods.getter),
-                                getTargetMethod(builder, methods.setter)))
-                        .annotations(discoverAnnotations(methods.getter, methods.setter))
-                        .typeData(typeData)
-                        .discoverMappedName();
-            }
         }
     }
 

@@ -423,4 +423,10 @@ public class EntityModelBuilder {
         }
     }
 
+    @Override
+    public String toString() {
+        return new StringBuilder("EntityModelBuilder")
+                   .append("<").append(type.getSimpleName())
+                   .append('>').toString();
+    }
 }
