@@ -1,14 +1,15 @@
 package dev.morphia.query.updates;
 
+import java.util.List;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.Sort;
 import dev.morphia.query.UpdateException;
 import dev.morphia.sofia.Sofia;
-import org.bson.Document;
 
-import java.util.List;
+import org.bson.Document;
 
 /**
  * Defines the $push update operator

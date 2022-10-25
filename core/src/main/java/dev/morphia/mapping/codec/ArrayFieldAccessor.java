@@ -1,12 +1,13 @@
 package dev.morphia.mapping.codec;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.codec.pojo.TypeData;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.List;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.codec.pojo.TypeData;
 
 import static java.lang.String.format;
 

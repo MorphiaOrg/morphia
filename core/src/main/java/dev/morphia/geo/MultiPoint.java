@@ -1,12 +1,14 @@
 package dev.morphia.geo;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.Id;
-import org.bson.types.ObjectId;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.annotations.Id;
+
+import org.bson.types.ObjectId;
 
 /**
  * This class represents a series of points, which will saved into MongoDB as per the <a href="http://geojson.org/geojson-spec

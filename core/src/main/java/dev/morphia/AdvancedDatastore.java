@@ -1,7 +1,10 @@
 package dev.morphia;
 
+import java.util.List;
+
 import com.mongodb.DBObject;
 import com.mongodb.DBRef;
+
 import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.aggregation.AggregationPipeline;
 import dev.morphia.mapping.MappingException;
@@ -9,9 +12,8 @@ import dev.morphia.query.Query;
 import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.UpdateOpsImpl;
 import dev.morphia.query.updates.UpdateOperator;
-import org.bson.Document;
 
-import java.util.List;
+import org.bson.Document;
 
 /**
  * This interface exposes advanced {@link Datastore} features, like interacting with Document and low-level options. It implements matching
@@ -30,7 +32,7 @@ public interface AdvancedDatastore extends Datastore {
      * @param clazz      The class to create aggregation against
      * @return the aggregation pipeline
      * @deprecated use {@link #aggregate(Class)} and pass the alternate collection via the options on
-     * {@link dev.morphia.aggregation.Aggregation#execute(Class, AggregationOptions)}
+     *             {@link dev.morphia.aggregation.Aggregation#execute(Class, AggregationOptions)}
      * @see dev.morphia.aggregation.Aggregation
      * @see dev.morphia.aggregation.AggregationOptions
      */

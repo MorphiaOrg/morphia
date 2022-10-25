@@ -1,5 +1,8 @@
 package dev.morphia.aggregation.expressions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.AccumulatorExpression;
 import dev.morphia.aggregation.expressions.impls.EndResultsExpression;
@@ -9,9 +12,6 @@ import dev.morphia.aggregation.expressions.impls.NRankedResultsExpression;
 import dev.morphia.aggregation.expressions.impls.Push;
 import dev.morphia.aggregation.expressions.impls.RankedResultsExpression;
 import dev.morphia.query.Sort;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 

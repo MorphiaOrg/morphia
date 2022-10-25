@@ -1,15 +1,17 @@
 package dev.morphia.test.mapping;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.mongodb.client.MongoCollection;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;

@@ -1,14 +1,15 @@
 package dev.morphia.aggregation.stages;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.Sort;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 

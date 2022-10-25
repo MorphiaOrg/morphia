@@ -1,8 +1,8 @@
 package dev.morphia.mapping.validation;
 
-import dev.morphia.mapping.MappingException;
-
 import java.util.Collection;
+
+import dev.morphia.mapping.MappingException;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)

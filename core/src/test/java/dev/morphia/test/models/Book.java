@@ -1,13 +1,14 @@
 package dev.morphia.test.models;
 
+import java.util.List;
+import java.util.Objects;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.mapping.experimental.MorphiaReference;
-import org.bson.types.ObjectId;
 
-import java.util.List;
-import java.util.Objects;
+import org.bson.types.ObjectId;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;

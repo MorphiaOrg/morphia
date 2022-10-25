@@ -3,8 +3,10 @@ package dev.morphia.query.filters;
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Polygon;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;

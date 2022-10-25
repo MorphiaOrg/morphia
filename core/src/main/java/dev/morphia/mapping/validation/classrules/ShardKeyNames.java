@@ -1,5 +1,9 @@
 package dev.morphia.mapping.validation.classrules;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import dev.morphia.annotations.ShardKey;
 import dev.morphia.annotations.ShardKeys;
 import dev.morphia.mapping.Mapper;
@@ -9,10 +13,6 @@ import dev.morphia.mapping.validation.ClassConstraint;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.sofia.Sofia;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Checks for duplicated attribute names

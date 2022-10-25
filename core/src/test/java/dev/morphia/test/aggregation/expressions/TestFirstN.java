@@ -2,6 +2,7 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.test.aggregation.AggregationTest;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.firstN;
@@ -21,12 +22,12 @@ public class TestFirstN extends AggregationTest {
             return aggregation
                     .group(group(id()
                             .field("gameId", field("gameId")))
-                            .field("gamescores", firstN(
-                                    condition(
-                                            ComparisonExpressions.eq(field("gameId"), value("G2")),
-                                            value(1),
-                                            value(3)),
-                                    field("score"))));
+                                    .field("gamescores", firstN(
+                                            condition(
+                                                    ComparisonExpressions.eq(field("gameId"), value("G2")),
+                                                    value(1),
+                                                    value(3)),
+                                            field("score"))));
         });
     }
 

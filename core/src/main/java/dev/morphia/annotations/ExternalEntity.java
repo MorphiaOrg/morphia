@@ -1,14 +1,14 @@
 package dev.morphia.annotations;
 
-import dev.morphia.annotations.internal.MorphiaExperimental;
-import dev.morphia.mapping.Mapper;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import dev.morphia.annotations.internal.MorphiaExperimental;
+import dev.morphia.mapping.Mapper;
 
 /**
  * Marks a class as a "stand in" for an external class whose source can not be properly annotated. A class annotated with this

@@ -1,16 +1,17 @@
 package dev.morphia.mapping.codec.references;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
 
 /**
  * The proxy for lazy references.

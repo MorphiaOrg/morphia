@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;

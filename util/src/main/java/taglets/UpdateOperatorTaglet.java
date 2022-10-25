@@ -16,12 +16,12 @@
 
 package taglets;
 
-import com.sun.source.doctree.DocTree;
-import com.sun.source.doctree.UnknownBlockTagTree;
-
 import java.util.List;
 
 import javax.lang.model.element.Element;
+
+import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.UnknownBlockTagTree;
 
 /**
  * Provides a taglet for linking to the MongoDB manual pages

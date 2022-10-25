@@ -16,14 +16,6 @@
 
 package dev.morphia.test.aggregation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.morphia.aggregation.Aggregation;
-import dev.morphia.aggregation.AggregationImpl;
-import dev.morphia.test.TestBase;
-import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
-import org.testng.Assert;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +26,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import dev.morphia.aggregation.Aggregation;
+import dev.morphia.aggregation.AggregationImpl;
+import dev.morphia.test.TestBase;
+
+import org.bson.Document;
+import org.jetbrains.annotations.NotNull;
+import org.testng.Assert;
 
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;

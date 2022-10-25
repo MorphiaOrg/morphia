@@ -4,6 +4,7 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.TestEntity;
+
 import org.testng.annotations.Test;
 
 public class MultipleVersionsTest extends TestBase {

@@ -1,16 +1,18 @@
 package dev.morphia.mapping;
 
+import java.lang.reflect.Constructor;
+import java.util.function.Supplier;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.internal.ConstructorCreator;
 import dev.morphia.sofia.Sofia;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Constructor;
-import java.util.function.Supplier;
 
 /**
  * @morphia.internal

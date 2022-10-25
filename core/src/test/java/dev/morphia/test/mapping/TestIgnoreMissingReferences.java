@@ -1,14 +1,15 @@
 package dev.morphia.test.mapping;
 
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
+
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;

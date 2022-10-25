@@ -1,13 +1,15 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.time.LocalDate;
+
 import com.mongodb.client.model.Collation;
+
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.models.User;
-import org.testng.annotations.Test;
 
-import java.time.LocalDate;
+import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.query.filters.Filters.eq;

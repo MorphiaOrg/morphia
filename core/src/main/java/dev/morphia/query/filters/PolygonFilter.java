@@ -1,7 +1,9 @@
 package dev.morphia.query.filters;
 
 import com.mongodb.client.model.geojson.Point;
+
 import dev.morphia.Datastore;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 

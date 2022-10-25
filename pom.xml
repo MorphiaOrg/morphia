@@ -281,34 +281,23 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>net.revelc.code</groupId>
-                    <artifactId>impsort-maven-plugin</artifactId>
-                    <version>${impsort-maven-plugin.version}</version>
-                    <configuration>
-                        <groups>*,java.,javax.,jakarta.</groups>
-                        <staticAfter>true</staticAfter>
-                        <staticGroups>*</staticGroups>
-                        <removeUnused>true</removeUnused>
-                        <treatSamePackageAsUnused>true</treatSamePackageAsUnused>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>net.revelc.code.formatter</groupId>
-                    <artifactId>formatter-maven-plugin</artifactId>
-                    <version>${formatter-maven-plugin.version}</version>
-                    <configuration>
-                        <cachedir>${project.basedir}/../config/formatter-maven-plugin</cachedir>
-                        <configFile>${project.basedir}/../config/eclipse-format.xml</configFile>
-                        <lineEnding>LF</lineEnding>
-                        <encoding>UTF-16</encoding>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>com.diffplug.spotless</groupId>
                     <artifactId>spotless-maven-plugin</artifactId>
                     <version>2.27.2</version>
 
                     <configuration>
+                        <java>
+                            <eclipse>
+                                <file>${project.basedir}/../config/eclipse-format.xml</file>
+                            </eclipse>
+                            <!--<googleJavaFormat />-->
+
+                            <importOrder>
+                                <file>${project.basedir}/../config/eclipse.importorder</file>
+                            </importOrder>
+
+                            <removeUnusedImports />
+                        </java>
                         <kotlin>
                             <ktfmt>
                                 <style>KOTLINLANG</style>
@@ -603,28 +592,13 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>net.revelc.code</groupId>
-                        <artifactId>impsort-maven-plugin</artifactId>
-                        <version>${impsort-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sort-imports</id>
-                                <goals>
-                                    <goal>sort</goal>
-                                </goals>
-                                <phase>process-sources</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>net.revelc.code.formatter</groupId>
-                        <artifactId>formatter-maven-plugin</artifactId>
-                        <version>${formatter-maven-plugin.version}</version>
+                        <groupId>com.diffplug.spotless</groupId>
+                        <artifactId>spotless-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <phase>process-sources</phase>
                                 <goals>
-                                    <goal>format</goal>
+                                    <goal>apply</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -645,32 +619,17 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>net.revelc.code</groupId>
-                        <artifactId>impsort-maven-plugin</artifactId>
+                        <groupId>com.diffplug.spotless</groupId>
+                        <artifactId>spotless-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>check imports</id>
+                                <phase>process-sources</phase>
                                 <goals>
                                     <goal>check</goal>
                                 </goals>
-                                <phase>process-sources</phase>
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin>
-                        <groupId>net.revelc.code.formatter</groupId>
-                        <artifactId>formatter-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>validate sources</id>
-                                <phase>process-sources</phase>
-                                <goals>
-                                    <goal>validate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
                 </plugins>
             </build>
         </profile>

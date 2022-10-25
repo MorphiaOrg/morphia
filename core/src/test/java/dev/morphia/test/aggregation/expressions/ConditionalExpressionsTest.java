@@ -1,10 +1,11 @@
 package dev.morphia.test.aggregation.expressions;
 
+import java.util.List;
+
 import dev.morphia.aggregation.stages.Projection;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.BooleanExpressions.and;

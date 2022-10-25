@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.stages;
 
 import com.mongodb.client.model.BucketGranularity;
+
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;

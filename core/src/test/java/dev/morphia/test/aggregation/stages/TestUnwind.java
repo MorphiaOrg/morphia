@@ -1,12 +1,13 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.aggregation.AggregationTest;
-import dev.morphia.test.models.User;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+
+import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.models.User;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Unwind.unwind;

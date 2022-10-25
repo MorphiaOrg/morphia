@@ -16,8 +16,22 @@
 
 package dev.morphia.mapping.codec.pojo;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.StringJoiner;
+
 import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.AlsoLoad;
@@ -31,22 +45,10 @@ import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.sofia.Sofia;
+
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyAccessor;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.StringJoiner;
 
 import static java.util.Arrays.asList;
 

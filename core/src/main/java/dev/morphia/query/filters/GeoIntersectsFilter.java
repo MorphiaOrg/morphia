@@ -1,8 +1,10 @@
 package dev.morphia.query.filters;
 
 import com.mongodb.client.model.geojson.Geometry;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 

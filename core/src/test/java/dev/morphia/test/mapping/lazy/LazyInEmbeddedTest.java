@@ -1,5 +1,9 @@
 package dev.morphia.test.mapping.lazy;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
@@ -7,11 +11,8 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.TestEntity;
-import org.testng.annotations.Test;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;

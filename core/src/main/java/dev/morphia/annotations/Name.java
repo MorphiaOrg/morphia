@@ -1,11 +1,11 @@
 package dev.morphia.annotations;
 
-import dev.morphia.annotations.internal.MorphiaExperimental;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import dev.morphia.annotations.internal.MorphiaExperimental;
 
 /**
  * Defines a name for a constructor parameter.

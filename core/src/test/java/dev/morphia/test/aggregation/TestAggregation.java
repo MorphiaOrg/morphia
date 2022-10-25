@@ -1,5 +1,11 @@
 package dev.morphia.test.aggregation;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.stages.Group;
 import dev.morphia.query.MorphiaCursor;
@@ -12,15 +18,10 @@ import dev.morphia.test.aggregation.model.Martian;
 import dev.morphia.test.aggregation.model.StringDates;
 import dev.morphia.test.models.User;
 import dev.morphia.test.models.geo.GeoCity;
+
 import org.bson.Document;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
@@ -72,7 +73,7 @@ public class TestAggregation extends TestBase {
                         id()
                                 .field("month", month(field("date")))
                                 .field("year", year(field("date"))))
-                        .field("count", sum(value(1))));
+                                        .field("count", sum(value(1))));
 
         MorphiaCursor<User> cursor = pipeline.execute(User.class);
         while (cursor.hasNext()) {
@@ -156,7 +157,7 @@ public class TestAggregation extends TestBase {
         final MorphiaCursor<GeoCity> pipeline = getDs().aggregate(GeoCity.class) /* the class is irrelevant for this test */
                 .group(group(
                         id("state"))
-                        .field("total_pop", sum(field("pop"))))
+                                .field("total_pop", sum(field("pop"))))
                 .match(gte("total_pop", 10000000))
                 .execute(GeoCity.class);
         while (pipeline.hasNext()) {

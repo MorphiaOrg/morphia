@@ -1,8 +1,8 @@
 package dev.morphia.test.models;
 
-import dev.morphia.annotations.Entity;
-
 import java.time.LocalDate;
+
+import dev.morphia.annotations.Entity;
 
 import static java.time.LocalDate.now;
 

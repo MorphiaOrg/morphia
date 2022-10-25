@@ -3,6 +3,7 @@ package dev.morphia.mapping.codec;
 import dev.morphia.Datastore;
 import dev.morphia.query.LegacyQuery;
 import dev.morphia.sofia.Sofia;
+
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.Document;

@@ -1,9 +1,9 @@
 package dev.morphia.aggregation;
 
-import com.mongodb.lang.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mongodb.lang.Nullable;
 
 import static java.util.Arrays.asList;
 

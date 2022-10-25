@@ -1,16 +1,5 @@
 package dev.morphia.mapping.conventions;
 
-import com.mongodb.lang.NonNull;
-import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MappingException;
-import dev.morphia.mapping.codec.MethodAccessor;
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
-import dev.morphia.mapping.codec.pojo.TypeData;
-import dev.morphia.sofia.Sofia;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Comparator;
@@ -20,6 +9,20 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.mongodb.lang.NonNull;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.MethodAccessor;
+import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
+import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.sofia.Sofia;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import org.jetbrains.annotations.NotNull;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -49,30 +52,31 @@ public class MethodDiscovery implements MorphiaConvention {
 
     private List<Methods> processMethods(Class<?> type) {
         return stream(type.getDeclaredMethods())
-                   .filter(MethodDiscovery::isGetterSetter)
-                   .filter(m -> !m.isSynthetic()) // overloaded parent methods are synthetic on the child types
-                   .collect(Collectors.groupingBy(this::stripPrefix))
-                   .entrySet().stream()
-                   .filter(entry -> entry.getValue().size() == 2)
-                   .map(entry -> new Methods(entry.getKey(), type, entry.getValue()))
-                   .collect(toList());
+                .filter(MethodDiscovery::isGetterSetter)
+                .filter(m -> !m.isSynthetic()) // overloaded parent methods are synthetic on the child types
+                .collect(Collectors.groupingBy(this::stripPrefix))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue().size() == 2)
+                .map(entry -> new Methods(entry.getKey(), type, entry.getValue()))
+                .collect(toList());
 
     }
 
     private void addProperties(EntityModelBuilder builder, Set<Methods> properties) {
         for (Methods methods : properties) {
             TypeData<?> typeData = entityModelBuilder.getTypeData(methods.type, TypeData.newInstance(methods.getter),
-                methods.getter.getGenericReturnType());
+                    methods.getter.getGenericReturnType());
 
             entityModelBuilder.addProperty()
-                              .name(methods.property)
-                              .accessor(new MethodAccessor(getTargetMethod(builder, methods.getter),
-                                  getTargetMethod(builder, methods.setter)))
-                              .annotations(discoverAnnotations(methods.getter, methods.setter))
-                              .typeData(typeData)
-                              .discoverMappedName();
+                    .name(methods.property)
+                    .accessor(new MethodAccessor(getTargetMethod(builder, methods.getter),
+                            getTargetMethod(builder, methods.setter)))
+                    .annotations(discoverAnnotations(methods.getter, methods.setter))
+                    .typeData(typeData)
+                    .discoverMappedName();
         }
     }
+
     private static class Methods {
         private final Method getter;
         private final Method setter;
@@ -83,7 +87,7 @@ public class MethodDiscovery implements MorphiaConvention {
             this.property = property;
             this.type = type;
             List<Method> collect = methods.stream().sorted(Comparator.comparing(Method::getName))
-                                          .collect(toList());
+                    .collect(toList());
             getter = collect.get(0);
             setter = collect.get(1);
         }
@@ -109,21 +113,21 @@ public class MethodDiscovery implements MorphiaConvention {
     @NotNull
     private String stripPrefix(Method m) {
         return m.getName().startsWith("get")
-               || m.getName().startsWith("set")
-               ? stripPrefix(m, 3)
-               : stripPrefix(m, 2);
+                || m.getName().startsWith("set")
+                        ? stripPrefix(m, 3)
+                        : stripPrefix(m, 2);
     }
 
     private static boolean isGetterSetter(Method m) {
         return m.getName().startsWith("get")
-               || m.getName().startsWith("set")
-               || m.getName().startsWith("is");
+                || m.getName().startsWith("set")
+                || m.getName().startsWith("is");
     }
 
     private List<Annotation> discoverAnnotations(Method getter, Method setter) {
         return Stream.of(getter, setter)
-                     .flatMap(m -> stream(m.getDeclaredAnnotations()))
-                     .collect(toList());
+                .flatMap(m -> stream(m.getDeclaredAnnotations()))
+                .collect(toList());
     }
 
     @NonNull

@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.test.aggregation.AggregationTest;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.document;

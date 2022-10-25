@@ -1,14 +1,15 @@
 package dev.morphia.aggregation.stages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Removes/excludes fields from documents.

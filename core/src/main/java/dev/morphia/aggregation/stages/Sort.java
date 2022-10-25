@@ -1,10 +1,11 @@
 package dev.morphia.aggregation.stages;
 
-import dev.morphia.annotations.internal.MorphiaInternal;
-import org.bson.BsonWriter;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
+
+import org.bson.BsonWriter;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 

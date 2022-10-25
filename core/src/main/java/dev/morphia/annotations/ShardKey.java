@@ -1,13 +1,13 @@
 package dev.morphia.annotations;
 
-import dev.morphia.annotations.internal.MorphiaExperimental;
-import dev.morphia.mapping.ShardKeyType;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import dev.morphia.annotations.internal.MorphiaExperimental;
+import dev.morphia.mapping.ShardKeyType;
 
 /**
  * Defines a shard key of a particular type

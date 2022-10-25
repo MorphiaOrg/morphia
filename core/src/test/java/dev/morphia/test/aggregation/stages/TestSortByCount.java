@@ -1,12 +1,13 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.Iterator;
+
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Book;
 import dev.morphia.test.aggregation.model.SortByCountResult;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Iterator;
 
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static java.util.Arrays.asList;

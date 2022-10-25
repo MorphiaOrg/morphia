@@ -1,9 +1,5 @@
 package dev.morphia.mapping.codec.pojo;
 
-import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.sofia.Sofia;
-import org.bson.codecs.pojo.TypeWithTypeParameters;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
@@ -15,6 +11,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.sofia.Sofia;
+
+import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import static java.lang.String.format;
 import static org.bson.assertions.Assertions.notNull;

@@ -1,5 +1,8 @@
 package dev.morphia.mapping.validation.classrules;
 
+import java.util.List;
+import java.util.Set;
+
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -7,9 +10,6 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.validation.ClassConstraint;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * Checks the multiple fields aren't annotated with @Version

@@ -1,9 +1,9 @@
 package dev.morphia.test.aggregation.model;
 
+import java.util.Objects;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-
-import java.util.Objects;
 
 @Entity
 public class ProjectedBook {

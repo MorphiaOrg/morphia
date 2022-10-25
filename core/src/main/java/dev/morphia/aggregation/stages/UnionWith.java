@@ -1,10 +1,11 @@
 package dev.morphia.aggregation.stages;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.internal.MorphiaInternal;
-
 import java.util.Collections;
 import java.util.List;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The

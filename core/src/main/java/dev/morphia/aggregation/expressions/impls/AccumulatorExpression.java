@@ -1,11 +1,12 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import java.util.List;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;

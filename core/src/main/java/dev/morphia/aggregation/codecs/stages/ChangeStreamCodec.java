@@ -2,8 +2,10 @@ package dev.morphia.aggregation.codecs.stages;
 
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.FullDocumentBeforeChange;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.ChangeStream;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 

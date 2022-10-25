@@ -19,7 +19,9 @@ package dev.morphia;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.internal.WriteConfigurable;
+
 import org.bson.BsonValue;
 import org.bson.conversions.Bson;
 

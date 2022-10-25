@@ -1,13 +1,15 @@
 package dev.morphia.query;
 
+import java.util.List;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.DatastoreImpl;
 import dev.morphia.ModifyOptions;
 import dev.morphia.query.updates.UpdateOperator;
-import org.bson.Document;
 
-import java.util.List;
+import org.bson.Document;
 
 /**
  * Represents a modify operation

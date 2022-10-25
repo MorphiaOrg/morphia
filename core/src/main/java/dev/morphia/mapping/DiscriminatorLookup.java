@@ -16,16 +16,19 @@
 
 package dev.morphia.mapping;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bson.codecs.configuration.CodecConfigurationException;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import org.bson.codecs.configuration.CodecConfigurationException;
 
 import static java.lang.String.format;
 

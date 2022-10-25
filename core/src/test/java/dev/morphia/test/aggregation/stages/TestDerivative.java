@@ -1,18 +1,19 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.List;
+
 import dev.morphia.test.aggregation.AggregationTest;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.TimeUnit.HOUR;
 import static dev.morphia.aggregation.expressions.TimeUnit.SECOND;
 import static dev.morphia.aggregation.expressions.WindowExpressions.derivative;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
+import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.filters.Filters.gt;
 

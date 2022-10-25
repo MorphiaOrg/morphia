@@ -1,11 +1,12 @@
 package dev.morphia.query.updates;
 
+import java.util.Collection;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
-import org.bson.Document;
 
-import java.util.Collection;
+import org.bson.Document;
 
 /**
  * Defines the $addToSet operator

@@ -1,15 +1,5 @@
 package dev.morphia.test;
 
-import com.antwerkz.bottlerocket.Versions;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.github.zafarkhaja.semver.Version;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.jetbrains.annotations.NotNull;
-import org.testng.annotations.Test;
-
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,6 +9,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.antwerkz.bottlerocket.Versions;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.github.zafarkhaja.semver.Version;
+
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.jetbrains.annotations.NotNull;
+import org.testng.annotations.Test;
 
 import static java.lang.String.format;
 import static java.util.List.of;

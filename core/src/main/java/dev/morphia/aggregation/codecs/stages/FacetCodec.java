@@ -1,14 +1,15 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import java.util.List;
+import java.util.Map.Entry;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Facet;
 import dev.morphia.aggregation.stages.Stage;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
-import java.util.Map.Entry;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;

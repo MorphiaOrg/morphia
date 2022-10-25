@@ -1,14 +1,15 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.List;
+
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Book;
 import dev.morphia.test.aggregation.model.ProjectedBook;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.stages.Projection.project;
 import static org.bson.Document.parse;

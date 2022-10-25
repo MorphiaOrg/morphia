@@ -16,19 +16,21 @@
 
 package dev.morphia;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.query.filters.Filter;
+
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The options to apply when updating documents in the MongoCollection

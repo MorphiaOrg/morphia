@@ -1,18 +1,20 @@
 package dev.morphia.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
+
 import dev.morphia.DatastoreImpl;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines an update operation

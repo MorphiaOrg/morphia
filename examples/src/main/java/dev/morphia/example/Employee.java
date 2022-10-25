@@ -1,5 +1,8 @@
 package dev.morphia.example;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
@@ -8,10 +11,8 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bson.types.ObjectId;
 
 @Entity("employees")
 @Indexes(@Index(options = @IndexOptions(name = "salary"), fields = @Field("salary")))

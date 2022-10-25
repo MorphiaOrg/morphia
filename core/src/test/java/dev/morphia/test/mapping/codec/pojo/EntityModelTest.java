@@ -1,18 +1,19 @@
 package dev.morphia.test.mapping.codec.pojo;
 
+import java.time.LocalDate;
+import java.util.Map;
+import java.util.UUID;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.test.TestBase;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.util.Map;
-import java.util.UUID;
 
 import static java.util.stream.Collectors.joining;
 import static org.testng.Assert.assertEquals;

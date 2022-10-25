@@ -1,11 +1,12 @@
 package dev.morphia.test.mapping.codec.pojo;
 
+import java.util.List;
+
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.test.TestBase;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 public class TypeDataTest extends TestBase {
     @Test

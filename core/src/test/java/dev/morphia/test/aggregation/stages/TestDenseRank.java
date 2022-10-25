@@ -1,15 +1,16 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.List;
+
 import dev.morphia.test.aggregation.AggregationTest;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.WindowExpressions.denseRank;
-import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
+import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.descending;
 
 public class TestDenseRank extends AggregationTest {

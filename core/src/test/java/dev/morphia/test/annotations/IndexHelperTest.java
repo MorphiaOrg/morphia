@@ -1,6 +1,12 @@
 package dev.morphia.test.annotations;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 import com.mongodb.client.MongoCollection;
+
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
@@ -22,15 +28,11 @@ import dev.morphia.test.models.MappedInterface;
 import dev.morphia.test.models.MappedInterfaceImpl;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static com.mongodb.client.model.CollationCaseFirst.UPPER;

@@ -1,13 +1,15 @@
 package dev.morphia.test.aggregation.expressions;
 
+import java.util.List;
+
 import com.mongodb.client.MongoCollection;
+
 import dev.morphia.aggregation.expressions.ArrayExpressions;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.stages.Projection;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.arrayToObject;
@@ -77,7 +79,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
                         and(
                                 gte(value("$$num"), value(-9223372036854775807L)),
                                 lte(value("$$num"), value(9223372036854775807L))))
-                        .as("num"),
+                                        .as("num"),
                 List.of(1, 2, 3.1, 4L));
     }
 

@@ -1,21 +1,24 @@
 package dev.morphia.query.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.NonNull;
+
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.reader.DocumentReader;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * Defines an Iterator across the Key values for a given type.

@@ -1,9 +1,9 @@
 package dev.morphia.test.aggregation.model;
 
+import java.util.StringJoiner;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-
-import java.util.StringJoiner;
 
 @Entity(value = "inventory", useDiscriminator = false)
 public class Inventory {

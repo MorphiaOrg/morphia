@@ -1,10 +1,11 @@
 package dev.morphia.geo;
 
-import com.mongodb.client.model.geojson.Position;
-import dev.morphia.annotations.internal.MorphiaInternal;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mongodb.client.model.geojson.Position;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Factory class for creating GeoJSON types. See <a href="http://docs.mongodb

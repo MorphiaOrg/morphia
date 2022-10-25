@@ -1,12 +1,13 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.List;
+
 import dev.morphia.aggregation.stages.Group;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Salary;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
 import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;

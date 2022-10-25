@@ -16,10 +16,10 @@
 
 package dev.morphia.aggregation;
 
-import org.bson.Document;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bson.Document;
 
 /**
  * Defines an accumulator for use in an aggregation pipeline.

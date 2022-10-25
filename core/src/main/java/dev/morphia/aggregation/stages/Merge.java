@@ -1,16 +1,17 @@
 package dev.morphia.aggregation.stages;
 
-import com.mongodb.client.model.MergeOptions.WhenMatched;
-import com.mongodb.client.model.MergeOptions.WhenNotMatched;
-import com.mongodb.lang.Nullable;
-import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.annotations.internal.MorphiaInternal;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.mongodb.client.model.MergeOptions.WhenMatched;
+import com.mongodb.client.model.MergeOptions.WhenNotMatched;
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 import static java.util.Arrays.asList;
 

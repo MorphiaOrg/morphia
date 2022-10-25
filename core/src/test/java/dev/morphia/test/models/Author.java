@@ -1,12 +1,12 @@
 package dev.morphia.test.models;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Reference;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Reference;
 
 @Entity("authors")
 public class Author {

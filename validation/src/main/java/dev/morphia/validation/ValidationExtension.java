@@ -1,10 +1,11 @@
 package dev.morphia.validation;
 
+import java.util.Set;
+
 import dev.morphia.EntityInterceptor;
 import dev.morphia.mapping.Mapper;
-import org.bson.Document;
 
-import java.util.Set;
+import org.bson.Document;
 
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;

@@ -1,17 +1,18 @@
 package dev.morphia.query;
 
-import dev.morphia.Datastore;
-import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
-import org.bson.Document;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringJoiner;
+
+import dev.morphia.Datastore;
+import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
+
+import org.bson.Document;
 
 /**
  * @morphia.internal

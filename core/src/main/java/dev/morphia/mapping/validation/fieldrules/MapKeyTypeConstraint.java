@@ -1,19 +1,20 @@
 package dev.morphia.mapping.validation.fieldrules;
 
-import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.mapping.codec.pojo.TypeData;
-import dev.morphia.mapping.validation.ConstraintViolation;
-import dev.morphia.mapping.validation.ConstraintViolation.Level;
-import org.bson.types.ObjectId;
-
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.validation.ConstraintViolation;
+import dev.morphia.mapping.validation.ConstraintViolation.Level;
+
+import org.bson.types.ObjectId;
 
 /**
  * A constraint to validate key types of Map fields

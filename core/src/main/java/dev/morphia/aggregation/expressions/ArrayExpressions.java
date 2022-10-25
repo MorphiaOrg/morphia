@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.expressions;
 
+import java.util.List;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.aggregation.expressions.impls.ArrayExpression;
@@ -15,10 +17,9 @@ import dev.morphia.aggregation.expressions.impls.ZipExpression;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.query.Sort;
 import dev.morphia.sofia.Sofia;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;

@@ -1,10 +1,11 @@
 package dev.morphia.query.filters;
 
+import java.util.List;
+
 import dev.morphia.Datastore;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
 
 class ElemMatchFilter extends Filter {
     ElemMatchFilter(String field, List<Filter> query) {

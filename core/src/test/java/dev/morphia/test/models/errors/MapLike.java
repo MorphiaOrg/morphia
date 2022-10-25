@@ -1,13 +1,14 @@
 package dev.morphia.test.models.errors;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import org.bson.types.ObjectId;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+
+import org.bson.types.ObjectId;
 
 @Entity(useDiscriminator = false)
 public class MapLike implements Map<String, String> {

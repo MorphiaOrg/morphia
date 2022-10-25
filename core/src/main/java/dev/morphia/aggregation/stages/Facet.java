@@ -1,10 +1,10 @@
 package dev.morphia.aggregation.stages;
 
-import dev.morphia.annotations.internal.MorphiaInternal;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 import static java.util.Arrays.asList;
 

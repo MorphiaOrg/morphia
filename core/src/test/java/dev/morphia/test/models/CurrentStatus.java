@@ -3,6 +3,7 @@ package dev.morphia.test.models;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+
 import org.bson.types.ObjectId;
 
 @Entity(cap = @CappedAt(count = 1))

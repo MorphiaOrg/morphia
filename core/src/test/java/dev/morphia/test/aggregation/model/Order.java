@@ -1,10 +1,10 @@
 package dev.morphia.test.aggregation.model;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-
 import java.util.List;
 import java.util.StringJoiner;
+
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 
 @Entity("orders")
 public class Order {

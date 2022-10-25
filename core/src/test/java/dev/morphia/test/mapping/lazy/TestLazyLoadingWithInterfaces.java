@@ -1,14 +1,15 @@
 package dev.morphia.test.mapping.lazy;
 
-import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.test.mapping.ProxyTestBase;
-import org.testng.annotations.Test;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.test.mapping.ProxyTestBase;
+
+import org.testng.annotations.Test;
 
 import static dev.morphia.mapping.experimental.MorphiaReference.wrap;
 import static java.util.Arrays.asList;

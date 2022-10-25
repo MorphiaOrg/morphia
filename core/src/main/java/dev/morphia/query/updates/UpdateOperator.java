@@ -1,12 +1,12 @@
 package dev.morphia.query.updates;
 
+import java.util.List;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.UpdateException;
 import dev.morphia.sofia.Sofia;
-
-import java.util.List;
 
 /**
  * Defines an update operator

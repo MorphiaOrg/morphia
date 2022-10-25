@@ -1,12 +1,13 @@
 package dev.morphia.aggregation.stages;
 
+import java.util.List;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.Sort;
-
-import java.util.List;
 
 /**
  * Performs operations on a specified span of documents in a collection, known as a window, and returns the results based on the chosen

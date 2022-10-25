@@ -1,12 +1,13 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.List;
+
 import dev.morphia.query.Type;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Author;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.ifNull;
 import static dev.morphia.aggregation.expressions.Expressions.field;

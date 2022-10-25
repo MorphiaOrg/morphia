@@ -1,12 +1,12 @@
 package dev.morphia.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.NonNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @param <T> the original type being iterated

@@ -1,8 +1,22 @@
 package dev.morphia.mapping.codec.references;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.mongodb.DBRef;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
@@ -25,6 +39,16 @@ import dev.morphia.mapping.experimental.SingleReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.QueryException;
 import dev.morphia.sofia.Sofia;
+
+import org.bson.BsonReader;
+import org.bson.BsonWriter;
+import org.bson.Document;
+import org.bson.codecs.BsonTypeClassMap;
+import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
+import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecConfigurationException;
+
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.TypeCache;
 import net.bytebuddy.TypeCache.Sort;
@@ -35,27 +59,6 @@ import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Default;
 import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatcher.Junction;
 import net.bytebuddy.matcher.ElementMatchers;
-import org.bson.BsonReader;
-import org.bson.BsonWriter;
-import org.bson.Document;
-import org.bson.codecs.BsonTypeClassMap;
-import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
-import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecConfigurationException;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static java.lang.String.format;

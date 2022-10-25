@@ -1,6 +1,19 @@
 package dev.morphia.test;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 import com.mongodb.client.model.Filters;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
@@ -50,24 +63,13 @@ import dev.morphia.test.models.versioned.AbstractVersionedBase;
 import dev.morphia.test.models.versioned.Versioned;
 import dev.morphia.test.models.versioned.VersionedChildEntity;
 import dev.morphia.test.models.versioned.subversioned.VersionedToo;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.query.filters.Filters.eq;
@@ -85,28 +87,27 @@ import static org.testng.Assert.fail;
 @SuppressWarnings({ "unchecked", "unchecked" })
 public class TestMapping extends TestBase {
 
-
     @DataProvider
     public static Object[][] discovery() {
         return new Object[][] {
-          new Object[] { PropertyDiscovery.FIELDS},
-          new Object[] { PropertyDiscovery.METHODS}
+                new Object[] { PropertyDiscovery.FIELDS },
+                new Object[] { PropertyDiscovery.METHODS }
         };
     }
 
     @Test(dataProvider = "discovery")
     public void testShadowing(PropertyDiscovery discovery) {
         withOptions(MapperOptions.builder()
-                                 .propertyDiscovery(discovery)
-                                 .build(), () -> {
+                .propertyDiscovery(discovery)
+                .build(), () -> {
 
-            getMapper().map(ShadowedGrandParent.class, ShadowedChild.class, ShadowedGrandChild.class);
+                    getMapper().map(ShadowedGrandParent.class, ShadowedChild.class, ShadowedGrandChild.class);
 
-            var check = new Check();
-            check.accept(ShadowedGrandParent.class);
-            check.accept(ShadowedChild.class);
-            check.accept(ShadowedGrandChild.class);
-        });
+                    var check = new Check();
+                    check.accept(ShadowedGrandParent.class);
+                    check.accept(ShadowedChild.class);
+                    check.accept(ShadowedGrandChild.class);
+                });
 
     }
 
@@ -115,8 +116,8 @@ public class TestMapping extends TestBase {
         public void accept(Class<?> classType) {
             Class<?> actual = getMapper().getEntityModel(classType).getProperty("shadowed").getType();
             assertEquals(actual, classType,
-                format("Expected the field 'shadowed' to be type '%s' on '%s' but was '%s'", classType.getSimpleName(),
-                    classType.getSimpleName(), actual.getSimpleName()));
+                    format("Expected the field 'shadowed' to be type '%s' on '%s' but was '%s'", classType.getSimpleName(),
+                            classType.getSimpleName(), actual.getSimpleName()));
         }
 
     };
@@ -143,6 +144,7 @@ public class TestMapping extends TestBase {
             this.shadowed = shadowed;
         }
     }
+
     @Entity(value = "child")
     public static class ShadowedChild extends ShadowedGrandParent {
         private ShadowedChild shadowed;

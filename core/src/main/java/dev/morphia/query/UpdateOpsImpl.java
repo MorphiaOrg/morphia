@@ -1,16 +1,17 @@
 package dev.morphia.query;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.PopOperator;
 import dev.morphia.query.updates.PushOperator;
 import dev.morphia.query.updates.UpdateOperators;
-import org.bson.Document;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.bson.Document;
 
 import static java.util.Collections.emptyList;
 

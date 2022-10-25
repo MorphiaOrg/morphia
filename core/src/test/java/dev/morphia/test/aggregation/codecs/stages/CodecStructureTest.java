@@ -1,9 +1,12 @@
 package dev.morphia.test.aggregation.codecs.stages;
 
+import java.util.List;
+
 import com.mongodb.client.model.MergeOptions.WhenMatched;
 import com.mongodb.client.model.MergeOptions.WhenNotMatched;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
+
 import dev.morphia.aggregation.expressions.AccumulatorExpressions;
 import dev.morphia.aggregation.expressions.ConditionalExpressions;
 import dev.morphia.aggregation.expressions.MathExpressions;
@@ -26,12 +29,11 @@ import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.test.TestBase;
+
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
@@ -235,7 +237,7 @@ public class CodecStructureTest extends TestBase {
         DocumentWriter writer = new DocumentWriter(getMapper());
         ((Codec) getDs().getCodecRegistry()
                 .get(value.getClass()))
-                .encode(writer, value, EncoderContext.builder().build());
+                        .encode(writer, value, EncoderContext.builder().build());
         Document actual = writer.getDocument();
 
         assertDocumentEquals(actual, expected);

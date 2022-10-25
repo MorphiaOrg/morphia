@@ -1,13 +1,14 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import java.util.List;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.Unset;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
 
 public class UnsetCodec extends StageCodec<Unset> {
     public UnsetCodec(Datastore datastore) {

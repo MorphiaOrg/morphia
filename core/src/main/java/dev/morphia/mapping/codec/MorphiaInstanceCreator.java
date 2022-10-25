@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 

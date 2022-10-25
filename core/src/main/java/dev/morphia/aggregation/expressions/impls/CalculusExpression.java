@@ -1,12 +1,13 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import java.util.Locale;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.aggregation.expressions.WindowExpressions;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.Locale;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;

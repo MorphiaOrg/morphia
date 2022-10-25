@@ -1,10 +1,11 @@
 package dev.morphia.mapping.codec;
 
+import java.util.List;
+
 import dev.morphia.mapping.codec.pojo.TypeData;
+
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
-
-import java.util.List;
 
 public abstract class MorphiaPropertyCodecProvider implements PropertyCodecProvider {
 

@@ -1,16 +1,17 @@
 package dev.morphia.test.mapping.lazy;
 
+import java.util.List;
+import java.util.Objects;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.TestEntity;
+
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.util.List;
-import java.util.Objects;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;

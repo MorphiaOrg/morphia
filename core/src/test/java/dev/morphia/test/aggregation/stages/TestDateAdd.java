@@ -1,12 +1,13 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.aggregation.stages.Merge;
-import dev.morphia.test.aggregation.AggregationTest;
-import org.bson.Document;
-import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import dev.morphia.aggregation.stages.Merge;
+import dev.morphia.test.aggregation.AggregationTest;
+
+import org.bson.Document;
+import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.dateAdd;
 import static dev.morphia.aggregation.expressions.Expressions.field;

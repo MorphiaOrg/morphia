@@ -1,5 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
+import java.util.List;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorLookup;
@@ -7,6 +9,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import dev.morphia.sofia.Sofia;
+
 import org.bson.BsonReader;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
@@ -18,8 +21,6 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
 import org.bson.types.ObjectId;
-
-import java.util.List;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
 import static org.bson.codecs.configuration.CodecRegistries.fromCodecs;

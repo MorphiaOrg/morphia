@@ -1,12 +1,13 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.List;
+
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Book;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.Miscellaneous.unsetField;
 import static dev.morphia.aggregation.expressions.SystemVariables.ROOT;

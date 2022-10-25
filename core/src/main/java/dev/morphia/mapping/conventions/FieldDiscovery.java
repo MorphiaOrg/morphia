@@ -1,6 +1,11 @@
 package dev.morphia.mapping.conventions;
 
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Set;
+
 import com.mongodb.lang.NonNull;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -9,11 +14,8 @@ import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.sofia.Sofia;
-import org.bson.codecs.pojo.PropertyAccessor;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Set;
+import org.bson.codecs.pojo.PropertyAccessor;
 
 @MorphiaInternal
 public class FieldDiscovery implements MorphiaConvention {

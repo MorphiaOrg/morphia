@@ -2,6 +2,7 @@ package dev.morphia.aggregation.stages;
 
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filter;
 

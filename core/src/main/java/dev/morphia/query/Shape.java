@@ -1,6 +1,7 @@
 package dev.morphia.query;
 
 import com.mongodb.client.model.geojson.Point;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filters;
 

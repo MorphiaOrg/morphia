@@ -1,9 +1,14 @@
 package dev.morphia.test.geo;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringJoiner;
+
 import com.mongodb.MongoQueryException;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.client.model.geojson.Position;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -13,14 +18,11 @@ import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TestBase;
 import dev.morphia.utils.IndexDirection;
+
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
 
 import static dev.morphia.query.filters.Filters.box;
 import static dev.morphia.query.filters.Filters.center;

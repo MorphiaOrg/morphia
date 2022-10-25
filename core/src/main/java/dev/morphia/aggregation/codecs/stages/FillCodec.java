@@ -1,15 +1,16 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import java.util.List;
+import java.util.Locale;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.Fill;
 import dev.morphia.aggregation.stages.Fill.Method;
 import dev.morphia.query.Sort;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
-import java.util.Locale;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;

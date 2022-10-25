@@ -1,10 +1,11 @@
 package dev.morphia.mapping.codec;
 
+import java.lang.reflect.Method;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
-import org.bson.codecs.pojo.PropertyAccessor;
 
-import java.lang.reflect.Method;
+import org.bson.codecs.pojo.PropertyAccessor;
 
 /**
  * @morphia.internal

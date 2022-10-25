@@ -1,13 +1,14 @@
 package dev.morphia.test.mapping.validation.classrules;
 
+import java.util.Map;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;
-import org.testng.annotations.Test;
 
-import java.util.Map;
+import org.testng.annotations.Test;
 
 public class DuplicatePropertyNameTest extends TestBase {
     @Test(expectedExceptions = ConstraintViolationException.class)

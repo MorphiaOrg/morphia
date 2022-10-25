@@ -1,7 +1,16 @@
 package dev.morphia.annotations.internal;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Index;
@@ -15,18 +24,12 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.IndexType;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static dev.morphia.annotations.Collation.DEFAULT_LOCALE;
 import static dev.morphia.annotations.internal.FieldBuilder.fieldBuilder;

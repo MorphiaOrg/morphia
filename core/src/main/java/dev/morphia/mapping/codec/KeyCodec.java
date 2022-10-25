@@ -1,18 +1,19 @@
 package dev.morphia.mapping.codec;
 
+import java.util.Iterator;
+
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-
-import java.util.Iterator;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 

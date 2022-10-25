@@ -1,12 +1,14 @@
 package dev.morphia.aggregation.stages;
 
+import java.time.LocalDateTime;
+
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.FullDocumentBeforeChange;
 import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.internal.MorphiaInternal;
-import org.bson.Document;
 
-import java.time.LocalDateTime;
+import dev.morphia.annotations.internal.MorphiaInternal;
+
+import org.bson.Document;
 
 import static java.lang.String.format;
 

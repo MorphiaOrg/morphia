@@ -1,18 +1,20 @@
 package dev.morphia;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import com.mongodb.WriteConcern;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
+
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Defines the options for a "find and modify" operation.

@@ -1,6 +1,10 @@
 package dev.morphia.test.mapping;
 
+import java.util.Map;
+import java.util.function.Function;
+
 import com.mongodb.client.MongoCollection;
+
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.Entity;
@@ -8,16 +12,15 @@ import dev.morphia.annotations.Id;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.test.TestBase;
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
-import net.bytebuddy.jar.asm.Opcodes;
+
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
-import java.util.Map;
-import java.util.function.Function;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
+import net.bytebuddy.jar.asm.Opcodes;
 
 import static org.testng.Assert.assertTrue;
 

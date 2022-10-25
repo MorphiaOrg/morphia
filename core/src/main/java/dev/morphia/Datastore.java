@@ -1,5 +1,9 @@
 package dev.morphia;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
@@ -8,6 +12,7 @@ import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
@@ -23,12 +28,9 @@ import dev.morphia.query.UpdateOperations;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.transactions.MorphiaSession;
 import dev.morphia.transactions.MorphiaTransaction;
+
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Datastore interface to get/delete/save objects

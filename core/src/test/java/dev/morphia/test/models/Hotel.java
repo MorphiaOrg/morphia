@@ -1,14 +1,14 @@
 package dev.morphia.test.models;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Transient;
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Transient;
 
 @Entity("hotels")
 public class Hotel extends TestEntity {

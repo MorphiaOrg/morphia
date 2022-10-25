@@ -3,6 +3,7 @@ package dev.morphia.aggregation.codecs.stages;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 

@@ -1,11 +1,12 @@
 package dev.morphia.geo;
 
-import com.mongodb.client.model.geojson.Position;
-import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.internal.MorphiaInternal;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mongodb.client.model.geojson.Position;
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Represents a GeoJSON Point type. Will be persisted into the database according to <a href="http://geojson.org/geojson-spec.html#id2">the

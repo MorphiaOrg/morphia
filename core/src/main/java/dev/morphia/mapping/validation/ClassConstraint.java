@@ -1,9 +1,9 @@
 package dev.morphia.mapping.validation;
 
+import java.util.Set;
+
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-
-import java.util.Set;
 
 /**
  * Defines a constraint for validation

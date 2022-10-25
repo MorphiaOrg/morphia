@@ -1,11 +1,12 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.List;
+
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Inventory;
 import dev.morphia.test.aggregation.model.Order;
-import org.testng.annotations.Test;
 
-import java.util.List;
+import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Sort.sort;

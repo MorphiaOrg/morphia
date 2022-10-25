@@ -1,15 +1,16 @@
 package dev.morphia.aggregation;
 
+import java.util.Iterator;
+import java.util.List;
+
 import com.mongodb.AggregationOptions;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.model.UnwindOptions;
+
 import dev.morphia.query.BucketAutoOptions;
 import dev.morphia.query.BucketOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * This defines the pipeline used in aggregation operations

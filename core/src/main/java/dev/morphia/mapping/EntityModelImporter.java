@@ -1,12 +1,12 @@
 package dev.morphia.mapping;
 
+import java.util.List;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-
-import java.util.List;
 
 /**
  * Defines an importer to allow for the external definition and import of model and codec definitions.

@@ -1,11 +1,12 @@
 package dev.morphia.test.aggregation.expressions;
 
+import java.util.List;
+
 import dev.morphia.aggregation.expressions.SystemVariables;
 import dev.morphia.aggregation.stages.Projection;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.DataSizeExpressions.binarySize;
 import static dev.morphia.aggregation.expressions.DataSizeExpressions.bsonSize;

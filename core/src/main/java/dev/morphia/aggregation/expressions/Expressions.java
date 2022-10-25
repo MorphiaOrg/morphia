@@ -1,15 +1,16 @@
 package dev.morphia.aggregation.expressions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.LiteralExpression;
 import dev.morphia.aggregation.expressions.impls.MetaExpression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 

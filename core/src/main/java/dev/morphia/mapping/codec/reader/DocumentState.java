@@ -1,9 +1,9 @@
 package dev.morphia.mapping.codec.reader;
 
+import java.util.List;
+
 import org.bson.BsonType;
 import org.bson.Document;
-
-import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 

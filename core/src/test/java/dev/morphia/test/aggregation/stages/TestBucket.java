@@ -1,16 +1,17 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.Iterator;
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Artwork;
 import dev.morphia.test.aggregation.model.Book;
+
 import org.bson.Document;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Iterator;
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;

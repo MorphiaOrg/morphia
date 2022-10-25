@@ -1,11 +1,11 @@
 package dev.morphia.mapping.codec;
 
+import java.util.Collection;
+
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
-
-import java.util.Collection;
 
 final class CollectionPropertyCodecProvider implements PropertyCodecProvider {
     @SuppressWarnings({ "rawtypes", "unchecked" })

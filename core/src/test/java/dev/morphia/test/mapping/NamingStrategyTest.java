@@ -2,6 +2,7 @@ package dev.morphia.test.mapping;
 
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.test.TestBase;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

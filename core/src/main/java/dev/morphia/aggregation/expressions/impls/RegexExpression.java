@@ -1,11 +1,12 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import java.util.regex.Pattern;
+
 import dev.morphia.Datastore;
+
 import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.regex.Pattern;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;

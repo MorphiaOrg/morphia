@@ -2,6 +2,7 @@ package dev.morphia.test.mapping.codec;
 
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.test.TestBase;
+
 import org.bson.Document;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;

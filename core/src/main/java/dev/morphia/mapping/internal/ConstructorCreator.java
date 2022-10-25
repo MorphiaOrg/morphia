@@ -1,6 +1,18 @@
 package dev.morphia.mapping.internal;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.Name;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
@@ -13,18 +25,8 @@ import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import static java.lang.Integer.compare;
 import static java.util.Arrays.asList;

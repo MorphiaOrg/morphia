@@ -1,17 +1,19 @@
 package dev.morphia.mapping.codec;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.annotations.LoadOnly;
-import dev.morphia.annotations.NotSaved;
-import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
-import org.bson.codecs.pojo.PropertySerialization;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.annotations.LoadOnly;
+import dev.morphia.annotations.NotSaved;
+import dev.morphia.mapping.MapperOptions;
+import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
+
+import org.bson.codecs.pojo.PropertySerialization;
 
 /**
  * Determines if a property should be serialized or not

@@ -1,10 +1,10 @@
 package dev.morphia.aggregation.expressions;
 
-import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.expressions.impls.MathExpression;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.aggregation.expressions.impls.MathExpression;
 
 import static java.util.Arrays.asList;
 

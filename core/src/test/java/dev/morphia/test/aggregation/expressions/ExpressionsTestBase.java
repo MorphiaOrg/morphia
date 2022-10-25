@@ -1,15 +1,16 @@
 package dev.morphia.test.aggregation.expressions;
 
+import java.time.LocalDate;
+
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.Projection;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.User;
+
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 import org.testng.annotations.BeforeMethod;
-
-import java.time.LocalDate;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static org.testng.Assert.assertEquals;

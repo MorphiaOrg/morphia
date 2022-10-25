@@ -17,6 +17,7 @@
 package dev.morphia;
 
 import com.mongodb.WriteConcern;
+
 import dev.morphia.internal.WriteConfigurable;
 
 /**

@@ -1,13 +1,15 @@
 package dev.morphia.query.filters;
 
+import java.util.Map;
+
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Point;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.Map;
 
 /**
  * Defines a filter for $near and $nearSphere queries

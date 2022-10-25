@@ -1,11 +1,13 @@
 package dev.morphia.test.aggregation.expressions;
 
+import java.util.List;
+
 import com.mongodb.client.MongoCollection;
+
 import dev.morphia.aggregation.stages.Group;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.Expressions.meta;

@@ -2,6 +2,7 @@ package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Book;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

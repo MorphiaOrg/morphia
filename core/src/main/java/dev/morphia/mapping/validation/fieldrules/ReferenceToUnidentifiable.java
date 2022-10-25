@@ -1,5 +1,7 @@
 package dev.morphia.mapping.validation.fieldrules;
 
+import java.util.Set;
+
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
@@ -9,8 +11,6 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.sofia.Sofia;
-
-import java.util.Set;
 
 /**
  * Checks that references point to mapped types.

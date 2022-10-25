@@ -1,9 +1,9 @@
 package dev.morphia.test.models;
 
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-
-import java.util.List;
 
 import static java.util.Arrays.asList;
 

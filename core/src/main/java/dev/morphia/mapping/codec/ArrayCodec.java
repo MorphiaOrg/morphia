@@ -1,7 +1,14 @@
 package dev.morphia.mapping.codec;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
+
 import org.bson.BsonBinarySubType;
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -9,11 +16,6 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 class ArrayCodec implements Codec<Object> {
 

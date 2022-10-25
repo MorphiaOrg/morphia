@@ -1,5 +1,8 @@
 package dev.morphia.aggregation.codecs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.codecs.stages.AddFieldsCodec;
 import dev.morphia.aggregation.codecs.stages.AutoBucketCodec;
@@ -37,14 +40,13 @@ import dev.morphia.aggregation.codecs.stages.UnionWithCodec;
 import dev.morphia.aggregation.codecs.stages.UnsetCodec;
 import dev.morphia.aggregation.codecs.stages.UnwindCodec;
 import dev.morphia.aggregation.expressions.impls.Expression;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AggregationCodecProvider implements CodecProvider {

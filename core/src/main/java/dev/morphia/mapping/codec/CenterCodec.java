@@ -1,7 +1,9 @@
 package dev.morphia.mapping.codec;
 
 import com.mongodb.client.model.geojson.Position;
+
 import dev.morphia.sofia.Sofia;
+
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;

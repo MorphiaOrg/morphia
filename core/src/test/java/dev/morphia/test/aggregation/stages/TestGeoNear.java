@@ -1,13 +1,15 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.Iterator;
+
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
+
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.models.geo.GeoCity;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Iterator;
 
 import static dev.morphia.aggregation.stages.GeoNear.geoNear;
 

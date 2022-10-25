@@ -1,6 +1,11 @@
 package dev.morphia.test.mapping.codec;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.function.Consumer;
+
 import com.mongodb.client.MongoCollection;
+
 import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -9,6 +14,7 @@ import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.reader.NameState;
 import dev.morphia.mapping.codec.reader.ValueState;
 import dev.morphia.test.TestBase;
+
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonType;
@@ -16,10 +22,6 @@ import org.bson.Document;
 import org.bson.codecs.DecoderContext;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.function.Consumer;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static org.bson.Document.parse;

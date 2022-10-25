@@ -1,14 +1,16 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import java.util.List;
+import java.util.StringJoiner;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
-import java.util.StringJoiner;
 
 /**
  * Base class for all the expression types.

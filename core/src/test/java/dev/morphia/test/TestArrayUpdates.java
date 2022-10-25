@@ -1,5 +1,8 @@
 package dev.morphia.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
@@ -8,11 +11,9 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.models.Grade;
 import dev.morphia.test.models.Student;
+
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.lt;

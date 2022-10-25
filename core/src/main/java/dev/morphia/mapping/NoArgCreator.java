@@ -1,12 +1,13 @@
 package dev.morphia.mapping;
 
+import java.lang.reflect.Constructor;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import java.lang.reflect.Constructor;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * @morphia.internal

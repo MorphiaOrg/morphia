@@ -1,11 +1,12 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.time.LocalDate;
+
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.models.User;
-import org.testng.annotations.Test;
 
-import java.time.LocalDate;
+import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;

@@ -3,6 +3,7 @@ package dev.morphia.test.models;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Validation;
+
 import org.bson.types.ObjectId;
 
 import static com.mongodb.client.model.ValidationLevel.MODERATE;

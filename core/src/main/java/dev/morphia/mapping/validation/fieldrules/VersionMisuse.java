@@ -1,13 +1,13 @@
 package dev.morphia.mapping.validation.fieldrules;
 
+import java.util.Set;
+
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
-
-import java.util.Set;
 
 import static java.lang.String.format;
 

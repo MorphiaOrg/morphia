@@ -16,11 +16,11 @@
 
 package dev.morphia.test.models;
 
+import java.util.Arrays;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-
-import java.util.Arrays;
 
 import static java.lang.String.format;
 

@@ -1,7 +1,11 @@
 package dev.morphia.mapping.codec.writer;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
+
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
 import org.bson.BsonMaxKey;
@@ -18,9 +22,6 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 /**
  * Utility to write out to a Document

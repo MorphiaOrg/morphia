@@ -1,5 +1,9 @@
 package dev.morphia.test.models.methods;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
@@ -9,11 +13,8 @@ import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.experimental.MorphiaReference;
-import org.bson.types.ObjectId;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
+import org.bson.types.ObjectId;
 
 import static java.lang.String.format;
 

@@ -16,15 +16,15 @@
 
 package dev.morphia.annotations;
 
-import com.mongodb.client.model.ValidationAction;
-import com.mongodb.client.model.ValidationLevel;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import com.mongodb.client.model.ValidationAction;
+import com.mongodb.client.model.ValidationLevel;
 
 import static com.mongodb.client.model.ValidationAction.ERROR;
 import static com.mongodb.client.model.ValidationLevel.STRICT;

@@ -1,6 +1,10 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import java.util.List;
+import java.util.Locale;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.aggregation.expressions.impls.Expression;
@@ -8,12 +12,10 @@ import dev.morphia.aggregation.stages.SetWindowFields;
 import dev.morphia.aggregation.stages.SetWindowFields.Output;
 import dev.morphia.aggregation.stages.SetWindowFields.Window;
 import dev.morphia.query.Sort;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
-import java.util.Locale;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;

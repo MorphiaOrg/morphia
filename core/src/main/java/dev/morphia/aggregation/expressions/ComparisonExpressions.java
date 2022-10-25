@@ -1,9 +1,9 @@
 package dev.morphia.aggregation.expressions;
 
+import java.util.List;
+
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
-
-import java.util.List;
 
 /**
  * Defines helper methods for the comparison expressions

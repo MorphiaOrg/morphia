@@ -1,10 +1,11 @@
 package dev.morphia.test.aggregation.model;
 
+import java.util.Date;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import org.bson.types.ObjectId;
 
-import java.util.Date;
+import org.bson.types.ObjectId;
 
 @Entity
 public class Sales {

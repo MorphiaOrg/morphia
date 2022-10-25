@@ -1,6 +1,7 @@
 package dev.morphia.query.filters;
 
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
@@ -8,6 +9,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.OperationTarget;
+
 import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;

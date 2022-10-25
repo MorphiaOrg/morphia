@@ -1,5 +1,7 @@
 package dev.morphia.test.query;
 
+import java.util.List;
+
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -13,9 +15,8 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.query.TestLegacyQuery.ContainsPic;
 import dev.morphia.test.query.TestLegacyQuery.Pic;
 import dev.morphia.test.query.TestLegacyQuery.PicWithObjectId;
-import org.testng.annotations.Test;
 
-import java.util.List;
+import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;

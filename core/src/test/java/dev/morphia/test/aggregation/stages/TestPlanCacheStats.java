@@ -1,15 +1,17 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.List;
+
 import com.mongodb.ReadConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.IndexOptions;
+
 import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Order;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertNotNull;

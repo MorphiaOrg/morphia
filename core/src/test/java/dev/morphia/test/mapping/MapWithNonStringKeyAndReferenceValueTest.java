@@ -1,12 +1,13 @@
 package dev.morphia.test.mapping;
 
-import dev.morphia.annotations.Reference;
-import dev.morphia.test.models.TestEntity;
-import org.testng.annotations.Test;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import dev.morphia.annotations.Reference;
+import dev.morphia.test.models.TestEntity;
+
+import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;

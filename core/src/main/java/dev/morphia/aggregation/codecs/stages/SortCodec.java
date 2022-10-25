@@ -3,6 +3,7 @@ package dev.morphia.aggregation.codecs.stages;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Sort;
 import dev.morphia.aggregation.stages.Sort.SortType;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 

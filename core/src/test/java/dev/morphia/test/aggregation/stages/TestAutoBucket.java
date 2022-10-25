@@ -1,17 +1,19 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.Iterator;
+import java.util.List;
+
 import com.mongodb.client.model.BucketGranularity;
+
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Artwork;
 import dev.morphia.test.aggregation.model.Book;
 import dev.morphia.test.aggregation.model.BooksBucketResult;
 import dev.morphia.test.aggregation.model.BucketAutoResult;
+
 import org.bson.Document;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Iterator;
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.addToSet;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;

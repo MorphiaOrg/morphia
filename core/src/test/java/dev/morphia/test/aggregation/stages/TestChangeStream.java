@@ -1,20 +1,22 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Iterator;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.FullDocumentBeforeChange;
+
 import dev.morphia.aggregation.stages.ChangeStream;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.aggregation.AggregationTest;
+
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.testng.annotations.Test;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
 
 import static dev.morphia.aggregation.stages.ChangeStream.changeStream;
 import static java.lang.String.format;

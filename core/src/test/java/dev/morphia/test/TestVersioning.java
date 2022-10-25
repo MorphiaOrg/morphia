@@ -1,7 +1,12 @@
 package dev.morphia.test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.UpdateResult;
+
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
@@ -25,13 +30,10 @@ import dev.morphia.test.models.methods.MethodMappedUser;
 import dev.morphia.test.models.versioned.AbstractVersionedBase;
 import dev.morphia.test.models.versioned.Versioned;
 import dev.morphia.test.models.versioned.VersionedChildEntity;
+
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.query.filters.Filters.eq;

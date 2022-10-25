@@ -1,11 +1,16 @@
 package dev.morphia.test.indexes;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import com.mongodb.MongoCommandException;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
+
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
@@ -23,14 +28,11 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.methods.MethodMappedUser;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static dev.morphia.test.util.IndexMatcher.doesNotHaveIndexNamed;
@@ -149,10 +151,10 @@ public class TestIndexes extends TestBase {
         getDs().ensureIndexes();
 
         assertEquals(getIndexInfo(Circle.class)
-                        .stream()
-                        .map(i -> (String) i.get("name"))
-                        .collect(toSet()),
-            Set.of("_id_", "radius_1", "description_1", "foo_1"));
+                .stream()
+                .map(i -> (String) i.get("name"))
+                .collect(toSet()),
+                Set.of("_id_", "radius_1", "description_1", "foo_1"));
     }
 
     @Test

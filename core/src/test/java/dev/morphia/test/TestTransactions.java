@@ -1,15 +1,17 @@
 package dev.morphia.test;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import com.mongodb.MongoQueryException;
 import com.mongodb.TransactionOptions;
+
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
 import dev.morphia.transactions.MorphiaSession;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import static com.mongodb.ClientSessionOptions.builder;
 import static com.mongodb.WriteConcern.MAJORITY;

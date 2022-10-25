@@ -1,5 +1,8 @@
 package dev.morphia.aggregation.expressions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.expressions.impls.Accumulator;
@@ -9,11 +12,9 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.MathExpression;
 import dev.morphia.aggregation.expressions.impls.ShiftExpression;
 import dev.morphia.aggregation.stages.SetWindowFields;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static java.util.Arrays.asList;

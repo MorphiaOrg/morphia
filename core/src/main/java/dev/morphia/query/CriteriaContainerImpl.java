@@ -1,16 +1,18 @@
 package dev.morphia.query;
 
-import dev.morphia.Datastore;
-import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bson.Document;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import org.bson.Document;
 
 /**
  * Defines a container of Criteria and a join method.

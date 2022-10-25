@@ -1,9 +1,10 @@
 package dev.morphia;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.mapping.codec.references.MorphiaProxy;
-
 import java.io.Serializable;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.mapping.codec.references.MorphiaProxy;
 
 /**
  * <p>

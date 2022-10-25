@@ -1,6 +1,10 @@
 package dev.morphia.aggregation.codecs;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.ArrayLiteral;
 import dev.morphia.aggregation.expressions.impls.Expression;
@@ -11,13 +15,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.Sort;
+
 import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @morphia.internal

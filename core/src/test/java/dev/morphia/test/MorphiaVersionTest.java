@@ -1,12 +1,14 @@
 package dev.morphia.test;
 
+import java.io.FileReader;
+
 import com.github.zafarkhaja.semver.Version;
+
 import dev.morphia.MorphiaVersion23;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.testng.annotations.Test;
-
-import java.io.FileReader;
 
 import static java.lang.String.format;
 import static org.testng.Assert.assertEquals;

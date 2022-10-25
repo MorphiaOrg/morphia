@@ -3,6 +3,7 @@ package dev.morphia.aggregation.codecs.stages;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.ReplaceWith;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 

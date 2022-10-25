@@ -16,9 +16,9 @@
 
 package dev.morphia.query;
 
-import org.bson.Document;
-
 import java.util.Arrays;
+
+import org.bson.Document;
 
 /**
  * Defines array slicing options for query projections.

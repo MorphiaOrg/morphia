@@ -1,14 +1,15 @@
 package dev.morphia.test.mapping.lazy;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.experimental.MorphiaReference;
-import org.bson.types.ObjectId;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.bson.types.ObjectId;
 
 @Entity
 public class ClassA implements InterfaceA {

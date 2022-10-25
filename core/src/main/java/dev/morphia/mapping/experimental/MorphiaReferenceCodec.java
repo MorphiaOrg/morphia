@@ -1,6 +1,12 @@
 package dev.morphia.mapping.experimental;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseReferenceCodec;
@@ -11,17 +17,13 @@ import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
+
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.mapping.codec.references.ReferenceCodec.processId;

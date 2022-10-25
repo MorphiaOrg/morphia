@@ -1,11 +1,12 @@
 package dev.morphia.test.models;
 
+import java.util.List;
+
 import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import org.bson.types.ObjectId;
 
-import java.util.List;
+import org.bson.types.ObjectId;
 
 @Entity
 @SuppressWarnings({ "UnusedDeclaration", "removal" })

@@ -1,12 +1,12 @@
 package dev.morphia.annotations;
 
-import dev.morphia.annotations.internal.MorphiaExperimental;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import dev.morphia.annotations.internal.MorphiaExperimental;
 
 /**
  * Specifies options to be applied when sharding.

@@ -16,7 +16,12 @@
 
 package dev.morphia.internal;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringJoiner;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.NotMappableException;
@@ -24,11 +29,8 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringJoiner;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import static java.util.Arrays.asList;
 

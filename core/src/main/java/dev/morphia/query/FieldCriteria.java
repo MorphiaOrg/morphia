@@ -1,13 +1,14 @@
 package dev.morphia.query;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import org.bson.Document;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.bson.Document;
 
 /**
  * @morphia.internal

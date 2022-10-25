@@ -17,14 +17,14 @@
 
 package dev.morphia.annotations;
 
-import dev.morphia.mapping.Mapper;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import dev.morphia.mapping.Mapper;
 
 /**
  * Allows marking and naming the collectionName

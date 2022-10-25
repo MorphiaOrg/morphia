@@ -1,8 +1,8 @@
 package dev.morphia.test.aggregation.model;
 
-import dev.morphia.annotations.Entity;
-
 import java.util.Objects;
+
+import dev.morphia.annotations.Entity;
 
 @Entity
 public class ProjectedAuthor {

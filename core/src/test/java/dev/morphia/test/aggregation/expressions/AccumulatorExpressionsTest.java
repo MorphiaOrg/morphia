@@ -1,14 +1,15 @@
 package dev.morphia.test.aggregation.expressions;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import dev.morphia.aggregation.stages.AddFields;
 import dev.morphia.aggregation.stages.Group;
 import dev.morphia.aggregation.stages.Sort;
 import dev.morphia.test.models.User;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.accumulator;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.addToSet;
@@ -60,9 +61,9 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                                 + "      sum: state1.sum + state2.sum\n"
                                                 + "   }\n"
                                                 + "}")
-                                        .finalizeFunction("function(state) {\n" +
-                                                "   return (state.sum / state.count)\n" +
-                                                "}")))
+                                                        .finalizeFunction("function(state) {\n" +
+                                                                "   return (state.sum / state.count)\n" +
+                                                                "}")))
                 .execute(Document.class)
                 .toList();
 

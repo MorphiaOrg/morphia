@@ -1,8 +1,8 @@
 package dev.morphia.mapping.codec.pojo;
 
-import dev.morphia.annotations.internal.MorphiaInternal;
-
 import java.util.Objects;
+
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Represents a wild card type

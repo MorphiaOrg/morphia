@@ -1,9 +1,9 @@
 package dev.morphia.mapping.validation.classrules;
 
-import dev.morphia.mapping.codec.pojo.PropertyModel;
-
 import java.util.Arrays;
 import java.util.List;
+
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 /**
  * @author Uwe Schaefer, (us@thomas-daily.de)

@@ -1,14 +1,15 @@
 package dev.morphia.mapping.codec;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.MapCodec;
-
-import java.util.Map;
-import java.util.Map.Entry;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 

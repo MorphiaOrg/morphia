@@ -1,6 +1,12 @@
 package dev.morphia.mapping;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ServiceLoader;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.internal.MorphiaExperimental;
@@ -14,16 +20,13 @@ import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.sofia.Sofia;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ServiceLoader;
 
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
 import static java.util.List.of;

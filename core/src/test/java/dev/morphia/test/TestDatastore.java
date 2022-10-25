@@ -1,11 +1,19 @@
 package dev.morphia.test;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.InsertManyOptions;
@@ -42,6 +50,7 @@ import dev.morphia.test.models.Population;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.User;
+
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.Document;
@@ -52,13 +61,6 @@ import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static com.mongodb.client.model.ReturnDocument.AFTER;

@@ -18,6 +18,7 @@ package dev.morphia.aggregation;
 
 import dev.morphia.geo.Point;
 import dev.morphia.query.Query;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
