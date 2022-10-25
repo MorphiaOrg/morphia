@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import com.mongodb.lang.Nullable;
-
 import java.util.List;
+
+import com.mongodb.lang.Nullable;
 
 /**
  * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The

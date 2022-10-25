@@ -1,9 +1,14 @@
 package dev.morphia.test.query.experimental.filters;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.result.InsertManyResult;
+
 import dev.morphia.aggregation.experimental.expressions.ComparisonExpressions;
 import dev.morphia.aggregation.experimental.expressions.Miscellaneous;
 import dev.morphia.query.FindOptions;
@@ -13,13 +18,10 @@ import dev.morphia.query.Type;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
+
 import org.bson.Document;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;

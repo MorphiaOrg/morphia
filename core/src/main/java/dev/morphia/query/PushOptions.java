@@ -16,11 +16,12 @@
 
 package dev.morphia.query;
 
-import dev.morphia.query.experimental.updates.PushOperator;
-import org.bson.Document;
-
 import java.util.Map;
 import java.util.Map.Entry;
+
+import dev.morphia.query.experimental.updates.PushOperator;
+
+import org.bson.Document;
 
 /**
  * The options to apply to a $push update operator.

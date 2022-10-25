@@ -1,5 +1,11 @@
 package dev.morphia.query;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
@@ -7,6 +13,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
@@ -17,16 +24,11 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.experimental.updates.UpdateOperator;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
+
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import static com.mongodb.CursorType.NonTailable;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;

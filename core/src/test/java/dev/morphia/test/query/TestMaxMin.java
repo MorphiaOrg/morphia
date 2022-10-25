@@ -1,6 +1,9 @@
 package dev.morphia.test.query;
 
+import java.util.List;
+
 import com.mongodb.MongoException;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
@@ -10,13 +13,12 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;

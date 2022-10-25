@@ -1,9 +1,10 @@
 package dev.morphia;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.sofia.Sofia;
-
 import java.util.ConcurrentModificationException;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.sofia.Sofia;
 
 /**
  * This exception is thrown when a version field does not match the expected state in the database. It's thrown when a versioned entity

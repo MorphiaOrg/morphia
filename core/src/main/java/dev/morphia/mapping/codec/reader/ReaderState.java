@@ -1,14 +1,16 @@
 package dev.morphia.mapping.codec.reader;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.sofia.Sofia;
+
 import org.bson.BsonBinary;
 import org.bson.BsonType;
 import org.bson.Document;
-
-import java.util.List;
-import java.util.UUID;
 
 abstract class ReaderState {
     private final DocumentReader reader;

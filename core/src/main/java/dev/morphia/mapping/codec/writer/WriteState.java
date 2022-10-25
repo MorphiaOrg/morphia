@@ -1,11 +1,13 @@
 package dev.morphia.mapping.codec.writer;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.sofia.Sofia;
-import org.bson.Document;
-
 import java.util.List;
 import java.util.StringJoiner;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.sofia.Sofia;
+
+import org.bson.Document;
 
 abstract class WriteState {
     private final DocumentWriter writer;

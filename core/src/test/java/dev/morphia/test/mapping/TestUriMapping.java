@@ -1,16 +1,17 @@
 package dev.morphia.test.mapping;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
-import dev.morphia.test.TestBase;
-import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.query.FindOptions;
+import dev.morphia.test.TestBase;
+
+import org.bson.types.ObjectId;
+import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;

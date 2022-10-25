@@ -1,15 +1,16 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.mapping.Mapper;
-import org.bson.codecs.Codec;
-import org.bson.codecs.MapCodec;
-import org.bson.codecs.configuration.CodecProvider;
-import org.bson.codecs.configuration.CodecRegistry;
-
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import dev.morphia.mapping.Mapper;
+
+import org.bson.codecs.Codec;
+import org.bson.codecs.MapCodec;
+import org.bson.codecs.configuration.CodecProvider;
+import org.bson.codecs.configuration.CodecRegistry;
 
 /**
  * Defines a provider of codecs for Morphia's types

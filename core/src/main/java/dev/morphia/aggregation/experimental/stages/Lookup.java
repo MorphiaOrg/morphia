@@ -1,11 +1,12 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import java.util.List;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-
-import java.util.List;
 
 import static java.util.Arrays.asList;
 

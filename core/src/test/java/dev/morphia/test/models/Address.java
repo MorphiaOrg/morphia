@@ -1,10 +1,10 @@
 package dev.morphia.test.models;
 
+import java.io.Serializable;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
-
-import java.io.Serializable;
 
 @Entity
 public class Address implements Serializable {

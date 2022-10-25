@@ -1,10 +1,5 @@
 package dev.morphia.mapping.conventions;
 
-import dev.morphia.Datastore;
-import dev.morphia.mapping.codec.MethodAccessor;
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
-import dev.morphia.mapping.codec.pojo.TypeData;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -14,6 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+
+import dev.morphia.Datastore;
+import dev.morphia.mapping.codec.MethodAccessor;
+import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
+import dev.morphia.mapping.codec.pojo.TypeData;
 
 public class MethodDiscovery implements MorphiaConvention {
     private EntityModelBuilder entityModelBuilder;

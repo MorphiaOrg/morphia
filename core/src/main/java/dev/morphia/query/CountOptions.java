@@ -16,16 +16,18 @@
 
 package dev.morphia.query;
 
+import java.util.concurrent.TimeUnit;
+
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.internal.SessionConfigurable;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * The options for a count operation.

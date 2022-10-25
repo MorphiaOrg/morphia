@@ -4,9 +4,11 @@ import com.mongodb.client.model.geojson.Geometry;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
+
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Type;
+
 import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;

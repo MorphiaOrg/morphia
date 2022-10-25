@@ -1,11 +1,12 @@
 package dev.morphia.query.experimental.filters;
 
-import dev.morphia.mapping.Mapper;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 import java.util.Arrays;
 import java.util.List;
+
+import dev.morphia.mapping.Mapper;
+
+import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 import static java.lang.String.format;

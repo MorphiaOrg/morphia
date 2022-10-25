@@ -1,15 +1,17 @@
 package dev.morphia.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.experimental.updates.UpdateOperator;
-import org.bson.Document;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bson.Document;
 
 import static java.util.Arrays.asList;
 

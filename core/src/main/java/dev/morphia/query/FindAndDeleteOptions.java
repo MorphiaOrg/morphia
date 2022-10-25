@@ -1,16 +1,18 @@
 package dev.morphia.query;
 
+import java.util.concurrent.TimeUnit;
+
 import com.mongodb.WriteConcern;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Defines options to use for find and delete operations

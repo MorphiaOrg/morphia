@@ -1,16 +1,17 @@
 package dev.morphia.test.mapping;
 
+import java.util.List;
+import java.util.Set;
+
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
+
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
-import java.util.Set;
 
 public class TestSingleToMultipleConversion extends TestBase {
     @Test

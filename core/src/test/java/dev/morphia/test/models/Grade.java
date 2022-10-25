@@ -1,9 +1,9 @@
 package dev.morphia.test.models;
 
+import java.util.Map;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
-
-import java.util.Map;
 
 @Entity
 public class Grade {

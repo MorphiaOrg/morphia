@@ -1,8 +1,21 @@
 package dev.morphia.test.mapping.experimental;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.ReturnDocument;
+
 import dev.morphia.Datastore;
 import dev.morphia.Key;
 import dev.morphia.ModifyOptions;
@@ -25,22 +38,11 @@ import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.methods.MethodMappedFriend;
 import dev.morphia.test.models.methods.MethodMappedUser;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.aggregation.experimental.stages.Lookup.lookup;

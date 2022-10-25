@@ -1,14 +1,16 @@
 package dev.morphia.mapping.codec;
 
+import java.util.Objects;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bson.codecs.Codec;
 
-import java.util.Objects;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import org.bson.codecs.Codec;
 
 /**
  * Defines codecs for properties

@@ -1,13 +1,13 @@
 package dev.morphia.aggregation.experimental.stages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.Fields;
 import dev.morphia.aggregation.experimental.expressions.impls.PipelineField;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 

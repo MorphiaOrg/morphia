@@ -174,6 +174,128 @@
                         <autoReleaseAfterClose>true</autoReleaseAfterClose>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>10.3.4</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>checkstyle</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <configLocation>../config/checkstyle.xml</configLocation>
+                        <suppressionsLocation>../config/checkstyle-exclude.xml</suppressionsLocation>
+                        <inputEncoding>UTF-8</inputEncoding>
+                        <linkXRef>false</linkXRef>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>4.7.2.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.github.spotbugs</groupId>
+                            <artifactId>spotbugs</artifactId>
+                            <version>4.7.2</version>
+                            <type>pom</type>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>spotbugs</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
+                        <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.revapi</groupId>
+                    <artifactId>revapi-maven-plugin</artifactId>
+                    <version>${revapi.maven.plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.revapi</groupId>
+                            <artifactId>revapi-java</artifactId>
+                            <version>${revapi.java.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>revapi</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
+                        <analysisConfigurationFiles>
+                            <analysisConfigurationFile>../config/revapi-filtered.json</analysisConfigurationFile>
+                        </analysisConfigurationFiles>
+                        <analysisConfiguration>
+                            <revapi.versions>
+                                <enabled>true</enabled>
+                                <versionIncreaseAllows>
+                                    <major>
+                                        <severity>BREAKING</severity>
+                                    </major>
+                                    <minor>
+                                        <severity>NON_BREAKING</severity>
+                                    </minor>
+                                    <patch>
+                                        <severity>EQUIVALENT</severity>
+                                    </patch>
+                                </versionIncreaseAllows>
+                            </revapi.versions>
+                        </analysisConfiguration>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.diffplug.spotless</groupId>
+                    <artifactId>spotless-maven-plugin</artifactId>
+                    <version>2.27.2</version>
+
+                    <configuration>
+                        <java>
+                            <eclipse>
+                                <file>${project.basedir}/../config/eclipse-format.xml</file>
+                            </eclipse>
+                            <!--<googleJavaFormat />-->
+
+                            <importOrder>
+                                <file>${project.basedir}/../config/eclipse.importorder</file>
+                            </importOrder>
+
+                            <removeUnusedImports />
+                        </java>
+                        <kotlin>
+                            <ktfmt>
+                                <style>KOTLINLANG</style>
+                                <!-- optional, other options are DEFAULT, DROPBOX, GOOGLE and KOTLINLANG -->
+                            </ktfmt>
+                        </kotlin>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -433,6 +555,9 @@
         <profile>
             <id>java formatting</id>
             <activation>
+                <property>
+                    <name>!code-audits</name>
+                </property>
                 <file>
                     <exists>src/main/java</exists>
                 </file>
@@ -440,41 +565,14 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>net.revelc.code</groupId>
-                        <artifactId>impsort-maven-plugin</artifactId>
-                        <version>${impsort-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sort-imports</id>
-                                <goals>
-                                    <goal>sort</goal>
-                                </goals>
-                                <phase>process-sources</phase>
-                                <configuration>
-                                    <groups>*,java.,javax.,jakarta.</groups>
-                                    <staticAfter>true</staticAfter>
-                                    <staticGroups>*</staticGroups>
-                                    <removeUnused>true</removeUnused>
-                                    <treatSamePackageAsUnused>true</treatSamePackageAsUnused>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>net.revelc.code.formatter</groupId>
-                        <artifactId>formatter-maven-plugin</artifactId>
-                        <version>${formatter-maven-plugin.version}</version>
+                        <groupId>com.diffplug.spotless</groupId>
+                        <artifactId>spotless-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <phase>process-sources</phase>
                                 <goals>
-                                    <goal>format</goal>
+                                    <goal>apply</goal>
                                 </goals>
-                                <configuration>
-                                    <cachedir>${project.basedir}/../config/formatter-maven-plugin</cachedir>
-                                    <configFile>${project.basedir}/../config/eclipse-format.xml</configFile>
-                                    <lineEnding>LF</lineEnding>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -482,16 +580,48 @@
             </build>
         </profile>
         <profile>
-            <id>format-kotlin</id>
+            <id>check java formatting</id>
             <activation>
-                <file><exists>src/main/kotlin</exists></file>
+                <property>
+                    <name>code-audits</name>
+                </property>
+                <file>
+                    <exists>src/main/java</exists>
+                </file>
             </activation>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>com.diffplug.spotless</groupId>
                         <artifactId>spotless-maven-plugin</artifactId>
-                        <version>2.27.2</version>
+                        <executions>
+                            <execution>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>format-kotlin</id>
+            <activation>
+                <property>
+                    <name>!code-audits</name>
+                </property>
+                <file>
+                    <exists>src/main/kotlin</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.diffplug.spotless</groupId>
+                        <artifactId>spotless-maven-plugin</artifactId>
                         <executions>
                             <execution>
                                 <id>format-kotlin</id>
@@ -501,20 +631,34 @@
                                 </goals>
                             </execution>
                         </executions>
-
-                        <configuration>
-                            <kotlin>
-                                <ktfmt>
-                                    <style>KOTLINLANG</style> <!-- optional, other options are DEFAULT, DROPBOX, GOOGLE and KOTLINLANG -->
-                                </ktfmt>
-<!--
-                                <ktlint>
-                                    <version>0.47.1</version>
-                                </ktlint>
--->
-
-                            </kotlin>
-                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>kotlin code checks</id>
+            <activation>
+                <property>
+                    <name>code-audits</name>
+                </property>
+                <file>
+                    <exists>src/main/kotlin</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.diffplug.spotless</groupId>
+                        <artifactId>spotless-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>validate sources</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

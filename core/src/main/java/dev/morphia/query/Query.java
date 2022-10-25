@@ -1,22 +1,24 @@
 package dev.morphia.query;
 
-import com.mongodb.ExplainVerbosity;
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.lang.Nullable;
-import dev.morphia.DeleteOptions;
-import dev.morphia.query.experimental.filters.Filter;
-import dev.morphia.query.experimental.updates.UpdateOperator;
-import dev.morphia.query.internal.MorphiaCursor;
-import dev.morphia.query.internal.MorphiaKeyCursor;
-import dev.morphia.sofia.Sofia;
-import org.bson.Document;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import com.mongodb.ExplainVerbosity;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.DeleteOptions;
+import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.query.experimental.updates.UpdateOperator;
+import dev.morphia.query.internal.MorphiaCursor;
+import dev.morphia.query.internal.MorphiaKeyCursor;
+import dev.morphia.sofia.Sofia;
+
+import org.bson.Document;
 
 import static dev.morphia.query.MorphiaQuery.legacyOperation;
 

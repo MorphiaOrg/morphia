@@ -1,10 +1,11 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
+import java.util.List;
+
 import dev.morphia.aggregation.experimental.stages.Projection;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.aggregation.experimental.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;

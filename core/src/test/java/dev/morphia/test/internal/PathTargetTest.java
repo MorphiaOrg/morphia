@@ -16,6 +16,12 @@
 
 package dev.morphia.test.internal;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -31,15 +37,10 @@ import dev.morphia.test.models.generics.Child;
 import dev.morphia.test.models.generics.ChildEntity;
 import dev.morphia.test.models.generics.EmbeddedType;
 import dev.morphia.test.models.generics.FatherEntity;
+
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
 import static java.util.Arrays.asList;
 

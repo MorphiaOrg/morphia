@@ -1,15 +1,16 @@
 package dev.morphia.mapping.codec.pojo;
 
+import java.util.Collection;
+import java.util.Map;
+
 import com.mongodb.lang.Nullable;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.IdGenerator;
 import org.bson.codecs.ObjectIdGenerator;
 import org.bson.types.ObjectId;
-
-import java.util.Collection;
-import java.util.Map;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 

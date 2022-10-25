@@ -1,7 +1,10 @@
 package dev.morphia.mapping.experimental;
 
+import java.util.List;
+
 import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -10,9 +13,8 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.Query;
 import dev.morphia.sofia.Sofia;
-import org.bson.Document;
 
-import java.util.List;
+import org.bson.Document;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 

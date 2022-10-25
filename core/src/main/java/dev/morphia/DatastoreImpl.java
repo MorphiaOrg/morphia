@@ -1,5 +1,11 @@
 package dev.morphia;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoWriteException;
@@ -13,6 +19,7 @@ import com.mongodb.client.model.ValidationOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.AggregationImpl;
 import dev.morphia.annotations.CappedAt;
@@ -37,15 +44,10 @@ import dev.morphia.query.UpdateException;
 import dev.morphia.query.experimental.updates.UpdateOperators;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.transactions.experimental.MorphiaTransaction;
+
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.bson.Document.parse;
@@ -315,7 +317,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         } else {
             update = ((MergingEncoder<T>) new MergingEncoder(query,
                     (MorphiaCodec) mapper.getCodecRegistry().get(entity.getClass())))
-                    .encode(entity);
+                            .encode(entity);
         }
         UpdateResult execute = update
                 .execute(new UpdateOptions()

@@ -1,16 +1,17 @@
 package dev.morphia.query;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.mongodb.client.model.geojson.Geometry;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.client.model.geojson.Position;
+
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.sofia.Sofia;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static java.lang.String.format;
 

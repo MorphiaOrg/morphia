@@ -1,5 +1,8 @@
 package dev.morphia.test.annotations;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Index;
@@ -15,10 +18,8 @@ import dev.morphia.annotations.builders.IndexOptionsBuilder;
 import dev.morphia.annotations.builders.IndexedBuilder;
 import dev.morphia.annotations.builders.TextBuilder;
 import dev.morphia.annotations.builders.ValidationBuilder;
-import org.testng.annotations.Test;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import org.testng.annotations.Test;
 
 import static java.lang.String.format;
 import static org.testng.Assert.assertNotNull;

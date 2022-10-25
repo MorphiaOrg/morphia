@@ -16,15 +16,16 @@
 
 package taglets;
 
-import com.sun.source.doctree.DocTree;
-import com.sun.source.doctree.UnknownBlockTagTree;
-import jdk.javadoc.doclet.Taglet;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
+
+import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.UnknownBlockTagTree;
+
+import jdk.javadoc.doclet.Taglet;
 
 import static java.util.Arrays.asList;
 import static jdk.javadoc.doclet.Taglet.Location.CONSTRUCTOR;

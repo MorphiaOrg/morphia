@@ -1,11 +1,11 @@
 package dev.morphia.test.util;
 
+import java.util.List;
+
 import org.bson.Document;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-
-import java.util.List;
 
 import static java.lang.String.format;
 import static org.testng.Assert.fail;

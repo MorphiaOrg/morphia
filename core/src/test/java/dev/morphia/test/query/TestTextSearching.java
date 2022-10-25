@@ -1,5 +1,7 @@
 package dev.morphia.test.query;
 
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
@@ -9,10 +11,9 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
 import dev.morphia.test.TestBase;
 import dev.morphia.utils.IndexType;
+
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.experimental.filters.Filters.text;

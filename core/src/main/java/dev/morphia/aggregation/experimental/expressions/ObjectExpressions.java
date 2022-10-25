@@ -1,12 +1,13 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.mapping.Mapper;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.mapping.Mapper;
+
+import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
 /**
  * Defines helper methods for the object expressions

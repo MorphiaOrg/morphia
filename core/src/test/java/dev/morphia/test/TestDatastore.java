@@ -1,10 +1,14 @@
 package dev.morphia.test;
 
+import java.util.Date;
+import java.util.List;
+
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.InsertManyOptions;
@@ -34,12 +38,10 @@ import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Population;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.TestEntity;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.util.Date;
-import java.util.List;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static com.mongodb.client.model.ReturnDocument.AFTER;

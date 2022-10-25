@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.experimental.stages;
 
 import com.mongodb.client.model.geojson.Point;
+
 import dev.morphia.query.experimental.filters.Filter;
 
 /**

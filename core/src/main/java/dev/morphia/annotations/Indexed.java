@@ -1,13 +1,13 @@
 package dev.morphia.annotations;
 
-import dev.morphia.utils.IndexDirection;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import dev.morphia.utils.IndexDirection;
 
 /**
  * Specified on fields that should be Indexed.

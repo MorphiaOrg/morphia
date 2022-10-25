@@ -1,10 +1,11 @@
 package dev.morphia.test.models.generics;
 
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import org.bson.types.ObjectId;
 
-import java.util.List;
+import org.bson.types.ObjectId;
 
 @Entity
 public abstract class FatherEntity<T extends EmbeddedType> {

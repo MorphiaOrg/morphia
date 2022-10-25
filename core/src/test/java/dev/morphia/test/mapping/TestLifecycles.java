@@ -1,8 +1,13 @@
 package dev.morphia.test.mapping;
 
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.client.model.geojson.Position;
 import com.mongodb.lang.NonNull;
+
 import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -15,14 +20,11 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static java.util.Arrays.asList;

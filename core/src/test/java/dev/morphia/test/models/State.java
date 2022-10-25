@@ -16,12 +16,13 @@
 
 package dev.morphia.test.models;
 
+import java.util.Objects;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import org.bson.types.ObjectId;
 
-import java.util.Objects;
+import org.bson.types.ObjectId;
 
 @Entity
 public class State {

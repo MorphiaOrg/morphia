@@ -5,6 +5,7 @@ import dev.morphia.aggregation.experimental.expressions.impls.IndexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.RegexExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ReplaceExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.TrimExpression;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

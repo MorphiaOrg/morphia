@@ -1,9 +1,10 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.mapping.MappingException;
-import org.bson.codecs.pojo.PropertyAccessor;
-
 import java.lang.reflect.Method;
+
+import dev.morphia.mapping.MappingException;
+
+import org.bson.codecs.pojo.PropertyAccessor;
 
 public class MethodAccessor implements PropertyAccessor<Object> {
     private final Method getter;

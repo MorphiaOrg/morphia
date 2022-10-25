@@ -1,8 +1,10 @@
 package dev.morphia.mapping.codec.pojo;
 
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
@@ -37,7 +39,7 @@ public class EntityDecoder implements org.bson.codecs.Decoder<Object> {
         } else {
             entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
                     morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
-                    .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
+                            .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
         }
 
         return entity;

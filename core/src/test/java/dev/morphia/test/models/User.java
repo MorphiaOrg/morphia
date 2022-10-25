@@ -1,12 +1,13 @@
 package dev.morphia.test.models;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Validation;
-import org.bson.types.ObjectId;
 
-import java.time.LocalDate;
-import java.util.List;
+import org.bson.types.ObjectId;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;

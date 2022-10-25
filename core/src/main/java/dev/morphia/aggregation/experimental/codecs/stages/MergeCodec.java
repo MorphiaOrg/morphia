@@ -1,14 +1,15 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-import dev.morphia.aggregation.experimental.stages.Merge;
-import dev.morphia.mapping.Mapper;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
+import dev.morphia.aggregation.experimental.stages.Merge;
+import dev.morphia.mapping.Mapper;
+
+import org.bson.BsonWriter;
+import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;

@@ -1,5 +1,12 @@
 package dev.morphia.test.mapping;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.Entity;
@@ -12,16 +19,10 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.TestBase;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static dev.morphia.query.experimental.filters.Filters.ne;
 import static org.testng.Assert.assertEquals;

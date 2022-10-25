@@ -1,12 +1,13 @@
 package dev.morphia.geo;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import org.bson.types.ObjectId;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+
+import org.bson.types.ObjectId;
 
 /**
  * This class represents a collection of mixed GeoJson objects as per the <a href="http://geojson.org/geojson-spec

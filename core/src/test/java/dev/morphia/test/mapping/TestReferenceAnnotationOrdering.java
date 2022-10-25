@@ -1,19 +1,21 @@
 package dev.morphia.test.mapping;
 
-import com.mongodb.client.MongoCollection;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Reference;
-import dev.morphia.test.TestBase;
-import org.bson.Document;
-import org.testng.annotations.Test;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+
+import com.mongodb.client.MongoCollection;
+
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Reference;
+import dev.morphia.test.TestBase;
+
+import org.bson.Document;
+import org.testng.annotations.Test;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

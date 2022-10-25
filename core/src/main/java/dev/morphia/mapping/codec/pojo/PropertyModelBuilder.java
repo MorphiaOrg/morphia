@@ -16,7 +16,13 @@
 
 package dev.morphia.mapping.codec.pojo;
 
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
@@ -25,13 +31,9 @@ import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
+
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertySerialization;
-
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;

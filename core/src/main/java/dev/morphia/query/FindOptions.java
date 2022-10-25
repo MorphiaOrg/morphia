@@ -16,6 +16,11 @@
 
 package dev.morphia.query;
 
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.concurrent.TimeUnit;
+
 import com.mongodb.CursorType;
 import com.mongodb.DBObject;
 import com.mongodb.ReadConcern;
@@ -25,22 +30,19 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.internal.PathTarget;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.SessionConfigurable;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.StringJoiner;
-import java.util.concurrent.TimeUnit;
-
-import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
+import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 
 /**
  * The options to apply to a find operation (also commonly referred to as a query).

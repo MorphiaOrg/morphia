@@ -1,8 +1,8 @@
 package dev.morphia.aggregation.experimental.expressions;
 
-import dev.morphia.aggregation.experimental.expressions.impls.Expression;
-
 import java.util.List;
+
+import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.toList;
 

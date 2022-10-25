@@ -16,11 +16,21 @@
 
 package dev.morphia.test.aggregation;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.BucketGranularity;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
+
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.AggregationOptions;
 import dev.morphia.annotations.AlsoLoad;
@@ -31,19 +41,11 @@ import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.User;
 import dev.morphia.test.models.geo.GeoCity;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.addToSet;
@@ -264,7 +266,7 @@ public class AggregationTest extends TestBase {
                         id()
                                 .field("month", month(field("date")))
                                 .field("year", year(field("date"))))
-                        .field("count", sum(value(1))));
+                                        .field("count", sum(value(1))));
 
         MorphiaCursor<User> cursor = pipeline.execute(User.class);
         while (cursor.hasNext()) {
@@ -577,7 +579,7 @@ public class AggregationTest extends TestBase {
         final MorphiaCursor<GeoCity> pipeline = getDs().aggregate(GeoCity.class) /* the class is irrelevant for this test */
                 .group(group(
                         id("state"))
-                        .field("total_pop", sum(field("pop"))))
+                                .field("total_pop", sum(field("pop"))))
                 .match(gte("total_pop", 10000000))
                 .execute(GeoCity.class);
         while (pipeline.hasNext()) {

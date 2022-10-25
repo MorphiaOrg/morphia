@@ -1,12 +1,12 @@
 package taglets;
 
-import com.sun.source.doctree.DocTree;
-
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
+
+import com.sun.source.doctree.DocTree;
 
 public class ExperimentalTaglet extends DocTaglet {
     @Override

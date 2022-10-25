@@ -1,13 +1,13 @@
 package dev.morphia.query.experimental.updates;
 
-import dev.morphia.query.Query;
-import dev.morphia.query.experimental.filters.Filter;
-import dev.morphia.sofia.Sofia;
-
 import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import dev.morphia.query.Query;
+import dev.morphia.query.experimental.filters.Filter;
+import dev.morphia.sofia.Sofia;
 
 import static java.util.Collections.singletonList;
 

@@ -1,9 +1,9 @@
 package dev.morphia.aggregation.experimental.stages;
 
-import org.bson.BsonWriter;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.bson.BsonWriter;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 

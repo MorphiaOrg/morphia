@@ -2,6 +2,7 @@ package dev.morphia.test.mapping;
 
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.test.TestBase;
+
 import org.testng.Assert;
 
 public class ProxyTestBase extends TestBase {

@@ -1,10 +1,11 @@
 package dev.morphia.query;
 
-import dev.morphia.aggregation.Accumulator;
-import org.bson.Document;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import dev.morphia.aggregation.Accumulator;
+
+import org.bson.Document;
 
 /**
  * The options for a bucket auto stage of aggregation pipeline.

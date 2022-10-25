@@ -1,10 +1,10 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import java.util.List;
+
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.IfNull;
 import dev.morphia.aggregation.experimental.expressions.impls.SwitchExpression;
-
-import java.util.List;
 
 /**
  * Defines helper methods for the conditional expressions

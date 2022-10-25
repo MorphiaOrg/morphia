@@ -1,5 +1,9 @@
 package dev.morphia.test.mapping.codec.pojo;
 
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Map;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -8,16 +12,13 @@ import dev.morphia.mapping.codec.pojo.ClassMethodPair;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.test.TestBase;
+
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;

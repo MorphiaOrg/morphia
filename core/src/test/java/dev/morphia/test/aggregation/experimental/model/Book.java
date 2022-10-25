@@ -1,10 +1,11 @@
 package dev.morphia.test.aggregation.experimental.model;
 
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import org.bson.types.ObjectId;
 
-import java.util.List;
+import org.bson.types.ObjectId;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;

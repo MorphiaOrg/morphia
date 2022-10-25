@@ -16,17 +16,18 @@
 
 package dev.morphia.internal;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringJoiner;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringJoiner;
 
 import static java.util.Arrays.asList;
 

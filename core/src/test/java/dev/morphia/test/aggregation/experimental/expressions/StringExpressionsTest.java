@@ -1,13 +1,14 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 import dev.morphia.aggregation.experimental.expressions.StringExpressions;
 import dev.morphia.aggregation.experimental.stages.AddFields;
 import dev.morphia.aggregation.experimental.stages.Projection;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
-
-import java.util.List;
-import java.util.regex.Pattern;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.field;
 import static dev.morphia.aggregation.experimental.expressions.Expressions.literal;

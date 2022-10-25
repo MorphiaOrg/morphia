@@ -1,11 +1,11 @@
 package taglets;
 
-import com.sun.source.doctree.DocTree;
-
 import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
+
+import com.sun.source.doctree.DocTree;
 
 import static jdk.javadoc.doclet.Taglet.Location.METHOD;
 

@@ -1,13 +1,13 @@
 package dev.morphia.mapping;
 
+import java.lang.reflect.Constructor;
+import java.util.function.Supplier;
+
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.experimental.ConstructorCreator;
 import dev.morphia.mapping.experimental.UnsafeConstructorCreator;
 import dev.morphia.sofia.Sofia;
-
-import java.lang.reflect.Constructor;
-import java.util.function.Supplier;
 
 /**
  * @morphia.internal

@@ -1,10 +1,10 @@
 package dev.morphia.mapping.codec;
 
-import org.bson.codecs.Codec;
-import org.bson.codecs.configuration.CodecRegistry;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bson.codecs.Codec;
+import org.bson.codecs.configuration.CodecRegistry;
 
 /**
  * A provider of codecs for primitive types

@@ -1,5 +1,8 @@
 package dev.morphia.test;
 
+import java.util.List;
+import java.util.UUID;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -14,12 +17,10 @@ import dev.morphia.test.models.generics.Another;
 import dev.morphia.test.models.generics.Child;
 import dev.morphia.test.models.generics.ChildEntity;
 import dev.morphia.test.models.methods.MethodMappedSpecializedEntity;
+
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
-import java.util.UUID;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.query.experimental.filters.Filters.eq;

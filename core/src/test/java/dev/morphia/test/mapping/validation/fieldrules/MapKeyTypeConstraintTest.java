@@ -1,14 +1,15 @@
 package dev.morphia.test.mapping.validation.fieldrules;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.TestEntity;
-import org.testng.annotations.Test;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import org.testng.annotations.Test;
 
 public class MapKeyTypeConstraintTest extends TestBase {
 

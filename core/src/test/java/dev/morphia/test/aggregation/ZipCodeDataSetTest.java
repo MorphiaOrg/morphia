@@ -1,6 +1,10 @@
 package dev.morphia.test.aggregation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.mongodb.client.MongoCursor;
+
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
 import dev.morphia.query.MorphiaCursor;
@@ -8,13 +12,11 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.Population;
 import dev.morphia.test.models.State;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.first;
@@ -44,10 +46,10 @@ public class ZipCodeDataSetTest extends TestBase {
         Aggregation pipeline = getDs().aggregate(City.class)
                 .group(group(id().field("state")
                         .field("city"))
-                        .field("pop", sum(field("pop"))))
+                                .field("pop", sum(field("pop"))))
                 .group(group(
                         id("_id.state"))
-                        .field("avgCityPop", avg(field("pop"))));
+                                .field("avgCityPop", avg(field("pop"))));
         validate(pipeline.execute(Population.class), "MN", 5372);
     }
 
@@ -70,16 +72,16 @@ public class ZipCodeDataSetTest extends TestBase {
 
                 .group(group(id().field("state")
                         .field("city"))
-                        .field("pop", sum(field("pop"))))
+                                .field("pop", sum(field("pop"))))
 
                 .sort(sort().ascending("pop"))
 
                 .group(group(
                         id("_id.state"))
-                        .field("biggestCity", last(field("_id.city")))
-                        .field("biggestPop", last(field("pop")))
-                        .field("smallestCity", first(field("_id.city")))
-                        .field("smallestPop", first(field("pop"))))
+                                .field("biggestCity", last(field("_id.city")))
+                                .field("biggestPop", last(field("pop")))
+                                .field("smallestCity", first(field("_id.city")))
+                                .field("smallestPop", first(field("pop"))))
 
                 .project(project()
                         .exclude("_id")

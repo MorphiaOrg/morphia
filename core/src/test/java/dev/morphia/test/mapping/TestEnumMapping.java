@@ -1,5 +1,10 @@
 package dev.morphia.test.mapping;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.annotations.Entity;
@@ -7,14 +12,10 @@ import dev.morphia.annotations.Id;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.test.TestBase;
+
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static dev.morphia.query.experimental.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;

@@ -1,10 +1,10 @@
 package dev.morphia.mapping;
 
+import java.lang.reflect.Constructor;
+
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
-
-import java.lang.reflect.Constructor;
 
 /**
  * @morphia.internal

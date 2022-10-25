@@ -1,14 +1,14 @@
 package dev.morphia.mapping.validation.fieldrules;
 
+import java.lang.annotation.Annotation;
+import java.util.Set;
+
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.validation.ConstraintViolation;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.sofia.Sofia;
-
-import java.lang.annotation.Annotation;
-import java.util.Set;
 
 /**
  * Checks that contradicting annotations aren't defined.

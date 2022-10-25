@@ -1,15 +1,17 @@
 package dev.morphia.mapping.codec.pojo;
 
+import java.util.Map.Entry;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.Query;
 import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.experimental.updates.UpdateOperator;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.Map.Entry;
 
 import static dev.morphia.query.experimental.updates.UpdateOperators.set;
 import static dev.morphia.query.experimental.updates.UpdateOperators.unset;

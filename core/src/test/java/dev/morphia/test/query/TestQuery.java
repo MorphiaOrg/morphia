@@ -1,11 +1,26 @@
 package dev.morphia.test.query;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import com.jayway.awaitility.Awaitility;
 import com.mongodb.CursorType;
 import com.mongodb.MongoNamespace;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.CollationStrength;
+
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.Key;
@@ -36,23 +51,10 @@ import dev.morphia.test.models.Keys;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Student;
 import dev.morphia.test.models.UsesCustomIdObject;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.StringJoiner;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Collation.builder;
 import static dev.morphia.aggregation.experimental.expressions.DateExpressions.year;

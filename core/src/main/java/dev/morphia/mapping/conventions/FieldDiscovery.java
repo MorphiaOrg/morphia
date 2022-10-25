@@ -1,15 +1,16 @@
 package dev.morphia.mapping.conventions;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.Datastore;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
 import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
-import org.bson.codecs.pojo.PropertyAccessor;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import org.bson.codecs.pojo.PropertyAccessor;
 
 public class FieldDiscovery implements MorphiaConvention {
 

@@ -1,14 +1,5 @@
 package dev.morphia.mapping.experimental;
 
-import com.mongodb.DBRef;
-import com.mongodb.client.MongoCursor;
-import dev.morphia.Datastore;
-import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.references.ReferenceCodec;
-import dev.morphia.mapping.lazy.proxy.ReferenceException;
-import dev.morphia.sofia.Sofia;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,6 +10,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import com.mongodb.DBRef;
+import com.mongodb.client.MongoCursor;
+
+import dev.morphia.Datastore;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.references.ReferenceCodec;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
+import dev.morphia.sofia.Sofia;
 
 import static dev.morphia.query.experimental.filters.Filters.in;
 import static java.util.Arrays.asList;

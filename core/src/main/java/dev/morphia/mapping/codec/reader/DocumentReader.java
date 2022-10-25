@@ -1,9 +1,15 @@
 package dev.morphia.mapping.codec.reader;
 
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.UUID;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.mapping.codec.BsonTypeMap;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.sofia.Sofia;
+
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
 import org.bson.BsonJavaScript;
@@ -18,10 +24,6 @@ import org.bson.Document;
 import org.bson.types.Binary;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
-
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.UUID;
 
 import static java.lang.String.format;
 

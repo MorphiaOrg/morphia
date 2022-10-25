@@ -1,11 +1,16 @@
 package dev.morphia.test.aggregation.experimental;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+
 import com.mongodb.ReadConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.MergeOptions.WhenMatched;
 import com.mongodb.client.model.MergeOptions.WhenNotMatched;
+
 import dev.morphia.aggregation.experimental.Aggregation;
 import dev.morphia.aggregation.experimental.AggregationOptions;
 import dev.morphia.aggregation.experimental.expressions.Expressions;
@@ -38,13 +43,10 @@ import dev.morphia.test.aggregation.experimental.model.Inventory;
 import dev.morphia.test.aggregation.experimental.model.Order;
 import dev.morphia.test.aggregation.experimental.model.Sales;
 import dev.morphia.test.models.User;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.experimental.expressions.AccumulatorExpressions.push;

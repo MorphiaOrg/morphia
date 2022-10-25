@@ -1,5 +1,8 @@
 package dev.morphia.mapping.conventions;
 
+import java.lang.reflect.Modifier;
+import java.util.Iterator;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Id;
@@ -13,9 +16,6 @@ import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
-
-import java.lang.reflect.Modifier;
-import java.util.Iterator;
 
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isStatic;

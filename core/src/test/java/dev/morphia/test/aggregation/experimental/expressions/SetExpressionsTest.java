@@ -1,8 +1,8 @@
 package dev.morphia.test.aggregation.experimental.expressions;
 
-import org.testng.annotations.Test;
-
 import java.util.List;
+
+import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.experimental.expressions.Expressions.value;
 import static dev.morphia.aggregation.experimental.expressions.SetExpressions.allElementsTrue;

@@ -1,10 +1,12 @@
 package dev.morphia.mapping.codec;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.mapping.MappingException;
-import org.bson.codecs.pojo.PropertyAccessor;
-
 import java.lang.reflect.Field;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.mapping.MappingException;
+
+import org.bson.codecs.pojo.PropertyAccessor;
 
 /**
  * @morphia.internal

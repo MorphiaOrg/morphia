@@ -1,13 +1,14 @@
 package dev.morphia.mapping;
 
+import java.lang.annotation.Annotation;
+
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
+
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
-
-import java.lang.annotation.Annotation;
 
 class MorphiaShortCutProvider implements CodecProvider {
     private final Mapper mapper;

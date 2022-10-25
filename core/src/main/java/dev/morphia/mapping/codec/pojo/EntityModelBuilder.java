@@ -1,13 +1,5 @@
 package dev.morphia.mapping.codec.pojo;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.Datastore;
-import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.NotMappableException;
-import dev.morphia.mapping.conventions.MorphiaConvention;
-import dev.morphia.sofia.Sofia;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -24,6 +16,15 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.Datastore;
+import dev.morphia.annotations.Entity;
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.NotMappableException;
+import dev.morphia.mapping.conventions.MorphiaConvention;
+import dev.morphia.sofia.Sofia;
 
 /**
  * Builder for EntityModels

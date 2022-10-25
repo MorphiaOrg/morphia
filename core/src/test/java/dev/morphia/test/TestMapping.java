@@ -1,5 +1,16 @@
 package dev.morphia.test;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
@@ -47,22 +58,12 @@ import dev.morphia.test.models.versioned.AbstractVersionedBase;
 import dev.morphia.test.models.versioned.Versioned;
 import dev.morphia.test.models.versioned.VersionedChildEntity;
 import dev.morphia.test.models.versioned.subversioned.VersionedToo;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.query.experimental.filters.Filters.eq;

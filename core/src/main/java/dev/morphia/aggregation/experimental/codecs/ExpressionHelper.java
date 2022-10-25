@@ -1,15 +1,17 @@
 package dev.morphia.aggregation.experimental.codecs;
 
+import java.util.function.Consumer;
+
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+
 import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-
-import java.util.function.Consumer;
 
 /**
  * @morphia.internal

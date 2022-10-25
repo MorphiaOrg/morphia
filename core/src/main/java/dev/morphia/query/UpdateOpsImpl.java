@@ -1,16 +1,17 @@
 package dev.morphia.query;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.experimental.filters.Filters;
 import dev.morphia.query.experimental.updates.PopOperator;
 import dev.morphia.query.experimental.updates.PushOperator;
 import dev.morphia.query.experimental.updates.UpdateOperators;
-import org.bson.Document;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.bson.Document;
 
 /**
  * @param <T> the type to update

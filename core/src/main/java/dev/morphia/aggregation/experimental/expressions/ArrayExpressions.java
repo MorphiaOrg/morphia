@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import java.util.List;
+
 import dev.morphia.aggregation.experimental.expressions.impls.ArrayExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ArrayFilterExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ArrayIndexExpression;
@@ -10,8 +12,6 @@ import dev.morphia.aggregation.experimental.expressions.impls.RangeExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ReduceExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.SliceExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ZipExpression;
-
-import java.util.List;
 
 import static java.util.Arrays.asList;
 

@@ -1,14 +1,14 @@
 package dev.morphia.mapping.codec.references;
 
-import dev.morphia.annotations.IdGetter;
-import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.mapping.lazy.proxy.ReferenceException;
-import dev.morphia.sofia.Sofia;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+
+import dev.morphia.annotations.IdGetter;
+import dev.morphia.mapping.experimental.MorphiaReference;
+import dev.morphia.mapping.lazy.proxy.ReferenceException;
+import dev.morphia.sofia.Sofia;
 
 /**
  * The proxy for lazy references.

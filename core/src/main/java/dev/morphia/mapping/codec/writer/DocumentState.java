@@ -1,12 +1,13 @@
 package dev.morphia.mapping.codec.writer;
 
-import com.mongodb.lang.Nullable;
-import org.bson.Document;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+
+import com.mongodb.lang.Nullable;
+
+import org.bson.Document;
 
 import static java.util.List.of;
 

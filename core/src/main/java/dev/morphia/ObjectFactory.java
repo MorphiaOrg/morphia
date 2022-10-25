@@ -1,12 +1,13 @@
 package dev.morphia;
 
-import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
-import org.bson.Document;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
+
+import org.bson.Document;
 
 /**
  * The ObjectFactory is used by morphia to create instances of classes which can be customized to fit a particular applications needs.

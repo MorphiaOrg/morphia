@@ -1,10 +1,10 @@
 package dev.morphia.aggregation;
 
-import com.mongodb.lang.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.mongodb.lang.Nullable;
 
 /**
  * Defines a projection for use in aggregation

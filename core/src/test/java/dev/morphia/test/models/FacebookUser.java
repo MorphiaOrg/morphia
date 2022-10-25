@@ -1,11 +1,11 @@
 package dev.morphia.test.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity("facebook_users")
 public class FacebookUser {

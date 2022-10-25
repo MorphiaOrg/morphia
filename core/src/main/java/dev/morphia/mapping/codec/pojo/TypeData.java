@@ -16,9 +16,6 @@
 
 package dev.morphia.mapping.codec.pojo;
 
-import dev.morphia.sofia.Sofia;
-import org.bson.codecs.pojo.TypeWithTypeParameters;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -29,6 +26,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import dev.morphia.sofia.Sofia;
+
+import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import static java.lang.String.format;
 import static org.bson.assertions.Assertions.notNull;

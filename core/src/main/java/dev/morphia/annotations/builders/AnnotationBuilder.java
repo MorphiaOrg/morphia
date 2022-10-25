@@ -1,11 +1,11 @@
 package dev.morphia.annotations.builders;
 
-import dev.morphia.mapping.MappingException;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import dev.morphia.mapping.MappingException;
 
 import static java.lang.String.format;
 

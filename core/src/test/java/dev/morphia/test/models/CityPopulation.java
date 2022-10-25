@@ -16,10 +16,10 @@
 
 package dev.morphia.test.models;
 
+import java.util.Objects;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
-
-import java.util.Objects;
 
 @Entity
 public class CityPopulation {

@@ -1,16 +1,17 @@
 package dev.morphia.mapping.codec;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.mapping.Mapper;
+
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.lang.String.format;
 

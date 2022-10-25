@@ -1,5 +1,10 @@
 package dev.morphia.mapping.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
@@ -17,13 +22,9 @@ import dev.morphia.mapping.validation.fieldrules.LazyReferenceOnArray;
 import dev.morphia.mapping.validation.fieldrules.MapKeyTypeConstraint;
 import dev.morphia.mapping.validation.fieldrules.ReferenceToUnidentifiable;
 import dev.morphia.mapping.validation.fieldrules.VersionMisuse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import static java.lang.String.format;
 import static java.util.Collections.sort;

@@ -1,5 +1,11 @@
 package dev.morphia.mapping.codec;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+
 import dev.morphia.Datastore;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
@@ -12,16 +18,11 @@ import dev.morphia.mapping.codec.pojo.LifecycleDecoder;
 import dev.morphia.mapping.codec.pojo.LifecycleEncoder;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PropertyCodecProvider;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
 
 /**
  * Provider for codecs for Morphia entities

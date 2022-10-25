@@ -1,8 +1,8 @@
 package dev.morphia.query;
 
-import dev.morphia.query.experimental.updates.UpdateOperator;
-
 import java.util.List;
+
+import dev.morphia.query.experimental.updates.UpdateOperator;
 
 /**
  * <p>

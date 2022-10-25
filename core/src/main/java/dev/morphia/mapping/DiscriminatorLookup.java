@@ -16,14 +16,16 @@
 
 package dev.morphia.mapping;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import org.bson.codecs.configuration.CodecConfigurationException;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.mapping.codec.pojo.EntityModel;
+
+import org.bson.codecs.configuration.CodecConfigurationException;
 
 import static java.lang.String.format;
 

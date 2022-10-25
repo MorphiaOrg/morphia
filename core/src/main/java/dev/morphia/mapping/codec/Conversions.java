@@ -1,12 +1,5 @@
 package dev.morphia.mapping.codec;
 
-import com.mongodb.lang.Nullable;
-import dev.morphia.mapping.MappingException;
-import org.bson.types.Binary;
-import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -16,6 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
+
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.mapping.MappingException;
+
+import org.bson.types.Binary;
+import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.Boolean.FALSE;
 

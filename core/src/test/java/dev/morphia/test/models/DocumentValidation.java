@@ -16,12 +16,13 @@
 
 package dev.morphia.test.models;
 
+import java.util.Date;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Validation;
-import org.bson.types.ObjectId;
 
-import java.util.Date;
+import org.bson.types.ObjectId;
 
 @Entity("validation")
 @Validation("{ number : { $gt : 10 } }")

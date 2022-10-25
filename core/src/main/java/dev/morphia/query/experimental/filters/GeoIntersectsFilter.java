@@ -1,7 +1,9 @@
 package dev.morphia.query.experimental.filters;
 
 import com.mongodb.client.model.geojson.Geometry;
+
 import dev.morphia.mapping.Mapper;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 

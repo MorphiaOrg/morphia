@@ -1,12 +1,13 @@
 package dev.morphia.query.experimental.filters;
 
+import java.util.regex.Pattern;
+
 import dev.morphia.aggregation.experimental.codecs.ExpressionHelper;
 import dev.morphia.mapping.Mapper;
+
 import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import java.util.regex.Pattern;
 
 /**
  * Defines a regular expression filter

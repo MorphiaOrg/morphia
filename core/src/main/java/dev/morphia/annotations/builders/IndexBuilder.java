@@ -1,10 +1,10 @@
 package dev.morphia.annotations.builders;
 
+import java.util.List;
+
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
-
-import java.util.List;
 
 /**
  * @morphia.internal

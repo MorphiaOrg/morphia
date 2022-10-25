@@ -1,5 +1,7 @@
 package dev.morphia.query.experimental.updates;
 
+import java.util.Map;
+
 import dev.morphia.DatastoreImpl;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
@@ -9,10 +11,10 @@ import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.internal.DatastoreAware;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.bson.codecs.EncoderContext;
 
-import java.util.Map;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.experimental.codecs.ExpressionHelper.document;
 

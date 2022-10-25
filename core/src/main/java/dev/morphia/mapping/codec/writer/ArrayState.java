@@ -1,10 +1,10 @@
 package dev.morphia.mapping.codec.writer;
 
-import org.bson.Document;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+
+import org.bson.Document;
 
 class ArrayState extends ValueState<List<Object>> {
     private final List<Object> list = new ArrayList<>();

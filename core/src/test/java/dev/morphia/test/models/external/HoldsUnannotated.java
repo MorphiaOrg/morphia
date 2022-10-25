@@ -1,10 +1,11 @@
 package dev.morphia.test.models.external;
 
+import java.util.Objects;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import org.bson.types.ObjectId;
 
-import java.util.Objects;
+import org.bson.types.ObjectId;
 
 @Entity
 public class HoldsUnannotated {

@@ -1,13 +1,13 @@
 package dev.morphia.aggregation.experimental.expressions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dev.morphia.aggregation.experimental.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.Expression;
 import dev.morphia.aggregation.experimental.expressions.impls.LiteralExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.MetaExpression;
 import dev.morphia.aggregation.experimental.expressions.impls.ValueExpression;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 

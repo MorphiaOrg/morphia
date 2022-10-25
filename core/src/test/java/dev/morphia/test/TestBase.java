@@ -1,5 +1,18 @@
 package dev.morphia.test;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.function.Supplier;
+
 import com.antwerkz.bottlerocket.clusters.MongoCluster;
 import com.antwerkz.bottlerocket.clusters.ReplicaSet;
 import com.antwerkz.bottlerocket.clusters.SingleNode;
@@ -13,12 +26,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.lang.NonNull;
+
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
+
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -27,19 +42,6 @@ import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.function.Supplier;
 
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;

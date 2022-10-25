@@ -1,5 +1,8 @@
 package dev.morphia.aggregation.experimental.codecs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import dev.morphia.aggregation.experimental.codecs.stages.AddFieldsCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.AutoBucketCodec;
 import dev.morphia.aggregation.experimental.codecs.stages.BucketCodec;
@@ -59,12 +62,10 @@ import dev.morphia.aggregation.experimental.stages.UnionWith;
 import dev.morphia.aggregation.experimental.stages.Unset;
 import dev.morphia.aggregation.experimental.stages.Unwind;
 import dev.morphia.mapping.Mapper;
+
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AggregationCodecProvider implements CodecProvider {

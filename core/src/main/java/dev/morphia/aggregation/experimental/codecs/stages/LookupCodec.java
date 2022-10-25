@@ -1,8 +1,10 @@
 package dev.morphia.aggregation.experimental.codecs.stages;
 
 import com.mongodb.client.MongoCollection;
+
 import dev.morphia.aggregation.experimental.stages.Lookup;
 import dev.morphia.mapping.Mapper;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
