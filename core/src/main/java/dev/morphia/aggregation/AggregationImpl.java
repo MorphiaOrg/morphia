@@ -15,41 +15,10 @@ import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.stages.AddFields;
-import dev.morphia.aggregation.stages.AutoBucket;
-import dev.morphia.aggregation.stages.Bucket;
-import dev.morphia.aggregation.stages.ChangeStream;
-import dev.morphia.aggregation.stages.CollectionStats;
-import dev.morphia.aggregation.stages.Count;
-import dev.morphia.aggregation.stages.CurrentOp;
-import dev.morphia.aggregation.stages.Densify;
-import dev.morphia.aggregation.stages.Documents;
-import dev.morphia.aggregation.stages.Facet;
-import dev.morphia.aggregation.stages.Fill;
+import dev.morphia.aggregation.stages.*;
 import dev.morphia.aggregation.stages.GeoNear;
-import dev.morphia.aggregation.stages.GraphLookup;
 import dev.morphia.aggregation.stages.Group;
-import dev.morphia.aggregation.stages.IndexStats;
-import dev.morphia.aggregation.stages.Limit;
-import dev.morphia.aggregation.stages.Lookup;
-import dev.morphia.aggregation.stages.Match;
-import dev.morphia.aggregation.stages.Merge;
-import dev.morphia.aggregation.stages.Out;
-import dev.morphia.aggregation.stages.PlanCacheStats;
 import dev.morphia.aggregation.stages.Projection;
-import dev.morphia.aggregation.stages.Redact;
-import dev.morphia.aggregation.stages.ReplaceRoot;
-import dev.morphia.aggregation.stages.ReplaceWith;
-import dev.morphia.aggregation.stages.Sample;
-import dev.morphia.aggregation.stages.Set;
-import dev.morphia.aggregation.stages.SetWindowFields;
-import dev.morphia.aggregation.stages.Skip;
-import dev.morphia.aggregation.stages.Sort;
-import dev.morphia.aggregation.stages.SortByCount;
-import dev.morphia.aggregation.stages.Stage;
-import dev.morphia.aggregation.stages.UnionWith;
-import dev.morphia.aggregation.stages.Unset;
-import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
@@ -113,44 +82,37 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public Aggregation<T> autoBucket(AutoBucket bucket) {
-        addStage(bucket);
-        return this;
+        return addStage(bucket);
     }
 
     @Override
     public Aggregation<T> bucket(Bucket bucket) {
-        addStage(bucket);
-        return this;
+        return addStage(bucket);
     }
 
     @Override
     public Aggregation<T> collStats(CollectionStats stats) {
-        addStage(stats);
-        return this;
+        return addStage(stats);
     }
 
     @Override
     public Aggregation<T> count(String name) {
-        addStage(new Count(name));
-        return this;
+        return addStage(new Count(name));
     }
 
     @Override
     public Aggregation<T> currentOp(CurrentOp currentOp) {
-        addStage(currentOp);
-        return this;
+        return addStage(currentOp);
     }
 
     @Override
     public Aggregation<T> densify(Densify densify) {
-        addStage(densify);
-        return this;
+        return addStage(densify);
     }
 
     @Override
     public Aggregation<T> documents(DocumentExpression... documents) {
-        addStage(Documents.documents(documents));
-        return this;
+        return addStage(Documents.documents(documents));
     }
 
     @Override
@@ -180,50 +142,42 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public Aggregation<T> facet(Facet facet) {
-        addStage(facet);
-        return this;
+        return addStage(facet);
     }
 
     @Override
     public Aggregation<T> fill(Fill fill) {
-        addStage(fill);
-        return this;
+        return addStage(fill);
     }
 
     @Override
     public Aggregation<T> geoNear(GeoNear near) {
-        addStage(near);
-        return this;
+        return addStage(near);
     }
 
     @Override
     public Aggregation<T> graphLookup(GraphLookup lookup) {
-        addStage(lookup);
-        return this;
+        return addStage(lookup);
     }
 
     @Override
     public Aggregation<T> group(Group group) {
-        addStage(group);
-        return this;
+        return addStage(group);
     }
 
     @Override
     public Aggregation<T> indexStats() {
-        addStage(IndexStats.indexStats());
-        return this;
+        return addStage(IndexStats.indexStats());
     }
 
     @Override
     public Aggregation<T> limit(long limit) {
-        addStage(Limit.limit(limit));
-        return this;
+        return addStage(Limit.limit(limit));
     }
 
     @Override
     public Aggregation<T> lookup(Lookup lookup) {
-        addStage(lookup);
-        return this;
+        return addStage(lookup);
     }
 
     @Override
@@ -233,8 +187,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
                     .filter(f -> f.getName().equals("$eq"))
                     .forEach(f -> f.entityType(source));
         }
-        addStage(Match.match(filters));
-        return this;
+        return addStage(Match.match(filters));
     }
 
     @Override
@@ -270,110 +223,97 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public Aggregation<T> planCacheStats() {
-        addStage(PlanCacheStats.planCacheStats());
-        return this;
+        return addStage(PlanCacheStats.planCacheStats());
     }
 
     @Override
     public Aggregation<T> project(Projection projection) {
-        addStage(projection);
-        return this;
+        return addStage(projection);
     }
 
     @Override
     public Aggregation<T> redact(Redact redact) {
-        addStage(redact);
-        return this;
+        return addStage(redact);
     }
 
     @Override
     public Aggregation<T> replaceRoot(ReplaceRoot root) {
-        addStage(root);
-        return this;
+        return addStage(root);
     }
 
     @Override
     public Aggregation<T> replaceWith(ReplaceWith with) {
-        addStage(with);
-        return this;
+        return addStage(with);
     }
 
     @Override
     public Aggregation<T> sample(long sample) {
-        addStage(Sample.sample(sample));
-        return this;
+        return addStage(Sample.sample(sample));
     }
 
     @Override
     public Aggregation<T> addFields(AddFields fields) {
-        addStage(fields);
-        return this;
+        return addStage(fields);
     }
 
     @Override
     public Aggregation<T> set(Set set) {
-        addStage(set);
-        return this;
+        return addStage(set);
     }
 
     @Override
     public Aggregation<T> setWindowFields(SetWindowFields fields) {
-        addStage(fields);
-        return this;
+        return addStage(fields);
     }
 
     @Override
     public Aggregation<T> skip(long skip) {
-        addStage(Skip.skip(skip));
-        return this;
+        return addStage(Skip.skip(skip));
     }
 
     @Override
     public Aggregation<T> sort(Sort sort) {
-        addStage(sort);
-        return this;
+        return addStage(sort);
     }
 
     @Override
     public Aggregation<T> sortByCount(Expression sort) {
-        addStage(SortByCount.sortByCount(sort));
-        return this;
+        return addStage(SortByCount.sortByCount(sort));
     }
 
     @Override
     public Aggregation<T> unionWith(Class<?> type, Stage first, Stage... others) {
-        addStage(new UnionWith(type, Expressions.toList(first, others)));
-        return this;
+        return addStage(new UnionWith(type, Expressions.toList(first, others)));
     }
 
     @Override
     public Aggregation<T> unionWith(String collection, Stage first, Stage... others) {
-        addStage(new UnionWith(collection, Expressions.toList(first, others)));
-        return this;
+        return addStage(new UnionWith(collection, Expressions.toList(first, others)));
     }
 
     @Override
     public Aggregation<T> unset(Unset unset) {
-        addStage(unset);
-        return this;
+        return addStage(unset);
     }
 
     @Override
     public Aggregation<T> unwind(Unwind unwind) {
-        addStage(unwind);
-        return this;
+        return addStage(unwind);
     }
 
     @Override
-    public Aggregation changeStream() {
-        addStage(ChangeStream.changeStream());
-        return this;
+    public Aggregation<T> changeStream() {
+        return addStage(ChangeStream.changeStream());
     }
 
     @Override
-    public Aggregation changeStream(ChangeStream stream) {
-        addStage(stream);
-        return this;
+    public Aggregation<T> changeStream(ChangeStream stream) {
+        return addStage(stream);
+    }
+
+    @Override
+    public List<Stage> getStates() {
+        return stages;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -388,9 +328,11 @@ public class AggregationImpl<T> implements Aggregation<T> {
                 .collect(Collectors.toList());
     }
 
-    private void addStage(Stage stage) {
+    @Override
+    public Aggregation<T> addStage(Stage stage) {
         stage.aggregation(this);
         stages.add(stage);
+        return this;
     }
 
     private static class MappingCursor<R> implements MongoCursor<R> {

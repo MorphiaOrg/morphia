@@ -1,32 +1,13 @@
 package dev.morphia.aggregation;
 
+import java.util.List;
+
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.stages.AddFields;
-import dev.morphia.aggregation.stages.AutoBucket;
-import dev.morphia.aggregation.stages.Bucket;
-import dev.morphia.aggregation.stages.ChangeStream;
-import dev.morphia.aggregation.stages.CollectionStats;
-import dev.morphia.aggregation.stages.CurrentOp;
-import dev.morphia.aggregation.stages.Densify;
-import dev.morphia.aggregation.stages.Facet;
-import dev.morphia.aggregation.stages.Fill;
+import dev.morphia.aggregation.stages.*;
 import dev.morphia.aggregation.stages.GeoNear;
-import dev.morphia.aggregation.stages.GraphLookup;
 import dev.morphia.aggregation.stages.Group;
-import dev.morphia.aggregation.stages.Lookup;
-import dev.morphia.aggregation.stages.Merge;
-import dev.morphia.aggregation.stages.Out;
 import dev.morphia.aggregation.stages.Projection;
-import dev.morphia.aggregation.stages.Redact;
-import dev.morphia.aggregation.stages.ReplaceRoot;
-import dev.morphia.aggregation.stages.ReplaceWith;
-import dev.morphia.aggregation.stages.Set;
-import dev.morphia.aggregation.stages.SetWindowFields;
-import dev.morphia.aggregation.stages.Sort;
-import dev.morphia.aggregation.stages.Stage;
-import dev.morphia.aggregation.stages.Unset;
-import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 
@@ -497,20 +478,23 @@ public interface Aggregation<T> {
      * aggregation pipeline.
      *
      * @return this
-     * @since 2.3
      * @aggregation.expression $changeStream
+     * @since 2.3
      */
-    Aggregation changeStream();
+    Aggregation<T> changeStream();
 
     /**
      * Returns a Change Stream cursor on a collection, a database, or an entire cluster. Must be used as the first stage in an
      * aggregation pipeline.
      *
      * @param stream the options to apply to the stage
-     *
      * @return this
-     * @since 2.3
      * @aggregation.expression $changeStream
+     * @since 2.3
      */
-    Aggregation changeStream(ChangeStream stream);
+    Aggregation<T> changeStream(ChangeStream stream);
+
+    List<Stage> getStates();
+
+    Aggregation<T> addStage(Stage stage);
 }
