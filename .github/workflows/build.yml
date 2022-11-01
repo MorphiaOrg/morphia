@@ -8,7 +8,7 @@ jobs:
   Build:
     strategy:
       matrix:
-        java: [ 11, 17, 19 ]
+        java: [ 11, 19 ]
         mongo: [ 6.0.2, 5.0.13, 4.4.17, 4.2.23 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
