@@ -6,6 +6,13 @@ on:
 
 jobs:
   Build:
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    with:
+      saveBuild: morphia-build
+      maven-flags: "-Dmongodb=6.0.2"
+  Test:
+    needs:
+      - Build
     strategy:
       matrix:
         java: [ 11, 19 ]
@@ -15,20 +22,21 @@ jobs:
       GH_TOKEN: ${{ secrets.TESTING_GH_OAUTH }}
     with:
       java: ${{ matrix.java }}
+      reuseBuild: morphia-build
       archive-name: "${{matrix.mongo}}-${{matrix.java}}"
       maven-flags: "-DMONGODB=${{ matrix.mongo }}"
 
-  Quality:
-    name: Style Checks
+  CodeAudits:
+    name: Code Audits
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
-      maven-flags: "-Pquality -DskipTests"
+      maven-flags: "-Dcode-audits -DskipTests"
 
   Snapshots:
     if: github.ref_type == 'branch'
     needs:
-      - Build
-      - Quality
+      - Test
+      - CodeAudits
     uses: evanchooly/workflows/.github/workflows/release.yml@master
     secrets:
       SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
