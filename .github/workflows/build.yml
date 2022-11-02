@@ -8,7 +8,7 @@ jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
-      saveBuild: morphia-build-${{ github.run_id }}
+      saveBuild: true
       maven-flags: "-Dmongodb=6.0.2 -Dcode-audits"
 
   Test:
@@ -23,7 +23,7 @@ jobs:
       GH_TOKEN: ${{ secrets.TESTING_GH_OAUTH }}
     with:
       java: ${{ matrix.java }}
-      reuseBuild: morphia-build-${{ github.run_id }}
+      reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{matrix.java}}"
       maven-flags: "-DMONGODB=${{ matrix.mongo }}"
 
