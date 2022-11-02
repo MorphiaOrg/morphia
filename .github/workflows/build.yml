@@ -31,7 +31,6 @@ jobs:
     if: github.ref_type == 'branch'
     needs:
       - Test
-      - CodeAudits
     uses: evanchooly/workflows/.github/workflows/release.yml@master
     secrets:
       SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
