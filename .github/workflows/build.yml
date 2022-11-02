@@ -9,18 +9,11 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       saveBuild: morphia-build
-      maven-flags: "-Dmongodb=6.0.2"
-
-  CodeAudits:
-    name: Code Audits
-    uses: evanchooly/workflows/.github/workflows/build.yml@master
-    with:
-      maven-flags: "-Dcode-audits -DskipTests"
+      maven-flags: "-Dmongodb=6.0.2 -Dcode-audits"
 
   Test:
     needs:
       - Build
-      - CodeAudits
     strategy:
       matrix:
         java: [ 11, 19 ]

@@ -553,6 +553,20 @@
             </build>
         </profile>
         <profile>
+            <id>code audits</id>
+            <activation>
+                <property>
+                    <name>code-audits</name>
+                </property>
+            </activation>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+            <build>
+                <defaultGoal>verify</defaultGoal>
+            </build>
+        </profile>
+        <profile>
             <id>java formatting</id>
             <activation>
                 <property>

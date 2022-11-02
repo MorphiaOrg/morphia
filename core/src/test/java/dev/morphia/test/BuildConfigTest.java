@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.Test;
 
 import static java.lang.String.format;
+import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -36,16 +37,28 @@ public class BuildConfigTest {
         try (InputStream inputStream = new FileInputStream("../.github/workflows/build.yml")) {
             map = objectMapper.readValue(inputStream, LinkedHashMap.class);
         }
-        map = walk(map, List.of("jobs", "Build", "strategy", "matrix"));
-        var mongo = (List<String>) map.get("mongo");
-        checkForVersions(mongo, Versions.Version60, Versions.Version50, Versions.Version44, Versions.Version42);
+        assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
+                String.format("-Dmongodb=%s -Dcode-audits", Versions.Version60.version()));
+
+        checkForVersions(walk(map, of("jobs", "Test", "strategy", "matrix", "mongo")),
+                Versions.Version60, Versions.Version50, Versions.Version44, Versions.Version42);
+
+        try (InputStream inputStream = new FileInputStream("../.github/workflows/pull-request.yml")) {
+            map = objectMapper.readValue(inputStream, LinkedHashMap.class);
+        }
+
+        assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
+                String.format("-Dmongodb=%s", Versions.Version60.version()));
     }
 
-    private static Map walk(Map map, List<String> steps) {
+    private static <T> T walk(Map map, List<String> steps) {
+        Object value = map;
         for (String step : steps) {
-            map = (Map) map.get(step);
+            if (value instanceof Map) {
+                value = ((Map<?, ?>) value).get(step);
+            }
         }
-        return map;
+        return (T) value;
     }
 
     @Test
@@ -65,7 +78,7 @@ public class BuildConfigTest {
         }
 
         assertEquals(version, format("%s.%s", pomVersion.getMajorVersion(), pomVersion.getMinorVersion()));
-        map = walk(map, List.of("asciidoc", "attributes"));
+        map = walk(map, of("asciidoc", "attributes"));
         version = (String) map.get("version");
         var srcRef = (String) map.get("srcRef");
         if (master) {
