@@ -560,7 +560,7 @@
                 </property>
             </activation>
             <properties>
-                <maven.test.skip>true</maven.test.skip>
+                <skipTests>true</skipTests>
             </properties>
             <build>
                 <defaultGoal>verify</defaultGoal>
