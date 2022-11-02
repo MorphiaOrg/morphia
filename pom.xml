@@ -250,7 +250,7 @@
                     <configuration>
                         <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
                         <analysisConfigurationFiles>
-                            <analysisConfigurationFile>../config/revapi-filtered.json</analysisConfigurationFile>
+                            <analysisConfigurationFile>../config/revapi.json</analysisConfigurationFile>
                         </analysisConfigurationFiles>
                         <analysisConfiguration>
                             <revapi.versions>

@@ -60,15 +60,30 @@
         <Package name="~dev\.morphia\.testmappackage.*"/>
     </Match>
     <Match>
+        <Package name="~.*internal.*"/>
+    </Match>
+    <Match>
+        <Package name="~.*experimental.*"/>
+    </Match>
+    <Match>
+        <Package name="~dev.morphia.mapping.validation.*"/>
+    </Match>
+    <Match>
         <Bug code="SQL,XSS,J2EE,SW,STI,DL,JLM,MWN,NN,RS,UL,HRS,PT,MTIA,XFB"/>
     </Match>
     <Match>
         <Bug category="I18N,MT_CORRECTNESS,SECURITY,PERFORMANCE"/>
     </Match>
     <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
         <Class name="dev.morphia.query.LegacyQuery"/>
         <!--<Method name="compare" params="FindOptions,FindOptions"/>-->
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Bug pattern="UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS"/>
     </Match>
     <Match>
         <Class name="~dev.morphia.query.internal.Morphia.*Cursor"/>

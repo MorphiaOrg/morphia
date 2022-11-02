@@ -29,14 +29,6 @@ public class RevApiConfig extends AbstractMojo {
     @Parameter(name = "output", defaultValue = "${project.basedir}/config/revapi.json")
     private File output;
 
-    public static void main(String[] args) throws MojoExecutionException {
-        RevApiConfig config = new RevApiConfig();
-        config.input = new File("../config/revapi-input-new.json");
-        config.output = new File("../config/revapi.json");
-
-        config.execute();
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException {

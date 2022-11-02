@@ -10,9 +10,17 @@ jobs:
     with:
       saveBuild: morphia-build
       maven-flags: "-Dmongodb=6.0.2"
+
+  CodeAudits:
+    name: Code Audits
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    with:
+      maven-flags: "-Dcode-audits -DskipTests"
+
   Test:
     needs:
       - Build
+      - CodeAudits
     strategy:
       matrix:
         java: [ 11, 19 ]
@@ -25,12 +33,6 @@ jobs:
       reuseBuild: morphia-build
       archive-name: "${{matrix.mongo}}-${{matrix.java}}"
       maven-flags: "-DMONGODB=${{ matrix.mongo }}"
-
-  CodeAudits:
-    name: Code Audits
-    uses: evanchooly/workflows/.github/workflows/build.yml@master
-    with:
-      maven-flags: "-Dcode-audits -DskipTests"
 
   Snapshots:
     if: github.ref_type == 'branch'

@@ -213,6 +213,24 @@
                 <defaultGoal>verify</defaultGoal>
                 <plugins>
                     <plugin>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>build-plugins</artifactId>
+                        <version>${project.version}</version>
+                        <executions>
+                            <execution>
+                                <id>revapi-config</id>
+                                <goals>
+                                    <goal>revapi-config</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <input>../config/revapi-input.json</input>
+                            <output>../config/revapi.json</output>
+                        </configuration>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
                     </plugin>

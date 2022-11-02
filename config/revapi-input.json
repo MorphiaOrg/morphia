@@ -44,6 +44,10 @@
       {
         "new": "class dev.morphia.mapping.experimental.UnsafeConstructorCreator",
         "justification": "internal implementation"
+      },
+      {
+        "new": "interface dev.morphia.query.internal.DatastoreAware",
+        "justification": "internal type"
       }
     ],
     "externalClassExposedInAPI": [
@@ -80,6 +84,13 @@
       {
         "class": "com.mongodb.*",
         "justification": "Driver classes should be ignored"
+      }
+    ],
+    "nowImplementsInterface": [
+      {
+        "classQualifiedName": "dev.morphia.query.experimental.updates.SetOnInsertOperator",
+        "interface": "dev.morphia.query.internal.DatastoreAware",
+        "justification": "internal type and interface"
       }
     ],
     "removed": [
@@ -159,6 +170,11 @@
       {
         "classQualifiedName": "dev.morphia.aggregation.experimental.stages.Stage",
         "methodName": "aggregation",
+        "justification": "internal method"
+      },
+      {
+        "classQualifiedName": "dev.morphia.query.experimental.updates.SetOnInsertOperator",
+        "new": "method void dev.morphia.query.experimental.updates.SetOnInsertOperator::setDatastore(dev.morphia.DatastoreImpl)",
         "justification": "internal method"
       }
     ],
