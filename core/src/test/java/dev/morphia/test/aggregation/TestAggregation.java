@@ -6,7 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import dev.morphia.InsertOneOptions;
 import dev.morphia.aggregation.Aggregation;
+import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.aggregation.stages.Group;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.TestBase;
@@ -146,6 +148,26 @@ public class TestAggregation extends TestBase {
         List<Human> execute = getDs().aggregate(Martian.class)
                 .limit(1)
                 .execute(Human.class)
+                .toList();
+        Human human = execute.get(0);
+        assertEquals(human.id, martian.id);
+        assertEquals(human.name, martian.name);
+    }
+
+    @Test
+    public void testResultTypesAlternateCollection() {
+        String alternate = "alternate";
+        getMapper().map(Martian.class);
+
+        Martian martian = new Martian();
+        martian.name = "Marvin";
+        getDs().save(martian, new InsertOneOptions()
+                .collection(alternate));
+
+        List<Human> execute = getDs().aggregate(Martian.class)
+                .limit(1)
+                .execute(Human.class, new AggregationOptions()
+                        .collection(alternate))
                 .toList();
         Human human = execute.get(0);
         assertEquals(human.id, martian.id);
