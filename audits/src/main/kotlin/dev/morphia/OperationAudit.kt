@@ -34,11 +34,7 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
     }
 
     val github by lazy {
-        GitHubBuilder.fromPropertyFile(
-                System.getProperty("GITHUB_PROPERTIES") ?: "github.properties"
-            )
-            .build()
-            .getRepository("MorphiaOrg/Morphia")
+        GitHubBuilder.fromEnvironment().build().getRepository("MorphiaOrg/Morphia")
     }
     val issues by lazy { github.getIssues(OPEN) }
     val milestone by lazy {
