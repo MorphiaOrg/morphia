@@ -569,7 +569,7 @@
             </build>
         </profile>
         <profile>
-            <id>code audits</id>
+            <id>code-audits</id>
             <activation>
                 <property>
                     <name>code-audits</name>
@@ -589,6 +589,9 @@
                     <name>audits</name>
                 </property>
             </activation>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
             <modules>
                 <module>audits</module>
             </modules>

@@ -222,7 +222,7 @@
 
     <profiles>
         <profile>
-            <id>code audits</id>
+            <id>code-audits</id>
             <activation>
                 <property>
                     <name>code-audits</name>

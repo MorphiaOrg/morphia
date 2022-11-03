@@ -103,4 +103,17 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>audits</id>
+            <activation>
+                <property>
+                    <name>audits</name>
+                </property>
+            </activation>
+            <properties>
+                <skipTests>false</skipTests>
+            </properties>
+        </profile>
+    </profiles>
 </project>

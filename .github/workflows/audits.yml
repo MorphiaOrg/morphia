@@ -16,4 +16,4 @@ jobs:
     with:
       maven-flags: "-Dmongodb=6.0.2 -Daudits"
     secrets:
-      GH_TOKEN: ${{ secrets.TESTING_GH_OAUTH }}
+      GH_TOKEN: ${{ secrets.GH_OAUTH }}
