@@ -6,15 +6,15 @@ on:
       - '.github/**'
 
 jobs:
-  Quality:
-    name: Style Checks
+  CodeAudits:
+    name: Code Audits
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       maven-flags: "-Dcode-audits"
 
   Build:
     needs:
-      - Quality
+      - CodeAudits
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
     with:
       maven-flags: "-Dmongodb=6.0.2"

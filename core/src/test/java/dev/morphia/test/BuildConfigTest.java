@@ -49,7 +49,7 @@ public class BuildConfigTest {
         }
 
         assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
-                String.format("-Dmongodb=%s -Dcode-audits", Versions.Version60.version()));
+                String.format("-Dmongodb=%s", Versions.Version60.version()));
     }
 
     private static <T> T walk(Map map, List<String> steps) {
