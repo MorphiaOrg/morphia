@@ -34,7 +34,7 @@
         <maven.version>3.8.6</maven.version>
         <revapi.maven.plugin.version>0.14.7</revapi.maven.plugin.version>
         <revapi.java.version>0.27.0</revapi.java.version>
-        <slf4j.version>2.0.3</slf4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <sofia.version>0.23</sofia.version>
         <surefire.version>3.0.0-M7</surefire.version>
         <testng.version>7.6.1</testng.version>
@@ -55,7 +55,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.4.4</version>
+                <version>1.2.11</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
