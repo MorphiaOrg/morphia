@@ -35,6 +35,7 @@ public class ExpressionList extends Expression implements SingleValuedExpression
         this.values = new ArrayList<>(asList(values));
     }
 
+    @NonNull
     public static ExpressionList coalesce(Expression first, Expression... values) {
         ExpressionList expressionList = new ExpressionList(first);
         expressionList.values.addAll(asList(values));
