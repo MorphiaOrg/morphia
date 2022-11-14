@@ -553,7 +553,7 @@ public interface Datastore {
     <T> T save(T entity, InsertOneOptions options);
 
     /**
-     * Shards any collections with sharding defintions.
+     * Shards any collections with sharding definitions.
      *
      * @morphia.experimental
      * @since 2.3
