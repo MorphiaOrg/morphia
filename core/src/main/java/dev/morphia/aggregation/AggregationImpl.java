@@ -1,39 +1,67 @@
 package dev.morphia.aggregation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.Nullable;
-
 import dev.morphia.DatastoreImpl;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.stages.*;
+import dev.morphia.aggregation.stages.AddFields;
+import dev.morphia.aggregation.stages.AutoBucket;
+import dev.morphia.aggregation.stages.Bucket;
+import dev.morphia.aggregation.stages.ChangeStream;
+import dev.morphia.aggregation.stages.CollectionStats;
+import dev.morphia.aggregation.stages.Count;
+import dev.morphia.aggregation.stages.CurrentOp;
+import dev.morphia.aggregation.stages.Densify;
+import dev.morphia.aggregation.stages.Documents;
+import dev.morphia.aggregation.stages.Facet;
+import dev.morphia.aggregation.stages.Fill;
 import dev.morphia.aggregation.stages.GeoNear;
+import dev.morphia.aggregation.stages.GraphLookup;
 import dev.morphia.aggregation.stages.Group;
+import dev.morphia.aggregation.stages.IndexStats;
+import dev.morphia.aggregation.stages.Limit;
+import dev.morphia.aggregation.stages.Lookup;
+import dev.morphia.aggregation.stages.Match;
+import dev.morphia.aggregation.stages.Merge;
+import dev.morphia.aggregation.stages.Out;
+import dev.morphia.aggregation.stages.PlanCacheStats;
 import dev.morphia.aggregation.stages.Projection;
+import dev.morphia.aggregation.stages.Redact;
+import dev.morphia.aggregation.stages.ReplaceRoot;
+import dev.morphia.aggregation.stages.ReplaceWith;
+import dev.morphia.aggregation.stages.Sample;
+import dev.morphia.aggregation.stages.Set;
+import dev.morphia.aggregation.stages.SetWindowFields;
+import dev.morphia.aggregation.stages.Skip;
+import dev.morphia.aggregation.stages.Sort;
+import dev.morphia.aggregation.stages.SortByCount;
+import dev.morphia.aggregation.stages.Stage;
+import dev.morphia.aggregation.stages.UnionWith;
+import dev.morphia.aggregation.stages.Unset;
+import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @param <T>
@@ -311,12 +339,11 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return addStage(stream);
     }
 
-    @Override
-    public List<Stage> getStates() {
+    public List<Stage> getStages() {
         return stages;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public List<Document> pipeline() {
         return stages.stream()
                 .map(s -> {
