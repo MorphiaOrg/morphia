@@ -1,39 +1,30 @@
 package dev.morphia.aggregation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.mongodb.ServerAddress;
-import com.mongodb.ServerCursor;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
+import com.mongodb.*;
+import com.mongodb.client.*;
 import com.mongodb.lang.Nullable;
-
-import dev.morphia.Datastore;
-import dev.morphia.aggregation.expressions.Expressions;
-import dev.morphia.aggregation.expressions.impls.DocumentExpression;
-import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.stages.*;
+import dev.morphia.*;
+import dev.morphia.aggregation.expressions.*;
+import dev.morphia.aggregation.expressions.impls.*;
 import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.aggregation.stages.Group;
 import dev.morphia.aggregation.stages.Projection;
-import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.reader.DocumentReader;
-import dev.morphia.mapping.codec.writer.DocumentWriter;
-import dev.morphia.query.filters.Filter;
-import dev.morphia.query.internal.MorphiaCursor;
+import dev.morphia.aggregation.stages.Set;
+import dev.morphia.aggregation.stages.*;
+import dev.morphia.annotations.internal.*;
+import dev.morphia.mapping.codec.pojo.*;
+import dev.morphia.mapping.codec.reader.*;
+import dev.morphia.mapping.codec.writer.*;
+import dev.morphia.query.filters.*;
+import dev.morphia.query.internal.*;
+import edu.umd.cs.findbugs.annotations.*;
+import org.bson.*;
+import org.bson.codecs.*;
+import org.slf4j.*;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
-import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
-import org.bson.codecs.EncoderContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.*;
+import java.util.stream.*;
+import java.lang.SuppressWarnings;
 
 /**
  * @param <T>
@@ -311,12 +302,11 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return addStage(stream);
     }
 
-    @Override
-    public List<Stage> getStates() {
+    public List<Stage> getStages() {
         return stages;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public List<Document> pipeline() {
         return stages.stream()
                 .map(s -> {

@@ -1,15 +1,12 @@
 package dev.morphia.aggregation;
 
-import java.util.List;
-
-import dev.morphia.aggregation.expressions.impls.DocumentExpression;
-import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.stages.*;
+import dev.morphia.aggregation.expressions.impls.*;
 import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.aggregation.stages.Group;
 import dev.morphia.aggregation.stages.Projection;
-import dev.morphia.query.filters.Filter;
-import dev.morphia.query.internal.MorphiaCursor;
+import dev.morphia.aggregation.stages.*;
+import dev.morphia.query.filters.*;
+import dev.morphia.query.internal.*;
 
 /**
  * @param <T> The initial type of the aggregation. Used for collection name resolution.
@@ -481,7 +478,7 @@ public interface Aggregation<T> {
      * @aggregation.expression $changeStream
      * @since 2.3
      */
-    Aggregation<T> changeStream();
+    Aggregation changeStream();
 
     /**
      * Returns a Change Stream cursor on a collection, a database, or an entire cluster. Must be used as the first stage in an
@@ -492,9 +489,7 @@ public interface Aggregation<T> {
      * @aggregation.expression $changeStream
      * @since 2.3
      */
-    Aggregation<T> changeStream(ChangeStream stream);
-
-    List<Stage> getStates();
+    Aggregation changeStream(ChangeStream stream);
 
     Aggregation<T> addStage(Stage stage);
 }
