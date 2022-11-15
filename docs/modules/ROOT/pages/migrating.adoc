@@ -1,6 +1,25 @@
 = Migration
 
-== Versioning
+== Migrating to 2.3
+
+=== Experimental packages
+
+To address various issues in older APIs, some new packages were introduced under an `experimental` subpackage.  These packages have had
+sufficient time to back and are being promoted out of experimental status in 2.3.  Unfortunately, there isn't a feasible, non-breaking
+way to do this so upgrading to 2.3 is a source breaking change.  The good news is that these breaks can be fixed by doing a global
+removal of `.experimental`.  This should fix all the cases where Morphia has promoted these packages out.
+
+[NOTE]
+====
+In the future such "experimental" items, the ones that need a little time to "bake" and get real world usage and feedback, will be marked
+with `@MorphiaExperimental` and javadoc'd as experimental.  When you see these items, they are intended to be used and any usability
+issues should be reported so that things can get massaged into, or replaced with, better forms.  Of course, such breaking changes will
+hopefully be minimal but when they do occur, the plan is to provide automated migration tools to help with those migrations.
+====
+
+== Migrating to 2.0
+
+=== Versioning
 
 Versioned updates now throw `VersionMismatchException` instead of `ConcurrentModification` exception.
 This allows for more targeted catches.
@@ -10,7 +29,7 @@ A future release will change the parent type of
 `VersionMismatchException` to `RuntimeException` instead.
 See https://github.com/MorphiaOrg/morphia/issues/982[this discussion] for more details.
 
-== Kotlin Support
+=== Kotlin Support
 
 Kotlin classes have worked with Morphia for years now but certain Kotlin features have started to cause problems as folks have started trying to use them in their applications.
 To this end a new module has been introduced, `morphia-kotlin`, to specifically focus on these cases.
@@ -18,7 +37,7 @@ Chances are good that you won't need this module but in some cases this new modu
 See the
 xref:kotlin.adoc[reference guide] for more details.
 
-== Nullability
+=== Nullability
 
 The API is now explicitly decorated with `@NonNull` and `@Nullable` annotations to indicate which parameters and return values support null references.
 Your IDE should give you in place hints when you run afoul of these annotations and guide you to properly handling null values.

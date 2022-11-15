@@ -1,5 +1,6 @@
 package dev.morphia.query.filters;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,12 +12,25 @@ import org.bson.codecs.EncoderContext;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static java.lang.String.format;
 
-class LogicalFilter extends Filter {
+public class LogicalFilter extends Filter {
     private final List<Filter> filters;
 
     LogicalFilter(String name, Filter... filters) {
         super(name);
-        this.filters = Arrays.asList(filters);
+        this.filters = new ArrayList<>(Arrays.asList(filters));
+    }
+
+    /**
+     * Adds a new filter to this LogicalFilter.
+     *
+     * @param filter the new filter
+     * @return this
+     *
+     * @since 2.3
+     */
+    public LogicalFilter add(Filter filter) {
+        filters.add(filter);
+        return this;
     }
 
     @Override

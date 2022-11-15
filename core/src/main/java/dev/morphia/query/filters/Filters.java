@@ -49,7 +49,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $and
      */
-    public static Filter and(Filter... filters) {
+    public static LogicalFilter and(Filter... filters) {
         return new LogicalFilter("$and", filters);
     }
 
@@ -520,7 +520,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $nor
      */
-    public static Filter nor(Filter... filters) {
+    public static LogicalFilter nor(Filter... filters) {
         return new LogicalFilter("$nor", filters);
     }
 
@@ -531,7 +531,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $or
      */
-    public static Filter or(Filter... filters) {
+    public static LogicalFilter or(Filter... filters) {
         return new LogicalFilter("$or", filters);
     }
 

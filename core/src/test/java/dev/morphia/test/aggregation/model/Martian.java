@@ -5,7 +5,7 @@ import dev.morphia.annotations.Id;
 
 import org.bson.types.ObjectId;
 
-@Entity
+@Entity(useDiscriminator = false)
 public class Martian {
     @Id
     public ObjectId id;

@@ -8,8 +8,9 @@ jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
-      saveBuild: morphia-build
+      saveBuild: true
       maven-flags: "-Dmongodb=6.0.2 -Dcode-audits"
+
   Test:
     needs:
       - Build
@@ -19,10 +20,12 @@ jobs:
         mongo: [ 6.0.2, 5.0.13, 4.4.17, 4.2.23 ]
         driver: [ 4.6.1, 4.7.1 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets:
+      GH_TOKEN: ${{ secrets.TESTING_GH_OAUTH }}
     with:
       java: ${{ matrix.java }}
-      reuseBuild: morphia-build
-      archive-name: "${{matrix.mongo}}-${{matrix.java}}"
+      reuseBuild: true
+      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
   Snapshots:
@@ -35,7 +38,7 @@ jobs:
       SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
       MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GH_OAUTH }}
 
   Docs:
     name: Update Documentation

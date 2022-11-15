@@ -5,6 +5,7 @@ import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.DatastoreImpl;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
@@ -164,7 +165,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
-        return new MorphiaCursor<>(options.apply(pipeline(), collection, resultType)
+        return new MorphiaCursor<>(options.apply(pipeline(), datastore, collection, resultType)
                 .iterator());
     }
 
@@ -230,7 +231,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         addStage(merge);
         Class<?> type = merge.getType();
         type = type != null ? type : Document.class;
-        options.apply(pipeline(), collection, type)
+        options.apply(pipeline(), datastore, collection, type)
                 .toCollection();
     }
 
@@ -246,7 +247,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         addStage(out);
         Class<?> type = out.type();
         type = type != null ? type : Document.class;
-        options.apply(pipeline(), collection, type).toCollection();
+        options.apply(pipeline(), datastore, collection, type).toCollection();
     }
 
     @Override

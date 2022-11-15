@@ -11,7 +11,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 
@@ -21,7 +23,9 @@ import org.bson.Document;
  * Defines options to be applied to an aggregation pipeline.
  */
 @SuppressWarnings("unused")
-public class AggregationOptions implements ReadConfigurable<AggregationOptions>, WriteConfigurable<AggregationOptions> {
+public class AggregationOptions implements ReadConfigurable<AggregationOptions>, WriteConfigurable<AggregationOptions>,
+        CollectionConfigurable<AggregationOptions> {
+    private String collection;
     private boolean allowDiskUse;
     private Integer batchSize;
     private boolean bypassDocumentValidation;
@@ -63,8 +67,9 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
      * @morphia.internal
      */
     @MorphiaInternal
-    public <S, T> AggregateIterable<S> apply(List<Document> documents, MongoCollection<T> collection, Class<S> resultType) {
-        MongoCollection<T> bound = collection;
+    <S, T> AggregateIterable<S> apply(List<Document> documents, DatastoreImpl datastore,
+            MongoCollection<T> collection, Class<S> resultType) {
+        MongoCollection<T> bound = prepare(collection, datastore.getDatabase());
         if (readConcern != null) {
             bound = bound.withReadConcern(readConcern);
         }
@@ -88,6 +93,14 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
         }
 
         return aggregate;
+    }
+
+    /**
+     * @param unit the target unit type
+     * @return the configuration value
+     */
+    public long maxTime(TimeUnit unit) {
+        return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -153,6 +166,25 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     }
 
     /**
+     * Specify an alternate collection to aggregate from rather than the collection mapped to the type used to create the aggregation
+     * initially.
+     *
+     * @param collection the name of the collection to use
+     * @return
+     * @since 2.3
+     */
+    @Override
+    public AggregationOptions collection(String collection) {
+        this.collection = collection;
+        return this;
+    }
+
+    @Override
+    public String collection() {
+        return collection;
+    }
+
+    /**
      * @return the hint for which index to use. A null value means no hint is set.
      * @mongodb.server.release 3.6
      * @since 2.0
@@ -160,29 +192,6 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     @Deprecated(forRemoval = true, since = "2.3")
     public Document hint() {
         return hint;
-    }
-
-    /**
-     * @param unit the target unit type
-     * @return the configuration value
-     */
-    public long maxTime(TimeUnit unit) {
-        return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * @return the configuration value
-     */
-    @Deprecated(forRemoval = true, since = "2.3")
-    public long maxTimeMS() {
-        return maxTimeMS;
-    }
-
-    /**
-     * @return the configuration value
-     */
-    public ReadConcern readConcern() {
-        return readConcern;
     }
 
     /**
@@ -196,6 +205,40 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     public AggregationOptions hint(String hint) {
         this.hint = new Document("hint", hint);
         return this;
+    }
+
+    /**
+     * @return the configuration value
+     */
+    @Deprecated(forRemoval = true, since = "2.3")
+    public long maxTimeMS() {
+        return maxTimeMS;
+    }
+
+    /**
+     * Specifies a time limit in milliseconds for processing operations on a cursor. If you do not specify a value for maxTimeMS,
+     * operations will not time out. A value of 0 explicitly specifies the default unbounded behavior.
+     *
+     * @param maxTimeMS the max time in milliseconds
+     * @return this
+     */
+    public AggregationOptions maxTimeMS(long maxTimeMS) {
+        this.maxTimeMS = maxTimeMS;
+        return this;
+    }
+
+    /**
+     * @return the configuration value
+     */
+    public ReadConcern readConcern() {
+        return readConcern;
+    }
+
+    /**
+     * @return the configuration value
+     */
+    public ReadPreference readPreference() {
+        return readPreference;
     }
 
     /**
@@ -220,23 +263,20 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
         return this;
     }
 
-    /**
-     * @return the configuration value
-     */
-    public ReadPreference readPreference() {
-        return readPreference;
-    }
-
-    /**
-     * Specifies a time limit in milliseconds for processing operations on a cursor. If you do not specify a value for maxTimeMS,
-     * operations will not time out. A value of 0 explicitly specifies the default unbounded behavior.
-     *
-     * @param maxTimeMS the max time in milliseconds
-     * @return this
-     */
-    public AggregationOptions maxTimeMS(long maxTimeMS) {
-        this.maxTimeMS = maxTimeMS;
-        return this;
+    @Override
+    public String toString() {
+        return new StringBuilder("AggregationOptions{")
+                .append("allowDiskUse=").append(allowDiskUse)
+                .append(", batchSize=").append(batchSize)
+                .append(", bypassDocumentValidation=").append(bypassDocumentValidation)
+                .append(", collation=").append(collation)
+                .append(", maxTimeMS=").append(maxTimeMS)
+                .append(", readPreference=").append(readPreference)
+                .append(", readConcern=").append(readConcern)
+                .append(", writeConcern=").append(writeConcern)
+                .append(", hint=").append(hint)
+                .append('}')
+                .toString();
     }
 
     /**
@@ -256,21 +296,5 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder("AggregationOptions{")
-                .append("allowDiskUse=").append(allowDiskUse)
-                .append(", batchSize=").append(batchSize)
-                .append(", bypassDocumentValidation=").append(bypassDocumentValidation)
-                .append(", collation=").append(collation)
-                .append(", maxTimeMS=").append(maxTimeMS)
-                .append(", readPreference=").append(readPreference)
-                .append(", readConcern=").append(readConcern)
-                .append(", writeConcern=").append(writeConcern)
-                .append(", hint=").append(hint)
-                .append('}')
-                .toString();
     }
 }

@@ -5,7 +5,7 @@ import dev.morphia.annotations.Property;
 
 import org.bson.types.ObjectId;
 
-@Entity
+@Entity(useDiscriminator = false)
 public class Human {
     @Property("_id")
     public ObjectId id;

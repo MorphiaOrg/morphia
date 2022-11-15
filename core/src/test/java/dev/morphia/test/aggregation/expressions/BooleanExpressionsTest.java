@@ -21,6 +21,9 @@ public class BooleanExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testOr() {
-        assertAndCheckDocShape("{ $or: [ true, false ] }", or(value(true), value(false)), true);
+        assertAndCheckDocShape("{ $or: [ true, false ] }", or()
+                .add(value(true))
+                .add(value(false)),
+                true);
     }
 }
