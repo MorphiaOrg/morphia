@@ -5,7 +5,7 @@ import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.Nullable;
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
@@ -72,7 +72,7 @@ import java.util.stream.Collectors;
 public class AggregationImpl<T> implements Aggregation<T> {
     private static final Logger LOG = LoggerFactory.getLogger(AggregationImpl.class);
 
-    private final Datastore datastore;
+    private final DatastoreImpl datastore;
     private final Class<?> source;
     private final MongoCollection<T> collection;
     private final List<Stage> stages = new ArrayList<>();
@@ -86,7 +86,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
      */
     @MorphiaInternal
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public AggregationImpl(Datastore datastore, MongoCollection<T> collection) {
+    public AggregationImpl(DatastoreImpl datastore, MongoCollection<T> collection) {
         this.datastore = datastore;
         this.collection = collection;
         this.source = null;
@@ -102,7 +102,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
      */
     @MorphiaInternal
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public AggregationImpl(Datastore datastore, Class<T> source, MongoCollection<T> collection) {
+    public AggregationImpl(DatastoreImpl datastore, Class<T> source, MongoCollection<T> collection) {
         this.datastore = datastore;
         this.source = source;
         this.collection = collection;
