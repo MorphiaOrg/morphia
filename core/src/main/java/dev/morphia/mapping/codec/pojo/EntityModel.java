@@ -1,18 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import com.mongodb.lang.Nullable;
-
 import dev.morphia.Datastore;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Embedded;
@@ -28,10 +16,21 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.sofia.Sofia;
-
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -61,7 +60,7 @@ public class EntityModel {
     private final String discriminator;
     private final Class<?> type;
     private final String collectionName;
-    private final List<EntityModel> subtypes = new ArrayList<>();
+    private final List<EntityModel> subtypes = new CopyOnWriteArrayList<>();
     private final EntityModel superClass;
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
