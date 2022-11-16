@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import com.mongodb.lang.NonNull;
@@ -67,7 +68,7 @@ public class EntityModel {
     private final String discriminator;
     private final Class<?> type;
     private final String collectionName;
-    private final List<EntityModel> subtypes = new ArrayList<>();
+    private final List<EntityModel> subtypes = new CopyOnWriteArrayList<>();
     private final EntityModel superClass;
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
