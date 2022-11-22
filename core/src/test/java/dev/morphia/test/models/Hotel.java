@@ -14,12 +14,14 @@ import dev.morphia.annotations.Transient;
 public class Hotel extends TestEntity {
     private String name;
     private Date startDate;
+    @Property("s")
     private int stars;
     private boolean takesCreditCards;
     private Type type;
     private Set<String> tags;
     @Transient
     private String temp;
+    @Property("addr")
     private Address address;
     @Property(concreteClass = Vector.class)
     private List<PhoneNumber> phoneNumbers;
