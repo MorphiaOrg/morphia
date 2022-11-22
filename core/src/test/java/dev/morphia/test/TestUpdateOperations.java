@@ -16,12 +16,14 @@ package dev.morphia.test;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -51,8 +53,11 @@ import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.CurrentDateOperator.TypeSpecification;
+import dev.morphia.query.updates.UpdateOperator;
+import dev.morphia.test.models.Address;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.Circle;
+import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Shape;
 import dev.morphia.test.models.Sphere;
@@ -64,10 +69,14 @@ import dev.morphia.test.query.TestQuery.Pic;
 
 import org.bson.BsonTimestamp;
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.jetbrains.annotations.NotNull;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.literal;
@@ -93,6 +102,7 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
 import static dev.morphia.query.updates.UpdateOperators.unset;
 import static dev.morphia.query.updates.UpdateOperators.xor;
+import static java.lang.String.format;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -1303,7 +1313,7 @@ public class TestUpdateOperations extends TestBase {
 
         @Override
         public String toString() {
-            return String.format("EntityLog{receivedTs=%s, value='%s'}", receivedTs, value);
+            return format("EntityLog{receivedTs=%s, value='%s'}", receivedTs, value);
         }
     }
 
@@ -1416,4 +1426,80 @@ public class TestUpdateOperations extends TestBase {
         private Map<TestEnum, EmbeddedObjTest> map;
 
     }
+
+    @DataProvider
+    private static Iterator<TranslationParams> paths() {
+        List<TranslationParams> list = new ArrayList<>();
+
+        list.addAll(prepParams("stars", "s"));
+        list.addAll(prepParams("s", "s"));
+
+        list.addAll(prepParams("address.street", "addr.address_street"));
+        list.addAll(prepParams("address.address_street", "addr.address_street"));
+
+        list.addAll(prepParams("addr.street", "addr.address_street"));
+        list.addAll(prepParams("addr.address_street", "addr.address_street"));
+
+        return list.iterator();
+    }
+
+    @NotNull
+    private static List<TranslationParams> prepParams(String updateName, String mappedName) {
+        LocalTime now = LocalTime.of(15, 16, 17);
+        Date date = new Date(107, 14, 15);
+        return List.of(
+                new TranslationParams(updateName, mappedName, addToSet(updateName, "MARKER")),
+                new TranslationParams(updateName, mappedName, addToSet(updateName, List.of("MARKER"))),
+                new TranslationParams(updateName, mappedName, and(updateName, 42)),
+                new TranslationParams(updateName, mappedName, currentDate(updateName)),
+                new TranslationParams(updateName, mappedName, dec(updateName)),
+                new TranslationParams(updateName, mappedName, dec(updateName, 42)),
+                new TranslationParams(updateName, mappedName, inc(updateName)),
+                new TranslationParams(updateName, mappedName, inc(updateName, 42)),
+                new TranslationParams(updateName, mappedName, max(updateName, 42)),
+                new TranslationParams(updateName, mappedName, max(updateName, now)),
+                new TranslationParams(updateName, mappedName, max(updateName, date)),
+                new TranslationParams(updateName, mappedName, min(updateName, 42)),
+                new TranslationParams(updateName, mappedName, min(updateName, now)),
+                new TranslationParams(updateName, mappedName, min(updateName, date)),
+                new TranslationParams(updateName, mappedName, mul(updateName, 42)),
+                new TranslationParams(updateName, mappedName, or(updateName, 42)),
+                new TranslationParams(updateName, mappedName, pop(updateName)),
+                new TranslationParams(updateName, mappedName, pull(updateName, eq("name", "MARKER"))),
+                new TranslationParams(updateName, mappedName, pullAll(updateName, List.of("MARKER"))),
+                new TranslationParams(updateName, mappedName, push(updateName, "MARKER")),
+                new TranslationParams(updateName, mappedName, push(updateName, List.of("MARKER"))),
+                new TranslationParams(updateName, mappedName, rename(updateName, "MARKER")),
+                new TranslationParams(updateName, mappedName, set(updateName, "MARKER")),
+                new TranslationParams(updateName, mappedName, setOnInsert(Map.of(mappedName, "MARKER"))),
+                new TranslationParams(updateName, mappedName, unset(updateName)),
+                new TranslationParams(updateName, mappedName, xor(updateName, 42)));
+    }
+
+    private static class TranslationParams {
+        private String updateName;
+        private String mappedName;
+        final UpdateOperator operator;
+
+        public TranslationParams(String updateName, String mappedName, UpdateOperator operator) {
+            this.updateName = updateName;
+            this.mappedName = mappedName;
+            this.operator = operator;
+        }
+    }
+
+    @Test(dataProvider = "paths")
+    public void testPathTranslations(TranslationParams params) {
+        getMapper().map(Hotel.class, Address.class);
+
+        Update<Hotel> update = getDs().find(Hotel.class)
+                .update(params.operator);
+        Document document = update.toDocument();
+        Codec<Document> documentCodec = getDs().getCodecRegistry().get(Document.class);
+        var json = document.toJson(JsonWriterSettings.builder().indent(true).build(), documentCodec);
+
+        String format = format("\"%s\"", params.mappedName);
+        assertTrue(json.contains(format), format("failed to find '%s' in:%n%s", format, json));
+    }
+
 }

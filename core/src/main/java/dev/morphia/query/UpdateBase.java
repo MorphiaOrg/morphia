@@ -67,6 +67,7 @@ public abstract class UpdateBase<T> {
 
     /**
      * @return the operations listed
+     * @morphia.internal
      */
     public Document toDocument() {
         final Operations operations = new Operations(datastore, mapper.getEntityModel(type));

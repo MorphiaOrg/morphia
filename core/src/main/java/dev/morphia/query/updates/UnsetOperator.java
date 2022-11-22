@@ -3,7 +3,6 @@ package dev.morphia.query.updates;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.OperationTarget;
 
 import org.bson.Document;
@@ -28,8 +27,7 @@ public class UnsetOperator extends UpdateOperator {
         return new OperationTarget(pathTarget, "") {
             @Override
             public Object encode(Datastore datastore) {
-                PropertyModel target = pathTarget.target();
-                return new Document(target != null ? target.getMappedName() : field(), "");
+                return new Document(pathTarget.translatedPath(), "");
             }
         };
     }
