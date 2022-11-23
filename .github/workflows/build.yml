@@ -27,7 +27,7 @@ jobs:
       java: ${{ matrix.java }}
       reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{matrix.java}}"
-      maven-flags: "-DMONGODB=${{ matrix.mongo }}"
+      maven-flags: "-Dmongodb=${{ matrix.mongo }}"
 
   Snapshots:
     if: github.ref_type == 'branch'

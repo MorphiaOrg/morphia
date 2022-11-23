@@ -46,7 +46,7 @@ public class QuickTourTest {
 
     @BeforeClass
     public static void setupDb() {
-        String mongodb = System.getProperty("MONGODB");
+        String mongodb = System.getProperty("mongodb");
         Builder builder = MongoClientSettings.builder();
 
         if (mongodb != null) {
