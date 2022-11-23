@@ -16,3 +16,6 @@ updates:
     schedule:
       interval: daily
     target-branch: 2.2.x
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
