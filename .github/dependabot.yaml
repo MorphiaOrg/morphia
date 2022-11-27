@@ -16,3 +16,8 @@ updates:
     schedule:
       interval: daily
     target-branch: 2.2.x
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      # Check for updates to GitHub Actions every week
+      interval: "weekly"
