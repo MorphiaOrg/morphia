@@ -11,7 +11,7 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       saveBuild: true
-      maven-flags: "-Dmongodb=6.0.2 -Dcode-audits"
+      maven-flags: "-Dmongodb=6.0.2"
 
   Test:
     needs:
