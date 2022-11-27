@@ -49,7 +49,7 @@ jobs:
       - Snapshots
     steps:
       - name: Invoke antora build
-        uses: benc-uk/workflow-dispatch@v1
+        uses: benc-uk/workflow-dispatch@v121
         with:
           workflow: Docs
           repo: MorphiaOrg/morphia-docs
@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Invoke critter build
-        uses: benc-uk/workflow-dispatch@v1
+        uses: benc-uk/workflow-dispatch@v121
         with:
           workflow: "Build Project"
           repo: MorphiaOrg/critter
