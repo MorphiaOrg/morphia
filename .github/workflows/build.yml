@@ -2,6 +2,8 @@ name: Build Project
 
 on:
   push:
+    branches:
+      - '*'
     branches-ignore:
       - 'dependabot/**'
   workflow_dispatch:
