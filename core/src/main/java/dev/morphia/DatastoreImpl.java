@@ -69,7 +69,6 @@ import dev.morphia.transactions.MorphiaTransaction;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
-import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -819,12 +818,7 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @since 2.3
      */
     private Document toDocument(Object entity) {
-        final Class<?> type = mapper.getEntityModel(entity.getClass()).getType();
-
-        DocumentWriter writer = new DocumentWriter(mapper);
-        ((Codec) codecRegistry.get(type)).encode(writer, entity, EncoderContext.builder().build());
-
-        return writer.getDocument();
+        return DocumentWriter.encode(entity, this.getMapper(), this.getCodecRegistry());
     }
 
     private <T> VersionBumpInfo updateVersioning(T entity) {

@@ -62,7 +62,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
-import org.bson.codecs.EncoderContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -349,12 +348,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<Document> pipeline() {
         return stages.stream()
-                .map(s -> {
-                    Codec codec = datastore.getCodecRegistry().get(s.getClass());
-                    DocumentWriter writer = new DocumentWriter(datastore.getMapper());
-                    codec.encode(writer, s, EncoderContext.builder().build());
-                    return writer.getDocument();
-                })
+                .map(stage -> DocumentWriter.encode(stage, datastore.getMapper(), datastore.getCodecRegistry()))
                 .collect(Collectors.toList());
     }
 

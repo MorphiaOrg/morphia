@@ -73,6 +73,34 @@ public class DocumentWriter implements BsonWriter {
         return this;
     }
 
+    /**
+     * Encodes a value.
+     *
+     * @param value the value to encode
+     * @param mapper
+     * @param codecRegistry
+     * @return the encoded Document
+     */
+    public static Document encode(Object value, Mapper mapper, CodecRegistry codecRegistry) {
+        return encode(value, mapper, codecRegistry, EncoderContext.builder().build());
+    }
+
+    /**
+     * Encodes this writer's structuring using the given codec
+     *
+     * @param value          the value to encode
+     * @param mapper
+     * @param codecRegistry
+     * @param encoderContext the encoder context
+     * @return the encoded Document
+     */
+    public static Document encode(Object value, Mapper mapper, CodecRegistry codecRegistry, EncoderContext encoderContext) {
+        DocumentWriter writer = new DocumentWriter(mapper);
+        Codec codec = codecRegistry.get(value.getClass());
+        codec.encode(writer, value, encoderContext);
+        return writer.getDocument();
+    }
+
     @Override
     public void flush() {
     }
