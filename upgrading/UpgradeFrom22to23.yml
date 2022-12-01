@@ -1,0 +1,43 @@
+###
+### run this recipe with the following command:
+### mvn org.openrewrite.maven:rewrite-maven-plugin:4.37.0:runNoFork -DactiveRecipes=dev.morphia.UpgradeFrom22to23
+###
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: dev.morphia.UpgradeFrom22to23
+displayName: Migrate from Morphia 2.2.x to 2.3.0
+description: Morphia 2.3 promoted most types out of experimental packages
+recipeList:
+  - dev.morphia.upgradeTo23
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: dev.morphia.upgradeTo23
+recipeList:
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.annotations.experimental.Name
+      newFullyQualifiedTypeName: dev.morphia.annotations.Name
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.annotations.experimental.IdField
+      newFullyQualifiedTypeName: dev.morphia.annotations.IdField
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: dev.morphia.morphia
+      oldArtifactId: morphia-core
+      newVersion: 2.3.0
+      overrideManagedVersion: false
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: dev.morphia.query.experimental
+      newPackageName: dev.morphia.query
+      recursive: true
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: dev.morphia.query.experimental.filters
+      newPackageName: dev.morphia.query
+      recursive: true
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: dev.morphia.aggregation.experimental
+      newPackageName: dev.morphia.aggregation
+      recursive: true
+  - org.openrewrite.java.ChangePackage:
+      oldPackageName: dev.morphia.query.experimental.updates
+      newPackageName: dev.morphia.query.updates
+      recursive: true

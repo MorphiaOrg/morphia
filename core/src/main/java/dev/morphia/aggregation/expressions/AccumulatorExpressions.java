@@ -295,4 +295,32 @@ public final class AccumulatorExpressions {
     public static Expression topN(Expression n, Expression output, Sort... sortBy) {
         return new NRankedResultsExpression("$topN", n, output, sortBy);
     }
+
+    /**
+     * Returns the population standard deviation of the input values.
+     *
+     * @param value      the value
+     * @param additional any subsequent expressions to include in the expression
+     * @return the new expression
+     * @aggregation.expression $stdDevPop
+     * @deprecated use {@link WindowExpressions#stdDevPop(Expression, Expression...)}
+     */
+    @Deprecated
+    public static Expression stdDevPop(Expression value, Expression... additional) {
+        return WindowExpressions.stdDevPop(value, additional);
+    }
+
+    /**
+     * Returns the sample standard deviation of the input values.
+     *
+     * @param value      the value
+     * @param additional any subsequent expressions to include in the expression
+     * @return the new expression
+     * @aggregation.expression $stdDevSamp
+     * @deprecated use {@link WindowExpressions#stdDevSamp(Expression, Expression...)}
+     */
+    @Deprecated
+    public static Expression stdDevSamp(Expression value, Expression... additional) {
+        return WindowExpressions.stdDevSamp(value, additional);
+    }
 }

@@ -76,7 +76,7 @@ public class DocumentWriter implements BsonWriter {
     /**
      * Encodes a value.
      *
-     * @param value the value to encode
+     * @param value         the value to encode
      * @param mapper
      * @param codecRegistry
      * @return the encoded Document

@@ -216,6 +216,7 @@ public final class WindowExpressions {
      * @param additional any subsequent expressions to include in the expression
      * @return the new expression
      * @aggregation.expression $stdDevPop
+     * @since 2.3
      */
     public static Expression stdDevPop(Expression value, Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
@@ -231,6 +232,7 @@ public final class WindowExpressions {
      * @param additional any subsequent expressions to include in the expression
      * @return the new expression
      * @aggregation.expression $stdDevSamp
+     * @since 2.3
      */
     public static Expression stdDevSamp(Expression value, Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
