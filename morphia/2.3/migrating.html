@@ -240,9 +240,52 @@
 <h3 id="_experimental_packages"><a class="anchor" href="#_experimental_packages"></a>Experimental packages</h3>
 <div class="paragraph">
 <p>To address various issues in older APIs, some new packages were introduced under an <code>experimental</code> subpackage.  These packages have had
-sufficient time to back and are being promoted out of experimental status in 2.3.  Unfortunately, there isn&#8217;t a feasible, non-breaking
-way to do this so upgrading to 2.3 is a source breaking change.  The good news is that these breaks can be fixed by doing a global
-removal of <code>.experimental</code>.  This should fix all the cases where Morphia has promoted these packages out.</p>
+sufficient time to bake and are being promoted out of experimental status in 2.3.  Unfortunately, there isn&#8217;t a feasible, non-breaking
+way to do this so upgrading to 2.3 is a mild breaking change.  The good news is that these breaks can be fixed by doing a global
+removal of <code>.experimental</code>.  This should fix all the cases where Morphia has promoted these packages.</p>
+</div>
+<div class="paragraph">
+<p>There are, however, two options being provided that might help with this process.  As always, make sure to commit any of your changes before using an external tool to mass update your code.  And, of course, examine the changes afterward to ensure no breakages.</p>
+</div>
+<div class="sect3">
+<h4 id="_openrewrite"><a class="anchor" href="#_openrewrite"></a>OpenRewrite</h4>
+<div class="paragraph">
+<p>The first tool is <a href="https://github.com/openrewrite">openrewrite</a>.  This is a powerful, general purpose tool for updates and migrations of
+all sorts.  In our case, it&#8217;s primarily just removing the <code>experimental</code> segment out of a few packages.  To use this script, download the
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.yml">script</a> and save it as <code>rewrite.yml</code> in the root of
+your project.  Once that is done, run the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">mvn org.openrewrite.maven:rewrite-maven-plugin:4.37.0:runNoFork -DactiveRecipes=dev.morphia.UpgradeFrom22to23</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This script will update the packages to reflect their new names.  It will also update your pom to the latest Morphia version for you
+if that has not been updated yet.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_jbang"><a class="anchor" href="#_jbang"></a>jbang</h4>
+<div class="paragraph">
+<p>Alternately, if you have <a href="https://www.jbang.dev/">jbang</a> installed, you can run a script to do this work for you.  It&#8217;s a little more brute
+force than the openrewrite approach (it&#8217;s literally just doing string replacements) but might be necessary in some cases.  If you&#8217;re a
+kotlin user, you&#8217;ll want to use this approach as openrewrite does not currently support kotlin source files.  To run this script, use the
+following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.kt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will likely be asked to specify the level of trust you have for this script and the MorphiaOrg github organization.  Choose whichever
+level you&#8217;re comfortable with.</p>
+</div>
+<div class="paragraph">
+<p>Whichever path you choose, even if that&#8217;s manually doing the updates yourself, make sure to examine the diffs and run your tests to make
+sure nothing was broken.  Though these approaches have both been tested on a number of projects, user code and project structures can be
+wildly different and some unhandled corner cases might arise.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -254,12 +297,12 @@ removal of <code>.experimental</code>.  This should fix all the cases where Morp
 <div class="paragraph">
 <p>In the future such "experimental" items, the ones that need a little time to "bake" and get real world usage and feedback, will be marked
 with <code>@MorphiaExperimental</code> and javadoc&#8217;d as experimental.  When you see these items, they are intended to be used and any usability
-issues should be reported so that things can get massaged into, or replaced with, better forms.  Of course, such breaking changes will
-hopefully be minimal but when they do occur, the plan is to provide automated migration tools to help with those migrations.</p>
+issues should be reported so that things can get massaged into, or replaced with, better forms.</p>
 </div>
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 <div class="sect2">
