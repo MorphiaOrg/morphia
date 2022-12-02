@@ -5,16 +5,49 @@
 === Experimental packages
 
 To address various issues in older APIs, some new packages were introduced under an `experimental` subpackage.  These packages have had
-sufficient time to back and are being promoted out of experimental status in 2.3.  Unfortunately, there isn't a feasible, non-breaking
-way to do this so upgrading to 2.3 is a source breaking change.  The good news is that these breaks can be fixed by doing a global
-removal of `.experimental`.  This should fix all the cases where Morphia has promoted these packages out.
+sufficient time to bake and are being promoted out of experimental status in 2.3.  Unfortunately, there isn't a feasible, non-breaking
+way to do this so upgrading to 2.3 is a mild breaking change.  The good news is that these breaks can be fixed by doing a global
+removal of `.experimental`.  This should fix all the cases where Morphia has promoted these packages.
+
+There are, however, two options being provided that might help with this process.  As always, make sure to commit any of your changes before using an external tool to mass update your code.  And, of course, examine the changes afterward to ensure no breakages.
+
+==== OpenRewrite
+
+The first tool is https://github.com/openrewrite[openrewrite].  This is a powerful, general purpose tool for updates and migrations of
+all sorts.  In our case, it's primarily just removing the `experimental` segment out of a few packages.  To use this script, download the
+https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.yml[script] and save it as `rewrite.yml` in the root of
+your project.  Once that is done, run the following command:
+
+```shell
+mvn org.openrewrite.maven:rewrite-maven-plugin:4.37.0:runNoFork -DactiveRecipes=dev.morphia.UpgradeFrom22to23
+```
+
+This script will update the packages to reflect their new names.  It will also update your pom to the latest Morphia version for you
+if that has not been updated yet.
+
+==== jbang
+
+Alternately, if you have https://www.jbang.dev/[jbang] installed, you can run a script to do this work for you.  It's a little more brute
+force than the openrewrite approach (it's literally just doing string replacements) but might be necessary in some cases.  If you're a
+kotlin user, you'll want to use this approach as openrewrite does not currently support kotlin source files.  To run this script, use the
+following command:
+
+```shell
+jbang https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.kt
+```
+
+You will likely be asked to specify the level of trust you have for this script and the MorphiaOrg github organization.  Choose whichever
+level you're comfortable with.
+
+Whichever path you choose, even if that's manually doing the updates yourself, make sure to examine the diffs and run your tests to make
+sure nothing was broken.  Though these approaches have both been tested on a number of projects, user code and project structures can be
+wildly different and some unhandled corner cases might arise.
 
 [NOTE]
 ====
 In the future such "experimental" items, the ones that need a little time to "bake" and get real world usage and feedback, will be marked
 with `@MorphiaExperimental` and javadoc'd as experimental.  When you see these items, they are intended to be used and any usability
-issues should be reported so that things can get massaged into, or replaced with, better forms.  Of course, such breaking changes will
-hopefully be minimal but when they do occur, the plan is to provide automated migration tools to help with those migrations.
+issues should be reported so that things can get massaged into, or replaced with, better forms.
 ====
 
 === Legacy Configuration
