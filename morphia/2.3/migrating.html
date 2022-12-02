@@ -262,6 +262,38 @@ hopefully be minimal but when they do occur, the plan is to provide automated mi
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_legacy_configuration"><a class="anchor" href="#_legacy_configuration"></a>Legacy Configuration</h3>
+<div class="paragraph">
+<p>As part of the modernization of mapping configuration introduced in 2.0, a <code>legacy()</code> option was added to <code>MapperOptions</code> to preconfigure
+the mapping options to reflect the pre-2.0 configuration style.  Part of the modernization of 2.0 also included how querying is done.
+The <code>legacy()</code> method mentioned above also configured this legacy querying style.  As of 3.0, this <code>legacy()</code> option, and the querying
+API associated with it, will go away.</p>
+</div>
+<div class="paragraph">
+<p>However, it will still be possible to configure your application with the old settings, you will just have to be explicit about it.  To
+update to this new configuration approach, rather than using <code>MappingOptions.legacy().build()</code> as you have perhaps been doing, simply
+replace it with something like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    MapperOptions.builder()
+        .discriminatorKey("className")
+        .discriminator(DiscriminatorFunction.className())
+        .collectionNaming(NamingStrategy.identity())
+        .propertyNaming(NamingStrategy.identity())</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will preserve the older mappings used by your data while enabling the modern query API implementation.  Some users will have
+date/time data stored under an older storage scheme.  Those users will also want to include the following option:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    .dateStorage(DateStorage.SYSTEM_DEFAULT)</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
