@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
  * @morphia.internal
  * @since 2.2
  */
-@SuppressWarnings("CheckStyle")
 @MorphiaInternal
 public final class MorphiaInternals {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaInternals.class);

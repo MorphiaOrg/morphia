@@ -100,7 +100,8 @@ public class MapperOptions {
 
     /**
      * @return a builder to set mapping options
-     * @deprecated See the upgrading instructions on the <a href="https://morphia.dev/morphia/2.3/migrating.html#_legacy_configuration">website</a>.
+     * @deprecated See the upgrading instructions on the
+     *             <a href="https://morphia.dev/morphia/2.3/migrating.html#_legacy_configuration">website</a>.
      */
     @Deprecated
     public static Builder legacy() {

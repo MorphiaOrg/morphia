@@ -13,7 +13,8 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * Defines a codec for Query instances
-* @deprecated
+ *
+ * @deprecated
  */
 @Deprecated
 public class LegacyQueryCodec implements Codec<LegacyQuery> {

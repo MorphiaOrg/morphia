@@ -24,7 +24,6 @@ public class DensifyCodec extends StageCodec<Densify> {
     }
 
     @Override
-    @SuppressWarnings("checkstyle:MissingSwitchDefault")
     protected void encodeStage(BsonWriter writer, Densify value, EncoderContext encoderContext) {
         document(writer, () -> {
             value(getDatastore(), writer, "field", value.field(), encoderContext);
