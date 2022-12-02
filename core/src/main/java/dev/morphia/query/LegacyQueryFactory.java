@@ -1,18 +1,23 @@
 package dev.morphia.query;
 
 import com.mongodb.lang.Nullable;
-
 import dev.morphia.Datastore;
-
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A implementation of {@link QueryFactory} to create {@link LegacyQuery} instances.
+ *
+ * @deprecated
  */
+@Deprecated
 public class LegacyQueryFactory implements QueryFactory {
-    @Override
-    public <T> Query<T> createQuery(Datastore datastore, String collection, Class<T> type) {
-        return new LegacyQuery<>(datastore, collection, type);
+    private static final Logger LOG = LoggerFactory.getLogger(LegacyQueryFactory.class);
+
+    public LegacyQueryFactory() {
+        LOG.info("The legacy query API is being removed.  Please update your configuration to the modern options (via MapperOptions" +
+                 ".builder()) or by using only the legacy mapping option using MapperOptions.legacyMapping()");
     }
 
     @Override
@@ -25,5 +30,10 @@ public class LegacyQueryFactory implements QueryFactory {
         }
 
         return query;
+    }
+
+    @Override
+    public <T> Query<T> createQuery(Datastore datastore, String collection, Class<T> type) {
+        return new LegacyQuery<>(datastore, collection, type);
     }
 }

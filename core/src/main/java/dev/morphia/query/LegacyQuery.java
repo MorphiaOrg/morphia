@@ -45,9 +45,11 @@ import static java.util.List.of;
  *
  * @param <T> The type we will be querying for, and returning.
  * @morphia.internal
+ * @deprecated
  */
 @SuppressWarnings({ "removal", "deprecation" })
 @MorphiaInternal
+@Deprecated
 public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
     private final DatastoreImpl datastore;

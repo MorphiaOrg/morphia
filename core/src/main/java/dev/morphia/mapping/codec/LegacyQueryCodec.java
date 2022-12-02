@@ -13,7 +13,9 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * Defines a codec for Query instances
+* @deprecated
  */
+@Deprecated
 public class LegacyQueryCodec implements Codec<LegacyQuery> {
     private final Datastore datastore;
 

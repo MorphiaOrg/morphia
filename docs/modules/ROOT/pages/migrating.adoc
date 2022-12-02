@@ -17,6 +17,32 @@ issues should be reported so that things can get massaged into, or replaced with
 hopefully be minimal but when they do occur, the plan is to provide automated migration tools to help with those migrations.
 ====
 
+=== Legacy Configuration
+
+As part of the modernization of mapping configuration introduced in 2.0, a `legacy()` option was added to `MapperOptions` to preconfigure
+the mapping options to reflect the pre-2.0 configuration style.  Part of the modernization of 2.0 also included how querying is done.
+The `legacy()` method mentioned above also configured this legacy querying style.  As of 3.0, this `legacy()` option, and the querying
+API associated with it, will go away.
+
+However, it will still be possible to configure your application with the old settings, you will just have to be explicit about it.  To
+update to this new configuration approach, rather than using `MappingOptions.legacy().build()` as you have perhaps been doing, simply
+replace it with something like the following:
+
+```java
+    MapperOptions.builder()
+        .discriminatorKey("className")
+        .discriminator(DiscriminatorFunction.className())
+        .collectionNaming(NamingStrategy.identity())
+        .propertyNaming(NamingStrategy.identity())
+```
+
+This will preserve the older mappings used by your data while enabling the modern query API implementation.  Some users will have
+date/time data stored under an older storage scheme.  Those users will also want to include the following option:
+
+```java
+    .dateStorage(DateStorage.SYSTEM_DEFAULT)
+```
+
 == Migrating to 2.0
 
 === Versioning
