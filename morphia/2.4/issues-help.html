@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Issues &amp; Help :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.0.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
+<div class="nav-container" data-component="morphia" data-version="2.4">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -118,7 +118,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="updating-old.html">Updating (Legacy)</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="deletes.html">Deleting</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -145,7 +145,7 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text"><em>Support</em></span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -164,7 +164,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
+    <span class="version">2.4-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -190,7 +190,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">2.3-SNAPSHOT</a>
+          <a href="index.html">2.4-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.2/index.html">2.2</a>
@@ -215,40 +215,88 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Morphia</a></li>
-    <li>Features</li>
-    <li><a href="deletes.html">Deleting</a></li>
+    <li><em>Support</em></li>
+    <li><a href="issues-help.html">Issues &amp; Support</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.4-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="deletes.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../2.2/deletes.html">2.2</a>
-    <a class="version is-missing" href="../2.1/index.html">2.1</a>
-    <a class="version is-missing" href="../1.6/index.html">1.6</a>
+    <a class="version is-current" href="issues-help.html">2.4-SNAPSHOT</a>
+    <a class="version" href="../2.2/issues-help.html">2.2</a>
+    <a class="version" href="../2.1/issues-help.html">2.1</a>
+    <a class="version" href="../1.6/issues-help.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/deletes.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/issues-help.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<div class="sect1">
-<h2 id="_deletes"><a class="anchor" href="#_deletes"></a>Deletes</h2>
+<h1 class="page">Issues &amp; Help</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Queries are used to delete documents from the database as well.
-Using
-<a href="javadoc/dev/morphia/query/Query.html#delete()">Query#delete()</a>, we can delete documents matching the query.
-The default operation will only delete the first matching document.
-However, you can opt to delete all matches by passing in the appropriate options:</p>
+<p>We are lucky to have a vibrant MongoDB Java community with lots of varying experience of using Morphia.
+We often find the quickest way to get support for general questions is through the <a href="https://groups.google.com/forum/#!forum/morphia">Morphia google group</a>,
+<a href="https://community.mongodb.com/c/drivers-odms-connectors/">the mongoDB community forums</a>, or through <a href="https://stackoverflow.com/questions/tagged/morphia">stackoverflow</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bugs_feature_requests"><a class="anchor" href="#_bugs_feature_requests"></a>Bugs / Feature Requests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you think you’ve found a bug or want to see a new feature in the Morphia, please open an issue on
+<a href="https://github.com/MorphiaOrg/morphia/issues">github</a>.
+Please provide as much information as possible (including version numbers) about the issue type and how to reproduce it.
+Ideally, if you can create a reproducer for the issue at hand, that would be even more helpful.
+To help with this, please take a look at the <a href="https://github.com/MorphiaOrg/reproducer">reproducer</a> project.
+This will help you set up a quick environment for reproducing your issue and providing a working example to examine.
+This project can either be shared via a github repo on your account or perhaps attaching a zip of the project to the associated issue.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Providing a <a href="https://github.com/MorphiaOrg/reproducer">reproducer</a> is the fastest way help resolve your issue.
+It cuts down the guess work and labor required to recreate the problem locally so that root causes can be investigated.
+If the repository is shared via github (or other public repository), it even allows the opportunity for tweaks and suggestions to be made by both you and the maintainers to more quickly isolate and provide a fix.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pull_requests"><a class="anchor" href="#_pull_requests"></a>Pull Requests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We are happy to accept contributions to help improve Morphia.
+We will guide user contributions to ensure they meet the standards of the codebase.
+Please ensure that any pull requests include documentation, tests, and also pass the build checks.</p>
+</div>
+<div class="paragraph">
+<p>To get started check out the source and work on a branch:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
-    .find(Hotel.class)
-    .filter(gt("stars", 100))
-    .delete(new DeleteOptions()
-                     .multi(true));</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git clone https://github.com/MorphiaOrg/morphia.git
+$ cd morphia
+$ git checkout -b myNewFeature</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, ensure that the code passes all the checks.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd core
+$ mvn -Pquality</code></pre>
 </div>
 </div>
 </div>

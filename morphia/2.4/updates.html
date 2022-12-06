@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
+<div class="nav-container" data-component="morphia" data-version="2.4">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -112,7 +112,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="querying-old.html">Querying (Legacy)</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="updates.html">Updating</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -121,7 +121,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="deletes.html">Deleting</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -164,7 +164,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
+    <span class="version">2.4-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -190,7 +190,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">2.3-SNAPSHOT</a>
+          <a href="index.html">2.4-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.2/index.html">2.2</a>
@@ -216,173 +216,198 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="aggregations.html">Aggregation</a></li>
+    <li><a href="updates.html">Updating</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.4-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="aggregations.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../2.2/aggregations.html">2.2</a>
+    <a class="version is-current" href="updates.html">2.4-SNAPSHOT</a>
+    <a class="version" href="../2.2/updates.html">2.2</a>
     <a class="version is-missing" href="../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/aggregations.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/updates.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_aggregations"><a class="anchor" href="#_aggregations"></a>Aggregations</h2>
+<h2 id="_updates"><a class="anchor" href="#_updates"></a>Updates</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <a href="http://docs.mongodb.org/manual/aggregation">aggregation framework</a> in MongoDB allows you to define a series (called a pipeline) of operations (called stages) against the data in a collection.
-These pipelines can be used for analytics or they can be used to convert your data from one form to another.
-This guide will not go in to the details of how aggregation works, however.
-The official MongoDB <a href="http://docs.mongodb.org/manual/aggregation">documentation</a> has extensive tutorials on such details.
-Rather, this guide will focus on the Morphia API. The examples shown here are taken from the
-<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/aggregation/AggregationTest.java">tests</a> in Morphia itself.</p>
-</div>
-<div class="paragraph">
-<p>Writing an aggregation pipeline starts just like writing a standard query.
-As with querying, we start with the <code>Datastore</code>:</p>
+<p>Updates in 2.0, are issued using a <code>Query</code> instance . These update operations are executed on the server without fetching any documents across the wire.
+Update operations are defined using a set of functions as defined on
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html">UpdateOperators</a>.
+In our examples, we&#8217;ll be using the following model:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">MorphiaCursor&lt;Author&gt; aggregate = getDs().aggregate(Book.class)
-     .group(of(id("author"))
-                .field("books", push(field("title"))))
-     .sort(Sort.on().ascending("name"))
-     .execute(Author.class);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>aggregate()</code> takes a <code>Class</code> literal.
-This lets Morphia know which collection to perform this aggregation against.
-Because of the transformational operations available in the aggregation <a href="http://docs.mongodb.org/manual/core/aggregation-pipeline">pipeline</a>, Morphia can not validate as much as it can with querying so care will need to be taken to ensure document fields actually exist when referencing them in your pipeline.</p>
-</div>
-<div class="sect2">
-<h3 id="_the_pipeline"><a class="anchor" href="#_the_pipeline"></a>The Pipeline</h3>
-<div class="paragraph">
-<p>Aggregation pipelines are comprised of a series stages.
-Our example here has only one stage: <code>group()</code>.
-This method is the Morphia equivalent of the <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/">$group</a> operator.
-This stage, as the name suggests, groups together documents based on various criteria.
-In this example, we are collecting together all the books by author.  <code>group()</code> takes one parameter: a <code>Group</code> instance.
-This instance is created using the <code>Group.of()</code> method which will return a new <code>Group</code> stage instance.
-There are a few overloads but the simplest version, <code>of()</code>, will generate a <code>$group</code> stage with no <code>_id</code>
-field in the document.
-In this case, we&#8217;re passing the output of the <code>id(String)</code> method which creates an <code>_id</code> field using the values found in the <code>author</code> properties found in the collection&#8217;s documents.</p>
-</div>
-<div class="paragraph">
-<p>The next step defines a new field, <code>books</code> comprised of the titles of the books found in each document.
-(For reference, this example is the Morphia equivalent of an <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author">example</a> found in the aggregation tutorials.) This results in a series of documents that look like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{ "_id" : "Homer", "books" : [ "The Odyssey", "Iliad" ] }
-{ "_id" : "Dante", "books" : [ "The Banquet", "Divine Comedy", "Eclogues" ] }</code></pre>
-</div>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity("hotels")
+public class Hotel
+{
+   @Id
+   private ObjectId id;
+
+   private String name;
+   private int stars;
+
+   @Embedded
+   private Address address;
+
+   List&lt;Integer&gt; roomNumbers = new ArrayList&lt;Integer&gt;();
+
+   // ... getters and setters
+}
+
+@Embedded
+public class Address
+{
+   private String street;
+   private String city;
+   private String postalCode;
+   private String country;
+
+   // ... getters and setters
+}</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_executing_the_pipeline"><a class="anchor" href="#_executing_the_pipeline"></a>Executing the Pipeline</h3>
+<h3 id="_setunset"><a class="anchor" href="#_setunset"></a>set()/unset()</h3>
 <div class="paragraph">
-<p>Once your pipeline is complete, you can execute it via the <code>execute()</code> method.
-This method takes a <code>Class</code> reference for the target type of your aggregation.
-Given this type, Morphia will map each document in the results and return it.
-Additionally, you can also include some options to <code>execute()</code>.
-We can use the various options on the
-<a href="javadoc/dev/morphia/aggregation/AggregationOptions.html">AggregationOptions</a> class to configure how we want the pipeline to execute.</p>
-</div>
-<div class="sect3">
-<h4 id="_out"><a class="anchor" href="#_out"></a>$out</h4>
-<div class="paragraph">
-<p>Depending your use case, you might not watch to return the results of your aggregation but simply output them to another collection.
-That&#8217;s where <code>$out</code> comes in.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/">$out</a> is an operator that allows the results of a pipeline to be stored in to a named collection.
-This collection can not be sharded or a capped collection, however.
-This collection, if it does not exist, will be created upon execution of the pipeline.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Any existing data in the collection will be replaced by the output of the aggregation.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>An example aggregation using the <code>$out</code> stage looks like this:</p>
+<p>To change the name of the hotel, one would use something like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.aggregate(Book.class)
-       .group(Group.of(id("author"))
-                   .field("books", push()
-                                       .single(field("title"))))
-       .out(Out.to(Author.class));</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
+    .find(Hotel.class)
+    .update(UpdateOperators.set("name", "Fairmont Chateau Laurier"))
+    .execute();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You&#8217;ll note that <code>out()</code> is the final method called here rather than <code>execute()</code>.
-This is because <code>$out</code> must be the final stage in the pipeline and it simply makes no sense to do anything other than execute the pipeline at that point.
-If you look at what we&#8217;re passing to the method, you&#8217;ll notice the <code>Out</code> class.
-There are currently two methods of note on <code>Out</code>:  <code>to(Class)</code> and <code>to(String)</code>.
-Using either of these methods instructs Morphia to write to either the collection mapped for the given <code>Class</code> or the named collection as noted by the String give.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>You may be wondering about the use of <code>Out</code> here and that it seems a bit overcomplicated.
-One of the design goals for the 2.0 API is to simplify the overall API and to reduce the number of overloads through the introduction of parameter or options objects.
-By limiting the <code>Aggregation</code> API to two methods for <code>$out</code> (the seconds takes an <code>AggregationOptions</code> reference), we can keep <code>Aggregation</code> itself slim and incorporate any future variations in <code>$out</code> limited to the <code>Out</code> class.
-This should, hopefully, make both APIs easier to digest and evolve.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_merge"><a class="anchor" href="#_merge"></a>$merge</h4>
-<div class="paragraph">
-<p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/merge/">$merge</a> is a very similar option with a some major differences.
-The biggest difference is that <code>$merge</code> can write to existing collections without destroying the existing documents.  <code>$out</code> would obliterate any existing documents and replace them with the results of the pipeline.  <code>$merge</code>, however, can deposit these new results alongside existing data and update existing data.</p>
+<p>The <code>execute()</code> can optionally take <a href="javadoc/dev/morphia/UpdateOptions.html">UpdateOptions</a> if there are any options you might want to apply to your update statement.</p>
 </div>
 <div class="paragraph">
-<p>Using <code>$merge</code> might look something like this:</p>
+<p>Embedded documents are updated the same way.
+To change the name of the city in the address, one would use something like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.aggregate(Salary.class)
-   .group(Group.of(id()
-                       .field("fiscal_year")
-                       .field("dept"))
-               .field("salaries", sum(field("salary"))))
-   .merge(Merge.into("budgets")
-               .on("_id")
-               .whenMatched(WhenMatched.REPLACE)
-               .whenNotMatched(WhenNotMatched.INSERT));</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
+    .find(Hotel.class)
+    .update(UpdateOperators.set("address.city", "Ottawa"))
+    execute();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Much like <code>out()</code> above, for <code>merge()</code> we pass in a <code>Merge</code> reference as created by the <code>Merge.into()</code> method.
-A merge is slightly more complex and so has more options to consider.
-In this example, we&#8217;re merging in to the <code>budgets</code> collection and merging any existing documents based on the <code>_id</code> as denoted using the <code>on()</code> method.
-Because there may be existing data in the collection, we need to instruct the operation how to handle those cases.
-In this example, when documents matching we&#8217;re choosing to replace them and when they don&#8217;t we&#8217;re instructing the operation to insert the new documents in to the collection.</p>
+<p>Values can also be removed from documents as shown below:</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
+    .find(Hotel.class)
+    .update(UpdateOperators.unset("name"))
+    execute();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After this update, the name of the hotel would be <code>null</code> when the entity is loaded.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_multiple_updates"><a class="anchor" href="#_multiple_updates"></a>Multiple Updates</h3>
+<div class="paragraph">
+<p>By default, an update operation will only update the first document matching the query.
+This behavior can be modified via the optional
+<a href="javadoc/dev/morphia/UpdateOptions.html">UpdateOptions</a> parameter on <code>execute()</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
+    .find(Hotel.class)
+    .inc("stars")
+    .execute(new UpdateOptions()
+        .multi(true));</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_upserts"><a class="anchor" href="#_upserts"></a>Upserts</h3>
+<div class="paragraph">
+<p>In some cases, updates are issued against a query that might not match any documents.
+In these cases, it&#8217;s often fine for those updates to simply pass with no effect.
+In other cases, it&#8217;s desirable to create an initial document matching the query parameters.
+Examples of this might include user high scores, e.g. In cases like this, we have the option to use an upsert:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
+    .find(Hotel.class)
+    .filter(gt("stars", 100))
+    .update()
+    .execute(new UpdateOptions()
+                     .upsert(true));
+
+// creates { "_id" : ObjectId("4c60629d2f1200000000161d"), "stars" : 50 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_checking_results"><a class="anchor" href="#_checking_results"></a>Checking results</h3>
+<div class="paragraph">
+<p>In all this one thing we haven&#8217;t really looked at is how to verify the results of an update.
+The <code>execute()</code> method returns an instance of
+<code>com.mongodb.client.result.UpdateResult</code>.
+Using this class, you can get specific numbers from the update operation as well as any generated ID as the result of an upsert.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_returning_the_updated_entity"><a class="anchor" href="#_returning_the_updated_entity"></a>Returning the updated entity</h3>
+<div class="paragraph">
+<p>There are times when a document needs to be updated and also fetched from the database.
+In the server documentation, this is referred to as <a href="http://docs.mongodb.org/manual/reference/method/db.collection.findAndModify/">findAndModify</a>.
+In Morphia, this functionality is exposed through the
+<a href="javadoc/dev/morphia/query/Query.html#modify(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)">Query#modify()</a>
+method. With this method, you can choose to return the updated entity in either the
+state before or after the update. The default is to return the entity in the <em>before</em> state.
+This can be changed by passing in a <code>ModifyOptions</code> reference to the operation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
+    .find(Hotel.class)
+    .modify(UpdateOperators.set("address.city", "Ottawa"))
+    execute(new ModifyOptions()
+        .returnDocument(ReturnDocument.AFTER));</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_merges"><a class="anchor" href="#_merges"></a>Merges</h3>
+<div class="paragraph">
+<p>A specialized form of an update is the <a href="javadoc/dev/morphia/Datastore.html#merge(T)">merge()</a> operation.
+A common case in scenarios where multiple subsystems or applications share a database is where one part of the system might only have part of a larger entity. e.g., a
+<a href="https://en.wikipedia.org/wiki/Data_transfer_object">DTO</a> might only have a subset of an entity necessary to perform the duties of that particular service.
+Updating the database with the partial entities can be problematic because it forces the application developer to inspect an entity&#8217;s state and manually generate the correct set of update statements.
+Morphia 2.0 introduced the <code>merge()</code> method to help cover this case.
+Using <code>merge()</code>, a specific set of <code>$set</code> updates are issued to only save fields as defined on the DTO type itself (which, of course, must be annotated with <code>@Entity</code> like any other Morphia type).</p>
+</div>
+<div class="paragraph">
+<p>This is useful but limited.
+What happens to any null fields and empty Lists?
+Using <code>MapperOptions</code>, Morphia can be configured to not persist those fields such that they never end up in the database.
+In the above scenario, however, Morphia is only issuing a <code>$set</code> for the fields that should be persisted which leaves potentially outdated information in the database. (e.g., say a process removes the final item from a List in memory.  <code>merge()</code> would actually <strong>leave</strong> that last item in the database because an update would not be issued for that empty List.) In 2.2, a new value is added to the optional <a href="javadoc/dev/morphia/InsertOneOptions.html">InsertOneOptions</a> to account for this.</p>
+</div>
+<div class="paragraph">
+<p>Setting <a href="javadoc/dev/morphia/InsertOneOptions.html#unsetMissing(boolean)">unsetMissing</a> to true, any property defined on an entity
+that isn&#8217;t getting updated via <code>$set</code> will have a <code>$unset</code> operator defined.
+This will result in null properties and empty Lists getting removed from documents in the database so that they will reflect the current state in memory.</p>
+</div>
+<div class="paragraph">
+<p>Regardless of whether this value is set, <code>merge()</code> will issue a <code>find()</code> for that entity and will return the updated form from the database.
+Without using <code>unsetMissing()</code>, this is useful for merging the in memory state with what&#8217;s in the database.
+With this value set, the two should be identical, of course.</p>
 </div>
 </div>
 </div>

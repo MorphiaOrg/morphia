@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Migration :: Morphia Docs</title>
+    <title>Untitled :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.0.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
+<div class="nav-container" data-component="morphia" data-version="2.4">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -79,7 +79,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="migrating.html">Migrating</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -118,7 +118,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="updating-old.html">Updating (Legacy)</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="deletes.html">Deleting</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -164,7 +164,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
+    <span class="version">2.4-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -190,7 +190,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">2.3-SNAPSHOT</a>
+          <a href="index.html">2.4-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.2/index.html">2.2</a>
@@ -215,160 +215,40 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Morphia</a></li>
-    <li><a href="index.html">Getting Started</a></li>
-    <li><a href="migrating.html">Migrating</a></li>
+    <li>Features</li>
+    <li><a href="deletes.html">Deleting</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.4-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="migrating.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../2.2/migrating.html">2.2</a>
+    <a class="version is-current" href="deletes.html">2.4-SNAPSHOT</a>
+    <a class="version" href="../2.2/deletes.html">2.2</a>
     <a class="version is-missing" href="../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/migrating.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/deletes.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Migration</h1>
 <div class="sect1">
-<h2 id="_migrating_to_2_3"><a class="anchor" href="#_migrating_to_2_3"></a>Migrating to 2.3</h2>
+<h2 id="_deletes"><a class="anchor" href="#_deletes"></a>Deletes</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_experimental_packages"><a class="anchor" href="#_experimental_packages"></a>Experimental packages</h3>
 <div class="paragraph">
-<p>To address various issues in older APIs, some new packages were introduced under an <code>experimental</code> subpackage.  These packages have had
-sufficient time to bake and are being promoted out of experimental status in 2.3.  Unfortunately, there isn&#8217;t a feasible, non-breaking
-way to do this so upgrading to 2.3 is a mild breaking change.  The good news is that these breaks can be fixed by doing a global
-removal of <code>.experimental</code>.  This should fix all the cases where Morphia has promoted these packages.</p>
-</div>
-<div class="paragraph">
-<p>There are, however, two options being provided that might help with this process.  As always, make sure to commit any of your changes before using an external tool to mass update your code.  And, of course, examine the changes afterward to ensure no breakages.</p>
-</div>
-<div class="sect3">
-<h4 id="_openrewrite"><a class="anchor" href="#_openrewrite"></a>OpenRewrite</h4>
-<div class="paragraph">
-<p>The first tool is <a href="https://github.com/openrewrite">openrewrite</a>.  This is a powerful, general purpose tool for updates and migrations of
-all sorts.  In our case, it&#8217;s primarily just removing the <code>experimental</code> segment out of a few packages.  To use this script, download the
-<a href="https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.yml">script</a> and save it as <code>rewrite.yml</code> in the root of
-your project.  Once that is done, run the following command:</p>
+<p>Queries are used to delete documents from the database as well.
+Using
+<a href="javadoc/dev/morphia/query/Query.html#delete()">Query#delete()</a>, we can delete documents matching the query.
+The default operation will only delete the first matching document.
+However, you can opt to delete all matches by passing in the appropriate options:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">mvn org.openrewrite.maven:rewrite-maven-plugin:4.37.0:runNoFork -DactiveRecipes=dev.morphia.UpgradeFrom22to23</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This script will update the packages to reflect their new names.  It will also update your pom to the latest Morphia version for you
-if that has not been updated yet.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_jbang"><a class="anchor" href="#_jbang"></a>jbang</h4>
-<div class="paragraph">
-<p>Alternately, if you have <a href="https://www.jbang.dev/">jbang</a> installed, you can run a script to do this work for you.  It&#8217;s a little more brute
-force than the openrewrite approach (it&#8217;s literally just doing string replacements) but might be necessary in some cases.  If you&#8217;re a
-kotlin user, you&#8217;ll want to use this approach as openrewrite does not currently support kotlin source files.  To run this script, use the
-following command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-shell hljs" data-lang="shell">jbang https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.kt</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You will likely be asked to specify the level of trust you have for this script and the MorphiaOrg github organization.  Choose whichever
-level you&#8217;re comfortable with.</p>
-</div>
-<div class="paragraph">
-<p>Whichever path you choose, even if that&#8217;s manually doing the updates yourself, make sure to examine the diffs and run your tests to make
-sure nothing was broken.  Though these approaches have both been tested on a number of projects, user code and project structures can be
-wildly different and some unhandled corner cases might arise.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>In the future such "experimental" items, the ones that need a little time to "bake" and get real world usage and feedback, will be marked
-with <code>@MorphiaExperimental</code> and javadoc&#8217;d as experimental.  When you see these items, they are intended to be used and any usability
-issues should be reported so that things can get massaged into, or replaced with, better forms.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_legacy_configuration"><a class="anchor" href="#_legacy_configuration"></a>Legacy Configuration</h3>
-<div class="paragraph">
-<p>As part of the modernization of mapping configuration introduced in 2.0, a <code>legacy()</code> option was added to <code>MapperOptions</code> to preconfigure
-the mapping options to reflect the pre-2.0 configuration style.  Part of the modernization of 2.0 also included how querying is done.
-The <code>legacy()</code> method mentioned above also configured this legacy querying style.  As of 3.0, this <code>legacy()</code> option, and the querying
-API associated with it, will go away.</p>
-</div>
-<div class="paragraph">
-<p>However, it will still be possible to configure your application with the old settings, you will just have to be explicit about it.  To
-update to this new configuration approach, rather than using <code>MappingOptions.legacy().build()</code> as you have perhaps been doing, simply
-replace it with something like the following:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    MapperOptions.builder()
-        .discriminatorKey("className")
-        .discriminator(DiscriminatorFunction.className())
-        .collectionNaming(NamingStrategy.identity())
-        .propertyNaming(NamingStrategy.identity())</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This will preserve the older mappings used by your data while enabling the modern query API implementation.  Some users will have
-date/time data stored under an older storage scheme.  Those users will also want to include the following option:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    .dateStorage(DateStorage.SYSTEM_DEFAULT)</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_migrating_to_2_0"><a class="anchor" href="#_migrating_to_2_0"></a>Migrating to 2.0</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_versioning"><a class="anchor" href="#_versioning"></a>Versioning</h3>
-<div class="paragraph">
-<p>Versioned updates now throw <code>VersionMismatchException</code> instead of <code>ConcurrentModification</code> exception.
-This allows for more targeted catches.
-For historical reasons, this new exception extends <code>ConcurrentModification</code> so that any existing catch clauses will continue to work.
-However, applications should be updated to catch the new exception.
-A future release will change the parent type of
-<code>VersionMismatchException</code> to <code>RuntimeException</code> instead.
-See <a href="https://github.com/MorphiaOrg/morphia/issues/982">this discussion</a> for more details.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_kotlin_support"><a class="anchor" href="#_kotlin_support"></a>Kotlin Support</h3>
-<div class="paragraph">
-<p>Kotlin classes have worked with Morphia for years now but certain Kotlin features have started to cause problems as folks have started trying to use them in their applications.
-To this end a new module has been introduced, <code>morphia-kotlin</code>, to specifically focus on these cases.
-Chances are good that you won&#8217;t need this module but in some cases this new module can help.
-See the
-<a href="kotlin.html" class="xref page">reference guide</a> for more details.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_nullability"><a class="anchor" href="#_nullability"></a>Nullability</h3>
-<div class="paragraph">
-<p>The API is now explicitly decorated with <code>@NonNull</code> and <code>@Nullable</code> annotations to indicate which parameters and return values support null references.
-Your IDE should give you in place hints when you run afoul of these annotations and guide you to properly handling null values.</p>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
+    .find(Hotel.class)
+    .filter(gt("stars", 100))
+    .delete(new DeleteOptions()
+                     .multi(true));</code></pre>
 </div>
 </div>
 </div>

@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.3">
+<div class="nav-container" data-component="morphia" data-version="2.4">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -124,7 +124,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="textSearches.html">Text Search</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -136,7 +136,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
   </li>
 </ul>
@@ -164,7 +164,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">2.3-SNAPSHOT</span>
+    <span class="version">2.4-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -190,7 +190,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">2.3-SNAPSHOT</a>
+          <a href="index.html">2.4-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.2/index.html">2.2</a>
@@ -216,54 +216,91 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="schemaValidation.html">Schema Validation</a></li>
+    <li><a href="textSearches.html">Text Search</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.4-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="schemaValidation.html">2.3-SNAPSHOT</a>
-    <a class="version" href="../2.2/schemaValidation.html">2.2</a>
-    <a class="version" href="../2.1/schemaValidation.html">2.1</a>
-    <a class="version" href="../1.6/schemaValidation.html">1.6</a>
+    <a class="version is-current" href="textSearches.html">2.4-SNAPSHOT</a>
+    <a class="version" href="../2.2/textSearches.html">2.2</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/schemaValidation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/textSearches.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_schema_validation"><a class="anchor" href="#_schema_validation"></a>Schema Validation</h2>
+<h2 id="_text_searches"><a class="anchor" href="#_text_searches"></a>Text Searches</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&#8217;s source.  <a href="http://docs.mongodb.org/manual/core/schema-validation/">Schema validation</a> provides the capability to perform schema validation during updates and insertions.
-Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.</p>
-</div>
-<div class="paragraph">
-<p>Below we have a basic entity definition.
-Note the new annotation <a href="javadoc/dev/morphia/annotations/Validation.html">@Validation</a>.</p>
+<p>Morphia also supports MongoDB&#8217;s text search capabilities.
+In order to execute a text search against a collection, the collection must have a <a href="http://docs.mongodb.org/manual/core/index-text/">text index</a> defined first.
+Using Morphia that definition would look like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity("validation")
-@Validation("{ number : { $gt : 10 } }")
-public class DocumentValidation {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
+public static class Greeting {
     @Id
     private ObjectId id;
-    private String string;
-    private int number;
-    private Date date;
+    private String value;
+    private String language;
 
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In this case, only one value is supplied to the annotation.
-This string value is the query that will be used to match against any new documents or updated documents.
-Should this query fail to match the new document, validation will fail on the document and it will be rejected.
-In addition to the required query, there are two other values that can be configured based on your needs:  <code>level</code> with a default of <code>STRICT</code> and <code>action</code> with a default of <code>ERROR</code>.
-A <code>MODERATE</code> validation level does not apply rules to updates on existing invalid documents.
-An <code>action</code> setting of <code>WARN</code> will merely log any validation violations.</p>
+<p>The <code>$**</code> value tells MongoDB to create a text index on all the text fields in a document.
+A more targeted index can be created, if desired, by explicitly listing which fields to index.
+Once the index is defined, we can start querying against it like this
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/legacy-tests/src/test/java/dev/morphia/query/TestTextSearching.java">test</a> does:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">mapper.map(Greeting.class);
+datastore.ensureIndexes();
+
+datastore.save(new Greeting("good morning", "english"),
+    new Greeting("good afternoon", "english"),
+    new Greeting("good night", "english"),
+    new Greeting("good riddance", "english"),
+    new Greeting("guten Morgen", "german"),
+    new Greeting("guten Tag", "german")),
+    new Greeting("gute Nacht", "german"));
+
+List&lt;Greeting&gt; good = getDs().find(Greeting.class)
+                             .filter(text("good"))
+                             .execute(new FindOptions()
+                                          .sort(ascending("_id")))
+                             .toList();
+Assert.assertEquals(4, good.size());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see here, we create <code>Greeting</code> objects for multiple languages.
+In our test query, we&#8217;re looking for occurrences of the word "good" in any document.
+Using the method <code>text()</code> found on the <code>Filters</code> class, we can then query for all instances of our search term.
+We created four such documents and our query returns exactly those four.</p>
+</div>
+<div class="paragraph">
+<p>If you would like to restrict your search to a specific language, that can also be specified as part of the query:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.find(Greeting.class)
+         .filter(text("good")
+                     .language("english"))
+         .execute(new FindOptions()
+                      .sort(ascending("_id")))
+         .toList();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are some optional parameters in addition to the language you can specify as part of your text search.
+Those parameters are documented on the <a href="javadoc/dev/morphia/query/filters/TextSearchFilter.html">TextSearchFilter</a> class.</p>
 </div>
 </div>
 </div>
