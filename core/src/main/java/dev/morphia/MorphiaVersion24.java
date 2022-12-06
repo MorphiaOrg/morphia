@@ -1,10 +1,14 @@
 package dev.morphia;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 /**
  * This class is a version marker for certain frameworks to use when loading configurations, e.g. See
  * <a href="https://github.com/MorphiaOrg/morphia/issues/1496">here</a> for details.
+ * @morphia.internal
  */
-public final class MorphiaVersion23 {
-    private MorphiaVersion23() {
+@MorphiaInternal
+public final class MorphiaVersion24 {
+    private MorphiaVersion24() {
     }
 }
