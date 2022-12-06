@@ -2,22 +2,23 @@ version: 2
 updates:
   - package-ecosystem: maven
     directory: "/"
-    open-pull-requests-limit: 100
+    schedule:
+      interval: daily
+  - package-ecosystem: maven
+    target-branch: 2.3.x
+    directory: "/"
+    schedule:
+      interval: daily
+  - package-ecosystem: maven
+    target-branch: 2.2.x
+    directory: "/"
     schedule:
       interval: daily
   - package-ecosystem: maven
     directory: "/audits"
-    open-pull-requests-limit: 100
     schedule:
       interval: daily
-  - package-ecosystem: maven
-    directory: "/"
-    open-pull-requests-limit: 100
-    schedule:
-      interval: daily
-    target-branch: 2.2.x
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      # Check for updates to GitHub Actions every week
-      interval: "weekly"
+      interval: daily
