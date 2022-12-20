@@ -31,6 +31,7 @@ public abstract class UpdateBase<T> {
     private final Class<T> type;
     private final List<UpdateOperator> updates = new ArrayList<>();
     private final DatastoreImpl datastore;
+    protected boolean validateDocument = true;
 
     UpdateBase(DatastoreImpl datastore,
             @Nullable MongoCollection<T> collection,
@@ -73,7 +74,7 @@ public abstract class UpdateBase<T> {
         final Operations operations = new Operations(datastore, mapper.getEntityModel(type));
 
         for (UpdateOperator update : updates) {
-            PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), true);
+            PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), validateDocument);
             if (update instanceof DatastoreAware) {
                 ((DatastoreAware) update).setDatastore(datastore);
             }
