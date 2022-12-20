@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashSet;
 
 import org.bson.BsonReader;
@@ -66,6 +67,7 @@ public class CollectionCodec<T> implements Codec<Collection<T>> {
         return encoderClass;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     protected Collection<T> getInstance() {
         if (encoderClass.isInterface()) {
             if (encoderClass.isAssignableFrom(ArrayList.class)) {
@@ -75,6 +77,8 @@ public class CollectionCodec<T> implements Codec<Collection<T>> {
             } else {
                 throw new CodecConfigurationException(format("Unsupported Collection interface of %s!", encoderClass.getName()));
             }
+        } else if (encoderClass.equals(EnumSet.class)) {
+            return EnumSet.noneOf(((EnumCodec) codec).getEncoderClass());
         }
 
         try {
