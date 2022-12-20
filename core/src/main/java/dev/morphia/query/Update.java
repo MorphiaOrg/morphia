@@ -47,6 +47,7 @@ public class Update<T> extends UpdateBase<T> {
      * @return the results
      */
     public UpdateResult execute(UpdateOptions options) {
+        this.validateDocument = options.getBypassDocumentValidation() == null || !options.getBypassDocumentValidation();
         Document updateOperations = toDocument();
         final Document queryObject = getQuery().toDocument();
         if (options.isUpsert()) {
