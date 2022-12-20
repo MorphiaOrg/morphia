@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import java.lang.reflect.Constructor;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,9 +96,12 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
             return encoderClass;
         }
 
+        @SuppressWarnings("rawtypes")
         private Map<K, V> getInstance() {
             if (encoderClass.isInterface()) {
                 return new HashMap<>();
+            } else if (encoderClass.equals(EnumMap.class)) {
+                return new EnumMap(keyType);
             }
             try {
                 final Constructor<Map<K, V>> constructor = encoderClass.getDeclaredConstructor();
