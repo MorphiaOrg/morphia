@@ -414,7 +414,7 @@ public class EntityModelBuilder {
             if (index + 1 < parameters.size()) {
                 for (Entry<String, Type> entry : current.entrySet()) {
                     int peek = index + 1;
-                    while (entry.getValue() instanceof TypeVariable) {
+                    while (entry.getValue() instanceof TypeVariable && peek < parameters.size()) {
                         TypeVariable<?> typeVariable = (TypeVariable<?>) entry.getValue();
                         Map<String, Type> next = parameters.get(peek++);
                         entry.setValue(next.get(typeVariable.getName()));
