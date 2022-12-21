@@ -1045,6 +1045,16 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Test
+    public void testValidationBadFieldNameBypassValidation() {
+    	getDs().save(new Circle(0d));
+        Query<Circle> query = getDs().find(Circle.class)
+                .filter(eq("radius", 0));
+        query.update(new UpdateOptions().bypassDocumentValidation(true), set("rad", 1D));
+
+        assertNotNull(getDs().find(Circle.class).disableValidation().filter(eq("rad", 1D)).first());
+    }
+
+    @Test
     public void testUpsert() {
         ContainsIntArray cIntArray = new ContainsIntArray();
         ContainsIntArray control = new ContainsIntArray();
