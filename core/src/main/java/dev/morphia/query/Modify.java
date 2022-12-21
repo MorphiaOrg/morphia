@@ -50,6 +50,7 @@ public class Modify<T> extends UpdateBase<T> {
      */
     @Nullable
     public T execute(ModifyOptions options) {
+        this.validateDocument = options.getBypassDocumentValidation() == null || !options.getBypassDocumentValidation();
         MongoCollection<T> collection = getDatastore().configureCollection(options, getCollection());
         Document update = toDocument();
 
