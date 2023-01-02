@@ -139,9 +139,9 @@ public class MapperOptions {
     }
 
     /**
-     * @return the configured CodecProvider
+     * @return the configured PropertyCodecProvider
      * @see CodecProvider
-     * @since 2.3
+     * @since 2.4
      */
     @Nullable
     @MorphiaInternal
@@ -405,12 +405,12 @@ public class MapperOptions {
         }
 
         /**
-         * Sets a provider for user defined codecs to used by Morphia
+         * Sets a property provider for user defined codecs to used by Morphia
          *
-         * @param codecProvider the provider to user
+         * @param propertyCodecProvider the provider to user
          * @return this
          * @morphia.experimental
-         * @since 2.3
+         * @since 2.4
          */
         @MorphiaExperimental
         public Builder propertyCodecProvider(PropertyCodecProvider propertyCodecProvider) {
