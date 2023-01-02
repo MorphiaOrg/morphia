@@ -25,6 +25,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecProvider;
+import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +57,7 @@ public class MapperOptions {
     private final boolean enablePolymorphicQueries;
     private final ClassLoader classLoader;
     private final CodecProvider codecProvider;
+    private final PropertyCodecProvider propertyCodecProvider;
 
     private MapperOptions(Builder builder) {
         autoImportModels = builder.autoImportModels;
@@ -67,6 +69,7 @@ public class MapperOptions {
         }
 
         codecProvider = builder.codecProvider;
+        propertyCodecProvider = builder.propertyCodecProvider;
         collectionNaming = builder.collectionNaming;
         conventions = builder.conventions();
         dateStorage = builder.dateStorage();
@@ -133,6 +136,17 @@ public class MapperOptions {
     @MorphiaInternal
     public CodecProvider codecProvider() {
         return codecProvider;
+    }
+
+    /**
+     * @return the configured CodecProvider
+     * @see CodecProvider
+     * @since 2.3
+     */
+    @Nullable
+    @MorphiaInternal
+    public PropertyCodecProvider propertyCodecProvider() {
+        return propertyCodecProvider;
     }
 
     /**
@@ -281,6 +295,7 @@ public class MapperOptions {
         private boolean enablePolymorphicQueries;
         private ClassLoader classLoader;
         private CodecProvider codecProvider;
+        private PropertyCodecProvider propertyCodecProvider;
         private DateStorage dateStorage = DateStorage.UTC;
         private String discriminatorKey = "_t";
         private DiscriminatorFunction discriminator = DiscriminatorFunction.simpleName();
@@ -299,6 +314,7 @@ public class MapperOptions {
             cacheClassLookups = original.cacheClassLookups;
             classLoader = original.getClassLoader();
             codecProvider = original.codecProvider;
+            propertyCodecProvider = original.propertyCodecProvider;
             dateStorage = original.dateStorage;
             ignoreFinals = original.ignoreFinals;
             mapSubPackages = original.mapSubPackages;
@@ -385,6 +401,20 @@ public class MapperOptions {
         @MorphiaExperimental
         public Builder codecProvider(CodecProvider codecProvider) {
             this.codecProvider = codecProvider;
+            return this;
+        }
+
+        /**
+         * Sets a provider for user defined codecs to used by Morphia
+         *
+         * @param codecProvider the provider to user
+         * @return this
+         * @morphia.experimental
+         * @since 2.3
+         */
+        @MorphiaExperimental
+        public Builder propertyCodecProvider(PropertyCodecProvider propertyCodecProvider) {
+            this.propertyCodecProvider = propertyCodecProvider;
             return this;
         }
 

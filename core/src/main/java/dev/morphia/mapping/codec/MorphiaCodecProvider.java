@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 
 import com.mongodb.lang.Nullable;
 
@@ -44,15 +43,16 @@ public class MorphiaCodecProvider implements CodecProvider {
      *
      * @param datastore the Datastore to use
      */
-    public MorphiaCodecProvider(Datastore datastore) {
+    public MorphiaCodecProvider(Datastore datastore, PropertyCodecProvider propertyCodecProvider) {
         this.datastore = datastore;
         this.mapper = datastore.getMapper();
 
+        if (propertyCodecProvider != null) {
+            propertyCodecProviders.add(propertyCodecProvider);
+        }
+
         propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
                 new MorphiaCollectionPropertyCodecProvider()));
-
-        ServiceLoader<MorphiaPropertyCodecProvider> providers = ServiceLoader.load(MorphiaPropertyCodecProvider.class);
-        providers.forEach(propertyCodecProviders::add);
     }
 
     @Nullable

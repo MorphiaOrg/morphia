@@ -111,7 +111,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             importModels();
         }
 
-        morphiaCodecProviders.add(new MorphiaCodecProvider(this));
+        morphiaCodecProviders.add(new MorphiaCodecProvider(this, mapper.getOptions().propertyCodecProvider()));
 
         CodecRegistry codecRegistry = database.getCodecRegistry();
         List<CodecProvider> providers = new ArrayList<>();
