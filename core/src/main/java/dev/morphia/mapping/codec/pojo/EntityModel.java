@@ -73,7 +73,7 @@ public class EntityModel {
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
     private final Mapper mapper;
-    private final Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
+    private final Map<Class<?>, Map<Class<? extends Annotation>, List<ClassMethodPair>>> lifecycleMethods;
 
     /**
      * Creates a new instance
@@ -151,10 +151,17 @@ public class EntityModel {
      */
     public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
             Datastore datastore) {
-        final List<ClassMethodPair> methodPairs = lifecycleMethods.get(event);
-        if (methodPairs != null) {
-            for (ClassMethodPair cm : methodPairs) {
-                cm.invoke(datastore, document, entity);
+
+        Map<Class<? extends Annotation>, List<ClassMethodPair>> annotationMap;
+
+        if ((annotationMap = lifecycleMethods.get(entity.getClass())) != null) {
+
+            List<ClassMethodPair> methodPairs;
+
+            if ((methodPairs = annotationMap.get(event)) != null) {
+                for (ClassMethodPair cm : methodPairs) {
+                    cm.invoke(datastore, document, entity);
+                }
             }
         }
 
@@ -432,8 +439,15 @@ public class EntityModel {
         for (Method method : getDeclaredAndInheritedMethods(type)) {
             for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
                 if (method.isAnnotationPresent(annotationClass)) {
-                    lifecycleMethods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
-                            .add(new ClassMethodPair(method, entityListener ? type : null, annotationClass));
+
+                    Map<Class<? extends Annotation>, List<ClassMethodPair>> annotationMap;
+
+                    if ((annotationMap = lifecycleMethods.get(type)) == null) {
+                        lifecycleMethods.put(type, annotationMap = new HashMap<>());
+                    }
+
+                    annotationMap.computeIfAbsent(annotationClass, c -> new ArrayList<>())
+                      .add(new ClassMethodPair(method, entityListener ? type : null, annotationClass));
                 }
             }
         }
