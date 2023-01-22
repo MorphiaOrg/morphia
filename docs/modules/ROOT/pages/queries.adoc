@@ -158,3 +158,15 @@ If the collection already exists and is not capped, you will have to manually
 {docsRef}/core/capped-collections/#convert-a-collection-to-capped[update] your collection to be a capped collection.
 2. Since this `Iterator` is backed by a tailable cursor, `hasNext()` and `next()` will block until a new item is found.
 In this version of the unit test, we tail the cursor waiting to pull out objects until we have 10 of them and then proceed with the rest of the application.
+
+=== Polymorphic Queries
+
+By default, Morphia will only return documents of the type given in `find()`. However, if you want to retrieve subtypes as well, you can
+enable this in the `MapperOptions` via link:++javadoc/dev/morphia/mapping/MapperOptions.Builder.html#enablePolymorphicQueries(boolean)
+++[MapperOptions.Builder.enablePolymorphicQueries(boolean)].
+
+[NOTE]
+====
+Queries by ID will ignore this setting since such queries are filtering by a specific, unique value and polymorphic queries do incur
+potential performance hits due to the wider scope of the query filter.
+====
