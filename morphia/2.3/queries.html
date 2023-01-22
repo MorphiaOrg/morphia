@@ -439,6 +439,29 @@ In this version of the unit test, we tail the cursor waiting to pull out objects
 </ol>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_polymorphic_queries"><a class="anchor" href="#_polymorphic_queries"></a>Polymorphic Queries</h3>
+<div class="paragraph">
+<p>By default, Morphia will only return documents of the type given in <code>find()</code>. However, if you want to retrieve subtypes as well, you can
+enable this in the <code>MapperOptions</code> via <a href="javadoc/dev/morphia/mapping/MapperOptions.Builder.html#enablePolymorphicQueries(boolean)
+">MapperOptions.Builder.enablePolymorphicQueries(boolean)</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Queries by ID will ignore this setting since such queries are filtering by a specific, unique value and polymorphic queries do incur
+potential performance hits due to the wider scope of the query filter.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 </article>
