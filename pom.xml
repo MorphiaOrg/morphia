@@ -26,15 +26,15 @@
         <bottlerocket.version>0.41.0</bottlerocket.version>
         <dokka.version>1.7.20</dokka.version>
         <driver.version>4.7.2</driver.version>
-        <driver.minor.version>4.6</driver.minor.version>
-        <formatter-maven-plugin.version>2.20.0</formatter-maven-plugin.version>
-        <impsort-maven-plugin.version>1.7.0</impsort-maven-plugin.version>
+        <driver.minor.version>4.7</driver.minor.version>
+        <jackson.version>2.14.1</jackson.version>
         <json.assert.version>1.5.1</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.7.20</kotlin.version>
+        <logback.version>1.4.5</logback.version>
         <maven.version>3.8.7</maven.version>
-        <revapi.maven.plugin.version>0.14.7</revapi.maven.plugin.version>
-        <revapi.java.version>0.27.0</revapi.java.version>
+        <revapi.maven.plugin.version>0.15.0</revapi.maven.plugin.version>
+        <revapi.java.version>0.28.0</revapi.java.version>
         <roaster.version>2.28.0.Final</roaster.version>
         <slf4j.version>2.0.6</slf4j.version>
         <sofia.version>0.23</sofia.version>
@@ -64,7 +64,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.4.5</version>
+                <version>${logback.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -148,12 +148,12 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.13.4.1</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>2.13.4</version>
+                <version>${jackson.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -387,8 +387,7 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <sourceFile>${session.executionRootDirectory}/LICENSE</sourceFile>
-                                    <destinationFile>${project.build.outputDirectory}/META-INF/LICENSE-${project.artifactId}
-                                    </destinationFile>
+                                    <destinationFile>${project.build.outputDirectory}/META-INF/LICENSE-${project.artifactId}</destinationFile>
                                 </configuration>
                             </execution>
                         </executions>
