@@ -4,6 +4,7 @@ import com.mongodb.client.model.geojson.Geometry;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
@@ -202,7 +203,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $eq
      */
-    public static Filter eq(String field, Object val) {
+    public static Filter eq(String field, @Nullable Object val) {
         return new Filter("$eq", field, val) {
             @Override
             public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
