@@ -447,7 +447,7 @@ public class EntityModel {
                     }
 
                     annotationMap.computeIfAbsent(annotationClass, c -> new ArrayList<>())
-                      .add(new ClassMethodPair(method, entityListener ? type : null, annotationClass));
+                            .add(new ClassMethodPair(method, entityListener ? type : null, annotationClass));
                 }
             }
         }

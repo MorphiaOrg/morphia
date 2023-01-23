@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 
 import com.mongodb.lang.Nullable;
 
@@ -51,8 +50,10 @@ public class MorphiaCodecProvider implements CodecProvider {
         CodecProvider codecProvider;
 
         if ((codecProvider = mapper.getOptions().codecProvider()) != null) {
-            // Must go first to user defined codecs take precedent
-            propertyCodecProviders.add((PropertyCodecProvider)codecProvider);
+            if (PropertyCodecProvider.class.isAssignableFrom(codecProvider.getClass())) {
+                // Must go first to user defined codecs take precedent
+                propertyCodecProviders.add((PropertyCodecProvider) codecProvider);
+            }
         }
 
         propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
