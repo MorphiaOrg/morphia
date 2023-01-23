@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.DatastoreImpl;
@@ -45,7 +46,7 @@ public abstract class UpdateBase<T> {
         this.collection = collection;
     }
 
-    @NotNull
+    @NonNull
     static <T> List<T> coalesce(T first, T[] updates) {
         List<T> operators = new ArrayList<>();
         operators.add(first);
