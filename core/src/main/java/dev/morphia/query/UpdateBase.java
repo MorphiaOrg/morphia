@@ -15,7 +15,6 @@ import dev.morphia.query.internal.DatastoreAware;
 import dev.morphia.query.updates.UpdateOperator;
 
 import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
 
 import static java.util.Arrays.asList;
 
