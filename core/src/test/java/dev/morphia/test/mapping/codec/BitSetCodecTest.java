@@ -13,18 +13,24 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 public class BitSetCodecTest extends TestBase {
 
     @Entity(value = "ClassWithBitSet")
     public static class ClassWithBitSet {
-        public @Id Long id = Long.valueOf(1);
-        public BitSet bits = new BitSet();
+        public @Id Long id;
+        public BitSet bits;
+        ClassWithBitSet() {}
+        ClassWithBitSet(long id, BitSet bits) {
+            this.id = id;
+            this.bits = bits;
+        }
     }
 
     @Test
     public void testBitSetBasicUsage() {
-        ClassWithBitSet testClass = new ClassWithBitSet();
+        ClassWithBitSet testClass = new ClassWithBitSet(1L, new BitSet());
         testClass.bits.set(4);
         testClass.bits.set(44);
         getDs().save(testClass);
@@ -41,7 +47,7 @@ public class BitSetCodecTest extends TestBase {
 
     @Test
     public void testBitSetEmptyCase() {
-        ClassWithBitSet testClass = new ClassWithBitSet();
+        ClassWithBitSet testClass = new ClassWithBitSet(1, new BitSet());
         getDs().save(testClass);
         getMapper().map(ClassWithBitSet.class);
 
@@ -52,11 +58,23 @@ public class BitSetCodecTest extends TestBase {
     }
 
     @Test
+    public void testBitSetNullCase() {
+        ClassWithBitSet testClass = new ClassWithBitSet(1, null);
+        getDs().save(testClass);
+        getMapper().map(ClassWithBitSet.class);
+
+        ClassWithBitSet found = getDs().find(ClassWithBitSet.class).filter(Filters.eq("id", testClass.id)).first();
+        assertNotNull(found);
+        assertNull(found.bits);
+    }
+
+    @Test
     public void testBitSetDecodeLegacyFormat() {
+        // create a Document that describe a ClassWithBitSet object with a legacy BitSet in it
         String bitSetInLegacyFormat = "{\"words\": [{\"$numberLong\": \"16\"}, {\"$numberLong\": \"-3\"}], \"wordsInUse\": {\"$numberInt\": \"2\"}, \"sizeIsSticky\":false}";
         String containingObject = "{\"_id\":{\"$numberLong\":\"2\"}, \"_t\":\"ClassWithBitSet\", \"bits\":" + bitSetInLegacyFormat + "}";
 
-        // insert our legacy-formatted document
+        // insert our legacy-style object
         insert("ClassWithBitSet", List.of(Document.parse(containingObject)));
 
         // retrieve document, make sure it's still the same
