@@ -17,9 +17,9 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * For compatibility with the legacy MongoDB driver, the codec can
  * also decode a BitSet from a document if it contains a key named "words"
- * which contains the array of longs. Note that this legacy format is only used
- * when LOADING a BitSet. When persisting a BitSet, it is always stored as an
- * array of long integers.
+ * whose value is an array of longs. Note that this legacy format is only
+ * available when LOADING a BitSet. When persisting a BitSet, it is always
+ * stored as an array of long integers.
  */
 public class BitSetCodec implements Codec<BitSet> {
     private static final String LEGACY_ARRAY_KEY = "words";

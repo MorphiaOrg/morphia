@@ -21,7 +21,10 @@ public class BitSetCodecTest extends TestBase {
     public static class ClassWithBitSet {
         public @Id Long id;
         public BitSet bits;
-        ClassWithBitSet() {}
+
+        ClassWithBitSet() {
+        }
+
         ClassWithBitSet(long id, BitSet bits) {
             this.id = id;
             this.bits = bits;
