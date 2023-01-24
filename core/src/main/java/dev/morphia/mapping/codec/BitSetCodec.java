@@ -75,11 +75,11 @@ public class BitSetCodec implements Codec<BitSet> {
             }
         }
         reader.readEndDocument();
-        
+
         if (!foundKey) {
             throw new IllegalStateException("Expected BitSet BSON to contain a field named '" + LEGACY_ARRAY_KEY + "', but not found!");
         }
-        
+
         return BitSet.valueOf(toArray(temp));
     }
 
