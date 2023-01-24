@@ -48,10 +48,12 @@ public class BitSetCodec implements Codec<BitSet> {
 
     private BitSet decodeLegacy(BsonReader reader, DecoderContext decoderContext) {
         List<Long> temp = new ArrayList<>();
+        boolean foundKey = false;
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String fieldName = reader.readName();
             if (fieldName.equals(LEGACY_ARRAY_KEY)) {
+                foundKey = true;
                 reader.readStartArray();
                 while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                     temp.add(reader.readInt64());
@@ -73,6 +75,11 @@ public class BitSetCodec implements Codec<BitSet> {
             }
         }
         reader.readEndDocument();
+        
+        if (!foundKey) {
+            throw new IllegalStateException("Expected BitSet BSON to contain a field named '" + LEGACY_ARRAY_KEY + "', but not found!");
+        }
+        
         return BitSet.valueOf(toArray(temp));
     }
 
