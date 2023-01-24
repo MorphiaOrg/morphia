@@ -133,12 +133,12 @@ public class EntityModel {
 
         final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
         if (entityLisAnn != null && entityLisAnn.value().length != 0) {
-            for (Class<?> aClass : entityLisAnn.value()) {
-                mapEvent(aClass, true);
+            for (Class<?> listenerClass : entityLisAnn.value()) {
+                mapEvent(getType(), listenerClass, true);
             }
         }
 
-        mapEvent(getType(), false);
+        mapEvent(getType(), getType(), false);
     }
 
     /**
@@ -324,7 +324,26 @@ public class EntityModel {
      * @return true if that even has been configured
      */
     public boolean hasLifecycle(Class<? extends Annotation> type) {
-        return lifecycleMethods.containsKey(type);
+
+        for (Map<Class<? extends Annotation>, List<ClassMethodPair>> annotationMap : lifecycleMethods.values()) {
+            if (annotationMap.containsKey(type)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param entityClass he entiity for hich we are checking for lifecycle events
+     * @param type        the lifecycle event type
+     * @return true if that even has been configured
+     */
+    public boolean hasLifecycle(Class<?> entityClass, Class<? extends Annotation> type) {
+
+        Map<Class<? extends Annotation>, List<ClassMethodPair>> annotationMap;
+
+        return ((annotationMap = lifecycleMethods.get(entityClass)) != null) && (annotationMap.containsKey(type));
     }
 
     @Override
@@ -435,19 +454,19 @@ public class EntityModel {
         return methods;
     }
 
-    private void mapEvent(Class<?> type, boolean entityListener) {
-        for (Method method : getDeclaredAndInheritedMethods(type)) {
+    private void mapEvent(Class<?> entityType, Class<?> annotatedType, boolean entityListener) {
+        for (Method method : getDeclaredAndInheritedMethods(annotatedType)) {
             for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
                 if (method.isAnnotationPresent(annotationClass)) {
 
                     Map<Class<? extends Annotation>, List<ClassMethodPair>> annotationMap;
 
-                    if ((annotationMap = lifecycleMethods.get(type)) == null) {
-                        lifecycleMethods.put(type, annotationMap = new HashMap<>());
+                    if ((annotationMap = lifecycleMethods.get(entityType)) == null) {
+                        lifecycleMethods.put(entityType, annotationMap = new HashMap<>());
                     }
 
                     annotationMap.computeIfAbsent(annotationClass, c -> new ArrayList<>())
-                            .add(new ClassMethodPair(method, entityListener ? type : null, annotationClass));
+                            .add(new ClassMethodPair(method, entityListener ? annotatedType : null, annotationClass));
                 }
             }
         }
