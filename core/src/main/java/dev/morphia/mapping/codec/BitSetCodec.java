@@ -87,9 +87,9 @@ public class BitSetCodec implements Codec<BitSet> {
     }
 
     /**
-     * Converts a list of Longs to an array of Longs.
+     * Converts a list of Longs to an array of longs.
      */
-    private long[] toArray(List<Long> list) {
+    private static long[] toArray(List<Long> list) {
         var ret = new long[list.size()];
         for (int i = 0; i < list.size(); ++i) {
             ret[i] = list.get(i);
