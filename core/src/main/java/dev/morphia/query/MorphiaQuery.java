@@ -215,6 +215,11 @@ class MorphiaQuery<T> implements Query<T> {
                 .execute(options);
     }
 
+    @MorphiaInternal
+    public boolean isValidate() {
+        return validate;
+    }
+
     @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, collection));
