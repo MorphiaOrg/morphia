@@ -1045,6 +1045,20 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Test
+    public void testValidation() {
+        getDs().getCollection(Circle.class).drop();
+        Query<Circle> query = getDs().find(Circle.class)
+                .disableValidation()
+                .filter(eq("radius", 0));
+        query.update(new UpdateOptions().upsert(true),
+                inc("rad", 1D));
+
+        Document shapes = getDs().find("shapes", Document.class)
+                .first();
+        assertTrue(shapes.containsKey("rad"));
+    }
+
+    @Test
     public void testUpsert() {
         ContainsIntArray cIntArray = new ContainsIntArray();
         ContainsIntArray control = new ContainsIntArray();

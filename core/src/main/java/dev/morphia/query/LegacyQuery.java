@@ -285,6 +285,11 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                 .execute(options);
     }
 
+    @MorphiaInternal
+    public boolean isValidate() {
+        return validateName;
+    }
+
     @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, datastore.configureCollection(options, collection)));

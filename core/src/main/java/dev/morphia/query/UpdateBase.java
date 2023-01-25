@@ -73,13 +73,19 @@ public abstract class UpdateBase<T> {
         final Operations operations = new Operations(datastore, mapper.getEntityModel(type));
 
         for (UpdateOperator update : updates) {
-            PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), true);
+            PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), validate());
             if (update instanceof DatastoreAware) {
                 ((DatastoreAware) update).setDatastore(datastore);
             }
             operations.add(update.operator(), update.toTarget(pathTarget));
         }
         return operations.toDocument();
+    }
+
+    private boolean validate() {
+        return query instanceof MorphiaQuery
+                ? ((MorphiaQuery) query).isValidate()
+                : ((LegacyQuery) query).isValidate();
     }
 
     @Override
