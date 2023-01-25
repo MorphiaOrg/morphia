@@ -10,6 +10,9 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.InsertOneResult;
+
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -28,6 +31,8 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.TestBase;
 
+import org.bson.BsonString;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
@@ -38,6 +43,121 @@ import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+
+public class ConstructorCreatorTest extends TestBase {
+
+    @Test
+    public void embeds() {
+        Person person = new Person("Mike", "Bloomberg");
+        getDs().save(person);
+        Invoice invoice = new Invoice(LocalDateTime.now(), person, new Address("New York City", "NY", "10036"));
+        getDs().save(invoice);
+
+        person = new Person("Andy", "Warhol");
+        getDs().save(person);
+
+        invoice = new Invoice(LocalDateTime.now(), person, new Address("NYC", "NY", "10018"));
+
+        getDs().save(invoice);
+
+        MorphiaCursor<Invoice> criteria1 = getDs().find(Invoice.class)
+                .filter(lte("orderDate", LocalDateTime.now().plusDays(5)))
+                .iterator(new FindOptions().sort(ascending("addresses")));
+        List<Invoice> list = criteria1.toList();
+        assertEquals(list.get(0).getAddresses().get(0).getCity(), "NYC",
+                list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
+        assertEquals(list.get(0), invoice, list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
+
+        MorphiaCursor<Invoice> criteria2 = getDs().find(Invoice.class).iterator(new FindOptions().sort(descending("addresses")));
+        assertEquals(criteria2.toList().get(0).getAddresses().get(0).getCity(), "New York City");
+    }
+
+    @Test
+    public void testBestConstructor() {
+
+        Constructor<?> constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(SomeProps.class).get(0));
+        assertNotNull(constructor);
+        assertEquals(constructor.getParameterCount(), 2);
+
+        constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(AllProps.class).get(0));
+        assertNotNull(constructor);
+        assertEquals(constructor.getParameterCount(), 3);
+
+        constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(NoProps.class).get(0));
+        assertNull(constructor);
+
+        constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(Default.class).get(0));
+        assertNotNull(constructor);
+        assertEquals(constructor.getParameterCount(), 0);
+    }
+
+    @Test
+    public void typeConversions() {
+        getMapper().map(MyEntity.class, EmbeddedEntity.class);
+        Document document = new Document("_id", "2")
+                .append("embedded",
+                        new Document("myId", "1234"));
+        MongoCollection<MyEntity> collection = getDs().getCollection(MyEntity.class);
+        InsertOneResult result = collection
+                .withDocumentClass(Document.class)
+                .insertOne(document);
+        assertEquals(((BsonString) result.getInsertedId()).getValue(), "2");
+
+        var first = getDs().find(MyEntity.class).first();
+        assertEquals(first.id, 2L);
+        assertEquals(first.embedded.myId, 1234L);
+
+    }
+
+    @Entity
+    private static class AllProps {
+        private final String name;
+        private final int count;
+        @Id
+        private ObjectId id;
+
+        public AllProps(ObjectId id, String name, int count) {
+            this.id = id;
+            this.name = name;
+            this.count = count;
+        }
+    }
+
+    @Entity
+    private static class Default {
+        @Id
+        private ObjectId id;
+        private String name;
+        private int count;
+
+        public Default() {
+        }
+    }
+
+    @Entity
+    private static class NoProps {
+        @Id
+        private ObjectId id;
+        private String name;
+        private int count;
+
+        public NoProps(Boolean whatever, LocalDateTime yikes) {
+        }
+    }
+
+    @Entity
+    private static class SomeProps {
+        private final String name;
+        private final int count;
+        @Id
+        private ObjectId id;
+
+        public SomeProps(String name, int count) {
+            this.name = name;
+            this.count = count;
+        }
+    }
+}
 
 abstract class AbstractPerson {
 
@@ -107,103 +227,6 @@ class Address {
                 .toString();
     }
 
-}
-
-public class ConstructorCreatorTest extends TestBase {
-
-    @Test
-    public void embeds() {
-        Person person = new Person("Mike", "Bloomberg");
-        getDs().save(person);
-        Invoice invoice = new Invoice(LocalDateTime.now(), person, new Address("New York City", "NY", "10036"));
-        getDs().save(invoice);
-
-        person = new Person("Andy", "Warhol");
-        getDs().save(person);
-
-        invoice = new Invoice(LocalDateTime.now(), person, new Address("NYC", "NY", "10018"));
-
-        getDs().save(invoice);
-
-        MorphiaCursor<Invoice> criteria1 = getDs().find(Invoice.class)
-                .filter(lte("orderDate", LocalDateTime.now().plusDays(5)))
-                .iterator(new FindOptions().sort(ascending("addresses")));
-        List<Invoice> list = criteria1.toList();
-        assertEquals(list.get(0).getAddresses().get(0).getCity(), "NYC",
-                list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
-        assertEquals(list.get(0), invoice, list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
-
-        MorphiaCursor<Invoice> criteria2 = getDs().find(Invoice.class).iterator(new FindOptions().sort(descending("addresses")));
-        assertEquals(criteria2.toList().get(0).getAddresses().get(0).getCity(), "New York City");
-    }
-
-    @Test
-    public void testBestConstructor() {
-
-        Constructor<?> constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(SomeProps.class).get(0));
-        assertNotNull(constructor);
-        assertEquals(constructor.getParameterCount(), 2);
-
-        constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(AllProps.class).get(0));
-        assertNotNull(constructor);
-        assertEquals(constructor.getParameterCount(), 3);
-
-        constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(NoProps.class).get(0));
-        assertNull(constructor);
-
-        constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(Default.class).get(0));
-        assertNotNull(constructor);
-        assertEquals(constructor.getParameterCount(), 0);
-    }
-
-    @Entity
-    private static class AllProps {
-        private final String name;
-        private final int count;
-        @Id
-        private ObjectId id;
-
-        public AllProps(ObjectId id, String name, int count) {
-            this.id = id;
-            this.name = name;
-            this.count = count;
-        }
-    }
-
-    @Entity
-    private static class Default {
-        @Id
-        private ObjectId id;
-        private String name;
-        private int count;
-
-        public Default() {
-        }
-    }
-
-    @Entity
-    private static class NoProps {
-        @Id
-        private ObjectId id;
-        private String name;
-        private int count;
-
-        public NoProps(Boolean whatever, LocalDateTime yikes) {
-        }
-    }
-
-    @Entity
-    private static class SomeProps {
-        private final String name;
-        private final int count;
-        @Id
-        private ObjectId id;
-
-        public SomeProps(String name, int count) {
-            this.name = name;
-            this.count = count;
-        }
-    }
 }
 
 @Entity
@@ -502,5 +525,28 @@ class Person extends AbstractPerson {
                 .add("firstName='" + firstName + "'")
                 .add("lastName='" + lastName + "'")
                 .toString();
+    }
+}
+
+@Entity(useDiscriminator = false)
+class MyEntity {
+    @Id
+    protected long id;
+    protected EmbeddedEntity embedded;
+}
+
+@Entity(useDiscriminator = false)
+class EmbeddedEntity {
+    protected long myId;
+
+    public EmbeddedEntity() {
+    }
+
+    public EmbeddedEntity(long myId) {
+        this.myId = myId;
+    }
+
+    public EmbeddedEntity(String myId) {
+        this.myId = Long.parseLong(myId);
     }
 }

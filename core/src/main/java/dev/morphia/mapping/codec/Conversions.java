@@ -102,6 +102,13 @@ public final class Conversions {
         register(String.class, Long.class, Long::parseLong);
         register(String.class, Float.class, Float::parseFloat);
         register(String.class, Short.class, Short::parseShort);
+        register(String.class, boolean.class, Boolean::parseBoolean);
+        register(String.class, byte.class, Byte::parseByte);
+        register(String.class, double.class, Double::parseDouble);
+        register(String.class, int.class, Integer::valueOf);
+        register(String.class, long.class, Long::parseLong);
+        register(String.class, float.class, Float::parseFloat);
+        register(String.class, short.class, Short::parseShort);
         register(String.class, URI.class, str -> URI.create(str.replace("%46", ".")));
         register(String.class, UUID.class, UUID::fromString);
     }
