@@ -10,6 +10,9 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.InsertOneResult;
+
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -28,6 +31,8 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.TestBase;
 
+import org.bson.BsonString;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
@@ -154,6 +159,24 @@ public class ConstructorCreatorTest extends TestBase {
         constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(Default.class).get(0));
         assertNotNull(constructor);
         assertEquals(constructor.getParameterCount(), 0);
+    }
+
+    @Test
+    public void typeConversions() {
+        getMapper().map(MyEntity.class, EmbeddedEntity.class);
+        Document document = new Document("_id", "2")
+                .append("embedded",
+                        new Document("myId", "1234"));
+        MongoCollection<MyEntity> collection = getDs().getCollection(MyEntity.class);
+        InsertOneResult result = collection
+                .withDocumentClass(Document.class)
+                .insertOne(document);
+        assertEquals(((BsonString) result.getInsertedId()).getValue(), "2");
+
+        var first = getDs().find(MyEntity.class).first();
+        assertEquals(first.id, 2L);
+        assertEquals(first.embedded.myId, 1234L);
+
     }
 
     @Entity
@@ -502,5 +525,28 @@ class Person extends AbstractPerson {
                 .add("firstName='" + firstName + "'")
                 .add("lastName='" + lastName + "'")
                 .toString();
+    }
+}
+
+@Entity(useDiscriminator = false)
+class MyEntity {
+    @Id
+    protected long id;
+    protected EmbeddedEntity embedded;
+}
+
+@Entity(useDiscriminator = false)
+class EmbeddedEntity {
+    protected long myId;
+
+    public EmbeddedEntity() {
+    }
+
+    public EmbeddedEntity(long myId) {
+        this.myId = myId;
+    }
+
+    public EmbeddedEntity(String myId) {
+        this.myId = Long.parseLong(myId);
     }
 }
