@@ -21,8 +21,9 @@ import org.bson.codecs.pojo.TypeWithTypeParameters;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 @SuppressWarnings("unchecked")
-public class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
-    @Override
+class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
+    @SuppressWarnings("rawtypes")
+	@Override
     public <T> Codec<T> get(TypeWithTypeParameters<T> type, PropertyCodecRegistry registry) {
         if (Map.class.isAssignableFrom(type.getType())) {
             final List<? extends TypeWithTypeParameters<?>> typeParameters = type.getTypeParameters();
@@ -47,7 +48,7 @@ public class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvide
         return null;
     }
 
-    public static class MapCodec<K, V> implements Codec<Map<K, V>> {
+    static class MapCodec<K, V> implements Codec<Map<K, V>> {
         protected final Class<Map<K, V>> encoderClass;
         protected final Class<K> keyType;
         protected final Codec<V> codec;
