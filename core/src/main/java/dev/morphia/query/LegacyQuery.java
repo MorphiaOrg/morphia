@@ -30,6 +30,8 @@ import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,6 +111,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @MorphiaInternal
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void invalid(ValidationException e) {
         invalid = e;
     }
