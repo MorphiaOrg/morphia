@@ -30,12 +30,14 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
+import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -64,6 +66,7 @@ import dev.morphia.test.models.Sphere;
 import dev.morphia.test.models.Square;
 import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.User;
+import dev.morphia.test.query.TestQuery.CappedPic;
 import dev.morphia.test.query.TestQuery.ContainsPic;
 import dev.morphia.test.query.TestQuery.Pic;
 
@@ -472,6 +475,36 @@ public class TestUpdateOperations extends TestBase {
                 .filter(eq("radius", 0))
                 .update(inc("radius", 1D))
                 .execute(new UpdateOptions().upsert(true)));
+    }
+
+    @Test
+    public void testInvalidPathsInUpdates() {
+        Consumer<Datastore> test = (datastore) -> {
+            getMapper().map(CappedPic.class);
+            Query<CappedPic> query = getDs().find(CappedPic.class);
+            assertThrows(ValidationException.class, () -> query.update(new UpdateOptions(), max("bad.name", 12)));
+            query.first();
+        };
+
+        test.accept(getDs());
+        withOptions(MapperOptions.legacy().build(), () -> {
+            test.accept(getDs());
+        });
+    }
+
+    @Test
+    public void testInvalidPathsInModify() {
+        Consumer<Datastore> test = (datastore) -> {
+            getMapper().map(CappedPic.class);
+            Query<CappedPic> query = getDs().find(CappedPic.class);
+            assertThrows(ValidationException.class, () -> query.modify(new ModifyOptions(), max("bad.name", 12)));
+            query.first();
+        };
+
+        test.accept(getDs());
+        withOptions(MapperOptions.legacy().build(), () -> {
+            test.accept(getDs());
+        });
     }
 
     @Test
