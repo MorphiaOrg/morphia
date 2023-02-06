@@ -308,7 +308,14 @@ public class FieldEndImpl<T extends CriteriaContainer> implements FieldEnd<T> {
     }
 
     protected T addCriteria(FilterOperator op, Object val, boolean not) {
-        target.add(new FieldCriteria(datastore, field, op, val, not, model, validating));
+        try {
+            target.add(new FieldCriteria(datastore, field, op, val, not, model, validating));
+        } catch (ValidationException e) {
+            if (target instanceof LegacyQuery) {
+                ((LegacyQuery) target).invalid(e);
+            }
+            throw e;
+        }
         return target;
     }
 

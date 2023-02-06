@@ -59,6 +59,9 @@ class MorphiaQuery<T> implements Query<T> {
     private final Document seedQuery;
     private String collectionName;
     private MongoCollection<T> collection;
+
+    private ValidationException invalid;
+
     private boolean validate = true;
     private FindOptions lastOptions;
 
@@ -265,22 +268,49 @@ class MorphiaQuery<T> implements Query<T> {
     @Override
     @Deprecated
     public Update<T> update(List<UpdateOperator> updates) {
-        return new Update<>(datastore, collection, this, type, updates);
+        if (invalid != null) {
+            throw invalid;
+        }
+        try {
+            return new Update<>(datastore, collection, this, type, updates);
+        } catch (ValidationException e) {
+            invalid = e;
+            throw e;
+        }
     }
 
     @Override
     public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
-        return new Update<>(datastore, collection, this, type, coalesce(first, updates));
+        if (invalid != null) {
+            throw invalid;
+        }
+        try {
+            return new Update<>(datastore, collection, this, type, coalesce(first, updates));
+        } catch (ValidationException e) {
+            invalid = e;
+            throw e;
+        }
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, Stage... updates) {
-        return new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, asList(updates))
-                .execute(options);
+        if (invalid != null) {
+            throw invalid;
+        }
+        try {
+            return new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, asList(updates))
+                    .execute(options);
+        } catch (ValidationException e) {
+            invalid = e;
+            throw e;
+        }
     }
 
     @Override
     public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
+        if (invalid != null) {
+            throw invalid;
+        }
         return new Update<>(datastore, datastore.configureCollection(options, collection), this, type, asList(updates))
                 .execute(options);
     }
@@ -351,20 +381,28 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     Document getQueryDocument() {
-        DocumentWriter writer = new DocumentWriter(mapper, seedQuery);
-        document(writer, () -> {
-            EncoderContext context = EncoderContext.builder().build();
-            for (Filter filter : filters) {
-                filter.encode(datastore, writer, context);
+        if (invalid != null) {
+            throw invalid;
+        }
+        try {
+            DocumentWriter writer = new DocumentWriter(mapper, seedQuery);
+            document(writer, () -> {
+                EncoderContext context = EncoderContext.builder().build();
+                for (Filter filter : filters) {
+                    filter.encode(datastore, writer, context);
+                }
+            });
+            Document query = writer.getDocument();
+            if (mapper.isMappable(getEntityClass())) {
+                mapper.updateQueryWithDiscriminators(mapper.getEntityModel(getEntityClass()), query);
             }
-        });
 
-        Document query = writer.getDocument();
-        if (mapper.isMappable(getEntityClass())) {
-            mapper.updateQueryWithDiscriminators(mapper.getEntityModel(getEntityClass()), query);
+            return query;
+        } catch (ValidationException e) {
+            invalid = e;
+            throw e;
         }
 
-        return query;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked", "DeprecatedIsStillUsed" })

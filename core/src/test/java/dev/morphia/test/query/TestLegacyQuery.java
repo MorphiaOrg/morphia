@@ -39,9 +39,11 @@ import dev.morphia.query.ValidationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.mapping.TestReferences.ChildId;
 import dev.morphia.test.mapping.TestReferences.Complex;
+import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
+import dev.morphia.test.query.TestQuery.CappedPic;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -614,6 +616,23 @@ public class TestLegacyQuery extends TestBase {
                 .find(PhotoWithKeywords.class)
                 .field("keywords").in(asList(new Keyword("Scott"), new Keyword("Randy")));
         assertNotNull(query.execute(new FindOptions().limit(1)).next());
+    }
+
+    @Test
+    public void testInvalidQueries() {
+        getMapper().map(TestQuery.CappedPic.class);
+        Query<TestQuery.CappedPic> query = getDs().find(TestQuery.CappedPic.class);
+        try {
+            query.field("bad.name").equal("blargle");
+            query.first();
+        } catch (ValidationException e) {
+            assertThrows(ValidationException.class, () -> query.first());
+        }
+
+        getDs().find(TestQuery.CappedPic.class)
+                .disableValidation()
+                .field("bad.name").equal("blargle")
+                .first();
     }
 
     @Test

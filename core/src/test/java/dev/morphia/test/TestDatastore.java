@@ -39,6 +39,7 @@ import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryException;
 import dev.morphia.query.Update;
+import dev.morphia.query.ValidationException;
 import dev.morphia.test.models.Address;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.City;
@@ -616,6 +617,18 @@ public class TestDatastore extends TestBase {
         getDs().save(life1);
         assertTrue(LifecycleListener.prePersist);
         assertTrue(LifecycleListener.prePersistWithEntity);
+    }
+
+    @Test
+    public void testModifyWithBadPaths() {
+        getMapper().map(LifecycleTestObj.class);
+
+        Query<LifecycleTestObj> query = getDs().find(LifecycleTestObj.class);
+        Modify<LifecycleTestObj> modify = query.modify(inc("some.field", 2));
+
+        assertThrows(ValidationException.class, () -> modify.execute());
+
+        query.first();
     }
 
     @Test
