@@ -149,8 +149,12 @@ public final class ExpressionHelper {
                 List<Object> list = (List<Object>) value;
                 array(writer, name, () -> {
                     for (Object object : list) {
-                        Codec codec = datastore.getCodecRegistry().get(object.getClass());
-                        encoderContext.encodeWithChildContext(codec, writer, object);
+                        if (object != null) {
+                            Codec codec = datastore.getCodecRegistry().get(object.getClass());
+                            encoderContext.encodeWithChildContext(codec, writer, object);
+                        } else {
+                            writer.writeNull();
+                        }
                     }
                 });
             } else {
