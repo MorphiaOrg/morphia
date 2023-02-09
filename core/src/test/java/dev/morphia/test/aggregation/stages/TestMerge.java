@@ -1,12 +1,19 @@
 package dev.morphia.test.aggregation.stages;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import dev.morphia.DatastoreImpl;
+import dev.morphia.InsertOneOptions;
 import dev.morphia.aggregation.stages.Group;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Salary;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
@@ -55,4 +62,22 @@ public class TestMerge extends AggregationTest {
         assertDocumentEquals(actual, expected);
     }
 
+    @Test
+    public void testMergeWithUnsetMissing() {
+        GenericEntity entity = new GenericEntity();
+        entity.strings = Arrays.asList("Test1", null, "Test2");
+        DatastoreImpl ds = getDs();
+        ds.save(entity);
+
+        entity.strings = Arrays.asList("Test1", null, "Test2");
+        ds.merge(entity, new InsertOneOptions().unsetMissing(true));
+
+    }
+
+    @Entity
+    private static class GenericEntity {
+        @Id
+        private ObjectId id;
+        private List<String> strings = new ArrayList<>();
+    }
 }

@@ -459,12 +459,12 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
         UpdateResult execute = update.execute(new UpdateOptions()
                 .writeConcern(options.writeConcern()));
-        if (execute.getModifiedCount() != 1) {
+        if (execute.getMatchedCount() != 1) {
             if (info.versioned()) {
                 info.rollbackVersion();
                 throw new VersionMismatchException(entity.getClass(), id);
             }
-            throw new UpdateException("Nothing updated");
+            throw new UpdateException(Sofia.noMatchingDocuments());
         }
 
         return (T) find(entity.getClass()).filter(eq("_id", id)).iterator(new FindOptions().limit(1)).next();
