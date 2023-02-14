@@ -36,7 +36,7 @@
         <revapi.java.version>0.28.0</revapi.java.version>
         <slf4j.version>1.7.36</slf4j.version>
         <sofia.version>0.23</sofia.version>
-        <surefire.version>3.0.0-M8</surefire.version>
+        <surefire.version>3.0.0-M9</surefire.version>
         <testng.version>7.7.1</testng.version>
         <zt.exec.version>1.12</zt.exec.version>
 
