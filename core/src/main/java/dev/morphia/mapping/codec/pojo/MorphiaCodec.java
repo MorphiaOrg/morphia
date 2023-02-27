@@ -21,6 +21,8 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PropertyCodecProvider;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
 import static org.bson.codecs.configuration.CodecRegistries.fromCodecs;
@@ -36,6 +38,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 @MorphiaInternal
 @SuppressWarnings("unchecked")
 public class MorphiaCodec<T> implements CollectibleCodec<T> {
+    private static final Logger LOG = LoggerFactory.getLogger(MorphiaCodec.class);
+
     private final PropertyModel idProperty;
     private final EntityModel entityModel;
     private final CodecRegistry registry;
@@ -85,18 +89,23 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     @Override
     public Object generateIdIfAbsentFromDocument(Object entity) {
         if (!documentHasId(entity)) {
-            idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType()));
+            if (idProperty != null) {
+                if (ObjectId.class.equals(idProperty.getType()) || String.class.equals(idProperty.getType())) {
+                    idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType()));
+                } else {
+                    LOG.warn(Sofia.noIdAndNotObjectId(entity.getClass().getName()));
+                }
+            }
         }
         return entity;
     }
 
     @Override
     public boolean documentHasId(Object entity) {
-        PropertyModel idField = entityModel.getIdProperty();
-        if (idField == null) {
+        if (idProperty == null) {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
-        return idField.getValue(entity) != null;
+        return idProperty.getValue(entity) != null;
     }
 
     @Override

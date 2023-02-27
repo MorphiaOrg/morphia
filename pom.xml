@@ -23,12 +23,11 @@
 
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
-        <bottlerocket.version>0.41.0</bottlerocket.version>
+        <bottlerocket.version>0.43.0</bottlerocket.version>
         <dokka.version>1.7.20</dokka.version>
         <driver.version>4.8.1</driver.version>
-        <driver.minor.version>4.6</driver.minor.version>
-        <formatter-maven-plugin.version>2.20.0</formatter-maven-plugin.version>
-        <impsort-maven-plugin.version>1.7.0</impsort-maven-plugin.version>
+        <driver.minor.version>4.8</driver.minor.version>
+        <jackson.version>2.14.2</jackson.version>
         <json.assert.version>1.5.1</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.7.20</kotlin.version>
@@ -148,12 +147,12 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>2.13.4</version>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>2.13.4</version>
+                <version>${jackson.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
