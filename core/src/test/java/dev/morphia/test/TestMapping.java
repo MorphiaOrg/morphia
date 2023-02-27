@@ -766,19 +766,19 @@ public class TestMapping extends TestBase {
     @Test
 
     public void testMethodMapping() {
-        Datastore datastore = createDatastore(getMongoClient(), TEST_DB_NAME,
-                MapperOptions.builder()
-                        .propertyDiscovery(
-                                PropertyDiscovery.METHODS)
-                        .build());
+        withOptions(MapperOptions.builder()
+                .propertyDiscovery(
+                        PropertyDiscovery.METHODS)
+                .build(), () -> {
+                    EntityModel model = getDs().getMapper().map(MethodMappedUser.class).get(0);
+                    assertTrue(model.getProperties().size() > 0);
+                    assertNotNull(model.getVersionProperty(), model.getProperties().toString());
+                    assertNotNull(model.getProperty("dateJoined"));
+                    assertNotNull(model.getProperty("joined"));
+                    assertNotNull(model.getProperty("friend_reference"));
+                    assertNotNull(model.getProperty("morphia_reference"));
+                });
 
-        EntityModel model = datastore.getMapper().map(MethodMappedUser.class).get(0);
-        assertTrue(model.getProperties().size() > 0);
-        assertNotNull(model.getVersionProperty(), model.getProperties().toString());
-        assertNotNull(model.getProperty("dateJoined"));
-        assertNotNull(model.getProperty("joined"));
-        assertNotNull(model.getProperty("friend_reference"));
-        assertNotNull(model.getProperty("morphia_reference"));
     }
 
     @Test

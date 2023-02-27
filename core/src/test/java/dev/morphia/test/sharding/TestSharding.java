@@ -32,7 +32,7 @@ public class TestSharding extends TestBase {
 
     @Test
     public void testShardCollection() {
-        String mongodb = System.getenv("MONGODB");
+        String mongodb = System.getProperty("mongodb");
         var version = mongodb != null ? Version.valueOf(mongodb) : Versions.latest();
         try (var cluster = new ClusterBuilder(SHARDED)
                 .baseDir(new File("target/mongo-" + version))

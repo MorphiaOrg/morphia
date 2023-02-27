@@ -16,12 +16,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.antwerkz.bottlerocket.clusters.ClusterBuilder;
-import com.antwerkz.bottlerocket.clusters.MongoCluster;
-import com.antwerkz.bottlerocket.configuration.types.Verbosity;
 import com.github.zafarkhaja.semver.Version;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoClientSettings.Builder;
+import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -41,7 +37,6 @@ import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 
-import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -50,12 +45,16 @@ import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.utility.DockerImageName;
 import org.testng.Assert;
 import org.testng.SkipException;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 
-import static com.antwerkz.bottlerocket.clusters.ClusterType.REPLICA_SET;
+import static com.mongodb.MongoClientSettings.*;
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
 import static org.testng.Assert.assertEquals;
@@ -64,7 +63,9 @@ import static org.testng.Assert.fail;
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-    private static MongoClient mongoClient;
+    private MongoClient mongoClient;
+    private MongoDBContainer mongoDBContainer;
+    private String connectionString = "mongodb://localhost:27017/" + TEST_DB_NAME;
 
     private MapperOptions mapperOptions;
     private MongoDatabase database;
@@ -78,6 +79,25 @@ public abstract class TestBase {
 
     public TestBase(MapperOptions mapperOptions) {
         this.mapperOptions = mapperOptions;
+    }
+
+    @BeforeSuite
+    public void startContainer() {
+        String mongodb = System.getProperty("mongodb");
+        if (mongodb == null) {
+            LOG.info("No mongodb property specified. Using already running server.");
+        } else {
+            mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:" + mongodb + "-jammy"));
+            mongoDBContainer.start();
+            connectionString = mongoDBContainer.getReplicaSetUrl(TEST_DB_NAME);
+        }
+    }
+
+    @AfterSuite
+    public void stopContainer() {
+        if (mongoDBContainer != null) {
+            mongoDBContainer.stop();
+        }
     }
 
     @BeforeMethod
@@ -119,41 +139,12 @@ public abstract class TestBase {
     }
 
     private void startMongo() {
-        String mongodb = System.getProperty("mongodb");
-        if (mongodb == null) {
-            LOG.info("No mongodb property specified. Using already running server.");
-        }
-        Builder builder = MongoClientSettings.builder()
-                .uuidRepresentation(mapperOptions.getUuidRepresentation());
 
-        if (mongodb != null) {
-            File mongodbRoot = new File("target/mongo");
-            try {
-                FileUtils.deleteDirectory(mongodbRoot);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-            Version version = Version.valueOf(mongodb);
-            final MongoCluster cluster = new ClusterBuilder(REPLICA_SET)
-                    .baseDir(mongodbRoot)
-                    .name("morphia_test")
-                    .version(version)
-                    .build();
+        mongoClient = MongoClients.create(builder()
+                .uuidRepresentation(mapperOptions.getUuidRepresentation())
+                .applyConnectionString(new ConnectionString(connectionString))
+                .build());
 
-            cluster.configure(c -> {
-                c.systemLog(s -> {
-                    s.setTraceAllExceptions(true);
-                    s.setVerbosity(Verbosity.FIVE);
-                    return null;
-                });
-                return null;
-            });
-            cluster.clean();
-            cluster.start();
-            mongoClient = cluster.getClient(builder);
-        } else {
-            mongoClient = MongoClients.create(builder.build());
-        }
     }
 
     public Mapper getMapper() {
@@ -402,12 +393,20 @@ public abstract class TestBase {
             mapperOptions = options;
             database = null;
             datastore = null;
+            if (mongoClient != null) {
+                mongoClient.close();
+            }
+            mongoClient = null;
 
             block.run();
         } finally {
             mapperOptions = previousOptions;
             database = null;
             datastore = null;
+            if (mongoClient != null) {
+                mongoClient.close();
+            }
+            mongoClient = null;
         }
     }
 

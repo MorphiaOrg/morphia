@@ -10,7 +10,6 @@ import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
-import dev.morphia.Morphia;
 import dev.morphia.UpdateOptions;
 import dev.morphia.VersionMismatchException;
 import dev.morphia.annotations.Entity;
@@ -35,7 +34,6 @@ import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.inc;
 import static dev.morphia.query.updates.UpdateOperators.set;
@@ -94,8 +92,7 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testCanMapAnEntityWithAnAbstractVersionedParent() {
-        Datastore datastore = Morphia.createDatastore(getMongoClient(), TEST_DB_NAME);
-        Mapper mapper = datastore.getMapper();
+        Mapper mapper = getMapper();
         mapper.map(VersionedChildEntity.class);
 
         List<EntityModel> mappedEntities = mapper.getMappedEntities();
@@ -239,18 +236,18 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testMethodMapping() {
-        Datastore datastore = createDatastore(getMongoClient(), TEST_DB_NAME,
-                MapperOptions.builder()
-                        .propertyDiscovery(
-                                PropertyDiscovery.METHODS)
-                        .build());
+        withOptions(MapperOptions.builder()
+                .propertyDiscovery(
+                        PropertyDiscovery.METHODS)
+                .build(), () -> {
 
-        datastore.getMapper().map(MethodMappedUser.class);
+                    getDs().getMapper().map(MethodMappedUser.class);
 
-        MethodMappedUser user = new MethodMappedUser();
-        assertEquals(user.getVersion(), null);
-        datastore.save(user);
-        assertEquals(user.getVersion(), Long.valueOf(1L));
+                    MethodMappedUser user = new MethodMappedUser();
+                    assertEquals(user.getVersion(), null);
+                    getDs().save(user);
+                    assertEquals(user.getVersion(), Long.valueOf(1L));
+                });
     }
 
     @Test

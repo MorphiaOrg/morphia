@@ -294,7 +294,7 @@ public class TestDocumentValidation extends TestBase {
                 .validator(validator)
                 .validationLevel(ValidationLevel.MODERATE)
                 .validationAction(ValidationAction.ERROR);
-        MongoDatabase database = getMongoClient().getDatabase(TestBase.TEST_DB_NAME);
+        MongoDatabase database = getDatabase();
         database.getCollection("validation").drop();
         database.createCollection("validation", new CreateCollectionOptions().validationOptions(options));
         return database;
@@ -315,7 +315,7 @@ public class TestDocumentValidation extends TestBase {
 
     @SuppressWarnings("unchecked")
     private Document getValidation() {
-        Document document = getMongoClient().getDatabase(TestBase.TEST_DB_NAME)
+        Document document = getDatabase()
                 .runCommand(new Document("listCollections", 1)
                         .append("filter", new Document("name", "validation")));
 
