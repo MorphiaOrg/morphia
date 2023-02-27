@@ -9,9 +9,16 @@
     <root level="warn">
         <appender-ref ref="STDOUT" />
     </root>
+
     <logger name="com.antwerkz.bottlerocket" level="warn">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="org.testcontainers" level="INFO"/>
+    <logger name="dev.morphia" level="info">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="org.testcontainers" level="error">
+        <appender-ref ref="STDOUT" />
+    </logger>
 </configuration>

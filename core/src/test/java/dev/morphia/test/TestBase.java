@@ -63,9 +63,9 @@ import static org.testng.Assert.fail;
 public abstract class TestBase {
     protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-    private MongoClient mongoClient;
-    private MongoDBContainer mongoDBContainer;
-    private String connectionString = "mongodb://localhost:27017/" + TEST_DB_NAME;
+    private static MongoClient mongoClient;
+    private static MongoDBContainer mongoDBContainer;
+    private static String connectionString;
 
     private MapperOptions mapperOptions;
     private MongoDatabase database;
@@ -83,20 +83,26 @@ public abstract class TestBase {
 
     @BeforeSuite
     public void startContainer() {
-        String mongodb = System.getProperty("mongodb");
-        if (mongodb == null) {
-            LOG.info("No mongodb property specified. Using already running server.");
-        } else {
-            String imageName;
-            try {
-                imageName = Versions.bestMatch(Version.valueOf(mongodb)).dockerImage();
-            } catch (IllegalArgumentException e) {
-                imageName = "mongo:" + mongodb;
+        if (mongoDBContainer == null) {
+            String mongodb = System.getProperty("mongodb");
+            if (mongodb == null) {
+                LOG.info("No mongodb property specified. Using already running server.");
+                connectionString = "mongodb://localhost:27017/" + TEST_DB_NAME;
+            } else {
+                String imageName;
+                try {
+                    Versions match = Versions.bestMatch(Version.valueOf(mongodb));
+                    imageName = match.dockerImage();
+                    LOG.info("mongodb property specified.  Closest match found.  Running tests using mongodb " + match.version());
+                } catch (IllegalArgumentException e) {
+                    imageName = "mongo:" + mongodb;
+                }
+
+                mongoDBContainer = new MongoDBContainer(DockerImageName.parse(imageName)
+                                                                       .asCompatibleSubstituteFor("mongo"));
+                mongoDBContainer.start();
+                connectionString = mongoDBContainer.getReplicaSetUrl(TEST_DB_NAME);
             }
-            mongoDBContainer = new MongoDBContainer(DockerImageName.parse(imageName)
-                    .asCompatibleSubstituteFor("mongo"));
-            mongoDBContainer.start();
-            connectionString = mongoDBContainer.getReplicaSetUrl(TEST_DB_NAME);
         }
     }
 
@@ -109,12 +115,11 @@ public abstract class TestBase {
 
     @BeforeMethod
     public void beforeEach() {
+        startContainer();
         cleanup();
     }
 
     protected void cleanup() {
-        database = null;
-        datastore = null;
         MongoDatabase db = getDatabase();
         db.runCommand(new Document("profile", 0).append("slowms", 0));
         db.listCollectionNames().forEach(s -> {
@@ -122,6 +127,8 @@ public abstract class TestBase {
                 db.getCollection(s).drop();
             }
         });
+        database = null;
+        datastore = null;
     }
 
     public MongoDatabase getDatabase() {
@@ -140,18 +147,13 @@ public abstract class TestBase {
 
     protected MongoClient getMongoClient() {
         if (mongoClient == null) {
-            startMongo();
+            mongoClient = MongoClients.create(builder()
+                    .uuidRepresentation(mapperOptions.getUuidRepresentation())
+                    .applyConnectionString(new ConnectionString(connectionString))
+                    .build());
+
         }
         return mongoClient;
-    }
-
-    private void startMongo() {
-
-        mongoClient = MongoClients.create(builder()
-                .uuidRepresentation(mapperOptions.getUuidRepresentation())
-                .applyConnectionString(new ConnectionString(connectionString))
-                .build());
-
     }
 
     public Mapper getMapper() {
