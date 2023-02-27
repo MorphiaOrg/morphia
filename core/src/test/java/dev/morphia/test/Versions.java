@@ -24,7 +24,7 @@ public enum Versions {
     Version50 {
         @Override
         String dockerImage() {
-            return "5.0.15-focal";
+            return "mongo:5.0.15-focal";
         }
 
         @Override
@@ -36,7 +36,7 @@ public enum Versions {
     Version44 {
         @Override
         String dockerImage() {
-            return "4.4.19-focal";
+            return "mongo:4.4.19-focal";
         }
 
         @Override
@@ -58,7 +58,7 @@ public enum Versions {
     Version40 {
         @Override
         String dockerImage() {
-            return "4.0.28-xenial";
+            return "mongo:4.0.28-xenial";
         }
 
         @Override
