@@ -99,7 +99,7 @@ public abstract class TestBase {
                 }
 
                 mongoDBContainer = new MongoDBContainer(DockerImageName.parse(imageName)
-                                                                       .asCompatibleSubstituteFor("mongo"));
+                        .asCompatibleSubstituteFor("mongo"));
                 mongoDBContainer.start();
                 connectionString = mongoDBContainer.getReplicaSetUrl(TEST_DB_NAME);
             }
