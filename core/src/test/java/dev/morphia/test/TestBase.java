@@ -87,15 +87,14 @@ public abstract class TestBase {
         if (mongodb == null) {
             LOG.info("No mongodb property specified. Using already running server.");
         } else {
-            Versions version;
             String imageName;
             try {
-                version = Versions.bestMatch(Version.valueOf(mongodb));
-                imageName = version.dockerImage();
+                imageName = Versions.bestMatch(Version.valueOf(mongodb)).dockerImage();
             } catch (IllegalArgumentException e) {
                 imageName = "mongo:" + mongodb;
             }
-            mongoDBContainer = new MongoDBContainer(DockerImageName.parse(imageName));
+            mongoDBContainer = new MongoDBContainer(DockerImageName.parse(imageName)
+                    .asCompatibleSubstituteFor("mongo"));
             mongoDBContainer.start();
             connectionString = mongoDBContainer.getReplicaSetUrl(TEST_DB_NAME);
         }

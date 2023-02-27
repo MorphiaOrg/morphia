@@ -12,21 +12,11 @@ import static java.util.stream.Collectors.toList;
 public enum Versions {
     Version60 {
         @Override
-        String dockerImage() {
-            return "mongo:6.0.4-jammy";
-        }
-
-        @Override
         Version version() {
             return Version.forIntegers(6, 0, 4);
         }
     },
     Version50 {
-        @Override
-        String dockerImage() {
-            return "5.0.15-focal";
-        }
-
         @Override
         Version version() {
             return Version.forIntegers(5, 0, 15);
@@ -35,32 +25,17 @@ public enum Versions {
     },
     Version44 {
         @Override
-        String dockerImage() {
-            return "4.4.19-focal";
-        }
-
-        @Override
         Version version() {
             return Version.forIntegers(4, 4, 19);
         }
     },
     Version42 {
         @Override
-        String dockerImage() {
-            return "4.2.24-bionic";
-        }
-
-        @Override
         Version version() {
             return Version.forIntegers(4, 2, 24);
         }
     },
     Version40 {
-        @Override
-        String dockerImage() {
-            return "4.0.28-xenial";
-        }
-
         @Override
         Version version() {
             return Version.forIntegers(4, 0, 28);
@@ -83,13 +58,17 @@ public enum Versions {
                 .filter(it -> it.version().getMajorVersion() == suggested.getMajorVersion()
                         && it.version().getMinorVersion() == suggested.getMinorVersion())
                 .findFirst()
-
                 .orElseThrow(() -> new IllegalArgumentException(Sofia.unknownMongoDbVersion(suggested)));
     }
 
     String dockerImage() {
-        throw new UnsupportedOperationException();
+        return "mongo:" + version().toString();
     }
 
     abstract Version version();
+
+    @Override
+    public String toString() {
+        return version().toString();
+    }
 }
