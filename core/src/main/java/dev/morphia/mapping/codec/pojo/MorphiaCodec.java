@@ -89,11 +89,12 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     @Override
     public Object generateIdIfAbsentFromDocument(Object entity) {
         if (!documentHasId(entity)) {
-            PropertyModel idField = entityModel.getIdProperty();
-            if (ObjectId.class.isAssignableFrom(idField.getType()) || String.class.isAssignableFrom(idField.getType())) {
-                idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType()));
-            } else {
-                LOG.warn(Sofia.noIdAndNotObjectId(entity.getClass().getName()));
+            if (idProperty != null) {
+                if (ObjectId.class.equals(idProperty.getType()) || String.class.equals(idProperty.getType())) {
+                    idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType()));
+                } else {
+                    LOG.warn(Sofia.noIdAndNotObjectId(entity.getClass().getName()));
+                }
             }
         }
         return entity;
@@ -101,11 +102,10 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
 
     @Override
     public boolean documentHasId(Object entity) {
-        PropertyModel idField = entityModel.getIdProperty();
-        if (idField == null) {
+        if (idProperty == null) {
             throw new MappingException(Sofia.idRequired(entity.getClass().getName()));
         }
-        return idField.getValue(entity) != null;
+        return idProperty.getValue(entity) != null;
     }
 
     @Override
