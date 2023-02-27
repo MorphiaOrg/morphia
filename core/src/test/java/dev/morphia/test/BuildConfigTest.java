@@ -34,23 +34,31 @@ public class BuildConfigTest {
 
     @Test
     public void testBuildMatrix() throws IOException {
-        Map map;
+        Map yaml;
         try (InputStream inputStream = new FileInputStream("../.github/workflows/build.yml")) {
-            map = objectMapper.readValue(inputStream, LinkedHashMap.class);
+            yaml = objectMapper.readValue(inputStream, LinkedHashMap.class);
         }
 
-        assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
+        assertEquals(walk(yaml, of("jobs", "Build", "with", "maven-flags")),
                 format("-Dmongodb=%s", LATEST),
                 format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
 
-        checkForVersions(walk(map, of("jobs", "Test", "strategy", "matrix", "mongo")),
-                Versions.Version60, Versions.Version50, Versions.Version44, Versions.Version42);
+        assertEquals(walk(yaml, of("jobs", "Test", "strategy", "matrix", "mongo")), List.of(LATEST.toString()),
+                format("Should find %s in the matrix in ../.github/workflows/build.yml", LATEST));
 
-        try (InputStream inputStream = new FileInputStream("../.github/workflows/pull-request.yml")) {
-            map = objectMapper.readValue(inputStream, LinkedHashMap.class);
+        List<Map<String, String>> include = walk(yaml, of("jobs", "Test", "strategy", "matrix", "include"));
+        var versions = List.of(Versions.Version50, Versions.Version44, Versions.Version42);
+        assertEquals(include.size(), versions.size());
+        for (int i = 0; i < versions.size(); i++) {
+            assertEquals(include.get(i).get("mongo"), versions.get(i).version().toString(),
+                    format("Should have the %s entry in the includes", versions.get(i).version()));
         }
 
-        assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
+        try (InputStream inputStream = new FileInputStream("../.github/workflows/pull-request.yml")) {
+            yaml = objectMapper.readValue(inputStream, LinkedHashMap.class);
+        }
+
+        assertEquals(walk(yaml, of("jobs", "Build", "with", "maven-flags")),
                 format("-Dmongodb=%s", LATEST),
                 format("Should find -Dmongodb=%s in ../.github/workflows/pull-request.yml", LATEST));
     }
