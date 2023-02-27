@@ -25,6 +25,7 @@ jobs:
     secrets:
       GH_TOKEN: ${{ secrets.TESTING_GH_OAUTH }}
     with:
+      os: macos-latest
       java: ${{ matrix.java }}
       reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
