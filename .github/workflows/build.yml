@@ -22,18 +22,18 @@ jobs:
         mongo: [ 6.0.4 ]
         driver: [ 4.6.1, 4.7.1 ]
         include:
-          - mongo: 5.0.15
-            os: macos-latest
+          - java: 11
+            mongo: 5.0.15
             driver: 4.7.1
-            java: 11
-          - mongo: 4.4.19
             os: macos-latest
+          - java: 11
+            mongo: 4.4.19
             driver: 4.7.1
-            java: 11
-          - mongo: 4.2.24
             os: macos-latest
+          - java: 11
+            mongo: 4.2.24
             driver: 4.7.1
-            java: 11
+            os: macos-latest
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
