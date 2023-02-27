@@ -18,6 +18,7 @@ jobs:
       - Build
     strategy:
       matrix:
+        java: 11
         mongo: [ 6.0.4 ]
         driver: [ 4.6.1, 4.7.2 ]
         include:
