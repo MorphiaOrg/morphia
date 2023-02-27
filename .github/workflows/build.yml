@@ -19,8 +19,22 @@ jobs:
     strategy:
       matrix:
         java: [ 11, 19 ]
-        mongo: [ 6.0.4, 5.0.15, 4.4.19, 4.2.24 ]
+        mongo: [ 6.0.4 ]
         driver: [ 4.6.1, 4.7.1 ]
+        include:
+          - mongo: 5.0.15
+            os: macos-latest
+            driver: 4.7.1
+            java: 11
+          - mongo: 4.4.19
+            os: macos-latest
+            driver: 4.7.1
+            java: 11
+          - mongo: 4.2.24
+            os: macos-latest
+            driver: 4.7.1
+            java: 11
+
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       GH_TOKEN: ${{ secrets.TESTING_GH_OAUTH }}
