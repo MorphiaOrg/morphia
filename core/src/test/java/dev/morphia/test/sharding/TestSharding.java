@@ -3,7 +3,6 @@ package dev.morphia.test.sharding;
 import java.io.File;
 import java.time.LocalDateTime;
 
-import com.antwerkz.bottlerocket.Versions;
 import com.antwerkz.bottlerocket.clusters.ClusterBuilder;
 import com.github.zafarkhaja.semver.Version;
 
@@ -13,6 +12,7 @@ import dev.morphia.annotations.ShardKey;
 import dev.morphia.annotations.ShardKeys;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;
+import dev.morphia.test.Versions;
 
 import org.bson.types.ObjectId;
 import org.testng.Assert;
