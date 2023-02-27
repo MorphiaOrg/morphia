@@ -13,4 +13,5 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
+    <logger name="org.testcontainers" level="INFO"/>
 </configuration>
