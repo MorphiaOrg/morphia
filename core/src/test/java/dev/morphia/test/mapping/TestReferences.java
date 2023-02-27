@@ -433,6 +433,8 @@ public class TestReferences extends ProxyTestBase {
         for (int i = 1; i <= 4; i++) {
             assertNull(getDs().find(FacebookUser.class).filter(eq("id", i)).first());
         }
+        getMongoClient().getDatabase("db1").drop();
+        getMongoClient().getDatabase("db2").drop();
     }
 
     private void testFirstDatastore(Datastore datastore) {

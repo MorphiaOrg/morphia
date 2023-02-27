@@ -29,6 +29,7 @@ import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BuildConfigTest {
+    private static final Version LATEST = Versions.Version60.version();
     final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
     @Test
@@ -39,7 +40,8 @@ public class BuildConfigTest {
         }
 
         assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
-                String.format("-Dmongodb=%s", Versions.Version60.version()));
+                format("-Dmongodb=%s", LATEST),
+                format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
 
         checkForVersions(walk(map, of("jobs", "Test", "strategy", "matrix", "mongo")),
                 Versions.Version60, Versions.Version50, Versions.Version44, Versions.Version42);
@@ -49,7 +51,8 @@ public class BuildConfigTest {
         }
 
         assertEquals(walk(map, of("jobs", "Build", "with", "maven-flags")),
-                String.format("-Dmongodb=%s", Versions.Version60.version()));
+                format("-Dmongodb=%s", LATEST),
+                format("Should find -Dmongodb=%s in ../.github/workflows/pull-request.yml", LATEST));
     }
 
     private static <T> T walk(Map map, List<String> steps) {
@@ -107,7 +110,8 @@ public class BuildConfigTest {
         List<String> expected = Arrays.stream(versions)
                 .map(v -> v.version().toString())
                 .collect(Collectors.toList());
-        assertEquals(mongo, expected);
+        assertEquals(mongo, expected,
+                String.format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
     }
 
 }

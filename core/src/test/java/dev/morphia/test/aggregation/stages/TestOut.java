@@ -67,6 +67,7 @@ public class TestOut extends AggregationTest {
                 .find().iterator()) {
             Assert.assertEquals(testAverage.next().get("copies"), 20);
         }
+        getMongoClient().getDatabase("homer").drop();
     }
 
     @Test
