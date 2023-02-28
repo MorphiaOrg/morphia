@@ -93,11 +93,11 @@ public abstract class TestBase {
                 try {
                     Versions match = Versions.bestMatch(Version.valueOf(mongodb));
                     imageName = match.dockerImage();
-                    LOG.info("mongodb property specified.  Closest match found.  Running tests using mongodb " + match.version());
                 } catch (IllegalArgumentException e) {
                     imageName = "mongo:" + mongodb;
                 }
 
+                LOG.info("mongodb property specified.  Running tests using " + imageName);
                 mongoDBContainer = new MongoDBContainer(DockerImageName.parse(imageName)
                         .asCompatibleSubstituteFor("mongo"));
                 mongoDBContainer.start();
@@ -115,7 +115,6 @@ public abstract class TestBase {
 
     @BeforeMethod
     public void beforeEach() {
-        startContainer();
         cleanup();
     }
 
