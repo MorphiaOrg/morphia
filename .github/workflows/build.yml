@@ -18,22 +18,25 @@ jobs:
       - Build
     strategy:
       matrix:
-        java: [ 11, 19 ]
+        java: [ 11 ]
         mongo: [ 6.0.4 ]
-        driver: [ 4.6.1, 4.7.1 ]
+        driver: [ 4.6.1, 4.7.2 ]
         include:
+          - java: 19
+            mongo: 6.0.4
+            driver: 4.7.2
           - java: 11
             mongo: 5.0.15
-            driver: 4.7.1
-            os: macos-latest
+            driver: 4.7.2
           - java: 11
             mongo: 4.4.19
-            driver: 4.7.1
-            os: macos-latest
+            driver: 4.7.2
           - java: 11
             mongo: 4.2.24
-            driver: 4.7.1
-            os: macos-latest
+            driver: 4.7.2
+          - java: 11
+            mongo: 4.0.28
+            driver: 4.7.2
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:

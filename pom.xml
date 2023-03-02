@@ -23,14 +23,15 @@
 
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
-        <bottlerocket.version>0.43.0</bottlerocket.version>
+        <bottlerocket.version>0.44.0</bottlerocket.version>
         <dokka.version>1.7.20</dokka.version>
         <driver.version>4.8.1</driver.version>
         <driver.minor.version>4.8</driver.minor.version>
         <jackson.version>2.14.2</jackson.version>
         <json.assert.version>1.5.1</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
-        <kotlin.version>1.7.20</kotlin.version>
+        <kotlin.version>1.8.10</kotlin.version>
+        <logback.version>1.4.5</logback.version>
         <maven.version>3.9.0</maven.version>
         <revapi.maven.plugin.version>0.15.0</revapi.maven.plugin.version>
         <revapi.java.version>0.28.0</revapi.java.version>
@@ -63,7 +64,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.4.5</version>
+                <version>${logback.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -386,8 +387,7 @@
                                 <phase>generate-sources</phase>
                                 <configuration>
                                     <sourceFile>${session.executionRootDirectory}/LICENSE</sourceFile>
-                                    <destinationFile>${project.build.outputDirectory}/META-INF/LICENSE-${project.artifactId}
-                                    </destinationFile>
+                                    <destinationFile>${project.build.outputDirectory}/META-INF/LICENSE-${project.artifactId}</destinationFile>
                                 </configuration>
                             </execution>
                         </executions>

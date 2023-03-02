@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.antwerkz.bottlerocket.Versions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.github.zafarkhaja.semver.Version;
@@ -45,11 +44,13 @@ public class BuildConfigTest {
 
         assertEquals(walk(yaml, of("jobs", "Test", "strategy", "matrix", "mongo")), List.of(LATEST.toString()),
                 format("Should find %s in the matrix in ../.github/workflows/build.yml", LATEST));
+
         List<Map<String, String>> include = walk(yaml, of("jobs", "Test", "strategy", "matrix", "include"));
-        var versions = List.of(Versions.Version50, Versions.Version44, Versions.Version42);
+        var versions = Versions.list();
         assertEquals(include.size(), versions.size());
         for (int i = 0; i < versions.size(); i++) {
-            assertEquals(include.get(i).get("mongo"), versions.get(i).version().toString());
+            assertEquals(include.get(i).get("mongo"), versions.get(i).toString(),
+                    format("Should have the %s entry in the includes", versions.get(i)));
         }
 
         try (InputStream inputStream = new FileInputStream("../.github/workflows/pull-request.yml")) {
@@ -117,7 +118,7 @@ public class BuildConfigTest {
                 .map(v -> v.version().toString())
                 .collect(Collectors.toList());
         assertEquals(mongo, expected,
-                format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
+                String.format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
     }
 
 }
