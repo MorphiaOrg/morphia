@@ -128,6 +128,10 @@ public class Filter {
         return value;
     }
 
+    protected void setValue(Object value) {
+        this.value = value;
+    }
+
     /**
      * Sets whether to validate field names or not
      *

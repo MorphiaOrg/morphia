@@ -2,6 +2,8 @@ package dev.morphia.query.filters;
 
 import java.util.regex.Pattern;
 
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.Datastore;
 
 import org.bson.BsonRegularExpression;
@@ -17,11 +19,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
  */
 @SuppressWarnings("unused")
 public class RegexFilter extends Filter {
-    private String regex;
     private String options;
 
-    RegexFilter(String field) {
-        super("$regex", field, null);
+    RegexFilter(String field, @Nullable String pattern) {
+        super("$regex", field, pattern);
     }
 
     @Override
@@ -30,7 +31,7 @@ public class RegexFilter extends Filter {
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
-        value(datastore, writer, "$regex", new BsonRegularExpression(regex), context);
+        value(datastore, writer, "$regex", new BsonRegularExpression((String) getValue()), context);
         value(writer, "$options", options);
         if (isNot()) {
             writer.writeEndDocument();
@@ -54,9 +55,11 @@ public class RegexFilter extends Filter {
      *
      * @param pattern the regular expression
      * @return this
+     * @deprecated use {@link Filters#regex(String, String)}
      */
+    @Deprecated(since = "2.4.0", forRemoval = true)
     public RegexFilter pattern(String pattern) {
-        this.regex = pattern;
+        setValue(pattern);
         return this;
     }
 
@@ -65,9 +68,11 @@ public class RegexFilter extends Filter {
      *
      * @param pattern the regular expression
      * @return this
+     * @deprecated use {@link Filters#regex(String, Pattern)}
      */
+    @Deprecated(since = "2.4.0", forRemoval = true)
     public RegexFilter pattern(Pattern pattern) {
-        this.regex = pattern.pattern();
+        setValue(pattern.pattern());
         return this;
     }
 
@@ -109,7 +114,7 @@ public class RegexFilter extends Filter {
     }
 
     /**
-     * Allows the dot character (i.e. .) to match all characters including newline characters.
+     * Allows the dot character (i.e. {@code .}) to match all characters including newline characters.
      *
      * @return this
      */

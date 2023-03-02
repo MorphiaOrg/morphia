@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.jayway.awaitility.Awaitility;
@@ -212,6 +213,14 @@ public class TestQuery extends TestBase {
         assertEquals(getDs().find(Pic.class)
                 .filter(regex("name")
                         .pattern("PIC")
+                        .options("i"))
+                .count(), 4);
+        assertEquals(getDs().find(Pic.class)
+                .filter(regex("name", "PIC")
+                        .options("i"))
+                .count(), 4);
+        assertEquals(getDs().find(Pic.class)
+                .filter(regex("name", Pattern.compile("PIC"))
                         .options("i"))
                 .count(), 4);
 
