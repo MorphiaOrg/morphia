@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="critter" data-version="4.2">
+<div class="nav-container" data-component="critter" data-version="4.3">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -89,16 +89,19 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Critter</span>
-    <span class="version">4.2-SNAPSHOT</span>
+    <span class="version">4.3</span>
   </div>
   <ul class="components">
     <li class="component is-current">
       <span class="title">Critter</span>
       <ul class="versions">
-        <li class="version is-current">
-          <a href="index.html">4.2-SNAPSHOT</a>
+        <li class="version">
+          <a href="../4.4/index.html">4.4-SNAPSHOT</a>
         </li>
-        <li class="version is-latest">
+        <li class="version is-current is-latest">
+          <a href="index.html">4.3</a>
+        </li>
+        <li class="version">
           <a href="../4.1/index.html">4.1</a>
         </li>
       </ul>
@@ -147,13 +150,14 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">4.2-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">4.3</button>
   <div class="version-menu">
-    <a class="version is-current" href="index.html">4.2-SNAPSHOT</a>
+    <a class="version" href="../4.4/index.html">4.4-SNAPSHOT</a>
+    <a class="version is-current" href="index.html">4.3</a>
     <a class="version" href="../4.1/index.html">4.1</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/critter/edit/master/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/critter/edit/4.3.x/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
@@ -262,7 +266,7 @@ Possible values: java, kotlin</p></td>
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
     &lt;groupId&gt;dev.morphia.critter&lt;/groupId&gt;
     &lt;artifactId&gt;critter-maven&lt;/artifactId&gt;
-    &lt;version&gt;4.2.0-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;4.3.0&lt;/version&gt;
     &lt;executions&gt;
         &lt;execution&gt;
             &lt;id&gt;critter&lt;/id&gt;
@@ -287,7 +291,7 @@ your maven project.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">plugins {
-    id("dev.morphia.critter") version "4.2.0-SNAPSHOT"
+    id("dev.morphia.critter") version "4.3.0"
 }
 
 
