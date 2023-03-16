@@ -261,12 +261,12 @@
                     <configuration>
                         <java>
                             <eclipse>
-                                <file>${project.basedir}/../config/eclipse-format.xml</file>
+                                <file>${basedir}/../config/eclipse-format.xml</file>
                             </eclipse>
                             <!--<googleJavaFormat />-->
 
                             <importOrder>
-                                <file>${project.basedir}/../config/eclipse.importorder</file>
+                                <file>${basedir}/../config/eclipse.importorder</file>
                             </importOrder>
 
                             <removeUnusedImports />
