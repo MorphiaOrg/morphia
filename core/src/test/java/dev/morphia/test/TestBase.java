@@ -91,7 +91,7 @@ public abstract class TestBase {
             } else {
                 String imageName;
                 try {
-                    Versions match = Versions.bestMatch(Version.valueOf(mongodb));
+                    Versions match = Versions.bestMatch(Version.valueOf(mongodb.length() == 1 ? mongodb + ".0.0" : mongodb));
                     imageName = match.dockerImage();
                 } catch (IllegalArgumentException e) {
                     imageName = "mongo:" + mongodb;
