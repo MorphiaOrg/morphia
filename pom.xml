@@ -25,7 +25,7 @@
         <awaitility.version>1.7.0</awaitility.version>
         <bottlerocket.version>0.44.0</bottlerocket.version>
         <dokka.version>1.7.20</dokka.version>
-        <driver.version>4.7.2</driver.version>
+        <driver.version>4.9.0</driver.version>
         <driver.minor.version>4.7</driver.minor.version>
         <jackson.version>2.14.1</jackson.version>
         <json.assert.version>1.5.1</json.assert.version>
