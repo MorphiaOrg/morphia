@@ -13,12 +13,12 @@ public enum Versions {
     Version60 {
         @Override
         String dockerImage() {
-            return "mongo:6.0.4-jammy";
+            return "mongo:6.0.5-jammy";
         }
 
         @Override
         Version version() {
-            return Version.forIntegers(6, 0, 4);
+            return Version.forIntegers(6, 0, 5);
         }
     },
     Version50 {
