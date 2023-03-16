@@ -1,7 +1,9 @@
 package dev.morphia.test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 
 import com.github.zafarkhaja.semver.Version;
 
@@ -10,26 +12,26 @@ import dev.morphia.sofia.Sofia;
 import static java.util.stream.Collectors.toList;
 
 public enum Versions {
-    Version60 {
+    Version6 {
         @Override
         String dockerImage() {
-            return "mongo:6.0.5-jammy";
+            return "mongo:6";
         }
 
         @Override
         Version version() {
-            return Version.forIntegers(6, 0, 5);
+            return Version.forIntegers(6).setBuildMetadata("latest");
         }
     },
-    Version50 {
+    Version5 {
         @Override
         String dockerImage() {
-            return "mongo:5.0.15-focal";
+            return "mongo:5";
         }
 
         @Override
         Version version() {
-            return Version.forIntegers(5, 0, 15);
+            return Version.forIntegers(5).setBuildMetadata("latest");
         }
 
     },
@@ -67,14 +69,23 @@ public enum Versions {
         }
     };
 
-    public static Version latest() {
-        return values()[0].version();
+    public static Versions find(Version target) {
+        for (Versions value : values()) {
+            if (value.matches(target)) {
+                return value;
+            }
+        }
+        return null;
     }
 
-    public static List<Version> list() {
-        return Arrays.stream(values())
-                .map(it -> it.version())
-                .collect(toList());
+    private boolean matches(Version target) {
+        boolean latest = version().getBuildMetadata().equals("latest");
+        return target.getMajorVersion() == version().getMajorVersion()
+            && (latest || target.getMinorVersion() == version().getMinorVersion());
+    }
+
+    public static Version latest() {
+        return values()[0].version();
     }
 
     public static Versions bestMatch(Version suggested) {
@@ -94,6 +105,14 @@ public enum Versions {
 
     @Override
     public String toString() {
-        return version().toString();
+        Version version = version();
+
+        var numbers = new StringJoiner(".");
+        numbers.add(version.getMajorVersion() + "");
+        if(version.getMinorVersion() != 0 || version.getPatchVersion() != 0) {
+            numbers.add(version().getMinorVersion()+ "");
+            numbers.add(version().getPatchVersion()+ "");
+        }
+        return numbers.toString();
     }
 }

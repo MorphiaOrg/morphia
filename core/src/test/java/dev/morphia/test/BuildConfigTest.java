@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BuildConfigTest {
-    private static final Version LATEST = Versions.Version60.version();
+    private static final Versions LATEST = Versions.values()[0];
     final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
     @Test
@@ -42,15 +43,19 @@ public class BuildConfigTest {
                 format("-Dmongodb=%s", LATEST),
                 format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
 
-        assertEquals(walk(yaml, of("jobs", "Test", "strategy", "matrix", "mongo")), List.of(LATEST.toString()),
+        Collection<?> walk = walk(yaml, of("jobs", "Test", "strategy", "matrix", "mongo"));
+        var list = walk.stream().map(i -> i.toString()).collect(Collectors.toList());
+        assertEquals(list, List.of(LATEST.toString()),
                 format("Should find %s in the matrix in ../.github/workflows/build.yml", LATEST));
 
-        List<Map<String, String>> include = walk(yaml, of("jobs", "Test", "strategy", "matrix", "include"));
-        var versions = Versions.list();
-        assertEquals(include.size(), versions.size());
-        for (int i = 0; i < versions.size(); i++) {
-            assertEquals(include.get(i).get("mongo"), versions.get(i).toString(),
-                    format("Should have the %s entry in the includes", versions.get(i)));
+        List<Map<String, Object>> include = walk(yaml, of("jobs", "Test", "strategy", "matrix", "include"));
+        var versions = Versions.values();
+        assertEquals(include.size(), versions.length);
+        for (int i = 0; i < versions.length; i++) {
+            Map<String, Object> map = include.get(i);
+            String mongo = map.get("mongo").toString();
+            Versions version = versions[i];
+            assertEquals(mongo.toString(), version.toString(), format("Should have the %s entry in the includes", version));
         }
 
         try (InputStream inputStream = new FileInputStream("../.github/workflows/pull-request.yml")) {

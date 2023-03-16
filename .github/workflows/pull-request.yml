@@ -9,5 +9,5 @@ jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
     with:
-      maven-flags: "-Dmongodb=6.0.4"
+      maven-flags: "-Dmongodb=6"
 

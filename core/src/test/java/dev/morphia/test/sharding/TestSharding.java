@@ -39,7 +39,7 @@ public class TestSharding extends TestBase {
         }
         try (var cluster = new ClusterBuilder(SHARDED)
                 .baseDir(new File("target/mongo-" + version))
-                .version(version)
+                .version(Version.valueOf("6.0.5"))
                 .build()) {
             cluster.clean();
             cluster.start();
