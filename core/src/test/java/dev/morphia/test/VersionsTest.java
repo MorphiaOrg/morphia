@@ -2,8 +2,6 @@ package dev.morphia.test;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.zafarkhaja.semver.Version;
@@ -12,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.testng.annotations.Test;
 
-import static java.util.Arrays.asList;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -35,7 +32,7 @@ public class VersionsTest {
 
         assertFalse(found.isEmpty(), "Should find versions");
 
-        found.removeIf( version -> Versions.find(version) != null);
+        found.removeIf(version -> Versions.find(version) != null);
         assertTrue(found.isEmpty(), "Some versions missing from the build config: " + found);
     }
 

@@ -1,15 +1,11 @@
 package dev.morphia.test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.StringJoiner;
 
 import com.github.zafarkhaja.semver.Version;
 
 import dev.morphia.sofia.Sofia;
-
-import static java.util.stream.Collectors.toList;
 
 public enum Versions {
     Version6 {
@@ -81,7 +77,7 @@ public enum Versions {
     private boolean matches(Version target) {
         boolean latest = version().getBuildMetadata().equals("latest");
         return target.getMajorVersion() == version().getMajorVersion()
-            && (latest || target.getMinorVersion() == version().getMinorVersion());
+                && (latest || target.getMinorVersion() == version().getMinorVersion());
     }
 
     public static Version latest() {
@@ -109,9 +105,9 @@ public enum Versions {
 
         var numbers = new StringJoiner(".");
         numbers.add(version.getMajorVersion() + "");
-        if(version.getMinorVersion() != 0 || version.getPatchVersion() != 0) {
-            numbers.add(version().getMinorVersion()+ "");
-            numbers.add(version().getPatchVersion()+ "");
+        if (version.getMinorVersion() != 0 || version.getPatchVersion() != 0) {
+            numbers.add(version().getMinorVersion() + "");
+            numbers.add(version().getPatchVersion() + "");
         }
         return numbers.toString();
     }
