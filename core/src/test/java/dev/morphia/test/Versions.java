@@ -1,67 +1,48 @@
 package dev.morphia.test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.StringJoiner;
 
 import com.github.zafarkhaja.semver.Version;
 
 import dev.morphia.sofia.Sofia;
 
+import org.testcontainers.utility.DockerImageName;
+
+import static com.github.zafarkhaja.semver.Version.forIntegers;
+
 public enum Versions {
     Version6 {
         @Override
-        String dockerImage() {
-            return "mongo:6";
-        }
-
-        @Override
         Version version() {
-            return Version.forIntegers(6).setBuildMetadata("latest");
+            return forIntegers(6).setBuildMetadata("latest");
         }
     },
     Version5 {
         @Override
-        String dockerImage() {
-            return "mongo:5";
-        }
-
-        @Override
         Version version() {
-            return Version.forIntegers(5).setBuildMetadata("latest");
+            return forIntegers(5).setBuildMetadata("latest");
         }
 
     },
     Version44 {
         @Override
-        String dockerImage() {
-            return "mongo:4.4.19-focal";
-        }
-
-        @Override
         Version version() {
-            return Version.forIntegers(4, 4, 19);
+            return forIntegers(4, 4, 19);
         }
     },
     Version42 {
         @Override
-        String dockerImage() {
-            return "mongo:4.2.24";
-        }
-
-        @Override
         Version version() {
-            return Version.forIntegers(4, 2, 24);
+            return forIntegers(4, 2, 24);
         }
     },
     Version40 {
         @Override
-        String dockerImage() {
-            return "mongo:4.0.28-xenial";
-        }
-
-        @Override
         Version version() {
-            return Version.forIntegers(4, 0, 28);
+            return forIntegers(4, 0, 28);
         }
     };
 
@@ -74,17 +55,35 @@ public enum Versions {
         return null;
     }
 
+    public String withMinorVersion() {
+        String minor = String.valueOf(version().getMajorVersion());
+        if (version().getMinorVersion() != -1) {
+            minor += "." + version().getMinorVersion();
+        }
+
+        return minor;
+    }
+
     private boolean matches(Version target) {
         boolean latest = version().getBuildMetadata().equals("latest");
         return target.getMajorVersion() == version().getMajorVersion()
                 && (latest || target.getMinorVersion() == version().getMinorVersion());
     }
 
-    public static Version latest() {
-        return values()[0].version();
+    public static Versions latest() {
+        return values()[0];
     }
 
-    public static Versions bestMatch(Version suggested) {
+    public static Versions bestMatch(String mongo) {
+        List<String> parts = new ArrayList<>(Arrays.asList(mongo.split("\\.")));
+        while (parts.size() < 3) {
+            parts.add("0");
+        }
+        StringJoiner joiner = new StringJoiner(".");
+        for (String part : parts) {
+            joiner.add(part);
+        }
+        Version suggested = Version.valueOf(joiner.toString());
 
         return Arrays.stream(values())
                 .filter(it -> it.version().getMajorVersion() == suggested.getMajorVersion()
@@ -93,8 +92,16 @@ public enum Versions {
                 .orElseThrow(() -> new IllegalArgumentException(Sofia.unknownMongoDbVersion(suggested)));
     }
 
-    String dockerImage() {
-        return "mongo:" + version().toString();
+    final DockerImageName dockerImage() {
+        Version version = version();
+        String tag;
+        if ("latest".equals(version.getBuildMetadata())) {
+            tag = String.valueOf(version.getMajorVersion());
+        } else {
+            tag = version.toString();
+        }
+        return DockerImageName.parse("mongo:" + tag)
+                .asCompatibleSubstituteFor("mongo");
     }
 
     abstract Version version();
@@ -104,10 +111,10 @@ public enum Versions {
         Version version = version();
 
         var numbers = new StringJoiner(".");
-        numbers.add(version.getMajorVersion() + "");
+        numbers.add(String.valueOf(version.getMajorVersion()));
         if (version.getMinorVersion() != 0 || version.getPatchVersion() != 0) {
-            numbers.add(version().getMinorVersion() + "");
-            numbers.add(version().getPatchVersion() + "");
+            numbers.add(String.valueOf(version().getMinorVersion()))
+                    .add(String.valueOf(version().getPatchVersion()));
         }
         return numbers.toString();
     }

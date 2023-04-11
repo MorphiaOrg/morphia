@@ -3,7 +3,6 @@ package dev.morphia.test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.ZonedDateTime;
@@ -12,23 +11,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.github.zafarkhaja.semver.Version;
-import com.mongodb.ConnectionString;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
-import dev.morphia.Morphia;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.ZonedDateTimeCodec;
@@ -45,31 +37,20 @@ import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.utility.DockerImageName;
 import org.testng.Assert;
-import org.testng.SkipException;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 
-import static com.mongodb.MongoClientSettings.*;
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
-public abstract class TestBase {
+public abstract class TestBase extends MorphiaTestSetup {
     protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-    private static MongoClient mongoClient;
-    private static MongoDBContainer mongoDBContainer;
-    private static String connectionString;
 
     private MapperOptions mapperOptions;
-    private MongoDatabase database;
-    private DatastoreImpl datastore;
 
     public TestBase() {
         mapperOptions = MapperOptions.builder()
@@ -81,38 +62,6 @@ public abstract class TestBase {
         this.mapperOptions = mapperOptions;
     }
 
-    @BeforeSuite
-    public void startContainer() {
-        if (mongoDBContainer == null) {
-            String mongodb = System.getProperty("mongodb");
-            if (mongodb == null) {
-                LOG.info("No mongodb property specified. Using already running server.");
-                connectionString = "mongodb://localhost:27017/" + TEST_DB_NAME;
-            } else {
-                String imageName;
-                try {
-                    Versions match = Versions.bestMatch(Version.valueOf(mongodb.length() == 1 ? mongodb + ".0.0" : mongodb));
-                    imageName = match.dockerImage();
-                } catch (IllegalArgumentException e) {
-                    imageName = "mongo:" + mongodb;
-                }
-
-                LOG.info("mongodb property specified.  Running tests using " + imageName);
-                mongoDBContainer = new MongoDBContainer(DockerImageName.parse(imageName)
-                        .asCompatibleSubstituteFor("mongo"));
-                mongoDBContainer.start();
-                connectionString = mongoDBContainer.getReplicaSetUrl(TEST_DB_NAME);
-            }
-        }
-    }
-
-    @AfterSuite
-    public void stopContainer() {
-        if (mongoDBContainer != null) {
-            mongoDBContainer.stop();
-        }
-    }
-
     @BeforeMethod
     public void beforeEach() {
         cleanup();
@@ -121,42 +70,38 @@ public abstract class TestBase {
     protected void cleanup() {
         MongoDatabase db = getDatabase();
         db.runCommand(new Document("profile", 0).append("slowms", 0));
-        db.listCollectionNames().forEach(s -> {
-            if (!s.equals("zipcodes") && !s.startsWith("system")) {
-                db.getCollection(s).drop();
-            }
-        });
-        database = null;
-        datastore = null;
-    }
-
-    public MongoDatabase getDatabase() {
-        if (database == null) {
-            database = getDs().getDatabase();
-        }
-        return database;
+        var collections = db.listCollectionNames().into(new ArrayList<>());
+        collections.stream()
+                .filter(s -> !s.equals("zipcodes") && !s.startsWith("system"))
+                .forEach(s -> {
+                    db.getCollection(s).drop();
+                });
+        morphiaContainer.database = null;
+        morphiaContainer.datastore = null;
+        morphiaContainer.mongoClient = null;
     }
 
     public DatastoreImpl getDs() {
-        if (datastore == null) {
-            datastore = (DatastoreImpl) Morphia.createDatastore(getMongoClient(), TEST_DB_NAME, mapperOptions);
-        }
-        return datastore;
+        return morphiaContainer.getDs();
     }
 
-    protected MongoClient getMongoClient() {
-        if (mongoClient == null) {
-            mongoClient = MongoClients.create(builder()
-                    .uuidRepresentation(mapperOptions.getUuidRepresentation())
-                    .applyConnectionString(new ConnectionString(connectionString))
-                    .build());
-
-        }
-        return mongoClient;
+    public MongoDatabase getDatabase() {
+        return morphiaContainer.getDatabase();
     }
 
     public Mapper getMapper() {
         return getDs().getMapper();
+    }
+
+    protected void download(URL url, File file) throws IOException {
+        LOG.info("Downloading zip data set to " + file);
+        try (var inputStream = url.openStream(); var outputStream = new FileOutputStream(file)) {
+            byte[] read = new byte[49152];
+            int count;
+            while ((count = inputStream.read(read)) != -1) {
+                outputStream.write(read, 0, count);
+            }
+        }
     }
 
     public void installData() {
@@ -182,23 +127,6 @@ public abstract class TestBase {
         assumeTrue(file.exists(), "Failed to process media files");
     }
 
-    protected void download(URL url, File file) throws IOException {
-        LOG.info("Downloading zip data set to " + file);
-        try (InputStream inputStream = url.openStream(); FileOutputStream outputStream = new FileOutputStream(file)) {
-            byte[] read = new byte[49152];
-            int count;
-            while ((count = inputStream.read(read)) != -1) {
-                outputStream.write(read, 0, count);
-            }
-        }
-    }
-
-    protected void assumeTrue(boolean condition, String message) {
-        if (!condition) {
-            throw new SkipException(message);
-        }
-    }
-
     @DataProvider(name = "mapperOptions")
     public Object[][] mapperOptions() {
         return new Object[][] {
@@ -215,11 +143,11 @@ public abstract class TestBase {
         };
     }
 
-    protected void assertCapped(Class<?> type, Integer max, Integer size) {
+    protected void assertCapped(Class<?> type, Integer max) {
         Document result = getOptions(type);
         Assert.assertTrue(result.getBoolean("capped"));
         assertEquals(result.get("max"), max);
-        assertEquals(result.get("size"), size);
+        assertEquals(result.get("size"), 1048576);
     }
 
     protected void assertDocumentEquals(Object actual, Object expected) {
@@ -252,51 +180,6 @@ public abstract class TestBase {
 
     protected void checkForReplicaSet() {
         assumeTrue(isReplicaSet(), "This test requires a replica set");
-    }
-
-    private boolean isReplicaSet() {
-        return runIsMaster().get("setName") != null;
-    }
-
-    private Document runIsMaster() {
-        return mongoClient.getDatabase("admin")
-                .runCommand(new Document("ismaster", 1));
-    }
-
-    protected void checkMinDriverVersion(double version) {
-        checkMinDriverVersion(Version.valueOf(version + ".0"));
-    }
-
-    protected void checkMinDriverVersion(Version version) {
-        assumeTrue(driverIsAtLeastVersion(version),
-                String.format("Server should be at least %s but found %s", version, getServerVersion()));
-    }
-
-    /**
-     * @param version the minimum version allowed
-     * @return true if server is at least specified version
-     */
-    private boolean driverIsAtLeastVersion(Version version) {
-        String property = System.getProperty("driver.version");
-        Version driverVersion = property != null ? Version.valueOf(property) : null;
-        return driverVersion == null || driverVersion.greaterThanOrEqualTo(version);
-    }
-
-    protected Version getServerVersion() {
-        String version = (String) getMongoClient()
-                .getDatabase("admin")
-                .runCommand(new Document("serverStatus", 1))
-                .get("version");
-        return Version.valueOf(version);
-    }
-
-    protected void checkMinServerVersion(double version) {
-        checkMinServerVersion(Version.valueOf(version + ".0"));
-    }
-
-    protected void checkMinServerVersion(Version version) {
-        assumeTrue(serverIsAtLeastVersion(version),
-                String.format("Server should be at least %s but found %s", version, getServerVersion()));
     }
 
     protected int count(MongoCursor<?> cursor) {
@@ -367,14 +250,6 @@ public abstract class TestBase {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * @param version the minimum version allowed
-     * @return true if server is at least specified version
-     */
-    protected boolean serverIsAtLeastVersion(Version version) {
-        return getServerVersion().greaterThanOrEqualTo(version);
-    }
-
     protected Document toDocument(Object entity) {
         final Class<?> type = getMapper().getEntityModel(entity.getClass()).getType();
 
@@ -386,36 +261,6 @@ public abstract class TestBase {
 
     protected String toString(Document document) {
         return document.toJson(getDs().getCodecRegistry().get(Document.class));
-    }
-
-    protected void withClient(MongoClient client, Consumer<Datastore> block) {
-        MapperOptions previousOptions = mapperOptions;
-        try (client) {
-            block.accept(Morphia.createDatastore(client, TEST_DB_NAME));
-        }
-    }
-
-    protected void withOptions(MapperOptions options, Runnable block) {
-        MapperOptions previousOptions = mapperOptions;
-        try {
-            mapperOptions = options;
-            database = null;
-            datastore = null;
-            if (mongoClient != null) {
-                mongoClient.close();
-            }
-            mongoClient = null;
-
-            block.run();
-        } finally {
-            mapperOptions = previousOptions;
-            database = null;
-            datastore = null;
-            if (mongoClient != null) {
-                mongoClient.close();
-            }
-            mongoClient = null;
-        }
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -476,7 +321,7 @@ public abstract class TestBase {
         }
     }
 
-    private static class ZDTCodecProvider implements CodecProvider {
+    static class ZDTCodecProvider implements CodecProvider {
         @Override
         public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
             if (clazz.equals(ZonedDateTime.class)) {

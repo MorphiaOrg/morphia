@@ -23,11 +23,10 @@
 
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
-        <bottlerocket.version>0.44.0</bottlerocket.version>
         <dokka.version>1.7.20</dokka.version>
         <driver.version>4.9.0</driver.version>
         <driver.minor.version>4.7</driver.minor.version>
-        <jackson.version>2.14.1</jackson.version>
+        <jackson.version>2.14.2</jackson.version>
         <json.assert.version>1.5.1</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.8.10</kotlin.version>
@@ -39,7 +38,7 @@
         <slf4j.version>2.0.7</slf4j.version>
         <sofia.version>0.23</sofia.version>
         <surefire.version>3.0.0</surefire.version>
-        <testng.version>7.6.1</testng.version>
+        <testng.version>7.7.1</testng.version>
         <zt.exec.version>1.12</zt.exec.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -134,9 +133,15 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.antwerkz.bottlerocket</groupId>
-                <artifactId>bottlerocket</artifactId>
-                <version>${bottlerocket.version}</version>
+                <groupId>org.awaitility</groupId>
+                <artifactId>awaitility</artifactId>
+                <version>4.2.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.github.zafarkhaja</groupId>
+                <artifactId>java-semver</artifactId>
+                <version>0.9.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

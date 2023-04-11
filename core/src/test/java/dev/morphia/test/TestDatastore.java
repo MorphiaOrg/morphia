@@ -247,7 +247,7 @@ public class TestDatastore extends TestBase {
         getMapper().map(CurrentStatus.class);
         getDs().ensureCaps();
 
-        assertCapped(CurrentStatus.class, 1, 1048576);
+        assertCapped(CurrentStatus.class, 1);
 
         // when-then
         Query<CurrentStatus> query = getDs().find(CurrentStatus.class);

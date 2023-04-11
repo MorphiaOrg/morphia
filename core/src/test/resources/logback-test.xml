@@ -8,10 +8,6 @@
 
     <root level="warn"/>
 
-    <logger name="com.antwerkz.bottlerocket" level="warn">
-        <appender-ref ref="STDOUT" />
-    </logger>
-
     <logger name="dev.morphia" level="info">
         <appender-ref ref="STDOUT" />
     </logger>

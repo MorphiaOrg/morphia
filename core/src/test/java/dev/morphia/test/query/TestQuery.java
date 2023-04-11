@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.jayway.awaitility.Awaitility;
 import com.mongodb.CursorType;
 import com.mongodb.MongoNamespace;
 import com.mongodb.client.MongoCollection;
@@ -49,8 +48,8 @@ import dev.morphia.test.models.Keys;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Student;
 import dev.morphia.test.models.UsesCustomIdObject;
-import dev.morphia.test.query.TestLegacyQuery.CappedPic;
 
+import org.awaitility.Awaitility;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
@@ -147,12 +146,12 @@ public class TestQuery extends TestBase {
         value.key = keys;
         getDs().save(value);
 
-        final Query<KeyValue> query = getDs().find(KeyValue.class)
+        Query<KeyValue> query = getDs().find(KeyValue.class)
                 .filter(in("key", keys));
-        query.iterator(new FindOptions().logQuery());
+        KeyValue first = query.first(new FindOptions().logQuery());
         String loggedQuery = query.getLoggedQuery();
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
-        assertEquals(query.first(new FindOptions().limit(1)).id, value.id);
+        assertEquals(first.id, value.id);
     }
 
     @Test
@@ -1248,7 +1247,7 @@ public class TestQuery extends TestBase {
         ds.ensureCaps();
 
         final List<CappedPic> found = new ArrayList<>();
-        assertCapped(CappedPic.class, 1000, 1024 * 1024);
+        assertCapped(CappedPic.class, 1000);
 
         final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 

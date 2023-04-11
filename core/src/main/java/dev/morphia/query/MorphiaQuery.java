@@ -163,17 +163,17 @@ class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public String getLoggedQuery() {
-        if (lastOptions.isLogQuery()) {
+        if (lastOptions != null && lastOptions.isLogQuery()) {
             String json = "{}";
+            Document filter = new Document("command.comment", Sofia.loggedQuery(lastOptions.queryLogId()));
             Document first = datastore.getDatabase()
                     .getCollection("system.profile")
-                    .find(new Document("command.comment", "logged query: " + lastOptions.queryLogId()),
-                            Document.class)
+                    .find(filter, Document.class)
                     .projection(new Document("command.filter", 1))
                     .first();
             if (first != null) {
                 Document command = (Document) first.get("command");
-                Document filter = (Document) command.get("filter");
+                filter = (Document) command.get("filter");
                 if (filter != null) {
                     json = filter.toJson(datastore.getCodecRegistry().get(Document.class));
                 }

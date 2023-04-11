@@ -213,7 +213,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public String getLoggedQuery() {
-        if (lastOptions.isLogQuery()) {
+        if (lastOptions != null && lastOptions.isLogQuery()) {
             String json = "{}";
             Document first = datastore.getDatabase()
                     .getCollection("system.profile")

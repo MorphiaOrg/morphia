@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         java: [ 11 ]
-        mongo: [ 6 ]
+        mongo: [ 6, 5, 4.4, 4.2, 4.0 ]
         driver: [ 4.9.0, 4.8.1, 4.7.2, 4.6.1 ]
         include:
           - java: 19

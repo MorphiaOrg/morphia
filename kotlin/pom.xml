@@ -114,10 +114,6 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.antwerkz.bottlerocket</groupId>
-            <artifactId>bottlerocket</artifactId>
-        </dependency>
-        <dependency>
             <groupId>dev.morphia.morphia</groupId>
             <artifactId>morphia-core</artifactId>
             <version>${project.version}</version>

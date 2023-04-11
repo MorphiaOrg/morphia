@@ -92,7 +92,7 @@ public class MathExpressionTest extends ExpressionsTestBase {
 
     @Test
     public void testTrunc() {
-        if (getServerVersion().greaterThanOrEqualTo(Version.forIntegers(4, 2))) {
+        if (serverIsAtLeastVersion(Version.forIntegers(4, 2))) {
             assertAndCheckDocShape("{ $trunc: [ 7.85, 1 ] }", trunc(value(7.85), value(1)), 7.8);
         } else {
             assertAndCheckDocShape("{ $trunc: 7.85 }", trunc(value(7.85), null), 7.0);

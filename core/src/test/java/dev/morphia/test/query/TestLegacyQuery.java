@@ -12,7 +12,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-import com.jayway.awaitility.Awaitility;
 import com.mongodb.CursorType;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -36,17 +35,19 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
+import dev.morphia.test.MorphiaContainer;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.mapping.TestReferences.ChildId;
 import dev.morphia.test.mapping.TestReferences.Complex;
-import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
-import dev.morphia.test.query.TestQuery.CappedPic;
 
+import org.awaitility.Awaitility;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.Collation.builder;
@@ -54,6 +55,7 @@ import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.Sort.naturalAscending;
 import static dev.morphia.query.Sort.naturalDescending;
+import static java.lang.String.valueOf;
 import static java.time.LocalDate.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
@@ -70,10 +72,24 @@ import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-@SuppressWarnings({ "unchecked", "unused", "removal" })
+@SuppressWarnings({ "unchecked", "unused", "removal", "resource", "DataFlowIssue", "rawtypes", "deprecation" })
 public class TestLegacyQuery extends TestBase {
-    public TestLegacyQuery() {
-        super(MapperOptions.legacy().build());
+    private MorphiaContainer oldContainer;
+
+    @BeforeClass
+    @Override
+    public void startContainer() {
+        oldContainer = morphiaContainer;
+        morphiaContainer = new MorphiaContainer(false)
+                .mapperOptions(MapperOptions.legacy().build())
+                .start();
+    }
+
+    @AfterClass
+    @Override
+    public void stopContainer() {
+        super.stopContainer();
+        morphiaContainer = oldContainer;
     }
 
     @Test
@@ -626,7 +642,7 @@ public class TestLegacyQuery extends TestBase {
             query.field("bad.name").equal("blargle");
             query.first();
         } catch (ValidationException e) {
-            assertThrows(ValidationException.class, () -> query.first());
+            assertThrows(ValidationException.class, query::first);
         }
 
         getDs().find(TestQuery.CappedPic.class)
@@ -1256,7 +1272,7 @@ public class TestLegacyQuery extends TestBase {
     @Entity(value = "capped_pic", cap = @CappedAt(count = 1000))
     public static class CappedPic extends Pic {
         public CappedPic() {
-            super(System.currentTimeMillis() + "");
+            super(valueOf(System.currentTimeMillis()));
         }
     }
 
@@ -1523,6 +1539,7 @@ public class TestLegacyQuery extends TestBase {
 
     }
 
+    @SuppressWarnings("FieldCanBeLocal")
     @Entity
     public static class Photo {
         @Id
