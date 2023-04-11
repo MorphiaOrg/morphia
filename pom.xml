@@ -71,16 +71,6 @@
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
                 <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>junit</groupId>
-                        <artifactId>junit</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.webjars</groupId>
-                        <artifactId>jquery</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>
@@ -288,6 +278,16 @@
                                 <!-- optional, other options are DEFAULT, DROPBOX, GOOGLE and KOTLINLANG -->
                             </ktfmt>
                         </kotlin>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <configuration>
+                        <properties>
+                            <failIfNoTests>true</failIfNoTests>
+                        </properties>
                     </configuration>
                 </plugin>
             </plugins>
