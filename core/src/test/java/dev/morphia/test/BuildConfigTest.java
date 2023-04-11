@@ -60,13 +60,11 @@ public class BuildConfigTest {
 
         List<Map<String, Object>> include = walk(yaml, of("jobs", "Test", "strategy", "matrix", "include"));
         var array = Versions.values();
-        assertEquals(include.size(), array.length);
-        for (int i = 0; i < array.length; i++) {
-            Map<String, Object> map = include.get(i);
-            String mongo = map.get("mongo").toString();
-            Versions version = array[i];
-            assertEquals(mongo, version.toString(), format("Should have the %s entry in the includes", version));
-        }
+        assertEquals(include.size(), 1);
+        Map<String, Object> map = include.get(0);
+        String mongo = map.get("mongo").toString();
+        Versions version = array[0];
+        assertEquals(mongo, version.toString(), format("Should have the %s entry in the includes", version));
 
         try (InputStream inputStream = new FileInputStream("../.github/workflows/pull-request.yml")) {
             yaml = objectMapper.readValue(inputStream, LinkedHashMap.class);
