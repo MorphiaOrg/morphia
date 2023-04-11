@@ -28,6 +28,7 @@ public class TestSharding extends TestBase {
 
     @Test
     public void testShardCollection() {
+        checkMinServerVersion(6.0);
         with(new MorphiaContainer(true).start(), () -> {
             Datastore datastore = getDs();
             datastore.getDatabase().createCollection("split_brain"); // make sure the db exists on 4.0.x
