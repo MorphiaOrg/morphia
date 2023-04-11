@@ -22,20 +22,8 @@ jobs:
         mongo: [ 6, 5, 4.4, 4.2, 4.0 ]
         driver: [ 4.9.0, 4.8.1, 4.7.2, 4.6.1 ]
         include:
-          - java: 19
+          - java: 20
             mongo: 6
-            driver: 4.9.0
-          - java: 11
-            mongo: 5
-            driver: 4.9.0
-          - java: 11
-            mongo: 4.4.19
-            driver: 4.9.0
-          - java: 11
-            mongo: 4.2.24
-            driver: 4.9.0
-          - java: 11
-            mongo: 4.0.28
             driver: 4.9.0
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
