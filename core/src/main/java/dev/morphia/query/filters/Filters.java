@@ -619,7 +619,7 @@ public final class Filters {
             @Override
             public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
                 writer.writeName(getName());
-                Object where = getValue(datastore);
+                Object where = getValue();
                 if (where != null) {
                     String value = where.toString().trim();
                     if (!value.startsWith("function()")) {
