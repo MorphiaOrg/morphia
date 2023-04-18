@@ -4,6 +4,8 @@ on:
   push:
     branches-ignore:
       - 'dependabot/*'
+    tags-ignore:
+      - r[0-9]*
   workflow_dispatch:
 
 jobs:
@@ -18,13 +20,9 @@ jobs:
       - Build
     strategy:
       matrix:
-        java: [ 11 ]
+        java: [ 11, 20 ]
         mongo: [ 6, 5, 4.4, 4.2, 4.0 ]
-        driver: [ 4.9.0, 4.8.1, 4.7.2, 4.6.1 ]
-        include:
-          - java: 20
-            mongo: 6
-            driver: 4.9.0
+        driver: [ 4.9.1, 4.8.1, 4.7.2, 4.6.1 ]
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
