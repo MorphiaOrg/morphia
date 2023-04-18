@@ -474,8 +474,9 @@ public class Mapper {
         mappedEntities.put(entityModel.getType(), entityModel);
         mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(entityModel);
-        if (entityModel.getSuperClass() != null) {
-            entityModel.getSuperClass().addSubtype(entityModel);
+        EntityModel superClass = entityModel.getSuperClass();
+        if (superClass != null) {
+            superClass.addSubtype(entityModel);
         }
 
         if (!entityModel.isInterface()) {
