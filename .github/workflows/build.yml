@@ -4,6 +4,8 @@ on:
   push:
     branches-ignore:
       - 'dependabot/*'
+    tags-ignore:
+      - r[0-9]*
   workflow_dispatch:
 
 jobs:
