@@ -23,11 +23,11 @@ import com.mongodb.lang.NonNull;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.codec.ZonedDateTimeCodec;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
+import dev.morphia.test.mapping.codec.ZonedDateTimeCodec;
 
 import org.bson.Document;
 import org.bson.codecs.Codec;

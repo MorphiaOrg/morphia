@@ -1,5 +1,27 @@
 package dev.morphia.mapping;
 
+import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.Nullable;
+import dev.morphia.EntityInterceptor;
+import dev.morphia.Key;
+import dev.morphia.annotations.Embedded;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.ExternalEntity;
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
+import dev.morphia.mapping.validation.MappingValidator;
+import dev.morphia.sofia.Sofia;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
+import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,31 +35,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
-
-import com.mongodb.WriteConcern;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.lang.Nullable;
-
-import dev.morphia.EntityInterceptor;
-import dev.morphia.Key;
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.ExternalEntity;
-import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.mapping.codec.references.MorphiaProxy;
-import dev.morphia.mapping.validation.MappingValidator;
-import dev.morphia.sofia.Sofia;
-
-import org.bson.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ScanResult;
 
 /**
  * @morphia.internal
@@ -450,11 +447,10 @@ public class Mapper {
         if (annotation != null && annotation.useDiscriminator()
                 && !query.containsKey("_id")
                 && !query.containsKey(model.getDiscriminatorKey())) {
-            List<EntityModel> subtypes = model.getSubtypes();
             List<String> values = new ArrayList<>();
             values.add(model.getDiscriminator());
             if (options.isEnablePolymorphicQueries()) {
-                for (EntityModel subtype : subtypes) {
+                for (EntityModel subtype : model.getSubtypes()) {
                     values.add(subtype.getDiscriminator());
                 }
             }
@@ -473,9 +469,11 @@ public class Mapper {
     public EntityModel register(EntityModel entityModel) {
         discriminatorLookup.addModel(entityModel);
         mappedEntities.put(entityModel.getType(), entityModel);
-        entityModel.getCollectionName();
         mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(entityModel);
+        if (entityModel.getSuperClass() != null) {
+            entityModel.getSuperClass().addSubtype(entityModel);
+        }
 
         if (!entityModel.isInterface()) {
             new MappingValidator()

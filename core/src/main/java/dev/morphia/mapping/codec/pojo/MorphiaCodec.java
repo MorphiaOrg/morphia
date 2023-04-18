@@ -1,7 +1,5 @@
 package dev.morphia.mapping.codec.pojo;
 
-import java.util.List;
-
 import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorLookup;
@@ -9,7 +7,6 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import dev.morphia.sofia.Sofia;
-
 import org.bson.BsonReader;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
@@ -23,6 +20,8 @@ import org.bson.codecs.pojo.PropertyCodecRegistry;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
 import static org.bson.codecs.configuration.CodecRegistries.fromCodecs;
@@ -185,9 +184,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * Sets the decoder
      *
      * @param decoder the decoder
+     * @return
      */
-    public void setDecoder(EntityDecoder<T> decoder) {
+    public MorphiaCodec<T> setDecoder(EntityDecoder<T> decoder) {
         this.decoder = decoder;
+        return this;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

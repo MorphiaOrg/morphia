@@ -1,20 +1,18 @@
 package dev.morphia.query.filters;
 
-import java.util.regex.Pattern;
-
 import com.mongodb.client.model.geojson.Geometry;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.lang.Nullable;
-
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.query.Type;
-
 import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
+
+import java.util.regex.Pattern;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
@@ -41,7 +39,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $all
      */
-    public static Filter all(String field, Object val) {
+    public static Filter all(String field, @Nullable Object val) {
         return new Filter("$all", field, val);
     }
 
@@ -465,7 +463,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $ne
      */
-    public static Filter ne(String field, Object val) {
+    public static Filter ne(String field, @Nullable Object val) {
         return new Filter("$ne", field, val);
     }
 
