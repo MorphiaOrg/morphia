@@ -1,4 +1,4 @@
-package dev.morphia.mapping.codec;
+package dev.morphia.test.mapping.codec;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

@@ -9,7 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
 import com.mongodb.lang.NonNull;
@@ -68,8 +69,8 @@ public class EntityModel {
     private final String discriminator;
     private final Class<?> type;
     private final String collectionName;
-    private final List<EntityModel> subtypes = new CopyOnWriteArrayList<>();
-    private final EntityModel superClass;
+    private final Set<EntityModel> subtypes = new CopyOnWriteArraySet<>();
+    private EntityModel superClass;
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
     private final Mapper mapper;
@@ -285,7 +286,7 @@ public class EntityModel {
      *
      * @return the subtypes
      */
-    public List<EntityModel> getSubtypes() {
+    public Set<EntityModel> getSubtypes() {
         return subtypes;
     }
 
@@ -295,6 +296,10 @@ public class EntityModel {
     @Nullable
     public EntityModel getSuperClass() {
         return superClass;
+    }
+
+    public void setSuperClass(EntityModel model) {
+        superClass = model;
     }
 
     /**
@@ -380,7 +385,7 @@ public class EntityModel {
         return discriminatorEnabled;
     }
 
-    private void addSubtype(EntityModel entityModel) {
+    public void addSubtype(EntityModel entityModel) {
         subtypes.add(entityModel);
         if (superClass != null) {
             superClass.addSubtype(entityModel);

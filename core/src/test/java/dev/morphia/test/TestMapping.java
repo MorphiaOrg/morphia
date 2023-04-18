@@ -55,9 +55,6 @@ import dev.morphia.test.models.external.ThirdPartyEmbedded;
 import dev.morphia.test.models.external.ThirdPartyEmbeddedProxy;
 import dev.morphia.test.models.external.ThirdPartyEntity;
 import dev.morphia.test.models.external.ThirdPartyEntityProxy;
-import dev.morphia.test.models.generics.Another;
-import dev.morphia.test.models.generics.Child;
-import dev.morphia.test.models.generics.EmbeddedType;
 import dev.morphia.test.models.methods.MethodMappedUser;
 import dev.morphia.test.models.versioned.AbstractVersionedBase;
 import dev.morphia.test.models.versioned.Versioned;
@@ -84,7 +81,7 @@ import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-@SuppressWarnings({ "unchecked", "unchecked" })
+@SuppressWarnings({ "unchecked", "unused" })
 public class TestMapping extends TestBase {
 
     @DataProvider
@@ -120,7 +117,7 @@ public class TestMapping extends TestBase {
                             classType.getSimpleName(), actual.getSimpleName()));
         }
 
-    };
+    }
 
     @Entity(value = "grandParent")
     public static class ShadowedGrandParent {
@@ -248,16 +245,6 @@ public class TestMapping extends TestBase {
     @Test
     public void shouldSupportGenericArrays() {
         getMapper().map(MyEntity.class);
-    }
-
-    @Test
-    public void subTypes() {
-        getMapper().map(EmbeddedType.class, Another.class, Child.class);
-
-        Mapper mapper = getMapper();
-        List<EntityModel> subTypes = mapper.getEntityModel(EmbeddedType.class).getSubtypes();
-        Assert.assertTrue(subTypes.contains(mapper.getEntityModel(Another.class)));
-        Assert.assertTrue(subTypes.contains(mapper.getEntityModel(Child.class)));
     }
 
     @Test

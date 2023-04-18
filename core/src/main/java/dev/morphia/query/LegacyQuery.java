@@ -213,7 +213,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public String getLoggedQuery() {
-        if (lastOptions.isLogQuery()) {
+        if (lastOptions != null && lastOptions.isLogQuery()) {
             String json = "{}";
             Document first = datastore.getDatabase()
                     .getCollection("system.profile")
@@ -441,10 +441,9 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
                 && !query.containsKey("_id")
                 && !query.containsKey(model.getDiscriminatorKey())) {
 
-            List<EntityModel> subtypes = datastore.getMapper().getEntityModel(getEntityClass()).getSubtypes();
             List<String> values = new ArrayList<>();
             values.add(model.getDiscriminator());
-            for (EntityModel subtype : subtypes) {
+            for (EntityModel subtype : datastore.getMapper().getEntityModel(getEntityClass()).getSubtypes()) {
                 values.add(subtype.getDiscriminator());
             }
             query.put(model.getDiscriminatorKey(),

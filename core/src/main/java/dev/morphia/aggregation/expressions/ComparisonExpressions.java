@@ -2,8 +2,12 @@ package dev.morphia.aggregation.expressions;
 
 import java.util.List;
 
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
+
+import static java.util.Arrays.asList;
 
 /**
  * Defines helper methods for the comparison expressions
@@ -36,8 +40,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $eq
      */
-    public static Expression eq(Expression first, Expression second) {
-        return new Expression("$eq", List.of(first, second));
+    public static Expression eq(Expression first, @Nullable Expression second) {
+        return new Expression("$eq", asList(first, second));
     }
 
     /**
@@ -105,8 +109,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $ne
      */
-    public static Expression ne(Expression first, Expression second) {
-        return new Expression("$ne", List.of(first, second));
+    public static Expression ne(Expression first, @Nullable Expression second) {
+        return new Expression("$ne", asList(first, second));
     }
 
 }

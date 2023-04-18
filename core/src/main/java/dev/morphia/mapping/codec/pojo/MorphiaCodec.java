@@ -185,9 +185,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * Sets the decoder
      *
      * @param decoder the decoder
+     * @return
      */
-    public void setDecoder(EntityDecoder<T> decoder) {
+    public MorphiaCodec<T> setDecoder(EntityDecoder<T> decoder) {
         this.decoder = decoder;
+        return this;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -39,7 +39,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $all
      */
-    public static Filter all(String field, Object val) {
+    public static Filter all(String field, @Nullable Object val) {
         return new Filter("$all", field, val);
     }
 

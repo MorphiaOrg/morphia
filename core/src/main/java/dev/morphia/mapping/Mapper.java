@@ -450,11 +450,10 @@ public class Mapper {
         if (annotation != null && annotation.useDiscriminator()
                 && !query.containsKey("_id")
                 && !query.containsKey(model.getDiscriminatorKey())) {
-            List<EntityModel> subtypes = model.getSubtypes();
             List<String> values = new ArrayList<>();
             values.add(model.getDiscriminator());
             if (options.isEnablePolymorphicQueries()) {
-                for (EntityModel subtype : subtypes) {
+                for (EntityModel subtype : model.getSubtypes()) {
                     values.add(subtype.getDiscriminator());
                 }
             }
@@ -473,9 +472,12 @@ public class Mapper {
     public EntityModel register(EntityModel entityModel) {
         discriminatorLookup.addModel(entityModel);
         mappedEntities.put(entityModel.getType(), entityModel);
-        entityModel.getCollectionName();
         mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(entityModel);
+        EntityModel superClass = entityModel.getSuperClass();
+        if (superClass != null) {
+            superClass.addSubtype(entityModel);
+        }
 
         if (!entityModel.isInterface()) {
             new MappingValidator()

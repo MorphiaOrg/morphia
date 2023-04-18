@@ -48,38 +48,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.jetbrains.dokka</groupId>
-                <artifactId>dokka-maven-plugin</artifactId>
-                <version>${dokka.version}</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>dokka</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>dokka-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>javadoc</classifier>
-                            <classesDirectory>${project.build.directory}/dokka</classesDirectory>
-                            <skipIfEmpty>true</skipIfEmpty>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
             </plugin>
@@ -123,36 +91,42 @@
     </dependencies>
     <profiles>
         <profile>
-            <id>copy test sources</id>
             <activation>
                 <property>
-                    <name>env.GITHUB_ACTION</name>
+                    <name>release</name>
                 </property>
             </activation>
+            <id>dokka</id>
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.jetbrains.dokka</groupId>
+                        <artifactId>dokka-maven-plugin</artifactId>
+                        <version>${dokka.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>dokka</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
+                        <artifactId>maven-jar-plugin</artifactId>
                         <version>3.3.1</version>
                         <executions>
                             <execution>
-                                <phase>generate-sources</phase>
+                                <id>dokka-jar</id>
+                                <phase>package</phase>
                                 <goals>
-                                    <goal>copy-resources</goal>
+                                    <goal>jar</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>src/test/kotlin/dev/morphia/test/</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${basedir}/../core/src/test/java/dev/morphia/test</directory>
-                                            <filtering>false</filtering>
-                                            <includes>
-                                                <include>**/TestBase.java</include>
-                                                <include>**/Versions.java</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
+                                    <classifier>javadoc</classifier>
+                                    <classesDirectory>${project.build.directory}/dokka</classesDirectory>
+                                    <skipIfEmpty>true</skipIfEmpty>
                                 </configuration>
                             </execution>
                         </executions>
