@@ -79,5 +79,6 @@ public final class MorphiaInternals {
         v4_0_0,
         v4_1_0,
         v4_2_0,
+        v4_6_0,
     }
 }

@@ -44,6 +44,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
+import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_6_0;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 
 /**
@@ -122,7 +123,9 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         });
         iterable.batchSize(batchSize);
         iterable.collation(collation);
-        iterable.comment(comment);
+        tryInvoke(v4_6_0, () -> {
+            return iterable.comment(comment);
+        });
         if (cursorType != null) {
             iterable.cursorType(cursorType);
         }
