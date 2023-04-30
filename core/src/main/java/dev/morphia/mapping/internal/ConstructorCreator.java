@@ -90,7 +90,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
             return constructors.stream()
                     .filter(it -> it.getParameters().length == 0)
                     .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("A type with lifecycle events must have a no-arg constructor"));
+                    .orElseThrow(() -> new IllegalStateException(Sofia.lifecycleNoargs(model.getType())));
         }
 
         return constructors.stream()
