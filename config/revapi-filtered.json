@@ -652,7 +652,16 @@
           "new": "parameter dev.morphia.query.filters.Filter dev.morphia.query.filters.Filters::eq(java.lang.String, ===java.lang.Object===)",
           "annotation": "@com.mongodb.lang.Nullable",
           "justification": "missed this in 2.3.0"
-        }  ]
+        },
+        {
+          "ignore": true,
+          "code": "java.annotation.added",
+          "old": "parameter dev.morphia.query.filters.Filter dev.morphia.query.filters.Filters::ne(java.lang.String, ===java.lang.Object===)",
+          "new": "parameter dev.morphia.query.filters.Filter dev.morphia.query.filters.Filters::ne(java.lang.String, ===java.lang.Object===)",
+          "annotation": "@com.mongodb.lang.Nullable",
+          "justification": "missed nullability"
+        }
+      ]
     }
   }
 ]
