@@ -11,6 +11,8 @@ import com.mongodb.client.result.InsertManyResult;
 
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.aggregation.expressions.Miscellaneous;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
 import dev.morphia.query.Query;
@@ -45,12 +47,15 @@ import static dev.morphia.query.filters.Filters.or;
 import static dev.morphia.query.filters.Filters.size;
 import static dev.morphia.query.filters.Filters.text;
 import static dev.morphia.query.filters.Filters.type;
+import static dev.morphia.query.filters.Filters.where;
 import static java.util.Arrays.asList;
+import static java.util.List.of;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
+@SuppressWarnings("resource")
 public class FiltersTest extends TestBase {
     @Test
     public void testAnd() {
@@ -333,5 +338,28 @@ public class FiltersTest extends TestBase {
                 .tryNext();
 
         assertNull(likes);
+    }
+
+    @Test
+    public void testWhere() {
+        getMapper().map(Player.class);
+        insert("players", of(
+                parse("{ _id: 12378, name: 'Steve', username: 'steveisawesome', first_login: '2017-01-01' }"),
+                parse("{ _id: 2, name: 'Anya', username: 'anya', first_login: '2001-02-02' }")));
+
+        Player player = getDs().find(Player.class)
+                .filter(where("return (hex_md5(this.name) == '9b53e667f30cd329dca1ec9e6a83e994')"))
+                .first();
+
+        assertEquals(player.name, "Anya");
+    }
+
+    @Entity(value = "players", useDiscriminator = false)
+    private static class Player {
+        @Id
+        private int id;
+        String name;
+        String username;
+        String first_login;
     }
 }
