@@ -23,7 +23,7 @@ jobs:
       matrix:
         java: [ 20, 11 ]
         mongo: [ 6 ]
-        driver: [ 4.9.1, 4.8.1, 4.7.2, 4.6.1 ]
+        driver: [ 4.9.1 ]
         include:
           - java: 11
             mongo: 5
@@ -37,6 +37,33 @@ jobs:
           - java: 11
             mongo: 4.0
             driver: 4.9.1
+          - java: 11
+            mongo: 6
+            driver: 4.8.1
+          - java: 11
+            mongo: 6
+            driver: 4.7.2
+          - java: 11
+            mongo: 6
+            driver: 4.6.1
+          - java: 11
+            mongo: 6
+            driver: 4.5.1
+          - java: 11
+            mongo: 6
+            driver: 4.4.2
+          - java: 11
+            mongo: 6
+            driver: 4.3.4
+          - java: 11
+            mongo: 6
+            driver: 4.2.3
+          - java: 11
+            mongo: 6
+            driver: 4.1.2
+          - java: 11
+            mongo: 6
+            driver: 4.0.6
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
