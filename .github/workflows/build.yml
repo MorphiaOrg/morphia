@@ -12,6 +12,7 @@ jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
+      java: 20
       saveBuild: true
       maven-flags: "-Dmongodb=6"
 
@@ -20,9 +21,18 @@ jobs:
       - Build
     strategy:
       matrix:
-        java: [ 11, 20 ]
-        mongo: [ 6, 5, 4.4, 4.2, 4.0 ]
+        java: [ 20, 11 ]
+        mongo: [ 6 ]
         driver: [ 4.9.1, 4.8.1, 4.7.2, 4.6.1 ]
+        include:
+          - java: 11
+            mongo: 5
+          - java: 11
+            mongo: 4.4
+          - java: 11
+            mongo: 4.2
+          - java: 11
+            mongo: 4.0
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
