@@ -8,6 +8,8 @@ on:
       - r[0-9]*
   workflow_dispatch:
 
+env:
+  LATEST_DRIVER: 4.9.1
 jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
@@ -23,16 +25,20 @@ jobs:
       matrix:
         java: [ 20, 11 ]
         mongo: [ 6 ]
-        driver: [ 4.9.1, 4.8.1, 4.7.2, 4.6.1 ]
+        driver: [ $LATEST_DRIVER, 4.8.1, 4.7.2, 4.6.1 ]
         include:
           - java: 11
             mongo: 5
+            driver: $LATEST_DRIVER
           - java: 11
             mongo: 4.4
+            driver: $LATEST_DRIVER
           - java: 11
             mongo: 4.2
+            driver: $LATEST_DRIVER
           - java: 11
             mongo: 4.0
+            driver: $LATEST_DRIVER
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
