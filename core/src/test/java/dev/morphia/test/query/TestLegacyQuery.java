@@ -108,7 +108,7 @@ public class TestLegacyQuery extends TestBase {
     @Test
     @SuppressWarnings("rawtypes")
     public void genericMultiKeyValueQueries() {
-        checkMinDriverVersion(4.2);
+        checkMinDriverVersion(4.6);
 
         getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
@@ -129,7 +129,8 @@ public class TestLegacyQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
-        checkMinDriverVersion(4.2);
+        checkMinDriverVersion(4.6);
+
         getMapper().map(List.of(KeyValue.class));
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
