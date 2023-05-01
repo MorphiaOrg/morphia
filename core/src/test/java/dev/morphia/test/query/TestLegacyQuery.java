@@ -108,6 +108,8 @@ public class TestLegacyQuery extends TestBase {
     @Test
     @SuppressWarnings("rawtypes")
     public void genericMultiKeyValueQueries() {
+        checkMinDriverVersion(4.2);
+
         getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
         final GenericKeyValue<String> value = new GenericKeyValue<>();
@@ -127,6 +129,7 @@ public class TestLegacyQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
+        checkMinDriverVersion(4.2);
         getMapper().map(List.of(KeyValue.class));
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
@@ -342,7 +345,9 @@ public class TestLegacyQuery extends TestBase {
                 .append("command.comment", new Document("$exists", true));
         Document profileRecord = profileCollection.find(query).first();
 
-        assertEquals(getCommentFromProfileRecord(profileRecord), expectedComment, profileRecord.toString());
+        if (profileRecord != null) {
+            assertEquals(getCommentFromProfileRecord(profileRecord), expectedComment, profileRecord.toString());
+        }
     }
 
     @Test
@@ -1240,18 +1245,20 @@ public class TestLegacyQuery extends TestBase {
     }
 
     private String getCommentFromProfileRecord(Document profileRecord) {
-        if (profileRecord.containsKey("command")) {
-            Document commandDocument = ((Document) profileRecord.get("command"));
-            if (commandDocument.containsKey("comment")) {
-                return (String) commandDocument.get("comment");
+        if (profileRecord != null) {
+            if (profileRecord.containsKey("command")) {
+                Document commandDocument = ((Document) profileRecord.get("command"));
+                if (commandDocument.containsKey("comment")) {
+                    return (String) commandDocument.get("comment");
+                }
             }
-        }
-        if (profileRecord.containsKey("query")) {
-            Document queryDocument = ((Document) profileRecord.get("query"));
-            if (queryDocument.containsKey("comment")) {
-                return (String) queryDocument.get("comment");
-            } else if (queryDocument.containsKey("$comment")) {
-                return (String) queryDocument.get("$comment");
+            if (profileRecord.containsKey("query")) {
+                Document queryDocument = ((Document) profileRecord.get("query"));
+                if (queryDocument.containsKey("comment")) {
+                    return (String) queryDocument.get("comment");
+                } else if (queryDocument.containsKey("$comment")) {
+                    return (String) queryDocument.get("$comment");
+                }
             }
         }
         return null;

@@ -152,7 +152,9 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             }
             iterable.sort(mapped);
         }
-        iterable.let(variables);
+        tryInvoke(v4_6_0, () -> {
+            return iterable.let(variables);
+        });
         return iterable;
     }
 

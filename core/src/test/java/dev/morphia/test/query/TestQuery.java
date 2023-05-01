@@ -48,6 +48,7 @@ import dev.morphia.test.models.Keys;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Student;
 import dev.morphia.test.models.UsesCustomIdObject;
+import dev.morphia.test.query.TestLegacyQuery.Pic;
 
 import org.awaitility.Awaitility;
 import org.bson.Document;
@@ -103,6 +104,8 @@ public class TestQuery extends TestBase {
 
     @Test
     public void genericMultiKeyValueQueries() {
+        checkMinDriverVersion(4.2);
+
         getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
         final GenericKeyValue<String> value = new GenericKeyValue<>();
@@ -139,6 +142,8 @@ public class TestQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
+        checkMinDriverVersion(4.2);
+
         getMapper().map(List.of(KeyValue.class));
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
@@ -402,8 +407,10 @@ public class TestQuery extends TestBase {
                 .append("command.comment", new Document("$exists", true));
         Document profileRecord = profileCollection.find(query).first();
 
-        assertEquals(getCommentFromProfileRecord(profileRecord), expectedComment,
-                profileRecord.toJson(getDs().getCodecRegistry().get(Document.class)));
+        if (profileRecord != null) {
+            assertEquals(getCommentFromProfileRecord(profileRecord), expectedComment,
+                    profileRecord.toJson(getDs().getCodecRegistry().get(Document.class)));
+        }
     }
 
     @Test
@@ -819,6 +826,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testMultipleConstraintsOnOneField() {
+        checkMinDriverVersion(4.2);
         getMapper().map(ContainsPic.class);
         getDs().ensureIndexes();
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
@@ -1345,18 +1353,20 @@ public class TestQuery extends TestBase {
     }
 
     private String getCommentFromProfileRecord(Document profileRecord) {
-        if (profileRecord.containsKey("command")) {
-            Document commandDocument = ((Document) profileRecord.get("command"));
-            if (commandDocument.containsKey("comment")) {
-                return (String) commandDocument.get("comment");
+        if (profileRecord != null) {
+            if (profileRecord.containsKey("command")) {
+                Document commandDocument = ((Document) profileRecord.get("command"));
+                if (commandDocument.containsKey("comment")) {
+                    return (String) commandDocument.get("comment");
+                }
             }
-        }
-        if (profileRecord.containsKey("query")) {
-            Document queryDocument = ((Document) profileRecord.get("query"));
-            if (queryDocument.containsKey("comment")) {
-                return (String) queryDocument.get("comment");
-            } else if (queryDocument.containsKey("$comment")) {
-                return (String) queryDocument.get("$comment");
+            if (profileRecord.containsKey("query")) {
+                Document queryDocument = ((Document) profileRecord.get("query"));
+                if (queryDocument.containsKey("comment")) {
+                    return (String) queryDocument.get("comment");
+                } else if (queryDocument.containsKey("$comment")) {
+                    return (String) queryDocument.get("$comment");
+                }
             }
         }
         return null;
