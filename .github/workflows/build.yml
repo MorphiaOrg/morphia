@@ -2,6 +2,10 @@ name: Build Project
 
 on:
   push:
+    branches:
+      - main
+      - 2.**.x
+      - 1.6.x
     branches-ignore:
       - 'dependabot/*'
     tags-ignore:
