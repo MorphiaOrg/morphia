@@ -13,6 +13,6 @@ do
    for DRIVER in $DRIVERS
    do
       echo $'\033]30;'Driver: $DRIVER -- Mongo: $MONGO'\007'
-      mvn surefire:test -Dmongodb=$MONGO -Ddriver.version=$DRIVER | tee target/mvn-$MONGOS-$DRIVER.out
+      mvn surefire:test -Dmongodb=$MONGO -Ddriver.version=$DRIVER | tee target/mvn-mongo-$MONGOS-driver-$DRIVER.txt
    done
 done
