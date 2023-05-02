@@ -3,7 +3,7 @@ name: Build Project
 on:
   push:
     branches-ignore:
-      - 'dependabot/*'
+      - 'dependabot/**'
     tags-ignore:
       - r[0-9]*
   workflow_dispatch:
