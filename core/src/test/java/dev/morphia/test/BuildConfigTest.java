@@ -112,13 +112,4 @@ public class BuildConfigTest {
         Version pomVersion = Version.valueOf(model.getVersion());
         return pomVersion;
     }
-
-    private static void checkForVersions(List<String> mongo, Versions... versions) {
-        List<String> expected = Arrays.stream(versions)
-                .map(v -> v.version().toString())
-                .collect(Collectors.toList());
-        assertEquals(mongo, expected,
-                String.format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
-    }
-
 }
