@@ -10,9 +10,13 @@ import org.bson.Document;
 
 /**
  * Interface for intercepting @Entity lifecycle events
+ *
+ * @deprecated use {@link EntityListener} instead. The interface is the same but generic and the name aligns better with the
+ *             {@link dev.morphia.annotations.EntityListeners} annotation.
  */
 @SuppressWarnings("unused")
-public interface EntityInterceptor {
+@Deprecated(forRemoval = true, since = "2.4")
+public interface EntityInterceptor extends EntityListener<Object> {
     /**
      * @param ent      the entity being processed
      * @param document the Document form of the entity

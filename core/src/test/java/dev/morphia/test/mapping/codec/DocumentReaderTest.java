@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import com.mongodb.client.MongoCollection;
 
-import dev.morphia.EntityInterceptor;
+import dev.morphia.EntityListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PreLoad;
@@ -185,8 +185,7 @@ public class DocumentReaderTest extends TestBase {
         HasNestedByteArray hasNestedByteArray = new HasNestedByteArray();
         hasNestedByteArray.nested = hasByteArray;
         getDs().save(hasNestedByteArray);
-        EntityInterceptor interceptor = new EntityInterceptor() {
-        };
+        EntityListener<?> interceptor = (EntityListener) type -> false;
         try {
             getDs().getMapper().addInterceptor(interceptor);
             Document first = getDs().getCollection(HasNestedByteArray.class)

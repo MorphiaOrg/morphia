@@ -3,9 +3,7 @@ package dev.morphia.mapping;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,10 +17,15 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityInterceptor;
+import dev.morphia.EntityListener;
 import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PostPersist;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
@@ -59,15 +62,18 @@ public class Mapper {
      */
     @MorphiaInternal
     public static final List<Class<? extends Annotation>> MAPPING_ANNOTATIONS = List.of(Entity.class, Embedded.class, ExternalEntity.class);
+    @MorphiaInternal
+    public static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = List.of(PrePersist.class,
+            PreLoad.class,
+            PostPersist.class,
+            PostLoad.class);
 
     /**
      * Set of classes that registered by this mapper
      */
     private final Map<Class, EntityModel> mappedEntities = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
-
-    //EntityInterceptors; these are called after EntityListeners and lifecycle methods on an Entity, for all Entities
-    private final List<EntityInterceptor> interceptors = new LinkedList<>();
+    private final List<EntityListener<?>> listeners = new ArrayList<>();
     private final MapperOptions options;
     private final DiscriminatorLookup discriminatorLookup;
 
@@ -87,9 +93,11 @@ public class Mapper {
      * Adds an {@link EntityInterceptor}
      *
      * @param ei the interceptor to add
+     * @deprecated use {@link dev.morphia.annotations.EntityListeners} to define any lifecycle event listeners
      */
-    public void addInterceptor(EntityInterceptor ei) {
-        interceptors.add(ei);
+    @Deprecated(forRemoval = true, since = "2.4")
+    public void addInterceptor(EntityListener<?> ei) {
+        listeners.add(ei);
     }
 
     /**
@@ -240,9 +248,11 @@ public class Mapper {
      * Gets list of {@link EntityInterceptor}s
      *
      * @return the Interceptors
+     * @deprecated
      */
-    public Collection<EntityInterceptor> getInterceptors() {
-        return interceptors;
+    @Deprecated(forRemoval = true, since = "2.4")
+    public List<EntityListener<?>> getInterceptors() {
+        return listeners;
     }
 
     /**
@@ -334,7 +344,7 @@ public class Mapper {
      * @return true if there are global interceptors defined
      */
     public boolean hasInterceptors() {
-        return !interceptors.isEmpty();
+        return !listeners.isEmpty();
     }
 
     /**

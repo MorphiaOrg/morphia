@@ -124,7 +124,7 @@ public class EntityModelBuilder {
             Objects.requireNonNull(discriminator, Sofia.notNull("discriminator"));
         }
 
-        return new EntityModel(mapper, this);
+        return new EntityModel(this);
     }
 
     /**

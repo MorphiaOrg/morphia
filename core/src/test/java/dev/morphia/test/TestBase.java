@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,7 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -43,6 +41,8 @@ import org.testng.annotations.DataProvider;
 
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
+import static java.nio.file.Files.lines;
+import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
@@ -118,8 +118,10 @@ public abstract class TestBase extends MorphiaTestSetup {
                 LOG.info("Count is 0.  (Re)installing sample data");
                 MongoCollection<Document> zipcodes = getDatabase().getCollection("zipcodes");
                 zipcodes.drop();
-                Files.lines(file.toPath())
-                        .forEach(l -> zipcodes.insertOne(Document.parse(l)));
+                zipcodes.insertMany(
+                        lines(file.toPath())
+                                .map(Document::parse)
+                                .collect(toList()));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -247,7 +249,7 @@ public abstract class TestBase extends MorphiaTestSetup {
     protected List<Document> removeIds(List<Document> documents) {
         return documents.stream()
                 .peek(d -> d.remove("_id"))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     protected Document toDocument(Object entity) {
