@@ -65,7 +65,7 @@ jobs:
       java: ${{ matrix.java }}
       reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
-      maven-flags: "-Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
+      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
   Snapshots:
     if: github.ref_type == 'branch'
