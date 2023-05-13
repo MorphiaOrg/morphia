@@ -8,15 +8,14 @@ import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.EntityEncoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.internal.DatastoreAware;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
@@ -50,18 +49,17 @@ public class SetOnInsertOperator extends UpdateOperator implements DatastoreAwar
     }
 
     @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public OperationTarget toTarget(PathTarget pathTarget) {
         Mapper mapper = pathTarget.mapper();
         EntityModel model = mapper.getEntityModel(pathTarget.root().getType());
-        MorphiaCodec codec = (MorphiaCodec) datastore.getCodecRegistry().get(model.getType());
-        EntityEncoder encoder = codec.getEncoder();
         DocumentWriter writer = new DocumentWriter(mapper);
         document(writer, () -> {
             insertValues.forEach((key, value) -> {
                 PathTarget keyTarget = new PathTarget(mapper, model, key, true);
                 writer.writeName(keyTarget.translatedPath());
-                encoder.encode(writer, value, EncoderContext.builder().build());
-
+                Codec valueCodec = datastore.getCodecRegistry().get(value.getClass());
+                valueCodec.encode(writer, value, EncoderContext.builder().build());
             });
         });
 

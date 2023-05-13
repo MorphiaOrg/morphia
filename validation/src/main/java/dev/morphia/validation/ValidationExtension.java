@@ -1,8 +1,10 @@
 package dev.morphia.validation;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 import dev.morphia.EntityInterceptor;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
 
 import org.bson.Document;
@@ -28,6 +30,12 @@ public class ValidationExtension implements EntityInterceptor {
     }
 
     @Override
+    public boolean hasAnnotation(Class<? extends Annotation> type) {
+        return PrePersist.class.equals(type);
+    }
+
+    @Override
+    @PrePersist
     @SuppressWarnings("unchecked")
     public void prePersist(Object ent, Document document, Mapper mapper) {
         final Set validate = validationFactory.getValidator().validate(ent);

@@ -1,10 +1,8 @@
 package dev.morphia.mapping.codec.pojo;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +15,7 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
-import dev.morphia.EntityInterceptor;
+import dev.morphia.EntityListener;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
@@ -29,9 +27,11 @@ import dev.morphia.annotations.ShardKeys;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
+import dev.morphia.mapping.lifecycle.OnEntityListenerAdapter;
+import dev.morphia.mapping.lifecycle.UntypedEntityListenerAdapter;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 
@@ -50,14 +49,9 @@ import static java.util.Collections.emptyList;
  * @since 2.0
  */
 @MorphiaInternal
-@SuppressWarnings({ "unchecked", "deprecation", "removal" })
+@SuppressWarnings({ "unchecked", "deprecation" })
 public class EntityModel {
     private static final Logger LOG = LoggerFactory.getLogger(EntityModel.class);
-
-    private static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = asList(PrePersist.class,
-            PreLoad.class,
-            PostPersist.class,
-            PostLoad.class);
 
     private final Map<Class<? extends Annotation>, Annotation> annotations;
     private final Map<String, PropertyModel> propertyModelsByName;
@@ -73,17 +67,15 @@ public class EntityModel {
     private EntityModel superClass;
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
-    private final Mapper mapper;
-    private final Map<Class<? extends Annotation>, List<ClassMethodPair>> lifecycleMethods;
+    private final List<EntityListener<?>> listeners = new ArrayList<>();
 
     /**
      * Creates a new instance
      *
      * @param builder the builder to pull values from
      */
-    EntityModel(Mapper mapper, EntityModelBuilder builder) {
+    EntityModel(EntityModelBuilder builder) {
         type = builder.targetType();
-        this.mapper = mapper;
         if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
             throw new MappingException(Sofia.noInnerClasses(type.getName()));
         }
@@ -130,16 +122,18 @@ public class EntityModel {
 
         builder.interfaces().forEach(i -> i.addSubtype(this));
 
-        lifecycleMethods = new HashMap<>();
-
         final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
-        if (entityLisAnn != null && entityLisAnn.value().length != 0) {
+        if (entityLisAnn != null) {
             for (Class<?> aClass : entityLisAnn.value()) {
-                mapEvent(aClass, true);
+                if (EntityListener.class.isAssignableFrom(aClass)) {
+                    listeners.add(new EntityListenerAdapter(aClass));
+                } else {
+                    listeners.add(new UntypedEntityListenerAdapter(aClass));
+                }
             }
         }
 
-        mapEvent(getType(), false);
+        listeners.add(new OnEntityListenerAdapter(getType()));
     }
 
     /**
@@ -150,16 +144,16 @@ public class EntityModel {
      * @param document  the document used in persistence
      * @param datastore the Datastore to use
      */
+    @SuppressWarnings("rawtypes")
     public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
             Datastore datastore) {
-        final List<ClassMethodPair> methodPairs = lifecycleMethods.get(event);
-        if (methodPairs != null) {
-            for (ClassMethodPair cm : methodPairs) {
-                cm.invoke(datastore, document, entity);
-            }
-        }
-
-        callGlobalInterceptors(event, entity, document, datastore);
+        listeners.forEach((listener) -> {
+            invokeLifecycleEvent(event, entity, document, datastore, listener);
+        });
+        datastore.getMapper().getInterceptors().forEach((listener) -> {
+            LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));
+            invokeLifecycleEvent(event, entity, document, datastore, listener);
+        });
     }
 
     /**
@@ -170,15 +164,6 @@ public class EntityModel {
     @Nullable
     public <A extends Annotation> A getAnnotation(Class<A> clazz) {
         return (A) annotations.get(clazz);
-    }
-
-    /**
-     * Returns all the annotations on this model
-     *
-     * @return the list of annotations
-     */
-    public Map<Class<? extends Annotation>, Annotation> getAnnotations() {
-        return annotations;
     }
 
     /**
@@ -322,14 +307,14 @@ public class EntityModel {
      * @return true if that even has been configured
      */
     public boolean hasLifecycle(Class<? extends Annotation> type) {
-        return lifecycleMethods.containsKey(type);
+        return listeners.stream()
+                .anyMatch(listener -> listener.hasAnnotation(type));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAnnotations(), propertyModelsByName, propertyModelsByMappedName, creatorFactory,
-                discriminatorEnabled,
-                getDiscriminatorKey(), getDiscriminator(), getType(), getCollectionName(), lifecycleMethods);
+        return Objects.hash(annotations, propertyModelsByName, propertyModelsByMappedName, creatorFactory,
+                discriminatorEnabled, getDiscriminatorKey(), getDiscriminator(), getType(), getCollectionName(), listeners);
     }
 
     @Override
@@ -342,7 +327,7 @@ public class EntityModel {
         }
         final EntityModel that = (EntityModel) o;
         return discriminatorEnabled == that.discriminatorEnabled
-                && Objects.equals(getAnnotations(), that.getAnnotations())
+                && Objects.equals(annotations, that.annotations)
                 && Objects.equals(propertyModelsByName, that.propertyModelsByName)
                 && Objects.equals(propertyModelsByMappedName, that.propertyModelsByMappedName)
                 && Objects.equals(creatorFactory, that.creatorFactory)
@@ -350,7 +335,7 @@ public class EntityModel {
                 && Objects.equals(getDiscriminator(), that.getDiscriminator())
                 && Objects.equals(getType(), that.getType())
                 && Objects.equals(getCollectionName(), that.getCollectionName())
-                && Objects.equals(lifecycleMethods, that.lifecycleMethods);
+                && Objects.equals(listeners, that.listeners);
     }
 
     @Override
@@ -392,55 +377,20 @@ public class EntityModel {
         }
     }
 
-    private void callGlobalInterceptors(Class<? extends Annotation> event, Object entity, Document document,
-            Datastore datastore) {
-        for (EntityInterceptor ei : datastore.getMapper().getInterceptors()) {
-            LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), ei));
-
-            if (event.equals(PreLoad.class)) {
-                ei.preLoad(entity, document, mapper);
-                ei.preLoad(entity, document, datastore);
-            } else if (event.equals(PostLoad.class)) {
-                ei.postLoad(entity, document, mapper);
-                ei.postLoad(entity, document, datastore);
-            } else if (event.equals(PrePersist.class)) {
-                ei.prePersist(entity, document, mapper);
-                ei.prePersist(entity, document, datastore);
-            } else if (event.equals(PostPersist.class)) {
-                ei.postPersist(entity, document, mapper);
-                ei.postPersist(entity, document, datastore);
-            }
-        }
-    }
-
-    private List<Method> getDeclaredAndInheritedMethods(Class<?> type) {
-        final List<Method> methods = new ArrayList<>();
-        if (type == Object.class) {
-            return methods;
-        }
-
-        final Class<?> parent = type.getSuperclass();
-        if (parent != null) {
-            methods.addAll(getDeclaredAndInheritedMethods(parent));
-        }
-
-        for (Method m : type.getDeclaredMethods()) {
-            if (!Modifier.isStatic(m.getModifiers())) {
-                methods.add(m);
-            }
-        }
-
-        return methods;
-    }
-
-    private void mapEvent(Class<?> type, boolean entityListener) {
-        for (Method method : getDeclaredAndInheritedMethods(type)) {
-            for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
-                if (method.isAnnotationPresent(annotationClass)) {
-                    lifecycleMethods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
-                            .add(new ClassMethodPair(method, entityListener ? type : null, annotationClass));
-                }
-            }
+    @SuppressWarnings("rawtypes")
+    private void invokeLifecycleEvent(Class<? extends Annotation> event,
+            Object entity,
+            Document document,
+            Datastore datastore,
+            EntityListener ei) {
+        if (event.equals(PreLoad.class)) {
+            ei.preLoad(entity, document, datastore);
+        } else if (event.equals(PostLoad.class)) {
+            ei.postLoad(entity, document, datastore);
+        } else if (event.equals(PrePersist.class)) {
+            ei.prePersist(entity, document, datastore);
+        } else if (event.equals(PostPersist.class)) {
+            ei.postPersist(entity, document, datastore);
         }
     }
 }

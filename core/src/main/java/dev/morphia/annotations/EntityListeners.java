@@ -7,6 +7,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import dev.morphia.EntityListener;
+
 /**
  * Specifies other classes to participate in the @Entity's lifecycle
  *
@@ -19,6 +21,9 @@ import java.lang.annotation.Target;
 public @interface EntityListeners {
     /**
      * @return The listeners to use for this entity
+     * @deprecated In the next version, this will be restricted to subclasses of {@link EntityListener}. Migrating your listeners to be
+     *             subclasses now will prevent any compilation issues in the future.
      */
-    Class<?>[] value();
+    @Deprecated(since = "2.4")
+    Class<?>[] value() default {};
 }

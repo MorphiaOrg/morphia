@@ -1,5 +1,6 @@
 package dev.morphia;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -797,6 +798,12 @@ public class DatastoreImpl implements AdvancedDatastore {
             }
         }
         return grouped;
+    }
+
+    public boolean hasLifecycle(EntityModel model, Class<? extends Annotation> type) {
+        return model.hasLifecycle(type)
+                || mapper.getInterceptors().stream()
+                        .anyMatch(listener -> listener.hasAnnotation(type));
     }
 
     private void importModels() {

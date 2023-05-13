@@ -1,5 +1,7 @@
 package dev.morphia.test.callbacks;
 
+import java.lang.annotation.Annotation;
+
 import com.mongodb.lang.NonNull;
 
 import dev.morphia.EntityInterceptor;
@@ -17,6 +19,7 @@ import org.testng.annotations.Test;
 public class TestInterceptors extends TestBase {
 
     @Test
+    @SuppressWarnings("removal")
     public void testGlobalInterceptor() {
         getMapper().map(E.class);
         getMapper().addInterceptor(new Interceptor());
@@ -38,6 +41,11 @@ public class TestInterceptors extends TestBase {
     }
 
     public static class Interceptor implements EntityInterceptor {
+        @Override
+        public boolean hasAnnotation(Class<? extends Annotation> type) {
+            return PrePersist.class.equals(type);
+        }
+
         @Override
         public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Mapper mapper) {
             Assert.assertTrue(((E) ent).called);
