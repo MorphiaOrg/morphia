@@ -18,6 +18,7 @@ dev.morphia.mapping.conventions
 dev.morphia.mapping.experimental
 dev.morphia.mapping.lazy
 dev.morphia.mapping.lazy.proxy
+dev.morphia.mapping.lifecycle
 dev.morphia.mapping.validation
 dev.morphia.mapping.validation.classrules
 dev.morphia.mapping.validation.fieldrules
