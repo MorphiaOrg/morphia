@@ -3,8 +3,8 @@ package dev.morphia.query;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
-
 import dev.morphia.sofia.Sofia;
+
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
