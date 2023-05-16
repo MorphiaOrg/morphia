@@ -171,7 +171,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         String alternate = options.collection();
         if (alternate != null && grouped.size() > 1) {
-            LOG.warn(Sofia.insertManyAlternateCollection(alternate));
+            Sofia.logInsertManyAlternateCollection(alternate);
         }
 
         grouped.entrySet().stream()
@@ -571,7 +571,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         String alternate = options.collection();
         if (grouped.size() > 1 && alternate != null) {
-            LOG.warn(Sofia.insertManyAlternateCollection(alternate));
+            Sofia.logInsertManyAlternateCollection(alternate);
         }
 
         for (Entry<Class<?>, List<T>> entry : grouped.entrySet()) {

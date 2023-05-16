@@ -4,6 +4,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 
+import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,7 @@ public class LegacyQueryFactory implements QueryFactory {
      * Logs a message stating this (obscured/hidden) class is going away and to read the website for steps on how to migrate away from it.
      */
     public LegacyQueryFactory() {
-        LOG.info("The legacy query API is being removed.  Please update your configuration to the modern options (via MapperOptions"
-                + ".builder()) or by using only the legacy mapping option using MapperOptions.legacyMapping()");
+        Sofia.logLegacyQuery();
     }
 
     @Override

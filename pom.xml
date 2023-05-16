@@ -36,7 +36,7 @@
         <revapi.java.version>0.28.1</revapi.java.version>
         <roaster.version>2.28.0.Final</roaster.version>
         <slf4j.version>2.0.7</slf4j.version>
-        <sofia.version>0.23</sofia.version>
+        <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
         <testng.version>7.7.1</testng.version>
         <zt.exec.version>1.12</zt.exec.version>
@@ -221,7 +221,7 @@
                     </executions>
                     <configuration>
                         <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
-                        <excludeFilterFile>../config/findbugs-exclude.xml</excludeFilterFile>
+                        <excludeFilterFile>${maven.multiModuleProjectDirectory}/config/findbugs-exclude.xml</excludeFilterFile>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -275,12 +275,12 @@
                     <configuration>
                         <java>
                             <eclipse>
-                                <file>${basedir}/../config/eclipse-format.xml</file>
+                                <file>maven.multiModuleProjectDirectory/config/eclipse-format.xml</file>
                             </eclipse>
                             <!--<googleJavaFormat />-->
 
                             <importOrder>
-                                <file>${basedir}/../config/eclipse.importorder</file>
+                                <file>${maven.multiModuleProjectDirectory}/config/eclipse.importorder</file>
                             </importOrder>
 
                             <removeUnusedImports />
@@ -410,7 +410,7 @@
                                 </goals>
                                 <phase>generate-sources</phase>
                                 <configuration>
-                                    <sourceFile>${session.executionRootDirectory}/LICENSE</sourceFile>
+                                    <sourceFile>${maven.multiModuleProjectDirectory}/LICENSE</sourceFile>
                                     <destinationFile>${project.build.outputDirectory}/META-INF/LICENSE-${project.artifactId}</destinationFile>
                                 </configuration>
                             </execution>
