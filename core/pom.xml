@@ -57,8 +57,8 @@
                 </executions>
                 <configuration>
                     <repository>MorphiaOrg/morphia</repository>
-                    <docsUrl>https://morphia.dev/morphia/2.3</docsUrl>
-                    <javadocUrl>https://morphia.dev/morphia/2.3/javadoc</javadocUrl>
+                    <docsUrl>https://morphia.dev/morphia/2.4</docsUrl>
+                    <javadocUrl>https://morphia.dev/morphia/2.4/javadoc</javadocUrl>
                 </configuration>
             </plugin>
             <plugin>
@@ -95,7 +95,7 @@
                             <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/..</directory>
+                                    <directory>${maven.multiModuleProjectDirectory}</directory>
                                     <includes>
                                         <include>LICENSE.txt</include>
                                     </includes>

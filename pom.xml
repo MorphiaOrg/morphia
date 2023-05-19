@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.antwerkz</groupId>
         <artifactId>antwerkz-parent</artifactId>
-        <version>3</version>
+        <version>6</version>
     </parent>
 
     <groupId>dev.morphia.morphia</groupId>
@@ -23,13 +23,10 @@
 
     <properties>
         <awaitility.version>1.7.0</awaitility.version>
-        <dokka.version>1.7.20</dokka.version>
         <driver.version>4.9.0</driver.version>
         <driver.minor.version>4.7</driver.minor.version>
         <jackson.version>2.14.2</jackson.version>
         <json.assert.version>1.5.1</json.assert.version>
-        <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
-        <kotlin.version>1.8.10</kotlin.version>
         <logback.version>1.4.7</logback.version>
         <maven.version>3.9.2</maven.version>
         <revapi.maven.plugin.version>0.15.0</revapi.maven.plugin.version>
@@ -40,12 +37,69 @@
         <surefire.version>3.1.0</surefire.version>
         <testng.version>7.7.1</testng.version>
         <zt.exec.version>1.12</zt.exec.version>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <downloadSources>true</downloadSources>
-        <nexus.url>https://oss.sonatype.org</nexus.url>
-        <local.repository.path>target/localRepo</local.repository.path>
     </properties>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <configuration>
+                        <source>11</source>
+                        <target>11</target>
+                        <compilerArgument>-proc:none</compilerArgument>
+                        <compilerArgument>-Xlint:deprecation</compilerArgument>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.revapi</groupId>
+                    <artifactId>revapi-maven-plugin</artifactId>
+                    <version>${revapi.maven.plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.revapi</groupId>
+                            <artifactId>revapi-java</artifactId>
+                            <version>${revapi.java.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>revapi</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
+                        <analysisConfigurationFiles>
+                            <analysisConfigurationFile>${maven.multiModuleProjectDirectory}/config/revapi-filtered.json</analysisConfigurationFile>
+                        </analysisConfigurationFiles>
+                        <analysisConfiguration>
+                            <revapi.versions>
+                                <enabled>true</enabled>
+                                <versionIncreaseAllows>
+                                    <major>
+                                        <severity>BREAKING</severity>
+                                    </major>
+                                    <minor>
+                                        <severity>NON_BREAKING</severity>
+                                    </minor>
+                                    <patch>
+                                        <severity>EQUIVALENT</severity>
+                                    </patch>
+                                </versionIncreaseAllows>
+                            </revapi.versions>
+                        </analysisConfiguration>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <dependencyManagement>
         <dependencies>
@@ -102,11 +156,6 @@
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-stdlib-jdk8</artifactId>
-                <version>${kotlin.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-reflect</artifactId>
                 <version>${kotlin.version}</version>
             </dependency>
@@ -159,68 +208,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <defaultGoal>install</defaultGoal>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.11.0</version>
-                    <configuration>
-                        <source>11</source>
-                        <target>11</target>
-                        <compilerArgument>-proc:none</compilerArgument>
-                        <compilerArgument>-Xlint:deprecation</compilerArgument>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.revapi</groupId>
-                    <artifactId>revapi-maven-plugin</artifactId>
-                    <version>${revapi.maven.plugin.version}</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.revapi</groupId>
-                            <artifactId>revapi-java</artifactId>
-                            <version>${revapi.java.version}</version>
-                        </dependency>
-                    </dependencies>
-                    <executions>
-                        <execution>
-                            <id>revapi</id>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                            <phase>verify</phase>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                        <analysisConfigurationFiles>
-                            <analysisConfigurationFile>../config/revapi-filtered.json</analysisConfigurationFile>
-                        </analysisConfigurationFiles>
-                        <analysisConfiguration>
-                            <revapi.versions>
-                                <enabled>true</enabled>
-                                <versionIncreaseAllows>
-                                    <major>
-                                        <severity>BREAKING</severity>
-                                    </major>
-                                    <minor>
-                                        <severity>NON_BREAKING</severity>
-                                    </minor>
-                                    <patch>
-                                        <severity>EQUIVALENT</severity>
-                                    </patch>
-                                </versionIncreaseAllows>
-                            </revapi.versions>
-                        </analysisConfiguration>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 
     <profiles>
         <profile>
