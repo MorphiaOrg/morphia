@@ -72,7 +72,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -782,7 +781,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         throw new IllegalStateException(Sofia.noRefreshCodec(entity.getClass().getName()));
     }
 
-    @NotNull
+    @NonNull
     private <T> Map<Class<?>, List<T>> groupByType(List<T> entities, Predicate<EntityModel> special) {
         Map<Class<?>, List<T>> grouped = new LinkedHashMap<>();
         for (T entity : entities) {
