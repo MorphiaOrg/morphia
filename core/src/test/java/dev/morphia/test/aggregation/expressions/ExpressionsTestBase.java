@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.Projection;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
-import dev.morphia.test.TestBase;
 import dev.morphia.test.models.User;
 
 import org.bson.Document;
@@ -15,7 +14,7 @@ import org.testng.annotations.BeforeMethod;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static org.testng.Assert.assertEquals;
 
-public class ExpressionsTestBase extends TestBase {
+public class ExpressionsTestBase extends TemplatedTestBase {
     @BeforeMethod
     public void seed() {
         getDs().getCollection(User.class).drop();

@@ -16,11 +16,7 @@
 
 package dev.morphia.test.aggregation;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,22 +27,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
-import dev.morphia.test.TestBase;
+import dev.morphia.test.aggregation.expressions.TemplatedTestBase;
 
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.testng.Assert;
 
-import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.bson.json.JsonWriterSettings.builder;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
-public class AggregationTest extends TestBase {
+public class AggregationTest extends TemplatedTestBase {
 
     protected final ObjectMapper mapper = new ObjectMapper();
 
@@ -71,10 +65,6 @@ public class AggregationTest extends TestBase {
         } else {
             assertListEquals(actual, expected);
         }
-    }
-
-    protected void loadData(String collection, String resourceName) {
-        insert(collection, loadJson(format("%s/%s/data.json", prefix(), resourceName)));
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -102,32 +92,6 @@ public class AggregationTest extends TestBase {
             throw new RuntimeException(e.getMessage(), e);
         }
 
-    }
-
-    protected @NotNull List<Document> loadExpected(String resourceName) {
-        return loadJson(format("%s/%s/expected.json", prefix(), resourceName));
-    }
-
-    @NotNull
-    protected List<Document> loadJson(String name) {
-        List<Document> data = new ArrayList<>();
-        InputStream stream = getClass().getResourceAsStream(name);
-        if (stream == null) {
-            fail("missing data file: " + name);
-        }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-            while (reader.ready()) {
-                data.add(Document.parse(reader.readLine()));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        return data;
-    }
-
-    public final String prefix() {
-        String root = getClass().getSimpleName().replace("Test", "");
-        return toLowerCase(root.charAt(0)) + root.substring(1);
     }
 
     protected void cakeSales() {

@@ -35,6 +35,7 @@ import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 
@@ -144,11 +145,16 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         iterable.skip(skip);
         if (sort != null) {
             Document mapped = new Document();
-            EntityModel model = mapper.getEntityModel(type);
+            EntityModel model = null;
+            try {
+                model = mapper.getEntityModel(type);
+            } catch (NotMappableException ignored) {
+            }
+
             for (Entry<String, Object> entry : sort.entrySet()) {
                 Object value = entry.getValue();
                 boolean metaScore = value instanceof Document && ((Document) value).get("$meta") != null;
-                mapped.put(new PathTarget(mapper, model, entry.getKey(), !metaScore).translatedPath(), value);
+                mapped.put(new PathTarget(mapper, model, entry.getKey(), model != null && !metaScore).translatedPath(), value);
             }
             iterable.sort(mapped);
         }
@@ -801,6 +807,24 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     public FindOptions sort(Meta meta) {
         projection().project(meta);
         return sort(meta.toDatabase());
+    }
+
+    /**
+     * Sets to the sort to use
+     *
+     * @param meta  the meta data to sort by
+     * @param sorts additional sort elements
+     * @return this
+     * @since 2.4
+     */
+    public FindOptions sort(Meta meta, Sort... sorts) {
+        projection().project(meta);
+        sort(meta.toDatabase());
+        for (Sort sort : sorts) {
+            this.sort.append(sort.getField(), sort.getOrder());
+        }
+
+        return this;
     }
 
     /**
