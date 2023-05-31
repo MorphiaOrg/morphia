@@ -1231,7 +1231,7 @@ public class TestMapping extends TestBase {
     }
 
     @Entity
-    public static class TwoIds {
+    private static class TwoIds {
         @Id
         private String extraId;
         @Id

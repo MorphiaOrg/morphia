@@ -2,6 +2,7 @@ package dev.morphia.mapping.validation;
 
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.sofia.Sofia;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -66,7 +67,7 @@ public class ConstraintViolation {
      * @return a human friendly version of the violation
      */
     public String render() {
-        return String.format("%s complained about %s : %s", validator.getSimpleName(), getPrefix(), message);
+        return Sofia.constraintViolation(validator.getSimpleName(), getPrefix(), message);
     }
 
     /**
