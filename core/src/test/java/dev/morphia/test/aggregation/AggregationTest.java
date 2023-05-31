@@ -16,17 +16,10 @@
 
 package dev.morphia.test.aggregation;
 
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dev.morphia.aggregation.Aggregation;
-import dev.morphia.aggregation.AggregationImpl;
 import dev.morphia.test.aggregation.expressions.TemplatedTestBase;
 
 import org.bson.Document;
@@ -36,62 +29,14 @@ import org.testng.Assert;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.bson.json.JsonWriterSettings.builder;
 import static org.testng.Assert.assertEquals;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
 public class AggregationTest extends TemplatedTestBase {
 
-    protected final ObjectMapper mapper = new ObjectMapper();
-
     public void testPipeline(double serverVersion, String resourceName,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         testPipeline(serverVersion, resourceName, true, true, pipeline);
-    }
-
-    public void testPipeline(double serverVersion, String resourceName, boolean removeIds, boolean orderMatters,
-            Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        String collection = "aggtest";
-        checkMinServerVersion(serverVersion);
-        loadData(collection, resourceName);
-
-        List<Document> documents = runPipeline(resourceName, pipeline.apply(getDs().aggregate(collection)));
-
-        List<Document> actual = removeIds ? removeIds(documents) : documents;
-        List<Document> expected = loadExpected(resourceName);
-
-        if (orderMatters) {
-            assertEquals(actual, expected);
-        } else {
-            assertListEquals(actual, expected);
-        }
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected List<Document> runPipeline(String pipelineTemplate, Aggregation<Document> aggregation) {
-        String pipelineName = format("%s/%s/pipeline.json", prefix(), pipelineTemplate);
-        try {
-            List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
-
-            Iterator<Map<String, Object>> iterator = mapper.readValue(getClass().getResourceAsStream(pipelineName), List.class)
-                    .iterator();
-            for (Document stage : pipeline) {
-                Object next = iterator.next();
-                assertEquals(mapper.readValue(stage.toJson(), Map.class), next,
-                        pipeline.stream()
-                                .map(d -> d.toJson(builder()
-                                        .indent(true)
-                                        .build()))
-                                .collect(Collectors.joining("\n", "[\n", "\n]")));
-            }
-
-            try (var cursor = aggregation.execute(Document.class)) {
-                return cursor.toList();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-
     }
 
     protected void cakeSales() {

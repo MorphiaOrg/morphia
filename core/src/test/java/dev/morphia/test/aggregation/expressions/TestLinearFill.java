@@ -13,7 +13,7 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 
 public class TestLinearFill extends AggregationTest {
     @Test
-    public void testMissingValues() {
+    public void missingValues() {
         testPipeline(5.3, "missingValues", true, false, (aggregation) -> {
             return aggregation
                     .setWindowFields(setWindowFields()
