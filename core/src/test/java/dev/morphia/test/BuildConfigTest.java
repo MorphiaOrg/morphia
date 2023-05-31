@@ -4,9 +4,11 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -40,16 +42,11 @@ public class BuildConfigTest {
                 format("-Dmongodb=%s", LATEST),
                 format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
 
-        assertEquals(walk(yaml, of("jobs", "Test", "strategy", "matrix", "mongo")), List.of(LATEST.toString()),
-                format("Should find %s in the matrix in ../.github/workflows/build.yml", LATEST));
+        assertEquals(walk(yaml, of("jobs", "Test", "strategy", "matrix", "mongo")),
+            Versions.list().stream().map(Version::toString).collect(Collectors.toList()),
+            format("Should find %s in the matrix in ../.github/workflows/build.yml", LATEST));
 
         List<Map<String, String>> include = walk(yaml, of("jobs", "Test", "strategy", "matrix", "include"));
-        var versions = Versions.list();
-        assertEquals(include.size(), versions.size());
-        for (int i = 0; i < versions.size(); i++) {
-            assertEquals(include.get(i).get("mongo"), versions.get(i).toString(),
-                    format("Should have the %s entry in the includes", versions.get(i)));
-        }
 
         try (InputStream inputStream = new FileInputStream("../.github/workflows/pull-request.yml")) {
             yaml = objectMapper.readValue(inputStream, LinkedHashMap.class);
