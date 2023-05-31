@@ -159,7 +159,7 @@ public class PathTarget {
         context = this.root;
         position = 0;
         PropertyModel property = null;
-        while (hasNext()) {
+        while (!resolved && hasNext()) {
             String segment = next();
 
             // array operator
@@ -176,8 +176,8 @@ public class PathTarget {
                     failValidation(segment);
                 }
                 translate(property.getMappedName());
-                if (property.isMap() && hasNext()) {
-                    next(); // consume the map key segment
+                if (property.isMap()) {
+                    resolved = true;
                 }
             } else {
                 if (validateNames) {

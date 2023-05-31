@@ -37,7 +37,8 @@ public class TestArrayUpdates extends TestBase {
 
         Query<Student> testQuery = datastore.find(Student.class)
                 .filter(eq("_id", 1L),
-                        eq("grades.data.name", "Test"));
+                        eq("grades.data.name", "Test"),
+                        eq("grades.data.bad.path.should.be.null", null));
         assertNotNull(testQuery.iterator(new FindOptions().limit(1))
                 .tryNext());
 
