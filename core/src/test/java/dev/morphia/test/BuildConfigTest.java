@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +42,8 @@ public class BuildConfigTest {
                 format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
 
         assertEquals(walk(yaml, of("jobs", "Test", "strategy", "matrix", "mongo")),
-            Versions.list().stream().map(Version::toString).collect(Collectors.toList()),
-            format("Should find %s in the matrix in ../.github/workflows/build.yml", LATEST));
-
-        List<Map<String, String>> include = walk(yaml, of("jobs", "Test", "strategy", "matrix", "include"));
+                Versions.list().stream().map(Version::toString).collect(Collectors.toList()),
+                format("Should find %s in the matrix in ../.github/workflows/build.yml", LATEST));
 
         try (InputStream inputStream = new FileInputStream("../.github/workflows/pull-request.yml")) {
             yaml = objectMapper.readValue(inputStream, LinkedHashMap.class);
