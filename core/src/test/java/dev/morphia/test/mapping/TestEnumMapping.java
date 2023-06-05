@@ -43,7 +43,7 @@ public class TestEnumMapping extends TestBase {
         Customer loaded = getDs().find(Customer.class)
                 .filter(eq("_id", customer.id))
                 .first();
-        assertEquals(customer.map, loaded.map);
+        assertEquals(loaded.map, customer.map);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class TestEnumMapping extends TestBase {
                 .filter(eq("_id", customer.id))
                 .first();
 
-        assertEquals(customer.mapWithArrayList, loaded.mapWithArrayList);
+        assertEquals(loaded.mapWithArrayList, customer.mapWithArrayList);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class TestEnumMapping extends TestBase {
                 .filter(eq("_id", customer.id))
                 .first();
 
-        assertEquals(customer.mapWithList, loaded.mapWithList);
+        assertEquals(loaded.mapWithList, customer.mapWithList);
     }
 
     @Test

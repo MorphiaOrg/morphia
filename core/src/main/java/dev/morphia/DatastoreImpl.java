@@ -320,7 +320,8 @@ public class DatastoreImpl implements AdvancedDatastore {
         EntityModel entityModel = mapper.getEntityModel(type);
         String collectionName = entityModel.getCollectionName();
 
-        MongoCollection<T> collection = getDatabase().getCollection(collectionName, type);
+        MongoCollection<T> collection = getDatabase().getCollection(collectionName, type)
+                .withCodecRegistry(codecRegistry);
 
         Entity annotation = entityModel.getEntityAnnotation();
         if (annotation != null && !annotation.concern().equals("")) {

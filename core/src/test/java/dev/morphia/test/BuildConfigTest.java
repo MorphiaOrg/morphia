@@ -54,7 +54,7 @@ public class BuildConfigTest {
         } else {
             var branch = format("%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
             Version released = Version.forIntegers(pomVersion.getMajorVersion(), pomVersion.getMinorVersion(),
-                pomVersion.getPatchVersion() - 1);
+                    pomVersion.getPatchVersion() - 1);
             assertTrue(srcRef.endsWith(format("/tree/%s", branch)));
             assertEquals(version, released.toString());
         }
