@@ -369,6 +369,8 @@ public final class PropertyModel {
             } catch (ReflectiveOperationException e) {
                 throw new MappingException(e.getMessage(), e);
             }
+        } else if (typeData.getTypeParameters().isEmpty()) {
+            codec = (Codec<? super Object>) datastore.getCodecRegistry().get(getType());
         }
     }
 
