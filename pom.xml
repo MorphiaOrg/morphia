@@ -137,6 +137,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>io.smallrye.config</groupId>
+                <artifactId>smallrye-config</artifactId>
+                <version>3.2.1</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>org.mongodb</groupId>
