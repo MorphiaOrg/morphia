@@ -6,6 +6,7 @@ dev.morphia.aggregation.expressions
 dev.morphia.aggregation.stages
 dev.morphia.annotations
 dev.morphia.annotations.experimental
+dev.morphia.config
 dev.morphia.geo
 dev.morphia.mapping
 dev.morphia.mapping.codec
@@ -18,6 +19,7 @@ dev.morphia.mapping.experimental
 dev.morphia.mapping.lazy
 dev.morphia.mapping.lazy.proxy
 dev.morphia.mapping.lifecycle
+dev.morphia.mapping.strategy
 dev.morphia.mapping.validation
 dev.morphia.mapping.validation.classrules
 dev.morphia.mapping.validation.fieldrules
