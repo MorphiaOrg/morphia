@@ -26,7 +26,7 @@ public @interface PossibleValues {
 
     /**
      * Indicates that a fully qualified class name maybe listed as well.
-     * 
+     *
      * @return true if a class name maybe be listed.
      */
     boolean fqcn() default true;
