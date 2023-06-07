@@ -10,7 +10,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.NotSaved;
-import dev.morphia.mapping.MapperOptions;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
 
 import org.bson.codecs.pojo.PropertySerialization;
@@ -21,37 +21,37 @@ import org.bson.codecs.pojo.PropertySerialization;
 @SuppressWarnings("removal")
 public class MorphiaPropertySerialization implements PropertySerialization {
     private final List<Annotation> annotations;
-    private final MapperOptions options;
+    private final MorphiaConfig config;
     private final int modifiers;
 
     /**
-     * @param options  the options to apply
+     * @param config   the configuration to use
      * @param property the property in question
      */
-    public MorphiaPropertySerialization(MapperOptions options, PropertyModelBuilder property) {
-        this.options = options;
+    public MorphiaPropertySerialization(MorphiaConfig config, PropertyModelBuilder property) {
+        this.config = config;
         annotations = property.annotations();
         modifiers = property.modifiers();
     }
 
     @Override
     public boolean shouldSerialize(@Nullable Object value) {
-        if (!options.isStoreNulls() && value == null) {
+        if (!config.storeNulls() && value == null) {
             return false;
         }
-        if (options.isIgnoreFinals() && Modifier.isFinal(modifiers)) {
+        if (config.ignoreFinals() && Modifier.isFinal(modifiers)) {
             return false;
         }
-        if (!options.isStoreEmpties()) {
-            if (value instanceof Map && ((Map) value).isEmpty()
-                    || value instanceof Collection && ((Collection) value).isEmpty()) {
+        if (!config.storeEmpties()) {
+            if (value instanceof Map && ((Map<?, ?>) value).isEmpty()
+                    || value instanceof Collection && ((Collection<?>) value).isEmpty()) {
                 return false;
             }
         }
-        return !hasAnnotation(LoadOnly.class) && !hasAnnotation(NotSaved.class);
+        return doesNotHaveAnnotation(LoadOnly.class) && doesNotHaveAnnotation(NotSaved.class);
     }
 
-    private boolean hasAnnotation(Class<? extends Annotation> annotationClass) {
-        return annotations.stream().anyMatch(a -> a.annotationType().equals(annotationClass));
+    private boolean doesNotHaveAnnotation(Class<? extends Annotation> annotationClass) {
+        return annotations.stream().noneMatch(a -> a.annotationType().equals(annotationClass));
     }
 }

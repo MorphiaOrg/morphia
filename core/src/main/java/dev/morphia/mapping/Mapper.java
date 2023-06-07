@@ -27,6 +27,7 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -74,19 +75,21 @@ public class Mapper {
     private final Map<Class, EntityModel> mappedEntities = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
     private final List<EntityListener<?>> listeners = new ArrayList<>();
-    private final MapperOptions options;
+    private final MorphiaConfig config;
     private final DiscriminatorLookup discriminatorLookup;
+    private final ClassLoader contextClassLoader;
 
     /**
      * Creates a Mapper with the given options.
      *
-     * @param options the options to use
+     * @param config the config to use
      * @morphia.internal
      */
     @MorphiaInternal
-    public Mapper(MapperOptions options) {
-        this.options = options;
-        discriminatorLookup = new DiscriminatorLookup(options.getClassLoader());
+    public Mapper(MorphiaConfig config) {
+        this.config = config;
+        contextClassLoader = Thread.currentThread().getContextClassLoader();
+        discriminatorLookup = new DiscriminatorLookup(contextClassLoader);
     }
 
     /**
@@ -143,7 +146,7 @@ public class Mapper {
     public <T> Class<T> getClass(Document document) {
         // see if there is a className value
         Class c = null;
-        String discriminator = (String) document.get(getOptions().getDiscriminatorKey());
+        String discriminator = (String) document.get(getConfig().discriminatorKey());
         if (discriminator != null) {
             c = getClass(discriminator);
         }
@@ -304,8 +307,8 @@ public class Mapper {
     /**
      * @return the options used by this Mapper
      */
-    public MapperOptions getOptions() {
-        return options;
+    public MorphiaConfig getConfig() {
+        return config;
     }
 
     /**
@@ -404,7 +407,7 @@ public class Mapper {
      */
     public synchronized void mapPackage(String packageName) {
         try {
-            getClasses(options.getClassLoader(), packageName, getOptions().isMapSubPackages())
+            getClasses(contextClassLoader, packageName, getConfig().mapSubPackages())
                     .stream()
                     .map(type -> {
                         try {
@@ -462,7 +465,7 @@ public class Mapper {
                 && !query.containsKey(model.getDiscriminatorKey())) {
             List<String> values = new ArrayList<>();
             values.add(model.getDiscriminator());
-            if (options.isEnablePolymorphicQueries()) {
+            if (config.enablePolymorphicQueries()) {
                 for (EntityModel subtype : model.getSubtypes()) {
                     values.add(subtype.getDiscriminator());
                 }

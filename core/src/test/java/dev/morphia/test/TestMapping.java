@@ -21,6 +21,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.Name;
 import dev.morphia.annotations.Transient;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
@@ -69,6 +70,7 @@ import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static dev.morphia.Morphia.createDatastore;
+import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.METHODS;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
 import static java.lang.String.format;
@@ -84,27 +86,28 @@ import static org.testng.Assert.fail;
 @SuppressWarnings({ "unchecked", "unused" })
 public class TestMapping extends TestBase {
 
+    private static final String QUERY_FACTORY_POLYMORPHIC = "query-factory-polymorphic.properties";
+    private static final String IGNORE_FINALS = "ignore-finals.properties";
+    private static final String MAP_SUBPACKAGES = "map-subpackages.properties";
+
     @DataProvider
     public static Object[][] discovery() {
         return new Object[][] {
-                new Object[] { PropertyDiscovery.FIELDS },
-                new Object[] { PropertyDiscovery.METHODS }
+                new Object[] { buildConfig().propertyDiscovery(PropertyDiscovery.FIELDS) },
+                new Object[] { buildConfig().propertyDiscovery(METHODS) }
         };
     }
 
     @Test(dataProvider = "discovery")
-    public void testShadowing(PropertyDiscovery discovery) {
-        withOptions(MapperOptions.builder()
-                .propertyDiscovery(discovery)
-                .build(), () -> {
+    public void testShadowing(MorphiaConfig config) {
+        withConfig(config, () -> {
+            getMapper().map(ShadowedGrandParent.class, ShadowedChild.class, ShadowedGrandChild.class);
 
-                    getMapper().map(ShadowedGrandParent.class, ShadowedChild.class, ShadowedGrandChild.class);
-
-                    var check = new Check();
-                    check.accept(ShadowedGrandParent.class);
-                    check.accept(ShadowedChild.class);
-                    check.accept(ShadowedGrandChild.class);
-                });
+            var check = new Check();
+            check.accept(ShadowedGrandParent.class);
+            check.accept(ShadowedChild.class);
+            check.accept(ShadowedGrandChild.class);
+        });
 
     }
 
@@ -229,19 +232,18 @@ public class TestMapping extends TestBase {
 
     @Test
     public void shouldOnlyMapEntitiesInTheGivenPackage() {
-        withOptions(MapperOptions.builder(getMapper().getOptions())
-                .build(), () -> {
-                    getMapper().mapPackageFromClass(Versioned.class);
+        withConfig(buildConfig(), () -> {
+            getMapper().mapPackageFromClass(Versioned.class);
 
-                    // then
-                    List<EntityModel> list = getMapper().getMappedEntities();
-                    Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
-                            .collect(Collectors.toList());
-                    assertEquals(classes.size(), 3);
-                    assertTrue(classes.contains(AbstractVersionedBase.class));
-                    assertTrue(classes.contains(Versioned.class));
-                    assertTrue(classes.contains(VersionedChildEntity.class));
-                });
+            // then
+            List<EntityModel> list = getMapper().getMappedEntities();
+            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                    .collect(Collectors.toList());
+            assertEquals(classes.size(), 3);
+            assertTrue(classes.contains(AbstractVersionedBase.class));
+            assertTrue(classes.contains(Versioned.class));
+            assertTrue(classes.contains(VersionedChildEntity.class));
+        });
     }
 
     @Test
@@ -367,7 +369,7 @@ public class TestMapping extends TestBase {
 
         final Document document = toDocument(cea);
         List<Document> res = (List<Document>) document.get("res");
-        assertFalse(res.get(0).containsKey(getMapper().getOptions().getDiscriminatorKey()));
+        assertFalse(res.get(0).containsKey(getMapper().getConfig().discriminatorKey()));
     }
 
     @Test
@@ -399,7 +401,7 @@ public class TestMapping extends TestBase {
         cee.cil = new ContainsIntegerList();
         cee.cil.intList = Collections.singletonList(1);
         final Document document = toDocument(cee);
-        assertFalse(((Document) document.get("cil")).containsKey(getMapper().getOptions().getDiscriminatorKey()));
+        assertFalse(((Document) document.get("cil")).containsKey(getMapper().getConfig().discriminatorKey()));
     }
 
     @Test
@@ -445,7 +447,7 @@ public class TestMapping extends TestBase {
 
         assertEquals(getDs().find(HoldsUnannotated.class).first(), holdsUnannotated);
 
-        withOptions(MapperOptions.DEFAULT, () -> {
+        withConfig(buildConfig(), () -> {
             assertFalse(getDs().getMapper().map(ThirdPartyEntityProxy.class).isEmpty());
             assertFalse(getDs().getMapper().map(ThirdPartyEmbeddedProxy.class).isEmpty());
 
@@ -469,36 +471,33 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testExternalClassUsingMethods() {
-        withOptions(MapperOptions.builder()
-                .propertyDiscovery(PropertyDiscovery.METHODS)
-                .build(), () -> {
-                    assertFalse(getDs().getMapper().map(ThirdPartyEntityProxy.class).isEmpty());
-                    assertFalse(getDs().getMapper().map(ThirdPartyEmbeddedProxy.class).isEmpty());
+        withConfig(buildConfig().propertyDiscovery(METHODS), () -> {
+            assertFalse(getDs().getMapper().map(ThirdPartyEntityProxy.class).isEmpty());
+            assertFalse(getDs().getMapper().map(ThirdPartyEmbeddedProxy.class).isEmpty());
 
-                    EntityModel model = getDs().getMapper().getEntityModel(ThirdPartyEntity.class);
-                    assertEquals(model.getCollectionName(), "extEnt");
-                    assertEquals(model.getDiscriminator(), "ext");
-                    assertEquals(model.getDiscriminatorKey(), "_xt");
-                    Entity annotation = model.getAnnotation(Entity.class);
-                    assertEquals(annotation.concern(), "JOURNALED");
-                    assertEquals(annotation.cap().count(), 123);
-                    assertEquals(annotation.cap().value(), 456);
+            EntityModel model = getDs().getMapper().getEntityModel(ThirdPartyEntity.class);
+            assertEquals(model.getCollectionName(), "extEnt");
+            assertEquals(model.getDiscriminator(), "ext");
+            assertEquals(model.getDiscriminatorKey(), "_xt");
+            Entity annotation = model.getAnnotation(Entity.class);
+            assertEquals(annotation.concern(), "JOURNALED");
+            assertEquals(annotation.cap().count(), 123);
+            assertEquals(annotation.cap().value(), 456);
 
-                    ThirdPartyEntity entity = new ThirdPartyEntity();
-                    entity.setField("hi");
-                    entity.setNumber(42L);
-                    getDs().save(entity);
+            ThirdPartyEntity entity = new ThirdPartyEntity();
+            entity.setField("hi");
+            entity.setNumber(42L);
+            getDs().save(entity);
 
-                    assertEquals(getDs().find(ThirdPartyEntity.class).first(), entity);
-                });
+            assertEquals(getDs().find(ThirdPartyEntity.class).first(), entity);
+        });
     }
 
     @Test(dataProvider = "queryFactories")
     public void testFieldAsDiscriminator(QueryFactory queryFactory) {
-        withOptions(MapperOptions.builder()
+        withConfig(buildConfig()
                 .queryFactory(queryFactory)
-                .enablePolymorphicQueries(true)
-                .build(), () -> {
+                .enablePolymorphicQueries(true), () -> {
                     getDs().getMapper().map(BlogImage.class, Png.class, Jpg.class);
 
                     BlogImage png = new Png();
@@ -532,9 +531,8 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testFinalFieldNotPersisted() {
-        withOptions(MapperOptions.builder(getMapper().getOptions())
-                .ignoreFinals(true)
-                .build(), () -> {
+        withConfig(buildConfig()
+                .ignoreFinals(true), () -> {
                     getMapper().map(ContainsFinalField.class);
                     final ObjectId savedKey = getDs().save(new ContainsFinalField("blah")).id;
                     final Document loaded = getDs().getCollection(ContainsFinalField.class)
@@ -755,18 +753,15 @@ public class TestMapping extends TestBase {
     @Test
 
     public void testMethodMapping() {
-        withOptions(MapperOptions.builder()
-                .propertyDiscovery(
-                        PropertyDiscovery.METHODS)
-                .build(), () -> {
-                    EntityModel model = getDs().getMapper().map(MethodMappedUser.class).get(0);
-                    assertTrue(model.getProperties().size() > 0);
-                    assertNotNull(model.getVersionProperty(), model.getProperties().toString());
-                    assertNotNull(model.getProperty("dateJoined"));
-                    assertNotNull(model.getProperty("joined"));
-                    assertNotNull(model.getProperty("friend_reference"));
-                    assertNotNull(model.getProperty("morphia_reference"));
-                });
+        withConfig(buildConfig().propertyDiscovery(METHODS), () -> {
+            EntityModel model = getDs().getMapper().map(MethodMappedUser.class).get(0);
+            assertTrue(model.getProperties().size() > 0);
+            assertNotNull(model.getVersionProperty(), model.getProperties().toString());
+            assertNotNull(model.getProperty("dateJoined"));
+            assertNotNull(model.getProperty("joined"));
+            assertNotNull(model.getProperty("friend_reference"));
+            assertNotNull(model.getProperty("morphia_reference"));
+        });
 
     }
 
@@ -879,22 +874,20 @@ public class TestMapping extends TestBase {
     @Test
     public void testSubPackagesMapping() {
         // when
-        withOptions(MapperOptions.builder(getMapper().getOptions())
-                .mapSubPackages(true)
-                .build(), () -> {
-                    getMapper().mapPackageFromClass(Versioned.class);
+        withConfig(buildConfig().mapSubPackages(true), () -> {
+            getMapper().mapPackageFromClass(Versioned.class);
 
-                    // then
-                    List<EntityModel> list = getMapper().getMappedEntities();
-                    assertEquals(list.size(), 4, list.toString());
-                    Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
-                            .collect(Collectors.toList());
-                    assertTrue(classes.contains(AbstractVersionedBase.class));
-                    assertTrue(classes.contains(Versioned.class));
-                    assertTrue(classes.contains(VersionedToo.class));
-                    assertTrue(classes.contains(VersionedChildEntity.class));
+            // then
+            List<EntityModel> list = getMapper().getMappedEntities();
+            assertEquals(list.size(), 4, list.toString());
+            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                    .collect(Collectors.toList());
+            assertTrue(classes.contains(AbstractVersionedBase.class));
+            assertTrue(classes.contains(Versioned.class));
+            assertTrue(classes.contains(VersionedToo.class));
+            assertTrue(classes.contains(VersionedChildEntity.class));
 
-                });
+        });
     }
 
     @Test
@@ -928,9 +921,8 @@ public class TestMapping extends TestBase {
     }
 
     private void verify(NamingStrategy strategy, String embeddedValues, String intList) {
-        withOptions(MapperOptions.builder()
-                .propertyNaming(strategy)
-                .build(), () -> {
+        withConfig(buildConfig()
+                .propertyNaming(strategy), () -> {
                     List<EntityModel> map = getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
                     List<PropertyModel> fields = map.get(0).getProperties();

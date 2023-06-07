@@ -3,7 +3,6 @@ package dev.morphia.mapping;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ServiceLoader;
 
 import com.mongodb.lang.Nullable;
 
@@ -11,11 +10,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.conventions.ConfigureProperties;
-import dev.morphia.mapping.conventions.FieldDiscovery;
-import dev.morphia.mapping.conventions.MethodDiscovery;
 import dev.morphia.mapping.conventions.MorphiaConvention;
-import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.QueryFactory;
@@ -29,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
-import static java.util.List.of;
 import static org.bson.UuidRepresentation.STANDARD;
 
 /**
@@ -68,7 +62,7 @@ public class MapperOptions {
 
         codecProvider = builder.codecProvider;
         collectionNaming = builder.collectionNaming;
-        conventions = builder.conventions();
+        conventions = builder.conventions;
         dateStorage = builder.dateStorage();
         discriminator = builder.discriminator();
         discriminatorKey = builder.discriminatorKey();
@@ -258,6 +252,14 @@ public class MapperOptions {
      */
     public boolean isStoreNulls() {
         return storeNulls;
+    }
+
+    /**
+     * @since 2.4
+     * @return
+     */
+    public PropertyDiscovery propertyDiscovery() {
+        return propertyDiscovery;
     }
 
     public enum PropertyDiscovery {
@@ -595,21 +597,6 @@ public class MapperOptions {
             if (options != null) {
                 throw new MappingException(Sofia.mapperOptionsLocked());
             }
-        }
-
-        private List<MorphiaConvention> conventions() {
-            if (conventions.isEmpty()) {
-                List<MorphiaConvention> list = new ArrayList<>(of(
-                        new MorphiaDefaultsConvention(),
-                        propertyDiscovery == FIELDS ? new FieldDiscovery() : new MethodDiscovery(),
-                        new ConfigureProperties()));
-
-                ServiceLoader<MorphiaConvention> conventions = ServiceLoader.load(MorphiaConvention.class);
-                conventions.forEach(list::add);
-
-                return list;
-            }
-            return conventions;
         }
 
         private DateStorage dateStorage() {

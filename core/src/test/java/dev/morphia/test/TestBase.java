@@ -19,6 +19,7 @@ import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.lang.NonNull;
 
 import dev.morphia.DatastoreImpl;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.reader.DocumentReader;
@@ -47,19 +48,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public abstract class TestBase extends MorphiaTestSetup {
-    protected static final String TEST_DB_NAME = "morphia_test";
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-
-    private MapperOptions mapperOptions;
+    protected static final String TEST_DB_NAME = "morphia_test";
 
     public TestBase() {
-        mapperOptions = MapperOptions.builder()
-                .codecProvider(new ZDTCodecProvider())
-                .build();
     }
 
-    public TestBase(MapperOptions mapperOptions) {
-        this.mapperOptions = mapperOptions;
+    public TestBase(MorphiaConfig config) {
+        super(config);
     }
 
     @BeforeMethod
@@ -76,17 +72,15 @@ public abstract class TestBase extends MorphiaTestSetup {
                 .forEach(s -> {
                     db.getCollection(s).drop();
                 });
-        morphiaContainer.database = null;
-        morphiaContainer.datastore = null;
-        morphiaContainer.mongoClient = null;
+        getMorphiaContainer().reset();
     }
 
     public DatastoreImpl getDs() {
-        return morphiaContainer.getDs();
+        return getMorphiaContainer().getDs();
     }
 
     public MongoDatabase getDatabase() {
-        return morphiaContainer.getDatabase();
+        return getMorphiaContainer().getDatabase();
     }
 
     public Mapper getMapper() {
@@ -205,7 +199,7 @@ public abstract class TestBase extends MorphiaTestSetup {
     protected <T> T fromDocument(Class<T> type, Document document) {
         Class<T> aClass = type;
         Mapper mapper = getMapper();
-        if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
+        if (document.containsKey(mapper.getConfig().discriminatorKey())) {
             aClass = mapper.getClass(document);
         }
 

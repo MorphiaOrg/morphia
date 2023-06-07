@@ -1,5 +1,7 @@
 package dev.morphia.config;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
 
 import org.eclipse.microprofile.config.spi.Converter;
@@ -10,6 +12,11 @@ import static dev.morphia.mapping.NamingStrategy.kebabCase;
 import static dev.morphia.mapping.NamingStrategy.lowerCase;
 import static dev.morphia.mapping.NamingStrategy.snakeCase;
 
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
 public class NamingStrategyConverter implements Converter<NamingStrategy> {
     @Override
     public NamingStrategy convert(String value) throws IllegalArgumentException, NullPointerException {
@@ -29,7 +36,7 @@ public class NamingStrategyConverter implements Converter<NamingStrategy> {
                     return (NamingStrategy) Class.forName(value).getDeclaredConstructor().newInstance();
             }
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new MappingException(e.getMessage(), e);
         }
     }
 }

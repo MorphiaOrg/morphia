@@ -28,7 +28,6 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.query.ArraySlice;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
@@ -46,8 +45,6 @@ import dev.morphia.test.models.User;
 import org.awaitility.Awaitility;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.Collation.builder;
@@ -76,20 +73,8 @@ import static org.testng.Assert.fail;
 public class TestLegacyQuery extends TestBase {
     private MorphiaContainer oldContainer;
 
-    @BeforeClass
-    @Override
-    public void startContainer() {
-        oldContainer = morphiaContainer;
-        morphiaContainer = new MorphiaContainer(false)
-                .mapperOptions(MapperOptions.legacy().build())
-                .start();
-    }
-
-    @AfterClass
-    @Override
-    public void stopContainer() {
-        super.stopContainer();
-        morphiaContainer = oldContainer;
+    public TestLegacyQuery() {
+        super(buildConfig().legacy());
     }
 
     @Test
@@ -415,14 +400,7 @@ public class TestLegacyQuery extends TestBase {
 
     @Test
     public void testCriteriaContainers() {
-        withOptions(MapperOptions.DEFAULT, () -> {
-            assertThrows(UnsupportedOperationException.class, () -> {
-                check(getDs().find(User.class).disableValidation());
-            });
-        });
-        withOptions(MapperOptions.legacy().build(), () -> {
-            check(getDs().find(User.class).disableValidation());
-        });
+        check(getDs().find(User.class).disableValidation());
     }
 
     @Test

@@ -106,18 +106,14 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.database = mongoClient.getDatabase(dbName);
         this.mapper = mapper;
         this.mongoClient = mongoClient;
-        this.queryFactory = mapper.getOptions().getQueryFactory();
-        if (mapper.getOptions().autoImportModels()) {
-            importModels();
-        }
+        this.queryFactory = mapper.getConfig().queryFactory();
+        importModels();
 
         morphiaCodecProviders.add(new MorphiaCodecProvider(this));
 
         CodecRegistry codecRegistry = database.getCodecRegistry();
         List<CodecProvider> providers = new ArrayList<>();
-        if (mapper.getOptions().codecProvider() != null) {
-            providers.add(mapper.getOptions().codecProvider());
-        }
+        mapper.getConfig().codecProvider().ifPresent(providers::add);
 
         providers.addAll(List.of(new MorphiaTypesCodecProvider(this),
                 new PrimitiveCodecRegistry(codecRegistry),
@@ -145,6 +141,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.mapper = datastore.mapper;
         this.queryFactory = datastore.queryFactory;
         this.codecRegistry = datastore.codecRegistry;
+        this.operations = datastore.operations;
     }
 
     @Override
@@ -173,23 +170,20 @@ public class DatastoreImpl implements AdvancedDatastore {
             Sofia.logInsertManyAlternateCollection(alternate);
         }
 
-        grouped.entrySet().stream()
-                .forEach(entry -> {
-                    List<T> list = entry.getValue();
+        grouped.forEach((key, list) -> {
+            List<VersionBumpInfo> infos = list.stream()
+                    .map(this::updateVersioning)
+                    .collect(Collectors.toList());
 
-                    List<VersionBumpInfo> infos = list.stream()
-                            .map(this::updateVersioning)
-                            .collect(Collectors.toList());
-
-                    try {
-                        MongoCollection<T> collection = configureCollection(options,
-                                (MongoCollection<T>) getCollection(entry.getKey()));
-                        operations.insertMany(collection, list, options);
-                    } catch (MongoException e) {
-                        infos.forEach(VersionBumpInfo::rollbackVersion);
-                        throw e;
-                    }
-                });
+            try {
+                MongoCollection<T> collection = configureCollection(options,
+                        (MongoCollection<T>) getCollection(key));
+                operations.insertMany(collection, list, options);
+            } catch (MongoException e) {
+                infos.forEach(VersionBumpInfo::rollbackVersion);
+                throw e;
+            }
+        });
     }
 
     @Override

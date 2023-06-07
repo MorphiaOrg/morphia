@@ -10,8 +10,8 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
@@ -37,9 +37,8 @@ public class ConfigureProperties implements MorphiaConvention {
 
     @Override
     public void apply(Mapper mapper, EntityModelBuilder modelBuilder) {
-        MapperOptions options = mapper.getOptions();
 
-        processProperties(modelBuilder, options);
+        processProperties(modelBuilder, mapper.getConfig());
 
         if (modelBuilder.idPropertyName() == null) {
             IdField idProperty = modelBuilder.getAnnotation(IdField.class);
@@ -52,16 +51,16 @@ public class ConfigureProperties implements MorphiaConvention {
 
     }
 
-    private void buildProperty(MapperOptions options, PropertyModelBuilder builder) {
+    private void buildProperty(MorphiaConfig config, PropertyModelBuilder builder) {
 
-        builder.serialization(new MorphiaPropertySerialization(options, builder));
+        builder.serialization(new MorphiaPropertySerialization(config, builder));
         if (isNotConcrete(builder.typeData())) {
             builder.discriminatorEnabled(true);
         }
     }
 
     @SuppressWarnings("rawtypes")
-    void processProperties(EntityModelBuilder modelBuilder, MapperOptions options) {
+    void processProperties(EntityModelBuilder modelBuilder, MorphiaConfig config) {
         Iterator<PropertyModelBuilder> iterator = modelBuilder.propertyModels().iterator();
         while (iterator.hasNext()) {
             final PropertyModelBuilder builder = iterator.next();
@@ -90,7 +89,7 @@ public class ConfigureProperties implements MorphiaConvention {
                     modelBuilder.versionPropertyName(builder.name());
                 }
 
-                buildProperty(options, builder);
+                buildProperty(config, builder);
             }
         }
     }

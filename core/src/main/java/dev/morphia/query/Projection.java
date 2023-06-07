@@ -141,7 +141,7 @@ public class Projection {
         Entity entityAnnotation = model.getEntityAnnotation();
 
         if (isIncluding() && entityAnnotation != null && entityAnnotation.useDiscriminator()) {
-            projection.put(mapper.getOptions().getDiscriminatorKey(), 1);
+            projection.put(mapper.getConfig().discriminatorKey(), 1);
         }
 
         return projection;

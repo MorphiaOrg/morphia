@@ -21,7 +21,6 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.test.TestBase;
@@ -48,6 +47,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class TestIndexes extends TestBase {
+
     @Test
     public void indexTypefromValue() {
         assertEquals(IndexType.fromValue(1), IndexType.ASC);
@@ -266,12 +266,11 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void testMethodMapping() {
-        withOptions(MapperOptions.builder().propertyDiscovery(PropertyDiscovery.METHODS).build(),
-                () -> {
-                    getMapper().map(MethodMappedUser.class);
-                    getDs().ensureIndexes(MethodMappedUser.class);
-                    assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3);
-                });
+        withConfig(buildConfig().propertyDiscovery(PropertyDiscovery.METHODS), () -> {
+            getMapper().map(MethodMappedUser.class);
+            getDs().ensureIndexes(MethodMappedUser.class);
+            assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3);
+        });
     }
 
     @Test

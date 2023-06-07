@@ -16,7 +16,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -236,18 +235,15 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testMethodMapping() {
-        withOptions(MapperOptions.builder()
-                .propertyDiscovery(
-                        PropertyDiscovery.METHODS)
-                .build(), () -> {
+        withConfig(buildConfig().propertyDiscovery(PropertyDiscovery.METHODS), () -> {
 
-                    getDs().getMapper().map(MethodMappedUser.class);
+            getDs().getMapper().map(MethodMappedUser.class);
 
-                    MethodMappedUser user = new MethodMappedUser();
-                    assertEquals(user.getVersion(), null);
-                    getDs().save(user);
-                    assertEquals(user.getVersion(), Long.valueOf(1L));
-                });
+            MethodMappedUser user = new MethodMappedUser();
+            assertEquals(user.getVersion(), null);
+            getDs().save(user);
+            assertEquals(user.getVersion(), Long.valueOf(1L));
+        });
     }
 
     @Test

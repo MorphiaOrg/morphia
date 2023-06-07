@@ -7,15 +7,13 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.config.MapperOptionsWrapper;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
 
-import org.eclipse.microprofile.config.Config;
-import org.eclipse.microprofile.config.ConfigProvider;
-
 import io.smallrye.config.EnvConfigSource;
-import io.smallrye.config.SmallRyeConfig;
 import io.smallrye.config.SmallRyeConfigBuilder;
 import io.smallrye.config.SysPropConfigSource;
 
@@ -68,7 +66,7 @@ public final class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(MongoClient mongoClient, String dbName, MapperOptions options) {
-        return new DatastoreImpl(new Mapper(options), mongoClient, dbName);
+        return new DatastoreImpl(new Mapper(new MapperOptionsWrapper(options, dbName)), mongoClient, dbName);
     }
 
     /**
@@ -89,19 +87,49 @@ public final class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(MongoClient mongoClient) {
-        Config config = ConfigProvider.getConfig();
-        SmallRyeConfig smallRyeConfig = new SmallRyeConfigBuilder()
+        return createDatastore(mongoClient, loadConfigMapping());
+    }
+
+    /**
+     * @hidden
+     * @param mongoClient
+     * @param configMapping
+     * @return
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static Datastore createDatastore(MongoClient mongoClient, MorphiaConfig configMapping) {
+        return new DatastoreImpl(new Mapper(configMapping), mongoClient, configMapping.database());
+
+    }
+
+    /**
+     * @hidden
+     * @return
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static MorphiaConfig loadConfigMapping() {
+        return loadConfigMapping(MORPHIA_CONFIG_PROPERTIES);
+    }
+
+    /**
+     * @hidden
+     * @return
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static MorphiaConfig loadConfigMapping(String path) {
+        return new SmallRyeConfigBuilder()
                 .addDefaultInterceptors()
                 .withMapping(MorphiaConfig.class)
                 .withSources(new EnvConfigSource(getEnvProperties(), 300),
                         new SysPropConfigSource())
-                .withSources(classPathSources(MORPHIA_CONFIG_PROPERTIES, currentThread().getContextClassLoader()))
+                .withSources(classPathSources(path.startsWith("META-INF/") ? path : "META-INF/" + path,
+                        currentThread().getContextClassLoader()))
                 .addDefaultSources()
-                .build();
-        MorphiaConfig configMapping = smallRyeConfig.getConfigMapping(MorphiaConfig.class);
-        System.out.println("configMapping.database() = " + configMapping.database());
-        System.out.println("configMapping = " + configMapping);
-        return null; //createDatastore(mongoClient, dbName, MapperOptions.DEFAULT);
+                .build()
+                .getConfigMapping(MorphiaConfig.class);
     }
 
     private static Map<String, String> getEnvProperties() {

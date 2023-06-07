@@ -28,8 +28,8 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -144,7 +144,7 @@ public final class PropertyModelBuilder {
      */
     @MorphiaInternal
     public PropertyModelBuilder discoverMappedName() {
-        MapperOptions options = mapper.getOptions();
+        MorphiaConfig config = mapper.getConfig();
         Property property = getAnnotation(Property.class);
         Reference reference = getAnnotation(Reference.class);
         Version version = getAnnotation(Version.class);
@@ -158,7 +158,7 @@ public final class PropertyModelBuilder {
         } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
             mappedName(version.value());
         } else {
-            mappedName(options.getFieldNaming().apply(name()));
+            mappedName(config.propertyNaming().apply(name()));
         }
         return this;
     }

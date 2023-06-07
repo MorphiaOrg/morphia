@@ -8,13 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import dev.morphia.Datastore;
-import dev.morphia.Morphia;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.MapperOptions.Builder;
-import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -24,6 +21,8 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
+import static dev.morphia.Morphia.*;
+import static dev.morphia.mapping.NamingStrategy.lowerCase;
 import static dev.morphia.query.filters.Filters.ne;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -39,23 +38,35 @@ public class TestMapperOptions extends TestBase {
         hl.names = new ArrayList<>();
 
         //Test default behavior
-        shouldNotFindField(empties(false), hl);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hl);
+        });
 
         //Test default storing empty list/array with storeEmpties option
-        shouldFindField(empties(true), hl, new ArrayList<>());
+        empties(true, () -> {
+            shouldFindField(getDs(), hl, new ArrayList<>());
+        });
 
         //Test opposite from above
-        shouldNotFindField(empties(false), hl);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hl);
+        });
 
         hl.names = null;
         //Test default behavior
-        shouldNotFindField(empties(false), hl);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hl);
+        });
 
         //Test default storing empty list/array with storeEmpties option
-        shouldNotFindField(empties(true), hl);
+        empties(true, () -> {
+            shouldNotFindField(getDs(), hl);
+        });
 
         //Test opposite from above
-        shouldNotFindField(empties(false), hl);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hl);
+        });
     }
 
     @Test
@@ -64,13 +75,19 @@ public class TestMapperOptions extends TestBase {
         hm.properties = new HashMap<>();
 
         //Test default behavior
-        shouldNotFindField(empties(false), hm);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hm);
+        });
 
         //Test default storing empty map with storeEmpties option
-        shouldFindField(empties(true), hm, new HashMap<>());
+        empties(true, () -> {
+            shouldFindField(getDs(), hm, new HashMap<>());
+        });
 
         //Test opposite from above
-        shouldNotFindField(empties(false), hm);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hm);
+        });
     }
 
     @Test
@@ -79,13 +96,19 @@ public class TestMapperOptions extends TestBase {
         hm.properties = new HashMap<>();
 
         //Test default behavior
-        shouldNotFindField(empties(false), hm);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hm);
+        });
 
         //Test default storing empty map with storeEmpties option
-        shouldFindField(empties(true), hm, new HashMap<>());
+        empties(true, () -> {
+            shouldFindField(getDs(), hm, new HashMap<>());
+        });
 
         //Test opposite from above
-        shouldNotFindField(empties(false), hm);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hm);
+        });
     }
 
     @Test
@@ -94,13 +117,19 @@ public class TestMapperOptions extends TestBase {
         hm.properties = new HashMap<>();
 
         //Test default behavior
-        shouldNotFindField(empties(false), hm);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hm);
+        });
 
         //Test default storing empty map with storeEmpties option
-        shouldFindField(empties(true), hm, new HashMap<>());
+        empties(true, () -> {
+            shouldFindField(getDs(), hm, new HashMap<>());
+        });
 
         //Test opposite from above
-        shouldNotFindField(empties(false), hm);
+        empties(false, () -> {
+            shouldNotFindField(getDs(), hm);
+        });
     }
 
     @Test
@@ -127,13 +156,19 @@ public class TestMapperOptions extends TestBase {
         hl.names = null;
 
         //Test default behavior
-        shouldNotFindField(nulls(false), hl);
+        nulls(false, () -> {
+            shouldNotFindField(getDs(), hl);
+        });
 
         //Test default storing null list/array with storeNulls option
-        shouldFindField(nulls(true), hl, null);
+        nulls(true, () -> {
+            shouldFindField(getDs(), hl, null);
+        });
 
         //Test opposite from above
-        shouldNotFindField(nulls(false), hl);
+        nulls(false, () -> {
+            shouldNotFindField(getDs(), hl);
+        });
     }
 
     @Test
@@ -142,18 +177,24 @@ public class TestMapperOptions extends TestBase {
         hm.properties = null;
 
         //Test default behavior
-        shouldNotFindField(nulls(false), hm);
+        nulls(false, () -> {
+            shouldNotFindField(getDs(), hm);
+        });
 
         //Test default storing empty map with storeEmpties option
-        shouldFindField(nulls(true), hm, null);
+        nulls(true, () -> {
+            shouldFindField(getDs(), hm, null);
+        });
 
         //Test opposite from above
-        shouldNotFindField(nulls(false), hm);
+        nulls(false, () -> {
+            shouldNotFindField(getDs(), hm);
+        });
     }
 
     @Test
     public void discriminator() {
-        Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
+        Datastore datastore = createDatastore(getMongoClient(), getDatabase().getName(),
                 MapperOptions.builder()
                         .discriminator(DiscriminatorFunction.lowerSimpleName())
                         .build());
@@ -177,14 +218,14 @@ public class TestMapperOptions extends TestBase {
         DummyEntity entity = new DummyEntity();
 
         String collectionName = getMapper().getEntityModel(entity.getClass()).getCollectionName();
-        assertEquals(collectionName, "dummyEntity", "uppercase");
+        assertEquals(collectionName, "dummyEntity", "camelCase");
 
-        Builder builder = MapperOptions.builder(getMapper().getOptions());
-        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
-                builder.collectionNaming(NamingStrategy.lowerCase()).build());
+        withConfig(buildConfig()
+                .collectionNaming(lowerCase()), () -> {
 
-        collectionName = datastore.getMapper().getEntityModel(entity.getClass()).getCollectionName();
-        assertEquals(collectionName, "dummyentity", "lowercase");
+                    String name = getMapper().getEntityModel(entity.getClass()).getCollectionName();
+                    assertEquals(name, "dummyentity", "lowercase");
+                });
     }
 
     private void shouldFindField(Datastore datastore, HasList hl, List<String> expected) {
@@ -193,12 +234,6 @@ public class TestMapperOptions extends TestBase {
         assertTrue(document.containsKey("names"), "Should find the field");
         assertEquals(datastore.find(HasList.class).first().names, expected);
         cleanup();
-    }
-
-    private Datastore empties(boolean storeEmpties) {
-        Builder builder = MapperOptions.builder(getMapper().getOptions());
-        return Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
-                builder.storeEmpties(storeEmpties).build());
     }
 
     private void shouldFindField(Datastore datastore, HasMap hl, Map<String, String> expected) {
@@ -265,10 +300,12 @@ public class TestMapperOptions extends TestBase {
         cleanup();
     }
 
-    private Datastore nulls(boolean storeNulls) {
-        Builder builder = MapperOptions.builder(getMapper().getOptions());
-        return Morphia.createDatastore(getMongoClient(), getDatabase().getName(),
-                builder.storeNulls(storeNulls).build());
+    private void empties(boolean storeEmpties, Runnable body) {
+        withConfig(buildConfig().storeEmpties(storeEmpties), body);
+    }
+
+    private void nulls(boolean storeNulls, Runnable body) {
+        withConfig(buildConfig().storeNulls(storeNulls), body);
     }
 
     @Entity

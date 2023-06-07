@@ -28,13 +28,13 @@ public class MorphiaDateCodec implements Codec<LocalDate> {
     @Override
     public LocalDate decode(BsonReader reader, DecoderContext decoderContext) {
         return Instant.ofEpochMilli(reader.readDateTime())
-                .atZone(datastore.getMapper().getOptions().getDateStorage().getZone())
+                .atZone(datastore.getMapper().getConfig().dateStorage().getZone())
                 .toLocalDate();
     }
 
     @Override
     public void encode(BsonWriter writer, LocalDate value, EncoderContext encoderContext) {
-        writer.writeDateTime(value.atStartOfDay(datastore.getMapper().getOptions().getDateStorage().getZone()).toInstant().toEpochMilli());
+        writer.writeDateTime(value.atStartOfDay(datastore.getMapper().getConfig().dateStorage().getZone()).toInstant().toEpochMilli());
     }
 
     @Override

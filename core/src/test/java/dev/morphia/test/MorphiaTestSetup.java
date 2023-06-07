@@ -1,42 +1,92 @@
 package dev.morphia.test;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoDatabase;
 
-import dev.morphia.DatastoreImpl;
-import dev.morphia.mapping.MapperOptions;
+import dev.morphia.Morphia;
+import dev.morphia.config.MorphiaConfig;
+import dev.morphia.test.TestBase.ZDTCodecProvider;
+import dev.morphia.test.config.MutableMorphiaConfig;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.utility.DockerImageName;
 import org.testng.SkipException;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
+import static dev.morphia.test.TestBase.TEST_DB_NAME;
 import static java.lang.String.format;
 
 @SuppressWarnings("removal")
 public class MorphiaTestSetup {
-    protected static MorphiaContainer morphiaContainer;
-    private static Object lock = new Object();
-    private static AtomicInteger count = new AtomicInteger(0);
+    private static final Logger LOG = LoggerFactory.getLogger(MorphiaTestSetup.class);
+
+    private static MongoHolder mongoHolder;
+
+    private MorphiaContainer morphiaContainer;
+    private MorphiaConfig morphiaConfig;
+
+    public MorphiaTestSetup() {
+        morphiaConfig = buildConfig()
+                .codecProvider(new ZDTCodecProvider());
+    }
+
+    public MorphiaTestSetup(MorphiaConfig config) {
+        morphiaConfig = config;
+    }
 
     @BeforeSuite
-    public void startContainer() {
-        synchronized (lock) {
-            if (morphiaContainer == null) {
-                morphiaContainer = new MorphiaContainer(false)
-                        .start();
-            }
+    public MorphiaContainer getMorphiaContainer() {
+        if (morphiaContainer == null) {
+            morphiaContainer = new MorphiaContainer(getMongoHolder().getMongoClient(), morphiaConfig);
         }
+
+        return morphiaContainer;
+    }
+
+    public MongoHolder getMongoHolder() {
+        if (mongoHolder == null || !mongoHolder.isAlive()) {
+            mongoHolder = initMongoDbContainer(false);
+        }
+        return mongoHolder;
+    }
+
+    private static MongoHolder initMongoDbContainer(boolean sharded) {
+        String mongodb = System.getProperty("mongodb");
+        String connectionString;
+        MongoDBContainer mongoDBContainer = null;
+        if ("local".equals(mongodb)) {
+            LOG.info("'local' mongodb property specified. Using local server.");
+            connectionString = "mongodb://localhost:27017/" + TEST_DB_NAME;
+        } else {
+            DockerImageName imageName;
+            try {
+                Versions match = mongodb == null
+                        ? Versions.latest()
+                        : Versions.bestMatch(mongodb);
+                imageName = match.dockerImage();
+            } catch (IllegalArgumentException e) {
+                imageName = Versions.latest().dockerImage();
+                LOG.error(format("Could not parse mongo docker image name.  using docker image %s.", imageName));
+            }
+
+            LOG.info("Running tests using " + imageName);
+            mongoDBContainer = new MongoDBContainer(imageName);
+            if (sharded) {
+                mongoDBContainer
+                        .withSharding();
+            }
+            mongoDBContainer.start();
+            connectionString = mongoDBContainer.getReplicaSetUrl(TEST_DB_NAME);
+        }
+        return new MongoHolder(mongoDBContainer, connectionString);
     }
 
     @AfterSuite
     public void stopContainer() {
-        if (morphiaContainer != null) {
-            morphiaContainer.close();
-            morphiaContainer = null;
-        }
+        morphiaContainer = null;
     }
 
     protected void assumeTrue(boolean condition, String message) {
@@ -64,7 +114,7 @@ public class MorphiaTestSetup {
     }
 
     protected MongoClient getMongoClient() {
-        return morphiaContainer.getMongoClient();
+        return getMongoHolder().getMongoClient();
     }
 
     protected Version getServerVersion() {
@@ -83,30 +133,32 @@ public class MorphiaTestSetup {
         return getServerVersion().greaterThanOrEqualTo(version);
     }
 
-    protected void with(MorphiaContainer newContainer, Runnable block) {
-        MorphiaContainer container = morphiaContainer;
-        try (newContainer) {
-            morphiaContainer = newContainer;
-            block.run();
+    protected void withSharding(Runnable body) {
+        var oldHolder = mongoHolder;
+        var oldContainer = morphiaContainer;
+        try (var holder = initMongoDbContainer(true)) {
+            mongoHolder = holder;
+            morphiaContainer = new MorphiaContainer(mongoHolder.getMongoClient(), Morphia.loadConfigMapping());
+            body.run();
         } finally {
-            morphiaContainer.close();
-            morphiaContainer = container;
+            mongoHolder = oldHolder;
+            morphiaContainer = oldContainer;
         }
     }
 
-    protected void withOptions(MapperOptions options, Runnable block) {
-        MapperOptions oldOptions = morphiaContainer.mapperOptions;
-        DatastoreImpl datastore = morphiaContainer.datastore;
-        MongoDatabase database = morphiaContainer.database;
+    protected void withConfig(MorphiaConfig config, Runnable body) {
+        var oldContainer = morphiaContainer;
         try {
-            morphiaContainer.mapperOptions(options);
-            block.run();
+            morphiaContainer = new MorphiaContainer(mongoHolder.getMongoClient(), config);
+            body.run();
         } finally {
-            morphiaContainer.mapperOptions(oldOptions);
-            morphiaContainer.datastore = datastore;
-            morphiaContainer.database = database;
-
+            morphiaContainer = oldContainer;
         }
+    }
+
+    protected static MutableMorphiaConfig buildConfig() {
+        return new MutableMorphiaConfig(Morphia.loadConfigMapping())
+                .database(TEST_DB_NAME);
     }
 
     /**

@@ -8,7 +8,6 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.ShardKey;
 import dev.morphia.annotations.ShardKeys;
 import dev.morphia.mapping.validation.ConstraintViolationException;
-import dev.morphia.test.MorphiaContainer;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
@@ -29,7 +28,7 @@ public class TestSharding extends TestBase {
     @Test
     public void testShardCollection() {
         checkMinServerVersion(6.0);
-        with(new MorphiaContainer(true).start(), () -> {
+        withSharding(() -> {
             Datastore datastore = getDs();
             datastore.getDatabase().createCollection("split_brain"); // make sure the db exists on 4.0.x
             datastore.getMapper().map(Sharded.class);

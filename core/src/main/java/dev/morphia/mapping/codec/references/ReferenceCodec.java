@@ -157,7 +157,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             if (document.containsKey("$ref")) {
                 id = processId(datastore, new DBRef(document.getString("$db"), document.getString("$ref"), document.get("$id")),
                         decoderContext);
-            } else if (document.containsKey(datastore.getMapper().getOptions().getDiscriminatorKey())) {
+            } else if (document.containsKey(datastore.getMapper().getConfig().discriminatorKey())) {
                 try {
                     id = datastore.getCodecRegistry()
                             .get(datastore.getMapper().getClass(document))

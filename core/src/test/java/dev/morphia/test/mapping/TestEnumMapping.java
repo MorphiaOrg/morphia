@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import dev.morphia.Datastore;
-import dev.morphia.Morphia;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
@@ -21,6 +19,7 @@ import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;
 
 public class TestEnumMapping extends TestBase {
+
     @Test
     public void getMapOfEnum() {
         Class1 entity = new Class1();
@@ -48,66 +47,64 @@ public class TestEnumMapping extends TestBase {
 
     @Test
     public void testCustomerWithArrayList() {
-        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
-                .storeEmpties(true)
+        withConfig(buildConfig()
                 .storeNulls(true)
-                .build();
-        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
+                .storeEmpties(true), () -> {
+                    Mapper mapper = getMapper();
+                    mapper.map(CustomerWithArrayList.class);
 
-        Mapper mapper = datastore.getMapper();
-        mapper.map(CustomerWithArrayList.class);
+                    CustomerWithArrayList customer = new CustomerWithArrayList();
 
-        CustomerWithArrayList customer = new CustomerWithArrayList();
+                    List<WebTemplate> templates1 = new ArrayList<>();
+                    templates1.add(new WebTemplate("template #1.1"));
+                    templates1.add(new WebTemplate("template #1.2"));
+                    customer.add(WebTemplateType.CrewContract, templates1);
 
-        List<WebTemplate> templates1 = new ArrayList<>();
-        templates1.add(new WebTemplate("template #1.1"));
-        templates1.add(new WebTemplate("template #1.2"));
-        customer.add(WebTemplateType.CrewContract, templates1);
+                    List<WebTemplate> templates2 = new ArrayList<>();
+                    templates1.add(new WebTemplate("template #2.1"));
+                    templates1.add(new WebTemplate("template #2.2"));
+                    customer.add(WebTemplateType.CrewContractHeader, templates2);
 
-        List<WebTemplate> templates2 = new ArrayList<>();
-        templates1.add(new WebTemplate("template #2.1"));
-        templates1.add(new WebTemplate("template #2.2"));
-        customer.add(WebTemplateType.CrewContractHeader, templates2);
+                    getDs().save(customer);
+                    final Datastore datastore1 = getDs();
+                    CustomerWithArrayList loaded = datastore1.find(CustomerWithArrayList.class)
+                            .filter(eq("_id", customer.id))
+                            .first();
 
-        getDs().save(customer);
-        final Datastore datastore1 = getDs();
-        CustomerWithArrayList loaded = datastore1.find(CustomerWithArrayList.class)
-                .filter(eq("_id", customer.id))
-                .first();
+                    assertEquals(loaded.mapWithArrayList, customer.mapWithArrayList);
+                });
 
-        assertEquals(loaded.mapWithArrayList, customer.mapWithArrayList);
     }
 
     @Test
     public void testCustomerWithList() {
 
-        MapperOptions options = MapperOptions.builder(getMapper().getOptions())
-                .storeEmpties(true)
+        withConfig(buildConfig()
                 .storeNulls(true)
-                .build();
-        final Datastore datastore = Morphia.createDatastore(getMongoClient(), getDatabase().getName(), options);
-        Mapper mapper = datastore.getMapper();
+                .storeEmpties(true), () -> {
+                    Mapper mapper = getMapper();
 
-        mapper.map(CustomerWithArrayList.class);
-        CustomerWithList customer = new CustomerWithList();
+                    mapper.map(CustomerWithArrayList.class);
+                    CustomerWithList customer = new CustomerWithList();
 
-        List<WebTemplate> templates1 = new ArrayList<>();
-        templates1.add(new WebTemplate("template #1.1"));
-        templates1.add(new WebTemplate("template #1.2"));
-        customer.add(WebTemplateType.CrewContract, templates1);
+                    List<WebTemplate> templates1 = new ArrayList<>();
+                    templates1.add(new WebTemplate("template #1.1"));
+                    templates1.add(new WebTemplate("template #1.2"));
+                    customer.add(WebTemplateType.CrewContract, templates1);
 
-        List<WebTemplate> templates2 = new ArrayList<>();
-        templates1.add(new WebTemplate("template #2.1"));
-        templates1.add(new WebTemplate("template #2.2"));
-        customer.add(WebTemplateType.CrewContractHeader, templates2);
+                    List<WebTemplate> templates2 = new ArrayList<>();
+                    templates1.add(new WebTemplate("template #2.1"));
+                    templates1.add(new WebTemplate("template #2.2"));
+                    customer.add(WebTemplateType.CrewContractHeader, templates2);
 
-        getDs().save(customer);
-        final Datastore datastore1 = getDs();
-        CustomerWithList loaded = datastore1.find(CustomerWithList.class)
-                .filter(eq("_id", customer.id))
-                .first();
+                    getDs().save(customer);
+                    final Datastore datastore1 = getDs();
+                    CustomerWithList loaded = datastore1.find(CustomerWithList.class)
+                            .filter(eq("_id", customer.id))
+                            .first();
 
-        assertEquals(loaded.mapWithList, customer.mapWithList);
+                    assertEquals(loaded.mapWithList, customer.mapWithList);
+                });
     }
 
     @Test

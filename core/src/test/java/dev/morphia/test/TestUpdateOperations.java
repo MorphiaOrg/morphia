@@ -45,7 +45,6 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
@@ -124,6 +123,7 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "ConstantConditions", "unused", "removal" })
 public class TestUpdateOperations extends TestBase {
+
     @Test
     public void retainsClassName() {
         final MapsOfStuff mapsOfStuff = new MapsOfStuff();
@@ -487,7 +487,7 @@ public class TestUpdateOperations extends TestBase {
         };
 
         test.accept(getDs());
-        withOptions(MapperOptions.legacy().build(), () -> {
+        withConfig(buildConfig().legacy(), () -> {
             test.accept(getDs());
         });
     }
@@ -502,7 +502,7 @@ public class TestUpdateOperations extends TestBase {
         };
 
         test.accept(getDs());
-        withOptions(MapperOptions.legacy().build(), () -> {
+        withConfig(buildConfig().legacy(), () -> {
             test.accept(getDs());
         });
     }
@@ -644,9 +644,8 @@ public class TestUpdateOperations extends TestBase {
 
     @Test
     public void testPolymorphicUpsert() {
-        withOptions(MapperOptions.builder()
-                .enablePolymorphicQueries(true)
-                .build(), () -> {
+        withConfig(buildConfig()
+                .enablePolymorphicQueries(true), () -> {
                     getMapper().map(Shape.class, Circle.class, Square.class, Sphere.class);
                     final ObjectId id = new ObjectId();
                     final double originalValue = 2D;
@@ -1048,10 +1047,9 @@ public class TestUpdateOperations extends TestBase {
                 .next().val, 22);
     }
 
-    @Test //(dataProvider = "mapperOptions")
+    @Test
     public void testUpdateWithStages(/* MapperOptions options */) {
         checkMinServerVersion(4.2);
-        //        withOptions(options, () -> {
         getDs().save(List.of(
                 new Student(1, 95, 92, 90, LocalDate.of(2020, Month.JANUARY, 5)),
                 new Student(2, 98, 100, 102, LocalDate.of(2020, Month.JANUARY, 5)),
@@ -1061,13 +1059,11 @@ public class TestUpdateOperations extends TestBase {
                 .filter(eq("id", 3));
         assertNull(query.first().test3);
 
-        query
-                .update(set()
-                        .field("test3", literal(98))
-                        .field("modified", NOW));
+        query.update(set()
+                .field("test3", literal(98))
+                .field("modified", NOW));
 
         assertEquals(query.first().test3, 98);
-        //        });
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -1209,7 +1205,7 @@ public class TestUpdateOperations extends TestBase {
         assertNotNull(loaded);
         List<Document> logs = (List<Document>) loaded.raw.get("logs");
         for (Document o : logs) {
-            assertNotNull(o.get(getMapper().getOptions().getDiscriminatorKey()), o.toString());
+            assertNotNull(o.get(getMapper().getConfig().discriminatorKey()), o.toString());
         }
     }
 

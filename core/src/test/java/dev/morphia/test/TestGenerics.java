@@ -6,7 +6,6 @@ import java.util.UUID;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -91,9 +90,8 @@ public class TestGenerics extends TestBase {
 
     @Test
     public void testMethodMappedGenericEntities() {
-        withOptions(MapperOptions.builder()
-                .propertyDiscovery(PropertyDiscovery.METHODS)
-                .build(), () -> {
+        withConfig(buildConfig()
+                .propertyDiscovery(PropertyDiscovery.METHODS), () -> {
 
                     EntityModel entityModel = getMapper().map(MethodMappedSpecializedEntity.class).get(0);
 

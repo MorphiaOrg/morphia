@@ -141,7 +141,7 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeDateTime(long value) {
-        state.value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), mapper.getOptions().getDateStorage().getZone()));
+        state.value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), mapper.getConfig().dateStorage().getZone()));
     }
 
     @Override

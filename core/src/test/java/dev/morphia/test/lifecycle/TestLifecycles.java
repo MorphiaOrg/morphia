@@ -23,7 +23,6 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
 import dev.morphia.mapping.DateStorage;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
@@ -45,7 +44,7 @@ import static org.testng.Assert.assertTrue;
 public class TestLifecycles extends TestBase {
     @Test
     public void ensureDateConfigurationIsAppliedEverywhere() {
-        withOptions(MapperOptions.builder().dateStorage(DateStorage.SYSTEM_DEFAULT).build(), () -> {
+        withConfig(buildConfig().dateStorage(DateStorage.SYSTEM_DEFAULT), () -> {
             getDs().getMapper().map(SimpleBean.class);
             SimpleBean simpleBean = new SimpleBean();
             simpleBean.id = ObjectId.get();

@@ -1,8 +1,10 @@
 package dev.morphia.mapping;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
+import dev.morphia.mapping.strategy.CamelCase;
+import dev.morphia.mapping.strategy.Identity;
+import dev.morphia.mapping.strategy.KebabCase;
+import dev.morphia.mapping.strategy.LowerCase;
+import dev.morphia.mapping.strategy.SnakeCase;
 
 /**
  * Defines a naming strategy for use, e.g., in naming collections and fields
@@ -16,12 +18,7 @@ public abstract class NamingStrategy {
      * @return the unchanged value.
      */
     public static NamingStrategy identity() {
-        return new NamingStrategy() {
-            @Override
-            public String apply(String value) {
-                return value;
-            }
-        };
+        return new Identity();
     }
 
     /**
@@ -30,12 +27,7 @@ public abstract class NamingStrategy {
      * @return the updated value.
      */
     public static NamingStrategy lowerCase() {
-        return new NamingStrategy() {
-            @Override
-            public String apply(String value) {
-                return value.toLowerCase();
-            }
-        };
+        return new LowerCase();
     }
 
     /**
@@ -45,18 +37,7 @@ public abstract class NamingStrategy {
      * @see <a href="https://en.wikipedia.org/wiki/Snake_case">Snake case</a>
      */
     public static NamingStrategy snakeCase() {
-        return new NamingStrategy() {
-            @Override
-            public String apply(String value) {
-                List<String> groups = groupByCapitals(value);
-
-                StringJoiner joiner = new StringJoiner("_");
-                for (String group : groups) {
-                    joiner.add(group.toLowerCase());
-                }
-                return joiner.toString();
-            }
-        };
+        return new SnakeCase();
     }
 
     /**
@@ -66,19 +47,7 @@ public abstract class NamingStrategy {
      * @see <a href="https://en.wikipedia.org/wiki/Camel_case">Camel case</a>
      */
     public static NamingStrategy camelCase() {
-        return new NamingStrategy() {
-            @Override
-            public String apply(String value) {
-                List<String> groups = groupByCapitals(value);
-
-                StringJoiner joiner = new StringJoiner("");
-                joiner.add(groups.get(0).toLowerCase());
-                for (int i = 1; i < groups.size(); i++) {
-                    joiner.add(groups.get(i));
-                }
-                return joiner.toString();
-            }
-        };
+        return new CamelCase();
     }
 
     /**
@@ -88,19 +57,7 @@ public abstract class NamingStrategy {
      * @see <a href="https://en.wikipedia.org/wiki/Kebab_case">Kebab case</a>
      */
     public static NamingStrategy kebabCase() {
-        return new NamingStrategy() {
-            @Override
-            public String apply(String value) {
-                List<String> groups = groupByCapitals(value);
-
-                StringJoiner joiner = new StringJoiner("-");
-                joiner.add(groups.get(0).toLowerCase());
-                for (int i = 1; i < groups.size(); i++) {
-                    joiner.add(groups.get(i).toLowerCase());
-                }
-                return joiner.toString();
-            }
-        };
+        return new KebabCase();
     }
 
     /**
@@ -110,26 +67,4 @@ public abstract class NamingStrategy {
      * @return the updated value
      */
     public abstract String apply(String value);
-
-    private static List<String> groupByCapitals(String value) {
-        List<String> groups = new ArrayList<>();
-        StringBuilder builder = null;
-        int index = 0;
-        int length = value.length();
-
-        while (index < length) {
-            char current = value.charAt(index);
-            if (index == 0 || Character.isUpperCase(current)) {
-                if (builder != null) {
-                    groups.add(builder.toString());
-                }
-                builder = new StringBuilder();
-            }
-            builder.append(current);
-            index++;
-        }
-        groups.add(builder.toString());
-
-        return groups;
-    }
 }

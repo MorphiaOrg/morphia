@@ -113,7 +113,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
     private <I> I fromDocument(Class<I> type, Document document) {
         Class<I> aClass = type;
         Mapper mapper = datastore.getMapper();
-        if (document.containsKey(mapper.getOptions().getDiscriminatorKey())) {
+        if (document.containsKey(mapper.getConfig().discriminatorKey())) {
             aClass = mapper.getClass(document);
         }
 

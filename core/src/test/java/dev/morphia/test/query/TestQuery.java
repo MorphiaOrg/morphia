@@ -36,7 +36,6 @@ import dev.morphia.query.ArraySlice;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
@@ -507,13 +506,9 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCriteriaContainers() {
-        try {
+        assertThrows(UnsupportedOperationException.class, () -> {
             check(new DefaultQueryFactory().createQuery(getDs(), User.class).disableValidation());
-            fail("These operations are not supported on the modern query operation and should have failed.");
-        } catch (UnsupportedOperationException e) {
-            // success
-        }
-        check(new LegacyQueryFactory().createQuery(getDs(), User.class).disableValidation());
+        });
     }
 
     @Test
@@ -1320,8 +1315,7 @@ public class TestQuery extends TestBase {
 
     @SuppressWarnings("removal")
     private void check(Query<User> query) {
-        query
-                .field("version").equal("latest")
+        query.field("version").equal("latest")
                 .and(
                         query.or(
                                 query.criteria("fieldA").equal("a"),

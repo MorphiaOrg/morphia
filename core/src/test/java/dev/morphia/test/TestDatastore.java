@@ -29,7 +29,6 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.CountOptions;
@@ -52,14 +51,8 @@ import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.User;
 
-import org.bson.BsonReader;
-import org.bson.BsonWriter;
 import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecProvider;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
@@ -80,6 +73,8 @@ import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "rawtypes", "ConstantConditions" })
 public class TestDatastore extends TestBase {
+
+    private static final String CUSTOM_CODEC = "custom-codec.properties";
 
     @Test
     public void testAlternateCollections() {
@@ -154,7 +149,7 @@ public class TestDatastore extends TestBase {
     @SuppressWarnings("removal")
     @Test
     public void testAlternateCollectionsWithLegacyQuery() {
-        withOptions(MapperOptions.legacy().build(), () -> {
+        withConfig(buildConfig().legacy(), () -> {
             final String alternateName = "alternate";
 
             getMapper().map(Book.class, User.class);
@@ -279,45 +274,23 @@ public class TestDatastore extends TestBase {
     @Test
     public void testCustomCodecProvider() {
         getDs().save(new User("Christopher Turk", LocalDate.of(1974, Month.JUNE, 22)));
-        var options = MapperOptions.builder()
-                .codecProvider(new CodecProvider() {
-                    @Override
-                    public <T> Codec<T> get(Class<T> aClass, CodecRegistry codecRegistry) {
-                        return new Codec<T>() {
-                            @Override
-                            public T decode(BsonReader bsonReader, DecoderContext decoderContext) {
-                                throw new QueryException("custom codec used on decode");
-                            }
+        withConfig(buildConfig()
+                .codecProvider(new AlwaysFailingCodecProvider()), () -> {
+                    getMapper().map(User.class);
 
-                            @Override
-                            public void encode(BsonWriter bsonWriter, T t, EncoderContext encoderContext) {
-                                throw new QueryException("custom codec used on encode");
-                            }
+                    assertThrows(QueryException.class, () -> {
+                        getDs().save(new User("John \"J.D.\" Dorian", LocalDate.of(1974, Month.APRIL, 6)));
+                    });
+                    assertThrows(QueryException.class, () -> {
+                        getDs().find(User.class).first();
+                    });
 
-                            @Override
-                            public Class<T> getEncoderClass() {
-                                return (Class<T>) Object.class;
-                            }
-                        };
-                    }
-                })
-                .build();
-        withOptions(options, () -> {
-            getMapper().map(User.class);
-
-            assertThrows(QueryException.class, () -> {
-                getDs().save(new User("John \"J.D.\" Dorian", LocalDate.of(1974, Month.APRIL, 6)));
-            });
-            assertThrows(QueryException.class, () -> {
-                getDs().find(User.class).first();
-            });
-
-            assertThrows(QueryException.class, () -> {
-                getDs().getCodecRegistry()
-                        .get(String.class)
-                        .encode(new DocumentWriter(getMapper()), "this should fail", EncoderContext.builder().build());
-            });
-        });
+                    assertThrows(QueryException.class, () -> {
+                        getDs().getCodecRegistry()
+                                .get(String.class)
+                                .encode(new DocumentWriter(getMapper()), "this should fail", EncoderContext.builder().build());
+                    });
+                });
     }
 
     @Test

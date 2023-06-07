@@ -1,15 +1,16 @@
 package dev.morphia.config;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.QueryFactory;
-import org.eclipse.microprofile.config.spi.Converter;
 
-public class QueryFactoryConverter implements Converter<QueryFactory> {
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
+public class QueryFactoryConverter extends ClassNameConverter<QueryFactory> {
     @Override
-    public QueryFactory convert(String value) throws IllegalArgumentException, NullPointerException {
-        try {
-            return (QueryFactory) Class.forName(value).getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+    public QueryFactory convert(String value) {
+        return (QueryFactory) super.convert(value);
     }
 }

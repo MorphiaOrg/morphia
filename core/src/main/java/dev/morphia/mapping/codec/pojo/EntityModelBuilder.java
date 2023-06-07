@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,8 +24,15 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.NotMappableException;
+import dev.morphia.mapping.conventions.ConfigureProperties;
+import dev.morphia.mapping.conventions.FieldDiscovery;
+import dev.morphia.mapping.conventions.MethodDiscovery;
 import dev.morphia.mapping.conventions.MorphiaConvention;
+import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 import dev.morphia.sofia.Sofia;
+
+import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
+import static java.util.List.of;
 
 /**
  * Builder for EntityModels
@@ -115,7 +123,15 @@ public class EntityModelBuilder {
      * @return the new instance
      */
     public EntityModel build() {
-        for (MorphiaConvention convention : mapper.getOptions().getConventions()) {
+        List<MorphiaConvention> conventions = new ArrayList<>(of(
+                new MorphiaDefaultsConvention(),
+                mapper.getConfig().propertyDiscovery() == FIELDS ? new FieldDiscovery() : new MethodDiscovery(),
+                new ConfigureProperties()));
+
+        ServiceLoader.load(MorphiaConvention.class)
+                .forEach(conventions::add);
+
+        for (MorphiaConvention convention : conventions) {
             convention.apply(mapper, this);
         }
 
@@ -341,7 +357,7 @@ public class EntityModelBuilder {
         Entity entityAn = getAnnotation(Entity.class);
         return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
                 ? entityAn.value()
-                : mapper.getOptions().getCollectionNaming().apply(targetType.getSimpleName());
+                : mapper.getConfig().collectionNaming().apply(targetType.getSimpleName());
     }
 
     private void buildHierarchy(Class<?> type) {
