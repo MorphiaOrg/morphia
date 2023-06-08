@@ -1,20 +1,21 @@
 == Configuration
 
-Morphia 2.0 introduced a number of new ways to configure its behavior.
-These values are listed below:
+Starting in Morphia 3.0, configuration will be driven via a configuration file rather than programmatic configuration.  This is being
+done for a number of reasons:
 
-1. Collection naming
-2. Property naming
-3. The discriminator key
-4. The discriminator value
+1.  Better align with usage in frameworks such as Quarkus and Spring Boot
+1.  Allow for deployment specific variations based on the deployment environment.
+
+The configuration mechanism, build on https://microprofile.io/microprofile-config/[Microprofile Config], allows for a number of
+variations which were awkward, at best, and usually downright impossible when using the traditional programmatic configuration.
+Reference documentation for the configuration file can be found in the link:++javadoc/dev/morphia/config/MorphiaConfig.html++[javadoc] but
+we'll go in depth on a few items here.  An example configuration file is included below.  All possible configuration elements are listed.
+However, if the default values are acceptable that element can be safely omitted from your file.  The only element *required* to be
+present is `morphia.database`.
 
 === Collection and property naming
 
-Traditionally Morphia has used with the class's "simple name" for the collection name if you choose to not manually map the name of an entity's collection.
-Similarly, an entity's properties were named after the Java field name unless mapped otherwise with the
-`@Property` annotation.
-In 2.0, however, we define naming strategies.
-As of 2.0, the naming strategies supported out of the box are:
+Traditionally Morphia has used with the class's "simple name" for the collection name if you choose to not manually map the name of an entity's collection. Similarly, an entity's properties were named after the Java field name unless mapped otherwise with the `@Property` annotation. In 2.0, however, we define naming strategies. As of 2.0, the naming strategies supported out of the box are:
 
 1. `identity` This is the legacy behavior Morphia has always used.
 2. `lower` This is simply the lower case form of the `identity` strategy.
@@ -25,9 +26,9 @@ This is the form most java developers will be familiar with.
 5. `kebab` This transforms element names in to their https://en.wikipedia.org/wiki/Kebab_case[kebab case] versions.
 This looks exactly like the `snake case` but with `-` instead of `_` so that it looks like it's on a kebab skewer.
 
-These strategies can all be access via the `NamingStrategy` class via their named methods.
-In the case where you have a custom naming strategy you'd like to employ, e.g., perhaps some hashing function to obscure element names, you can simply extend `NamingStrategy`
-yourself and implement whatever logic you might need.
+These strategies can all be accessed via the link:++javadoc/dev/morphia/mapping/NamingStrategy.html++[NamingStrategy] class using their
+named methods. If you need a custom naming strategy, perhaps some hashing function to obscure
+element names, e.g., you can simply extend `NamingStrategy` yourself and implement whatever logic you might need.
 
 === Discriminator keys and values
 

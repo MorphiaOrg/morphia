@@ -13,13 +13,14 @@ import dev.morphia.config.MapperOptionsWrapper;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
-
 import dev.morphia.mapping.MappingException;
 import dev.morphia.sofia.Sofia;
+
+import org.eclipse.microprofile.config.spi.ConfigSource;
+
 import io.smallrye.config.EnvConfigSource;
 import io.smallrye.config.SmallRyeConfigBuilder;
 import io.smallrye.config.SysPropConfigSource;
-import org.eclipse.microprofile.config.spi.ConfigSource;
 
 import static io.smallrye.config.PropertiesConfigSourceProvider.classPathSources;
 import static java.lang.Thread.currentThread;
@@ -125,7 +126,7 @@ public final class Morphia {
     @MorphiaInternal
     public static MorphiaConfig loadConfigMapping(String path) {
         List<ConfigSource> configSources = classPathSources(path.startsWith("META-INF/") ? path : "META-INF/" + path,
-            currentThread().getContextClassLoader());
+                currentThread().getContextClassLoader());
         if (configSources.isEmpty()) {
             throw new MappingException(Sofia.missingConfigFile(path));
         }

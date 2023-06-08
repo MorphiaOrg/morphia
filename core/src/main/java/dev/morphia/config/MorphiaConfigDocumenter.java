@@ -1,7 +1,6 @@
 package dev.morphia.config;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -149,7 +148,7 @@ public class MorphiaConfigDocumenter {
         Converter<?> converter;
 
         public Entry(String name, boolean optional, Object value, String defaultValue, PossibleValues possibleValues,
-                     Converter<?> converter) {
+                Converter<?> converter) {
             this.name = name;
             this.value = value;
             this.defaultValue = defaultValue;
@@ -162,10 +161,10 @@ public class MorphiaConfigDocumenter {
         private void normalize() {
             if (converter != null && possibleValues != null) {
                 stream(possibleValues.value())
-                    .filter(v1 -> value.equals(convertToString(converter.convert(v1))))
-                    .findFirst().ifPresent(v -> {
-                        value = v;
-                    });
+                        .filter(v1 -> value.equals(convertToString(converter.convert(v1))))
+                        .findFirst().ifPresent(v -> {
+                            value = v;
+                        });
             }
 
         }
@@ -184,7 +183,7 @@ public class MorphiaConfigDocumenter {
             }
             if (possibleValues != null) {
                 joiner.add("# possible values = " +
-                           join(", ", possibleValues.value()) );
+                        join(", ", possibleValues.value()));
             }
 
             joiner.add(name + "=" + value);
