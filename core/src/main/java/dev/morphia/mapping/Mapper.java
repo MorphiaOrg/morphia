@@ -407,7 +407,7 @@ public class Mapper {
      */
     public synchronized void mapPackage(String packageName) {
         try {
-            getClasses(contextClassLoader, packageName, getConfig().mapSubPackages())
+            getClasses(contextClassLoader, packageName, getConfig().mapSubpackages())
                     .stream()
                     .map(type -> {
                         try {

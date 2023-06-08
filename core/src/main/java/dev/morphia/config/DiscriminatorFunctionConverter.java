@@ -20,7 +20,6 @@ public class DiscriminatorFunctionConverter implements Converter<DiscriminatorFu
     @Override
     public DiscriminatorFunction convert(String value) throws IllegalArgumentException, NullPointerException {
         try {
-
             switch (value) {
                 case "className":
                     return className();

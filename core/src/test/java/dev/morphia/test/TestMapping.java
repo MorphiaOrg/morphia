@@ -874,7 +874,7 @@ public class TestMapping extends TestBase {
     @Test
     public void testSubPackagesMapping() {
         // when
-        withConfig(buildConfig().mapSubPackages(true), () -> {
+        withConfig(buildConfig().mapSubpackages(true), () -> {
             getMapper().mapPackageFromClass(Versioned.class);
 
             // then

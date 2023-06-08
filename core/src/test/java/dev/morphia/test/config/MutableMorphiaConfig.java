@@ -23,7 +23,7 @@ public class MutableMorphiaConfig implements MorphiaConfig {
     private String discriminatorKey;
     private boolean enablePolymorphicQueries;
     private boolean ignoreFinals;
-    private boolean mapSubPackages;
+    private boolean mapSubpackages;
     private PropertyDiscovery propertyDiscovery;
     private NamingStrategy propertyNaming;
     private QueryFactory queryFactory;
@@ -40,7 +40,7 @@ public class MutableMorphiaConfig implements MorphiaConfig {
         discriminatorKey = base.discriminatorKey();
         enablePolymorphicQueries = base.enablePolymorphicQueries();
         ignoreFinals = base.ignoreFinals();
-        mapSubPackages = base.mapSubPackages();
+        mapSubpackages = base.mapSubpackages();
         propertyDiscovery = base.propertyDiscovery();
         propertyNaming = base.propertyNaming();
         queryFactory = base.queryFactory();
@@ -142,12 +142,12 @@ public class MutableMorphiaConfig implements MorphiaConfig {
     }
 
     @Override
-    public boolean mapSubPackages() {
-        return mapSubPackages;
+    public boolean mapSubpackages() {
+        return mapSubpackages;
     }
 
-    public MutableMorphiaConfig mapSubPackages(boolean mapSubPackages) {
-        this.mapSubPackages = mapSubPackages;
+    public MutableMorphiaConfig mapSubpackages(boolean mapSubpackages) {
+        this.mapSubpackages = mapSubpackages;
         return this;
     }
 

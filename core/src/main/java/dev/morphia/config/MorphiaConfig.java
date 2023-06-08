@@ -64,7 +64,7 @@ public interface MorphiaConfig {
      * 
      * @return the date storage configuration value
      */
-    @WithDefault("UTC")
+    @WithDefault("utc")
     DateStorage dateStorage();
 
     /**
@@ -106,10 +106,10 @@ public interface MorphiaConfig {
     /**
      * Instructs Morphia to scan subpackages when mapping by package
      *
-     * @return true if Morphia should map classes from the sub-packages as well
+     * @return true if Morphia should map classes from the subpackages as well
      */
     @WithDefault("false")
-    boolean mapSubPackages();
+    boolean mapSubpackages();
 
     /**
      * Determines how properties are discovered. The traditional value is by scanning for fields which involves a bit more reflective
@@ -166,7 +166,7 @@ public interface MorphiaConfig {
      * @return the UUID representation to use in the driver
      * @deprecated This should be configured in the MongoClient given to Morphia
      */
-    @WithDefault("STANDARD")
+    @WithDefault("standard")
     @Deprecated(forRemoval = true, since = "2.4")
     UuidRepresentation uuidRepresentation();
 }

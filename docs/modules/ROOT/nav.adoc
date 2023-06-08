@@ -4,6 +4,7 @@
 
 * Features
 ** xref:configuration.adoc[Configuration]
+** xref:configuration-old.adoc[Configuration (Legacy)]
 ** xref:kotlin.adoc[Kotlin]
 ** xref:mapping.adoc[Mapping]
 ** xref:indexing.adoc[Indexing]
