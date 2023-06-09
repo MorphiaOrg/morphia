@@ -3,8 +3,8 @@ package dev.morphia.test;
 import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 
-import dev.morphia.Morphia;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.config.MorphiaConfigHelper;
 import dev.morphia.test.TestBase.ZDTCodecProvider;
 import dev.morphia.test.config.MutableMorphiaConfig;
 
@@ -138,7 +138,7 @@ public class MorphiaTestSetup {
         var oldContainer = morphiaContainer;
         try (var holder = initMongoDbContainer(true)) {
             mongoHolder = holder;
-            morphiaContainer = new MorphiaContainer(mongoHolder.getMongoClient(), Morphia.loadConfigMapping());
+            morphiaContainer = new MorphiaContainer(mongoHolder.getMongoClient(), MorphiaConfigHelper.loadConfigMapping());
             body.run();
         } finally {
             mongoHolder = oldHolder;
@@ -157,7 +157,7 @@ public class MorphiaTestSetup {
     }
 
     protected static MutableMorphiaConfig buildConfig() {
-        return new MutableMorphiaConfig(Morphia.loadConfigMapping())
+        return new MutableMorphiaConfig(MorphiaConfigHelper.loadConfigMapping())
                 .database(TEST_DB_NAME);
     }
 

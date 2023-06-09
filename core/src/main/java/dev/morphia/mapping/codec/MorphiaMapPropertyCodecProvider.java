@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.TypeData;
 
 import org.bson.BsonReader;
@@ -20,6 +21,11 @@ import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
     @Override

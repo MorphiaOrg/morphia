@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 import dev.morphia.Datastore;
-import dev.morphia.mapping.MapperOptions;
+import dev.morphia.config.MorphiaConfig;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -13,7 +13,7 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
 /**
- * Converts the {@code LocalDate} values to and from the zone defined in {@link MapperOptions#getDateStorage()}
+ * Converts the {@code LocalDate} values to and from the zone defined in {@link MorphiaConfig#dateStorage()}
  *
  * @since 2.0
  */

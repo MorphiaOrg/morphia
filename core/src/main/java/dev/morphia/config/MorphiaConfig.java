@@ -28,7 +28,8 @@ import io.smallrye.config.WithDefault;
 public interface MorphiaConfig {
 
     /**
-     * The database name that Morphia should use.
+     * The database name that Morphia should use. This entry is required to be present and is the only necessary configuration element
+     * you need to provide as all the other entries have discernible default values.
      *
      * @return the database name to be used with this configuration
      */
@@ -40,7 +41,9 @@ public interface MorphiaConfig {
      * @return the user configured CodecProvider
      * @see CodecProvider
      * @since 2.4
+     * @deprecated this configuration entry will updated to use SPI as with other customizations
      */
+    @Deprecated(since = "2.4", forRemoval = true)
     @WithConverter(CodecConverter.class)
     Optional<CodecProvider> codecProvider();
 

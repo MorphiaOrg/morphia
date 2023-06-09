@@ -12,16 +12,14 @@ import dev.morphia.query.QueryFactory;
 
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @hidden
  * @morphia.internal
+ * @since 2.4
  */
 @MorphiaInternal
 public class MapperOptionsWrapper implements MorphiaConfig {
-    private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
 
     private final MapperOptions options;
     private final String database;
@@ -29,14 +27,6 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     public MapperOptionsWrapper(MapperOptions options, String database) {
         this.options = options;
         this.database = database;
-        logConfigMessage();
-    }
-
-    private void logConfigMessage() {
-        LOG.info("Morphia 3.0 will be moving to a configuration file based setup.  As such MapperOptions will be removed in the next " +
-                "major release.  To remove this message, create the file 'META-INF/morphia-config.properties' in your resources folder " +
-                "using the following text.  Entries with default values may be omitted but are included here for completeness.\n" +
-                new MorphiaConfigDocumenter(this));
     }
 
     @Override

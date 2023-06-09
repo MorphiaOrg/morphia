@@ -89,6 +89,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
  * A generic (type-safe) wrapper around mongodb collections
  *
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
 @SuppressWarnings({ "unchecked", "rawtypes", "removal" })
@@ -102,7 +103,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     private MongoDatabase database;
     private DatastoreOperations operations;
 
-    protected DatastoreImpl(Mapper mapper, MongoClient mongoClient, String dbName) {
+    public DatastoreImpl(Mapper mapper, MongoClient mongoClient, String dbName) {
         this.database = mongoClient.getDatabase(dbName);
         this.mapper = mapper;
         this.mongoClient = mongoClient;

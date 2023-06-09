@@ -162,8 +162,8 @@ In this version of the unit test, we tail the cursor waiting to pull out objects
 === Polymorphic Queries
 
 By default, Morphia will only return documents of the type given in `find()`. However, if you want to retrieve subtypes as well, you can
-enable this in the `MapperOptions` via link:++javadoc/dev/morphia/mapping/MapperOptions.Builder.html#enablePolymorphicQueries(boolean)
-++[MapperOptions.Builder.enablePolymorphicQueries(boolean)].
+enable this in `MorphiaConfig` via
+link:++javadoc/dev/morphia/config/MorphiaConfig.html#enablePolymorphicQueries()++[MorphiaConfig#enablePolymorphicQueries()].
 
 [NOTE]
 ====

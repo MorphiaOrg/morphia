@@ -1,5 +1,30 @@
 = Migration
 
+== Migrating to 2.4
+
+=== Configuration
+Morphia 2.4 sees the introduction of file-based configuration instead of the programmatic configuration currently in use.  The file
+should live in your build's resources folder and be named `META-INF/morphia-config.properties`.  More information can be found in
+xref:configuration.adoc[configuration section].  In order to aid in your migration to the new configuration file, a couple of options
+are available to you:
+
+1.  Upon initializing Morphia using the traditional method of passing in `MapperOptions` to `#createDatastore()`, Morphia will log a
+warning about the deprecation of that approach and will output your current configuration in config file format to the logs which you can
+simply copy and paste in to the configuration file and update to use the
+link:++javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient)++[new method].
+2.  You can manually generate that content by calling `MapperOptions#toConfigFormat(String database, boolean showComplete)` on your
+instance.  This will return a `String` which can be copied in to your configuration file.
+
+=== Deprecations
+    "Man Plans and God Laughs."
+        -- old Yiddish adage
+
+The 2.4.0 release, and any subsequent patch releases, will be the last of the 2.x releases as attention is turned toward a major 3.0
+release.  Consequently, now is the time to replace any uses of deprecated elements with their recommended replacements.  Should you find
+a deprecated element without a documented replacement, please file https://github.com/MorphiaOrg/morphia/issues[an issue].  There are a
+handful of deprecations that currently have no replacement but are deprecated to serve as a bit of heads up that, e.g., the return type is
+shifting and that it will need attention after the upgrade to 3.0.
+
 == Migrating to 2.3
 
 === Experimental packages

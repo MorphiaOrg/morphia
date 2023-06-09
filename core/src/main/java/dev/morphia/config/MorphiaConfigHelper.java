@@ -3,23 +3,36 @@ package dev.morphia.config;
 import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import dev.morphia.annotations.PossibleValues;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.MapperOptions;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
+import dev.morphia.sofia.Sofia;
 
+import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.eclipse.microprofile.config.spi.Converter;
 
 import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.EnvConfigSource;
+import io.smallrye.config.SmallRyeConfigBuilder;
+import io.smallrye.config.SysPropConfigSource;
 import io.smallrye.config.WithConverter;
 import io.smallrye.config.WithDefault;
 
 import static dev.morphia.annotations.internal.PossibleValuesBuilder.possibleValuesBuilder;
+import static io.smallrye.config.PropertiesConfigSourceProvider.classPathSources;
 import static java.lang.String.join;
+import static java.lang.Thread.currentThread;
 import static java.util.Arrays.stream;
+import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -28,13 +41,46 @@ import static java.util.stream.Collectors.joining;
  * @morphia.internal
  */
 @MorphiaInternal
-public class MorphiaConfigDocumenter {
+public class MorphiaConfigHelper {
+    private static final String MORPHIA_CONFIG_PROPERTIES = "META-INF/morphia-config.properties";
     final String prefix;
     private final MorphiaConfig config;
+    private final boolean showComplete;
     private final List<Entry> entries;
 
-    public MorphiaConfigDocumenter(MorphiaConfig config) {
+    /**
+     * Logs the configuration file form of the MapperOptions without default values listed.
+     *
+     * @param options  the options to convert
+     * @param database the database name to configure
+     * @return
+     * @since 2.4
+     */
+    public static String dumpConfigurationFile(MapperOptions options, String database, boolean showComplete) {
+        MapperOptionsWrapper wrapper = new MapperOptionsWrapper(options, database);
+        MorphiaConfigHelper helper = new MorphiaConfigHelper(wrapper, showComplete);
+        return helper.toString();
+    }
+
+    /**
+     * Logs the configuration file form of the MapperOptions with default values optionally listed.
+     *
+     * @param options  the options to convert
+     * @param database the database name to configure
+     * @since 2.4
+     */
+    public static void dumpConfigurationFile(MapperOptions options, String database) {
+        new MapperOptionsWrapper(options, database);
+    }
+
+    /**
+     * @param config
+     * @param showComplete
+     * @hidden
+     */
+    MorphiaConfigHelper(MorphiaConfig config, boolean showComplete) {
         this.config = config;
+        this.showComplete = showComplete;
         prefix = getPrefix();
         entries = stream(MorphiaConfig.class.getDeclaredMethods())
                 .sorted(Comparator.comparing(Method::getName))
@@ -43,11 +89,49 @@ public class MorphiaConfigDocumenter {
 
     }
 
+    private static Map<String, String> getEnvProperties() {
+        return unmodifiableMap(new TreeMap<>(System.getenv()));
+    }
+
+    /**
+     * @hidden
+     * @return
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static MorphiaConfig loadConfigMapping() {
+        return loadConfigMapping(MORPHIA_CONFIG_PROPERTIES);
+    }
+
+    /**
+     * @hidden
+     * @return
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static MorphiaConfig loadConfigMapping(String path) {
+        List<ConfigSource> configSources = classPathSources(path.startsWith("META-INF/") ? path : "META-INF/" + path,
+                currentThread().getContextClassLoader());
+        if (configSources.isEmpty()) {
+            throw new MappingException(Sofia.missingConfigFile(path));
+        }
+        return new SmallRyeConfigBuilder()
+                .addDefaultInterceptors()
+                .withMapping(MorphiaConfig.class)
+                .withSources(new EnvConfigSource(getEnvProperties(), 300),
+                        new SysPropConfigSource())
+                .withSources(configSources)
+                .addDefaultSources()
+                .build()
+                .getConfigMapping(MorphiaConfig.class);
+    }
+
     @Override
     public String toString() {
         return entries
                 .stream()
                 .map(Entry::printEntry)
+                .filter(Objects::nonNull)
                 .collect(joining("\n"));
     }
 
@@ -65,15 +149,13 @@ public class MorphiaConfigDocumenter {
             }
         }
 
-        var entry = new Entry(
+        return new Entry(
                 prefix + NamingStrategy.kebabCase().apply(m.getName()),
                 Optional.class.isAssignableFrom(m.getReturnType()),
                 getValue(m),
                 getDefault(m),
                 getPossibles(m),
                 converter);
-
-        return entry;
     }
 
     private static String getPrefix() {
@@ -95,7 +177,7 @@ public class MorphiaConfigDocumenter {
 
     private static String convertToString(Object value) {
         if (value == null) {
-            return "";
+            return null;
         } else if (value instanceof String) {
             return (String) value;
         } else if (value instanceof Enum) {
@@ -139,7 +221,7 @@ public class MorphiaConfigDocumenter {
         return annotation.value();
     }
 
-    private static class Entry {
+    private class Entry {
         String name;
         private final boolean optional;
         Object value;
@@ -158,37 +240,46 @@ public class MorphiaConfigDocumenter {
             normalize();
         }
 
+        @Override
+        public String toString() {
+            return name;
+        }
+
         private void normalize() {
-            if (converter != null && possibleValues != null) {
+            if (possibleValues != null) {
                 stream(possibleValues.value())
-                        .filter(v1 -> value.equals(convertToString(converter.convert(v1))))
+                        .filter(v1 -> {
+                            String converted = converter != null ? convertToString(converter.convert(v1)) : v1;
+                            return value.equals(converted);
+                        })
                         .findFirst().ifPresent(v -> {
-                            value = v;
+                            value = null;
                         });
             }
 
         }
 
         String printEntry() {
-            StringJoiner joiner = new StringJoiner("\n");
+            if (showComplete || value != null && !value.equals(defaultValue)) {
+                StringJoiner joiner = new StringJoiner("\n");
+                if (optional) {
+                    joiner.add("# *optional*");
+                }
+                if (!optional && defaultValue == null) {
+                    joiner.add("# *required*");
+                }
+                if (defaultValue != null) {
+                    joiner.add("# default = " + defaultValue);
+                }
+                if (possibleValues != null) {
+                    joiner.add("# possible values = " +
+                            join(", ", possibleValues.value()));
+                }
 
-            if (optional) {
-                joiner.add("# *optional*");
+                joiner.add(name + "=" + value);
+                return joiner.toString();
             }
-            if (!optional && defaultValue == null) {
-                joiner.add("# *required*");
-            }
-            if (defaultValue != null) {
-                joiner.add("# default = " + defaultValue);
-            }
-            if (possibleValues != null) {
-                joiner.add("# possible values = " +
-                        join(", ", possibleValues.value()));
-            }
-
-            joiner.add(name + "=" + value);
-
-            return joiner.toString();
+            return null;
         }
     }
 }

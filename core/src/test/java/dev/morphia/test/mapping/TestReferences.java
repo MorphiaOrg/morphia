@@ -26,7 +26,6 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
@@ -337,25 +336,23 @@ public class TestReferences extends ProxyTestBase {
 
     @Test
     public void testMethodMapping() {
-        Datastore datastore = createDatastore(getMongoClient(), TEST_DB_NAME,
-                MapperOptions.builder()
-                        .propertyDiscovery(
-                                PropertyDiscovery.METHODS)
-                        .build());
+        withConfig(buildConfig()
+                .propertyDiscovery(PropertyDiscovery.METHODS), () -> {
 
-        datastore.getMapper().map(MethodMappedUser.class);
-        MethodMappedUser user = new MethodMappedUser();
-        MethodMappedFriend friend = new MethodMappedFriend();
-        user.setFriend(friend);
-        user.setFriends(MorphiaReference.wrap(List.of(friend)));
+                    getDs().getMapper().map(MethodMappedUser.class);
+                    MethodMappedUser user = new MethodMappedUser();
+                    MethodMappedFriend friend = new MethodMappedFriend();
+                    user.setFriend(friend);
+                    user.setFriends(MorphiaReference.wrap(List.of(friend)));
 
-        datastore.save(List.of(friend, user));
+                    getDs().save(List.of(friend, user));
 
-        MethodMappedUser loaded = datastore.find(MethodMappedUser.class).first();
-        assertFalse(loaded.getFriends().isResolved());
-        assertEquals(loaded.getFriend(), friend);
-        assertEquals(loaded.getFriends().get().get(0), friend);
-        assertEquals(loaded, user);
+                    MethodMappedUser loaded = getDs().find(MethodMappedUser.class).first();
+                    assertFalse(loaded.getFriends().isResolved());
+                    assertEquals(loaded.getFriend(), friend);
+                    assertEquals(loaded.getFriends().get().get(0), friend);
+                    assertEquals(loaded, user);
+                });
     }
 
     @Test(expectedExceptions = ReferenceException.class)

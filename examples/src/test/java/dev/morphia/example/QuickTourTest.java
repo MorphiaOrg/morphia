@@ -17,10 +17,10 @@ import static org.testng.Assert.assertEquals;
 /**
  * This class is used in the Quick Tour documentation and is used to demonstrate various Morphia features.
  */
+@Test
 public class QuickTourTest extends TestBase {
-    @Test
     public void demo() {
-        final Datastore datastore = Morphia.createDatastore(getMongoClient(), "morphia_example");
+        final Datastore datastore = Morphia.createDatastore(getMongoClient());
 
         // tell morphia where to find your classes
         // can be called multiple times with different packages or classes
@@ -30,14 +30,9 @@ public class QuickTourTest extends TestBase {
         datastore.getDatabase().drop();
         datastore.ensureIndexes();
 
-        final Employee elmer = new Employee("Elmer Fudd", 50000.0);
-        datastore.save(elmer);
-
-        final Employee daffy = new Employee("Daffy Duck", 40000.0);
-        datastore.save(daffy);
-
-        final Employee pepe = new Employee("Pepé Le Pew", 25000.0);
-        datastore.save(pepe);
+        final Employee elmer = datastore.save(new Employee("Elmer Fudd", 50000.0));
+        final Employee daffy = datastore.save(new Employee("Daffy Duck", 40000.0));
+        final Employee pepe = datastore.save(new Employee("Pepé Le Pew", 25000.0));
 
         elmer.getDirectReports().add(daffy);
         elmer.getDirectReports().add(pepe);

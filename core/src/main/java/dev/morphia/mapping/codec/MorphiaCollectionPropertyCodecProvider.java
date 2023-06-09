@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.TypeData;
 
 import org.bson.codecs.Codec;
@@ -14,7 +15,11 @@ import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 /**
  * A provider for collection types
+ * 
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 public class MorphiaCollectionPropertyCodecProvider extends MorphiaPropertyCodecProvider {
     @Nullable

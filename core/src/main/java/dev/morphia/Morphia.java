@@ -1,36 +1,24 @@
 package dev.morphia;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
-import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MapperOptionsWrapper;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.config.MorphiaConfigHelper;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.MappingException;
-import dev.morphia.sofia.Sofia;
 
-import org.eclipse.microprofile.config.spi.ConfigSource;
-
-import io.smallrye.config.EnvConfigSource;
-import io.smallrye.config.SmallRyeConfigBuilder;
-import io.smallrye.config.SysPropConfigSource;
-
-import static io.smallrye.config.PropertiesConfigSourceProvider.classPathSources;
-import static java.lang.Thread.currentThread;
-import static java.util.Collections.unmodifiableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Entry point for working with Morphia
  */
 public final class Morphia {
-    public static final String MORPHIA_CONFIG_PROPERTIES = "META-INF/morphia-config.properties";
+
+    private static final Logger LOG = LoggerFactory.getLogger(Morphia.class);
 
     private Morphia() {
     }
@@ -40,7 +28,7 @@ public final class Morphia {
      *
      * @param dbName the name of the database
      * @return a Datastore that you can use to interact with MongoDB
-     * @deprecated Please use {@link #createDatastore(MongoClient, String)}
+     * @deprecated use {@link #createDatastore(MongoClient)} and provide a configuration file instead. See the website docs for more detail
      */
     @Deprecated(forRemoval = true, since = "2.3")
     public static Datastore createDatastore(String dbName) {
@@ -53,7 +41,7 @@ public final class Morphia {
      * @param dbName  the name of the database
      * @param options the mapping options to use.
      * @return a Datastore that you can use to interact with MongoDB
-     * @deprecated Please use {@link #createDatastore(MongoClient, String, MapperOptions)}
+     * @deprecated use {@link #createDatastore(MongoClient)} and provide a configuration file instead. See the website docs for more detail
      */
     @Deprecated(forRemoval = true, since = "2.3")
     public static Datastore createDatastore(String dbName, MapperOptions options) {
@@ -69,9 +57,18 @@ public final class Morphia {
      * @param dbName      the name of the database
      * @param options     the mapping options to use.
      * @return a Datastore that you can use to interact with MongoDB
+     * @deprecated use {@link #createDatastore(MongoClient)} and provide a configuration file instead. See the website docs for more detail
      */
+    @Deprecated(forRemoval = true, since = "2.4.0")
     public static Datastore createDatastore(MongoClient mongoClient, String dbName, MapperOptions options) {
-        return new DatastoreImpl(new Mapper(new MapperOptionsWrapper(options, dbName)), mongoClient, dbName);
+        MapperOptionsWrapper config = new MapperOptionsWrapper(options, dbName);
+        var configContents = MorphiaConfigHelper.dumpConfigurationFile(options, dbName, true);
+        LOG.info("Morphia 3.0 will be moving to a configuration file based setup.  As such MapperOptions will be removed in the next " +
+                "major release.  To remove this message, create the file 'META-INF/morphia-config.properties' in your resources folder " +
+                "using the following text.  Entries with default values may be omitted but are included here for completeness.\n" +
+                configContents);
+
+        return new DatastoreImpl(new Mapper(config), mongoClient, dbName);
     }
 
     /**
@@ -80,7 +77,9 @@ public final class Morphia {
      * @param mongoClient the client to use
      * @param dbName      the name of the database
      * @return a Datastore that you can use to interact with MongoDB
+     * @deprecated use {@link #createDatastore(MongoClient)} and provide a configuration file instead. See the website docs for more detail
      */
+    @Deprecated(forRemoval = true, since = "2.4.0")
     public static Datastore createDatastore(MongoClient mongoClient, String dbName) {
         return createDatastore(mongoClient, dbName, MapperOptions.DEFAULT);
     }
@@ -92,57 +91,8 @@ public final class Morphia {
      * @return a Datastore that you can use to interact with MongoDB
      */
     public static Datastore createDatastore(MongoClient mongoClient) {
-        return createDatastore(mongoClient, loadConfigMapping());
-    }
-
-    /**
-     * @hidden
-     * @param mongoClient
-     * @param configMapping
-     * @return
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public static Datastore createDatastore(MongoClient mongoClient, MorphiaConfig configMapping) {
+        MorphiaConfig configMapping = MorphiaConfigHelper.loadConfigMapping();
         return new DatastoreImpl(new Mapper(configMapping), mongoClient, configMapping.database());
-
-    }
-
-    /**
-     * @hidden
-     * @return
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public static MorphiaConfig loadConfigMapping() {
-        return loadConfigMapping(MORPHIA_CONFIG_PROPERTIES);
-    }
-
-    /**
-     * @hidden
-     * @return
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public static MorphiaConfig loadConfigMapping(String path) {
-        List<ConfigSource> configSources = classPathSources(path.startsWith("META-INF/") ? path : "META-INF/" + path,
-                currentThread().getContextClassLoader());
-        if (configSources.isEmpty()) {
-            throw new MappingException(Sofia.missingConfigFile(path));
-        }
-        return new SmallRyeConfigBuilder()
-                .addDefaultInterceptors()
-                .withMapping(MorphiaConfig.class)
-                .withSources(new EnvConfigSource(getEnvProperties(), 300),
-                        new SysPropConfigSource())
-                .withSources(configSources)
-                .addDefaultSources()
-                .build()
-                .getConfigMapping(MorphiaConfig.class);
-    }
-
-    private static Map<String, String> getEnvProperties() {
-        return unmodifiableMap(new TreeMap<>(System.getenv()));
     }
 
 }

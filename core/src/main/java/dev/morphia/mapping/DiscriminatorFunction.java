@@ -70,6 +70,7 @@ public abstract class DiscriminatorFunction {
      * Applies the function to the given model to determine the discriminator value
      *
      * @param builder the builder to evaluate
+     * @hidden
      */
     public final void apply(EntityModelBuilder builder) {
         String discriminator = Mapper.IGNORED_FIELDNAME;
