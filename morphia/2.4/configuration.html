@@ -257,7 +257,7 @@ should live in your build&#8217;s resources folder and be named <code>META-INF/m
 </ol>
 </div>
 <div class="paragraph">
-<p>The configuration mechanism, build on <a href="https://microprofile.io/microprofile-config/">Microprofile Config</a>, allows for a number of
+<p>The configuration mechanism, based on <a href="https://microprofile.io/microprofile-config/">Microprofile Config</a>, allows for a number of
 variations which were awkward, at best, and usually downright impossible when using the traditional programmatic configuration.
 Reference documentation for the configuration file can be found in the <a href="javadoc/dev/morphia/config/MorphiaConfig.html">javadoc</a> but
 we&#8217;ll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed.
@@ -338,7 +338,7 @@ can enable it by giving the fully qualified classname (fqcn) instead. The same a
 <p>Morphia has long hard coded the choice of how to encode an entity&#8217;s type in to the resulting documents in the database using the
 <code>className</code> key and the simple name of the class.
 The default is to use <code>_t</code> as the discriminator property key. This was chosen in part because of its use in other systems and also for its brevity.
-By default, Morphia 2.0 stores the entity type unless you configure your types otherwise so saving space seemed prudent.</p>
+By default, Morphia 2.0 stores the entity type unless you configure your types otherwise.</p>
 </div>
 <div class="paragraph">
 <p>Similar to how collections and fields have a naming strategy, we can apply a global function to determine the discriminator values should we choose.
