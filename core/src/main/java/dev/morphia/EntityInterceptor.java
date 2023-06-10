@@ -1,5 +1,7 @@
 package dev.morphia;
 
+import java.lang.annotation.Annotation;
+
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
@@ -7,8 +9,6 @@ import dev.morphia.annotations.PrePersist;
 import dev.morphia.mapping.Mapper;
 
 import org.bson.Document;
-
-import java.lang.annotation.Annotation;
 
 /**
  * Interface for intercepting @Entity lifecycle events
