@@ -114,11 +114,23 @@ The legacy query factory is deprecated and will be removed in 3.0. It is advisab
 avoid breakage.
 ====
 
-=== Sample config file
+=== Sample config files
 .Complete with defaults
 [,txt]
 ----
-include::examples$complete-morphia-config.properties[]
+include::example$complete-morphia-config.properties[]
+----
+
+.Minimal config file
+[,txt]
+----
+include::example$minimal-morphia-config.properties[]
+----
+
+.Legacy config file
+[,txt]
+----
+include::example$legacy-morphia-config.properties[]
 ----
 
 === Some notes on ServiceLoader

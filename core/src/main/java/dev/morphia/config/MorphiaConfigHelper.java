@@ -253,7 +253,7 @@ public class MorphiaConfigHelper {
                             return value.equals(converted);
                         })
                         .findFirst().ifPresent(v -> {
-                            value = null;
+                            value = v;
                         });
             }
 
@@ -262,11 +262,12 @@ public class MorphiaConfigHelper {
         String printEntry() {
             if (showComplete || value != null && !value.equals(defaultValue)) {
                 StringJoiner joiner = new StringJoiner("\n");
+                joiner.add("######");
                 if (optional) {
-                    joiner.add("# *optional*");
+                    joiner.add("# Optional");
                 }
                 if (!optional && defaultValue == null) {
-                    joiner.add("# *required*");
+                    joiner.add("# Required");
                 }
                 if (defaultValue != null) {
                     joiner.add("# default = " + defaultValue);
@@ -275,8 +276,9 @@ public class MorphiaConfigHelper {
                     joiner.add("# possible values = " +
                             join(", ", possibleValues.value()));
                 }
+                joiner.add("######");
 
-                joiner.add(name + "=" + value);
+                joiner.add(name + "=" + (value != null ? value : ""));
                 return joiner.toString();
             }
             return null;
