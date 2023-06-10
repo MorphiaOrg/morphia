@@ -95,6 +95,9 @@
     <a class="nav-link" href="configuration.html">Configuration</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="configuration-old.html">Configuration (Legacy)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="kotlin.html">Kotlin</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -240,33 +243,41 @@
 <h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Morphia 2.0 introduced a number of new ways to configure its behavior.
-These values are listed below:</p>
+<p>Starting in Morphia 3.0, configuration will be driven via a configuration file rather than programmatic configuration. The file
+should live in your build&#8217;s resources folder and be named <code>META-INF/morphia-config.properties</code>. This is being done for a number of reasons:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Collection naming</p>
+<p>Better align with usage in frameworks such as Quarkus and Spring Boot</p>
 </li>
 <li>
-<p>Property naming</p>
-</li>
-<li>
-<p>The discriminator key</p>
-</li>
-<li>
-<p>The discriminator value</p>
+<p>Allow for deployment specific variations based on the deployment environment.</p>
 </li>
 </ol>
 </div>
+<div class="paragraph">
+<p>The configuration mechanism, build on <a href="https://microprofile.io/microprofile-config/">Microprofile Config</a>, allows for a number of
+variations which were awkward, at best, and usually downright impossible when using the traditional programmatic configuration.
+Reference documentation for the configuration file can be found in the <a href="javadoc/dev/morphia/config/MorphiaConfig.html">javadoc</a> but
+we&#8217;ll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed.
+However, if the default values are acceptable that element can be safely omitted from your file. The only element <strong>required</strong> to be
+present is <code>morphia.database</code>.</p>
+</div>
 <div class="sect2">
 <h3 id="_collection_and_property_naming"><a class="anchor" href="#_collection_and_property_naming"></a>Collection and property naming</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>morphia.collection-naming</code></p>
+</li>
+<li>
+<p><code>morphia.property-naming</code></p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>Traditionally Morphia has used with the class&#8217;s "simple name" for the collection name if you choose to not manually map the name of an entity&#8217;s collection.
-Similarly, an entity&#8217;s properties were named after the Java field name unless mapped otherwise with the
-<code>@Property</code> annotation.
-In 2.0, however, we define naming strategies.
-As of 2.0, the naming strategies supported out of the box are:</p>
+<p>Traditionally Morphia has used with the class&#8217;s "simple name" for the collection name if you chose to not manually map the name of an entity&#8217;s collection. Similarly, an entity&#8217;s properties were named after the Java field name unless mapped otherwise with the <code>@Property</code> annotation. In 2.0, however, we define naming strategies. The naming strategies supported out of the box are:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -291,20 +302,42 @@ This looks exactly like the <code>snake case</code> but with <code>-</code> inst
 </ol>
 </div>
 <div class="paragraph">
-<p>These strategies can all be access via the <code>NamingStrategy</code> class via their named methods.
-In the case where you have a custom naming strategy you&#8217;d like to employ, e.g., perhaps some hashing function to obscure element names, you can simply extend <code>NamingStrategy</code>
-yourself and implement whatever logic you might need.</p>
+<p>These strategies can all be accessed via the <a href="javadoc/dev/morphia/mapping/NamingStrategy.html">NamingStrategy</a> class using their
+named methods. If you need a custom naming strategy, perhaps some hashing function to obscure
+element names, e.g., you can simply extend <code>NamingStrategy</code> yourself and implement whatever logic you might need.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For the provided strategies, you can simply use the shortened version as shown in the sample below. If you define your own strategy, you
+can enable it by giving the fully qualified classname (fqcn) instead. The same applies everywhere you see <code>fqcn</code> in the sample file.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_discriminator_keys_and_values"><a class="anchor" href="#_discriminator_keys_and_values"></a>Discriminator keys and values</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>morphia.discriminator</code></p>
+</li>
+<li>
+<p><code>morphia.discriminator-key</code></p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>Morphia has long hard coded the choice of how to encode an entity&#8217;s type in to the resulting documents in the database using the
 <code>className</code> key and the simple name of the class.
-As of 2.0, you have a choice to change that if you&#8217;d like.
-The new default is to use
-<code>_t</code> as the discriminator property key.
-This was chosen in part because of its use in other systems and also for its brevity.
+The default is to use <code>_t</code> as the discriminator property key. This was chosen in part because of its use in other systems and also for its brevity.
 By default, Morphia 2.0 stores the entity type unless you configure your types otherwise so saving space seemed prudent.</p>
 </div>
 <div class="paragraph">
@@ -318,94 +351,224 @@ The choices here are simpler:</p>
 </li>
 <li>
 <p><code>simpleName()</code>/<code>lowerSimpleName()</code></p>
-<div class="literalblock">
-<div class="content">
-<pre>These call all be accessed via their named methods on `DiscriminatorFunction` and just like the `NamingStrategy` cases if the provided
- options are not sufficient, you can implement your own by subclassing `DiscriminatorFunction` and implementing your own function.</pre>
-</div>
-</div>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>Simple name is simply the fully qualified classname without the package name. These call all be accessed via their named methods on
+<a href="javadoc/dev/morphia/mapping/DiscriminatorFunction.html">DiscriminatorFunction</a> and just like the <code>NamingStrategy</code> cases, if the provided options are not sufficient, you can implement your own by subclassing <code>DiscriminatorFunction</code> and implementing your own function.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_user_defined_codecs"><a class="anchor" href="#_user_defined_codecs"></a>User-defined Codecs</h3>
-<div class="paragraph">
-<p>Morphia makes heavy use of the driver&#8217;s <code>Codec</code> infrastructure.
-All of the persistence of your entities is handled by Morphia-defined and -configured codecs.
-Morphia also makes use of driver-defined codecs with a select number of replacements more attuned to Morphia&#8217;s needs.
-This is typically sufficient for users' needs.
-However, there are invariably times when more control is needed.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>morphia.codec-provider</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Starting with 2.3, you can provide your own <code>CodecProvider</code> to customize how Morphia handles the types you&#8217;re interested.
-It&#8217;s not advised to write custom codecs for your entities (why mark them as entities at that point?) but if you&#8217;re comfortable taking that on, then it is, of course, your prerogative.
-You can register your custom <code>CodecProvider</code> implementation via the
-<a href="javadoc/dev/morphia/mapping/MapperOptions.Builder.html#codecProvider()">MapperOptions.Builder#codecProvider(org.bson.codecs
-.configuration.CodecProvider)</a>
-method.
-For details on how to write a <code>Codec</code> and a <code>CodecProvider</code>, please consult
+<p>Morphia makes heavy use of the Java driver&#8217;s <code>Codec</code> infrastructure.
+All the persistence of your entities is handled by Morphia-defined and -configured codecs.
+Morphia also makes use of driver-defined codecs with a select number of replacements more attuned to Morphia&#8217;s needs.
+This is typically sufficient for users' needs. However, there are invariably times when more control is needed.</p>
+</div>
+<div class="paragraph">
+<p>Starting with 2.3, you can provide your own <code>CodecProvider</code> to customize how Morphia handles the types you&#8217;re interested in. It&#8217;s not
+advised to write custom codecs for your entities (why mark them as entities at that point?) but if you&#8217;re comfortable taking that on,
+then it is, of course, your prerogative. You can register your custom <code>CodecProvider</code> implementation using the property listed above.</p>
+</div>
+<div class="paragraph">
+<p>For details on how to write a <code>Codec</code> and a <code>CodecProvider</code>, please consult
 <a href="https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/data-formats/codecs/">the driver&#8217;s documentation</a>.
 Using your custom <code>CodecProvider</code>, you can supply as many <code>Codec</code> implementations as you need.</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In future versions, this will be updated to use <a href="https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html">the SPI mechanism</a>. This
+will not only make it consistent with other configurable elements but will make it possible to supply more than one <code>CodecProvider</code>. See
+the note below about using the ServiceLoader with Java 9 modules.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_property_codecs"><a class="anchor" href="#_property_codecs"></a>Property Codecs</h4>
+<div class="paragraph">
+<p>As unusual as is the need for a custom codec to handle types, there are rare cases where how Morphia processes a property on entity needs
+to be customized.  This processing is handled via the
+<a href="javadoc/dev/morphia/mapping/codec/MorphiaPropertyCodecProvider.html">MorphiaPropertyCodecProvider</a>.  Morphia discovers these
+custom implementations via SPI the details of which won&#8217;t be covered here.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_old_versus_new"><a class="anchor" href="#_old_versus_new"></a>Old versus New</h3>
+<h3 id="_legacy_configuration"><a class="anchor" href="#_legacy_configuration"></a>Legacy Configuration</h3>
 <div class="paragraph">
-<p>Morphia can be configured in one of two ways: the legacy mode and the modern mode.</p>
+<p>Morphia can be configured in one of two ways: the legacy mode and the modern mode. The defaults in the configuration code will give you
+the modern configuration and is the recommended way to configure Morphia. However, if you&#8217;re upgrading an older project, you very likely
+have more data than can be easily updated within any reasonable limits. For those, cases using the legacy configuration is rather
+straightforward.</p>
 </div>
-<div class="sect3">
-<h4 id="_legacy"><a class="anchor" href="#_legacy"></a>Legacy</h4>
 <div class="paragraph">
-<p>We&#8217;ll cover the legacy mode first as it reflects how Morphia worked prior to 2.0.  <code>MapperOptions</code> drives the configuration and so this is where we&#8217;ll start.
-Prior to 2.0, you could simply create a <code>MapperOptions</code> instance directly.
-Starting with 2.0, you will need to use one of the factory methods.
-In this instance, you will want the <code>legacy()</code> method.
-Among other things, this will configure Morphia to the legacy implementation of the <code>Query</code> class.
-The <code>legacy()</code> builder currently configures the following settings:</p>
+<p>Using the legacy configuration is a matter of defining a few entries in your configuration file:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><code>className</code> as the discriminator key</p>
-</li>
-<li>
-<p><code>className()</code> as the <code>DiscriminatorFunction</code></p>
-</li>
-<li>
-<p><code>identity()</code> as both the class and field name strategies</p>
-</li>
-<li>
-<p>Configures the legacy query implementation</p>
-</li>
-</ol>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">morphia.discriminator=className
+morphia.discriminator-key=className
+morphia.collection-naming=identity
+morphia.property-naming=identity
+morphia.query-factory=dev.morphia.query.LegacyQueryFactory</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_modern"><a class="anchor" href="#_modern"></a>Modern</h4>
 <div class="paragraph">
-<p>One of the big goals for 2.0 was to modernize both the API and behavior of Morphia.
-As such, the <code>builder()</code> method returns a
-<code>Builder</code> that applies some updated defaults:</p>
+<p>This will give you the legacy mapping information and legacy query behavior (older methods of query construction).</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><code>_t</code> as the new discriminator key (replacing <code>className</code>)</p>
-</li>
-<li>
-<p><code>simpleName()</code> as the discriminator function used to determine these values</p>
-</li>
-<li>
-<p><code>camelCase()</code> is the default collection naming strategy</p>
-</li>
-<li>
-<p><code>identity()</code> remains the property naming strategy</p>
-</li>
-<li>
-<p>A new <code>Query</code> implementation is configured enabling the new <code>Filters</code> based querying and disabling some older, deprecated methods.</p>
-</li>
-</ol>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>The legacy query factory is deprecated and will be removed in 3.0. It is advisable to switch to the newer query filters based API now to
+avoid breakage.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sample_config_files"><a class="anchor" href="#_sample_config_files"></a>Sample config files</h3>
+<div class="listingblock">
+<div class="title">Complete with defaults</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">######
+# Optional
+######
+morphia.codec-provider=
+######
+# default = camelCase
+# possible values = camelCase, identity, kebabCase, lowerCase, snakeCase
+######
+morphia.collection-naming=camelCase
+######
+# Required
+######
+morphia.database=dummy
+######
+# default = utc
+# possible values = utc, system_default
+######
+morphia.date-storage=utc
+######
+# default = simpleName
+# possible values = className, lowerClassName, lowerSimpleName, simpleName
+######
+morphia.discriminator=simpleName
+######
+# default = _t
+######
+morphia.discriminator-key=_t
+######
+# default = false
+######
+morphia.enable-polymorphic-queries=false
+######
+# default = false
+######
+morphia.ignore-finals=false
+######
+# default = false
+######
+morphia.map-subpackages=false
+######
+# default = fields
+# possible values = fields, methods
+######
+morphia.property-discovery=fields
+######
+# default = identity
+# possible values = camelCase, identity, kebabCase, lowerCase, snakeCase
+######
+morphia.property-naming=identity
+######
+# default = dev.morphia.query.DefaultQueryFactory
+######
+morphia.query-factory=dev.morphia.query.DefaultQueryFactory
+######
+# default = false
+######
+morphia.store-empties=false
+######
+# default = false
+######
+morphia.store-nulls=false
+######
+# default = standard
+# possible values = unspecified, standard, c_sharp_legacy, java_legacy, python_legacy
+######
+morphia.uuid-representation=standard</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Minimal config file</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">######
+# Required
+######
+morphia.database=dummy</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Legacy config file</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">######
+# default = camelCase
+# possible values = camelCase, identity, kebabCase, lowerCase, snakeCase
+######
+morphia.collection-naming=identity
+######
+# Required
+######
+morphia.database=dummy
+######
+# default = utc
+# possible values = utc, system_default
+######
+morphia.date-storage=system_default
+######
+# default = simpleName
+# possible values = className, lowerClassName, lowerSimpleName, simpleName
+######
+morphia.discriminator=className
+######
+# default = _t
+######
+morphia.discriminator-key=className
+######
+# default = dev.morphia.query.DefaultQueryFactory
+######
+morphia.query-factory=dev.morphia.query.LegacyQueryFactory</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_some_notes_on_serviceloader"><a class="anchor" href="#_some_notes_on_serviceloader"></a>Some notes on ServiceLoader</h3>
+<div class="paragraph">
+<p>Morphia provides a number of extensibility points using <a href="https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html">the SPI mechanism</a>
+available in the JVM.  This allows for seamless, config-free inclusion of different functionality.  In general, this works without notice
+because most users will not need to implement such features and so needn&#8217;t be bothered with such details.  However, if you are one of the
+lucky ones that <strong>does</strong> need to know <strong>and</strong> you use Java modules, please be aware that the usual services file in <code>META-INF/services</code> won&#8217;t
+work.  In order to export your service for Morphia to find you need an entry in your <code>module-info.java</code> file as shown below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">provides dev.morphia.mapping.codec.MorphiaPropertyCodecProvider with com.foo.MyCodecProvider;</code></pre>
 </div>
 </div>
 </div>

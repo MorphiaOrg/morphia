@@ -95,6 +95,9 @@
     <a class="nav-link" href="configuration.html">Configuration</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="configuration-old.html">Configuration (Legacy)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="kotlin.html">Kotlin</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -443,8 +446,8 @@ In this version of the unit test, we tail the cursor waiting to pull out objects
 <h3 id="_polymorphic_queries"><a class="anchor" href="#_polymorphic_queries"></a>Polymorphic Queries</h3>
 <div class="paragraph">
 <p>By default, Morphia will only return documents of the type given in <code>find()</code>. However, if you want to retrieve subtypes as well, you can
-enable this in the <code>MapperOptions</code> via <a href="javadoc/dev/morphia/mapping/MapperOptions.Builder.html#enablePolymorphicQueries(boolean)
-">MapperOptions.Builder.enablePolymorphicQueries(boolean)</a>.</p>
+enable this in <code>MorphiaConfig</code> via
+<a href="javadoc/dev/morphia/config/MorphiaConfig.html#enablePolymorphicQueries()">MorphiaConfig#enablePolymorphicQueries()</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
