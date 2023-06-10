@@ -6,7 +6,7 @@ should live in your build's resources folder and be named `META-INF/morphia-conf
 1. Better align with usage in frameworks such as Quarkus and Spring Boot
 2. Allow for deployment specific variations based on the deployment environment.
 
-The configuration mechanism, build on https://microprofile.io/microprofile-config/[Microprofile Config], allows for a number of
+The configuration mechanism, based on https://microprofile.io/microprofile-config/[Microprofile Config], allows for a number of
 variations which were awkward, at best, and usually downright impossible when using the traditional programmatic configuration.
 Reference documentation for the configuration file can be found in the link:++javadoc/dev/morphia/config/MorphiaConfig.html++[javadoc] but
 we'll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed.
@@ -47,7 +47,7 @@ can enable it by giving the fully qualified classname (fqcn) instead. The same a
 Morphia has long hard coded the choice of how to encode an entity's type in to the resulting documents in the database using the
 `className` key and the simple name of the class.
 The default is to use `_t` as the discriminator property key. This was chosen in part because of its use in other systems and also for its brevity.
-By default, Morphia 2.0 stores the entity type unless you configure your types otherwise so saving space seemed prudent.
+By default, Morphia 2.0 stores the entity type unless you configure your types otherwise.
 
 Similar to how collections and fields have a naming strategy, we can apply a global function to determine the discriminator values should we choose.
 The choices here are simpler:
