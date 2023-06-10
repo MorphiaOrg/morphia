@@ -29,6 +29,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.zafarkhaja</groupId>
+            <artifactId>java-semver</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mongodb</artifactId>
         </dependency>

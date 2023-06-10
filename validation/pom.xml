@@ -71,5 +71,9 @@
             <version>4.0.2</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.zafarkhaja</groupId>
+            <artifactId>java-semver</artifactId>
+        </dependency>
     </dependencies>
 </project>
