@@ -95,31 +95,17 @@ the modern configuration and is the recommended way to configure Morphia. Howeve
 have more data than can be easily updated within any reasonable limits. For those, cases using the legacy configuration is rather
 straightforward.
 
-Using the legacy configuration is a matter of defining a few entries in your configuration file:
-
-
-```properties
-morphia.discriminator=className
-morphia.discriminator-key=className
-morphia.collection-naming=identity
-morphia.property-naming=identity
-morphia.query-factory=dev.morphia.query.LegacyQueryFactory
-```
-
-This will give you the legacy mapping information and legacy query behavior (older methods of query construction).
-
-[WARN]
-====
-The legacy query factory is deprecated and will be removed in 3.0. It is advisable to switch to the newer query filters based API now to
-avoid breakage.
-====
+Using the legacy configuration is a matter of defining a few entries in your configuration file.  An example of that is listed below.
 
 === Sample config files
+
 .Complete with defaults
 [,txt]
 ----
 include::example$complete-morphia-config.properties[]
 ----
+
+---
 
 .Minimal config file
 [,txt]
@@ -127,11 +113,19 @@ include::example$complete-morphia-config.properties[]
 include::example$minimal-morphia-config.properties[]
 ----
 
+---
+
 .Legacy config file
 [,txt]
 ----
 include::example$legacy-morphia-config.properties[]
 ----
+
+[WARN]
+====
+The legacy query factory is deprecated and will be removed in 3.0. It is advisable to switch to the newer query filters based API now to
+avoid breakage.
+====
 
 === Some notes on ServiceLoader
 
