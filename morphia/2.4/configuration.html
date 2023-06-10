@@ -419,27 +419,7 @@ have more data than can be easily updated within any reasonable limits. For thos
 straightforward.</p>
 </div>
 <div class="paragraph">
-<p>Using the legacy configuration is a matter of defining a few entries in your configuration file:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">morphia.discriminator=className
-morphia.discriminator-key=className
-morphia.collection-naming=identity
-morphia.property-naming=identity
-morphia.query-factory=dev.morphia.query.LegacyQueryFactory</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This will give you the legacy mapping information and legacy query behavior (older methods of query construction).</p>
-</div>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<p>The legacy query factory is deprecated and will be removed in 3.0. It is advisable to switch to the newer query filters based API now to
-avoid breakage.</p>
-</div>
-</div>
+<p>Using the legacy configuration is a matter of defining a few entries in your configuration file.  An example of that is listed below.</p>
 </div>
 </div>
 <div class="sect2">
@@ -515,6 +495,7 @@ morphia.store-nulls=false
 morphia.uuid-representation=standard</code></pre>
 </div>
 </div>
+<hr>
 <div class="listingblock">
 <div class="title">Minimal config file</div>
 <div class="content">
@@ -524,6 +505,7 @@ morphia.uuid-representation=standard</code></pre>
 morphia.database=dummy</code></pre>
 </div>
 </div>
+<hr>
 <div class="listingblock">
 <div class="title">Legacy config file</div>
 <div class="content">
@@ -554,6 +536,14 @@ morphia.discriminator-key=className
 # default = dev.morphia.query.DefaultQueryFactory
 ######
 morphia.query-factory=dev.morphia.query.LegacyQueryFactory</code></pre>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>The legacy query factory is deprecated and will be removed in 3.0. It is advisable to switch to the newer query filters based API now to
+avoid breakage.</p>
+</div>
 </div>
 </div>
 </div>
