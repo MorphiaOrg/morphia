@@ -8,6 +8,8 @@ import dev.morphia.mapping.Mapper;
 
 import org.bson.Document;
 
+import java.lang.annotation.Annotation;
+
 /**
  * Interface for intercepting @Entity lifecycle events
  *
@@ -17,6 +19,12 @@ import org.bson.Document;
 @SuppressWarnings("unused")
 @Deprecated(forRemoval = true, since = "2.4")
 public interface EntityInterceptor extends EntityListener<Object> {
+
+    @Override
+    default boolean hasAnnotation(Class<? extends Annotation> type) {
+        return true;
+    }
+
     /**
      * @param ent      the entity being processed
      * @param document the Document form of the entity
@@ -36,6 +44,7 @@ public interface EntityInterceptor extends EntityListener<Object> {
      * @since 2.3
      */
     default void postLoad(Object ent, Document document, Datastore datastore) {
+        postLoad(ent, document, datastore.getMapper());
     }
 
     /**
@@ -57,6 +66,7 @@ public interface EntityInterceptor extends EntityListener<Object> {
      * @since 2.3
      */
     default void postPersist(Object ent, Document document, Datastore datastore) {
+        postPersist(ent, document, datastore.getMapper());
     }
 
     /**
@@ -79,6 +89,7 @@ public interface EntityInterceptor extends EntityListener<Object> {
      * @since 2.3
      */
     default void preLoad(Object ent, Document document, Datastore datastore) {
+        preLoad(ent, document, datastore.getMapper());
     }
 
     /**
@@ -101,5 +112,6 @@ public interface EntityInterceptor extends EntityListener<Object> {
      * @since 2.3
      */
     default void prePersist(Object ent, Document document, Datastore datastore) {
+        prePersist(ent, document, datastore.getMapper());
     }
 }
