@@ -63,17 +63,6 @@ public class MorphiaConfigHelper {
     }
 
     /**
-     * Logs the configuration file form of the MapperOptions with default values optionally listed.
-     *
-     * @param options  the options to convert
-     * @param database the database name to configure
-     * @since 2.4
-     */
-    public static void dumpConfigurationFile(MapperOptions options, String database) {
-        new MapperOptionsWrapper(options, database);
-    }
-
-    /**
      * @param config
      * @param showComplete
      * @hidden
@@ -99,8 +88,8 @@ public class MorphiaConfigHelper {
      * @morphia.internal
      */
     @MorphiaInternal
-    public static MorphiaConfig loadConfigMapping() {
-        return loadConfigMapping(MORPHIA_CONFIG_PROPERTIES);
+    public static MorphiaConfig loadConfig() {
+        return loadConfig(MORPHIA_CONFIG_PROPERTIES);
     }
 
     /**
@@ -109,7 +98,7 @@ public class MorphiaConfigHelper {
      * @morphia.internal
      */
     @MorphiaInternal
-    public static MorphiaConfig loadConfigMapping(String path) {
+    public static MorphiaConfig loadConfig(String path) {
         List<ConfigSource> configSources = classPathSources(path.startsWith("META-INF/") ? path : "META-INF/" + path,
                 currentThread().getContextClassLoader());
         if (configSources.isEmpty()) {
@@ -189,7 +178,7 @@ public class MorphiaConfigHelper {
         } else if (value instanceof Boolean) {
             return value.toString().toLowerCase();
         } else if (value instanceof List) {
-            var list = (List) value;
+            var list = (List<?>) value;
             StringJoiner joiner = new StringJoiner(",");
             for (Object o : list) {
                 joiner.add(convertToString(o));
@@ -202,8 +191,7 @@ public class MorphiaConfigHelper {
 
     private PossibleValues getPossibles(Method m) {
         if (!m.getReturnType().isEnum()) {
-            PossibleValues annotation = m.getAnnotation(PossibleValues.class);
-            return annotation;
+            return m.getAnnotation(PossibleValues.class);
         }
         return possibleValuesBuilder()
                 .value(stream(m.getReturnType().getEnumConstants())

@@ -138,7 +138,7 @@ public class MorphiaTestSetup {
         var oldContainer = morphiaContainer;
         try (var holder = initMongoDbContainer(true)) {
             mongoHolder = holder;
-            morphiaContainer = new MorphiaContainer(mongoHolder.getMongoClient(), MorphiaConfigHelper.loadConfigMapping());
+            morphiaContainer = new MorphiaContainer(mongoHolder.getMongoClient(), MorphiaConfigHelper.loadConfig());
             body.run();
         } finally {
             mongoHolder = oldHolder;
@@ -157,7 +157,7 @@ public class MorphiaTestSetup {
     }
 
     protected static MutableMorphiaConfig buildConfig() {
-        return new MutableMorphiaConfig(MorphiaConfigHelper.loadConfigMapping())
+        return new MutableMorphiaConfig(MorphiaConfigHelper.loadConfig())
                 .database(TEST_DB_NAME);
     }
 

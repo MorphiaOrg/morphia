@@ -54,11 +54,4 @@ public class TestConfig extends TestBase {
         }
         return root;
     }
-
-    @Test
-    public void testLegacyConfigDump() {
-        MapperOptions mapperOptions = MapperOptions.legacy().build();
-        MorphiaConfigHelper.dumpConfigurationFile(mapperOptions, "test-database");
-    }
-
 }

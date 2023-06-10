@@ -38,6 +38,7 @@ import dev.morphia.annotations.ShardOptions;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.IndexHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.CollectionConfiguration;
 import dev.morphia.internal.ReadConfigurable;
@@ -103,9 +104,9 @@ public class DatastoreImpl implements AdvancedDatastore {
     private MongoDatabase database;
     private DatastoreOperations operations;
 
-    public DatastoreImpl(Mapper mapper, MongoClient mongoClient, String dbName) {
-        this.database = mongoClient.getDatabase(dbName);
-        this.mapper = mapper;
+    public DatastoreImpl(MongoClient mongoClient, MorphiaConfig config) {
+        this.database = mongoClient.getDatabase(config.database());
+        this.mapper = new Mapper(config);
         this.mongoClient = mongoClient;
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();

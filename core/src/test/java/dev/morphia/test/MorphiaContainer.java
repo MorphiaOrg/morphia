@@ -6,11 +6,9 @@ import com.mongodb.client.MongoDatabase;
 
 import dev.morphia.DatastoreImpl;
 import dev.morphia.config.MorphiaConfig;
-import dev.morphia.mapping.Mapper;
 
 import org.bson.Document;
 
-@SuppressWarnings("removal")
 public class MorphiaContainer {
     private DatastoreImpl datastore;
     private MongoDatabase database;
@@ -42,7 +40,7 @@ public class MorphiaContainer {
 
     public DatastoreImpl getDs() {
         if (datastore == null) {
-            datastore = (DatastoreImpl) new DatastoreImpl(new Mapper(morphiaConfig), mongoClient, morphiaConfig.database());
+            datastore = new DatastoreImpl(mongoClient, morphiaConfig);
         }
         return datastore;
     }
