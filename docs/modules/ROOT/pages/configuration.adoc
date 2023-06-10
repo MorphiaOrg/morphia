@@ -115,44 +115,11 @@ avoid breakage.
 ====
 
 === Sample config file
-```properties
-# *optional*
-morphia.codec-provider=
-# default = camelCase
-# possible values = camelCase, identity, kebabCase, lowerCase, snakeCase
-morphia.collection-naming=camelCase
-# *required*
-morphia.database=dummy
-# default = utc
-# possible values = utc, system_default
-morphia.date-storage=utc
-# default = simpleName
-# possible values = className, lowerClassName, lowerSimpleName, simpleName
-morphia.discriminator=simpleName
-# default = _t
-morphia.discriminator-key=_t
-# default = false
-morphia.enable-polymorphic-queries=false
-# default = false
-morphia.ignore-finals=false
-# default = false
-morphia.map-subpackages=false
-# default = fields
-# possible values = fields, methods
-morphia.property-discovery=fields
-# default = identity
-# possible values = camelCase, identity, kebabCase, lowerCase, snakeCase
-morphia.property-naming=identity
-# default = dev.morphia.query.DefaultQueryFactory
-morphia.query-factory=dev.morphia.query.DefaultQueryFactory
-# default = false
-morphia.store-empties=false
-# default = false
-morphia.store-nulls=false
-# default = standard
-# possible values = unspecified, standard, c_sharp_legacy, java_legacy, python_legacy
-morphia.uuid-representation=standard
-```
+.Complete with defaults
+[,txt]
+----
+include::examples$complete-morphia-config.properties[]
+----
 
 === Some notes on ServiceLoader
 
