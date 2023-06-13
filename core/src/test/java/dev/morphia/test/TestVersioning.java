@@ -24,6 +24,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import dev.morphia.test.models.TestEntity;
+import dev.morphia.test.models.errors.invalidVersion.InvalidVersionUse;
 import dev.morphia.test.models.methods.MethodMappedUser;
 import dev.morphia.test.models.versioned.AbstractVersionedBase;
 import dev.morphia.test.models.versioned.Versioned;
@@ -37,14 +38,17 @@ import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.inc;
 import static dev.morphia.query.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
 public class TestVersioning extends TestBase {
+    public TestVersioning() {
+        super(buildConfig(VersionedChildEntity.class, Primitive.class));
+    }
+
     @Test
     public void testBulkUpdate() {
         final Datastore datastore = getDs();
@@ -77,10 +81,7 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testCanMapAPackageContainingAVersionedAbstractBaseClass() {
-        getMapper().mapPackage("dev.morphia.test.models.versioned");
-
         List<EntityModel> entities = getMapper().getMappedEntities();
-        assertThat(entities.size(), is(3));
         List<Class<?>> list = new ArrayList<>();
         for (EntityModel entityModel : entities) {
             list.add(entityModel.getType());
@@ -92,10 +93,8 @@ public class TestVersioning extends TestBase {
     @Test
     public void testCanMapAnEntityWithAnAbstractVersionedParent() {
         Mapper mapper = getMapper();
-        mapper.map(VersionedChildEntity.class);
 
         List<EntityModel> mappedEntities = mapper.getMappedEntities();
-        assertEquals(mappedEntities.size(), 2, mappedEntities.toString());
         List<Class<?>> list = new ArrayList<>();
         for (EntityModel entityModel : mappedEntities) {
             list.add(entityModel.getType());
@@ -107,8 +106,6 @@ public class TestVersioning extends TestBase {
     @Test
     public void testConcurrentModification() {
         assertThrows(VersionMismatchException.class, () -> {
-            getMapper().map(List.of(VersionedType.class));
-
             final VersionedType a = new VersionedType();
             assertEquals(a.version, 0);
             getDs().save(a);
@@ -167,7 +164,6 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testInittedPrimitive() {
-        getMapper().map(InittedPrimitive.class);
         InittedPrimitive Primitive = new InittedPrimitive();
         getDs().save(Primitive);
 
@@ -179,7 +175,6 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testInittedWrapper() {
-        getMapper().map(InittedWrapper.class);
         InittedWrapper wrapper = new InittedWrapper();
         getDs().save(wrapper);
 
@@ -197,7 +192,10 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testInvalidVersionUse() {
-        assertThrows(ConstraintViolationException.class, () -> getMapper().map(InvalidVersionUse.class));
+        withConfig(buildConfig(InvalidVersionUse.class), () -> {
+            assertThrows(ConstraintViolationException.class, () -> getMapper().getEntityModel(InvalidVersionUse.class));
+        });
+
     }
 
     @Test
@@ -235,10 +233,7 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testMethodMapping() {
-        withConfig(buildConfig().propertyDiscovery(PropertyDiscovery.METHODS), () -> {
-
-            getDs().getMapper().map(MethodMappedUser.class);
-
+        withConfig(buildConfig(MethodMappedUser.class).propertyDiscovery(PropertyDiscovery.METHODS), () -> {
             MethodMappedUser user = new MethodMappedUser();
             assertEquals(user.getVersion(), null);
             getDs().save(user);
@@ -248,8 +243,7 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testMultiSaves() {
-        getMapper().map(List.of(VersionedType.class));
-        List<VersionedType> initial = List.of(new VersionedType(), new VersionedType());
+        List<VersionedType> initial = of(new VersionedType(), new VersionedType());
 
         getDs().save(initial);
 
@@ -269,7 +263,6 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testPrimitive() {
-        getMapper().map(Primitive.class);
         Primitive Primitive = new Primitive();
         getDs().save(Primitive);
 
@@ -297,7 +290,7 @@ public class TestVersioning extends TestBase {
     @Test
     public void testUpdate() {
         Datastore ds = getDs();
-        List<VersionedType> initial = List.of(new VersionedType(), new VersionedType());
+        List<VersionedType> initial = of(new VersionedType(), new VersionedType());
         ds.save(initial);
 
         UpdateResult results = ds.find(VersionedType.class)
@@ -403,7 +396,6 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testWrapper() {
-        getMapper().map(Wrapper.class);
         Wrapper wrapper = new Wrapper();
         getDs().save(wrapper);
 
@@ -459,17 +451,6 @@ public class TestVersioning extends TestBase {
             return Objects.equals(name, that.name) &&
                     Objects.equals(hubba, that.hubba);
         }
-
-    }
-
-    @Entity
-    private static class InvalidVersionUse {
-        @Id
-        private String id;
-        @Version
-        private long version1;
-        @Version
-        private long version2;
 
     }
 

@@ -1,7 +1,5 @@
 package dev.morphia.test.mapping;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import dev.morphia.annotations.Entity;
@@ -17,26 +15,23 @@ import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.shuffle;
+import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
 
 @SuppressWarnings("DataFlowIssue")
 public class TestEntityModel extends TestBase {
     @Test
     public void childParentPairings() {
-        List<Class> classes = new ArrayList<>(asList(ChildLevel3a.class, RootParent.class, ChildLevel1a.class, ChildLevel2a.class,
-                ChildLevel2b.class, ChildLevel1b.class, ChildLevel1c.class));
-        shuffle(classes);
+        withConfig(buildConfig()
+                .mapPackages(of(ChildLevel3a.class.getPackageName())), () -> {
+                    EntityModel entityModel = getMapper().getEntityModel(RootParent.class);
+                    Set<EntityModel> subtypes = entityModel.getSubtypes();
+                    assertEquals(subtypes.size(), 6);
+                    checkParent(RootParent.class, ChildLevel1a.class, ChildLevel1b.class, ChildLevel1c.class);
+                    checkParent(ChildLevel1a.class, ChildLevel2a.class, ChildLevel2b.class);
+                    checkParent(ChildLevel2b.class, ChildLevel3a.class);
+                });
 
-        getMapper().map(classes);
-
-        EntityModel entityModel = getMapper().getEntityModel(RootParent.class);
-        Set<EntityModel> subtypes = entityModel.getSubtypes();
-        assertEquals(subtypes.size(), 6);
-        checkParent(RootParent.class, ChildLevel1a.class, ChildLevel1b.class, ChildLevel1c.class);
-        checkParent(ChildLevel1a.class, ChildLevel2a.class, ChildLevel2b.class);
-        checkParent(ChildLevel2b.class, ChildLevel3a.class);
     }
 
     private void checkParent(Class<?> parent, Class<?>... classes) {

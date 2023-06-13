@@ -71,7 +71,6 @@ public class TestPropertyModel extends TestBase {
 
     @BeforeMethod
     public void mapping() {
-        getMapper().map(List.of(TestEntity.class));
         entityModel = getMapper().getEntityModel(TestEntity.class);
     }
 

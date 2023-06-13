@@ -28,9 +28,7 @@ import static org.testng.Assert.assertNull;
 public class TestArrayUpdates extends TestBase {
     @Test
     public void testStudents() {
-        getMapper().map(Student.class);
         final Datastore datastore = getDs();
-        datastore.ensureIndexes();
 
         datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
                 new Grade(90, singletonMap("name", "Test"))));
@@ -93,9 +91,7 @@ public class TestArrayUpdates extends TestBase {
 
     @Test
     public void testUpdatesWithArrayFilters() {
-        getMapper().map(Student.class, Grade.class);
         final Datastore datastore = getDs();
-        datastore.ensureIndexes();
 
         datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
                 new Grade(90, singletonMap("name", "Test"))));

@@ -1,5 +1,7 @@
 package dev.morphia.test.config;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import dev.morphia.config.MorphiaConfig;
@@ -15,6 +17,7 @@ import org.bson.codecs.configuration.CodecProvider;
 
 @SuppressWarnings("removal")
 public class MutableMorphiaConfig implements MorphiaConfig {
+    private boolean applyIndexes;
     private String database;
     private Optional<CodecProvider> codecProvider;
     private NamingStrategy collectionNaming;
@@ -23,6 +26,7 @@ public class MutableMorphiaConfig implements MorphiaConfig {
     private String discriminatorKey;
     private boolean enablePolymorphicQueries;
     private boolean ignoreFinals;
+    private List<String> packages = new ArrayList<>();
     private boolean mapSubpackages;
     private PropertyDiscovery propertyDiscovery;
     private NamingStrategy propertyNaming;
@@ -40,6 +44,7 @@ public class MutableMorphiaConfig implements MorphiaConfig {
         discriminatorKey = base.discriminatorKey();
         enablePolymorphicQueries = base.enablePolymorphicQueries();
         ignoreFinals = base.ignoreFinals();
+        packages = base.mapPackages();
         mapSubpackages = base.mapSubpackages();
         propertyDiscovery = base.propertyDiscovery();
         propertyNaming = base.propertyNaming();
@@ -47,6 +52,16 @@ public class MutableMorphiaConfig implements MorphiaConfig {
         storeEmpties = base.storeEmpties();
         storeNulls = base.storeNulls();
         uuidRepresentation = base.uuidRepresentation();
+    }
+
+    @Override
+    public boolean applyIndexes() {
+        return applyIndexes;
+    }
+
+    public MutableMorphiaConfig applyIndexes(boolean applyIndexes) {
+        this.applyIndexes = applyIndexes;
+        return this;
     }
 
     @Override
@@ -138,6 +153,18 @@ public class MutableMorphiaConfig implements MorphiaConfig {
         propertyNaming(NamingStrategy.identity());
         queryFactory(new LegacyQueryFactory());
 
+        return this;
+    }
+
+    @Override
+    public List<String> mapPackages() {
+        return packages;
+    }
+
+    public MutableMorphiaConfig mapPackages(List<String> packages) {
+        if (!packages.isEmpty()) {
+            this.packages = new ArrayList<>(packages);
+        }
         return this;
     }
 

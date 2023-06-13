@@ -161,7 +161,9 @@ public interface Datastore {
      * @see Indexes
      * @see Indexed
      * @see Text
+     * @deprecated this is configured by the config file and doesn't need to be called directly
      */
+    @Deprecated(since = "2.4", forRemoval = true)
     void ensureIndexes();
 
     /**

@@ -45,6 +45,10 @@ import static org.testng.Assert.assertEquals;
 
 @SuppressWarnings({ "unused", "RedundantSuppression" })
 public class TestAggregation extends TestBase {
+    public TestAggregation() {
+        super(buildConfig(Martian.class, User.class));
+    }
+
     @Test
     public void testBasicGrouping() {
         getDs().save(asList(new Book("The Banquet", "Dante", 2),
@@ -139,8 +143,6 @@ public class TestAggregation extends TestBase {
 
     @Test
     public void testResultTypes() {
-        getMapper().map(Martian.class);
-
         Martian martian = new Martian();
         martian.name = "Marvin";
         getDs().save(martian);
@@ -157,7 +159,6 @@ public class TestAggregation extends TestBase {
     @Test
     public void testResultTypesAlternateCollection() {
         String alternate = "alternate";
-        getMapper().map(Martian.class);
 
         Martian martian = new Martian();
         martian.name = "Marvin";

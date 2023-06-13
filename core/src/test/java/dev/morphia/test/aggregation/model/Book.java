@@ -29,6 +29,11 @@ public final class Book {
         this.tags = asList(tags);
     }
 
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+
     public ObjectId getId() {
         return id;
     }

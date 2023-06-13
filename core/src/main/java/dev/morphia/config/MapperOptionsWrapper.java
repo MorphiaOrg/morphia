@@ -1,5 +1,6 @@
 package dev.morphia.config;
 
+import java.util.List;
 import java.util.Optional;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -13,11 +14,14 @@ import dev.morphia.query.QueryFactory;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecProvider;
 
+import static java.util.Collections.emptyList;
+
 /**
  * @hidden
  * @morphia.internal
  * @since 2.4
  */
+@SuppressWarnings("removal")
 @MorphiaInternal
 public class MapperOptionsWrapper implements MorphiaConfig {
 
@@ -27,6 +31,11 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     public MapperOptionsWrapper(MapperOptions options, String database) {
         this.options = options;
         this.database = database;
+    }
+
+    @Override
+    public boolean applyIndexes() {
+        return false;
     }
 
     @Override
@@ -67,6 +76,11 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     @Override
     public boolean ignoreFinals() {
         return options.isIgnoreFinals();
+    }
+
+    @Override
+    public List<String> mapPackages() {
+        return emptyList();
     }
 
     @Override

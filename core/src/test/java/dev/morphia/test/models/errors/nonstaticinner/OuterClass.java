@@ -1,4 +1,4 @@
-package dev.morphia.test.models.errors;
+package dev.morphia.test.models.errors.nonstaticinner;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;

@@ -25,7 +25,6 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.ValidationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.MappedInterface;
-import dev.morphia.test.models.MappedInterfaceImpl;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
 
@@ -174,7 +173,6 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void findField() {
-        getMapper().map(MappedInterface.class, MappedInterfaceImpl.class, AbstractParent.class, IndexedClass.class);
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
 
         IndexOptions options = indexOptionsBuilder().build();

@@ -62,7 +62,6 @@ import static org.testng.Assert.fail;
 public class TestDocumentValidation extends TestBase {
     @Test
     public void createValidation() {
-        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
         assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
@@ -79,7 +78,6 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void findAndModify() {
-        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
@@ -105,7 +103,6 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void insert() {
-        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         try {
@@ -146,7 +143,6 @@ public class TestDocumentValidation extends TestBase {
         insert("contacts", List.of(
                 parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
                 parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
-        getDs().getMapper().map(Contact.class);
         getDs().enableDocumentValidation();
 
         Assert.assertThrows(MongoWriteException.class,
@@ -177,7 +173,6 @@ public class TestDocumentValidation extends TestBase {
             assertTrue(e.getMessage().contains("Document failed validation"));
         }
 
-        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
         assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
@@ -197,7 +192,6 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void save() {
-        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         try {
@@ -233,7 +227,6 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void testBypassDocumentValidation() {
-        getMapper().map(User.class);
         getDs().enableDocumentValidation();
 
         final User user = new User("Jim Halpert", LocalDate.now());
@@ -253,7 +246,6 @@ public class TestDocumentValidation extends TestBase {
     @Test
     @SuppressWarnings("rawtypes")
     public void update() {
-        getMapper().map(DocumentValidation.class);
         getDs().enableDocumentValidation();
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
@@ -279,7 +271,6 @@ public class TestDocumentValidation extends TestBase {
     @Test
     public void validationDocuments() {
         Document validator = parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
-        getMapper().map(DocumentValidation.class);
         EntityModel model = getMapper().getEntityModel(DocumentValidation.class);
 
         for (ValidationLevel level : EnumSet.allOf(ValidationLevel.class)) {

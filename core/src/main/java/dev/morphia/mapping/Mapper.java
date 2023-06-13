@@ -377,7 +377,10 @@ public class Mapper {
      *
      * @param entityClasses the classes to map
      * @return the EntityModel references
+     * @deprecated This is handled via the config file and should not be called manually
+     * @hidden
      */
+    @Deprecated(since = "2.4", forRemoval = true)
     public List<EntityModel> map(Class... entityClasses) {
         return map(List.of(entityClasses));
     }
@@ -385,10 +388,14 @@ public class Mapper {
     /**
      * Maps a set of classes
      *
+     * @hidden
      * @param classes the classes to map
      * @return the list of mapped classes
+     * @deprecated This is handled via the config file and should not be called manually
      */
+    @Deprecated(since = "2.4", forRemoval = true)
     public List<EntityModel> map(List<Class> classes) {
+        Sofia.logConfiguredOperation("Mapper#map");
         for (Class type : classes) {
             if (!isMappable(type)) {
                 throw new MappingException(Sofia.mappingAnnotationNeeded(type.getName()));
@@ -404,20 +411,43 @@ public class Mapper {
      * Tries to map all classes in the package specified.
      *
      * @param packageName the name of the package to process
+     * @deprecated This is handled via the config file and should not be called manually
+     * @hidden
+     * @since 2.4
      */
-    public synchronized void mapPackage(String packageName) {
+    @Deprecated(since = "2.4", forRemoval = true)
+    public synchronized void map(String packageName) {
         try {
             getClasses(contextClassLoader, packageName, getConfig().mapSubpackages())
-                    .stream()
-                    .map(type -> {
+                    .forEach(type -> {
                         try {
-                            return getEntityModel(type);
-                        } catch (NotMappableException e) {
-                            return null;
+                            getEntityModel(type);
+                        } catch (NotMappableException ignored) {
                         }
-                    })
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    });
+        } catch (ClassNotFoundException e) {
+            throw new MappingException("Could not get map classes from package " + packageName, e);
+        }
+    }
+
+    /**
+     * Tries to map all classes in the package specified.
+     *
+     * @hidden
+     * @param packageName the name of the package to process
+     * @deprecated This is handled via the config file and should not be called manually
+     */
+    @Deprecated(since = "2.4", forRemoval = true)
+    public synchronized void mapPackage(String packageName) {
+        Sofia.logConfiguredOperation("Mapper#mapPackage");
+        try {
+            getClasses(contextClassLoader, packageName, getConfig().mapSubpackages())
+                    .forEach(type -> {
+                        try {
+                            getEntityModel(type);
+                        } catch (NotMappableException ignored) {
+                        }
+                    });
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
@@ -426,8 +456,11 @@ public class Mapper {
     /**
      * Maps all the classes found in the package to which the given class belongs.
      *
+     * @hidden
      * @param clazz the class to use when trying to find others to map
+     * @deprecated This is handled via the config file and should not be called manually
      */
+    @Deprecated(since = "2.4", forRemoval = true)
     public void mapPackageFromClass(Class clazz) {
         mapPackage(clazz.getPackage().getName());
     }
@@ -483,6 +516,7 @@ public class Mapper {
      */
     @MorphiaInternal
     public EntityModel register(EntityModel entityModel) {
+
         discriminatorLookup.addModel(entityModel);
         mappedEntities.put(entityModel.getType(), entityModel);
         mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
@@ -526,7 +560,10 @@ public class Mapper {
 
         try (ScanResult scanResult = classGraph.scan()) {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
-                classes.add(Class.forName(classInfo.getName(), true, loader));
+                try {
+                    classes.add(Class.forName(classInfo.getName(), true, loader));
+                } catch (NoClassDefFoundError ignored) {
+                }
             }
         }
         return new ArrayList<>(classes);

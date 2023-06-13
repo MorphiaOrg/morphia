@@ -21,7 +21,6 @@ import dev.morphia.utils.IndexDirection;
 
 import org.bson.types.ObjectId;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.box;
@@ -35,6 +34,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestGeoQueries extends TestBase {
+    public TestGeoQueries() {
+        super(buildConfig(Place.class)
+                .applyIndexes(true));
+    }
+
     @Test
     public void geoIntersects() {
         // given
@@ -81,12 +85,6 @@ public class TestGeoQueries extends TestBase {
         // then
         assertThat(cities.size(), is(1));
         assertThat(cities.get(0), is(london));
-    }
-
-    @BeforeMethod
-    public void setUp() {
-        getMapper().map(Place.class);
-        getDs().ensureIndexes();
     }
 
     @Test

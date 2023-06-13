@@ -21,14 +21,7 @@ import static org.testng.Assert.assertEquals;
 public class QuickTourTest extends TestBase {
     public void demo() {
         final Datastore datastore = Morphia.createDatastore(getMongoClient());
-
-        // tell morphia where to find your classes
-        // can be called multiple times with different packages or classes
-        datastore.getMapper().mapPackage("dev.morphia.example");
-
-        // create the Datastore connecting to the database running on the default port on the local host
         datastore.getDatabase().drop();
-        datastore.ensureIndexes();
 
         final Employee elmer = datastore.save(new Employee("Elmer Fudd", 50000.0));
         final Employee daffy = datastore.save(new Employee("Daffy Duck", 40000.0));

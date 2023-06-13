@@ -12,7 +12,7 @@ import static org.testng.Assert.assertNotNull;
 public class TestCollectionStats extends AggregationTest {
     @Test
     public void testCollectionStats() {
-        getDs().save(new dev.morphia.test.aggregation.model.Author());
+        getDs().save(new Author());
         Document stats = getDs().aggregate(Author.class)
                 .collStats(collStats()
                         .histogram(true)

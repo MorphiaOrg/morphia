@@ -14,10 +14,17 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static java.util.List.of;
+
 /**
  * asserts some common behaviour between entities with or without lifecycle
  */
 public class DiscriminantLifecycleTest extends TestBase {
+
+    public DiscriminantLifecycleTest() {
+        super(buildConfig()
+                .mapPackages(of("dev.morphia.test.mapping.codec.pojo")));
+    }
 
     @DataProvider(name = "classes")
     public Object[][] classes() {

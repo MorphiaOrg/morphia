@@ -1,5 +1,6 @@
 package dev.morphia.config;
 
+import java.util.List;
 import java.util.Optional;
 
 import dev.morphia.annotations.Entity;
@@ -34,6 +35,14 @@ public interface MorphiaConfig {
      * @return the database name to be used with this configuration
      */
     String database();
+
+    /**
+     * If true, mapped index will be applied to the database at start up.
+     * 
+     * @return true if the indexes should be applied
+     */
+    @WithDefault("false")
+    boolean applyIndexes();
 
     /**
      * Specifies a {@code CodecProvider} to supply user defined codecs that Morphia should use.
@@ -105,6 +114,14 @@ public interface MorphiaConfig {
      */
     @WithDefault("false")
     boolean ignoreFinals();
+
+    /**
+     * A comma delimited list of packages that Morphia should map.
+     *
+     * @return the list of packages, if any, to scan for entities to map
+     * @see #mapSubpackages()
+     */
+    List<String> mapPackages();
 
     /**
      * Instructs Morphia to scan subpackages when mapping by package

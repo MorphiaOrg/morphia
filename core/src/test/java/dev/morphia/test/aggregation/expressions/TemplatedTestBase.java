@@ -17,6 +17,7 @@ import com.mongodb.lang.NonNull;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -36,6 +37,13 @@ import static org.testng.Assert.fail;
 
 public abstract class TemplatedTestBase extends TestBase {
     protected final ObjectMapper mapper = new ObjectMapper();
+
+    public TemplatedTestBase() {
+    }
+
+    public TemplatedTestBase(MorphiaConfig config) {
+        super(config);
+    }
 
     public final String prefix() {
         String root = getClass().getSimpleName().substring(4);

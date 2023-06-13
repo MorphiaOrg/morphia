@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.test.models.errors.unannotated.external.ThirdPartyEmbedded;
 
 import org.bson.types.ObjectId;
 

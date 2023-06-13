@@ -13,8 +13,11 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.IdGenerator;
 import org.bson.codecs.ObjectIdGenerator;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static java.lang.String.format;
 
 /**
  * @param <T> the entity type
@@ -23,6 +26,8 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
  */
 @MorphiaInternal
 public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
+    private static final Logger LOG = LoggerFactory.getLogger(EntityEncoder.class);
+
     public static final ObjectIdGenerator OBJECT_ID_GENERATOR = new ObjectIdGenerator();
     private final MorphiaCodec<T> morphiaCodec;
     private IdGenerator idGenerator;
@@ -36,6 +41,8 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = morphiaCodec.getEntityModel();
         if (areEquivalentTypes(value.getClass(), model.getType())) {
+            LOG.debug(format("Encoding document using codec for %s'", morphiaCodec.getEntityModel().getType().getName()));
+
             document(writer, () -> {
 
                 PropertyModel idModel = model.getIdProperty();

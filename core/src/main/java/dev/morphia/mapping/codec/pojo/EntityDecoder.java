@@ -15,8 +15,11 @@ import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static dev.morphia.mapping.codec.Conversions.convert;
+import static java.lang.String.format;
 
 /**
  * @param <T> the entity type
@@ -25,6 +28,8 @@ import static dev.morphia.mapping.codec.Conversions.convert;
  */
 @MorphiaInternal
 public class EntityDecoder<T> implements Decoder<T> {
+    private static final Logger LOG = LoggerFactory.getLogger(EntityDecoder.class);
+
     private final MorphiaCodec<T> morphiaCodec;
     private final EntityModel classModel;
 
@@ -38,6 +43,7 @@ public class EntityDecoder<T> implements Decoder<T> {
     public T decode(BsonReader reader, DecoderContext decoderContext) {
         T entity;
         if (decoderContext.hasCheckedDiscriminator()) {
+            LOG.debug(format("Decoding document using codec for %s'", morphiaCodec.getEntityModel().getType().getName()));
             MorphiaInstanceCreator instanceCreator = getInstanceCreator();
             decodeProperties(reader, decoderContext, instanceCreator, classModel);
             return (T) instanceCreator.getInstance();
@@ -102,7 +108,7 @@ public class EntityDecoder<T> implements Decoder<T> {
                     }
                 }
             } catch (Exception e) {
-                throw new CodecConfigurationException(String.format("Failed to decode '%s'. Decoding errored with: %s",
+                throw new CodecConfigurationException(format("Failed to decode '%s'. Decoding errored with: %s",
                         morphiaCodec.getEntityModel().getName(), e.getMessage()), e);
             } finally {
                 mark.reset();

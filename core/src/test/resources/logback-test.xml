@@ -8,7 +8,19 @@
 
     <root level="warn"/>
 
-    <logger name="dev.morphia" level="info">
+    <logger name="ch.qos" level="error">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="dev.morphia" level="error">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="dev.morphia.mapping.codec.pojo" level="info">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="dev.morphia.aggregation.AggregationImpl" level="info">
         <appender-ref ref="STDOUT" />
     </logger>
 

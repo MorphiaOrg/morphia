@@ -74,13 +74,15 @@ import static org.testng.Assert.assertTrue;
 @SuppressWarnings({ "rawtypes", "ConstantConditions" })
 public class TestDatastore extends TestBase {
 
-    private static final String CUSTOM_CODEC = "custom-codec.properties";
+    public TestDatastore() {
+        super(buildConfig()
+                .mapPackages(of(LifecycleTestObj.class.getPackageName(),
+                        FacebookUser.class.getPackageName())));
+    }
 
     @Test
     public void testAlternateCollections() {
         final String alternateName = "alternate";
-
-        getMapper().map(Book.class, User.class);
 
         Book book = getDs().save(new Book(), new InsertOneOptions()
                 .collection(alternateName));
@@ -151,8 +153,6 @@ public class TestDatastore extends TestBase {
     public void testAlternateCollectionsWithLegacyQuery() {
         withConfig(buildConfig().legacy(), () -> {
             final String alternateName = "alternate";
-
-            getMapper().map(Book.class, User.class);
 
             Book book = getDs().save(new Book(), new InsertOneOptions()
                     .collection(alternateName));
@@ -239,7 +239,6 @@ public class TestDatastore extends TestBase {
     @Test
     public void testCappedEntity() {
         // given
-        getMapper().map(CurrentStatus.class);
         getDs().ensureCaps();
 
         assertCapped(CurrentStatus.class, 1);
@@ -276,8 +275,6 @@ public class TestDatastore extends TestBase {
         getDs().save(new User("Christopher Turk", LocalDate.of(1974, Month.JUNE, 22)));
         withConfig(buildConfig()
                 .codecProvider(new AlwaysFailingCodecProvider()), () -> {
-                    getMapper().map(User.class);
-
                     assertThrows(QueryException.class, () -> {
                         getDs().save(new User("John \"J.D.\" Dorian", LocalDate.of(1974, Month.APRIL, 6)));
                     });
@@ -563,7 +560,6 @@ public class TestDatastore extends TestBase {
     @Test
     public void testLifecycle() {
         final LifecycleTestObj life1 = new LifecycleTestObj();
-        getMapper().map(of(LifecycleTestObj.class));
         getDs().save(life1);
         assertTrue(LifecycleListener.foundDatastore);
         assertTrue(life1.prePersist);
@@ -586,7 +582,6 @@ public class TestDatastore extends TestBase {
     @Test
     public void testLifecycleListeners() {
         final LifecycleTestObj life1 = new LifecycleTestObj();
-        getMapper().map(of(LifecycleTestObj.class));
         getDs().save(life1);
         assertTrue(LifecycleListener.prePersist);
         assertTrue(LifecycleListener.prePersistWithEntity);
@@ -594,8 +589,6 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testModifyWithBadPaths() {
-        getMapper().map(LifecycleTestObj.class);
-
         Query<LifecycleTestObj> query = getDs().find(LifecycleTestObj.class);
         Modify<LifecycleTestObj> modify = query.modify(inc("some.field", 2));
 
@@ -633,7 +626,6 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testSaveWithNoID() {
-        getMapper().map(Grade.class);
         Grade grade = new Grade();
         grade.marks = 80;
 

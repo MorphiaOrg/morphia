@@ -111,6 +111,10 @@ public class TestReferences extends ProxyTestBase {
                         .foreignField("_id")
                         .localField("list"));
 
+        var docs = aggregation
+                .execute(Document.class)
+                .tryNext();
+        System.out.println("docs = " + docs);
         final Author loaded = aggregation
                 //  TODO how to fetch the values from a nested document for cross-referencing?
                 //                                   .lookup(Lookup.from(Book.class)
@@ -210,8 +214,6 @@ public class TestReferences extends ProxyTestBase {
 
     @Test
     public void testDBRefSaves() {
-        getMapper().map(List.of(FacebookUser.class));
-
         FacebookUser tom = new FacebookUser(1, "Tom Anderson");
         tom.friends.addAll(List.of(new FacebookUser(2, "Cameron Winklevoss"), new FacebookUser(3, "Tyler Winklevoss")));
         getDs().save(tom.friends);
@@ -283,8 +285,6 @@ public class TestReferences extends ProxyTestBase {
 
     @Test
     public void testIdOnly() {
-        getMapper().map(List.of(HasIdOnly.class, FacebookUser.class));
-
         HasIdOnly tom = new HasIdOnly();
         tom.list.addAll(List.of(new FacebookUser(2, "Cameron Winklevoss"), new FacebookUser(3, "Tyler Winklevoss")));
         getDs().save(tom.list);
@@ -407,8 +407,6 @@ public class TestReferences extends ProxyTestBase {
 
     @Test
     public void testMultipleDatabasesSingleThreaded() {
-        getMapper().map(List.of(FacebookUser.class));
-
         final Datastore ds1 = createDatastore(getMongoClient(), "db1");
         final Datastore ds2 = createDatastore(getMongoClient(), "db2");
 

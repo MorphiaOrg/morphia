@@ -20,6 +20,10 @@ public class MorphiaContainer {
         this.mongoClient = mongoClient;
     }
 
+    public MorphiaConfig getMorphiaConfig() {
+        return morphiaConfig;
+    }
+
     public void reset() {
         database = null;
         datastore = null;

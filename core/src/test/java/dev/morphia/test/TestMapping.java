@@ -23,10 +23,9 @@ import dev.morphia.annotations.Name;
 import dev.morphia.annotations.Transient;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
+import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.experimental.MorphiaReference;
@@ -42,7 +41,6 @@ import dev.morphia.test.models.Book;
 import dev.morphia.test.models.CityPopulation;
 import dev.morphia.test.models.Jpg;
 import dev.morphia.test.models.MappedInterface;
-import dev.morphia.test.models.MappedInterfaceImpl;
 import dev.morphia.test.models.Png;
 import dev.morphia.test.models.State;
 import dev.morphia.test.models.TestEntity;
@@ -50,9 +48,11 @@ import dev.morphia.test.models.User;
 import dev.morphia.test.models.errors.ContainsDocument;
 import dev.morphia.test.models.errors.ContainsMapLike;
 import dev.morphia.test.models.errors.ContainsXKeyMap;
-import dev.morphia.test.models.errors.OuterClass.NonStaticInnerClass;
+import dev.morphia.test.models.errors.nonstaticinner.OuterClass.NonStaticInnerClass;
+import dev.morphia.test.models.errors.twoIds.TwoIds;
+import dev.morphia.test.models.errors.unannotated.UnannotatedEntity;
+import dev.morphia.test.models.errors.unannotated.external.ThirdPartyEmbedded;
 import dev.morphia.test.models.external.HoldsUnannotated;
-import dev.morphia.test.models.external.ThirdPartyEmbedded;
 import dev.morphia.test.models.external.ThirdPartyEmbeddedProxy;
 import dev.morphia.test.models.external.ThirdPartyEntity;
 import dev.morphia.test.models.external.ThirdPartyEntityProxy;
@@ -69,11 +69,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import static dev.morphia.Morphia.createDatastore;
+import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.*;
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.METHODS;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
+import static dev.morphia.query.filters.Filters.type;
 import static java.lang.String.format;
+import static java.util.List.of;
 import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -85,23 +87,27 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unchecked", "unused" })
 public class TestMapping extends TestBase {
-
-    private static final String QUERY_FACTORY_POLYMORPHIC = "query-factory-polymorphic.properties";
-    private static final String IGNORE_FINALS = "ignore-finals.properties";
-    private static final String MAP_SUBPACKAGES = "map-subpackages.properties";
+    public TestMapping() {
+        super(buildConfig()
+                .mapPackages(of(MappedInterface.class.getPackageName(),
+                        ContainsMapWithEmbeddedInterface.class.getPackageName())));
+    }
 
     @DataProvider
     public static Object[][] discovery() {
         return new Object[][] {
-                new Object[] { buildConfig().propertyDiscovery(PropertyDiscovery.FIELDS) },
-                new Object[] { buildConfig().propertyDiscovery(METHODS) }
+                new Object[] { buildConfig()
+                        .mapPackages(of(ShadowedGrandParent.class.getPackageName()))
+                        .propertyDiscovery(FIELDS) },
+                new Object[] { buildConfig()
+                        .mapPackages(of(ShadowedGrandParent.class.getPackageName()))
+                        .propertyDiscovery(METHODS) }
         };
     }
 
     @Test(dataProvider = "discovery")
     public void testShadowing(MorphiaConfig config) {
         withConfig(config, () -> {
-            getMapper().map(ShadowedGrandParent.class, ShadowedChild.class, ShadowedGrandChild.class);
 
             var check = new Check();
             check.accept(ShadowedGrandParent.class);
@@ -175,41 +181,34 @@ public class TestMapping extends TestBase {
 
     @Test
     public void childMapping() {
-        List<EntityModel> list = getMapper().map(User.class, BannedUser.class);
-
-        assertEquals(list.get(0).getCollectionName(), "users");
-        assertEquals(list.get(1).getCollectionName(), "banned");
+        assertEquals(getMapper().getEntityModel(User.class).getCollectionName(), "users");
+        assertEquals(getMapper().getEntityModel(BannedUser.class).getCollectionName(), "banned");
     }
 
     @Test
     public void collectionNaming() {
-        MapperOptions options = MapperOptions.builder()
-                .collectionNaming(NamingStrategy.lowerCase())
-                .build();
-        Datastore datastore = createDatastore(TestBase.TEST_DB_NAME, options);
-        List<EntityModel> map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
-
-        assertEquals(map.get(0).getCollectionName(), "containsmapwithembeddedinterface");
-        assertEquals(map.get(1).getCollectionName(), "cil");
-
-        options = MapperOptions.builder()
-                .collectionNaming(NamingStrategy.kebabCase())
-                .build();
-        datastore = createDatastore(TestBase.TEST_DB_NAME, options);
-        map = datastore.getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
-
-        assertEquals(map.get(0).getCollectionName(), "contains-map-with-embedded-interface");
-        assertEquals(map.get(1).getCollectionName(), "cil");
+        withConfig(buildConfig()
+                .mapPackages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
+                .collectionNaming(NamingStrategy.lowerCase()), () -> {
+                    assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).getCollectionName(),
+                            "containsmapwithembeddedinterface");
+                    assertEquals(getMapper().getEntityModel(ContainsIntegerList.class).getCollectionName(), "cil");
+                });
+        withConfig(buildConfig()
+                .mapPackages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
+                .collectionNaming(NamingStrategy.kebabCase()), () -> {
+                    assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).getCollectionName(),
+                            "contains-map-with-embedded-interface");
+                    assertEquals(getMapper().getEntityModel(ContainsIntegerList.class).getCollectionName(), "cil");
+                });
     }
 
     @Test
     public void constructors() {
-        getDs().getMapper().map(ConstructorBased.class);
-
         ContainsFinalField value = new ContainsFinalField();
         ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", MorphiaReference.wrap(value));
 
-        getDs().save(List.of(value, instance));
+        getDs().save(of(value, instance));
 
         ConstructorBased first = getDs().find(ConstructorBased.class).first();
         assertNotNull(first);
@@ -218,7 +217,11 @@ public class TestMapping extends TestBase {
 
     @Test(expectedExceptions = ConstraintViolationException.class)
     public final void multipleIds() {
-        getMapper().map(TwoIds.class);
+        withConfig(buildConfig()
+                .mapPackages(of(TwoIds.class.getPackageName())),
+                () -> {
+                    getMapper().getEntityModel(TwoIds.class);
+                });
     }
 
     @Test
@@ -232,36 +235,36 @@ public class TestMapping extends TestBase {
 
     @Test
     public void shouldOnlyMapEntitiesInTheGivenPackage() {
-        withConfig(buildConfig(), () -> {
-            getMapper().mapPackageFromClass(Versioned.class);
+        withConfig(buildConfig()
+                .mapPackages(of(Versioned.class.getPackageName())), () -> {
 
-            // then
-            List<EntityModel> list = getMapper().getMappedEntities();
-            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
-                    .collect(Collectors.toList());
-            assertEquals(classes.size(), 3);
-            assertTrue(classes.contains(AbstractVersionedBase.class));
-            assertTrue(classes.contains(Versioned.class));
-            assertTrue(classes.contains(VersionedChildEntity.class));
-        });
+                    // then
+                    List<EntityModel> list = getMapper().getMappedEntities();
+                    Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                            .collect(Collectors.toList());
+                    assertEquals(classes.size(), 3);
+                    assertTrue(classes.contains(AbstractVersionedBase.class));
+                    assertTrue(classes.contains(Versioned.class));
+                    assertTrue(classes.contains(VersionedChildEntity.class));
+                });
     }
 
     @Test
     public void shouldSupportGenericArrays() {
-        getMapper().map(MyEntity.class);
+        assertNotNull(getMapper().getEntityModel(MyEntity.class));
     }
 
     @Test
     public void subtypes() {
-        List<EntityModel> list = getMapper().map(MappedInterface.class, MappedInterfaceImpl.class, User.class, BannedUser.class);
+        EntityModel model = getMapper().getEntityModel(MappedInterface.class);
+        assertEquals(model.getSubtypes().size(), 1, "Should find 1 subtype: " + model);
 
-        assertEquals(list.get(0).getSubtypes().size(), 1, "Should find 1 subtype: " + list.get(0));
-        assertEquals(list.get(2).getSubtypes().size(), 1, "Should find 1 subtype: " + list.get(2));
+        model = getMapper().getEntityModel(User.class);
+        assertEquals(model.getSubtypes().size(), 1, "Should find 1 subtype: " + model);
     }
 
     @Test
     public void testAlsoLoad() {
-        getMapper().map(ContainsIntegerListNew.class, ContainsIntegerList.class);
         final ContainsIntegerList cil = new ContainsIntegerList();
         cil.intList.add(1);
         getDs().save(cil);
@@ -282,26 +285,32 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testBadMappings() {
-        assertThrows(MappingException.class, () -> {
-            getMapper().map(UnannotatedEntity.class);
-            fail("Missing @Entity and @Embedded should have been caught");
-        });
-
-        assertThrows(MappingException.class, () -> {
-            getMapper().map(ThirdPartyEmbedded.class);
-            fail("Missing @Entity and @Embedded should have been caught");
-        });
-
-        assertThrows(MappingException.class, () -> {
-            getMapper().map(NonStaticInnerClass.class);
-            fail("Validation: Non-static inner class allowed");
-        });
+        withConfig(buildConfig()
+                .mapPackages(of(UnannotatedEntity.class.getPackageName())), () -> {
+                    assertThrows(NotMappableException.class, () -> {
+                        getMapper().getEntityModel(UnannotatedEntity.class);
+                        fail("Missing @Entity and @Embedded should have been caught");
+                    });
+                });
+        withConfig(buildConfig()
+                .mapPackages(of(ThirdPartyEmbedded.class.getPackageName())), () -> {
+                    assertThrows(NotMappableException.class, () -> {
+                        getMapper().getEntityModel(ThirdPartyEmbedded.class);
+                        fail("Missing @Entity and @Embedded should have been caught");
+                    });
+                });
+        withConfig(buildConfig()
+                .mapPackages(of(NonStaticInnerClass.class.getPackageName())), () -> {
+                    assertThrows(MappingException.class, () -> {
+                        getMapper().getEntityModel(NonStaticInnerClass.class);
+                        fail("Validation: Non-static inner class allowed");
+                    });
+                });
     }
 
     @Test
     public void testBasicMapping() {
         Mapper mapper = getDs().getMapper();
-        mapper.map(List.of(State.class, CityPopulation.class));
 
         final State state = new State();
         state.state = "NY";
@@ -319,12 +328,11 @@ public class TestMapping extends TestBase {
         assertEquals(mapper.getEntityModel(State.class)
                 .getProperties().stream()
                 .map(PropertyModel::getMappedName)
-                .collect(toList()), List.of("_id", "state", "biggestCity", "smallestCity"));
+                .collect(toList()), of("_id", "state", "biggestCity", "smallestCity"));
     }
 
     @Test
     public void testByteArrayMapping() {
-        getMapper().map(ContainsByteArray.class);
         final ObjectId savedKey = getDs().save(new ContainsByteArray()).id;
         final ContainsByteArray loaded = getDs().find(ContainsByteArray.class)
                 .filter(eq("_id", savedKey))
@@ -335,8 +343,6 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testArrayOfNulls() {
-        getMapper().map(ObjectArray.class);
-
         ObjectArray entity = new ObjectArray();
         entity.array = new ContainsCollection[10];
         entity.typedArray = new Integer[10];
@@ -352,7 +358,6 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testCollectionMapping() {
-        getMapper().map(ContainsCollection.class);
         final ObjectId savedKey = getDs().save(new ContainsCollection()).id;
         final ContainsCollection loaded = getDs().find(ContainsCollection.class)
                 .filter(eq("_id", savedKey))
@@ -363,7 +368,6 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testEmbeddedArrayElementHasNoClassname() {
-        getMapper().map(ContainsEmbeddedArray.class);
         final ContainsEmbeddedArray cea = new ContainsEmbeddedArray();
         cea.res = new RenamedEmbedded[] { new RenamedEmbedded() };
 
@@ -374,15 +378,15 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testEmbeddedDocument() {
-        getMapper().map(ContainsDocument.class);
-        getDs().save(new ContainsDocument());
-        assertNotNull(getDs().find(ContainsDocument.class).iterator(new FindOptions().limit(1))
-                .next());
+        withConfig(buildConfig(ContainsDocument.class), () -> {
+            getDs().save(new ContainsDocument());
+            assertNotNull(getDs().find(ContainsDocument.class).iterator(new FindOptions().limit(1))
+                    .next());
+        });
     }
 
     @Test
     public void testEmbeddedEntity() {
-        getMapper().map(ContainsEmbeddedEntity.class);
         getDs().save(new ContainsEmbeddedEntity());
         final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class)
                 .iterator(new FindOptions().limit(1))
@@ -396,7 +400,6 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testEmbeddedEntityDocumentHasNoClassname() {
-        getMapper().map(ContainsEmbeddedEntity.class);
         final ContainsEmbeddedEntity cee = new ContainsEmbeddedEntity();
         cee.cil = new ContainsIntegerList();
         cee.cil.intList = Collections.singletonList(1);
@@ -471,26 +474,33 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testExternalClassUsingMethods() {
-        withConfig(buildConfig().propertyDiscovery(METHODS), () -> {
-            assertFalse(getDs().getMapper().map(ThirdPartyEntityProxy.class).isEmpty());
-            assertFalse(getDs().getMapper().map(ThirdPartyEmbeddedProxy.class).isEmpty());
+        withConfig(buildConfig(ThirdPartyEntityProxy.class)
+                .propertyDiscovery(METHODS), () -> {
+                    List<EntityModel> mappedEntities = getMapper().getMappedEntities();
+                    assertFalse(mappedEntities.stream()
+                            .map(EntityModel::getType)
+                            .anyMatch(type -> type.equals(ThirdPartyEntityProxy.class) || type.equals(ThirdPartyEmbeddedProxy.class)));
 
-            EntityModel model = getDs().getMapper().getEntityModel(ThirdPartyEntity.class);
-            assertEquals(model.getCollectionName(), "extEnt");
-            assertEquals(model.getDiscriminator(), "ext");
-            assertEquals(model.getDiscriminatorKey(), "_xt");
-            Entity annotation = model.getAnnotation(Entity.class);
-            assertEquals(annotation.concern(), "JOURNALED");
-            assertEquals(annotation.cap().count(), 123);
-            assertEquals(annotation.cap().value(), 456);
+                    EntityModel model = mappedEntities.stream()
+                            .filter(m -> m.getType().equals(ThirdPartyEntity.class))
+                            .findFirst()
+                            .orElseThrow(
+                                    () -> new MappingException(ThirdPartyEntity.class.getName() + " was not found"));
+                    assertEquals(model.getCollectionName(), "extEnt");
+                    assertEquals(model.getDiscriminator(), "ext");
+                    assertEquals(model.getDiscriminatorKey(), "_xt");
+                    Entity annotation = model.getAnnotation(Entity.class);
+                    assertEquals(annotation.concern(), "JOURNALED");
+                    assertEquals(annotation.cap().count(), 123);
+                    assertEquals(annotation.cap().value(), 456);
 
-            ThirdPartyEntity entity = new ThirdPartyEntity();
-            entity.setField("hi");
-            entity.setNumber(42L);
-            getDs().save(entity);
+                    ThirdPartyEntity entity = new ThirdPartyEntity();
+                    entity.setField("hi");
+                    entity.setNumber(42L);
+                    getDs().save(entity);
 
-            assertEquals(getDs().find(ThirdPartyEntity.class).first(), entity);
-        });
+                    assertEquals(getDs().find(ThirdPartyEntity.class).first(), entity);
+                });
     }
 
     @Test(dataProvider = "queryFactories")
@@ -498,8 +508,6 @@ public class TestMapping extends TestBase {
         withConfig(buildConfig()
                 .queryFactory(queryFactory)
                 .enablePolymorphicQueries(true), () -> {
-                    getDs().getMapper().map(BlogImage.class, Png.class, Jpg.class);
-
                     BlogImage png = new Png();
                     png.content = "I'm a png";
                     getDs().save(png);
@@ -512,14 +520,13 @@ public class TestMapping extends TestBase {
                     findFirst(getDs(), Jpg.class, jpg);
                     Query<BlogImage> query = getDs().find(BlogImage.class);
                     assertEquals(query.count(), 2, query.toString());
-                    assertListEquals(query.iterator().toList(), List.of(jpg, png));
+                    assertListEquals(query.iterator().toList(), of(jpg, png));
                 });
 
     }
 
     @Test
     public void testFinalField() {
-        getMapper().map(ContainsFinalField.class);
         final ObjectId savedKey = getDs().save(new ContainsFinalField("blah")).id;
         final ContainsFinalField loaded = getDs().find(ContainsFinalField.class)
                 .filter(eq("_id", savedKey))
@@ -531,9 +538,8 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testFinalFieldNotPersisted() {
-        withConfig(buildConfig()
+        withConfig(buildConfig(ContainsFinalField.class)
                 .ignoreFinals(true), () -> {
-                    getMapper().map(ContainsFinalField.class);
                     final ObjectId savedKey = getDs().save(new ContainsFinalField("blah")).id;
                     final Document loaded = getDs().getCollection(ContainsFinalField.class)
                             .withDocumentClass(Document.class)
@@ -546,7 +552,6 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testFinalIdField() {
-        getMapper().map(HasFinalFieldId.class);
         final long savedKey = getDs().save(new HasFinalFieldId(12)).id;
         final HasFinalFieldId loaded = getDs().find(HasFinalFieldId.class)
                 .filter(eq("_id", savedKey))
@@ -685,7 +690,6 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testLongArrayMapping() {
-        getMapper().map(ContainsLongAndStringArray.class);
         getDs().save(new ContainsLongAndStringArray());
         ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class).iterator(new FindOptions().limit(1))
                 .next();
@@ -707,8 +711,6 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testMapAsId() {
-        getMapper().map(MapAsId.class);
-
         final MapAsId mai = new MapAsId();
         mai.id.put("test", "string");
         assertNotNull(getDs().save(mai));
@@ -753,8 +755,8 @@ public class TestMapping extends TestBase {
     @Test
 
     public void testMethodMapping() {
-        withConfig(buildConfig().propertyDiscovery(METHODS), () -> {
-            EntityModel model = getDs().getMapper().map(MethodMappedUser.class).get(0);
+        withConfig(buildConfig(MethodMappedUser.class).propertyDiscovery(METHODS), () -> {
+            EntityModel model = getDs().getMapper().getEntityModel(MethodMappedUser.class);
             assertTrue(model.getProperties().size() > 0);
             assertNotNull(model.getVersionProperty(), model.getProperties().toString());
             assertNotNull(model.getProperty("dateJoined"));
@@ -767,7 +769,6 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testObjectIdKeyedMap() {
-        getMapper().map(ContainsObjectIdKeyMap.class);
         final ContainsObjectIdKeyMap map = new ContainsObjectIdKeyMap();
         final ObjectId o1 = new ObjectId("111111111111111111111111");
         final ObjectId o2 = new ObjectId("222222222222222222222222");
@@ -864,7 +865,6 @@ public class TestMapping extends TestBase {
     @Test
     public void testReferenceWithoutIdValue() {
         assertThrows(ReferenceException.class, () -> {
-            getMapper().map(Book.class, Author.class);
             final Book book = new Book();
             book.setAuthor(new Author());
             getDs().save(book);
@@ -874,25 +874,25 @@ public class TestMapping extends TestBase {
     @Test
     public void testSubPackagesMapping() {
         // when
-        withConfig(buildConfig().mapSubpackages(true), () -> {
-            getMapper().mapPackageFromClass(Versioned.class);
+        withConfig(buildConfig()
+                .mapPackages(of(Versioned.class.getPackageName()))
+                .mapSubpackages(true), () -> {
 
-            // then
-            List<EntityModel> list = getMapper().getMappedEntities();
-            assertEquals(list.size(), 4, list.toString());
-            Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
-                    .collect(Collectors.toList());
-            assertTrue(classes.contains(AbstractVersionedBase.class));
-            assertTrue(classes.contains(Versioned.class));
-            assertTrue(classes.contains(VersionedToo.class));
-            assertTrue(classes.contains(VersionedChildEntity.class));
+                    // then
+                    List<EntityModel> list = getMapper().getMappedEntities();
+                    assertEquals(list.size(), 4, list.toString());
+                    Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
+                            .collect(Collectors.toList());
+                    assertTrue(classes.contains(AbstractVersionedBase.class));
+                    assertTrue(classes.contains(Versioned.class));
+                    assertTrue(classes.contains(VersionedToo.class));
+                    assertTrue(classes.contains(VersionedChildEntity.class));
 
-        });
+                });
     }
 
     @Test
     public void transientFields() {
-        getMapper().map(HasTransientFields.class);
         final HasTransientFields entity = new HasTransientFields();
         entity.javaTransientString = "should not be persisted";
         entity.morphiaTransientString = "should not be persisted";
@@ -921,15 +921,14 @@ public class TestMapping extends TestBase {
     }
 
     private void verify(NamingStrategy strategy, String embeddedValues, String intList) {
-        withConfig(buildConfig()
+        withConfig(buildConfig(ContainsMapWithEmbeddedInterface.class)
                 .propertyNaming(strategy), () -> {
-                    List<EntityModel> map = getMapper().map(ContainsMapWithEmbeddedInterface.class, ContainsIntegerList.class);
 
-                    List<PropertyModel> fields = map.get(0).getProperties();
+                    List<PropertyModel> fields = getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).getProperties();
                     validateField(fields, "_id", "id");
                     validateField(fields, embeddedValues, "embeddedValues");
 
-                    fields = map.get(1).getProperties();
+                    fields = getMapper().getEntityModel(ContainsIntegerList.class).getProperties();
                     validateField(fields, "_id", "id");
                     validateField(fields, intList, "intList");
                 });
@@ -1222,18 +1221,4 @@ public class TestMapping extends TestBase {
     private static class Super3<T extends Number> extends Super2<T> {
     }
 
-    @Entity
-    private static class TwoIds {
-        @Id
-        private String extraId;
-        @Id
-        private String broken;
-    }
-
-    private static class UnannotatedEntity {
-        @Id
-        private ObjectId id;
-        private String field;
-        private Long number;
-    }
 }

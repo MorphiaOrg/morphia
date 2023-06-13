@@ -19,8 +19,6 @@ import static org.testng.Assert.assertNotNull;
 public class TestCommonTypes extends TestBase {
     @Test
     public void testBigDecimal() {
-        getDs().getMapper().map(Money.class);
-
         Money money = new Money();
         money.amount = new BigDecimal("123456.7890");
 
@@ -31,7 +29,7 @@ public class TestCommonTypes extends TestBase {
                 .getCollection(Money.class)
                 .withDocumentClass(Document.class);
         Document document = new Document("_id", new ObjectId())
-                .append("_t", "Money")
+                .append("_t", Money.class.getName())
                 .append("amount", "123456.7890");
         collection.insertOne(document);
 

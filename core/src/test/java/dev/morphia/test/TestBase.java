@@ -64,7 +64,7 @@ public abstract class TestBase extends MorphiaTestSetup {
     }
 
     protected void cleanup() {
-        MongoDatabase db = getDatabase();
+        MongoDatabase db = getMongoClient().getDatabase(getMorphiaContainer().getMorphiaConfig().database());
         db.runCommand(new Document("profile", 0).append("slowms", 0));
         var collections = db.listCollectionNames().into(new ArrayList<>());
         collections.stream()
@@ -317,7 +317,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         }
     }
 
-    static class ZDTCodecProvider implements CodecProvider {
+    public static class ZDTCodecProvider implements CodecProvider {
         @Override
         public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
             if (clazz.equals(ZonedDateTime.class)) {

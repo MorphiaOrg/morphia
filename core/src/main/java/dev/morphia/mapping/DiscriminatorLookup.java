@@ -25,6 +25,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.sofia.Sofia;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -59,7 +60,11 @@ public final class DiscriminatorLookup {
      * @param entityModel the model
      */
     public void addModel(EntityModel entityModel) {
-        discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
+        Class<?> extant = discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
+        if (extant != null) {
+            throw new MappingException(Sofia.duplicateDiscriminators(entityModel.getDiscriminator(), extant.getName(),
+                    entityModel.getType().getName()));
+        }
     }
 
     /**

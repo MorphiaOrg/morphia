@@ -22,10 +22,15 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
+import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class TestGenerics extends TestBase {
+    public TestGenerics() {
+        super(buildConfig()
+                .mapPackages(of(Element.class.getPackageName())));
+    }
 
     @Test
     public void example() {
@@ -42,12 +47,13 @@ public class TestGenerics extends TestBase {
 
     @Test
     public void testBoundGenerics() {
-        getMapper().map(Element.class, AudioElement.class);
+        getDs().getCollection(Element.class);
+        getDs().getCollection(AudioElement.class);
     }
 
     @Test
     public void testGenericEntities() {
-        EntityModel entityModel = getMapper().map(SpecializedEntity.class).get(0);
+        EntityModel entityModel = getMapper().getEntityModel(SpecializedEntity.class);
 
         PropertyModel test = entityModel.getProperty("test");
         assertEquals(test.getType(), UUID.class);
@@ -68,7 +74,6 @@ public class TestGenerics extends TestBase {
 
     @Test
     public void testIt() {
-        getMapper().map(HoldsAnInteger.class, HoldsAString.class, ContainsThings.class);
         final ContainsThings ct = new ContainsThings();
         final HoldsAnInteger hai = new HoldsAnInteger();
         hai.setThing(7);
@@ -91,9 +96,10 @@ public class TestGenerics extends TestBase {
     @Test
     public void testMethodMappedGenericEntities() {
         withConfig(buildConfig()
+                .mapPackages(of(MethodMappedSpecializedEntity.class.getPackageName()))
                 .propertyDiscovery(PropertyDiscovery.METHODS), () -> {
 
-                    EntityModel entityModel = getMapper().map(MethodMappedSpecializedEntity.class).get(0);
+                    EntityModel entityModel = getMapper().getEntityModel(MethodMappedSpecializedEntity.class);
 
                     PropertyModel test = entityModel.getProperty("test");
                     assertEquals(test.getType(), UUID.class);
@@ -116,10 +122,8 @@ public class TestGenerics extends TestBase {
 
     @Test
     public void upperBounds() {
-        getMapper().map(Status.class, EmailStatus.class);
-
         Status<EmailItem> status = new EmailStatus();
-        status.items = List.of(new EmailItem("help@example.org"));
+        status.items = of(new EmailItem("help@example.org"));
 
         getDs().save(status);
 
@@ -128,9 +132,8 @@ public class TestGenerics extends TestBase {
 
     @Test
     public void testWildCards() {
-        List<EntityModel> list = getMapper().map(WildCards.class);
-        assertEquals(list.size(), 1);
-        assertEquals(list.get(0).getProperties().size(), 1);
+        EntityModel model = getMapper().getEntityModel(WildCards.class);
+        assertEquals(model.getProperties().size(), 1);
     }
 
     @Entity

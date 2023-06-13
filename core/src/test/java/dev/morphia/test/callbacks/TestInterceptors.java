@@ -18,10 +18,13 @@ import org.testng.annotations.Test;
 
 public class TestInterceptors extends TestBase {
 
+    public TestInterceptors() {
+        super(buildConfig(E.class));
+    }
+
     @Test
     @SuppressWarnings("removal")
     public void testGlobalInterceptor() {
-        getMapper().map(E.class);
         getMapper().addInterceptor(new Interceptor());
 
         getDs().save(new E());

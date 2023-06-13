@@ -18,7 +18,6 @@ import static org.bson.Document.parse;
 public class TestAdd extends AggregationTest {
     @Test
     public void testAdd() {
-        getMapper().map(Sales.class);
         insert("sales", asList(
                 parse("{ '_id' : 1, 'item' : 'abc', 'price' : 10, 'fee' : 2, date: ISODate('2014-03-01T08:00:00Z') }"),
                 parse("{ '_id' : 2, 'item' : 'jkl', 'price' : 20, 'fee' : 1, date: ISODate('2014-03-01T09:00:00Z') }"),

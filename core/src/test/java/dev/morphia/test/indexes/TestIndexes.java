@@ -24,6 +24,7 @@ import dev.morphia.annotations.Text;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.test.TestBase;
+import dev.morphia.test.indexes.errors.MultipleTextIndexes;
 import dev.morphia.test.models.methods.MethodMappedUser;
 import dev.morphia.utils.IndexDirection;
 import dev.morphia.utils.IndexType;
@@ -34,7 +35,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
-import static dev.morphia.test.util.IndexMatcher.doesNotHaveIndexNamed;
 import static dev.morphia.test.util.IndexMatcher.hasIndexNamed;
 import static dev.morphia.utils.IndexType.DESC;
 import static dev.morphia.utils.IndexType.TEXT;
@@ -47,6 +47,11 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class TestIndexes extends TestBase {
+    public TestIndexes() {
+        super(buildConfig(UniqueIndexOnValue.class)
+                .codecProvider(new ZDTCodecProvider())
+                .applyIndexes(true));
+    }
 
     @Test
     public void indexTypefromValue() {
@@ -60,8 +65,6 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void mutipleUniqueIndexed() {
-        getMapper().map(UniqueIndexOnValue.class);
-        getDs().ensureIndexes();
         long value = 7L;
 
         try {
@@ -98,13 +101,12 @@ public class TestIndexes extends TestBase {
 
     @Test(expectedExceptions = MongoCommandException.class)
     public void shouldErrorWhenCreatingA2dIndexOnGeoJson() {
-        // given
-        Place2D pointB = new Place2D(new Point(new Position(3.1, 7.5)), "Point B");
-        getDs().save(pointB);
+        withConfig(buildConfig(Place2D.class), () -> {
+            Place2D pointB = new Place2D(new Point(new Position(3.1, 7.5)), "Point B");
+            getDs().save(pointB);
 
-        // when
-        getDs().ensureIndexes();
-        //"location object expected, location array not in correct format", code : 13654
+            getDs().applyIndexes();
+        });
     }
 
     @Test(expectedExceptions = MongoCommandException.class)
@@ -115,13 +117,6 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void testCanCreate2dSphereIndexes() {
-        // given
-        getMapper().map(Place.class);
-
-        // when
-        getDs().ensureIndexes(Place.class);
-
-        // then
         List<Document> indexInfo = getIndexInfo(Place.class);
         assertThat(indexInfo.size(), is(2));
         assertThat(indexInfo, hasIndexNamed("location_2dsphere"));
@@ -129,26 +124,16 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void testCanCreate2dSphereIndexesOnLegacyCoordinatePairs() {
-        // given
-        getMapper().map(LegacyPlace.class);
-
-        // when
-        getDs().ensureIndexes(LegacyPlace.class);
-
-        // then
         List<Document> indexInfo = getIndexInfo(LegacyPlace.class);
         assertThat(indexInfo, hasIndexNamed("location_2dsphere"));
     }
 
     @Test
     public void testClassIndexInherit() {
-        getMapper().map(Shape.class, Circle.class);
         final EntityModel entityModel = getMapper().getEntityModel(Circle.class);
         assertNotNull(entityModel);
 
         assertNotNull(entityModel.getAnnotation(Indexes.class));
-
-        getDs().ensureIndexes();
 
         assertEquals(getIndexInfo(Circle.class)
                 .stream()
@@ -159,9 +144,6 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void testExpireAfterClassAnnotation() {
-        getMapper().map(ClassAnnotation.class);
-        getDs().ensureIndexes(ClassAnnotation.class);
-
         getDs().save(new ClassAnnotation());
 
         final List<Document> indexes = getIndexInfo(ClassAnnotation.class);
@@ -179,9 +161,6 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void testIndexedField() {
-        getMapper().map(HasExpiryField.class);
-        getDs().ensureIndexes(HasExpiryField.class);
-
         getDs().save(new HasExpiryField());
 
         final List<Document> indexes = getIndexInfo(HasExpiryField.class);
@@ -259,43 +238,31 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void testInheritedFieldIndex() {
-        getMapper().map(Shape.class, Circle.class);
-        getDs().ensureIndexes();
         assertEquals(getIndexInfo(Circle.class).size(), 4);
     }
 
     @Test
     public void testMethodMapping() {
-        withConfig(buildConfig().propertyDiscovery(PropertyDiscovery.METHODS), () -> {
-            getMapper().map(MethodMappedUser.class);
-            getDs().ensureIndexes(MethodMappedUser.class);
-            assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3);
-        });
+        withConfig(buildConfig(MethodMappedUser.class)
+                .applyIndexes(true)
+                .propertyDiscovery(PropertyDiscovery.METHODS), () -> {
+                    assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3);
+                });
     }
 
     @Test
     public void testMixedIndexes() {
-        getMapper().getEntityModel(Ad2.class);
-
-        assertThat(getIndexInfo(Ad2.class), doesNotHaveIndexNamed("active_1_lastMod_-1"));
-        getDs().ensureIndexes(Ad2.class);
         assertThat(getIndexInfo(Ad2.class), hasIndexNamed("active_1_lastMod_-1"));
         assertThat(getIndexInfo(Ad2.class), hasIndexNamed("lastMod_1"));
     }
 
     @Test
     public void testNamedIndexEntity() {
-        getDs().getMapper().map(NamedIndexOnValue.class);
-        getDs().ensureIndexes(NamedIndexOnValue.class);
-
         assertThat(getIndexInfo(NamedIndexOnValue.class), hasIndexNamed("value_ascending"));
     }
 
     @Test
     public void testSingleAnnotation() {
-        getMapper().map(CompoundTextIndex.class);
-        getDs().ensureIndexes();
-
         List<Document> indexInfo = getIndexInfo(CompoundTextIndex.class);
         Assert.assertEquals(indexInfo.size(), 2);
         boolean found = false;
@@ -315,9 +282,6 @@ public class TestIndexes extends TestBase {
     @Test
     public void testTextAnnotation() {
         Class<SingleFieldTextIndex> clazz = SingleFieldTextIndex.class;
-
-        getMapper().map(clazz);
-        getDs().ensureIndexes();
 
         List<Document> indexInfo = getIndexInfo(clazz);
         Assert.assertEquals(indexInfo.size(), 2, indexInfo.toString());
@@ -420,16 +384,6 @@ public class TestIndexes extends TestBase {
 
         @Indexed(IndexDirection.GEO2DSPHERE)
         private double[] location;
-    }
-
-    @Entity
-    @Indexes({ @Index(fields = @Field(value = "name", type = TEXT)),
-            @Index(fields = @Field(value = "nickName", type = TEXT)) })
-    private static class MultipleTextIndexes {
-        @Id
-        private ObjectId id;
-        private String name;
-        private String nickName;
     }
 
     @Entity

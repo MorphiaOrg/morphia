@@ -1,7 +1,6 @@
 package dev.morphia.test.mapping.codec;
 
 import java.util.BitSet;
-import java.util.List;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -11,11 +10,16 @@ import dev.morphia.test.TestBase;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
+import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 public class BitSetCodecTest extends TestBase {
+    public BitSetCodecTest() {
+        super(buildConfig()
+                .mapPackages(of("dev.morphia.test.mapping.codec")));
+    }
 
     @Entity(value = "ClassWithBitSet")
     public static class ClassWithBitSet {
@@ -75,13 +79,13 @@ public class BitSetCodecTest extends TestBase {
     public void testBitSetDecodeLegacyFormat() {
         // create a Document that describe a ClassWithBitSet object with a legacy BitSet in it
         String bitSetInLegacyFormat = "{\"words\": [{\"$numberLong\": \"16\"}, {\"$numberLong\": \"-3\"}], \"wordsInUse\": {\"$numberInt\": \"2\"}, \"sizeIsSticky\":false}";
-        String containingObject = "{\"_id\":{\"$numberLong\":\"2\"}, \"_t\":\"ClassWithBitSet\", \"bits\":" + bitSetInLegacyFormat + "}";
+        String containingObject = "{\"_id\":{\"$numberLong\":\"2\"}, \"_t\":\"" + ClassWithBitSet.class.getName() + "\", \"bits\":"
+                + bitSetInLegacyFormat + "}";
 
         // insert our legacy-style object
-        insert("ClassWithBitSet", List.of(Document.parse(containingObject)));
+        insert("ClassWithBitSet", of(Document.parse(containingObject)));
 
         // retrieve document, make sure it's still the same
-        getMapper().map(ClassWithBitSet.class);
         ClassWithBitSet result = getDs().find(ClassWithBitSet.class).filter(Filters.eq("_id", 2L)).first();
         assertNotNull(result);
         assertEquals(result.bits.get(3), false);

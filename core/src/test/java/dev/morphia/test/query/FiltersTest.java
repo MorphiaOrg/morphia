@@ -84,10 +84,11 @@ public class FiltersTest extends TestBase {
     public void testBitsAllClear() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
 
+        String discriminator = User.class.getName();
         collection.insertMany(asList(
-                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
-                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", "User"),
-                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", "User")));
+                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", discriminator),
+                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", discriminator),
+                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", discriminator)));
 
         FindOptions options = new FindOptions().logQuery();
 
@@ -106,10 +107,11 @@ public class FiltersTest extends TestBase {
     public void testBitsAllSet() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
 
+        String discriminator = User.class.getName();
         collection.insertMany(asList(
-                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
-                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", "User"),
-                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", "User")));
+                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", discriminator),
+                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", discriminator),
+                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", discriminator)));
 
         final FindOptions options = new FindOptions().logQuery();
 
@@ -129,10 +131,11 @@ public class FiltersTest extends TestBase {
     public void testBitsAnyClear() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
 
+        String discriminator = User.class.getName();
         collection.insertMany(asList(
-                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
-                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", "User"),
-                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", "User")));
+                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", discriminator),
+                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", discriminator),
+                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", discriminator)));
 
         FindOptions options = new FindOptions().logQuery();
 
@@ -152,10 +155,11 @@ public class FiltersTest extends TestBase {
     public void testBitsAnySet() {
         MongoCollection<Document> collection = getDatabase().getCollection("users");
 
+        String discriminator = User.class.getName();
         collection.insertMany(asList(
-                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", "User"),
-                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", "User"),
-                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", "User")));
+                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", discriminator),
+                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", discriminator),
+                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", discriminator)));
 
         FindOptions options = new FindOptions().logQuery();
 

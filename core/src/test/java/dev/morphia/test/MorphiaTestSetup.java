@@ -1,5 +1,7 @@
 package dev.morphia.test;
 
+import java.util.stream.Collectors;
+
 import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 
@@ -18,6 +20,7 @@ import org.testng.annotations.BeforeSuite;
 
 import static dev.morphia.test.TestBase.TEST_DB_NAME;
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 
 @SuppressWarnings("removal")
 public class MorphiaTestSetup {
@@ -156,8 +159,11 @@ public class MorphiaTestSetup {
         }
     }
 
-    protected static MutableMorphiaConfig buildConfig() {
+    protected static MutableMorphiaConfig buildConfig(Class<?>... types) {
         return new MutableMorphiaConfig(MorphiaConfigHelper.loadConfig())
+                .mapPackages(stream(types)
+                        .map(Class::getPackageName)
+                        .collect(Collectors.toList()))
                 .database(TEST_DB_NAME);
     }
 

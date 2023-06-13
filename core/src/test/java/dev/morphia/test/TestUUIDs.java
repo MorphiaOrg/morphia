@@ -1,6 +1,5 @@
 package dev.morphia.test;
 
-import java.util.List;
 import java.util.UUID;
 
 import dev.morphia.annotations.Entity;
@@ -8,6 +7,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.Transient;
 import dev.morphia.query.FindOptions;
+import dev.morphia.test.models.FacebookUser;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -20,9 +20,12 @@ import static org.testng.Assert.assertNotNull;
 
 public class TestUUIDs extends TestBase {
 
+    public TestUUIDs() {
+        super(buildConfig(ContainsUUID.class, FacebookUser.class));
+    }
+
     @Test
     public void testUUID() {
-        getMapper().map(ContainsUUID.class);
         final ContainsUUID uuid = new ContainsUUID();
         final UUID before = uuid.uuid;
         getDs().save(uuid);
@@ -37,7 +40,6 @@ public class TestUUIDs extends TestBase {
 
     @Test
     public void testUuidId() {
-        getMapper().map(List.of(ContainsUuidId.class));
         final ContainsUuidId uuidId = new ContainsUuidId();
         final UUID before = uuidId.id;
         getDs().save(uuidId);
@@ -49,8 +51,6 @@ public class TestUUIDs extends TestBase {
 
     @Test
     void checkLifecycleForUuid() {
-        getDs().getMapper().map(ContainsUuidId.class);
-
         ContainsUuidId example = new ContainsUuidId();
         getDs().save(example);
 

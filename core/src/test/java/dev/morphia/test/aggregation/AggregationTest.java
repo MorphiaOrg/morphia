@@ -21,6 +21,8 @@ import java.util.function.Function;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.test.aggregation.expressions.TemplatedTestBase;
+import dev.morphia.test.aggregation.model.Martian;
+import dev.morphia.test.models.User;
 
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +35,12 @@ import static org.testng.Assert.assertEquals;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
 public class AggregationTest extends TemplatedTestBase {
+
+    public AggregationTest() {
+        super(buildConfig(Martian.class, User.class)
+                .applyIndexes(true)
+                .codecProvider(new ZDTCodecProvider()));
+    }
 
     public void testPipeline(double serverVersion, String resourceName,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {

@@ -128,6 +128,14 @@ public class DatastoreImpl implements AdvancedDatastore {
 
         this.database = database.withCodecRegistry(this.codecRegistry);
         operations = new CollectionOperations();
+
+        config.mapPackages().forEach(packageName -> {
+            Sofia.logMappingPackage(packageName);
+            mapper.map(packageName);
+        });
+        if (config.applyIndexes()) {
+            applyIndexes();
+        }
     }
 
     /**
@@ -266,6 +274,19 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public void ensureIndexes() {
+        Sofia.logConfiguredOperation("Datastore#ensureIndexes");
+        if (mapper.getMappedEntities().isEmpty()) {
+            LOG.warn(Sofia.noMappedClasses());
+        }
+        final IndexHelper indexHelper = new IndexHelper(mapper);
+        for (EntityModel model : mapper.getMappedEntities()) {
+            if (model.getIdProperty() != null) {
+                indexHelper.createIndex(getCollection(model.getType()), model);
+            }
+        }
+    }
+
+    public void applyIndexes() {
         if (mapper.getMappedEntities().isEmpty()) {
             LOG.warn(Sofia.noMappedClasses());
         }

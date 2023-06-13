@@ -1,4 +1,4 @@
-package dev.morphia.test.models.external;
+package dev.morphia.test.models.errors.unannotated.external;
 
 import java.util.Objects;
 

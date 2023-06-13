@@ -55,14 +55,11 @@ import dev.morphia.query.ValidationException;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.CurrentDateOperator.TypeSpecification;
 import dev.morphia.query.updates.UpdateOperator;
-import dev.morphia.test.models.Address;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.Circle;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Shape;
-import dev.morphia.test.models.Sphere;
-import dev.morphia.test.models.Square;
 import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.User;
 import dev.morphia.test.query.TestQuery.CappedPic;
@@ -123,6 +120,10 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "ConstantConditions", "unused", "removal" })
 public class TestUpdateOperations extends TestBase {
+
+    public TestUpdateOperations() {
+        super(buildConfig(LogHolder.class, CappedPic.class, Shape.class));
+    }
 
     @Test
     public void retainsClassName() {
@@ -223,7 +224,6 @@ public class TestUpdateOperations extends TestBase {
 
     @Test
     public void testAddAll() {
-        getMapper().map(LogHolder.class, Log.class);
         String uuid = "4ec6ada9-081a-424f-bee0-934c0bc4fab7";
 
         LogHolder logs = new LogHolder();
@@ -480,7 +480,6 @@ public class TestUpdateOperations extends TestBase {
     @Test
     public void testInvalidPathsInUpdates() {
         Consumer<Datastore> test = (datastore) -> {
-            getMapper().map(CappedPic.class);
             Query<CappedPic> query = getDs().find(CappedPic.class);
             assertThrows(ValidationException.class, () -> query.update(new UpdateOptions(), max("bad.name", 12)));
             query.first();
@@ -495,7 +494,6 @@ public class TestUpdateOperations extends TestBase {
     @Test
     public void testInvalidPathsInModify() {
         Consumer<Datastore> test = (datastore) -> {
-            getMapper().map(CappedPic.class);
             Query<CappedPic> query = getDs().find(CappedPic.class);
             assertThrows(ValidationException.class, () -> query.modify(new ModifyOptions(), max("bad.name", 12)));
             query.first();
@@ -608,7 +606,6 @@ public class TestUpdateOperations extends TestBase {
 
     @Test
     public void testMultiUpdates() {
-        getMapper().map(ContainsPic.class);
         Query<ContainsPic> finder = getDs().find(ContainsPic.class);
 
         createContainsPic(0);
@@ -646,7 +643,6 @@ public class TestUpdateOperations extends TestBase {
     public void testPolymorphicUpsert() {
         withConfig(buildConfig()
                 .enablePolymorphicQueries(true), () -> {
-                    getMapper().map(Shape.class, Circle.class, Square.class, Sphere.class);
                     final ObjectId id = new ObjectId();
                     final double originalValue = 2D;
 
@@ -974,8 +970,6 @@ public class TestUpdateOperations extends TestBase {
 
     @Test
     public void testUpdateList() {
-        getMapper().map(Stuff1.class);
-
         getDs().find(Stuff1.class)
                 .update(set("foo", "update1"))
                 .execute();
@@ -988,7 +982,6 @@ public class TestUpdateOperations extends TestBase {
 
     @Test
     public void testUpdateMap() {
-        getMapper().map(TestMapWithEnumKey.class);
         final Map<TestEnum, EmbeddedObjTest> map = Map.of(TestEnum.ANYVAL, new EmbeddedObjTest("name", "value"));
         getDs().find(TestMapWithEnumKey.class)
                 .update(set("map", map))
@@ -1533,8 +1526,6 @@ public class TestUpdateOperations extends TestBase {
 
     @Test(dataProvider = "paths")
     public void testPathTranslations(TranslationParams params) {
-        getMapper().map(Hotel.class, Address.class);
-
         Update<Hotel> update = getDs().find(Hotel.class)
                 .update(params.operator);
         Document document = update.toDocument();
