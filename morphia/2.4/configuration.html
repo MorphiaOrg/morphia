@@ -428,6 +428,10 @@ straightforward.</p>
 <div class="title">Complete with defaults</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">######
+# default = false
+######
+morphia.apply-indexes=false
+######
 # Optional
 ######
 morphia.codec-provider=
@@ -462,6 +466,10 @@ morphia.enable-polymorphic-queries=false
 # default = false
 ######
 morphia.ignore-finals=false
+######
+# Required
+######
+morphia.map-packages=
 ######
 # default = false
 ######
@@ -502,7 +510,11 @@ morphia.uuid-representation=standard</code></pre>
 <pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">######
 # Required
 ######
-morphia.database=dummy</code></pre>
+morphia.database=dummy
+######
+# Required
+######
+morphia.map-packages=</code></pre>
 </div>
 </div>
 <hr>
@@ -532,6 +544,10 @@ morphia.discriminator=className
 # default = _t
 ######
 morphia.discriminator-key=className
+######
+# Required
+######
+morphia.map-packages=
 ######
 # default = dev.morphia.query.DefaultQueryFactory
 ######
