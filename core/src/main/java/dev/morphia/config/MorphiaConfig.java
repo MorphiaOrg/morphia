@@ -37,8 +37,16 @@ public interface MorphiaConfig {
     String database();
 
     /**
-     * If true, mapped index will be applied to the database at start up.
+     * If true, collection caps will be applied to the database at start up.
      * 
+     * @return true if the caps should be applied
+     */
+    @WithDefault("false")
+    boolean applyCaps();
+
+    /**
+     * If true, mapped indexes will be applied to the database at start up.
+     *
      * @return true if the indexes should be applied
      */
     @WithDefault("false")
@@ -52,7 +60,7 @@ public interface MorphiaConfig {
      * @since 2.4
      * @deprecated this configuration entry will updated to use SPI as with other customizations
      */
-    @Deprecated(since = "2.4", forRemoval = true)
+    @Deprecated(since = "2.4.0", forRemoval = true)
     @WithConverter(CodecConverter.class)
     Optional<CodecProvider> codecProvider();
 
@@ -187,6 +195,6 @@ public interface MorphiaConfig {
      * @deprecated This should be configured in the MongoClient given to Morphia
      */
     @WithDefault("standard")
-    @Deprecated(forRemoval = true, since = "2.4")
+    @Deprecated(forRemoval = true, since = "2.4.0")
     UuidRepresentation uuidRepresentation();
 }

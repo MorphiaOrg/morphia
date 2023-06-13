@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
@@ -15,8 +16,15 @@ import dev.morphia.query.QueryFactory;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecProvider;
 
+/**
+ * @hidden
+ * @morphia.internal
+ * @since 2.4
+ */
+@MorphiaInternal
 @SuppressWarnings("removal")
 public class MutableMorphiaConfig implements MorphiaConfig {
+    private boolean applyCaps;
     private boolean applyIndexes;
     private String database;
     private Optional<CodecProvider> codecProvider;
@@ -26,7 +34,7 @@ public class MutableMorphiaConfig implements MorphiaConfig {
     private String discriminatorKey;
     private boolean enablePolymorphicQueries;
     private boolean ignoreFinals;
-    private List<String> packages = new ArrayList<>();
+    private List<String> packages;
     private boolean mapSubpackages;
     private PropertyDiscovery propertyDiscovery;
     private NamingStrategy propertyNaming;
@@ -52,6 +60,16 @@ public class MutableMorphiaConfig implements MorphiaConfig {
         storeEmpties = base.storeEmpties();
         storeNulls = base.storeNulls();
         uuidRepresentation = base.uuidRepresentation();
+    }
+
+    @Override
+    public boolean applyCaps() {
+        return applyCaps;
+    }
+
+    public MutableMorphiaConfig applyCaps(boolean applyCaps) {
+        this.applyCaps = applyCaps;
+        return this;
     }
 
     @Override

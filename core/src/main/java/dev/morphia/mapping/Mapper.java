@@ -98,7 +98,7 @@ public class Mapper {
      * @param ei the interceptor to add
      * @deprecated use {@link dev.morphia.annotations.EntityListeners} to define any lifecycle event listeners
      */
-    @Deprecated(forRemoval = true, since = "2.4")
+    @Deprecated(forRemoval = true, since = "2.4.0")
     public void addInterceptor(EntityListener<?> ei) {
         listeners.add(ei);
     }
@@ -253,7 +253,7 @@ public class Mapper {
      * @return the Interceptors
      * @deprecated
      */
-    @Deprecated(forRemoval = true, since = "2.4")
+    @Deprecated(forRemoval = true, since = "2.4.0")
     public List<EntityListener<?>> getInterceptors() {
         return listeners;
     }
@@ -380,7 +380,7 @@ public class Mapper {
      * @deprecated This is handled via the config file and should not be called manually
      * @hidden
      */
-    @Deprecated(since = "2.4", forRemoval = true)
+    @Deprecated(since = "2.4.0", forRemoval = true)
     public List<EntityModel> map(Class... entityClasses) {
         return map(List.of(entityClasses));
     }
@@ -393,7 +393,7 @@ public class Mapper {
      * @return the list of mapped classes
      * @deprecated This is handled via the config file and should not be called manually
      */
-    @Deprecated(since = "2.4", forRemoval = true)
+    @Deprecated(since = "2.4.0", forRemoval = true)
     public List<EntityModel> map(List<Class> classes) {
         Sofia.logConfiguredOperation("Mapper#map");
         for (Class type : classes) {
@@ -415,7 +415,7 @@ public class Mapper {
      * @hidden
      * @since 2.4
      */
-    @Deprecated(since = "2.4", forRemoval = true)
+    @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void map(String packageName) {
         try {
             getClasses(contextClassLoader, packageName, getConfig().mapSubpackages())
@@ -437,7 +437,7 @@ public class Mapper {
      * @param packageName the name of the package to process
      * @deprecated This is handled via the config file and should not be called manually
      */
-    @Deprecated(since = "2.4", forRemoval = true)
+    @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void mapPackage(String packageName) {
         Sofia.logConfiguredOperation("Mapper#mapPackage");
         try {
@@ -460,7 +460,7 @@ public class Mapper {
      * @param clazz the class to use when trying to find others to map
      * @deprecated This is handled via the config file and should not be called manually
      */
-    @Deprecated(since = "2.4", forRemoval = true)
+    @Deprecated(since = "2.4.0", forRemoval = true)
     public void mapPackageFromClass(Class clazz) {
         mapPackage(clazz.getPackage().getName());
     }

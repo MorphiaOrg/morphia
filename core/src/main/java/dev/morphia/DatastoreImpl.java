@@ -133,6 +133,9 @@ public class DatastoreImpl implements AdvancedDatastore {
             Sofia.logMappingPackage(packageName);
             mapper.map(packageName);
         });
+        if (config.applyCaps()) {
+            applyCaps();
+        }
         if (config.applyIndexes()) {
             applyIndexes();
         }
@@ -275,15 +278,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     public void ensureIndexes() {
         Sofia.logConfiguredOperation("Datastore#ensureIndexes");
-        if (mapper.getMappedEntities().isEmpty()) {
-            LOG.warn(Sofia.noMappedClasses());
-        }
-        final IndexHelper indexHelper = new IndexHelper(mapper);
-        for (EntityModel model : mapper.getMappedEntities()) {
-            if (model.getIdProperty() != null) {
-                indexHelper.createIndex(getCollection(model.getType()), model);
-            }
-        }
+        applyIndexes();
     }
 
     public void applyIndexes() {
@@ -419,9 +414,14 @@ public class DatastoreImpl implements AdvancedDatastore {
         return entity;
     }
 
-    @Override
-    public void ensureCaps() {
+    private void applyCaps() {
         List<String> collectionNames = database.listCollectionNames().into(new ArrayList<>());
+        /*
+         * mapper.getMappedEntities()
+         * .forEach(model -> {
+         * System.out.println(model.getCollectionName() + " : " + model.getType().getName());
+         * });
+         */
         for (EntityModel model : mapper.getMappedEntities()) {
             Entity entityAnnotation = model.getEntityAnnotation();
             if (entityAnnotation != null) {
@@ -453,6 +453,12 @@ public class DatastoreImpl implements AdvancedDatastore {
                 }
             }
         }
+    }
+
+    @Override
+    public void ensureCaps() {
+        Sofia.logConfiguredOperation("ensureCaps");
+        applyCaps();
     }
 
     @Override

@@ -47,7 +47,6 @@ import dev.morphia.test.models.Keys;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Student;
 import dev.morphia.test.models.UsesCustomIdObject;
-import dev.morphia.test.query.TestLegacyQuery.Pic;
 
 import org.awaitility.Awaitility;
 import org.bson.Document;
@@ -90,6 +89,12 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unchecked", "unused" })
 public class TestQuery extends TestBase {
+    public TestQuery() {
+        super(buildConfig(CappedPic.class)
+                .applyCaps(true)
+                .applyIndexes(true));
+    }
+
     @Test
     public void testNativeQuery() {
         dev.morphia.test.models.User user = getDs().save(new dev.morphia.test.models.User("Malcolm 'Mal' Reynolds", now()));
@@ -1243,12 +1248,8 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testTailableCursors() {
-        getMapper().map(CappedPic.class);
         final Datastore ds = getDs();
         final Query<CappedPic> query = ds.find(CappedPic.class);
-
-        getMapper().map(CappedPic.class);
-        ds.ensureCaps();
 
         final List<CappedPic> found = new ArrayList<>();
         assertCapped(CappedPic.class, 1000);

@@ -12,9 +12,9 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TestBase;
-import dev.morphia.test.query.TestLegacyQuery.ContainsPic;
-import dev.morphia.test.query.TestLegacyQuery.Pic;
-import dev.morphia.test.query.TestLegacyQuery.PicWithObjectId;
+import dev.morphia.test.query.TestQuery.ContainsPic;
+import dev.morphia.test.query.TestQuery.Pic;
+import dev.morphia.test.query.TestQuery.PicWithObjectId;
 
 import org.testng.annotations.Test;
 

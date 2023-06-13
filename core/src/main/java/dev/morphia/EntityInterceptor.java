@@ -17,7 +17,7 @@ import org.bson.Document;
  *             {@link dev.morphia.annotations.EntityListeners} annotation.
  */
 @SuppressWarnings("unused")
-@Deprecated(forRemoval = true, since = "2.4")
+@Deprecated(forRemoval = true, since = "2.4.0")
 public interface EntityInterceptor extends EntityListener<Object> {
 
     @Override

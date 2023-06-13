@@ -1,4 +1,4 @@
-package dev.morphia.test.query;
+package dev.morphia.test.query.legacy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +41,8 @@ import dev.morphia.test.mapping.TestReferences.Complex;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
+import dev.morphia.test.query.TestQuery;
+import dev.morphia.test.query.TestQuery.CappedPic;
 
 import org.awaitility.Awaitility;
 import org.bson.Document;
@@ -74,7 +76,10 @@ public class TestLegacyQuery extends TestBase {
     private MorphiaContainer oldContainer;
 
     public TestLegacyQuery() {
-        super(buildConfig().legacy());
+        super(buildConfig(CappedPic.class)
+                .applyCaps(true)
+                .applyIndexes(true)
+                .legacy());
     }
 
     @Test
@@ -95,8 +100,6 @@ public class TestLegacyQuery extends TestBase {
     public void genericMultiKeyValueQueries() {
         checkMinDriverVersion(4.6);
 
-        getMapper().map(GenericKeyValue.class);
-        getDs().ensureIndexes(GenericKeyValue.class);
         final GenericKeyValue<String> value = new GenericKeyValue<>();
         final List<Object> keys = Arrays.asList("key1", "key2");
         value.key = keys;
@@ -960,10 +963,7 @@ public class TestLegacyQuery extends TestBase {
 
     @Test
     public void testQueryUnmappedData() {
-        getMapper().map(Class1.class);
-        getDs().ensureIndexes();
-
-        getDs().getDatabase().getCollection("user").insertOne(
+        getDs().getDatabase().getCollection("legacy_user").insertOne(
                 new Document()
                         .append("@class", Class1.class.getName())
                         .append("value1", "foo")
@@ -1119,9 +1119,7 @@ public class TestLegacyQuery extends TestBase {
 
     @Test
     public void testTailableCursors() {
-        getMapper().map(CappedPic.class);
         final Datastore ds = getDs();
-        ds.ensureCaps();
 
         final Query<CappedPic> query = ds.find(CappedPic.class);
         final List<CappedPic> found = new ArrayList<>();
@@ -1255,14 +1253,14 @@ public class TestLegacyQuery extends TestBase {
         getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
     }
 
-    @Entity(value = "capped_pic", cap = @CappedAt(count = 1000))
-    public static class CappedPic extends Pic {
+    @Entity(value = "legacy_capped_pic", cap = @CappedAt(count = 1000))
+    private static class CappedPic extends Pic {
         public CappedPic() {
             super(valueOf(System.currentTimeMillis()));
         }
     }
 
-    @Entity(value = "user", useDiscriminator = false)
+    @Entity(value = "legacy_user", useDiscriminator = false)
     private static class Class1 {
         @Id
         private ObjectId id;
@@ -1272,7 +1270,7 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Entity
-    public static class ContainsPic {
+    private static class ContainsPic {
         @Id
         private ObjectId id;
         private String name = "test";
@@ -1344,7 +1342,7 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Entity(useDiscriminator = false)
-    public static class ContainsRenamedFields {
+    private static class ContainsRenamedFields {
         @Id
         private ObjectId id;
         @Property("first_name")
@@ -1361,8 +1359,8 @@ public class TestLegacyQuery extends TestBase {
         }
     }
 
-    @Entity("facebook_users")
-    public static class FacebookUser {
+    @Entity("legacy_facebook_users")
+    private static class FacebookUser {
         @Reference
         private final List<FacebookUser> friends = new ArrayList<>();
         public int loginCount;
@@ -1397,7 +1395,7 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Entity
-    public static class HasIntId {
+    private static class HasIntId {
         @Id
         private int id;
 
@@ -1450,7 +1448,7 @@ public class TestLegacyQuery extends TestBase {
 
     @Entity
     @SuppressWarnings({ "UnusedDeclaration", "removal" })
-    public static class Keys {
+    private static class Keys {
         @Id
         private ObjectId id;
         private List<Key<FacebookUser>> users;
@@ -1478,7 +1476,7 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Entity
-    public static class Keyword {
+    private static class Keyword {
         private String keyword;
         private Integer score;
 
@@ -1527,7 +1525,7 @@ public class TestLegacyQuery extends TestBase {
 
     @SuppressWarnings("FieldCanBeLocal")
     @Entity
-    public static class Photo {
+    private static class Photo {
         @Id
         private ObjectId id;
         private List<String> keywords = singletonList("amazing");
@@ -1541,7 +1539,7 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Entity
-    public static class PhotoWithKeywords {
+    private static class PhotoWithKeywords {
         @Id
         private ObjectId id;
         private List<Keyword> keywords = new ArrayList<>();
@@ -1562,7 +1560,7 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Entity
-    public static class Pic {
+    private static class Pic {
         @Id
         private ObjectId id;
         @Indexed
@@ -1635,7 +1633,7 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Entity
-    public static class PicWithObjectId {
+    private static class PicWithObjectId {
         @Id
         private ObjectId id;
         private String name;

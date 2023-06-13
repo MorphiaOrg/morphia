@@ -152,7 +152,10 @@ public interface Datastore {
 
     /**
      * ensure capped collections for {@code Entity}(s)
+     * 
+     * @deprecated this is handled by the config file and should not be called directly
      */
+    @Deprecated(since = "2.4.0", forRemoval = true)
     void ensureCaps();
 
     /**
@@ -163,7 +166,7 @@ public interface Datastore {
      * @see Text
      * @deprecated this is configured by the config file and doesn't need to be called directly
      */
-    @Deprecated(since = "2.4", forRemoval = true)
+    @Deprecated(since = "2.4.0", forRemoval = true)
     void ensureIndexes();
 
     /**

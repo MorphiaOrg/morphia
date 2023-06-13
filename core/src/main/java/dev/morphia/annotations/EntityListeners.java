@@ -24,6 +24,6 @@ public @interface EntityListeners {
      * @deprecated In the next version, this will be restricted to subclasses of {@link EntityListener}. Migrating your listeners to be
      *             subclasses now will prevent any compilation issues in the future.
      */
-    @Deprecated(since = "2.4")
+    @Deprecated(since = "2.4.0")
     Class<?>[] value() default {};
 }

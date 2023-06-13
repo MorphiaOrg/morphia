@@ -76,6 +76,7 @@ public class TestDatastore extends TestBase {
 
     public TestDatastore() {
         super(buildConfig()
+                .applyCaps(true)
                 .mapPackages(of(LifecycleTestObj.class.getPackageName(),
                         FacebookUser.class.getPackageName())));
     }
@@ -238,9 +239,6 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testCappedEntity() {
-        // given
-        getDs().ensureCaps();
-
         assertCapped(CurrentStatus.class, 1);
 
         // when-then

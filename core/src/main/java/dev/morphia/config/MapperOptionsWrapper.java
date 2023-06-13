@@ -34,6 +34,11 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     }
 
     @Override
+    public boolean applyCaps() {
+        return false;
+    }
+
+    @Override
     public boolean applyIndexes() {
         return false;
     }
