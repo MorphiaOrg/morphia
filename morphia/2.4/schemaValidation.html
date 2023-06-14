@@ -244,7 +244,9 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&#8217;s source.  <a href="http://docs.mongodb.org/manual/core/schema-validation/">Schema validation</a> provides the capability to perform schema validation during updates and insertions.
-Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.</p>
+Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.  Morphia will automatically
+apply mapped document validations when <code>morphia.apply-document-validations</code> is set to true in the <a href="configuration.html" class="xref page">configuration
+ file</a>.</p>
 </div>
 <div class="paragraph">
 <p>Below we have a basic entity definition.

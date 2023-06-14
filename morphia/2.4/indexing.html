@@ -248,7 +248,8 @@ In addition to the familiar ascending/descending index types, Morphia and MongoD
 <a href="http://docs.mongodb.org/manual/core/index-ttl/">TTL</a>, <a href="http://docs.mongodb.org/manual/core/index-text/">text</a>, and <a href="http://docs.mongodb.org/manual/applications/geospatial-indexes/">geospatial</a>
 indexes.
 When defining <a href="#_text_indexing">text indexes</a> there are certain restrictions which will be covered below.
-Full details for all these types are available in the <a href="http://docs.mongodb.org/manual/indexes">manual</a>.</p>
+Full details for all these types are available in the <a href="http://docs.mongodb.org/manual/indexes">manual</a>.  Morphia will apply any indexes for you at start up by
+setting the <code>morphia.apply-indexes</code> to true in the <a href="configuration.html" class="xref page">configuration file</a>.</p>
 </div>
 <div class="paragraph">
 <p>There are two ways to define indexes: at the class level and at the field level.</p>
