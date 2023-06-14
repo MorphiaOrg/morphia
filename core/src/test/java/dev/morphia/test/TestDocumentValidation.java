@@ -60,6 +60,11 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 public class TestDocumentValidation extends TestBase {
+    public TestDocumentValidation() {
+        super(buildConfig()
+                  .applyDocumentValidations(true));
+    }
+
     @Test
     public void createValidation() {
         getDs().enableDocumentValidation();
@@ -78,8 +83,6 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void findAndModify() {
-        getDs().enableDocumentValidation();
-
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
@@ -103,8 +106,6 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void insert() {
-        getDs().enableDocumentValidation();
-
         try {
             getDs().insert(new DocumentValidation("Harold", 8, new Date()));
             fail("Document validation should have complained");
@@ -140,60 +141,62 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void jsonSchemaValidation() {
-        insert("contacts", List.of(
+        withConfig(buildConfig(), () -> {
+            insert("contacts", List.of(
                 parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
                 parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
-        getDs().enableDocumentValidation();
+            getDs().applyDocumentValidations();
 
-        Assert.assertThrows(MongoWriteException.class,
+            Assert.assertThrows(MongoWriteException.class,
                 () -> getDs().find(Contact.class)
-                        .filter(eq("_id", 1))
-                        .update(set("age", 42))
-                        .execute());
+                             .filter(eq("_id", 1))
+                             .update(set("age", 42))
+                             .execute());
 
-        getDs().find(Contact.class)
-                .filter(eq("_id", 2))
-                .update(unset("name"))
-                .execute();
+            getDs().find(Contact.class)
+                   .filter(eq("_id", 2))
+                   .update(unset("name"))
+                   .execute();
+        });
     }
 
     @Test
     public void overwriteValidation() {
-        Document validator = parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
-        MongoDatabase database = addValidation(validator);
+        withConfig(buildConfig(), () -> {
+            Document validator = parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
+            MongoDatabase database = addValidation(validator);
 
-        assertEquals(validator, getValidator());
+            assertEquals(validator, getValidator());
 
-        Document rhubarb = new Document("jelly", "rhubarb").append("number", 20);
-        database.getCollection("validation").insertOne(new Document("jelly", "grape"));
-        try {
-            database.getCollection("validation").insertOne(rhubarb);
-            fail("Document should have failed validation");
-        } catch (MongoWriteException e) {
-            assertTrue(e.getMessage().contains("Document failed validation"));
-        }
+            Document rhubarb = new Document("jelly", "rhubarb").append("number", 20);
+            database.getCollection("validation").insertOne(new Document("jelly", "grape"));
+            try {
+                database.getCollection("validation").insertOne(rhubarb);
+                fail("Document should have failed validation");
+            } catch (MongoWriteException e) {
+                assertTrue(e.getMessage().contains("Document failed validation"));
+            }
 
-        getDs().enableDocumentValidation();
-        assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
+            getDs().applyDocumentValidations();
+            assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
 
-        try {
-            database.getCollection("validation").insertOne(rhubarb);
-        } catch (MongoWriteException e) {
-            assertFalse(e.getMessage().contains("Document failed validation"));
-        }
+            try {
+                database.getCollection("validation").insertOne(rhubarb);
+            } catch (MongoWriteException e) {
+                assertFalse(e.getMessage().contains("Document failed validation"));
+            }
 
-        try {
-            getDs().save(new DocumentValidation("John", 1, new Date()));
-            fail("Document should have failed validation");
-        } catch (MongoWriteException e) {
-            assertTrue(e.getMessage().contains("Document failed validation"));
-        }
+            try {
+                getDs().save(new DocumentValidation("John", 1, new Date()));
+                fail("Document should have failed validation");
+            } catch (MongoWriteException e) {
+                assertTrue(e.getMessage().contains("Document failed validation"));
+            }
+        });
     }
 
     @Test
     public void save() {
-        getDs().enableDocumentValidation();
-
         try {
             getDs().save(new DocumentValidation("Harold", 8, new Date()));
             fail("Document validation should have complained");
@@ -227,8 +230,6 @@ public class TestDocumentValidation extends TestBase {
 
     @Test
     public void testBypassDocumentValidation() {
-        getDs().enableDocumentValidation();
-
         final User user = new User("Jim Halpert", LocalDate.now());
         user.age = 5;
 
@@ -246,8 +247,6 @@ public class TestDocumentValidation extends TestBase {
     @Test
     @SuppressWarnings("rawtypes")
     public void update() {
-        getDs().enableDocumentValidation();
-
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);

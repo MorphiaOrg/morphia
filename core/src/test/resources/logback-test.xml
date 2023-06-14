@@ -19,6 +19,9 @@
     <logger name="dev.morphia.test" level="info">
         <appender-ref ref="STDOUT" />
     </logger>
+    <logger name="dev.morphia.test,TestBase" level="debug">
+        <appender-ref ref="STDOUT" />
+    </logger>
 
     <logger name="dev.morphia.mapping.codec.pojo" level="info">
         <appender-ref ref="STDOUT" />

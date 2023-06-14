@@ -19,6 +19,7 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
+import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
@@ -101,7 +102,8 @@ public class TestIndexes extends TestBase {
 
     @Test(expectedExceptions = MongoCommandException.class)
     public void shouldErrorWhenCreatingA2dIndexOnGeoJson() {
-        withConfig(buildConfig(Place2D.class), () -> {
+        withConfig(buildConfig(Place2D.class)
+                       .applyIndexes(false), () -> {
             Place2D pointB = new Place2D(new Point(new Position(3.1, 7.5)), "Point B");
             getDs().save(pointB);
 
@@ -416,6 +418,10 @@ public class TestIndexes extends TestBase {
             this.name = name;
         }
 
+        @PostPersist
+        public void show(Document document) {
+            System.out.println("document = " + document);
+        }
         private Place2D() {
         }
     }

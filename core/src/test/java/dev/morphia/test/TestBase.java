@@ -67,13 +67,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         LOG.debug("Cleaning up database");
         MongoDatabase db = getMongoClient().getDatabase(getMorphiaContainer().getMorphiaConfig().database());
         db.runCommand(new Document("profile", 0).append("slowms", 0));
-        var collections = db.listCollectionNames().into(new ArrayList<>());
-        collections.stream()
-                .filter(s -> !s.equals("zipcodes") && !s.startsWith("system"))
-                .forEach(s -> {
-                    LOG.debug("Dropping collection " + s);
-                    db.getCollection(s).drop();
-                });
+        db.drop();
         getMorphiaContainer().reset();
     }
 

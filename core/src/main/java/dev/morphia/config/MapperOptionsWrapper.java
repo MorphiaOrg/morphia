@@ -39,6 +39,11 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     }
 
     @Override
+    public boolean applyDocumentValidations() {
+        return false;
+    }
+
+    @Override
     public boolean applyIndexes() {
         return false;
     }

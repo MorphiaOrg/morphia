@@ -147,7 +147,9 @@ public interface Datastore {
      *
      * @mongodb.driver.manual core/document-validation/
      * @since 1.3
+     * @deprecated this is handled by the config file and should not be called directly
      */
+    @Deprecated(since = "2.4.0", forRemoval = true)
     void enableDocumentValidation();
 
     /**

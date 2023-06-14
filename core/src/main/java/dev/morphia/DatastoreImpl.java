@@ -139,6 +139,9 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (config.applyIndexes()) {
             applyIndexes();
         }
+        if (config.applyDocumentValidations()) {
+            applyDocumentValidations();
+        }
     }
 
     /**
@@ -268,8 +271,15 @@ public class DatastoreImpl implements AdvancedDatastore {
         return delete(entity, new DeleteOptions().writeConcern(mapper.getWriteConcern(entity.getClass())));
     }
 
+    public void applyDocumentValidations() {
+        for (EntityModel model : mapper.getMappedEntities()) {
+            enableDocumentValidation(model);
+        }
+    }
+
     @Override
     public void enableDocumentValidation() {
+        Sofia.logConfiguredOperation("Datastore#enableDocumentValidation()");
         for (EntityModel model : mapper.getMappedEntities()) {
             enableDocumentValidation(model);
         }
@@ -416,12 +426,6 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     private void applyCaps() {
         List<String> collectionNames = database.listCollectionNames().into(new ArrayList<>());
-        /*
-         * mapper.getMappedEntities()
-         * .forEach(model -> {
-         * System.out.println(model.getCollectionName() + " : " + model.getType().getName());
-         * });
-         */
         for (EntityModel model : mapper.getMappedEntities()) {
             Entity entityAnnotation = model.getEntityAnnotation();
             if (entityAnnotation != null) {

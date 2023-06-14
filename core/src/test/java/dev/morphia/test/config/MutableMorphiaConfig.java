@@ -25,6 +25,7 @@ import org.bson.codecs.configuration.CodecProvider;
 @SuppressWarnings("removal")
 public class MutableMorphiaConfig implements MorphiaConfig {
     private boolean applyCaps;
+    private boolean applyDocumentValidations;
     private boolean applyIndexes;
     private String database;
     private Optional<CodecProvider> codecProvider;
@@ -44,6 +45,9 @@ public class MutableMorphiaConfig implements MorphiaConfig {
     private UuidRepresentation uuidRepresentation;
 
     public MutableMorphiaConfig(MorphiaConfig base) {
+        applyCaps = base.applyCaps();
+        applyDocumentValidations = base.applyDocumentValidations();
+        applyIndexes = base.applyIndexes();
         codecProvider = base.codecProvider();
         collectionNaming = base.collectionNaming();
         database = base.database();
@@ -69,6 +73,15 @@ public class MutableMorphiaConfig implements MorphiaConfig {
 
     public MutableMorphiaConfig applyCaps(boolean applyCaps) {
         this.applyCaps = applyCaps;
+        return this;
+    }
+
+    public boolean applyDocumentValidations() {
+        return applyDocumentValidations;
+    }
+
+    public MutableMorphiaConfig applyDocumentValidations(boolean applyDocumentValidations) {
+        this.applyDocumentValidations = applyDocumentValidations;
         return this;
     }
 

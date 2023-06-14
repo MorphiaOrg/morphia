@@ -6,6 +6,7 @@ import java.util.Optional;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.PossibleValues;
 import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
@@ -44,6 +45,15 @@ public interface MorphiaConfig {
     @WithDefault("false")
     boolean applyCaps();
 
+    /**
+     * If true, document validations will be enabled for entities/collections with such mapping.
+     *
+     * @mongodb.driver.manual core/document-validation/
+     * @return true if the validations should be applied
+     * @see Validation
+     */
+    @WithDefault("false")
+    boolean applyDocumentValidations();
     /**
      * If true, mapped indexes will be applied to the database at start up.
      *
