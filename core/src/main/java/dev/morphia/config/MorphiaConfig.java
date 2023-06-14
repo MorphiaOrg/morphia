@@ -54,6 +54,7 @@ public interface MorphiaConfig {
      */
     @WithDefault("false")
     boolean applyDocumentValidations();
+
     /**
      * If true, mapped indexes will be applied to the database at start up.
      *

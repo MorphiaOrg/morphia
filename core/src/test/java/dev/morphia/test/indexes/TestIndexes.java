@@ -103,12 +103,12 @@ public class TestIndexes extends TestBase {
     @Test(expectedExceptions = MongoCommandException.class)
     public void shouldErrorWhenCreatingA2dIndexOnGeoJson() {
         withConfig(buildConfig(Place2D.class)
-                       .applyIndexes(false), () -> {
-            Place2D pointB = new Place2D(new Point(new Position(3.1, 7.5)), "Point B");
-            getDs().save(pointB);
+                .applyIndexes(false), () -> {
+                    Place2D pointB = new Place2D(new Point(new Position(3.1, 7.5)), "Point B");
+                    getDs().save(pointB);
 
-            getDs().applyIndexes();
-        });
+                    getDs().applyIndexes();
+                });
     }
 
     @Test(expectedExceptions = MongoCommandException.class)
@@ -422,6 +422,7 @@ public class TestIndexes extends TestBase {
         public void show(Document document) {
             System.out.println("document = " + document);
         }
+
         private Place2D() {
         }
     }

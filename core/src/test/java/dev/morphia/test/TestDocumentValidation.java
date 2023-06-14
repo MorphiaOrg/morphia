@@ -62,7 +62,7 @@ import static org.testng.Assert.fail;
 public class TestDocumentValidation extends TestBase {
     public TestDocumentValidation() {
         super(buildConfig()
-                  .applyDocumentValidations(true));
+                .applyDocumentValidations(true));
     }
 
     @Test
@@ -143,20 +143,20 @@ public class TestDocumentValidation extends TestBase {
     public void jsonSchemaValidation() {
         withConfig(buildConfig(), () -> {
             insert("contacts", List.of(
-                parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
-                parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
+                    parse("{ '_id': 1, 'name': 'Anne', 'phone': '+1 555 123 456', 'city': 'London', 'status': 'Complete' }"),
+                    parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
             getDs().applyDocumentValidations();
 
             Assert.assertThrows(MongoWriteException.class,
-                () -> getDs().find(Contact.class)
-                             .filter(eq("_id", 1))
-                             .update(set("age", 42))
-                             .execute());
+                    () -> getDs().find(Contact.class)
+                            .filter(eq("_id", 1))
+                            .update(set("age", 42))
+                            .execute());
 
             getDs().find(Contact.class)
-                   .filter(eq("_id", 2))
-                   .update(unset("name"))
-                   .execute();
+                    .filter(eq("_id", 2))
+                    .update(unset("name"))
+                    .execute();
         });
     }
 
