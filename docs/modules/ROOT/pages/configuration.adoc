@@ -5,6 +5,7 @@ should live in your build's resources folder and be named `META-INF/morphia-conf
 
 1. Better align with usage in frameworks such as Quarkus and Spring Boot
 2. Allow for deployment specific variations based on the deployment environment.
+3. Allow for certain optimizations and simplifications because we know more about the runtime set up earlier in the process.
 
 The configuration mechanism, based on https://microprofile.io/microprofile-config/[Microprofile Config], allows for a number of
 variations which were awkward, at best, and usually downright impossible when using the traditional programmatic configuration.

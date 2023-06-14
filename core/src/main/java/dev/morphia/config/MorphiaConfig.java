@@ -46,7 +46,7 @@ public interface MorphiaConfig {
     boolean applyCaps();
 
     /**
-     * If true, document validations will be enabled for entities/collections with such mapping.
+     * If true, document validations will be enabled for entities/collections with validation mappings.
      *
      * @mongodb.driver.manual core/document-validation/
      * @return true if the validations should be applied

@@ -258,10 +258,10 @@ public class MorphiaConfigHelper {
                     joiner.add("# Required");
                 }
                 if (defaultValue != null) {
-                    joiner.add("# default = " + defaultValue);
+                    joiner.add("# default=" + defaultValue);
                 }
                 if (possibleValues != null) {
-                    joiner.add("# possible values = " +
+                    joiner.add("# possible values=" +
                             join(", ", possibleValues.value()));
                 }
                 joiner.add("######");

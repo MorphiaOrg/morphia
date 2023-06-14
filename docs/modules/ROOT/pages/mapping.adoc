@@ -46,7 +46,8 @@ That is, every field must be represented in the constructor signature.
 Here, there is a bit of flexibility.
 The argument name can match either the field name as found in the source or the mapped name as determined by any `@Property` annotation.
 While this is likely to be the most common case as it is the simplest, for various this won't always be possible or preferable.
-If a constructor argument name can't mirror the field name, using the link:javadoc/dev/morphia/annotations/Name.html[@Name] annotation, an explict name can be given so that the argument can be properly matched to a field.
+If a constructor argument name can't mirror the field name, using the link:javadoc/dev/morphia/annotations/Name.html[@Name] annotation,
+an explicit name can be given so that the argument can be properly matched to a field.
 
 [WARNING]
 ====

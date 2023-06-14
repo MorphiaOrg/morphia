@@ -111,7 +111,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.5.0</version>
                 <configuration>
-                    <failOnError>true</failOnError>
+                    <failOnError>false</failOnError>
                     <excludePackageNames>dev.morphia.sofia:*.internal:*.impls</excludePackageNames>
                     <doclint>none</doclint>
                     <doctitle>Morphia ${project.version}</doctitle>

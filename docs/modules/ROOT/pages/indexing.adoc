@@ -5,7 +5,8 @@ In addition to the familiar ascending/descending index types, Morphia and MongoD
 {docsRef}/core/index-ttl/[TTL], {docsRef}/core/index-text/[text], and {docsRef}/applications/geospatial-indexes/[geospatial]
 indexes.
 When defining <<_text_indexing, text indexes>> there are certain restrictions which will be covered below.
-Full details for all these types are available in the {docsRef}/indexes[manual].
+Full details for all these types are available in the {docsRef}/indexes[manual].  Morphia will apply any indexes for you at start up by
+setting the `morphia.apply-indexes` to true in the xref:configuration.adoc[configuration file].
 
 There are two ways to define indexes: at the class level and at the field level.
 
