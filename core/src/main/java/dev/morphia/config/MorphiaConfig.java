@@ -22,8 +22,8 @@ import io.smallrye.config.WithConverter;
 import io.smallrye.config.WithDefault;
 
 /**
- * Please note that there is every expectation that this format/naming is stable.  However, based on usage feedback prior to 3.0 some
- * tweaks might be made to improve the experience.  As of 3.0, the experimental label will be dropped and the format fixed for the
+ * Please note that there is every expectation that this format/naming is stable. However, based on usage feedback prior to 3.0 some
+ * tweaks might be made to improve the experience. As of 3.0, the experimental label will be dropped and the format fixed for the
  * existing configuration values.
  *
  * @since 2.4
