@@ -22,7 +22,7 @@ class DocumentState extends ValueState<Map<String, Object>> {
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner(", ", "{", finished != null ? "}" : "");
-        values.forEach(v -> joiner.add(v.toString()));
+        values.forEach(v -> joiner.add(String.valueOf(v)));
         return joiner.toString();
     }
 

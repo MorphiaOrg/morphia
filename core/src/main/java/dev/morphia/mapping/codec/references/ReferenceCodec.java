@@ -204,7 +204,12 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             });
             return writer.getDocument().get("ref");
         } catch (ReferenceException e) {
-            return value;
+            if (getPropertyModel().getAnnotation(Reference.class).ignoreMissing()) {
+                return null;
+            } else {
+                throw e;
+            }
+
         }
     }
 
