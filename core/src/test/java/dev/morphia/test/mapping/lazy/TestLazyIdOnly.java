@@ -13,7 +13,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
 
 @Test(groups = "references")
@@ -90,7 +89,7 @@ public class TestLazyIdOnly extends ProxyTestBase {
     public static class RootEntity extends TestEntity {
         @Reference(idOnly = true, lazy = true, ignoreMissing = false)
         private ReferencedEntity dontIgnoreMissing;
-        @Reference(idOnly = true, lazy = true , ignoreMissing = true )
+        @Reference(idOnly = true, lazy = true, ignoreMissing = true)
         private ReferencedEntity ignoreMissing;
 
         private String bar;
