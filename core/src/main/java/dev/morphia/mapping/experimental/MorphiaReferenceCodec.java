@@ -30,6 +30,7 @@ import static dev.morphia.mapping.codec.references.ReferenceCodec.processId;
 
 /**
  * Defines a codec for MorphiaReference values
+ * 
  * @hidden
  */
 @SuppressWarnings("ALL")
