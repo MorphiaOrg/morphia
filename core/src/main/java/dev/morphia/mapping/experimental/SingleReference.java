@@ -22,6 +22,7 @@ import static dev.morphia.query.filters.Filters.eq;
 /**
  * @param <T>
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
 @SuppressWarnings("unchecked")

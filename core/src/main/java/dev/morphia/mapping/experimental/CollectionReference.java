@@ -28,6 +28,7 @@ import static java.util.Arrays.asList;
 /**
  * @param <C>
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
 @SuppressWarnings({ "rawtypes", "unchecked" })

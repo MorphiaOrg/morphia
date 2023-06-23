@@ -11,6 +11,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 /**
  * @param <T>
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
 @Deprecated(forRemoval = true, since = "2.3")

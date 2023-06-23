@@ -17,6 +17,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
  * Wrapper type for references to entities in other collections
  *
  * @param <T>
+ * @hidden
  * @since 1.5
  * @deprecated use @{@link dev.morphia.annotations.Reference} instead. See issue
  *             <a href="https://github.com/MorphiaOrg/morphia/issues/1864">1864</a> for more.

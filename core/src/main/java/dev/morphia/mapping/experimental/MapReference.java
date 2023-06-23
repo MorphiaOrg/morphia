@@ -25,6 +25,7 @@ import static dev.morphia.query.filters.Filters.in;
 /**
  * @param <T>
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
 @SuppressWarnings({ "rawtypes", "unchecked" })
