@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
 
 @Test(groups = "references")
@@ -49,7 +50,7 @@ public class TestLazyIdOnly extends ProxyTestBase {
             datastore.find(RootEntity.class).filter(eq("dontIgnoreMissing", p)).first();
         });
 
-        datastore.find(RootEntity.class).filter(eq("ignoreMissing", p)).first();
+        assertNull(datastore.find(RootEntity.class).filter(eq("ignoreMissing", p)).first());
 
         ReferencedEntity r = root.dontIgnoreMissing;
         assertThrows(ReferenceException.class, () -> {
