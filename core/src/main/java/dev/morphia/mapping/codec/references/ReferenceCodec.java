@@ -195,6 +195,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     @Override
+    @Nullable
     public Object encode(Object value) {
         try {
             DocumentWriter writer = new DocumentWriter(mapper);
@@ -204,7 +205,13 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             });
             return writer.getDocument().get("ref");
         } catch (ReferenceException e) {
-            return value;
+            Reference refAnn = getPropertyModel().getAnnotation(Reference.class);
+            if (refAnn != null && refAnn.ignoreMissing()) {
+                return null;
+            } else {
+                throw e;
+            }
+
         }
     }
 

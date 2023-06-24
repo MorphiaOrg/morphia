@@ -63,8 +63,9 @@ public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
                 Object target = reference.get();
                 if (target == null) {
                     throw new ReferenceException(Sofia.missingReferencedEntity(reference.getType()));
+                } else {
+                    return method.invoke(target, args);
                 }
-                return method.invoke(target, args);
             } else {
                 return method.invoke(reference.getIds(), args);
             }

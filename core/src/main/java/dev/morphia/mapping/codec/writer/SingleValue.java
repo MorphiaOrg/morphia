@@ -11,7 +11,7 @@ class SingleValue extends ValueState<Object> {
 
     @Override
     public String toString() {
-        return value.toString();
+        return String.valueOf(value);
     }
 
     @Override
