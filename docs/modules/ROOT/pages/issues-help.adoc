@@ -41,5 +41,5 @@ Finally, ensure that the code passes all the checks.
 [source,bash]
 ----
 $ cd core
-$ mvn -Pquality
+$ mvn -Pcode-audits
 ----
