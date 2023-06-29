@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Preparing for 3.0 :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.3">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -85,7 +85,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="preparingFor30.html">Preparing for 3.0</a>
   </li>
 </ul>
@@ -139,7 +139,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -224,105 +224,80 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Morphia</a></li>
-    <li>Features</li>
-    <li><a href="lifeCycleMethods.html">Life Cycle Methods</a></li>
+    <li><a href="index.html">Getting Started</a></li>
+    <li><a href="preparingFor30.html">Preparing for 3.0</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">2.4-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="lifeCycleMethods.html">2.4-SNAPSHOT</a>
-    <a class="version" href="../2.3/lifeCycleMethods.html">2.3</a>
-    <a class="version" href="../2.2/lifeCycleMethods.html">2.2</a>
-    <a class="version" href="../2.1/lifeCycleMethods.html">2.1</a>
-    <a class="version" href="../1.6/lifeCycleMethods.html">1.6</a>
+    <a class="version is-current" href="preparingFor30.html">2.4-SNAPSHOT</a>
+    <a class="version is-missing" href="../2.3/index.html">2.3</a>
+    <a class="version is-missing" href="../2.2/index.html">2.2</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/lifeCycleMethods.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/preparingFor30.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
+<h1 class="page">Preparing for 3.0</h1>
 <div class="sect1">
-<h2 id="_life_cycle_methods"><a class="anchor" href="#_life_cycle_methods"></a>Life Cycle Methods</h2>
+<h2 id="_minimum_java_version"><a class="anchor" href="#_minimum_java_version"></a>Minimum Java Version</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are various annotations which can be used to register callbacks on certain life cycle events.
-These include Pre/Post-Persist (Save), and Pre/Post-Load.</p>
+<p>Morphia 2.x made the jump to Java 11 and 3.0 will make the jump to Java 17. While this may not work for everyone, we&#8217;re hopeful that it
+won&#8217;t be a significant migration issue since by the time 3.0 releases, major frameworks such as Spring Boot and Quarkus will have
+long-since completed their moves to 17 as well.  This move will enable Morphia to continue to evolve to meet modern demands over the next
+few years.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><code>@PrePersist</code> - Called before save, it can return a <code>Document</code> in place of an empty one.</p>
-</li>
-<li>
-<p><code>@PostPersist</code> - Called after the save call to the database</p>
-</li>
-<li>
-<p><code>@PreLoad</code> - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can add/remove/change values)</p>
-</li>
-<li>
-<p><code>@PostLoad</code> - Called after populating the entity with the values from the document</p>
-</li>
-</ol>
 </div>
-<div class="sect2">
-<h3 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h3>
+</div>
+<div class="sect1">
+<h2 id="_build_time_vs_runtime"><a class="anchor" href="#_build_time_vs_runtime"></a>Build time vs runtime</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">Here</a> is a one of the test classes.</p>
+<p>Traditionally Morphia, like most object mappers, has leaned heavily on reflection at runtime to discover any mapped entities and to
+handle the read/write operations with the database. Modern JVMs take an increasingly dimmer view of such efforts and is closing off some
+avenues to support such features.  Taking some lessons learned from Quarkus&#8217;s model, much of this work will be moving to build time
+processing such that when you deploy your application, all the mapping information will not only be known but processed and ready for
+usage. This will necessitate the introduction of a basic maven/gradle plugin to collect and process this information.  Moving to this
+model opens the door to some interesting optimizations and potential new features that are impractical if not impossible in the current
+approach.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_critter"><a class="anchor" href="#_critter"></a>Critter</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>All parameters and return values are options in your implemented methods.</p>
+<p>For the last several years, <a href="https://morphia.dev/critter/4.4/index.html">critter</a> has been available as an optional add on to Morphia that
+offers some nice features over and above what Morphia does in core.  In addition to compile time checked constants for property names,
+etc., the latest critter can also generate the codecs necessary to manage entities with minimal or no reflection needed.  In 3.0, critter
+will be brought in to Morphia proper and will live under the same lifecycle and release cycles as Morphia itself.  Indeed, it will likely
+be the core of how Morphia works in the future. Much testing and performance evaluation needs to happen before that final decision is
+reached but that will be part of the 3.0 dev cycle as well.</p>
 </div>
-<div class="sect3">
-<h4 id="_example"><a class="anchor" href="#_example"></a>Example</h4>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_file"><a class="anchor" href="#_configuration_file"></a>Configuration file</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Here is a simple example of an entity that always saves the Date it was last updated.
-Alternatively, the resulting serialized form can be passed back in just prior to sending the document to the database.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class BankAccount {
-  @Id
-  String id;
-  Date lastUpdated = new Date();
-
-  @PrePersist
-  public void trackUpdate() {
-    lastUpdated = new Date();
-  }
-
-  @PrePersist
-  public void prePersist( Document document) {
-    // perform operations on serialized form of the entity
-  }
-}</code></pre>
+<p>Morphia 2.4 introduces a new configuration file based method of configuring Morphia&#8217;s behavior for your needs.  As of 3.0, this will be
+the only way to configure Morphia and the programmatic API will be removed from the public API.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_entitylisteners"><a class="anchor" href="#_entitylisteners"></a>EntityListeners</h3>
+<div class="sect1">
+<h2 id="_deprecations"><a class="anchor" href="#_deprecations"></a>Deprecations</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>If your application has more generalized life cycle events, these methods can be stored on classes external to your model.
-For example&#8217;s sake, let&#8217;s assume there&#8217;s a need to digitally sign all documents before storing it in the database.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@EntityListeners(DigitalSigner.class)
-public class BankAccount {
-  @Id
-  String id;
-  Date lastUpdated = new Date();
-}
-
-class DigitalSigner {
-  @PrePersist
-  void prePersist( Object entity, Document document) {
-     document.put("signature", sign(document));
-  }
-
-}</code></pre>
-</div>
+<p>With 2.0, much of the focus was on pivoting to the (then) new POJO Codecs and simplifying the API.  Over the course of the 2.x cycle,
+many overloaded methods have been consolidated in to <code>Options</code> based variants.  These <code>Options</code> classes make the task of adding, and
+removing, various options much simpler while also keeping the core API slim enough to easily process.  That said, these older methods
+still exist and continue to clutter the API.  Morphia 3.0 will see the removal of all deprecated items.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -332,12 +307,29 @@ class DigitalSigner {
 </td>
 <td class="content">
 <div class="paragraph">
-<p><strong>No Delete Support</strong> Because deletes are usually done with queries there is no way to support a Delete lifecycle event.</p>
+<p>One thing to note on a handful of deprecations is that the method isn&#8217;t going away as such as the usage of it will change in a breaking
+manner.  e.g.,
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/main/java/dev/morphia/query/Query.java">Query#update(UpdateOperator first, UpdateOperator&#8230;&#8203; updates)</a>.  This method
+will, in 3.0, return an <code>UpdateResult</code> like the <code>execute()</code> method you have to call today does.  Migrating to this new form when 3.0
+arrives should be as simple as removing that last method call in the chain.</p>
+</div>
+<div class="paragraph">
+<p>This use of deprecation is not optimal but seemed the best way to educate users about the upcoming change.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_field_vs_property_mapping"><a class="anchor" href="#_field_vs_property_mapping"></a>Field vs Property Mapping</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the current scheme of mapping, this distinction has meant more than it will in future versions.  As such, this distinction will go
+away and Morphia will simply evaluate and process both fields and accessor methods for mapping metadata. The config value for this
+setting will silently vanish from the config file schema and the only thing you should notice is a warning about an unknown config
+property which can be removed at your leisure.</p>
 </div>
 </div>
 </div>
