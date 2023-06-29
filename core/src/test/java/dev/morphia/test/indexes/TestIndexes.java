@@ -19,7 +19,6 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
-import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
