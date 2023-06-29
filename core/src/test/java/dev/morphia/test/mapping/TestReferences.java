@@ -111,10 +111,6 @@ public class TestReferences extends ProxyTestBase {
                         .foreignField("_id")
                         .localField("list"));
 
-        var docs = aggregation
-                .execute(Document.class)
-                .tryNext();
-        System.out.println("docs = " + docs);
         final Author loaded = aggregation
                 //  TODO how to fetch the values from a nested document for cross-referencing?
                 //                                   .lookup(Lookup.from(Book.class)

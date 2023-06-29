@@ -418,11 +418,6 @@ public class TestIndexes extends TestBase {
             this.name = name;
         }
 
-        @PostPersist
-        public void show(Document document) {
-            System.out.println("document = " + document);
-        }
-
         private Place2D() {
         }
     }
