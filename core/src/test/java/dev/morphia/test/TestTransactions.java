@@ -254,6 +254,7 @@ public class TestTransactions extends TemplatedTestBase {
 
     @Test
     public void testTransactions() {
+        checkMinServerVersion(5.0);
         getDs().withTransaction(session -> {
             // save company
             Company company = new Company();

@@ -51,6 +51,7 @@ import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.internal.DatastoreHolder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -347,6 +348,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<Document> pipeline() {
+        DatastoreHolder.holder.set(datastore);
         return stages.stream()
                 .map(stage -> DocumentWriter.encode(stage, datastore.getMapper(), datastore.getCodecRegistry()))
                 .collect(Collectors.toList());

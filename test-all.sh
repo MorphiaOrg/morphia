@@ -1,18 +1,27 @@
 #! /bin/sh
 
 
-DRIVERS=$( yq '.jobs.Test.strategy.matrix.include.[].driver' .github/workflows/build.yml  | sort -r | uniq )
-MONGOS=$( yq '.jobs.Test.strategy.matrix.include.[].mongo' .github/workflows/build.yml  | sort -r | uniq )
+BUILD=.github/workflows/build.yml
+MATDRIVER=$( yq '.jobs.Test.strategy.matrix.driver[]' $BUILD )
+INCDRIVER=$( yq '.jobs.Test.strategy.matrix.include.[].driver' $BUILD )
+DRIVERS=$( echo $MATDRIVER $INCDRIVER | sort -r | uniq )
+MONGOS=$( yq '.jobs.Test.strategy.matrix.mongo[]' $BUILD  | sort | uniq )
 
-mvn clean install -DskipTests
+#echo DRIVERS=$DRIVERS
+echo MONGOS=$MONGOS
+#exit
+
+echo $'\033]30;'Primary First Build'\007'
+mvn install -DskipTests
 
 mkdir -p target
 
 for MONGO in $MONGOS
 do
-   for DRIVER in $DRIVERS
+   for DRIVER in $MATDRIVER
    do
       echo $'\033]30;'Driver: $DRIVER -- Mongo: $MONGO'\007'
-      mvn surefire:test -Dmongodb=$MONGO -Ddriver.version=$DRIVER | tee target/mvn-mongo-$MONGOS-driver-$DRIVER.txt
+      OUTFILE="target/mongo-$MONGO-driver-$DRIVER.txt"
+      mvn surefire:test -Dmongodb=$MONGO -Ddriver.version=$DRIVER | tee "$OUTFILE"
    done
 done

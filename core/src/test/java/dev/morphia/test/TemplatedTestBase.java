@@ -215,7 +215,6 @@ public abstract class TemplatedTestBase extends TestBase {
 
             return method.getAnnotation(Test.class) != null;
         } catch (ReflectiveOperationException e) {
-            LOG.debug(e.getMessage(), e);
             return false;
         }
     }

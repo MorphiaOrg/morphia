@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  CodeAudtis:
+  CodeAudits:
     uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
@@ -20,7 +20,7 @@ jobs:
 
   Test:
     needs:
-      - CodeAudtis
+      - CodeAudits
       - Build
     strategy:
       matrix:
