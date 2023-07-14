@@ -3,7 +3,6 @@ package dev.morphia.mapping.codec;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
@@ -12,6 +11,7 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.MapCodec;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.internal.DatastoreHolder.holder;
 
 /**
  * Maps Map subtypes to/from the database. This is mostly a pass-through to the driver codec except for the encoding, non-String types
@@ -23,10 +23,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 @MorphiaInternal
 public class MorphiaMapCodec extends MapCodec {
 
-    private final Datastore datastore;
-
-    MorphiaMapCodec(Datastore datastore) {
-        this.datastore = datastore;
+    MorphiaMapCodec() {
     }
 
     @Override
@@ -38,7 +35,7 @@ public class MorphiaMapCodec extends MapCodec {
                 if (entry.getValue() == null) {
                     writer.writeNull();
                 } else {
-                    Codec codec = datastore.getCodecRegistry().get(entry.getValue().getClass());
+                    Codec codec = holder.get().getCodecRegistry().get(entry.getValue().getClass());
                     codec.encode(writer, entry.getValue(), encoderContext);
                 }
             }

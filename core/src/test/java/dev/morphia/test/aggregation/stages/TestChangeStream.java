@@ -60,7 +60,7 @@ public class TestChangeStream extends AggregationTest {
 
         Codec<ChangeStream> codec = getDs().getCodecRegistry().get(ChangeStream.class);
 
-        DocumentWriter writer = new DocumentWriter(getMapper());
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         codec.encode(writer, changeStream, EncoderContext.builder().build());
         Document document = writer.getDocument().get("$changeStream", Document.class);
         assertTrue(document.getBoolean("allChangesForCluster"));

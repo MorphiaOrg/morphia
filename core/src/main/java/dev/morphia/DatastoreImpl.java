@@ -41,6 +41,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.CollectionConfiguration;
+import dev.morphia.internal.DatastoreHolder;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.mapping.EntityModelImporter;
@@ -76,6 +77,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static dev.morphia.internal.DatastoreHolder.holder;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.set;
 import static dev.morphia.sofia.Sofia.noDocumentsUpdated;
@@ -117,10 +119,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         List<CodecProvider> providers = new ArrayList<>();
         mapper.getConfig().codecProvider().ifPresent(providers::add);
 
-        providers.addAll(List.of(new MorphiaTypesCodecProvider(this),
+        providers.addAll(List.of(new MorphiaTypesCodecProvider(),
                 new PrimitiveCodecRegistry(codecRegistry),
                 new EnumCodecProvider(),
-                new AggregationCodecProvider(this)));
+                new AggregationCodecProvider()));
 
         providers.addAll(morphiaCodecProviders);
         providers.add(codecRegistry);
@@ -582,6 +584,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             return List.of();
         }
 
+        holder.set(this);
         Map<Class<?>, List<T>> grouped = new LinkedHashMap<>();
         List<T> list = new ArrayList<>();
         for (T entity : entities) {
@@ -660,6 +663,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         return operations;
     }
 
+    @Nullable
     protected <T> T doTransaction(MorphiaSessionImpl morphiaSession, MorphiaTransaction<T> body) {
         try (morphiaSession) {
             return morphiaSession.getSession().withTransaction(() -> body.execute(morphiaSession));
@@ -734,6 +738,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private <T> void save(MongoCollection collection, T entity, InsertOneOptions options) {
+        DatastoreHolder.holder.set(this);
         collection = configureCollection(options, collection);
 
         EntityModel entityModel = mapper.getEntityModel(entity.getClass());

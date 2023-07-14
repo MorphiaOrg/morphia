@@ -660,6 +660,12 @@
           "new": "parameter dev.morphia.query.filters.Filter dev.morphia.query.filters.Filters::ne(java.lang.String, ===java.lang.Object===)",
           "annotation": "@com.mongodb.lang.Nullable",
           "justification": "missed nullability"
+        },
+        {
+          "ignore": true,
+          "code": "java.annotation.added",
+          "annotation": "@com.mongodb.lang.Nullable",
+          "justification": "just documenting that null values are OK."
         }
       ]
     }

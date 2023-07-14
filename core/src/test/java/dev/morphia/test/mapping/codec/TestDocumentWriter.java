@@ -17,7 +17,7 @@ import static java.util.List.of;
 public class TestDocumentWriter extends TestBase {
     @Test
     public void arrays() {
-        DocumentWriter writer = new DocumentWriter(getMapper());
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
 
         document(writer, () -> {
             array(writer, "stuff", () -> {
@@ -34,7 +34,7 @@ public class TestDocumentWriter extends TestBase {
 
     @Test
     public void arraysWithDocs() {
-        DocumentWriter writer = new DocumentWriter(getMapper());
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
 
         document(writer, () -> {
             array(writer, "stuff", () -> {
@@ -50,7 +50,7 @@ public class TestDocumentWriter extends TestBase {
     @Test
     public void basic() {
         for (int i = 0; i < 3; i++) {
-            DocumentWriter writer = new DocumentWriter(getMapper());
+            DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
             Document expected = new Document();
 
             int finalI = i;
@@ -66,7 +66,7 @@ public class TestDocumentWriter extends TestBase {
 
     @Test
     public void nestedArrays() {
-        DocumentWriter writer = new DocumentWriter(getMapper());
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
 
         document(writer, () -> {
             array(writer, "top", () -> {
@@ -89,7 +89,7 @@ public class TestDocumentWriter extends TestBase {
         String expected = "{$group : {_id : {$dateToString: {format: \"%Y-%m-%d\", date: \"$date\"}}, totalSaleAmount: {$sum: "
                 + "{$multiply: [ \"$price\", \"$quantity\" ]}}, averageQuantity: {$avg: \"$quantity\"},count: {$sum: 1}}}";
 
-        DocumentWriter writer = new DocumentWriter(getMapper());
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         document(writer, () -> {
             document(writer, "$group", () -> {
 
@@ -123,7 +123,7 @@ public class TestDocumentWriter extends TestBase {
 
     @Test
     public void subdocuments() {
-        DocumentWriter writer = new DocumentWriter(getMapper());
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         document(writer, () -> {
             writer.writeName("subdoc");
             document(writer, () -> writer.writeInt32("nested", 42));

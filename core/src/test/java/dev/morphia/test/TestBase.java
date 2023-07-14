@@ -64,7 +64,6 @@ public abstract class TestBase extends MorphiaTestSetup {
     }
 
     protected void cleanup() {
-        LOG.debug("Cleaning up database");
         MongoDatabase db = getMongoClient().getDatabase(getMorphiaContainer().getMorphiaConfig().database());
         db.runCommand(new Document("profile", 0).append("slowms", 0));
         db.drop();
@@ -245,7 +244,7 @@ public abstract class TestBase extends MorphiaTestSetup {
     protected Document toDocument(Object entity) {
         final Class<?> type = getMapper().getEntityModel(entity.getClass()).getType();
 
-        DocumentWriter writer = new DocumentWriter(getMapper());
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         ((Codec) getDs().getCodecRegistry().get(type)).encode(writer, entity, EncoderContext.builder().build());
 
         return writer.getDocument();

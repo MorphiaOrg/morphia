@@ -1,0 +1,10 @@
+[
+  {
+    "$lookup": {
+      "from": "aggTest2",
+      "localField": "item",
+      "foreignField": "sku",
+      "as": "inventory_docs"
+    }
+  }
+]

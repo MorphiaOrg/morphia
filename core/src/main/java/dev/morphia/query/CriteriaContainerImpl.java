@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import org.bson.Document;
+
+import static dev.morphia.internal.DatastoreHolder.holder;
 
 /**
  * Defines a container of Criteria and a join method.
@@ -24,18 +25,15 @@ import org.bson.Document;
 @SuppressWarnings("removal")
 @Deprecated(since = "2.0", forRemoval = true)
 public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaContainer {
-    private final Datastore datastore;
-    private final EntityModel model;
     private final CriteriaJoin joinMethod;
     private final List<Criteria> children = new ArrayList<>();
     private LegacyQuery<?> query;
+    private EntityModel model;
 
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    protected CriteriaContainerImpl(Datastore datastore, LegacyQuery<?> query, CriteriaJoin joinMethod) {
+    protected CriteriaContainerImpl(LegacyQuery<?> query, CriteriaJoin joinMethod) {
         this.joinMethod = joinMethod;
-        this.datastore = datastore;
         this.query = query;
-        model = datastore.getMapper().getEntityModel(query.getEntityClass());
     }
 
     /**
@@ -120,7 +118,16 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(String name) {
-        return new FieldEndImpl<>(datastore, name, this, model, query.isValidatingNames());
+
+        return new FieldEndImpl<>(name, this, getEntityModel(), query.isValidatingNames());
+    }
+
+    private EntityModel getEntityModel() {
+        if (model == null) {
+            model = holder.get().getMapper().getEntityModel(query.getEntityClass());
+        }
+
+        return model;
     }
 
     /**
@@ -156,7 +163,7 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     }
 
     private CriteriaContainer collect(CriteriaJoin cj, Criteria... criteria) {
-        final CriteriaContainerImpl parent = new CriteriaContainerImpl(datastore, query, cj);
+        final CriteriaContainerImpl parent = new CriteriaContainerImpl(query, cj);
 
         for (Criteria c : criteria) {
             parent.add(c);

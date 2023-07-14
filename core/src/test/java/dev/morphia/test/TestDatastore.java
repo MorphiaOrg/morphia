@@ -283,7 +283,7 @@ public class TestDatastore extends TestBase {
                     assertThrows(QueryException.class, () -> {
                         getDs().getCodecRegistry()
                                 .get(String.class)
-                                .encode(new DocumentWriter(getMapper()), "this should fail", EncoderContext.builder().build());
+                                .encode(new DocumentWriter(getMapper().getConfig()), "this should fail", EncoderContext.builder().build());
                     });
                 });
     }

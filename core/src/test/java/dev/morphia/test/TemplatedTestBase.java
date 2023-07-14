@@ -1,9 +1,10 @@
-package dev.morphia.test.aggregation.expressions;
+package dev.morphia.test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -21,11 +22,13 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.Test;
 
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
@@ -36,6 +39,8 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 
 public abstract class TemplatedTestBase extends TestBase {
+    private static final Logger LOG = LoggerFactory.getLogger(TemplatedTestBase.class);
+
     protected final ObjectMapper mapper = new ObjectMapper();
 
     public TemplatedTestBase() {
@@ -55,7 +60,7 @@ public abstract class TemplatedTestBase extends TestBase {
         String collection = "aggtest";
         checkMinServerVersion(serverVersion);
         var resourceName = discoverResourceName(new Exception().getStackTrace());
-        loadData(collection, resourceName);
+        loadData(collection, "data.json");
 
         List<Document> documents = runPipeline(resourceName, pipeline.apply(getDs().aggregate(collection)));
 
@@ -72,7 +77,7 @@ public abstract class TemplatedTestBase extends TestBase {
     public <D> void testQuery(Query<D> query, FindOptions options, boolean orderMatters) {
         var resourceName = discoverResourceName(new Exception().getStackTrace());
 
-        loadData(getDs().getCollection(query.getEntityClass()).getNamespace().getCollectionName(), resourceName);
+        loadData(getDs().getCollection(query.getEntityClass()).getNamespace().getCollectionName(), "data.json");
 
         List<D> actual = runQuery(resourceName, query, options);
 
@@ -85,8 +90,9 @@ public abstract class TemplatedTestBase extends TestBase {
         }
     }
 
-    protected void loadData(String collection, String resourceName) {
-        insert(collection, loadJson(format("%s/%s/data.json", prefix(), resourceName)));
+    protected void loadData(String collection, String fileName) {
+        var resourceName = discoverResourceName(new Exception().getStackTrace());
+        insert(collection, loadJson(format("%s/%s/%s", prefix(), resourceName, fileName)));
     }
 
     protected @NotNull List<Document> loadExpected(String resourceName) {
@@ -102,7 +108,7 @@ public abstract class TemplatedTestBase extends TestBase {
         List<Document> data = new ArrayList<>();
         InputStream stream = getClass().getResourceAsStream(name);
         if (stream == null) {
-            fail("missing data file: " + name);
+            fail(format("missing data file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'), name));
         }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             while (reader.ready()) {
@@ -139,7 +145,14 @@ public abstract class TemplatedTestBase extends TestBase {
         try {
             List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
 
-            Iterator<Map<String, Object>> iterator = mapper.readValue(getClass().getResourceAsStream(pipelineName), List.class)
+            InputStream stream = getClass().getResourceAsStream(pipelineName);
+            if (stream == null) {
+                fail(format("missing data file: src/test/resources/%s/%s",
+                        getClass().getPackageName().replace('.', '/'),
+                        pipelineName));
+            }
+
+            Iterator<Map<String, Object>> iterator = mapper.readValue(stream, List.class)
                     .iterator();
             for (Document stage : pipeline) {
                 Object next = iterator.next();
@@ -185,8 +198,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
     private String discoverResourceName(StackTraceElement[] stackTrace) {
         String methodName = Arrays.stream(stackTrace)
-                .filter(e -> !(e.getMethodName().equals("testPipeline") ||
-                        e.getMethodName().equals("testQuery")))
+                .filter(e -> isTestMethod(e))
                 .findFirst()
                 .get().getMethodName();
         if (methodName.startsWith("test")) {
@@ -194,6 +206,18 @@ public abstract class TemplatedTestBase extends TestBase {
             methodName = methodName.substring(0, 1).toLowerCase() + methodName.substring(1);
         }
         return methodName;
+    }
+
+    private boolean isTestMethod(StackTraceElement element) {
+        try {
+            Class<?> klass = Class.forName(element.getClassName());
+            Method method = klass.getDeclaredMethod(element.getMethodName());
+
+            return method.getAnnotation(Test.class) != null;
+        } catch (ReflectiveOperationException e) {
+            LOG.debug(e.getMessage(), e);
+            return false;
+        }
     }
 
     private <D> List<D> map(Class<D> entityClass, List<Document> documents) {

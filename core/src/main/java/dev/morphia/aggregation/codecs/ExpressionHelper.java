@@ -89,7 +89,7 @@ public final class ExpressionHelper {
     }
 
     public static Document document(Mapper mapper, Document seed, Consumer<BsonWriter> body) {
-        DocumentWriter writer = new DocumentWriter(mapper, seed);
+        DocumentWriter writer = new DocumentWriter(mapper.getConfig(), seed);
         writer.writeStartDocument();
         body.accept(writer);
         writer.writeEndDocument();

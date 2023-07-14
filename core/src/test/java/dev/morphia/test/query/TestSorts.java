@@ -7,7 +7,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Text;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.test.aggregation.expressions.TemplatedTestBase;
+import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.Test;
 

@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 
 import org.bson.BsonBinary;
@@ -32,16 +33,16 @@ import org.bson.types.ObjectId;
 @SuppressWarnings("unchecked")
 public class DocumentWriter implements BsonWriter {
     private final RootState root;
+    private final MorphiaConfig config;
     private WriteState state;
-    private final Mapper mapper;
 
     /**
      * Creates a new Writer
      *
-     * @param mapper the mapper to use
+     * @param config
      */
-    public DocumentWriter(Mapper mapper) {
-        this.mapper = mapper;
+    public DocumentWriter(MorphiaConfig config) {
+        this.config = config;
         root = new RootState(this);
         state = root;
     }
@@ -49,12 +50,12 @@ public class DocumentWriter implements BsonWriter {
     /**
      * Creates a new Writer with a seeded Document
      *
-     * @param mapper the mapper to use
+     * @param config
      * @param seed   the seed Document
      */
-    public DocumentWriter(Mapper mapper, Document seed) {
+    public DocumentWriter(MorphiaConfig config, Document seed) {
         root = new RootState(this, seed);
-        this.mapper = mapper;
+        this.config = config;
         state = root;
     }
 
@@ -95,7 +96,7 @@ public class DocumentWriter implements BsonWriter {
      * @return the encoded Document
      */
     public static Document encode(Object value, Mapper mapper, CodecRegistry codecRegistry, EncoderContext encoderContext) {
-        DocumentWriter writer = new DocumentWriter(mapper);
+        DocumentWriter writer = new DocumentWriter(mapper.getConfig());
         Codec codec = codecRegistry.get(value.getClass());
         codec.encode(writer, value, encoderContext);
         return writer.getDocument();
@@ -141,7 +142,7 @@ public class DocumentWriter implements BsonWriter {
 
     @Override
     public void writeDateTime(long value) {
-        state.value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), mapper.getConfig().dateStorage().getZone()));
+        state.value(LocalDateTime.ofInstant(Instant.ofEpochMilli(value), config.dateStorage().getZone()));
     }
 
     @Override

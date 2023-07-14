@@ -13,6 +13,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
+import static dev.morphia.internal.DatastoreHolder.holder;
+
 /**
  * Wrapper type for references to entities in other collections
  *
@@ -26,17 +28,10 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 @Handler(MorphiaReferenceCodec.class)
 @Deprecated(forRemoval = true, since = "2.3")
 public abstract class MorphiaReference<T> {
-    private Datastore datastore;
-    private Mapper mapper;
     private boolean ignoreMissing;
     private boolean resolved;
 
     MorphiaReference() {
-    }
-
-    MorphiaReference(Datastore datastore, Mapper mapper) {
-        this.mapper = mapper;
-        this.datastore = datastore;
     }
 
     /**
@@ -78,7 +73,7 @@ public abstract class MorphiaReference<T> {
     public abstract List<Object> getIds();
 
     protected Datastore getDatastore() {
-        return datastore;
+        return holder.get();
     }
 
     /**
@@ -106,7 +101,7 @@ public abstract class MorphiaReference<T> {
     }
 
     protected Mapper getMapper() {
-        return mapper;
+        return holder.get().getMapper();
     }
 
     /**

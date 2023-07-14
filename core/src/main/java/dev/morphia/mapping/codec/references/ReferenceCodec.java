@@ -85,12 +85,12 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     /**
      * Creates a codec
      *
-     * @param datastore     the datastore to use
+     * @param mapper
      * @param propertyModel the reference property
      */
-    public ReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
-        super(datastore, propertyModel);
-        mapper = datastore.getMapper();
+    public ReferenceCodec(Mapper mapper, PropertyModel propertyModel) {
+        super(propertyModel);
+        this.mapper = mapper;
         annotation = getReferenceAnnotation(propertyModel);
     }
 
@@ -198,7 +198,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     @Nullable
     public Object encode(Object value) {
         try {
-            DocumentWriter writer = new DocumentWriter(mapper);
+            DocumentWriter writer = new DocumentWriter(mapper.getConfig());
             document(writer, () -> {
                 writer.writeName("ref");
                 encode(writer, value, EncoderContext.builder().build());
@@ -381,7 +381,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     MorphiaReference<?> readList(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
-                ? new ListReference<>(getDatastore(), mapper, getEntityModelForField(), value)
+                ? new ListReference<>(getEntityModelForField(), value)
                 : new ListReference<>(mapped);
     }
 
@@ -392,17 +392,17 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             ids.put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
         }
 
-        return new MapReference(getDatastore(), mapper, ids, getEntityModelForField());
+        return new MapReference(ids, getEntityModelForField());
     }
 
     MorphiaReference<?> readSet(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
-                ? new SetReference<>(getDatastore(), getDatastore().getMapper(), getEntityModelForField(), value)
+                ? new SetReference<>(getEntityModelForField(), value)
                 : new SetReference<>(new LinkedHashSet<>(mapped));
     }
 
     MorphiaReference<?> readSingle(Object value) {
-        return new SingleReference<>(getDatastore(), mapper, getEntityModelForField(), value);
+        return new SingleReference<>(getEntityModelForField(), value);
     }
 }

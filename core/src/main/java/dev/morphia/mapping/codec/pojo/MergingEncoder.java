@@ -38,7 +38,7 @@ public class MergingEncoder<T> extends EntityEncoder {
     public MergingEncoder(Query<T> query, MorphiaCodec<T> morphiaCodec) {
         super(morphiaCodec);
         this.query = query;
-        setOperations = new DocumentWriter(morphiaCodec.getMapper());
+        setOperations = new DocumentWriter(morphiaCodec.getMapper().getConfig());
     }
 
     /**

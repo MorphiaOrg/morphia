@@ -4,9 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
 /**
@@ -28,8 +26,8 @@ public class SetReference<T> extends CollectionReference<Set<T>> {
      * @morphia.internal
      */
     @MorphiaInternal
-    public SetReference(Datastore datastore, Mapper mapper, EntityModel entityModel, List ids) {
-        super(datastore, mapper, entityModel, ids);
+    public SetReference(EntityModel entityModel, List ids) {
+        super(entityModel, ids);
     }
 
     /**

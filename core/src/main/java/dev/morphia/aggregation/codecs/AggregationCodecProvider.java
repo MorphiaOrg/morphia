@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
 import dev.morphia.aggregation.codecs.stages.AddFieldsCodec;
 import dev.morphia.aggregation.codecs.stages.AutoBucketCodec;
 import dev.morphia.aggregation.codecs.stages.BucketCodec;
@@ -53,13 +52,11 @@ import org.bson.codecs.configuration.CodecRegistry;
 public class AggregationCodecProvider implements CodecProvider {
 
     private final Codec expressionCodec;
-    private final Datastore datastore;
     private Map<Class, StageCodec> codecs;
 
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public AggregationCodecProvider(Datastore datastore) {
-        this.datastore = datastore;
-        expressionCodec = new ExpressionCodec(datastore);
+    public AggregationCodecProvider() {
+        expressionCodec = new ExpressionCodec();
     }
 
     @Override
@@ -79,40 +76,40 @@ public class AggregationCodecProvider implements CodecProvider {
             codecs = new HashMap<>();
 
             // Stages
-            addCodec(new AddFieldsCodec(datastore),
-                    new AutoBucketCodec(datastore),
-                    new BucketCodec(datastore),
-                    new ChangeStreamCodec(datastore),
-                    new CollectionStatsCodec(datastore),
-                    new CountCodec(datastore),
-                    new CurrentOpCodec(datastore),
-                    new DensifyCodec(datastore),
-                    new DocumentsCodec(datastore),
-                    new FacetCodec(datastore),
-                    new FillCodec(datastore),
-                    new GeoNearCodec(datastore),
-                    new GraphLookupCodec(datastore),
-                    new GroupCodec(datastore),
-                    new IndexStatsCodec(datastore),
-                    new MergeCodec(datastore),
-                    new PlanCacheStatsCodec(datastore),
-                    new LimitCodec(datastore),
-                    new LookupCodec(datastore),
-                    new MatchCodec(datastore),
-                    new OutCodec(datastore),
-                    new ProjectionCodec(datastore),
-                    new RedactCodec(datastore),
-                    new ReplaceRootCodec(datastore),
-                    new ReplaceWithCodec(datastore),
-                    new SampleCodec(datastore),
-                    new SetStageCodec(datastore),
-                    new SetWindowFieldsCodec(datastore),
-                    new SkipCodec(datastore),
-                    new SortCodec(datastore),
-                    new SortByCountCodec(datastore),
-                    new UnionWithCodec(datastore),
-                    new UnsetCodec(datastore),
-                    new UnwindCodec(datastore));
+            addCodec(new AddFieldsCodec(),
+                    new AutoBucketCodec(),
+                    new BucketCodec(),
+                    new ChangeStreamCodec(),
+                    new CollectionStatsCodec(),
+                    new CountCodec(),
+                    new CurrentOpCodec(),
+                    new DensifyCodec(),
+                    new DocumentsCodec(),
+                    new FacetCodec(),
+                    new FillCodec(),
+                    new GeoNearCodec(),
+                    new GraphLookupCodec(),
+                    new GroupCodec(),
+                    new IndexStatsCodec(),
+                    new MergeCodec(),
+                    new PlanCacheStatsCodec(),
+                    new LimitCodec(),
+                    new LookupCodec(),
+                    new MatchCodec(),
+                    new OutCodec(),
+                    new ProjectionCodec(),
+                    new RedactCodec(),
+                    new ReplaceRootCodec(),
+                    new ReplaceWithCodec(),
+                    new SampleCodec(),
+                    new SetStageCodec(),
+                    new SetWindowFieldsCodec(),
+                    new SkipCodec(),
+                    new SortCodec(),
+                    new SortByCountCodec(),
+                    new UnionWithCodec(),
+                    new UnsetCodec(),
+                    new UnwindCodec());
         }
         return codecs;
     }

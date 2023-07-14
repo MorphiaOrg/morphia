@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Documents;
 
 import org.bson.BsonWriter;
@@ -10,10 +9,6 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class DocumentsCodec extends StageCodec<Documents> {
-    public DocumentsCodec(Datastore datastore) {
-        super(datastore);
-    }
-
     @Override
     public Class<Documents> getEncoderClass() {
         return Documents.class;

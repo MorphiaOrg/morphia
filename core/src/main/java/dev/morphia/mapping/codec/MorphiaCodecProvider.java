@@ -37,7 +37,6 @@ public class MorphiaCodecProvider implements CodecProvider {
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
     private final Mapper mapper;
     private final List<PropertyCodecProvider> propertyCodecProviders = new ArrayList<>();
-    private final Datastore datastore;
 
     /**
      * Creates a provider
@@ -45,7 +44,6 @@ public class MorphiaCodecProvider implements CodecProvider {
      * @param datastore the Datastore to use
      */
     public MorphiaCodecProvider(Datastore datastore) {
-        this.datastore = datastore;
         this.mapper = datastore.getMapper();
 
         propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
@@ -62,7 +60,7 @@ public class MorphiaCodecProvider implements CodecProvider {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
             EntityModel model = mapper.getEntityModel(type);
-            codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry);
+            codec = new MorphiaCodec<>(model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry);
             if (model.hasLifecycle(PostPersist.class) || model.hasLifecycle(PrePersist.class) || mapper.hasInterceptors()) {
                 codec.setEncoder(new LifecycleEncoder(codec));
             }
@@ -73,18 +71,6 @@ public class MorphiaCodecProvider implements CodecProvider {
         }
 
         return codec;
-    }
-
-    protected Map<Class<?>, Codec<?>> getCodecs() {
-        return codecs;
-    }
-
-    protected Datastore getDatastore() {
-        return datastore;
-    }
-
-    protected List<PropertyCodecProvider> getPropertyCodecProviders() {
-        return propertyCodecProviders;
     }
 
     /**
@@ -98,10 +84,10 @@ public class MorphiaCodecProvider implements CodecProvider {
     @Nullable
     public <T> Codec<T> getRefreshCodec(T entity, CodecRegistry registry) {
         EntityModel model = mapper.getEntityModel(entity.getClass());
-        return new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
+        return new MorphiaCodec<>(model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry) {
             @Override
             protected EntityDecoder<T> getDecoder() {
-                return new EntityDecoder(this) {
+                return new EntityDecoder<>(this) {
                     @Override
                     protected MorphiaInstanceCreator getInstanceCreator() {
                         return new MorphiaInstanceCreator() {

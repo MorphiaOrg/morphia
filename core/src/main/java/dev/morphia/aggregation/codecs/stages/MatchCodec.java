@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Match;
 import dev.morphia.query.filters.Filter;
 
@@ -10,10 +9,6 @@ import org.bson.codecs.EncoderContext;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 public class MatchCodec extends StageCodec<Match> {
-
-    public MatchCodec(Datastore datastore) {
-        super(datastore);
-    }
 
     @Override
     public Class<Match> getEncoderClass() {

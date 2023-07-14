@@ -1,16 +1,11 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Skip;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class SkipCodec extends StageCodec<Skip> {
-    public SkipCodec(Datastore datastore) {
-        super(datastore);
-    }
-
     @Override
     public Class<Skip> getEncoderClass() {
         return Skip.class;

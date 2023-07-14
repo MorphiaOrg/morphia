@@ -626,6 +626,7 @@ public interface Datastore {
      * @return the return value
      * @since 2.0
      */
+    @Nullable
     <T> T withTransaction(MorphiaTransaction<T> transaction);
 
     /**
@@ -635,5 +636,6 @@ public interface Datastore {
      * @return the return value
      * @since 2.0
      */
+    @Nullable
     <T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction);
 }

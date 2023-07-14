@@ -166,7 +166,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
-        return new MorphiaCursor<>(options.apply(pipeline(), datastore, collection, resultType)
+        return new MorphiaCursor<>(options.apply(pipeline(), datastore.getDatabase(), collection, resultType)
                 .iterator());
     }
 
@@ -232,7 +232,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         addStage(merge);
         Class<?> type = merge.getType();
         type = type != null ? type : Document.class;
-        options.apply(pipeline(), datastore, collection, type)
+        options.apply(pipeline(), datastore.getDatabase(), collection, type)
                 .toCollection();
     }
 
@@ -248,7 +248,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         addStage(out);
         Class<?> type = out.type();
         type = type != null ? type : Document.class;
-        options.apply(pipeline(), datastore, collection, type).toCollection();
+        options.apply(pipeline(), datastore.getDatabase(), collection, type).toCollection();
     }
 
     @Override

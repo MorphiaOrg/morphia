@@ -23,6 +23,7 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.internal.DatastoreHolder;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -86,7 +87,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
             this.collectionName = this.collection.getNamespace().getCollectionName();
         }
 
-        compoundContainer = new CriteriaContainerImpl(datastore, this, CriteriaJoin.AND);
+        compoundContainer = new CriteriaContainerImpl(this, CriteriaJoin.AND);
     }
 
     @Override
@@ -104,10 +105,10 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(String field) {
-        final CriteriaContainerImpl container = new CriteriaContainerImpl(datastore, this, CriteriaJoin.AND);
+        final CriteriaContainerImpl container = new CriteriaContainerImpl(this, CriteriaJoin.AND);
         add(container);
 
-        return new FieldEndImpl<CriteriaContainer>(datastore, field, container, model, this.isValidatingNames());
+        return new FieldEndImpl<CriteriaContainer>(field, container, model, this.isValidatingNames());
     }
 
     @MorphiaInternal
@@ -237,7 +238,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public FieldEnd<? extends Query<T>> field(String name) {
         try {
-            return new FieldEndImpl<>(datastore, name, this, model, this.isValidatingNames());
+            return new FieldEndImpl<>(name, this, model, this.isValidatingNames());
         } catch (ValidationException e) {
             invalid = e;
             throw e;
@@ -529,6 +530,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
         try {
+            DatastoreHolder.holder.set(datastore);
             return options
                     .apply(iterable(options, collection), datastore.getMapper(), type)
                     .iterator();

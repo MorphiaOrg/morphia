@@ -66,7 +66,7 @@ class PipelineUpdate<T> {
         CodecRegistry registry = datastore.getCodecRegistry();
         List<Document> documents = new ArrayList<>();
         for (Stage update : updates) {
-            DocumentWriter writer = new DocumentWriter(datastore.getMapper());
+            DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
             Codec codec = registry.get(update.getClass());
             codec.encode(writer, update, EncoderContext.builder().build());
             documents.add(writer.getDocument());

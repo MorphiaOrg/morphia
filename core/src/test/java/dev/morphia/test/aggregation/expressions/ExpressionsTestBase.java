@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.Projection;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.models.User;
 
 import org.bson.Document;
@@ -24,7 +25,7 @@ public class ExpressionsTestBase extends TemplatedTestBase {
     @SuppressWarnings("unchecked")
     protected void assertAndCheckDocShape(String expectedString, Expression value, Object expectedValue) {
         Document expected = Document.parse(expectedString);
-        DocumentWriter writer = new DocumentWriter(getMapper());
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         document(writer, () -> {
             value.encode(getDs(), writer, EncoderContext.builder().build());
         });

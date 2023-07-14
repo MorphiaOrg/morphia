@@ -53,7 +53,7 @@ public class SetOnInsertOperator extends UpdateOperator implements DatastoreAwar
     public OperationTarget toTarget(PathTarget pathTarget) {
         Mapper mapper = pathTarget.mapper();
         EntityModel model = mapper.getEntityModel(pathTarget.root().getType());
-        DocumentWriter writer = new DocumentWriter(mapper);
+        DocumentWriter writer = new DocumentWriter(mapper.getConfig());
         document(writer, () -> {
             insertValues.forEach((key, value) -> {
                 PathTarget keyTarget = new PathTarget(mapper, model, key, true);

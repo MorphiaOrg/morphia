@@ -7,7 +7,6 @@ import java.util.Set;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseReferenceCodec;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -37,18 +36,18 @@ import static dev.morphia.mapping.codec.references.ReferenceCodec.processId;
 @Deprecated(forRemoval = true, since = "2.3")
 public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> implements PropertyHandler {
 
-    private final Mapper mapper;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
+    private Mapper mapper;
 
     /**
      * Creates a codec
      *
-     * @param datastore     the datastore
+     * @param mapper        the mapper
      * @param propertyModel the reference property model
      */
-    public MorphiaReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
-        super(datastore, propertyModel);
-        mapper = datastore.getMapper();
+    public MorphiaReferenceCodec(Mapper mapper, PropertyModel propertyModel) {
+        super(propertyModel);
+        this.mapper = mapper;
     }
 
     @Override
@@ -60,13 +59,13 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
         TypeData typeData = getTypeData().getTypeParameters().get(0);
         EntityModel fieldEntityModel = getEntityModelForField();
         if (Set.class.isAssignableFrom(typeData.getType())) {
-            return new SetReference<>(getDatastore(), mapper, fieldEntityModel, (List) value);
+            return new SetReference<>(fieldEntityModel, (List) value);
         } else if (Collection.class.isAssignableFrom(typeData.getType())) {
-            return new ListReference<>(getDatastore(), mapper, fieldEntityModel, (List) value);
+            return new ListReference<>(fieldEntityModel, (List) value);
         } else if (Map.class.isAssignableFrom(typeData.getType())) {
-            return new MapReference<>(getDatastore(), mapper, (Map) value, fieldEntityModel);
+            return new MapReference<>((Map) value, fieldEntityModel);
         } else {
-            return new SingleReference<>(getDatastore(), mapper, fieldEntityModel, value);
+            return new SingleReference<>(fieldEntityModel, value);
         }
     }
 
@@ -79,7 +78,7 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
             } else {
                 wrap = MorphiaReference.wrap(value);
             }
-            DocumentWriter writer = new DocumentWriter(mapper);
+            DocumentWriter writer = new DocumentWriter(mapper.getConfig());
             document(writer, () -> {
                 writer.writeName("ref");
                 encode(writer, wrap, EncoderContext.builder().build());

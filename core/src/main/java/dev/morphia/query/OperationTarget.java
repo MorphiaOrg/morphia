@@ -67,7 +67,7 @@ public class OperationTarget {
         if (cachedCodec instanceof PropertyHandler) {
             mappedValue = ((PropertyHandler) cachedCodec).encode(mappedValue);
         } else {
-            DocumentWriter writer = new DocumentWriter(datastore.getMapper());
+            DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
             Object finalMappedValue = mappedValue;
             document(writer, () -> value(datastore, writer, "mapped", finalMappedValue, EncoderContext.builder().build()));
             mappedValue = writer.getDocument().get("mapped");

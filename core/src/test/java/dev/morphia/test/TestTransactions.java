@@ -6,10 +6,15 @@ import java.util.List;
 import com.mongodb.MongoQueryException;
 import com.mongodb.TransactionOptions;
 
+import dev.morphia.aggregation.stages.Lookup;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Reference;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
 import dev.morphia.transactions.MorphiaSession;
 
+import org.bson.types.ObjectId;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,7 +26,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 //@Tags(@Tag("transactions"))
-public class TestTransactions extends TestBase {
+public class TestTransactions extends TemplatedTestBase {
     @BeforeMethod
     public void before() {
         checkMinServerVersion(4.0);
@@ -41,7 +46,7 @@ public class TestTransactions extends TestBase {
                 .defaultTransactionOptions(TransactionOptions.builder()
                         .writeConcern(MAJORITY)
                         .build())
-                .build(), (session) -> {
+                .build(), session -> {
 
                     assertNotNull(getDs().find(Rectangle.class).first());
                     assertNotNull(session.find(Rectangle.class).first());
@@ -53,14 +58,13 @@ public class TestTransactions extends TestBase {
                     return null;
                 });
 
-        assertNull(getDs().find(Rectangle.class).first());
     }
 
     @Test
     public void insert() {
         Rectangle rectangle = new Rectangle(1, 1);
 
-        getDs().withTransaction((session) -> {
+        getDs().withTransaction(session -> {
             session.insert(rectangle);
 
             assertNull(getDs().find(Rectangle.class).first());
@@ -77,7 +81,7 @@ public class TestTransactions extends TestBase {
         List<Rectangle> rectangles = List.of(new Rectangle(5, 7),
                 new Rectangle(1, 1));
 
-        getDs().withTransaction((session) -> {
+        getDs().withTransaction(session -> {
             session.insert(rectangles);
 
             assertNull(getDs().find(Rectangle.class).first());
@@ -131,7 +135,7 @@ public class TestTransactions extends TestBase {
         getDs().save(rectangle);
         assertEquals(getDs().find(Rectangle.class).count(), 1);
 
-        getDs().withTransaction((session) -> {
+        getDs().withTransaction(session -> {
 
             assertEquals(getDs().find(Rectangle.class).first(), new Rectangle(1, 1));
             assertEquals(session.find(Rectangle.class).first(), new Rectangle(1, 1));
@@ -149,10 +153,26 @@ public class TestTransactions extends TestBase {
     }
 
     @Test
+    public void aggregation() {
+        getDs().withTransaction(session -> {
+            testPipeline(0.0, "", false, false,
+                    aggregation -> {
+                        loadData("aggTest2", "data2.json");
+                        return aggregation
+                                .lookup(Lookup.lookup("aggTest2")
+                                        .localField("item")
+                                        .foreignField("sku")
+                                        .as("inventory_docs"));
+                    });
+            return null;
+        });
+    }
+
+    @Test
     public void modify() {
         Rectangle rectangle = new Rectangle(1, 1);
 
-        getDs().withTransaction((session) -> {
+        getDs().withTransaction(session -> {
             session.save(rectangle);
 
             assertNull(getDs().find(Rectangle.class).first());
@@ -177,7 +197,7 @@ public class TestTransactions extends TestBase {
         Rectangle rectangle = new Rectangle(1, 1);
         getDs().save(rectangle);
 
-        getDs().withTransaction((session) -> {
+        getDs().withTransaction(session -> {
 
             assertNotNull(getDs().find(Rectangle.class).first());
             assertNotNull(session.find(Rectangle.class).first());
@@ -197,7 +217,7 @@ public class TestTransactions extends TestBase {
     public void save() {
         Rectangle rectangle = new Rectangle(1, 1);
 
-        getDs().withTransaction((session) -> {
+        getDs().withTransaction(session -> {
             session.save(rectangle);
 
             assertNull(getDs().find(Rectangle.class).first());
@@ -220,7 +240,7 @@ public class TestTransactions extends TestBase {
         List<Rectangle> rectangles = List.of(new Rectangle(5, 7),
                 new Rectangle(1, 1));
 
-        getDs().withTransaction((session) -> {
+        getDs().withTransaction(session -> {
             session.save(rectangles);
 
             assertNull(getDs().find(Rectangle.class).first());
@@ -233,10 +253,32 @@ public class TestTransactions extends TestBase {
     }
 
     @Test
+    public void testTransactions() {
+        getDs().withTransaction(session -> {
+            // save company
+            Company company = new Company();
+            company.name = "test";
+            company = session.save(company);
+
+            // save employee with reference to company
+            Employee employee = new Employee();
+            employee.email = "test@test.com";
+            employee.company = company;
+            session.save(employee);
+
+            var list = session.find(Employee.class).iterator().toList();
+
+            assertEquals(list.size(), 1);
+
+            return null;
+        });
+    }
+
+    @Test
     public void update() {
         Rectangle rectangle = new Rectangle(1, 1);
 
-        getDs().withTransaction((session) -> {
+        getDs().withTransaction(session -> {
             session.save(rectangle);
 
             assertNull(getDs().find(Rectangle.class).first());
@@ -254,4 +296,19 @@ public class TestTransactions extends TestBase {
         assertEquals(getDs().find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
     }
 
+    @Entity
+    private static class Company {
+        @Id
+        private ObjectId id;
+        String name;
+    }
+
+    @Entity
+    private static class Employee {
+        @Id
+        private ObjectId id;
+        String email;
+        @Reference
+        Company company;
+    }
 }

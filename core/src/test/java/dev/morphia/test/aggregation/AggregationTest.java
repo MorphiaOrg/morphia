@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import dev.morphia.aggregation.Aggregation;
-import dev.morphia.test.aggregation.expressions.TemplatedTestBase;
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Martian;
 import dev.morphia.test.models.User;
 

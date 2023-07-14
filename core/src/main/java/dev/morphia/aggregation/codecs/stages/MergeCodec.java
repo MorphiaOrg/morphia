@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.Merge;
 
@@ -18,10 +17,6 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class MergeCodec extends StageCodec<Merge> {
-    public MergeCodec(Datastore datastore) {
-        super(datastore);
-    }
-
     @Override
     public Class<Merge> getEncoderClass() {
         return Merge.class;

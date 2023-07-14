@@ -23,6 +23,7 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.internal.DatastoreHolder;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
@@ -360,18 +361,19 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @SuppressWarnings("ConstantConditions")
-    private <E> MongoCursor<E> prepareCursor(FindOptions findOptions, MongoCollection<E> collection) {
+    private <E> MongoCursor<E> prepareCursor(FindOptions options, MongoCollection<E> collection) {
         Document oldProfile = null;
-        lastOptions = findOptions;
-        if (findOptions.isLogQuery()) {
+        lastOptions = options;
+        if (options.isLogQuery()) {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
         try {
-            return findOptions
-                    .apply(iterable(findOptions, collection), mapper, type)
+            DatastoreHolder.holder.set(datastore);
+            return options
+                    .apply(iterable(options, collection), mapper, type)
                     .iterator();
         } finally {
-            if (findOptions.isLogQuery()) {
+            if (options.isLogQuery()) {
                 datastore.getDatabase().runCommand(new Document("profile", oldProfile.get("was"))
                         .append("slowms", oldProfile.get("slowms"))
                         .append("sampleRate", oldProfile.get("sampleRate")));
@@ -385,7 +387,7 @@ class MorphiaQuery<T> implements Query<T> {
             throw invalid;
         }
         try {
-            DocumentWriter writer = new DocumentWriter(mapper, seedQuery);
+            DocumentWriter writer = new DocumentWriter(mapper.getConfig(), seedQuery);
             document(writer, () -> {
                 EncoderContext context = EncoderContext.builder().build();
                 for (Filter filter : filters) {
@@ -412,7 +414,7 @@ class MorphiaQuery<T> implements Query<T> {
         private final String name;
 
         private MorphiaQueryFieldEnd(String name) {
-            super(datastore, name, MorphiaQuery.this, mapper.getEntityModel(getEntityClass()), validate);
+            super(name, MorphiaQuery.this, mapper.getEntityModel(getEntityClass()), validate);
             this.name = name;
         }
 

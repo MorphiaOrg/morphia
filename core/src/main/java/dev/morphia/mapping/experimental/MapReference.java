@@ -36,15 +36,12 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private final Map<String, List<Object>> collections = new HashMap<>();
 
     /**
-     * @param datastore   the datastore to use
-     * @param mapper      the mapper to use
      * @param ids         the IDs of the entities
      * @param entityModel the model of the entity type
      * @morphia.internal
      */
     @MorphiaInternal
-    public MapReference(Datastore datastore, Mapper mapper, Map<String, Object> ids, EntityModel entityModel) {
-        super(datastore, mapper);
+    public MapReference(Map<String, Object> ids, EntityModel entityModel) {
         for (Entry<String, Object> entry : ids.entrySet()) {
             CollectionReference.collate(entityModel, collections, entry.getValue());
         }
@@ -75,7 +72,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         final Map<String, Object> ids = (Map<String, Object>) property.getDocumentValue(document);
         MapReference reference = null;
         if (ids != null) {
-            reference = new MapReference(datastore, mapper, ids, mapper.getEntityModel(subType));
+            reference = new MapReference(ids, mapper.getEntityModel(subType));
         }
 
         return reference;

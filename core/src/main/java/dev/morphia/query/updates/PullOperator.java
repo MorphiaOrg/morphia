@@ -35,7 +35,7 @@ public class PullOperator extends UpdateOperator {
         return new OperationTarget(pathTarget, value()) {
             @Override
             public Object encode(Datastore datastore) {
-                DocumentWriter writer = new DocumentWriter(datastore.getMapper());
+                DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
                 document(writer, () -> {
                     ((Filter) getValue()).encode(datastore, writer, EncoderContext.builder().build());
                 });

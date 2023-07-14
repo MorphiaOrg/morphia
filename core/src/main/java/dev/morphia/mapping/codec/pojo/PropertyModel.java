@@ -50,6 +50,7 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyAccessor;
 
+import static dev.morphia.internal.DatastoreHolder.holder;
 import static java.util.Arrays.asList;
 
 /**
@@ -270,7 +271,7 @@ public final class PropertyModel {
     @Nullable
     public Codec<?> specializeCodec(Datastore datastore) {
         if (codec == null) {
-            configureCodec(datastore);
+            configureCodec(datastore.getMapper());
         }
         return codec;
     }
@@ -359,18 +360,18 @@ public final class PropertyModel {
         return serialization.shouldSerialize(value);
     }
 
-    private void configureCodec(Datastore datastore) {
+    private void configureCodec(Mapper mapper) {
         Handler handler = getHandler();
         if (handler != null) {
             try {
                 codec = handler.value()
-                        .getDeclaredConstructor(Datastore.class, PropertyModel.class)
-                        .newInstance(datastore, this);
+                        .getDeclaredConstructor(Mapper.class, PropertyModel.class)
+                        .newInstance(mapper, this);
             } catch (ReflectiveOperationException e) {
                 throw new MappingException(e.getMessage(), e);
             }
         } else if (typeData.getTypeParameters().isEmpty()) {
-            codec = (Codec<? super Object>) datastore.getCodecRegistry().get(getType());
+            codec = (Codec<? super Object>) holder.get().getCodecRegistry().get(getType());
         }
     }
 

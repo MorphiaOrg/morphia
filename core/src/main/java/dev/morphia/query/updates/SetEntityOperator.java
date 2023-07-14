@@ -41,7 +41,7 @@ public class SetEntityOperator extends UpdateOperator {
                 }
 
                 Codec<Object> codec = datastore.getCodecRegistry().get((Class<Object>) value.getClass());
-                DocumentWriter writer = new DocumentWriter(datastore.getMapper());
+                DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
 
                 codec.encode(writer, value, EncoderContext.builder().build());
 

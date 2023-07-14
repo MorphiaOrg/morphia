@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Fields;
 import dev.morphia.aggregation.stages.Group;
 import dev.morphia.aggregation.stages.Group.GroupId;
@@ -12,11 +11,6 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 
 public class GroupCodec extends StageCodec<Group> {
-
-    public GroupCodec(Datastore datastore) {
-        super(datastore);
-    }
-
     @Override
     public Class<Group> getEncoderClass() {
         return Group.class;

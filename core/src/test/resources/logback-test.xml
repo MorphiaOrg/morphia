@@ -16,10 +16,11 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="dev.morphia.test" level="info">
+    <logger name="dev.morphia.test" level="debug" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
-    <logger name="dev.morphia.test,TestBase" level="debug">
+
+    <logger name="dev.morphia.test.TestBase" level="debug" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
