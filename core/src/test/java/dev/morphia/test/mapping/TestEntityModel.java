@@ -50,32 +50,31 @@ public class TestEntityModel extends TestBase {
         Assert.assertTrue(subTypes.contains(mapper.getEntityModel(Child.class)));
     }
 
-}
+    @Entity
+    interface TestEntity {
+    }
 
-@Entity
-interface TestEntity {
-}
+    private static class RootParent implements TestEntity {
+        @Id
+        ObjectId id = null;
+    }
 
-class RootParent implements TestEntity {
-    @Id
-    ObjectId id = null;
-}
+    @Entity
+    private static class ChildLevel1a extends RootParent {
+    }
 
-@Entity
-class ChildLevel1a extends RootParent {
-}
+    private static class ChildLevel2a extends ChildLevel1a {
+    }
 
-class ChildLevel2a extends ChildLevel1a {
-}
+    private static class ChildLevel2b extends ChildLevel1a {
+    }
 
-class ChildLevel2b extends ChildLevel1a {
-}
+    private static class ChildLevel3a extends ChildLevel2b {
+    }
 
-class ChildLevel3a extends ChildLevel2b {
-}
+    private static class ChildLevel1b extends RootParent {
+    }
 
-class ChildLevel1b extends RootParent {
-}
-
-class ChildLevel1c extends RootParent {
+    private static class ChildLevel1c extends RootParent {
+    }
 }
