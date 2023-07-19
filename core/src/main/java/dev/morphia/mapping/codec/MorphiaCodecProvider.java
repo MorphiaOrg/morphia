@@ -8,7 +8,6 @@ import java.util.ServiceLoader;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
@@ -41,16 +40,18 @@ public class MorphiaCodecProvider implements CodecProvider {
     /**
      * Creates a provider
      *
-     * @param datastore the Datastore to use
+     * @param mapper
      */
-    public MorphiaCodecProvider(Datastore datastore) {
-        this.mapper = datastore.getMapper();
+    public MorphiaCodecProvider(Mapper mapper) {
+        this.mapper = mapper;
 
         propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
                 new MorphiaCollectionPropertyCodecProvider()));
 
         ServiceLoader<MorphiaPropertyCodecProvider> providers = ServiceLoader.load(MorphiaPropertyCodecProvider.class);
-        providers.forEach(propertyCodecProviders::add);
+        providers.forEach(provider -> {
+            propertyCodecProviders.add(provider);
+        });
     }
 
     @Nullable
@@ -109,5 +110,10 @@ public class MorphiaCodecProvider implements CodecProvider {
 
     protected Mapper getMapper() {
         return mapper;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("MorphiaCodecProvider{propertyCodecProviders=%s}", propertyCodecProviders);
     }
 }

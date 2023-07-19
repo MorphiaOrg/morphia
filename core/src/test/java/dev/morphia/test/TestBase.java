@@ -67,7 +67,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         MongoDatabase db = getMongoClient().getDatabase(getMorphiaContainer().getMorphiaConfig().database());
         db.runCommand(new Document("profile", 0).append("slowms", 0));
         db.drop();
-        getMorphiaContainer().reset();
+                getMorphiaContainer().reset();
     }
 
     public DatastoreImpl getDs() {

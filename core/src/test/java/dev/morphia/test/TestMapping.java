@@ -753,7 +753,6 @@ public class TestMapping extends TestBase {
     }
 
     @Test
-
     public void testMethodMapping() {
         withConfig(buildConfig(MethodMappedUser.class).propertyDiscovery(METHODS), () -> {
             EntityModel model = getDs().getMapper().getEntityModel(MethodMappedUser.class);

@@ -22,6 +22,7 @@ class ReadWritePropertyCodecProvider : MorphiaPropertyCodecProvider() {
         type: TypeWithTypeParameters<T>,
         registry: PropertyCodecRegistry
     ): Codec<T>? {
+        println("**************** type = ${type}")
         if (ReadWriteProperty::class.java.isAssignableFrom(type.type)) {
             val typeParameters = type.typeParameters
             val valueType = getType(typeParameters, 0)

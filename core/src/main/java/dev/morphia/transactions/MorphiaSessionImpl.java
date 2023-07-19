@@ -25,6 +25,7 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.ReplaceOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.internal.DatastoreHolder;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 
@@ -186,51 +187,61 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
     private class TransactionalOperations extends DatastoreOperations {
         @Override
         public <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.countDocuments(session, query, options);
         }
 
         @Override
         public <T> DeleteResult deleteMany(MongoCollection<T> collection, Document queryDocument, DeleteOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.deleteMany(session, queryDocument, options);
         }
 
         @Override
         public <T> DeleteResult deleteOne(MongoCollection<T> collection, Document queryDocument, DeleteOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.deleteOne(session, queryDocument, options);
         }
 
         @Override
         public <E> FindIterable<E> find(MongoCollection<E> collection, Document query) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.find(session, query);
         }
 
         @Override
         public <T> T findOneAndDelete(MongoCollection<T> mongoCollection, Document queryDocument, FindAndDeleteOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return mongoCollection.findOneAndDelete(session, queryDocument, options);
         }
 
         @Override
         public <T> T findOneAndUpdate(MongoCollection<T> collection, Document query, Document update, ModifyOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.findOneAndUpdate(session, query, update, options);
         }
 
         @Override
         public <T> InsertManyResult insertMany(MongoCollection<T> collection, List<T> list, InsertManyOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.insertMany(session, list, options.options());
         }
 
         @Override
         public <T> InsertOneResult insertOne(MongoCollection<T> collection, T entity, InsertOneOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.insertOne(session, entity, options.options());
         }
 
         @Override
         public <T> UpdateResult replaceOne(MongoCollection<T> collection, T entity, Document filter, ReplaceOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.replaceOne(session, filter, entity, options);
         }
 
         @Override
         public Document runCommand(Document command) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return getMongoClient()
                     .getDatabase("admin")
                     .runCommand(session, command);
@@ -239,24 +250,28 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
         @Override
         public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
                 UpdateOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.updateMany(session, queryObject, updateOperations, options);
         }
 
         @Override
         public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
                 UpdateOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.updateMany(session, queryObject, updateOperations, options);
         }
 
         @Override
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, Document updateOperations,
                 UpdateOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.updateOne(session, queryObject, updateOperations, options);
         }
 
         @Override
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
                 UpdateOptions options) {
+            DatastoreHolder.holder.set(MorphiaSessionImpl.this);
             return collection.updateOne(session, queryObject, updateOperations, options);
         }
     }

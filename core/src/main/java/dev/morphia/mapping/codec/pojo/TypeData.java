@@ -9,8 +9,11 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
 import java.util.StringJoiner;
+import java.util.function.Consumer;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
@@ -69,8 +72,9 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
     private static TypeData<?> getTypeData(Type type) {
         if (type instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) type;
+            TypeParameters parameters = TypeParameters.of(pType);
             Builder paramBuilder = TypeData.builder((Class) pType.getRawType());
-            for (Type argType : pType.getActualTypeArguments()) {
+            for (Type argType : parameters) {
                 paramBuilder.addTypeParameter(getTypeData(argType));
             }
             return paramBuilder.build();
@@ -85,8 +89,8 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
             return TypeData.builder(Object.class).build();
         } else if (type instanceof Class) {
             Builder builder = TypeData.builder((Class) type);
-            for (TypeVariable typeParameter : builder.type.getTypeParameters()) {
-                builder.addTypeParameter(getTypeData(typeParameter));
+            for (Type argType : TypeParameters.of(type)) {
+                builder.addTypeParameter(getTypeData(argType));
             }
             return builder.build();
         } else if (type instanceof GenericArrayType) {
@@ -97,6 +101,91 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         }
 
         throw new UnsupportedOperationException(Sofia.unhandledTypeData(type.getClass()));
+    }
+
+    static class TypeParameters implements Iterable<Type> {
+        final List<Param> params = new ArrayList<>();
+
+        public static TypeParameters of(Type type) {
+            if (type instanceof Class<?>) {
+                Class<?> klass = (Class<?>) type;
+                TypeVariable<? extends Class<?>>[] parameters = ((Class<?>) type).getTypeParameters();
+                TypeParameters params = new TypeParameters();
+                for (TypeVariable<? extends Class<?>> parameter : parameters) {
+                    params.add(new Param(parameter.getName(), Object.class));
+                }
+                Type superclass = klass.getGenericSuperclass();
+                if (!klass.isEnum() && superclass instanceof ParameterizedType) {
+                    return of((ParameterizedType) superclass, params);
+                }
+                return params;
+            } else {
+                throw new UnsupportedOperationException("Unsupported type passed: " + type);
+            }
+        }
+
+        public static TypeParameters of(ParameterizedType type) {
+            return of(type, new TypeParameters());
+        }
+
+        private static TypeParameters of(ParameterizedType type, TypeParameters subtypeParams) {
+            TypeParameters params = new TypeParameters();
+            Type[] typeArguments = type.getActualTypeArguments();
+            TypeVariable<?>[] typeParameters = ((Class<?>) type.getRawType()).getTypeParameters();
+            int index = 0;
+            for (int i = 0; i < typeParameters.length; i++) {
+                Type typeArgument = typeArguments[i];
+                if (typeArgument instanceof TypeVariable && index < subtypeParams.params.size()) {
+                    typeArgument = subtypeParams.params.get(index++).type;
+                }
+                params.add(new Param(typeParameters[i].getName(), typeArgument));
+            }
+            Type genericSuperclass = ((Class<?>) type.getRawType()).getGenericSuperclass();
+            if (genericSuperclass instanceof ParameterizedType) {
+                params = TypeParameters.of((ParameterizedType) genericSuperclass, params);
+            }
+            return params;
+        }
+
+        @Override
+        public void forEach(Consumer<? super Type> action) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Spliterator<Type> spliterator() {
+            return Iterable.super.spliterator();
+        }
+
+        @Override
+        public Iterator<Type> iterator() {
+            return params.stream().map(p -> p.type)
+                    .iterator();
+        }
+
+        private void add(Param param) {
+            params.add(param);
+        }
+
+        @Override
+        public String toString() {
+            return format("TypeParameters{%s}", params);
+        }
+
+        private static class Param {
+            private String name;
+            private Type type;
+
+            public Param(String name, Type type) {
+                this.name = name;
+                this.type = type;
+            }
+
+            @Override
+            public String toString() {
+                return format("Param{name='%s', type=%s}", name, type.getTypeName());
+            }
+        }
     }
 
     private static String nestedTypeParameters(List<TypeData<?>> typeParameters) {
