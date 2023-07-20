@@ -883,7 +883,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    public abstract class DatastoreOperations {
+    public abstract static class DatastoreOperations {
         public abstract <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options);
 
         public abstract <T> DeleteResult deleteMany(MongoCollection<T> collection, Document queryDocument, DeleteOptions options);
