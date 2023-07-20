@@ -211,10 +211,6 @@ public final class PropertyModel {
      * @return the type of this field
      */
     public Class<?> getType() {
-        if (name.equals("status")) {
-            System.out.println("name = " + name);
-            System.out.println("typeData = " + typeData);
-        }
         return getTypeData().getType();
     }
 

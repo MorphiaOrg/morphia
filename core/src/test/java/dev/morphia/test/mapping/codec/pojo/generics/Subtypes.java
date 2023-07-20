@@ -5,9 +5,6 @@ import java.util.Locale;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.PostPersist;
-
-import org.bson.Document;
 
 @Entity
 public class Subtypes {
@@ -19,10 +16,4 @@ public class Subtypes {
     public PartialList partialList;
     public String name;
     public int age;
-
-    @PostPersist
-    public void pre(Document document) {
-        System.out.println("document = " + document);
-    }
-
 }
