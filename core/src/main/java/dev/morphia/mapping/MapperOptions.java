@@ -261,12 +261,18 @@ public class MapperOptions {
 
     /**
      * @since 2.4
+     * @deprecated 3.0 will evaluate both field and getter/setters for annotation so this setting becomes vestigial
      * @return
      */
+    @Deprecated(since = "2.4", forRemoval = true)
     public PropertyDiscovery propertyDiscovery() {
         return propertyDiscovery;
     }
 
+    /**
+     * @deprecated 3.0 will evaluate both field and getter/setters for annotation so this setting becomes vestigial
+     */
+    @Deprecated(since = "2.4", forRemoval = true)
     public enum PropertyDiscovery {
         FIELDS,
         METHODS
@@ -532,9 +538,11 @@ public class MapperOptions {
          * Determines how properties are discovered on mapped entities
          *
          * @param discovery the discovery strategy to use
+         * @deprecated 3.0 will evaluate both field and getter/setters for annotation so this setting becomes vestigial
          * @return this
          * @since 2.2
          */
+        @Deprecated(since = "2.4", forRemoval = true)
         public Builder propertyDiscovery(PropertyDiscovery discovery) {
             assertNotLocked();
             this.propertyDiscovery = discovery;
