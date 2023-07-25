@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="3">
+<div class="nav-container" data-component="morphia" data-version="3.0">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -124,7 +124,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="updating-old.html">Updating (Legacy)</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="deletes.html">Deleting</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -139,7 +139,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -170,16 +170,16 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3-SNAPSHOT</span>
+    <span class="version">3.0-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
       <span class="title">Critter</span>
       <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../critter/4.4/index.html">4.4</a>
-        </li>
         <li class="version">
+          <a href="../../critter/4.4/index.html">4.4-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
           <a href="../../critter/4.3/index.html">4.3</a>
         </li>
       </ul>
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">3-SNAPSHOT</a>
+          <a href="index.html">3.0-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.4/index.html">2.4</a>
@@ -228,41 +228,119 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="deletes.html">Deleting</a></li>
+    <li><a href="lifeCycleMethods.html">Life Cycle Methods</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="deletes.html">3-SNAPSHOT</a>
-    <a class="version" href="../2.4/deletes.html">2.4</a>
-    <a class="version" href="../2.3/deletes.html">2.3</a>
-    <a class="version" href="../2.2/deletes.html">2.2</a>
-    <a class="version is-missing" href="../2.1/index.html">2.1</a>
-    <a class="version is-missing" href="../1.6/index.html">1.6</a>
+    <a class="version is-current" href="lifeCycleMethods.html">3.0-SNAPSHOT</a>
+    <a class="version" href="../2.4/lifeCycleMethods.html">2.4</a>
+    <a class="version" href="../2.3/lifeCycleMethods.html">2.3</a>
+    <a class="version" href="../2.2/lifeCycleMethods.html">2.2</a>
+    <a class="version" href="../2.1/lifeCycleMethods.html">2.1</a>
+    <a class="version" href="../1.6/lifeCycleMethods.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/deletes.adoc">Edit this Page</a></div>
-  </div>
+  <div class="edit-this-page"><a href="file:///home/jlee/dev/mongodb/morphia/docs/modules/ROOT/pages/lifeCycleMethods.adoc">Edit this Page</a></div>
+</div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_deletes"><a class="anchor" href="#_deletes"></a>Deletes</h2>
+<h2 id="_life_cycle_methods"><a class="anchor" href="#_life_cycle_methods"></a>Life Cycle Methods</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Queries are used to delete documents from the database as well.
-Using
-<a href="javadoc/dev/morphia/query/Query.html#delete()">Query#delete()</a>, we can delete documents matching the query.
-The default operation will only delete the first matching document.
-However, you can opt to delete all matches by passing in the appropriate options:</p>
+<p>There are various annotations which can be used to register callbacks on certain life cycle events.
+These include Pre/Post-Persist (Save), and Pre/Post-Load.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>@PrePersist</code> - Called before save, it can return a <code>Document</code> in place of an empty one.</p>
+</li>
+<li>
+<p><code>@PostPersist</code> - Called after the save call to the database</p>
+</li>
+<li>
+<p><code>@PreLoad</code> - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can add/remove/change values)</p>
+</li>
+<li>
+<p><code>@PostLoad</code> - Called after populating the entity with the values from the document</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h3>
+<div class="paragraph">
+<p><a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">Here</a> is a one of the test classes.</p>
+</div>
+<div class="paragraph">
+<p>All parameters and return values are options in your implemented methods.</p>
+</div>
+<div class="sect3">
+<h4 id="_example"><a class="anchor" href="#_example"></a>Example</h4>
+<div class="paragraph">
+<p>Here is a simple example of an entity that always saves the Date it was last updated.
+Alternatively, the resulting serialized form can be passed back in just prior to sending the document to the database.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
-    .find(Hotel.class)
-    .filter(gt("stars", 100))
-    .delete(new DeleteOptions()
-                     .multi(true));</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class BankAccount {
+  @Id
+  String id;
+  Date lastUpdated = new Date();
+
+  @PrePersist
+  public void trackUpdate() {
+    lastUpdated = new Date();
+  }
+
+  @PrePersist
+  public void prePersist( Document document) {
+    // perform operations on serialized form of the entity
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_entitylisteners"><a class="anchor" href="#_entitylisteners"></a>EntityListeners</h3>
+<div class="paragraph">
+<p>If your application has more generalized life cycle events, these methods can be stored on classes external to your model.
+For example&#8217;s sake, let&#8217;s assume there&#8217;s a need to digitally sign all documents before storing it in the database.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@EntityListeners(DigitalSigner.class)
+public class BankAccount {
+  @Id
+  String id;
+  Date lastUpdated = new Date();
+}
+
+class DigitalSigner {
+  @PrePersist
+  void prePersist( Object entity, Document document) {
+     document.put("signature", sign(document));
+  }
+
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>No Delete Support</strong> Because deletes are usually done with queries there is no way to support a Delete lifecycle event.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

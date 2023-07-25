@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Getting Started :: Morphia Docs</title>
+    <title>Issues &amp; Help :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="3">
+<div class="nav-container" data-component="morphia" data-version="3.0">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -75,7 +75,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
@@ -151,7 +151,7 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text"><em>Support</em></span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -170,16 +170,16 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3-SNAPSHOT</span>
+    <span class="version">3.0-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
       <span class="title">Critter</span>
       <ul class="versions">
-        <li class="version is-latest">
-          <a href="../../critter/4.4/index.html">4.4</a>
-        </li>
         <li class="version">
+          <a href="../../critter/4.4/index.html">4.4-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
           <a href="../../critter/4.3/index.html">4.3</a>
         </li>
       </ul>
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">3-SNAPSHOT</a>
+          <a href="index.html">3.0-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.4/index.html">2.4</a>
@@ -227,93 +227,93 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Morphia</a></li>
-    <li><a href="index.html">Getting Started</a></li>
+    <li><em>Support</em></li>
+    <li><a href="issues-help.html">Issues &amp; Support</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="index.html">3-SNAPSHOT</a>
-    <a class="version" href="../2.4/index.html">2.4</a>
-    <a class="version" href="../2.3/index.html">2.3</a>
-    <a class="version" href="../2.2/index.html">2.2</a>
-    <a class="version" href="../2.1/index.html">2.1</a>
-    <a class="version" href="../1.6/index.html">1.6</a>
+    <a class="version is-current" href="issues-help.html">3.0-SNAPSHOT</a>
+    <a class="version" href="../2.4/issues-help.html">2.4</a>
+    <a class="version" href="../2.3/issues-help.html">2.3</a>
+    <a class="version" href="../2.2/issues-help.html">2.2</a>
+    <a class="version" href="../2.1/issues-help.html">2.1</a>
+    <a class="version" href="../1.6/issues-help.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
-  </div>
+  <div class="edit-this-page"><a href="file:///home/jlee/dev/mongodb/morphia/docs/modules/ROOT/pages/issues-help.adoc">Edit this Page</a></div>
+</div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Getting Started</h1>
+<h1 class="page">Issues &amp; Help</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle.
-To use Morphia using either build tool, you will need to update your build configuration with the following information.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
-        &lt;artifactId&gt;morphia-core&lt;/artifactId&gt;
-        &lt;version&gt;3.0.0-SNAPSHOT&lt;/version&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;</code></pre>
+<p>We are lucky to have a vibrant MongoDB Java community with lots of varying experience of using Morphia.
+We often find the quickest way to get support for general questions is through <a href="https://github.com/MorphiaOrg/morphia/discussions">GitHub discussions</a>,
+<a href="https://community.mongodb.com/c/drivers-odms-connectors/">the mongoDB community forums</a>, or through <a href="https://stackoverflow.com/questions/tagged/morphia">stackoverflow</a>.</p>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_bugs_feature_requests"><a class="anchor" href="#_bugs_feature_requests"></a>Bugs / Feature Requests</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>If you want to use a <code>-SNAPSHOT</code> build you will need to add the appropriate repository information to you pom:</p>
+<p>If you think you’ve found a bug or want to see a new feature in the Morphia, please open an issue on
+<a href="https://github.com/MorphiaOrg/morphia/issues">github</a>.
+Please provide as much information as possible (including version numbers) about the issue type and how to reproduce it.
+Ideally, if you can create a reproducer for the issue at hand, that would be even more helpful.
+To help with this, please take a look at the <a href="https://github.com/MorphiaOrg/reproducer">reproducer</a> project.
+This will help you set up a quick environment for reproducing your issue and providing a working example to examine.
+This project can either be shared via a github repo on your account or perhaps attaching a zip of the project to the associated issue.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;repositories&gt;
-    &lt;repository&gt;
-        &lt;id&gt;sonatype-snapshots&lt;/id&gt;
-        &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
-        &lt;snapshots&gt;
-            &lt;enabled&gt;true&lt;/enabled&gt;
-        &lt;/snapshots&gt;
-    &lt;/repository&gt;
-&lt;/repositories&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Gradle users can use the following dependency declaration:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
-    compile 'dev.morphia.morphia:morphia-core:3.0.0-SNAPSHOT'
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To use <code>-SNAPSHOT</code> builds, an additional repository will be needed:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">repositories {
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
-}</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Morphia 2.0 requires Java 11 or greater.
-Morphia has been tested on mongodb servers as old as 3.6.15 up through the most recent builds.
-Morphia will likely work on older servers versions, but those remain untested and no guarantees are made.</p>
+<p>Providing a <a href="https://github.com/MorphiaOrg/reproducer">reproducer</a> is the fastest way help resolve your issue.
+It cuts down the guess work and labor required to recreate the problem locally so that root causes can be investigated.
+If the repository is shared via github (or other public repository), it even allows the opportunity for tweaks and suggestions to be made by both you and the maintainers to more quickly isolate and provide a fix.</p>
 </div>
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pull_requests"><a class="anchor" href="#_pull_requests"></a>Pull Requests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We are happy to accept contributions to help improve Morphia.
+We will guide user contributions to ensure they meet the standards of the codebase.
+Please ensure that any pull requests include documentation, tests, and also pass the build checks.</p>
+</div>
+<div class="paragraph">
+<p>To get started check out the source and work on a branch:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ git clone https://github.com/MorphiaOrg/morphia.git
+$ cd morphia
+$ git checkout -b myNewFeature</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, ensure that the code passes all the checks.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ cd core
+$ mvn -Dcode-audits</code></pre>
+</div>
+</div>
+</div>
 </div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
