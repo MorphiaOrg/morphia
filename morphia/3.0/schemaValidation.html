@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="3">
+<div class="nav-container" data-component="morphia" data-version="3.0">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -124,7 +124,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="updating-old.html">Updating (Legacy)</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="deletes.html">Deleting</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -142,7 +142,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
   </li>
 </ul>
@@ -170,7 +170,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3-SNAPSHOT</span>
+    <span class="version">3.0-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">3-SNAPSHOT</a>
+          <a href="index.html">3.0-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.4/index.html">2.4</a>
@@ -228,42 +228,58 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="deletes.html">Deleting</a></li>
+    <li><a href="schemaValidation.html">Schema Validation</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="deletes.html">3-SNAPSHOT</a>
-    <a class="version" href="../2.4/deletes.html">2.4</a>
-    <a class="version" href="../2.3/deletes.html">2.3</a>
-    <a class="version" href="../2.2/deletes.html">2.2</a>
-    <a class="version is-missing" href="../2.1/index.html">2.1</a>
-    <a class="version is-missing" href="../1.6/index.html">1.6</a>
+    <a class="version is-current" href="schemaValidation.html">3.0-SNAPSHOT</a>
+    <a class="version" href="../2.4/schemaValidation.html">2.4</a>
+    <a class="version" href="../2.3/schemaValidation.html">2.3</a>
+    <a class="version" href="../2.2/schemaValidation.html">2.2</a>
+    <a class="version" href="../2.1/schemaValidation.html">2.1</a>
+    <a class="version" href="../1.6/schemaValidation.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/deletes.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/schemaValidation.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_deletes"><a class="anchor" href="#_deletes"></a>Deletes</h2>
+<h2 id="_schema_validation"><a class="anchor" href="#_schema_validation"></a>Schema Validation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Queries are used to delete documents from the database as well.
-Using
-<a href="javadoc/dev/morphia/query/Query.html#delete()">Query#delete()</a>, we can delete documents matching the query.
-The default operation will only delete the first matching document.
-However, you can opt to delete all matches by passing in the appropriate options:</p>
+<p>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&#8217;s source.  <a href="http://docs.mongodb.org/manual/core/schema-validation/">Schema validation</a> provides the capability to perform schema validation during updates and insertions.
+Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.  Morphia will automatically
+apply mapped document validations when <code>morphia.apply-document-validations</code> is set to true in the <a href="configuration.html" class="xref page">configuration
+ file</a>.</p>
+</div>
+<div class="paragraph">
+<p>Below we have a basic entity definition.
+Note the new annotation <a href="javadoc/dev/morphia/annotations/Validation.html">@Validation</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
-    .find(Hotel.class)
-    .filter(gt("stars", 100))
-    .delete(new DeleteOptions()
-                     .multi(true));</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity("validation")
+@Validation("{ number : { $gt : 10 } }")
+public class DocumentValidation {
+    @Id
+    private ObjectId id;
+    private String string;
+    private int number;
+    private Date date;
+
+}</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>In this case, only one value is supplied to the annotation.
+This string value is the query that will be used to match against any new documents or updated documents.
+Should this query fail to match the new document, validation will fail on the document and it will be rejected.
+In addition to the required query, there are two other values that can be configured based on your needs:  <code>level</code> with a default of <code>STRICT</code> and <code>action</code> with a default of <code>ERROR</code>.
+A <code>MODERATE</code> validation level does not apply rules to updates on existing invalid documents.
+An <code>action</code> setting of <code>WARN</code> will merely log any validation violations.</p>
 </div>
 </div>
 </div>

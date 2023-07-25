@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="3">
+<div class="nav-container" data-component="morphia" data-version="3.0">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -109,7 +109,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="indexing.html">Indexing</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="sharding.html">Sharding</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -124,7 +124,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="updating-old.html">Updating (Legacy)</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="deletes.html">Deleting</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -170,7 +170,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3-SNAPSHOT</span>
+    <span class="version">3.0-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">3-SNAPSHOT</a>
+          <a href="index.html">3.0-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.4/index.html">2.4</a>
@@ -228,133 +228,41 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="sharding.html">Sharding</a></li>
+    <li><a href="deletes.html">Deleting</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="sharding.html">3-SNAPSHOT</a>
-    <a class="version" href="../2.4/sharding.html">2.4</a>
-    <a class="version" href="../2.3/sharding.html">2.3</a>
-    <a class="version is-missing" href="../2.2/index.html">2.2</a>
+    <a class="version is-current" href="deletes.html">3.0-SNAPSHOT</a>
+    <a class="version" href="../2.4/deletes.html">2.4</a>
+    <a class="version" href="../2.3/deletes.html">2.3</a>
+    <a class="version" href="../2.2/deletes.html">2.2</a>
     <a class="version is-missing" href="../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/sharding.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/deletes.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_sharding"><a class="anchor" href="#_sharding"></a>Sharding</h2>
+<h2 id="_deletes"><a class="anchor" href="#_deletes"></a>Deletes</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>Sharding suport is new in 2.3 and should be considered experimental.
-While all tests currently pass, the form and function of the sharding support might change as issues arise and any usability concerns are addressed.
-This is feature is safe to use just be aware that this API might change based on user feedback.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Much like the indexing support, Morphia provides a number of annotations to help in the definition and use of sharded collections.
-You don&#8217;t need to use Morphia to shard your collections, but if your collection is sharded, you must also define that shard key on your entity in order for Morphia to properly generate certain operations.</p>
-</div>
-<div class="paragraph">
-<p>Documentation on how to choose a proper shard key can be found in the <a href="http://docs.mongodb.org/manual/sharding">manual</a>.</p>
-</div>
-<div class="sect2">
-<h3 id="_shard_definition"><a class="anchor" href="#_shard_definition"></a>Shard Definition</h3>
-<div class="paragraph">
-<p>Sharding definitions are driven by the <a href="javadoc/dev/morphia/annotations/ShardKeys.html">@ShardKeys</a> annotation.
-This annotation takes two values: the shard keys themselves as defined by the <a href="javadoc/dev/morphia/annotations/ShardKey.html">@ShardKey</a> annotation and the options to apply when sharding the collection via the <a href="javadoc/dev/morphia/annotations/ShardOptions.html">@ShardOptions</a>
-annotation.</p>
-</div>
-<div class="paragraph">
-<p>An shard definition might look something like this.</p>
+<p>Queries are used to delete documents from the database as well.
+Using
+<a href="javadoc/dev/morphia/query/Query.html#delete()">Query#delete()</a>, we can delete documents matching the query.
+The default operation will only delete the first matching document.
+However, you can opt to delete all matches by passing in the appropriate options:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity("profiles")
-@ShardKeys({@ShardKey(value = "name", type = HASHED)})
-private static class UserProfiles {
-    @Id
-    private ObjectId id;
-    private final String name;
-    private String nickName;
-    private LocalDateTime date;
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In this example, we have a single property used in the shard key.
-In this case, we&#8217;re making use of
-<a href="http://docs.mongodb.org/manual/core/hashed-sharding">hashed sharding</a>.
-The other type of shard key supported by MongoDB is
-<a href="http://docs.mongodb.org/manual/core/ranged-sharding">ranged sharding</a>.
-You can define that kind of shard key just like the example above except instead of
-<code>HASHED</code>, you would use <code>RANGED</code>.
-Additionally, since the default type is <code>RANGED</code>, you can omit this value entirely and simplify your definitions to <code>@ShardKey("price")</code>, for example.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>In the example above, you&#8217;ll note that the property we&#8217;ve defined as part of the shard key is declared as final.
-It is recommended that you follow this practice to help prevent mutating your shard key values in memory.
-If you were to fetch an entity and update one or more of the shard key properties, mongodb would be unable to find the document in the database to update with the new state.
-If you find yourself needing to mutate one of those properties, consult the <a href="http://docs.mongodb.org/manual/core/sharding-change-shard-key-value/">manual</a> first.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Morphia does not currently support redefining the shard key definition entirely.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_sharding_options"><a class="anchor" href="#_sharding_options"></a>Sharding Options</h3>
-<div class="paragraph">
-<p><code>@ShardKeys</code> also has an <code>options</code> field which takes a <a href="javadoc/dev/morphia/annotations/ShardOptions.html">@ShardOptions</a>.
-Using this annotation, you can configure the number of initial shards, <a href="http://docs.mongodb.org/manual/core/hashed-sharding/#shard-an-empty-collection">presplit the hashed zones</a>, or <a href="http://docs.mongodb.org/manual/core/sharding-shard-key/#unique-indexes">enforce uniqueness</a> in your shard key.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_how_is_it_used"><a class="anchor" href="#_how_is_it_used"></a>How is it used?</h3>
-<div class="paragraph">
-<p>Once you have your sharding configured, you have the choice of manually sharding it via the mongo shell or having Morphia shard it for you.
-For the latter, there is a new method <a href="javadoc/dev/morphia/Datastore.html#shardCollections()">shardCollections()</a> that will do
-thisfor you. It should be noted here that if your collection is not empty, there are certain administrative tasks you must perform on the collection first that Morphia does <strong>not</strong> handle.
-You can find those details in the server documentation.</p>
-</div>
-<div class="paragraph">
-<p>Once your collection is sharded, Morphia uses the shard key definition to update certain operations (such as saves/upserts and find-and-modify among others) to include the relevant shard key information so that mongodb can quickly and efficiently find the documents in the database.
-This is done transparently for you so you needn&#8217;t worry about doing such things manually.</p>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
+    .find(Hotel.class)
+    .filter(gt("stars", 100))
+    .delete(new DeleteOptions()
+                     .multi(true));</code></pre>
 </div>
 </div>
 </div>

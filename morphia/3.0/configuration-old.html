@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Getting Started :: Morphia Docs</title>
+    <title>Untitled :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="3">
+<div class="nav-container" data-component="morphia" data-version="3.0">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -75,7 +75,7 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
@@ -97,7 +97,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="configuration.html">Configuration</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="configuration-old.html">Configuration (Legacy)</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -170,7 +170,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3-SNAPSHOT</span>
+    <span class="version">3.0-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">3-SNAPSHOT</a>
+          <a href="index.html">3.0-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.4/index.html">2.4</a>
@@ -227,93 +227,199 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Morphia</a></li>
-    <li><a href="index.html">Getting Started</a></li>
+    <li>Features</li>
+    <li><a href="configuration-old.html">Configuration (Legacy)</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="index.html">3-SNAPSHOT</a>
-    <a class="version" href="../2.4/index.html">2.4</a>
-    <a class="version" href="../2.3/index.html">2.3</a>
-    <a class="version" href="../2.2/index.html">2.2</a>
-    <a class="version" href="../2.1/index.html">2.1</a>
-    <a class="version" href="../1.6/index.html">1.6</a>
+    <a class="version is-current" href="configuration-old.html">3.0-SNAPSHOT</a>
+    <a class="version" href="../2.4/configuration-old.html">2.4</a>
+    <a class="version is-missing" href="../2.3/index.html">2.3</a>
+    <a class="version is-missing" href="../2.2/index.html">2.2</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/configuration-old.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Getting Started</h1>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>The recommended way to get started using Morphia in your project is with a dependency management system such as maven or gradle.
-To use Morphia using either build tool, you will need to update your build configuration with the following information.</p>
+<p>Morphia 2.0 introduced a number of new ways to configure its behavior.
+These values are listed below:</p>
 </div>
-<div class="listingblock">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Collection naming</p>
+</li>
+<li>
+<p>Property naming</p>
+</li>
+<li>
+<p>The discriminator key</p>
+</li>
+<li>
+<p>The discriminator value</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_collection_and_property_naming"><a class="anchor" href="#_collection_and_property_naming"></a>Collection and property naming</h3>
+<div class="paragraph">
+<p>Traditionally Morphia has used with the class&#8217;s "simple name" for the collection name if you choose to not manually map the name of an entity&#8217;s collection.
+Similarly, an entity&#8217;s properties were named after the Java field name unless mapped otherwise with the
+<code>@Property</code> annotation.
+In 2.0, however, we define naming strategies.
+As of 2.0, the naming strategies supported out of the box are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>identity</code> This is the legacy behavior Morphia has always used.</p>
+</li>
+<li>
+<p><code>lower</code> This is simply the lower case form of the <code>identity</code> strategy.</p>
+</li>
+<li>
+<p><code>snake</code> This transforms element names in to their <a href="https://en.wikipedia.org/wiki/Snake_case">snake case</a> versions.
+For those coming from a Python background or who work with Python developers regularly, this should look familiar.</p>
+</li>
+<li>
+<p><code>camel</code> This transforms element names in to their <a href="https://en.wikipedia.org/wiki/Camel_case">camel case</a> versions.
+This is the form most java developers will be familiar with.</p>
+</li>
+<li>
+<p><code>kebab</code> This transforms element names in to their <a href="https://en.wikipedia.org/wiki/Kebab_case">kebab case</a> versions.
+This looks exactly like the <code>snake case</code> but with <code>-</code> instead of <code>_</code> so that it looks like it&#8217;s on a kebab skewer.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>These strategies can all be access via the <code>NamingStrategy</code> class via their named methods.
+In the case where you have a custom naming strategy you&#8217;d like to employ, e.g., perhaps some hashing function to obscure element names, you can simply extend <code>NamingStrategy</code>
+yourself and implement whatever logic you might need.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_discriminator_keys_and_values"><a class="anchor" href="#_discriminator_keys_and_values"></a>Discriminator keys and values</h3>
+<div class="paragraph">
+<p>Morphia has long hard coded the choice of how to encode an entity&#8217;s type in to the resulting documents in the database using the
+<code>className</code> key and the simple name of the class.
+As of 2.0, you have a choice to change that if you&#8217;d like.
+The new default is to use
+<code>_t</code> as the discriminator property key.
+This was chosen in part because of its use in other systems and also for its brevity.
+By default, Morphia 2.0 stores the entity type unless you configure your types otherwise.</p>
+</div>
+<div class="paragraph">
+<p>Similar to how collections and fields have a naming strategy, we can apply a global function to determine the discriminator values should we choose.
+The choices here are simpler:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>className()</code>/<code>lowerClassName()</code></p>
+</li>
+<li>
+<p><code>simpleName()</code>/<code>lowerSimpleName()</code></p>
+<div class="literalblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
-        &lt;artifactId&gt;morphia-core&lt;/artifactId&gt;
-        &lt;version&gt;3.0.0-SNAPSHOT&lt;/version&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;</code></pre>
+<pre>These call all be accessed via their named methods on `DiscriminatorFunction` and just like the `NamingStrategy` cases if the provided
+ options are not sufficient, you can implement your own by subclassing `DiscriminatorFunction` and implementing your own function.</pre>
 </div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_defined_codecs"><a class="anchor" href="#_user_defined_codecs"></a>User-defined Codecs</h3>
+<div class="paragraph">
+<p>Morphia makes heavy use of the driver&#8217;s <code>Codec</code> infrastructure.
+All of the persistence of your entities is handled by Morphia-defined and -configured codecs.
+Morphia also makes use of driver-defined codecs with a select number of replacements more attuned to Morphia&#8217;s needs.
+This is typically sufficient for users' needs.
+However, there are invariably times when more control is needed.</p>
 </div>
 <div class="paragraph">
-<p>If you want to use a <code>-SNAPSHOT</code> build you will need to add the appropriate repository information to you pom:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;repositories&gt;
-    &lt;repository&gt;
-        &lt;id&gt;sonatype-snapshots&lt;/id&gt;
-        &lt;url&gt;https://oss.sonatype.org/content/repositories/snapshots&lt;/url&gt;
-        &lt;snapshots&gt;
-            &lt;enabled&gt;true&lt;/enabled&gt;
-        &lt;/snapshots&gt;
-    &lt;/repository&gt;
-&lt;/repositories&gt;</code></pre>
+<p>Starting with 2.3, you can provide your own <code>CodecProvider</code> to customize how Morphia handles the types you&#8217;re interested.
+It&#8217;s not advised to write custom codecs for your entities (why mark them as entities at that point?) but if you&#8217;re comfortable taking that on, then it is, of course, your prerogative.
+You can register your custom <code>CodecProvider</code> implementation via the
+<a href="javadoc/dev/morphia/mapping/MapperOptions.Builder.html#codecProvider()">MapperOptions.Builder#codecProvider(org.bson.codecs
+.configuration.CodecProvider)</a>
+method.
+For details on how to write a <code>Codec</code> and a <code>CodecProvider</code>, please consult
+<a href="https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/data-formats/codecs/">the driver&#8217;s documentation</a>.
+Using your custom <code>CodecProvider</code>, you can supply as many <code>Codec</code> implementations as you need.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_old_versus_new"><a class="anchor" href="#_old_versus_new"></a>Old versus New</h3>
 <div class="paragraph">
-<p>Gradle users can use the following dependency declaration:</p>
+<p>Morphia can be configured in one of two ways: the legacy mode and the modern mode.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
-    compile 'dev.morphia.morphia:morphia-core:3.0.0-SNAPSHOT'
-}</code></pre>
-</div>
-</div>
+<div class="sect3">
+<h4 id="_legacy"><a class="anchor" href="#_legacy"></a>Legacy</h4>
 <div class="paragraph">
-<p>To use <code>-SNAPSHOT</code> builds, an additional repository will be needed:</p>
+<p>We&#8217;ll cover the legacy mode first as it reflects how Morphia worked prior to 2.0.  <code>MapperOptions</code> drives the configuration and so this is where we&#8217;ll start.
+Prior to 2.0, you could simply create a <code>MapperOptions</code> instance directly.
+Starting with 2.0, you will need to use one of the factory methods.
+In this instance, you will want the <code>legacy()</code> method.
+Among other things, this will configure Morphia to the legacy implementation of the <code>Query</code> class.
+The <code>legacy()</code> builder currently configures the following settings:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">repositories {
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
-}</code></pre>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>className</code> as the discriminator key</p>
+</li>
+<li>
+<p><code>className()</code> as the <code>DiscriminatorFunction</code></p>
+</li>
+<li>
+<p><code>identity()</code> as both the class and field name strategies</p>
+</li>
+<li>
+<p>Configures the legacy query implementation</p>
+</li>
+</ol>
 </div>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
+<div class="sect3">
+<h4 id="_modern"><a class="anchor" href="#_modern"></a>Modern</h4>
 <div class="paragraph">
-<p>Morphia 2.0 requires Java 11 or greater.
-Morphia has been tested on mongodb servers as old as 3.6.15 up through the most recent builds.
-Morphia will likely work on older servers versions, but those remain untested and no guarantees are made.</p>
+<p>One of the big goals for 2.0 was to modernize both the API and behavior of Morphia.
+As such, the <code>builder()</code> method returns a
+<code>Builder</code> that applies some updated defaults:</p>
 </div>
-</td>
-</tr>
-</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>_t</code> as the new discriminator key (replacing <code>className</code>)</p>
+</li>
+<li>
+<p><code>simpleName()</code> as the discriminator function used to determine these values</p>
+</li>
+<li>
+<p><code>camelCase()</code> is the default collection naming strategy</p>
+</li>
+<li>
+<p><code>identity()</code> remains the property naming strategy</p>
+</li>
+<li>
+<p>A new <code>Query</code> implementation is configured enabling the new <code>Filters</code> based querying and disabling some older, deprecated methods.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
 </div>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

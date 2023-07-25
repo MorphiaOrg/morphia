@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="3">
+<div class="nav-container" data-component="morphia" data-version="3.0">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -133,7 +133,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="textSearches.html">Text Search</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -142,7 +142,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
   </li>
 </ul>
@@ -170,7 +170,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3-SNAPSHOT</span>
+    <span class="version">3.0-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">3-SNAPSHOT</a>
+          <a href="index.html">3.0-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.4/index.html">2.4</a>
@@ -228,58 +228,91 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="schemaValidation.html">Schema Validation</a></li>
+    <li><a href="references.html">References</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="schemaValidation.html">3-SNAPSHOT</a>
-    <a class="version" href="../2.4/schemaValidation.html">2.4</a>
-    <a class="version" href="../2.3/schemaValidation.html">2.3</a>
-    <a class="version" href="../2.2/schemaValidation.html">2.2</a>
-    <a class="version" href="../2.1/schemaValidation.html">2.1</a>
-    <a class="version" href="../1.6/schemaValidation.html">1.6</a>
+    <a class="version is-current" href="references.html">3.0-SNAPSHOT</a>
+    <a class="version" href="../2.4/references.html">2.4</a>
+    <a class="version" href="../2.3/references.html">2.3</a>
+    <a class="version" href="../2.2/references.html">2.2</a>
+    <a class="version" href="../2.1/references.html">2.1</a>
+    <a class="version" href="../1.6/references.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/schemaValidation.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/references.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_schema_validation"><a class="anchor" href="#_schema_validation"></a>Schema Validation</h2>
+<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Morphia provides annotations that allow developers to define document validations for a collection to be defined alongside the other mapping data on an entity&#8217;s source.  <a href="http://docs.mongodb.org/manual/core/schema-validation/">Schema validation</a> provides the capability to perform schema validation during updates and insertions.
-Validation rules are on a per-collection basis and can be defined via annotations just like indexes are.  Morphia will automatically
-apply mapped document validations when <code>morphia.apply-document-validations</code> is set to true in the <a href="configuration.html" class="xref page">configuration
- file</a>.</p>
+<p>MongoDB tries to encourage self-contained documents so that data can be fetched much more efficiently via single reads from the database.
+However not every data model or application can adhere to this philosophy in its entirety.
+As such, MongoDB supports
+<a href="http://docs.mongodb.org/manual/reference/database-references/">database references</a>.Morphia supports two styles of defining references:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>the <a href="javadoc/dev/morphia/annotations/Reference.html">@Reference</a> annotation</p>
+</li>
+<li>
+<p>an experimental wrapper type <a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html">MorphiaReference</a>.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_using_the_annotation"><a class="anchor" href="#_using_the_annotation"></a>Using the annotation</h3>
+<div class="paragraph">
+<p>The annotation based approach is the traditional approach.
+The <a href="javadoc/dev/morphia/annotations/Reference.html">@Reference</a> can be applied to any property whose type is a mappable Entity type.
+When this is done, instead of storing that objects information as a subdocument in the larger document sent to the database, a reference will be stored instead which points to where the document is actually stored.
+The referenced types are stored according to the mapping information configured by their
+<a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> annotations.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It can be helpful to think of references as a foreign key like you would find in a relational database.
+It&#8217;s important to note, however, that MongoDB does not enforce any notion of referential integrity with these keys.
+Those remote documents may or may not actually exist and you will have to tailor your application (and configure Morphia as we&#8217;ll see in a moment) to deal with those missing documents.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p>Below we have a basic entity definition.
-Note the new annotation <a href="javadoc/dev/morphia/annotations/Validation.html">@Validation</a>.</p>
+<p>The annotation provides a number of options to help tailor Morphia&#8217;s behavior to your liking.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity("validation")
-@Validation("{ number : { $gt : 10 } }")
-public class DocumentValidation {
-    @Id
-    private ObjectId id;
-    private String string;
-    private int number;
-    private Date date;
-
-}</code></pre>
-</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>idOnly</code>&#8201;&#8212;&#8201;<em>defaults to false</em> When <code>true</code>, only the value of the ID field is stored in the enclosing documents.
+If the referenced entity type has no subclasses, setting this can help save disk space and network traffic.
+If there <strong>are</strong> subtypes, this setting may be overridden automatically so that type information can properly stored.</p>
+</li>
+<li>
+<p><code>ignoreMissing</code> <em>defaults to false</em> When <code>true</code>, references that can not be loaded are simply ignored.
+Otherwise an exception is thrown whenever the reference load is attempted.</p>
+</li>
+<li>
+<p><code>lazy</code> <em>defaults to false</em> When <code>true</code> the referenced entity will not be fetched until the property is explicitly referenced.
+Otherwise the referenced entity (or entities) are loaded as part of the query load cycle of the enclosing entity.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>In this case, only one value is supplied to the annotation.
-This string value is the query that will be used to match against any new documents or updated documents.
-Should this query fail to match the new document, validation will fail on the document and it will be rejected.
-In addition to the required query, there are two other values that can be configured based on your needs:  <code>level</code> with a default of <code>STRICT</code> and <code>action</code> with a default of <code>ERROR</code>.
-A <code>MODERATE</code> validation level does not apply rules to updates on existing invalid documents.
-An <code>action</code> setting of <code>WARN</code> will merely log any validation violations.</p>
+<p>A <code>String</code> may be passed to the annotation to define the document field name to be stored in the database.</p>
+</div>
 </div>
 </div>
 </div>
