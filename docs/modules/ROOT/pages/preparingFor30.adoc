@@ -25,7 +25,9 @@ reached but that will be part of the 3.0 dev cycle as well.
 
 ## Configuration file
 Morphia 2.4 introduces a new configuration file based method of configuring Morphia's behavior for your needs.  As of 3.0, this will be
-the only way to configure Morphia and the programmatic API will be removed from the public API.
+the only way to configure Morphia and the programmatic API will be removed from the public API.  For more details, please see the
+xref:configuration.adoc[configuration section.]
+
 
 ## Deprecations
 With 2.0, much of the focus was on pivoting to the (then) new POJO Codecs and simplifying the API.  Over the course of the 2.x cycle,
