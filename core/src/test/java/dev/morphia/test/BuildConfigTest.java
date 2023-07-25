@@ -55,7 +55,8 @@ public class BuildConfigTest {
             var branch = format("%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
             Version released = Version.forIntegers(pomVersion.getMajorVersion(), pomVersion.getMinorVersion(),
                     pomVersion.getPatchVersion() - 1);
-            assertTrue(srcRef.endsWith(format("/tree/%s", branch)));
+            String format = format("/tree/%s", branch);
+            assertTrue(srcRef.endsWith(format), String.format("Should end with %s but found %s", format, srcRef));
             assertEquals(version, released.toString());
         }
     }
