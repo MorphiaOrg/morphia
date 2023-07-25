@@ -3,7 +3,7 @@
 == Migrating to 2.4
 
 === Configuration
-Morphia 2.4 sees the introduction of file-based configuration instead of the programmatic configuration currently in use.  The file
+Morphia 2.4 introduces file-based configuration instead of the programmatic configuration currently in use.  The file
 should live in your build's resources folder and be named `META-INF/morphia-config.properties`.  More information can be found in
 xref:configuration.adoc[configuration section].  In order to aid in your migration to the new configuration file, a couple of options
 are available to you:
