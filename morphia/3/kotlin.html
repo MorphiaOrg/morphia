@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="3.0">
+<div class="nav-container" data-component="morphia" data-version="3">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -100,7 +100,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="configuration-old.html">Configuration (Legacy)</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="kotlin.html">Kotlin</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -133,7 +133,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="textSearches.html">Text Search</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -170,16 +170,16 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3.0-SNAPSHOT</span>
+    <span class="version">3-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
       <span class="title">Critter</span>
       <ul class="versions">
-        <li class="version">
-          <a href="../../critter/4.4/index.html">4.4-SNAPSHOT</a>
-        </li>
         <li class="version is-latest">
+          <a href="../../critter/4.4/index.html">4.4</a>
+        </li>
+        <li class="version">
           <a href="../../critter/4.3/index.html">4.3</a>
         </li>
       </ul>
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">3.0-SNAPSHOT</a>
+          <a href="index.html">3-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.4/index.html">2.4</a>
@@ -228,91 +228,68 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="references.html">References</a></li>
+    <li><a href="kotlin.html">Kotlin</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="references.html">3.0-SNAPSHOT</a>
-    <a class="version" href="../2.4/references.html">2.4</a>
-    <a class="version" href="../2.3/references.html">2.3</a>
-    <a class="version" href="../2.2/references.html">2.2</a>
-    <a class="version" href="../2.1/references.html">2.1</a>
-    <a class="version" href="../1.6/references.html">1.6</a>
+    <a class="version is-current" href="kotlin.html">3-SNAPSHOT</a>
+    <a class="version" href="../2.4/kotlin.html">2.4</a>
+    <a class="version" href="../2.3/kotlin.html">2.3</a>
+    <a class="version" href="../2.2/kotlin.html">2.2</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="file:///home/jlee/dev/mongodb/morphia/docs/modules/ROOT/pages/references.adoc">Edit this Page</a></div>
-</div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/kotlin.adoc">Edit this Page</a></div>
+  </div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
+<h2 id="_kotlin"><a class="anchor" href="#_kotlin"></a>Kotlin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>MongoDB tries to encourage self-contained documents so that data can be fetched much more efficiently via single reads from the database.
-However not every data model or application can adhere to this philosophy in its entirety.
-As such, MongoDB supports
-<a href="http://docs.mongodb.org/manual/reference/database-references/">database references</a>.Morphia supports two styles of defining references:</p>
+<p>In general, your Kotlin types should work out of the box with Morphia.
+There are, however, a few interesting cases where they need a little extra help.
+Morphia 2.2 introduces a new module dependency for those who need that extra support.
+To import the new
+<code>morphia-kotlin</code> module in maven, simply add this to your <code>pom.xml</code>:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>the <a href="javadoc/dev/morphia/annotations/Reference.html">@Reference</a> annotation</p>
-</li>
-<li>
-<p>an experimental wrapper type <a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html">MorphiaReference</a>.</p>
-</li>
-</ol>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
+        &lt;artifactId&gt;morphia-kotlin&lt;/artifactId&gt;
+        &lt;version&gt;3.0.0-SNAPSHOT&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</code></pre>
 </div>
-<div class="sect2">
-<h3 id="_using_the_annotation"><a class="anchor" href="#_using_the_annotation"></a>Using the annotation</h3>
-<div class="paragraph">
-<p>The annotation based approach is the traditional approach.
-The <a href="javadoc/dev/morphia/annotations/Reference.html">@Reference</a> can be applied to any property whose type is a mappable Entity type.
-When this is done, instead of storing that objects information as a subdocument in the larger document sent to the database, a reference will be stored instead which points to where the document is actually stored.
-The referenced types are stored according to the mapping information configured by their
-<a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> annotations.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>It can be helpful to think of references as a foreign key like you would find in a relational database.
-It&#8217;s important to note, however, that MongoDB does not enforce any notion of referential integrity with these keys.
-Those remote documents may or may not actually exist and you will have to tailor your application (and configure Morphia as we&#8217;ll see in a moment) to deal with those missing documents.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
-<p>The annotation provides a number of options to help tailor Morphia&#8217;s behavior to your liking.</p>
+<p>And, of course, gradle users can use the following dependency declaration:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><code>idOnly</code>&#8201;&#8212;&#8201;<em>defaults to false</em> When <code>true</code>, only the value of the ID field is stored in the enclosing documents.
-If the referenced entity type has no subclasses, setting this can help save disk space and network traffic.
-If there <strong>are</strong> subtypes, this setting may be overridden automatically so that type information can properly stored.</p>
-</li>
-<li>
-<p><code>ignoreMissing</code> <em>defaults to false</em> When <code>true</code>, references that can not be loaded are simply ignored.
-Otherwise an exception is thrown whenever the reference load is attempted.</p>
-</li>
-<li>
-<p><code>lazy</code> <em>defaults to false</em> When <code>true</code> the referenced entity will not be fetched until the property is explicitly referenced.
-Otherwise the referenced entity (or entities) are loaded as part of the query load cycle of the enclosing entity.</p>
-</li>
-</ol>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
+    compile 'dev.morphia.morphia:morphia-kotlin:3.0.0-SNAPSHOT'
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>A <code>String</code> may be passed to the annotation to define the document field name to be stored in the database.</p>
+<p>Explicit Kotlin support is relatively new so there are likely cases that haven&#8217;t been discovered yet that might still need specific help but this new module will help cover those cases going forward.</p>
 </div>
+<div class="paragraph">
+<p>New to 2.2 is support for <a href="https://kotlinlang.org/docs/delegated-properties.html">delegated properties</a>.
+If your project uses
+<code>Delegates.notNull()</code>, e.g., you will want to include this module to support that delegation.
+This module should support any
+<code>ReadWriteProperty</code> type but is only currently tested against the <code>notNull()</code> case.</p>
+</div>
+<div class="paragraph">
+<p>All that is needed to enable this more targeted support is to simply add the new dependency to your project as shown above and it should magically "Just Work&#8482;".
+If you find something that doesn&#8217;t work in your Kotlin project, please file an <a href="issues-help.html" class="xref page">issue</a>.</p>
 </div>
 </div>
 </div>

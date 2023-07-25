@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Preparing for 3.0 :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="3.0">
+<div class="nav-container" data-component="morphia" data-version="3">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -85,7 +85,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="preparingFor30.html">Preparing for 3.0</a>
   </li>
 </ul>
@@ -136,7 +136,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -170,16 +170,16 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3.0-SNAPSHOT</span>
+    <span class="version">3-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
       <span class="title">Critter</span>
       <ul class="versions">
-        <li class="version">
-          <a href="../../critter/4.4/index.html">4.4-SNAPSHOT</a>
-        </li>
         <li class="version is-latest">
+          <a href="../../critter/4.4/index.html">4.4</a>
+        </li>
+        <li class="version">
           <a href="../../critter/4.3/index.html">4.3</a>
         </li>
       </ul>
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">3.0-SNAPSHOT</a>
+          <a href="index.html">3-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.4/index.html">2.4</a>
@@ -227,86 +227,114 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Morphia</a></li>
-    <li>Features</li>
-    <li><a href="transactions.html">Transactions</a></li>
+    <li><a href="index.html">Getting Started</a></li>
+    <li><a href="preparingFor30.html">Preparing for 3.0</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="transactions.html">3.0-SNAPSHOT</a>
-    <a class="version" href="../2.4/transactions.html">2.4</a>
-    <a class="version" href="../2.3/transactions.html">2.3</a>
-    <a class="version" href="../2.2/transactions.html">2.2</a>
-    <a class="version" href="../2.1/transactions.html">2.1</a>
+    <a class="version is-current" href="preparingFor30.html">3-SNAPSHOT</a>
+    <a class="version" href="../2.4/preparingFor30.html">2.4</a>
+    <a class="version is-missing" href="../2.3/index.html">2.3</a>
+    <a class="version is-missing" href="../2.2/index.html">2.2</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="file:///home/jlee/dev/mongodb/morphia/docs/modules/ROOT/pages/transactions.adoc">Edit this Page</a></div>
-</div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/preparingFor30.adoc">Edit this Page</a></div>
+  </div>
   <div class="content">
 <article class="doc">
+<h1 class="page">Preparing for 3.0</h1>
 <div class="sect1">
-<h2 id="_transactions"><a class="anchor" href="#_transactions"></a>Transactions</h2>
+<h2 id="_minimum_java_version"><a class="anchor" href="#_minimum_java_version"></a>Minimum Java Version</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Starting with MongoDB version 4.0, multi-document transactions are now supported on replica sets.
-Morphia 2.0 introduced a simple mechanism to access this functionality.
-Morphia 2.0 added the methods <code>withTransaction(MorphiaTransaction&lt;T&gt; transaction)</code> and
-<code>withTransaction(ClientSessionOptions options, MorphiaTransaction&lt;T&gt; transaction)</code> allowing for the execution of logic scoped to a transaction.</p>
+<p>Morphia 2.x made the jump to Java 11 and 3.0 will make the jump to Java 17. While this may not work for everyone, we&#8217;re hopeful that it
+won&#8217;t be a significant migration issue since by the time 3.0 releases, major frameworks such as Spring Boot and Quarkus will have
+long-since completed their moves to 17 as well.  This move will enable Morphia to continue to evolve to meet modern demands over the next
+few years.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_build_time_vs_runtime"><a class="anchor" href="#_build_time_vs_runtime"></a>Build time vs runtime</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Traditionally Morphia, like most object mappers, has leaned heavily on reflection at runtime to discover any mapped entities and to
+handle the read/write operations with the database. Modern JVMs take an increasingly dimmer view of such efforts and is closing off some
+avenues to support such features.  Taking some lessons learned from Quarkus&#8217;s model, much of this work will be moving to build time
+processing such that when you deploy your application, all the mapping information will not only be known but processed and ready for
+usage. This will necessitate the introduction of a basic maven/gradle plugin to collect and process this information.  Moving to this
+model opens the door to some interesting optimizations and potential new features that are impractical if not impossible in the current
+approach.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_critter"><a class="anchor" href="#_critter"></a>Critter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For the last several years, <a href="https://morphia.dev/critter/4.4/index.html">critter</a> has been available as an optional add on to Morphia that
+offers some nice features over and above what Morphia does in core.  In addition to compile time checked constants for property names,
+etc., the latest critter can also generate the codecs necessary to manage entities with minimal or no reflection needed.  In 3.0, critter
+will be brought in to Morphia proper and will live under the same lifecycle and release cycles as Morphia itself.  Indeed, it will likely
+be the core of how Morphia works in the future. Much testing and performance evaluation needs to happen before that final decision is
+reached but that will be part of the 3.0 dev cycle as well.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_file"><a class="anchor" href="#_configuration_file"></a>Configuration file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Morphia 2.4 introduces a new configuration file based method of configuring Morphia&#8217;s behavior for your needs.  As of 3.0, this will be
+the only way to configure Morphia and the programmatic API will be removed from the public API.  For more details, please see the
+<a href="configuration.html" class="xref page">configuration section.</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deprecations"><a class="anchor" href="#_deprecations"></a>Deprecations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With 2.0, much of the focus was on pivoting to the (then) new POJO Codecs and simplifying the API.  Over the course of the 2.x cycle,
+many overloaded methods have been consolidated in to <code>Options</code> based variants.  These <code>Options</code> classes make the task of adding, and
+removing, various options much simpler while also keeping the core API slim enough to easily process.  That said, these older methods
+still exist and continue to clutter the API.  Morphia 3.0 will see the removal of all deprecated items.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>One thing to note on a handful of deprecations is that the method isn&#8217;t going away as such as the usage of it will change in a breaking
+manner.  e.g.,
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/main/java/dev/morphia/query/Query.java">Query#update(UpdateOperator first, UpdateOperator&#8230;&#8203; updates)</a>.  This method
+will, in 3.0, return an <code>UpdateResult</code> like the <code>execute()</code> method you have to call today does.  Migrating to this new form when 3.0
+arrives should be as simple as removing that last method call in the chain.</p>
 </div>
 <div class="paragraph">
-<p>The API is designed to work with Java 8&#8217;s lambda syntax for the most convenience.
-In this example, let&#8217;s assume we&#8217;re building a shopping site.</p>
+<p>This use of deprecation is not optimal but seemed the best way to educate users about the upcoming change.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">User account = datastore.withTransaction((session) -&gt; {
-    User user = new User("jimbo", "jimhalpert@dundermifflin.com");
-    user.setHomeAddress(new Address("123 Paper Lane", "Scranton", "PA", "18510"));
-
-    return session.save(user);
-});</code></pre>
+</td>
+</tr>
+</table>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_field_vs_property_mapping"><a class="anchor" href="#_field_vs_property_mapping"></a>Field vs Property Mapping</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>In this simple example, we&#8217;re starting with our standard <code>Datastore</code> and calling <code>withTransaction()</code>.
-The lambda we&#8217;re passing in executes all with the scope of a single transaction.
-You&#8217;ll note the single parameter passed in is a <code>MorphiaSession</code>.
-This is actually a <code>Datastore</code> but it has been bound to a session.
-Any changes to be made within the transaction should be made using this
-<code>session</code> reference.
-Once the lambda returns, the transaction is automatically committed and the session closed.
-If you need access to server session or the transaction, there are methods on <code>MorphiaSession</code> to return either of those.</p>
-</div>
-<div class="paragraph">
-<p>Of course, it&#8217;s not always possible to wrap things up neatly inside a lambda so let&#8217;s take a look at more hands on approach:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">MorphiaSession session = datastore.startSession();
-session.startTransaction();
-User user = new User("jimbo", "jimhalpert@dundermifflin.com");
-user.setHomeAddress(new Address("123 Paper Lane", "Scranton", "PA", "18510"));
-session.save(user);
-session.commitTransaction();
-session.close();</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This is essentially the same logic as above but now we&#8217;re manually managing the transactional boundaries.  <code>MorphiaSession</code> is also
-<code>AutoCloseable</code> so you could wrap the entire block in a <code>try-with-resources</code> block and let that manage the session boundary for you:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">try(MorphiaSession session = datastore.startSession()) {
-    session.startTransaction();
-    User user = new User("jimbo", "jimhalpert@dundermifflin.com");
-    user.setHomeAddress(new Address("123 Paper Lane", "Scranton", "PA", "18510"));
-    session.save(user);
-    session.commitTransaction();
-}</code></pre>
-</div>
+<p>In the current scheme of mapping, this distinction has meant more than it will in future versions.  As such, this distinction will go
+away and Morphia will simply evaluate and process both fields and accessor methods for mapping metadata. The config value for this
+setting will silently vanish from the config file schema and the only thing you should notice is a warning about an unknown config
+property which can be removed at your leisure.</p>
 </div>
 </div>
 </div>

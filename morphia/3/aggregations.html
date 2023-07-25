@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="3.0">
+<div class="nav-container" data-component="morphia" data-version="3">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -106,7 +106,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="mapping.html">Mapping</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="indexing.html">Indexing</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -127,7 +127,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="deletes.html">Deleting</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -170,16 +170,16 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3.0-SNAPSHOT</span>
+    <span class="version">3-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
       <span class="title">Critter</span>
       <ul class="versions">
-        <li class="version">
-          <a href="../../critter/4.4/index.html">4.4-SNAPSHOT</a>
-        </li>
         <li class="version is-latest">
+          <a href="../../critter/4.4/index.html">4.4</a>
+        </li>
+        <li class="version">
           <a href="../../critter/4.3/index.html">4.3</a>
         </li>
       </ul>
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">3.0-SNAPSHOT</a>
+          <a href="index.html">3-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.4/index.html">2.4</a>
@@ -228,172 +228,127 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="indexing.html">Indexing</a></li>
+    <li><a href="aggregations.html">Aggregation</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="indexing.html">3.0-SNAPSHOT</a>
-    <a class="version" href="../2.4/indexing.html">2.4</a>
-    <a class="version" href="../2.3/indexing.html">2.3</a>
-    <a class="version" href="../2.2/indexing.html">2.2</a>
-    <a class="version" href="../2.1/indexing.html">2.1</a>
-    <a class="version" href="../1.6/indexing.html">1.6</a>
+    <a class="version is-current" href="aggregations.html">3-SNAPSHOT</a>
+    <a class="version" href="../2.4/aggregations.html">2.4</a>
+    <a class="version" href="../2.3/aggregations.html">2.3</a>
+    <a class="version" href="../2.2/aggregations.html">2.2</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="file:///home/jlee/dev/mongodb/morphia/docs/modules/ROOT/pages/indexing.adoc">Edit this Page</a></div>
-</div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/aggregations.adoc">Edit this Page</a></div>
+  </div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_indexing"><a class="anchor" href="#_indexing"></a>Indexing</h2>
+<h2 id="_aggregations"><a class="anchor" href="#_aggregations"></a>Aggregations</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Morphia provides annotations that allow developers to define indexes for a collection to be defined alongside the other mapping data on an entity&#8217;s source.
-In addition to the familiar ascending/descending index types, Morphia and MongoDB support
-<a href="http://docs.mongodb.org/manual/core/index-ttl/">TTL</a>, <a href="http://docs.mongodb.org/manual/core/index-text/">text</a>, and <a href="http://docs.mongodb.org/manual/applications/geospatial-indexes/">geospatial</a>
-indexes.
-When defining <a href="#_text_indexing">text indexes</a> there are certain restrictions which will be covered below.
-Full details for all these types are available in the <a href="http://docs.mongodb.org/manual/indexes">manual</a>.  Morphia will apply any indexes for you at start up by
-setting the <code>morphia.apply-indexes</code> to true in the <a href="configuration.html" class="xref page">configuration file</a>.</p>
+<p>The <a href="http://docs.mongodb.org/manual/aggregation">aggregation framework</a> in MongoDB allows you to define a series (called a pipeline) of operations (called stages) against the data in a collection.
+These pipelines can be used for analytics or they can be used to convert your data from one form to another.
+This guide will not go in to the details of how aggregation works, however.
+The official MongoDB <a href="http://docs.mongodb.org/manual/aggregation">documentation</a> has extensive tutorials on such details.
+Rather, this guide will focus on the Morphia API. The examples shown here are taken from the
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/aggregation/AggregationTest.java">tests</a> in Morphia itself.</p>
 </div>
 <div class="paragraph">
-<p>There are two ways to define indexes: at the class level and at the field level.</p>
-</div>
-<div class="sect2">
-<h3 id="_class_level_indexes"><a class="anchor" href="#_class_level_indexes"></a>Class Level Indexes</h3>
-<div class="paragraph">
-<p>Class level indexing begins with the <a href="javadoc/dev/morphia/annotations/Indexes.html">@Indexes</a> annotation.
-This is a container annotation whose sole purpose is to hold a number of <a href="javadoc/dev/morphia/annotations/Index.html">@Index</a> annotations.
-This annotation has two primary components to cover here:  <code>fields</code> and <code>options</code>.
-An index definition would take the following form:</p>
+<p>Writing an aggregation pipeline starts just like writing a standard query.
+As with querying, we start with the <code>Datastore</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity
-@Indexes({
-    @Index(fields = @Field(value = "field2", type = DESC)),
-    @Index(
-      fields = @Field("field3"),
-      options = @IndexOptions(name = "indexing_test")
-    )
-})
-public class IndexExample {
-    @Id
-    private ObjectId id;
-    private String field;
-    @Property
-    private String field2;
-    @Property("f3")
-    private String field3;
-}</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">MorphiaCursor&lt;Author&gt; aggregate = getDs().aggregate(Book.class)
+     .group(of(id("author"))
+                .field("books", push(field("title"))))
+     .sort(Sort.on().ascending("name"))
+     .execute(Author.class);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>aggregate()</code> takes a <code>Class</code> literal.
+This lets Morphia know which collection to perform this aggregation against.
+Because of the transformational operations available in the aggregation <a href="http://docs.mongodb.org/manual/core/aggregation-pipeline">pipeline</a>, Morphia can not validate as much as it can with querying so care will need to be taken to ensure document fields actually exist when referencing them in your pipeline.</p>
+</div>
+<div class="sect2">
+<h3 id="_the_pipeline"><a class="anchor" href="#_the_pipeline"></a>The Pipeline</h3>
+<div class="paragraph">
+<p>Aggregation pipelines are comprised of a series stages.
+Our example here has only one stage: <code>group()</code>.
+This method is the Morphia equivalent of the <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/">$group</a> operator.
+This stage, as the name suggests, groups together documents based on various criteria.
+In this example, we are collecting together all the books by author.  <code>group()</code> takes one parameter: a <code>Group</code> instance.
+This instance is created using the <code>Group.of()</code> method which will return a new <code>Group</code> stage instance.
+There are a few overloads but the simplest version, <code>of()</code>, will generate a <code>$group</code> stage with no <code>_id</code>
+field in the document.
+In this case, we&#8217;re passing the output of the <code>id(String)</code> method which creates an <code>_id</code> field using the values found in the <code>author</code> properties found in the collection&#8217;s documents.</p>
+</div>
+<div class="paragraph">
+<p>The next step defines a new field, <code>books</code> comprised of the titles of the books found in each document.
+(For reference, this example is the Morphia equivalent of an <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/group/#group-title-by-author">example</a> found in the aggregation tutorials.) This results in a series of documents that look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{ "_id" : "Homer", "books" : [ "The Odyssey", "Iliad" ] }
+{ "_id" : "Dante", "books" : [ "The Banquet", "Divine Comedy", "Eclogues" ] }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_fields"><a class="anchor" href="#_fields"></a>Fields</h3>
+<h3 id="_executing_the_pipeline"><a class="anchor" href="#_executing_the_pipeline"></a>Executing the Pipeline</h3>
 <div class="paragraph">
-<p>Which fields to index are defined with the <a href="javadoc/dev/morphia/annotations/Field.html">@Field</a> annotation.
-An arbitrary number of <a href="javadoc/dev/morphia/annotations/Field.html">@Field</a>s can be given but at least one must be present.
-The name used for the field can be either the Java field name or the mapped document field name as defined in the class&#8217;s mapping via, e.g., the
-<a href="javadoc/dev/morphia/annotations/Property.html">@Property</a> or <a href="javadoc/dev/morphia/annotations/Embedded.html">@Embedded</a>
-annotations.
-For most index types, this value is validated by default.
-An exception is made for <a href="#_text_indexing">text indexing</a> as discussed below.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_index_options"><a class="anchor" href="#_index_options"></a>Index Options</h3>
-<div class="paragraph">
-<p>Options for an index are defined on the <a href="javadoc/dev/morphia/annotations/IndexOptions.html">@IndexOptions</a>.
-More complete documenation can be found in the <a href="http://docs.mongodb.org/manual/reference/method/db.collection.createIndex/#options">manual</a>.
-Using the options allows you to run indexing in the background, e.g. By default, creating an index blocks all other operations on a database.
-When building an index on a collection, the database that holds the collection is unavailable for read or write operations until the index build completes.
-For potentially long running index building operations, consider the <strong>background</strong> operation so that the MongoDB database remains available during the index building operation.
-The MongoDB <a href="http://docs.mongodb.org/manual/core/index-creation/#background-construction">manual</a> has more detail.</p>
-</div>
-<div class="paragraph">
-<p>By default Morphia will attempt to validate the fields specified but in some cases that isn&#8217;t desirable so you can turn it off via the options refernce.  <code>IndexOptions</code> lets you define <a href="http://docs.mongodb.org/manual/core/index-ttl/">TTL</a>, <a href="http://docs.mongodb.org/manual/core/index-sparse/">sparse</a>, and <a href="http://docs.mongodb.org/manual/core/index-partial/">partial</a> indexes as well.  <code>IndexOptions</code> can also be used to give an index a more human friendly name.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Whether user specified or MongoDB generated, index names including their full namespace (i.e. database.collection) cannot be longer than the <a href="http://docs.mongodb.org/manual/reference/limits/#Index-Name-Length">Index Name Limit</a>.</p>
-</div>
-</td>
-</tr>
-</table>
+<p>Once your pipeline is complete, you can execute it via the <code>execute()</code> method.
+This method takes a <code>Class</code> reference for the target type of your aggregation.
+Given this type, Morphia will map each document in the results and return it.
+Additionally, you can also include some options to <code>execute()</code>.
+We can use the various options on the
+<a href="javadoc/dev/morphia/aggregation/AggregationOptions.html">AggregationOptions</a> class to configure how we want the pipeline to execute.</p>
 </div>
 <div class="sect3">
-<h4 id="_partial_indexes"><a class="anchor" href="#_partial_indexes"></a>Partial Indexes</h4>
+<h4 id="_out"><a class="anchor" href="#_out"></a>$out</h4>
 <div class="paragraph">
-<p>New in MongoDB 3.2, <a href="https://docs.mongodb.com/v3.2/core/index-partial/">partial indexes</a> only index the documents in a collection that meet a specified filter expression thereby reducing storage and maintenance costs.
-A partial filter is defined using a query as shown here:</p>
+<p>Depending your use case, you might not watch to return the results of your aggregation but simply output them to another collection.
+That&#8217;s where <code>$out</code> comes in.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/">$out</a> is an operator that allows the results of a pipeline to be stored in to a named collection.
+This collection can not be sharded or a capped collection, however.
+This collection, if it does not exist, will be created upon execution of the pipeline.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Any existing data in the collection will be replaced by the output of the aggregation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>An example aggregation using the <code>$out</code> stage looks like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Indexes({@Index(options =
-    @IndexOptions(partialFilter = "{ name : { $exists : true } }"),
-    fields = {@Field(value = "name")})})
-public class SomeClass {
-    ...
-}</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.aggregate(Book.class)
+       .group(Group.of(id("author"))
+                   .field("books", push()
+                                       .single(field("title"))))
+       .out(Out.to(Author.class));</code></pre>
 </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_field_level_indexes"><a class="anchor" href="#_field_level_indexes"></a>Field Level Indexes</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Field level indexing is a simpler approach to defining a basic, single key index.
-These indexes are defined by applying the
-<a href="javadoc/dev/morphia/annotations/Indexed.html">@Indexed</a> annotation to a particular field on a class.
-Because the index definition is applied at the field level, the index is created using only that field and so the <a href="javadoc/dev/morphia/annotations/Field.html">@Field</a>
-annotations are unnecessary.
-The options for the index are the same as defined <a href="#_index_options">above</a>.
-A field level index definition would look like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Entity
-private class FieldIndex {
-    @Id
-    private ObjectId id;
-    @Indexed(options = @IndexOptions(unique = true))
-    private String name;
-    private String color;
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_text_indexing"><a class="anchor" href="#_text_indexing"></a><span id="text-indexing">Text Indexing</span></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Morphia&#8217;s indexing supports MongoDB&#8217;s text indexing and search functionality as we&#8217;ve briefly seen above.
-Full details can be found in the <a href="http://docs.mongodb.org/manual/core/index-text/">manual</a> but there are a few Morphia specific details to cover.
-Indexed field names are validated by default but validation is disabled when an index is defined using MongoDB&#8217;s
-<a href="http://docs.mongodb.org/manual/core/index-text/#text-index-wildcard">$**</a> syntax.
-This special instruction tells MongoDB to create a text index on all fields with string content in a document.
-A <a href="http://docs.mongodb.org/manual/core/index-text/#compound-index">compound index</a> can be created incorporating a text index but it&#8217;s important to note there can only be one text index on a collection.</p>
 </div>
 <div class="paragraph">
-<p>A wild card text index declaration would look like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">    @Indexes(@Index(fields = @Field(value = "$**", type = TEXT)))</code></pre>
-</div>
+<p>You&#8217;ll note that <code>out()</code> is the final method called here rather than <code>execute()</code>.
+This is because <code>$out</code> must be the final stage in the pipeline and it simply makes no sense to do anything other than execute the pipeline at that point.
+If you look at what we&#8217;re passing to the method, you&#8217;ll notice the <code>Out</code> class.
+There are currently two methods of note on <code>Out</code>:  <code>to(Class)</code> and <code>to(String)</code>.
+Using either of these methods instructs Morphia to write to either the collection mapped for the given <code>Class</code> or the named collection as noted by the String give.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -403,18 +358,45 @@ A <a href="http://docs.mongodb.org/manual/core/index-text/#compound-index">compo
 </td>
 <td class="content">
 <div class="paragraph">
-<p>A collection can have at most one text index.</p>
+<p>You may be wondering about the use of <code>Out</code> here and that it seems a bit overcomplicated.
+One of the design goals for the 2.0 API is to simplify the overall API and to reduce the number of overloads through the introduction of parameter or options objects.
+By limiting the <code>Aggregation</code> API to two methods for <code>$out</code> (the seconds takes an <code>AggregationOptions</code> reference), we can keep <code>Aggregation</code> itself slim and incorporate any future variations in <code>$out</code> limited to the <code>Out</code> class.
+This should, hopefully, make both APIs easier to digest and evolve.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="sect2">
-<h3 id="_collation"><a class="anchor" href="#_collation"></a>Collation</h3>
+</div>
+<div class="sect3">
+<h4 id="_merge"><a class="anchor" href="#_merge"></a>$merge</h4>
 <div class="paragraph">
-<p>Collation allows users to specify language-specific rules for string comparison such as rules for lettercase and accent marks.
-A collation can be defined using the <code>collation()</code> property on <a href="javadoc/dev/morphia/annotations/IndexOptions.html">@IndexOptions</a>
-and takes a <a href="javadoc/dev/morphia/annotations/Collation.html">@Collation</a> instance.</p>
+<p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/merge/">$merge</a> is a very similar option with a some major differences.
+The biggest difference is that <code>$merge</code> can write to existing collections without destroying the existing documents.  <code>$out</code> would obliterate any existing documents and replace them with the results of the pipeline.  <code>$merge</code>, however, can deposit these new results alongside existing data and update existing data.</p>
+</div>
+<div class="paragraph">
+<p>Using <code>$merge</code> might look something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.aggregate(Salary.class)
+   .group(Group.of(id()
+                       .field("fiscal_year")
+                       .field("dept"))
+               .field("salaries", sum(field("salary"))))
+   .merge(Merge.into("budgets")
+               .on("_id")
+               .whenMatched(WhenMatched.REPLACE)
+               .whenNotMatched(WhenNotMatched.INSERT));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Much like <code>out()</code> above, for <code>merge()</code> we pass in a <code>Merge</code> reference as created by the <code>Merge.into()</code> method.
+A merge is slightly more complex and so has more options to consider.
+In this example, we&#8217;re merging in to the <code>budgets</code> collection and merging any existing documents based on the <code>_id</code> as denoted using the <code>on()</code> method.
+Because there may be existing data in the collection, we need to instruct the operation how to handle those cases.
+In this example, when documents matching we&#8217;re choosing to replace them and when they don&#8217;t we&#8217;re instructing the operation to insert the new documents in to the collection.</p>
+</div>
 </div>
 </div>
 </div>
