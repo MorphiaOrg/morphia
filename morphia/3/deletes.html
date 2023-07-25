@@ -66,7 +66,7 @@
 </header>
 
 <div class="body">
-<div class="nav-container" data-component="morphia" data-version="2.4">
+<div class="nav-container" data-component="morphia" data-version="3">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
@@ -124,7 +124,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="updating-old.html">Updating (Legacy)</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="deletes.html">Deleting</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -136,7 +136,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -170,7 +170,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">2.4-SNAPSHOT</span>
+    <span class="version">3-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -196,7 +196,7 @@
       <span class="title">Morphia</span>
       <ul class="versions">
         <li class="version is-current">
-          <a href="index.html">2.4-SNAPSHOT</a>
+          <a href="index.html">3-SNAPSHOT</a>
         </li>
         <li class="version is-latest">
           <a href="../2.3/index.html">2.3</a>
@@ -225,83 +225,40 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="transactions.html">Transactions</a></li>
+    <li><a href="deletes.html">Deleting</a></li>
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.4-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="transactions.html">2.4-SNAPSHOT</a>
-    <a class="version" href="../2.3/transactions.html">2.3</a>
-    <a class="version" href="../2.2/transactions.html">2.2</a>
-    <a class="version" href="../2.1/transactions.html">2.1</a>
+    <a class="version is-current" href="deletes.html">3-SNAPSHOT</a>
+    <a class="version" href="../2.3/deletes.html">2.3</a>
+    <a class="version" href="../2.2/deletes.html">2.2</a>
+    <a class="version is-missing" href="../2.1/index.html">2.1</a>
     <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/transactions.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/deletes.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
 <div class="sect1">
-<h2 id="_transactions"><a class="anchor" href="#_transactions"></a>Transactions</h2>
+<h2 id="_deletes"><a class="anchor" href="#_deletes"></a>Deletes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Starting with MongoDB version 4.0, multi-document transactions are now supported on replica sets.
-Morphia 2.0 introduced a simple mechanism to access this functionality.
-Morphia 2.0 added the methods <code>withTransaction(MorphiaTransaction&lt;T&gt; transaction)</code> and
-<code>withTransaction(ClientSessionOptions options, MorphiaTransaction&lt;T&gt; transaction)</code> allowing for the execution of logic scoped to a transaction.</p>
-</div>
-<div class="paragraph">
-<p>The API is designed to work with Java 8&#8217;s lambda syntax for the most convenience.
-In this example, let&#8217;s assume we&#8217;re building a shopping site.</p>
+<p>Queries are used to delete documents from the database as well.
+Using
+<a href="javadoc/dev/morphia/query/Query.html#delete()">Query#delete()</a>, we can delete documents matching the query.
+The default operation will only delete the first matching document.
+However, you can opt to delete all matches by passing in the appropriate options:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">User account = datastore.withTransaction((session) -&gt; {
-    User user = new User("jimbo", "jimhalpert@dundermifflin.com");
-    user.setHomeAddress(new Address("123 Paper Lane", "Scranton", "PA", "18510"));
-
-    return session.save(user);
-});</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>In this simple example, we&#8217;re starting with our standard <code>Datastore</code> and calling <code>withTransaction()</code>.
-The lambda we&#8217;re passing in executes all with the scope of a single transaction.
-You&#8217;ll note the single parameter passed in is a <code>MorphiaSession</code>.
-This is actually a <code>Datastore</code> but it has been bound to a session.
-Any changes to be made within the transaction should be made using this
-<code>session</code> reference.
-Once the lambda returns, the transaction is automatically committed and the session closed.
-If you need access to server session or the transaction, there are methods on <code>MorphiaSession</code> to return either of those.</p>
-</div>
-<div class="paragraph">
-<p>Of course, it&#8217;s not always possible to wrap things up neatly inside a lambda so let&#8217;s take a look at more hands on approach:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">MorphiaSession session = datastore.startSession();
-session.startTransaction();
-User user = new User("jimbo", "jimhalpert@dundermifflin.com");
-user.setHomeAddress(new Address("123 Paper Lane", "Scranton", "PA", "18510"));
-session.save(user);
-session.commitTransaction();
-session.close();</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This is essentially the same logic as above but now we&#8217;re manually managing the transactional boundaries.  <code>MorphiaSession</code> is also
-<code>AutoCloseable</code> so you could wrap the entire block in a <code>try-with-resources</code> block and let that manage the session boundary for you:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">try(MorphiaSession session = datastore.startSession()) {
-    session.startTransaction();
-    User user = new User("jimbo", "jimhalpert@dundermifflin.com");
-    user.setHomeAddress(new Address("123 Paper Lane", "Scranton", "PA", "18510"));
-    session.save(user);
-    session.commitTransaction();
-}</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore
+    .find(Hotel.class)
+    .filter(gt("stars", 100))
+    .delete(new DeleteOptions()
+                     .multi(true));</code></pre>
 </div>
 </div>
 </div>
