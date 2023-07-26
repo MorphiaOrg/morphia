@@ -101,19 +101,6 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.4.0</version>
-                <executions>
-                    <execution>
-                        <id>parse-version</id>
-                        <goals>
-                            <goal>parse-version</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
                 <version>6.0.0</version>
@@ -127,38 +114,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <skipPoms>false</skipPoms>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>1.5.3</version>
-                <executions>
-                    <execution>
-                        <id>antora</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <filesToInclude>${project.basedir}/docs/antora.yml</filesToInclude>
-                    <replacements>
-                        <replacement>
-                            <token>version: \d+.\d+</token>
-                            <value>version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}</value>
-                        </replacement>
-                        <replacement>
-                            <token>    version: \d+.\d+.\d+</token>
-                            <value>    version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</value>
-                        </replacement>
-                        <replacement>
-                            <token>srcRef: https://github.com/MorphiaOrg/morphia/blob/.*</token>
-                            <value>srcRef: https://github.com/MorphiaOrg/morphia/blob/${git.branch}</value>
-                        </replacement>
-                    </replacements>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>target/git.properties</generateGitPropertiesFilename>
                 </configuration>
             </plugin>
         </plugins>

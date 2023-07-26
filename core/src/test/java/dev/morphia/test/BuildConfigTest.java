@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.TreeMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -32,12 +34,11 @@ public class BuildConfigTest {
     public void testDocsConfig() throws IOException, XmlPullParserException {
         Version pomVersion = pomVersion();
 
-        Map map;
-        try (InputStream inputStream = new FileInputStream("../docs/antora.yml")) {
-            map = objectMapper.readValue(inputStream, LinkedHashMap.class);
-        }
+        Map map = antora();
+        Map gitInfo = gitProperties();
+
         String version = map.get("version").toString();
-        boolean master = pomVersion.getPatchVersion() == 0 && pomVersion.getPreReleaseVersion() != null;
+        boolean master = "master".equals(gitInfo.get("git.branch"));
         if (master) {
             assertEquals(map.get("prerelease"), "-SNAPSHOT");
         } else {
@@ -59,6 +60,25 @@ public class BuildConfigTest {
             assertTrue(srcRef.endsWith(format), String.format("Should end with %s but found %s", format, srcRef));
             assertEquals(version, released.toString());
         }
+    }
+
+    @NotNull
+    private static Map gitProperties() throws IOException {
+        Map gitInfo;
+        try (InputStream inputStream = new FileInputStream("target/git.properties")) {
+            var props = new Properties();
+            props.load(inputStream);
+            gitInfo = new TreeMap(props);
+        }
+        return gitInfo;
+    }
+
+    private Map antora() throws IOException {
+        Map map;
+        try (InputStream inputStream = new FileInputStream("../docs/antora.yml")) {
+            map = objectMapper.readValue(inputStream, LinkedHashMap.class);
+        }
+        return map;
     }
 
     private <T> T walk(Map map, List<String> steps) {
