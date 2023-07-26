@@ -3,9 +3,11 @@ dev.morphia.aggregation
 dev.morphia.aggregation.codecs
 dev.morphia.aggregation.codecs.stages
 dev.morphia.aggregation.expressions
-dev.morphia.aggregation.expressions.impls
 dev.morphia.aggregation.stages
 dev.morphia.annotations
+dev.morphia.annotations.experimental
+dev.morphia.config
+dev.morphia.geo
 dev.morphia.mapping
 dev.morphia.mapping.codec
 dev.morphia.mapping.codec.pojo
@@ -16,12 +18,13 @@ dev.morphia.mapping.conventions
 dev.morphia.mapping.experimental
 dev.morphia.mapping.lazy
 dev.morphia.mapping.lazy.proxy
+dev.morphia.mapping.lifecycle
+dev.morphia.mapping.strategy
 dev.morphia.mapping.validation
 dev.morphia.mapping.validation.classrules
 dev.morphia.mapping.validation.fieldrules
 dev.morphia.query
 dev.morphia.query.filters
 dev.morphia.query.updates
-dev.morphia.sofia
 dev.morphia.transactions
 dev.morphia.utils
