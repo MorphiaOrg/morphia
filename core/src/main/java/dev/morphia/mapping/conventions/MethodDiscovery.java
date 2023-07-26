@@ -22,8 +22,6 @@ import dev.morphia.sofia.Sofia;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import org.jetbrains.annotations.NotNull;
-
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
@@ -110,7 +108,7 @@ public class MethodDiscovery implements MorphiaConvention {
         }
     }
 
-    @NotNull
+    @NonNull
     private String stripPrefix(Method m) {
         return m.getName().startsWith("get")
                 || m.getName().startsWith("set")

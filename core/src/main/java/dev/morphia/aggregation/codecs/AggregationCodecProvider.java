@@ -3,6 +3,7 @@ package dev.morphia.aggregation.codecs;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.codecs.stages.AddFieldsCodec;
 import dev.morphia.aggregation.codecs.stages.AutoBucketCodec;
@@ -46,7 +47,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AggregationCodecProvider implements CodecProvider {

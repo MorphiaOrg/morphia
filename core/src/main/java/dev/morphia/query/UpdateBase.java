@@ -1,20 +1,18 @@
 package dev.morphia.query;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
-
 import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.internal.DatastoreAware;
 import dev.morphia.query.updates.UpdateOperator;
-
 import org.bson.Document;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -45,7 +43,7 @@ public abstract class UpdateBase<T> {
         this.collection = collection;
     }
 
-    @NotNull
+    @NonNull
     static <T> List<T> coalesce(T first, T[] updates) {
         List<T> operators = new ArrayList<>();
         operators.add(first);

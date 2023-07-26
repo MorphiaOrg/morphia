@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,26 +56,15 @@ public class BuildConfigTest {
                 format("Should find -Dmongodb=%s in ../.github/workflows/pull-request.yml", LATEST));
     }
 
-    private static <T> T walk(Map map, List<String> steps) {
-        Object value = map;
-        for (String step : steps) {
-            if (value instanceof Map) {
-                value = ((Map<?, ?>) value).get(step);
-            }
-        }
-        return (T) value;
-    }
-
     @Test
     public void testDocsConfig() throws IOException, XmlPullParserException {
         Version pomVersion = pomVersion();
 
-        Map map;
-        try (InputStream inputStream = new FileInputStream("../docs/antora.yml")) {
-            map = objectMapper.readValue(inputStream, LinkedHashMap.class);
-        }
+        Map map = antora();
+        Map gitInfo = gitProperties();
+
         String version = map.get("version").toString();
-        boolean master = pomVersion.getPatchVersion() == 0 && pomVersion.getPreReleaseVersion() != null;
+        boolean master = "master".equals(gitInfo.get("git.branch"));
         if (master) {
             assertEquals(map.get("prerelease"), "-SNAPSHOT");
         } else {
@@ -91,17 +82,46 @@ public class BuildConfigTest {
             var branch = format("%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
             Version released = Version.forIntegers(pomVersion.getMajorVersion(), pomVersion.getMinorVersion(),
                     pomVersion.getPatchVersion() - 1);
-            assertTrue(srcRef.endsWith(format("/tree/%s", branch)));
+            String format = format("/tree/%s", branch);
+            assertTrue(srcRef.endsWith(format), String.format("Should end with %s but found %s", format, srcRef));
             assertEquals(version, released.toString());
         }
     }
 
     @NotNull
-    private static Version pomVersion() throws IOException, XmlPullParserException {
+    private static Map gitProperties() throws IOException {
+        Map gitInfo;
+        try (InputStream inputStream = new FileInputStream("target/git.properties")) {
+            var props = new Properties();
+            props.load(inputStream);
+            gitInfo = new TreeMap(props);
+        }
+        return gitInfo;
+    }
+
+    private Map antora() throws IOException {
+        Map map;
+        try (InputStream inputStream = new FileInputStream("../docs/antora.yml")) {
+            map = objectMapper.readValue(inputStream, LinkedHashMap.class);
+        }
+        return map;
+    }
+
+    private <T> T walk(Map map, List<String> steps) {
+        Object value = map;
+        for (String step : steps) {
+            if (value instanceof Map) {
+                value = ((Map<?, ?>) value).get(step);
+            }
+        }
+        return (T) value;
+    }
+
+    @NotNull
+    private Version pomVersion() throws IOException, XmlPullParserException {
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model model = reader.read(new FileReader("../pom.xml"));
 
-        Version pomVersion = Version.valueOf(model.getVersion());
-        return pomVersion;
+        return Version.valueOf(model.getVersion());
     }
 }
