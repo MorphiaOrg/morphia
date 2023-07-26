@@ -1,5 +1,14 @@
 package dev.morphia;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.ServiceLoader;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoException;
@@ -17,6 +26,7 @@ import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
 import dev.morphia.aggregation.codecs.AggregationCodecProvider;
@@ -55,6 +65,7 @@ import dev.morphia.query.UpdateException;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.transactions.MorphiaSessionImpl;
 import dev.morphia.transactions.MorphiaTransaction;
+
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -62,15 +73,6 @@ import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.ServiceLoader;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.set;
