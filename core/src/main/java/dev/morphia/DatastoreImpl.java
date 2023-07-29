@@ -719,7 +719,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             } else {
                 ReplaceOptions updateOptions = new ReplaceOptions()
                         .bypassDocumentValidation(options.bypassDocumentValidation())
-                        .upsert(true);
+                        .upsert(!info.versioned);
                 Document filter = new Document("_id", id);
                 info.filter(filter);
                 entityModel.getShardKeys().forEach((property) -> {
@@ -736,7 +736,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         } catch (MongoWriteException e) {
             if (info.versioned()) {
                 info.rollbackVersion();
-                throw new VersionMismatchException(entity.getClass(), id);
             }
             throw e;
         }
