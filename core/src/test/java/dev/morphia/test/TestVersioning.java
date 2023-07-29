@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.mongodb.MongoWriteException;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.UpdateResult;
 
@@ -14,6 +15,8 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.VersionMismatchException;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
@@ -88,6 +91,39 @@ public class TestVersioning extends TestBase {
         }
         assertTrue(list.contains(VersionedChildEntity.class));
         assertTrue(list.contains(AbstractVersionedBase.class));
+    }
+
+    @Test
+    public void testAlternateFailures() {
+        assertThrows(MongoWriteException.class, () -> {
+            getMapper().map(Country.class);
+            getDs().ensureIndexes();
+
+            getDs().save(new Country("USA"));
+            getDs().save(new Country("Sweden"));
+
+            Country first = getDs().find(Country.class)
+                    .filter(eq("name", "Sweden"))
+                    .first();
+
+            first.name = "USA";
+
+            getDs().save(first);
+        });
+    }
+
+    @Entity
+    private static class Country {
+        @Id
+        private ObjectId id;
+        @Indexed(options = @IndexOptions(unique = true))
+        private String name;
+        @Version
+        private long version;
+
+        public Country(String name) {
+            this.name = name;
+        }
     }
 
     @Test
