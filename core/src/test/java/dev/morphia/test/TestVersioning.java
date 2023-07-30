@@ -103,8 +103,8 @@ public class TestVersioning extends TestBase {
             getDs().save(new Country("Sweden"));
 
             Country first = getDs().find(Country.class)
-                                   .filter(eq("name", "Sweden"))
-                                   .first();
+                    .filter(eq("name", "Sweden"))
+                    .first();
 
             first.name = "USA";
 
