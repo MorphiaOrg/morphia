@@ -105,8 +105,8 @@ public class TestVersioning extends TestBase {
             getDs().save(new Country("Sweden"));
 
             Country first = getDs().find(Country.class)
-                                   .filter(eq("name", "Sweden"))
-                                   .first();
+                    .filter(eq("name", "Sweden"))
+                    .first();
 
             first.name = "USA";
 
@@ -242,7 +242,7 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testManuallyIdentified() {
-        assertThrows(VersionMismatchException.class, () -> {
+        assertThrows(MongoWriteException.class, () -> {
 
             final NamedVersion entity1 = new NamedVersion();
             final NamedVersion entity2 = new NamedVersion();
