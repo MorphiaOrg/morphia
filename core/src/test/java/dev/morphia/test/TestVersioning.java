@@ -236,7 +236,7 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testManuallyIdentified() {
-        assertThrows(VersionMismatchException.class, () -> {
+        assertThrows(MongoWriteException.class, () -> {
 
             final NamedVersion entity1 = new NamedVersion();
             final NamedVersion entity2 = new NamedVersion();
