@@ -31,7 +31,7 @@
         <json.assert.version>1.5.1</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.8.10</kotlin.version>
-        <logback.version>1.4.8</logback.version>
+        <logback.version>1.4.9</logback.version>
         <maven.version>3.9.3</maven.version>
         <revapi.maven.plugin.version>0.15.0</revapi.maven.plugin.version>
         <revapi.java.version>0.28.1</revapi.java.version>
