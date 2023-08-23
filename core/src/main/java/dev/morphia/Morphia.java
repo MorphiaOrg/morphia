@@ -87,6 +87,7 @@ public final class Morphia {
      *
      * @param mongoClient the client to use
      * @return a Datastore that you can use to interact with MongoDB
+     * @since 2.4.0
      */
     public static Datastore createDatastore(MongoClient mongoClient) {
         return new DatastoreImpl(mongoClient, loadConfig());
