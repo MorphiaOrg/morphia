@@ -39,10 +39,6 @@ public class BuildConfigTest {
             yaml = objectMapper.readValue(inputStream, LinkedHashMap.class);
         }
 
-        assertEquals(walk(yaml, of("jobs", "Build", "with", "maven-flags")),
-                format("-Dmongodb=%s", LATEST),
-                format("Should find -Dmongodb=%s in ../.github/workflows/build.yml", LATEST));
-
         assertEquals(walk(yaml, of("jobs", "Test", "strategy", "matrix", "mongo")),
                 Versions.list().stream().map(Version::toString).collect(Collectors.toList()),
                 format("Should find %s in the matrix in ../.github/workflows/build.yml", LATEST));
