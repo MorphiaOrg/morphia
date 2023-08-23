@@ -10,9 +10,8 @@ import org.bson.codecs.pojo.PropertyCodecRegistry
 import org.bson.codecs.pojo.TypeWithTypeParameters
 
 /**
- * @hidden
- * @morphia.internal
  * @since 2.2
+ * @hidden
  */
 @MorphiaInternal
 @Suppress("UNCHECKED_CAST")
