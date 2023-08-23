@@ -14,6 +14,12 @@ import org.testcontainers.utility.DockerImageName;
 import static com.github.zafarkhaja.semver.Version.forIntegers;
 
 public enum Versions {
+    Version7 {
+        @Override
+        Version version() {
+            return forIntegers(7).setBuildMetadata("latest");
+        }
+    },
     Version6 {
         @Override
         Version version() {

@@ -154,12 +154,12 @@ public class TestUpdateOperations extends TestBase {
     @Test(description = "see https://github.com/MorphiaOrg/morphia/issues/2472 for details")
     public void testUpdateWithDocumentConversion() {
         getDs().find(Hotel.class).filter(eq("_id", ObjectId.get()))
-               .disableValidation()
-               .update(
-                set("last_updated", LocalDateTime.now()),
-                push("logs", List.of(Map.of("1", 1L))),
-                push("user_detail", List.of(new FacebookUser())))
-               .execute();
+                .disableValidation()
+                .update(
+                        set("last_updated", LocalDateTime.now()),
+                        push("logs", List.of(Map.of("1", 1L))),
+                        push("user_detail", List.of(new FacebookUser())))
+                .execute();
     }
 
     @Test

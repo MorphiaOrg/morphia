@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.antwerkz</groupId>
         <artifactId>antwerkz-parent</artifactId>
-        <version>6</version>
+        <version>20</version>
     </parent>
 
     <groupId>dev.morphia.morphia</groupId>
@@ -22,6 +22,7 @@
     </scm>
 
     <properties>
+        <kotlin.version>1.8.20</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>4.9.0</driver.version>
         <driver.minor.version>4.7</driver.minor.version>
