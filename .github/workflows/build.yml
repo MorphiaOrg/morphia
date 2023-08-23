@@ -61,8 +61,6 @@ jobs:
             optional: true
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
-    secrets:
-      GH_TOKEN: ${{ secrets.TESTING_GH_OAUTH }}
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
