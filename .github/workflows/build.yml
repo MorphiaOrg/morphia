@@ -4,7 +4,7 @@ on:
   push:
     branches-ignore:
       - 'dependabot/**'
-    tags-ignore:
+    tags:
       - r[0-9]*
   workflow_dispatch:
 
@@ -16,7 +16,6 @@ jobs:
     with:
       java: 20
       saveBuild: true
-      maven-flags: "-Dmongodb=6"
 
   Test:
     needs:
@@ -70,23 +69,23 @@ jobs:
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
-  Snapshots:
-    if: github.ref_type == 'branch'
+  Release:
+    if: github.ref_type == 'branch' || github.ref_type == 'tag'
     needs:
       - Test
     uses: evanchooly/workflows/.github/workflows/release.yml@master
     secrets:
-      SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-      MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-      GH_TOKEN: ${{ secrets.GH_OAUTH }}
+      GH_PUSH_TOKEN       : ${{ secrets.GH_PUSH_TOKEN }}
+      GPG_PASSPHRASE      : ${{ secrets.GPG_PASSPHRASE }}
+      GPG_PRIVATE_KEY     : ${{ secrets.GPG_PRIVATE_KEY }}
+      SONATYPE_USERNAME   : ${{ secrets.SONATYPE_USERNAME }}
+      SONATYPE_PASSWORD   : ${{ secrets.SONATYPE_PASSWORD }}
 
   Docs:
     name: Update Documentation
     runs-on: ubuntu-latest
     needs:
-      - Snapshots
+      - Release
     steps:
       - name: Invoke antora build
         uses: benc-uk/workflow-dispatch@v121
