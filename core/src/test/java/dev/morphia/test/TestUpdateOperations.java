@@ -57,6 +57,7 @@ import dev.morphia.query.updates.CurrentDateOperator.TypeSpecification;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.Circle;
+import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Shape;
@@ -102,7 +103,9 @@ import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
 import static dev.morphia.query.updates.UpdateOperators.unset;
 import static dev.morphia.query.updates.UpdateOperators.xor;
 import static java.lang.String.format;
+import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -146,6 +149,17 @@ public class TestUpdateOperations extends TestBase {
         // fails due to type now missing
         getDs().find(MapsOfStuff.class).iterator(new FindOptions().limit(1))
                 .next();
+    }
+
+    @Test(description = "see https://github.com/MorphiaOrg/morphia/issues/2472 for details")
+    public void testUpdateWithDocumentConversion() {
+        getDs().find(Hotel.class).filter(eq("_id", ObjectId.get()))
+               .disableValidation()
+               .update(
+                set("last_updated", LocalDateTime.now()),
+                push("logs", List.of(Map.of("1", 1L))),
+                push("user_detail", List.of(new FacebookUser())))
+               .execute();
     }
 
     @Test
@@ -551,7 +565,7 @@ public class TestUpdateOperations extends TestBase {
 
         getDs().save(entities);
         UpdateResult updated = getDs().find(User.class)
-                .update(max("joined", LocalDate.now()))
+                .update(max("joined", now()))
                 .execute(new UpdateOptions().multi(true));
         assertEquals(updated.getModifiedCount(), 3);
 
@@ -575,10 +589,11 @@ public class TestUpdateOperations extends TestBase {
 
     @Test
     public void testMinWithDates() {
+        getDs().find(User.class).delete(new DeleteOptions().multi(true));
         List<User> entities = List.of(
-                new User("User 1", LocalDate.of(2003, 7, 13)),
-                new User("User 2", LocalDate.of(2009, 12, 1)),
-                new User("User 3", LocalDate.of(2015, 8, 19)));
+                new User("User 1", now().minus(1, MONTHS)),
+                new User("User 2", now().minus(2, MONTHS)),
+                new User("User 3", now().minus(3, MONTHS)));
 
         getDs().save(entities);
         UpdateResult updated = getDs().find(User.class)
@@ -589,7 +604,7 @@ public class TestUpdateOperations extends TestBase {
         getDs().find(User.class).delete();
         getDs().save(entities);
         updated = getDs().find(User.class)
-                .update(min("joined", Instant.now().minus(5000, DAYS)))
+                .update(min("joined", Instant.now().minus(70, DAYS)))
                 .execute(new UpdateOptions().multi(true));
         assertEquals(updated.getModifiedCount(), 2);
 

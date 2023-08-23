@@ -12,6 +12,8 @@ import dev.morphia.query.updates.UpdateOperator;
 
 import org.bson.Document;
 
+import static dev.morphia.internal.DatastoreHolder.holder;
+
 /**
  * Defines an update operation
  *
@@ -47,6 +49,8 @@ public class Update<T> extends UpdateBase<T> {
      * @return the results
      */
     public UpdateResult execute(UpdateOptions options) {
+        holder.set(getDatastore());
+
         Document updateOperations = toDocument();
         final Document queryObject = getQuery().toDocument();
         if (options.isUpsert()) {

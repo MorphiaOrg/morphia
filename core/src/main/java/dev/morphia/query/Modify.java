@@ -11,6 +11,8 @@ import dev.morphia.query.updates.UpdateOperator;
 
 import org.bson.Document;
 
+import static dev.morphia.internal.DatastoreHolder.holder;
+
 /**
  * Represents a modify operation
  *
@@ -50,6 +52,7 @@ public class Modify<T> extends UpdateBase<T> {
      */
     @Nullable
     public T execute(ModifyOptions options) {
+        holder.set(getDatastore());
         MongoCollection<T> collection = getDatastore().configureCollection(options, getCollection());
         Document update = toDocument();
 
