@@ -5,12 +5,12 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: maven
-    target-branch: 2.3.x
+    target-branch: 2.4.x
     directory: "/"
     schedule:
       interval: daily
   - package-ecosystem: maven
-    target-branch: 2.2.x
+    target-branch: 2.3.x
     directory: "/"
     schedule:
       interval: daily
