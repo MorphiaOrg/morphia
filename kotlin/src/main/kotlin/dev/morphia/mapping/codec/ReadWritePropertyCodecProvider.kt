@@ -11,6 +11,7 @@ import org.bson.codecs.pojo.TypeWithTypeParameters
 
 /**
  * @morphia.internal
+ *
  * @since 2.2
  */
 @MorphiaInternal
