@@ -666,6 +666,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     protected <T> T doTransaction(MorphiaSessionImpl morphiaSession, MorphiaTransaction<T> body) {
         try (morphiaSession) {
             return morphiaSession.getSession().withTransaction(() -> body.execute(morphiaSession));
+        } finally {
+            holder.set(morphiaSession.prior());
         }
     }
 

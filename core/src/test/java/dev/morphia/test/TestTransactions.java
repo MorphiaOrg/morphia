@@ -5,16 +5,21 @@ import java.util.List;
 
 import com.mongodb.MongoQueryException;
 import com.mongodb.TransactionOptions;
+import com.mongodb.client.result.DeleteResult;
 
 import dev.morphia.aggregation.stages.Lookup;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
+import dev.morphia.query.filters.Filters;
+import dev.morphia.test.mapping.lazy.TestLazyCircularReference.ReferencedEntity;
+import dev.morphia.test.mapping.lazy.TestLazyCircularReference.RootEntity;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
 import dev.morphia.transactions.MorphiaSession;
 
 import org.bson.types.ObjectId;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -295,6 +300,28 @@ public class TestTransactions extends TemplatedTestBase {
         });
 
         assertEquals(getDs().find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
+    }
+
+    @Test
+    public void testFetchAfterTransactionalDelete() {
+        checkForProxyTypes();
+        checkForReplicaSet();
+
+        RootEntity root = new RootEntity();
+        final ReferencedEntity ref = new ReferencedEntity();
+        ref.setFoo("bar");
+
+        root.setR(ref);
+
+        final ObjectId refId = getDs().save(ref).getId();
+        final ObjectId rootId = getDs().save(root).getId();
+
+        root = getDs().find(RootEntity.class).filter(Filters.eq("_id", rootId)).first();
+
+        final DeleteResult deleteResult = getDs().withTransaction((session) -> session.find(RootEntity.class).delete());
+        Assert.assertEquals(deleteResult.getDeletedCount(), 1);
+
+        Assert.assertEquals(root.getR().getId(), refId);
     }
 
     @Entity
