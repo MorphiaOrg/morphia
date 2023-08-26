@@ -827,17 +827,23 @@ public class TestQuery extends TestBase {
     @Test
     public void testMultipleConstraintsOnOneField() {
         checkMinDriverVersion(4.6);
+        withConfig(buildConfig(ContainsPic.class)
+            , () -> {
+            });
 
-        getMapper().map(ContainsPic.class);
         getDs().ensureIndexes();
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
         query.filter(gte("size", 10),
                 lt("size", 100));
 
         Map<String, Object> explain = query.explain();
-        Map<String, Object> queryPlanner = (Map<String, Object>) explain.get("queryPlanner");
-        Map<String, Object> winningPlan = (Map<String, Object>) queryPlanner.get("winningPlan");
-        Map<String, Object> inputStage = (Map<String, Object>) winningPlan.get("inputStage");
+        Map<String, Object> inputStage = null;
+
+        if (explain.get("explainVersion").equals("1")) {
+            inputStage = walk(explain, List.of("queryPlanner", "winningPlan", "inputStage"));
+        } else {
+            inputStage = walk(explain, List.of("queryPlanner", "winningPlan", "queryPlan", "inputStage"));
+        }
         assertEquals(inputStage.get("stage"), "IXSCAN");
     }
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
@@ -132,6 +133,16 @@ public abstract class TestBase extends MorphiaTestSetup {
                 new Object[] { new DefaultQueryFactory() },
                 new Object[] { new LegacyQueryFactory() }
         };
+    }
+
+    public static <T> T walk(Map map, List<String> steps) {
+        Object value = map;
+        for (String step : steps) {
+            if (value instanceof Map) {
+                value = ((Map<?, ?>) value).get(step);
+            }
+        }
+        return (T) value;
     }
 
     protected void assertCapped(Class<?> type, Integer max) {

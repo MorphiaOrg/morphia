@@ -20,6 +20,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.Test;
 
+import static dev.morphia.test.TestBase.walk;
 import static java.lang.String.format;
 import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
@@ -79,16 +80,6 @@ public class BuildConfigTest {
             map = objectMapper.readValue(inputStream, LinkedHashMap.class);
         }
         return map;
-    }
-
-    private <T> T walk(Map map, List<String> steps) {
-        Object value = map;
-        for (String step : steps) {
-            if (value instanceof Map) {
-                value = ((Map<?, ?>) value).get(step);
-            }
-        }
-        return (T) value;
     }
 
     @NotNull

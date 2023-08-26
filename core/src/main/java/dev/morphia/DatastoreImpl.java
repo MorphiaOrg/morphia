@@ -143,6 +143,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (config.applyDocumentValidations()) {
             applyDocumentValidations();
         }
+        holder.set(this);
     }
 
     /**
