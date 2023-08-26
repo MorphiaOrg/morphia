@@ -102,7 +102,9 @@ import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
 import static dev.morphia.query.updates.UpdateOperators.unset;
 import static dev.morphia.query.updates.UpdateOperators.xor;
 import static java.lang.String.format;
+import static java.time.LocalDate.now;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -551,7 +553,7 @@ public class TestUpdateOperations extends TestBase {
 
         getDs().save(entities);
         UpdateResult updated = getDs().find(User.class)
-                .update(max("joined", LocalDate.now()))
+                .update(max("joined", now()))
                 .execute(new UpdateOptions().multi(true));
         assertEquals(updated.getModifiedCount(), 3);
 
@@ -576,9 +578,9 @@ public class TestUpdateOperations extends TestBase {
     @Test
     public void testMinWithDates() {
         List<User> entities = List.of(
-                new User("User 1", LocalDate.of(2003, 7, 13)),
-                new User("User 2", LocalDate.of(2009, 12, 1)),
-                new User("User 3", LocalDate.of(2015, 8, 19)));
+                new User("User 1", now().minus(1, MONTHS)),
+                new User("User 2", now().minus(2, MONTHS)),
+                new User("User 3", now().minus(3, MONTHS)));
 
         getDs().save(entities);
         UpdateResult updated = getDs().find(User.class)
@@ -589,7 +591,7 @@ public class TestUpdateOperations extends TestBase {
         getDs().find(User.class).delete();
         getDs().save(entities);
         updated = getDs().find(User.class)
-                .update(min("joined", Instant.now().minus(5000, DAYS)))
+                .update(min("joined", Instant.now().minus(70, DAYS)))
                 .execute(new UpdateOptions().multi(true));
         assertEquals(updated.getModifiedCount(), 2);
 
