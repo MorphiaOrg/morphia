@@ -827,9 +827,8 @@ public class TestQuery extends TestBase {
     @Test
     public void testMultipleConstraintsOnOneField() {
         checkMinDriverVersion(4.6);
-        withConfig(buildConfig(ContainsPic.class)
-            , () -> {
-            });
+        withConfig(buildConfig(ContainsPic.class), () -> {
+        });
 
         getDs().ensureIndexes();
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
