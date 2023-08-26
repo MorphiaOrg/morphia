@@ -14,6 +14,6 @@ jobs:
   Audits:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
-      maven-flags: "-Dmongodb=6.0.2 -Daudits"
+      maven-flags: "-Daudits"
     secrets:
       GH_TOKEN: ${{ secrets.GH_OAUTH }}

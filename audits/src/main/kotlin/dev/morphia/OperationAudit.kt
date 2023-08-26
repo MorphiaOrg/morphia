@@ -60,7 +60,7 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
                 .sorted()
                 .distinctBy { it }
                 .filter { it !in excludes && methods[it] == null }
-        val docRoot = url.replace("/index.html", "")
+
         var issuesCreated = 0
         if (remaining.isNotEmpty()) {
             val enhancement = github.getLabel("enhancement")
