@@ -836,7 +836,7 @@ public class TestQuery extends TestBase {
                 lt("size", 100));
 
         Map<String, Object> explain = query.explain();
-        Map<String, Object> inputStage = null;
+        Map<String, Object> inputStage;
 
         if (explain.get("explainVersion").equals("1")) {
             inputStage = walk(explain, List.of("queryPlanner", "winningPlan", "inputStage"));

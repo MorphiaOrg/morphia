@@ -759,9 +759,13 @@ public class TestLegacyQuery extends TestBase {
         query.field("size").lessThan(100);
 
         Map<String, Object> explain = query.explain();
-        Map<String, Object> queryPlanner = (Map<String, Object>) explain.get("queryPlanner");
-        Map<String, Object> winningPlan = (Map<String, Object>) queryPlanner.get("winningPlan");
-        Map<String, Object> inputStage = (Map<String, Object>) winningPlan.get("inputStage");
+        Map<String, Object> inputStage;
+
+        if (explain.get("explainVersion").equals("1")) {
+            inputStage = walk(explain, List.of("queryPlanner", "winningPlan", "inputStage"));
+        } else {
+            inputStage = walk(explain, List.of("queryPlanner", "winningPlan", "queryPlan", "inputStage"));
+        }
         assertEquals(inputStage.get("stage"), "IXSCAN");
     }
 
