@@ -23,40 +23,43 @@ jobs:
       - Build
     strategy:
       matrix:
-        java: [ 20, 11 ]
-        mongo: [ 6, 5, 4.4, 4.2, 4.0 ]
-        driver: [ 4.9.1 ]
+        java: [ 20, 17 ]
+        mongo: [ 7, 6, 5 ]
+        driver: [ 4.10.2 ]
         include:
-          - java: 11
-            mongo: 6
-            driver: 4.8.1
-          - java: 11
-            mongo: 6
+          - java: 17
+            mongo: 7
+            driver: 4.9.1
+          - java: 17
+            mongo: 7
+            driver: 4.8.2
+          - java: 17
+            mongo: 7
             driver: 4.7.2
-          - java: 11
-            mongo: 6
+          - java: 17
+            mongo: 7
             driver: 4.6.1
-          - java: 11
-            mongo: 6
+          - java: 17
+            mongo: 7
             driver: 4.5.1
-          - java: 11
-            mongo: 6
+          - java: 17
+            mongo: 7
             driver: 4.4.2
             optional: true
-          - java: 11
-            mongo: 6
+          - java: 17
+            mongo: 7
             driver: 4.3.4
             optional: true
-          - java: 11
-            mongo: 6
+          - java: 17
+            mongo: 7
             driver: 4.2.3
             optional: true
-          - java: 11
-            mongo: 6
+          - java: 17
+            mongo: 7
             driver: 4.1.2
             optional: true
-          - java: 11
-            mongo: 6
+          - java: 17
+            mongo: 7
             driver: 4.0.6
             optional: true
 
