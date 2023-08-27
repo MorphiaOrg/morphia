@@ -15,5 +15,6 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       maven-flags: "-Daudits"
+      java: 17
     secrets:
       GH_TOKEN: ${{ secrets.GH_OAUTH }}
