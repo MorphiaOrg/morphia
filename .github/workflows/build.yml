@@ -13,12 +13,10 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
     with:
       java: 17
-      maven: './mvnw'
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: 20
-      maven: './mvnw'
       saveBuild: true
 
   Test:
@@ -79,6 +77,8 @@ jobs:
     needs:
       - Test
     uses: evanchooly/workflows/.github/workflows/release.yml@master
+    with:
+      java: 20
     secrets:
       GH_PUSH_TOKEN       : ${{ secrets.GH_PUSH_TOKEN }}
       GPG_PASSPHRASE      : ${{ secrets.GPG_PASSPHRASE }}

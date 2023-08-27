@@ -14,7 +14,6 @@ jobs:
   Audits:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
-      maven: './mvnw'
       maven-flags: "-Daudits"
     secrets:
       GH_TOKEN: ${{ secrets.GH_OAUTH }}
