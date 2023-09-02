@@ -46,10 +46,10 @@ public class ZipCodeDataSetTest extends TestBase {
         Aggregation pipeline = getDs().aggregate(City.class)
                 .group(group(id().field("state")
                         .field("city"))
-                                .field("pop", sum(field("pop"))))
+                        .field("pop", sum(field("pop"))))
                 .group(group(
                         id("_id.state"))
-                                .field("avgCityPop", avg(field("pop"))));
+                        .field("avgCityPop", avg(field("pop"))));
         validate(pipeline.execute(Population.class), "MN", 5372);
     }
 
@@ -72,16 +72,16 @@ public class ZipCodeDataSetTest extends TestBase {
 
                 .group(group(id().field("state")
                         .field("city"))
-                                .field("pop", sum(field("pop"))))
+                        .field("pop", sum(field("pop"))))
 
                 .sort(sort().ascending("pop"))
 
                 .group(group(
                         id("_id.state"))
-                                .field("biggestCity", last(field("_id.city")))
-                                .field("biggestPop", last(field("pop")))
-                                .field("smallestCity", first(field("_id.city")))
-                                .field("smallestPop", first(field("pop"))))
+                        .field("biggestCity", last(field("_id.city")))
+                        .field("biggestPop", last(field("pop")))
+                        .field("smallestCity", first(field("_id.city")))
+                        .field("smallestPop", first(field("pop"))))
 
                 .project(project()
                         .exclude("_id")

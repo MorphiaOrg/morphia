@@ -486,7 +486,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         } else {
             update = ((MergingEncoder<T>) new MergingEncoder(query,
                     (MorphiaCodec) codecRegistry.get(entity.getClass())))
-                            .encode(entity);
+                    .encode(entity);
         }
         UpdateResult execute = update.execute(new UpdateOptions()
                 .writeConcern(options.writeConcern()));

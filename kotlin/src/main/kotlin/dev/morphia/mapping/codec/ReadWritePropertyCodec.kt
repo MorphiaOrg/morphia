@@ -10,6 +10,7 @@ import org.bson.codecs.EncoderContext
 @Suppress("UNCHECKED_CAST")
 class ReadWritePropertyCodec<T>(private val codec: Codec<Any>) : Codec<Any> {
     override fun getEncoderClass(): Class<Any> = ReadWriteProperty::class.java as Class<Any>
+
     override fun encode(writer: BsonWriter, value: Any, context: EncoderContext) {
         context.encodeWithChildContext(codec, writer, value)
     }
