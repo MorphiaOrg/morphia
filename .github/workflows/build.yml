@@ -18,15 +18,25 @@ jobs:
     with:
       java: 20
       saveBuild: true
+  Matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - id: mongo-versions
+        run: |
+          curl -Ls https://sh.jbang.dev | bash -s - app setup
+          echo '::set-output name=version_matrix::$( ~/.jbang/bin/jbang .github/BuildMatrix.java \ )'
+    outputs:
+      version_matrix: ${{ steps.mongo-versions.outputs.version_matrix }}
 
   Test:
     needs:
       - CodeAudits
       - Build
+      - Matrix
     strategy:
       matrix:
         java: [ 20, 17 ]
-        mongo: [ 7, 6, 5 ]
+        mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: [ 4.10.2 ]
         include:
           - java: 17
