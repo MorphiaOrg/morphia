@@ -24,6 +24,7 @@ public class BuildMatrix {
                 .map(Version::valueOf)
                 .filter(it -> it.getPreReleaseVersion() == null || it.getPreReleaseVersion().equals(""))
                 .filter(it -> it.greaterThan(Version.valueOf("4.0.0")))
+                .map(it -> "'%s'".formatted(it))
                 .collect(Collectors.toList());
 
         System.out.println(found);
