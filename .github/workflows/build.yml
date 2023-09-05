@@ -75,18 +75,6 @@ jobs:
             mongo: 7
             driver: 4.3.4
             optional: true
-          - java: 17
-            mongo: 7
-            driver: 4.2.3
-            optional: true
-          - java: 17
-            mongo: 7
-            driver: 4.1.2
-            optional: true
-          - java: 17
-            mongo: 7
-            driver: 4.0.6
-            optional: true
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
