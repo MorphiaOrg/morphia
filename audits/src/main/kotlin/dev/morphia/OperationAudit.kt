@@ -91,8 +91,8 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
                                Milestone: ${milestone.title}
                                Labels: ${labels.joinToString { label -> label.name }}
                                Body: $body
-                               """.trimIndent(
-                        )
+                               """
+                            .trimIndent()
                     )
                     val builder = github.createIssue(title).milestone(milestone).body(body)
 
