@@ -54,6 +54,14 @@ public class MorphiaCodecProvider implements CodecProvider {
         });
     }
 
+    protected Map<Class<?>, Codec<?>> getCodecs() {
+        return codecs;
+    }
+
+    protected List<PropertyCodecProvider> getPropertyCodecProviders() {
+        return propertyCodecProviders;
+    }
+
     @Nullable
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })

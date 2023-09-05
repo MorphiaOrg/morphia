@@ -8,6 +8,7 @@ import dev.morphia.annotations.PossibleValues;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.MorphiaExperimental;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
@@ -212,4 +213,14 @@ public interface MorphiaConfig {
     @WithDefault("standard")
     @Deprecated(forRemoval = true, since = "2.4.0")
     UuidRepresentation uuidRepresentation();
+
+    /**
+     *
+     * @hidden
+     * @return true if models should be automatically loaded from prebuilt structures.
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @WithDefault("true")
+    boolean autoImportModels();
 }

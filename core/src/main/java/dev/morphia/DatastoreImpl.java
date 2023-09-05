@@ -844,7 +844,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 mapper.register(model);
             }
 
-            morphiaCodecProviders.add(importer.getCodecProvider(this));
+            morphiaCodecProviders.add(importer.getCodecProvider(mapper));
         }
     }
 

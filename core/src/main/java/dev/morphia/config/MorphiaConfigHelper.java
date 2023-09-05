@@ -74,6 +74,7 @@ public class MorphiaConfigHelper {
         entries = stream(MorphiaConfig.class.getDeclaredMethods())
                 .sorted(Comparator.comparing(Method::getName))
                 .map(m -> getEntry(prefix, m))
+                .filter(Objects::isNull)
                 .collect(Collectors.toList());
 
     }
@@ -138,18 +139,23 @@ public class MorphiaConfigHelper {
             }
         }
 
-        return new Entry(
-                prefix + NamingStrategy.kebabCase().apply(m.getName()),
-                Optional.class.isAssignableFrom(m.getReturnType()),
-                getValue(m),
-                getDefault(m),
-                getPossibles(m),
-                converter);
+        if (m.getAnnotation(MorphiaInternal.class) != null) {
+            return null;
+        } else {
+
+            return new Entry(
+                    prefix + NamingStrategy.kebabCase().apply(m.getName()),
+                    Optional.class.isAssignableFrom(m.getReturnType()),
+                    getValue(m),
+                    getDefault(m),
+                    getPossibles(m),
+                    converter);
+        }
     }
 
     private static String getPrefix() {
         var prefix = MorphiaConfig.class.getAnnotation(ConfigMapping.class).prefix();
-        if (!prefix.equals("")) {
+        if (!prefix.isEmpty()) {
             prefix = prefix + ".";
         }
         return prefix;

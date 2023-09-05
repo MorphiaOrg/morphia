@@ -27,6 +27,7 @@ public class MutableMorphiaConfig implements MorphiaConfig {
     private boolean applyCaps;
     private boolean applyDocumentValidations;
     private boolean applyIndexes;
+    private boolean autoImportModels;
     private String database;
     private Optional<CodecProvider> codecProvider;
     private NamingStrategy collectionNaming;
@@ -92,6 +93,16 @@ public class MutableMorphiaConfig implements MorphiaConfig {
 
     public MutableMorphiaConfig applyIndexes(boolean applyIndexes) {
         this.applyIndexes = applyIndexes;
+        return this;
+    }
+
+    @Override
+    public boolean autoImportModels() {
+        return autoImportModels;
+    }
+
+    public MutableMorphiaConfig autoImportModels(boolean autoImportModels) {
+        this.autoImportModels = autoImportModels;
         return this;
     }
 

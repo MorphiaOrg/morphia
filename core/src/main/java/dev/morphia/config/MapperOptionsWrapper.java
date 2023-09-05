@@ -49,6 +49,11 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     }
 
     @Override
+    public boolean autoImportModels() {
+        return options.autoImportModels();
+    }
+
+    @Override
     public String database() {
         return database;
     }
