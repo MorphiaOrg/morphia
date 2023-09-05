@@ -21,11 +21,12 @@ jobs:
   Matrix:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - id: mongo-versions
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
-          echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose BuildMatrix.java)" >> $GITHUB_OUTPUT
-        working-directory: .github
+          echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java)" >> $GITHUB_OUTPUT
 
     outputs:
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
