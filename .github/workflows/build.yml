@@ -36,7 +36,6 @@ jobs:
         id: mongo-versions
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
-          ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java
           echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
 
     outputs:
