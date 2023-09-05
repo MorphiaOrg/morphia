@@ -23,7 +23,7 @@ public class BuildMatrix {
                 .map(it -> substringBeforeSpace(it.text()))
                 .map(Version::valueOf)
                 .filter(it -> it.getPreReleaseVersion() == null || it.getPreReleaseVersion().equals(""))
-                .filter(it -> it.greaterThan(Version.valueOf("4.0.0")))
+                .filter(it -> it.greaterThanOrEqualTo(Version.valueOf("5.0.0")))
                 .map(it -> "'%s'".formatted(it))
                 .collect(Collectors.toList());
 
