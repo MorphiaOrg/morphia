@@ -32,7 +32,8 @@ jobs:
           server-id: central
           cache: maven
 
-      - id: mongo-versions
+      - name: Find MongoDB versions
+        id: mongo-versions
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java
