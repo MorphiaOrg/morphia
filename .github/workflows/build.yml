@@ -23,6 +23,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          server-id: central
+          cache: maven
+
       - id: mongo-versions
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup

@@ -1,6 +1,5 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
-//JAVA 17
 //DEPS com.github.zafarkhaja:java-semver:0.9.0
 //DEPS org.jsoup:jsoup:1.15.3
 
