@@ -24,9 +24,10 @@ jobs:
       - id: mongo-versions
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
-          echo '::set-output name=version_matrix::$( ~/.jbang/bin/jbang .github/BuildMatrix.java \ )'
+          echo "mongo_versions=$( ~/.jbang/bin/jbang .github/BuildMatrix.java)" >> $GITHUB_OUTPUT
+
     outputs:
-      version_matrix: ${{ steps.mongo-versions.outputs.version_matrix }}
+      version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
 
   Test:
     needs:
