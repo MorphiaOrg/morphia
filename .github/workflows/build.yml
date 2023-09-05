@@ -89,7 +89,7 @@ jobs:
     if: github.ref_type == 'branch' || github.ref_type == 'tag'
     needs:
       - Test
-    uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
+    uses: evanchooly/workflows/.github/workflows/release.yml@master
     with:
       java: 17
     secrets:
