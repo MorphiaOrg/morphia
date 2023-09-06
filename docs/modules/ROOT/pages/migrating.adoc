@@ -5,15 +5,17 @@
 === Configuration
 Morphia 2.4 introduces file-based configuration instead of the programmatic configuration currently in use.  The file
 should live in your build's resources folder and be named `META-INF/morphia-config.properties`.  More information can be found in
-xref:configuration.adoc[configuration section].  In order to aid in your migration to the new configuration file, a couple of options
-are available to you:
+xref:configuration.adoc[configuration section].  This new approach is optional but in order to aid in your migration to the new
+configuration file, you can manually generate that content by calling
+`MapperOptions#toConfigFormat(String database, boolean showComplete)` on your instance.  This will return a `String` which can be copied
+in to your configuration file.
 
-1.  Upon initializing Morphia using the traditional method of passing in `MapperOptions` to `#createDatastore()`, Morphia will log a
-warning about the deprecation of that approach and will output your current configuration in config file format to the logs which you can
-simply copy and paste in to the configuration file and update to use the
-link:++javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient)++[new method].
-2.  You can manually generate that content by calling `MapperOptions#toConfigFormat(String database, boolean showComplete)` on your
-instance.  This will return a `String` which can be copied in to your configuration file.
+[NOTE]
+====
+After some feedback about some unexpected use cases, this transition has been postponed and the requisite `MapperOptions` based methods
+undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
+those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.
+====
 
 === Deprecations
     "Man Plans and God Laughs."

@@ -13,12 +13,13 @@ import java.util.stream.Collectors;
 import dev.morphia.annotations.PossibleValues;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.sofia.Sofia;
 
 import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.eclipse.microprofile.config.spi.Converter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.EnvConfigSource;
@@ -42,6 +43,8 @@ import static java.util.stream.Collectors.joining;
  */
 @MorphiaInternal
 public class MorphiaConfigHelper {
+    private static final Logger LOG = LoggerFactory.getLogger(MorphiaConfig.class);
+
     private static final String MORPHIA_CONFIG_PROPERTIES = "META-INF/morphia-config.properties";
     final String prefix;
     private final MorphiaConfig config;
@@ -74,9 +77,8 @@ public class MorphiaConfigHelper {
         entries = stream(MorphiaConfig.class.getDeclaredMethods())
                 .sorted(Comparator.comparing(Method::getName))
                 .map(m -> getEntry(prefix, m))
-                .filter(Objects::isNull)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-
     }
 
     private static Map<String, String> getEnvProperties() {
@@ -103,7 +105,8 @@ public class MorphiaConfigHelper {
         List<ConfigSource> configSources = classPathSources(path.startsWith("META-INF/") ? path : "META-INF/" + path,
                 currentThread().getContextClassLoader());
         if (configSources.isEmpty()) {
-            throw new MappingException(Sofia.missingConfigFile(path));
+            LOG.warn(Sofia.missingConfigFile(path));
+            return MorphiaConfigHelper.defaultConfig();
         }
         return new SmallRyeConfigBuilder()
                 .addDefaultInterceptors()
@@ -114,6 +117,11 @@ public class MorphiaConfigHelper {
                 .addDefaultSources()
                 .build()
                 .getConfigMapping(MorphiaConfig.class);
+    }
+
+    private static MorphiaConfig defaultConfig() {
+        return new DefaultMorphiaConfig();
+
     }
 
     @Override

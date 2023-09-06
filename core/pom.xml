@@ -43,25 +43,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.antwerkz.github</groupId>
-                <artifactId>issues-maven-plugin</artifactId>
-                <version>1.1.13</version>
-                <executions>
-                    <execution>
-                        <id>issues</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <repository>MorphiaOrg/morphia</repository>
-                    <docsUrl>https://morphia.dev/morphia/2.4</docsUrl>
-                    <javadocUrl>https://morphia.dev/morphia/2.4/javadoc</javadocUrl>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>com.antwerkz.sofia</groupId>
                 <artifactId>sofia-maven</artifactId>
                 <version>${sofia.version}</version>
@@ -139,10 +120,6 @@
                         <arg>-parameters</arg>
                     </compilerArgs>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

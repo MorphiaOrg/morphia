@@ -23,17 +23,13 @@ import org.bson.codecs.configuration.CodecProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.config.MorphiaConfigHelper.*;
+import static dev.morphia.config.MorphiaConfigHelper.dumpConfigurationFile;
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
 import static org.bson.UuidRepresentation.STANDARD;
 
 /**
  * Options to control mapping behavior.
- * 
- * @deprecated use the new configuration file mechanism. See the
- *             <a href="https://morphia.dev/morphia/2.4/migrating.html#_migrating_to_2_4">website docs</a> for more information.
  */
-@Deprecated(forRemoval = true, since = "2.4.0")
 public class MapperOptions {
     private static final Logger LOG = LoggerFactory.getLogger(MapperOptions.class);
     public static final MapperOptions DEFAULT = MapperOptions.builder().build();

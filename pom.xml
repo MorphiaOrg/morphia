@@ -4,16 +4,17 @@
     <parent>
         <groupId>com.antwerkz</groupId>
         <artifactId>antwerkz-parent</artifactId>
-        <version>20</version>
+        <version>30</version>
     </parent>
 
-    <groupId>dev.morphia.morphia</groupId>
-    <artifactId>morphia</artifactId>
-    <version>2.4.3-SNAPSHOT</version>
+    <groupid>dev.morphia.morphia</groupid>
+    <artifactid>morphia</artifactid>
+    <version>2.4.3-snapshot</version>
     <packaging>pom</packaging>
 
-    <name>Morphia</name>
-    <url>https://github.com/MorphiaOrg/morphia</url>
+    <name>morphia</name>
+    <url>https://github.com/morphiaorg/morphia</url>
+    <description>mongodb object-document mapper in Java based on https://github.com/mongodb/mongo-java-driver</description>
 
     <scm>
         <connection>scm:git:git@github.com:MorphiaOrg/morphia.git</connection>
@@ -164,7 +165,6 @@
                 <version>3.2.1</version>
             </dependency>
 
-
             <dependency>
                 <groupId>org.mongodb</groupId>
                 <artifactId>mongodb-driver-sync</artifactId>
@@ -180,6 +180,11 @@
                 <artifactId>mongodb</artifactId>
                 <version>1.19.0</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
+                <version>${kotlin.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>

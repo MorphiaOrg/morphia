@@ -46,6 +46,7 @@ class MorphiaMethod(val pkgName: String, val className: String, name: String) {
 enum class Version {
     v2_1_0_SNAPSHOT {
         override fun artifactId(): String = "morphia-core"
+
         override fun version() = "2.1.0-SNAPSHOT"
     },
     v1_6_0_SNAPSHOT {
@@ -56,8 +57,11 @@ enum class Version {
     };
 
     open fun artifactId() = "core"
+
     fun groupId() = "dev.morphia.morphia"
+
     abstract fun version(): String
+
     fun download(): JarFile {
         val groupId = groupId().replace('.', '/')
         val path = "$groupId/${artifactId()}/${version()}/${artifactId()}-${version()}.jar"
