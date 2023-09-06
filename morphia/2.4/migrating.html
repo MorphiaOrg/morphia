@@ -255,22 +255,26 @@
 <div class="paragraph">
 <p>Morphia 2.4 introduces file-based configuration instead of the programmatic configuration currently in use.  The file
 should live in your build&#8217;s resources folder and be named <code>META-INF/morphia-config.properties</code>.  More information can be found in
-<a href="configuration.html" class="xref page">configuration section</a>.  In order to aid in your migration to the new configuration file, a couple of options
-are available to you:</p>
+<a href="configuration.html" class="xref page">configuration section</a>.  This new approach is optional but in order to aid in your migration to the new
+configuration file, you can manually generate that content by calling
+<code>MapperOptions#toConfigFormat(String database, boolean showComplete)</code> on your instance.  This will return a <code>String</code> which can be copied
+in to your configuration file.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Upon initializing Morphia using the traditional method of passing in <code>MapperOptions</code> to <code>#createDatastore()</code>, Morphia will log a
-warning about the deprecation of that approach and will output your current configuration in config file format to the logs which you can
-simply copy and paste in to the configuration file and update to use the
-<a href="javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient)">new method</a>.</p>
-</li>
-<li>
-<p>You can manually generate that content by calling <code>MapperOptions#toConfigFormat(String database, boolean showComplete)</code> on your
-instance.  This will return a <code>String</code> which can be copied in to your configuration file.</p>
-</li>
-</ol>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>After some feedback about some unexpected use cases, this transition has been postponed and the requisite <code>MapperOptions</code> based methods
+undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
+those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
