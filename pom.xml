@@ -14,6 +14,7 @@
 
     <name>Morphia</name>
     <url>https://github.com/MorphiaOrg/morphia</url>
+    <description>mongodb object-document mapper in Java based on https://github.com/mongodb/mongo-java-driver</description>
 
     <scm>
         <connection>scm:git:git@github.com:MorphiaOrg/morphia.git</connection>
@@ -41,11 +42,6 @@
         <surefire.version>3.1.2</surefire.version>
         <testng.version>7.8.0</testng.version>
         <zt.exec.version>1.12</zt.exec.version>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <downloadSources>true</downloadSources>
-        <nexus.url>https://oss.sonatype.org</nexus.url>
-        <local.repository.path>${maven.multiModuleProjectDirectory}/target/local-repo</local.repository.path>
     </properties>
 
     <build>
@@ -86,7 +82,7 @@
                     <configuration>
                         <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
                         <analysisConfigurationFiles>
-                            <analysisConfigurationFile>../config/revapi-filtered.json</analysisConfigurationFile>
+                            <analysisConfigurationFile>${maven.multiModuleProjectDirectory}/config/revapi-filtered.json</analysisConfigurationFile>
                         </analysisConfigurationFiles>
                         <analysisConfiguration>
                             <revapi.versions>
