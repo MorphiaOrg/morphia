@@ -12,6 +12,6 @@ public abstract class MorphiaPropertyCodecProvider implements PropertyCodecProvi
     protected TypeWithTypeParameters<?> getType(List<? extends TypeWithTypeParameters<?>> typeParameters, int position) {
         return typeParameters.size() > position
                 ? typeParameters.get(position)
-                : TypeData.builder(Object.class).build();
+                : TypeData.get(Object.class);
     }
 }

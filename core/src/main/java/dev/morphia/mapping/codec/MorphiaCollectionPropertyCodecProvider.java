@@ -29,7 +29,7 @@ public class MorphiaCollectionPropertyCodecProvider extends MorphiaPropertyCodec
             } catch (CodecConfigurationException e) {
                 if (valueType.getType().equals(Object.class)) {
                     try {
-                        return (Codec<T>) registry.get(TypeData.builder(Collection.class).build());
+                        return (Codec<T>) registry.get(TypeData.get(Collection.class));
                     } catch (CodecConfigurationException e1) {
                         // Ignore and return original exception
                     }

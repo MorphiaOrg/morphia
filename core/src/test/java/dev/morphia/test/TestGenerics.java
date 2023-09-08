@@ -11,6 +11,7 @@ import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.filters.Filters;
 import dev.morphia.test.models.SpecializedEntity;
 import dev.morphia.test.models.generics.Another;
 import dev.morphia.test.models.generics.Child;
@@ -135,6 +136,21 @@ public class TestGenerics extends TestBase {
         assertEquals(list.get(0).getProperties().size(), 1);
     }
 
+    @Test
+    public void testSelfReferentialGenerics() {
+        MyEntity entity = new MyEntity();
+        String address = "r23c8nwzeqvfnu89hnz";
+        entity.setAddress(address);
+        MyEmbeddedEntity emb = new MyEmbeddedEntity();
+        emb.setName("bar");
+        entity.setEmbeddedEntities(List.of(emb));
+        getDs().save(entity);
+        MyEntity foundEntity = getDs().find(MyEntity.class).filter(Filters.eq("address", address)).first();
+        System.out.println(foundEntity.getAddress());
+        System.out.println(foundEntity.getEmbeddedEntities().get(0).getName());
+
+    }
+
     @Entity
     private interface Item {
     }
@@ -208,5 +224,69 @@ public class TestGenerics extends TestBase {
         private static final Class<? extends Status<EmailItem>> PROCEDURE_CLASS = EmailStatus.class;
         @Id
         private ObjectId id;
+    }
+
+
+    private static class MongoEntity<T> {
+
+    }
+
+    @Entity
+    private static class MyEmbeddedEntity
+        extends MongoEntity<MyEmbeddedEntity> {
+
+        private String name = "foo";
+        public MyEmbeddedEntity() {
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String setName(String name) {
+            return this.name = name;
+        }
+
+    }
+
+    @Entity
+    private static class MyEntity {
+
+        @Id
+        private String id;
+
+
+        private String address;
+
+        List<MyEmbeddedEntity> embeddedEntities;
+
+        // constructor
+        public MyEntity() {
+        }
+
+        public List<MyEmbeddedEntity> getEmbeddedEntities() {
+            return embeddedEntities;
+        }
+
+        public void setEmbeddedEntities(List<MyEmbeddedEntity> embeddedEntities) {
+            this.embeddedEntities = embeddedEntities;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String setId(String id) {
+            return this.id = id;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
     }
 }

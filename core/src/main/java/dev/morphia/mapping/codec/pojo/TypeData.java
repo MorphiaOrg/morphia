@@ -35,8 +35,25 @@ import static org.bson.assertions.Assertions.notNull;
 public class TypeData<T> implements TypeWithTypeParameters<T> {
 
     private final Class<T> type;
-    private final List<TypeData<?>> typeParameters;
+    private final List<TypeData<?>> typeParameters = new ArrayList<>();
     private boolean array;
+
+    /**
+     * Creates a new TypeData with the concrete type and type parameters around it.
+     * <p>
+     * e.g., List&lt;Address&gt; would be
+     *
+     * <pre>
+     * <code>
+     * new TypeData(Address.class, TypeData.builder(List.class).build())
+     * </code>
+     * </pre>
+     *
+     * @param type           the type
+     */
+    public TypeData(Class<T> type) {
+        this.type = type;
+    }
 
     /**
      * Creates a new TypeData with the concrete type and type parameters around it.
@@ -54,7 +71,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      */
     public TypeData(Class<T> type, List<TypeData<?>> typeParameters) {
         this.type = type;
-        this.typeParameters = typeParameters;
+        this.typeParameters.addAll(typeParameters);
     }
 
     /**
@@ -69,13 +86,13 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private static TypeData<?> getTypeData(Type type) {
+    public static TypeData<?> get(Type type) {
         if (type instanceof ParameterizedType) {
             ParameterizedType pType = (ParameterizedType) type;
             TypeParameters parameters = TypeParameters.of(pType);
             Builder paramBuilder = TypeData.builder((Class) pType.getRawType());
             for (Type argType : parameters) {
-                paramBuilder.addTypeParameter(getTypeData(argType));
+                paramBuilder.addTypeParameter(get(argType));
             }
             return paramBuilder.build();
         } else if (type instanceof WildcardType) {
@@ -84,18 +101,18 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
             Type[] bounds = upperBounds != null
                     ? upperBounds
                     : wildcardType.getLowerBounds();
-            return WildCardTypeData.builder(getTypeData(bounds[0]), upperBounds != null).build();
+            return new WildCardTypeData(get(bounds[0]), upperBounds != null);
         } else if (type instanceof TypeVariable) {
             return TypeData.builder(Object.class).build();
         } else if (type instanceof Class) {
-            Builder builder = TypeData.builder((Class) type);
+            var typeData = new TypeData((Class) type);
             for (Type argType : TypeParameters.of(type)) {
-                builder.addTypeParameter(getTypeData(argType));
+                typeData.typeParameters.add(argType.equals(type) ? type : get(argType));
             }
-            return builder.build();
+            return typeData;
         } else if (type instanceof GenericArrayType) {
             GenericArrayType arrayType = (GenericArrayType) type;
-            TypeData<?> typeData = getTypeData(arrayType.getGenericComponentType());
+            TypeData<?> typeData = get(arrayType.getGenericComponentType());
             typeData.setArray(true);
             return typeData;
         }
@@ -211,8 +228,8 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      * @param field the field to analyze
      * @return the new TypeData information
      */
-    public static TypeData<?> newInstance(Field field) {
-        return newInstance(field.getGenericType());
+    public static TypeData<?> get(Field field) {
+        return get(field.getGenericType());
     }
 
     /**
@@ -221,7 +238,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      * @param method the method to analyze
      * @return the new TypeData information
      */
-    public static TypeData<?> newInstance(Method method) {
+    public static TypeData<?> get(Method method) {
         return newInstance(method.getGenericReturnType());
     }
 
@@ -243,7 +260,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
          * }
          * return builder.build();
          */
-        return (TypeData<T>) getTypeData(genericType);
+        return (TypeData<T>) get(genericType);
     }
 
     /**

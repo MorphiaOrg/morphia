@@ -62,7 +62,7 @@ public class MethodDiscovery implements MorphiaConvention {
 
     private void addProperties(EntityModelBuilder builder, Set<Methods> properties) {
         for (Methods methods : properties) {
-            TypeData<?> typeData = entityModelBuilder.getTypeData(methods.type, TypeData.newInstance(methods.getter),
+            TypeData<?> typeData = entityModelBuilder.getTypeData(methods.type, TypeData.get(methods.getter),
                     methods.getter.getGenericReturnType());
 
             entityModelBuilder.addProperty()
