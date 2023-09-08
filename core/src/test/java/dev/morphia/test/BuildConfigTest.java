@@ -38,7 +38,16 @@ public class BuildConfigTest {
         Map gitInfo = gitProperties();
 
         String version = map.get("version").toString();
-        boolean master = "master".equals(gitInfo.get("git.branch"));
+        Object gitBranch = gitInfo.get("git.branch");
+        System.out.println("****************** gitBranch = " + gitBranch);
+        System.out.println("****************** gitBranch = " + gitBranch);
+        System.out.println("****************** gitBranch = " + gitBranch);
+        System.out.println("****************** gitBranch = " + gitBranch);
+        System.out.println("****************** gitBranch = " + gitBranch);
+        System.out.println("****************** gitBranch = " + gitBranch);
+        System.out.println("****************** gitBranch = " + gitBranch);
+        System.out.println("****************** gitBranch = " + gitBranch);
+        boolean master = "master".equals(gitBranch);
         if (master) {
             assertEquals(map.get("prerelease"), "-SNAPSHOT");
         } else {
