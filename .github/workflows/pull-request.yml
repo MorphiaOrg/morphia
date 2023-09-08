@@ -10,4 +10,4 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
     with:
       maven-flags: "-Dmongodb=6"
-
+      java: 17
