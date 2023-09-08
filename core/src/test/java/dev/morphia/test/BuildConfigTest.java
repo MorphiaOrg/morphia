@@ -38,15 +38,10 @@ public class BuildConfigTest {
         Map gitInfo = gitProperties();
 
         String version = map.get("version").toString();
-        Object gitBranch = gitInfo.get("git.branch");
-        System.out.println("****************** gitBranch = " + gitBranch);
-        System.out.println("****************** gitBranch = " + gitBranch);
-        System.out.println("****************** gitBranch = " + gitBranch);
-        System.out.println("****************** gitBranch = " + gitBranch);
-        System.out.println("****************** gitBranch = " + gitBranch);
-        System.out.println("****************** gitBranch = " + gitBranch);
-        System.out.println("****************** gitBranch = " + gitBranch);
-        System.out.println("****************** gitBranch = " + gitBranch);
+        var gitBranch = gitInfo.get("git.branch").toString();
+        if (gitBranch.startsWith("dependabot/")) {
+            return;
+        }
         boolean master = "master".equals(gitBranch);
         if (master) {
             assertEquals(map.get("prerelease"), "-SNAPSHOT");
