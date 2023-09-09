@@ -28,6 +28,12 @@ Morphia 2.4 introduces a new configuration file based method of configuring Morp
 the only way to configure Morphia and the programmatic API will be removed from the public API.  For more details, please see the
 xref:configuration.adoc[configuration section.]
 
+[NOTE]
+====
+After some feedback about some unexpected use cases, this transition has been postponed and the requisite `MapperOptions` based methods
+undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
+those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.
+====
 
 ## Deprecations
 With 2.0, much of the focus was on pivoting to the (then) new POJO Codecs and simplifying the API.  Over the course of the 2.x cycle,
