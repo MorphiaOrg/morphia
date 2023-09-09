@@ -12,15 +12,6 @@
 
     <artifactId>morphia-validation</artifactId>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
