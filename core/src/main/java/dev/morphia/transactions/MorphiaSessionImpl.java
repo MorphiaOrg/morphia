@@ -29,11 +29,14 @@ import dev.morphia.internal.DatastoreHolder;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import org.bson.BsonDocument;
 import org.bson.BsonTimestamp;
 import org.bson.Document;
 
 /**
+ * @hidden
  * @since 2.0
  * @morphia.internal
  */
@@ -41,6 +44,7 @@ import org.bson.Document;
 public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession {
 
     private final ClientSession session;
+    private final DatastoreImpl prior;
 
     /**
      * Creates a new session.
@@ -48,10 +52,22 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
      * @param datastore the datastore
      * @param session   the client session
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public MorphiaSessionImpl(DatastoreImpl datastore, ClientSession session) {
         super(datastore);
         operations(new TransactionalOperations());
         this.session = session;
+        this.prior = datastore;
+    }
+
+    /**
+     * @hidden
+     * @return
+     * @since 2.4.3
+     */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
+    public DatastoreImpl prior() {
+        return prior;
     }
 
     @Override
@@ -289,5 +305,6 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
     @Override
     public void close() {
         session.close();
+        DatastoreHolder.holder.set(prior);
     }
 }

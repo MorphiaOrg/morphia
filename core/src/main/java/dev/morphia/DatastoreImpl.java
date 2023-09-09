@@ -143,7 +143,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         if (config.applyDocumentValidations()) {
             applyDocumentValidations();
         }
-        holder.set(this);
     }
 
     /**
@@ -486,7 +485,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         } else {
             update = ((MergingEncoder<T>) new MergingEncoder(query,
                     (MorphiaCodec) codecRegistry.get(entity.getClass())))
-                    .encode(entity);
+                            .encode(entity);
         }
         UpdateResult execute = update.execute(new UpdateOptions()
                 .writeConcern(options.writeConcern()));
@@ -667,6 +666,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     protected <T> T doTransaction(MorphiaSessionImpl morphiaSession, MorphiaTransaction<T> body) {
         try (morphiaSession) {
             return morphiaSession.getSession().withTransaction(() -> body.execute(morphiaSession));
+        } finally {
+            holder.set(morphiaSession.prior());
         }
     }
 
