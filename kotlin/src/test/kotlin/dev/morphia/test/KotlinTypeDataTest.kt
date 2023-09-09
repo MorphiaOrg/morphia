@@ -33,7 +33,7 @@ class KotlinTypeDataTest : TestBase() {
         val field = owner.declaredMemberProperties.first { it.name == propertyName }
         val typeData = TypeData.builder(field.javaField?.type).build()
 
-        //        val typeData = TypeData.newInstance(field)
+        //        val typeData = TypeData.get(field)
         //        Assert.assertEquals(typeData.type, fieldType)
         //        val typeParameters = typeData.typeParameters
         //        Assert.assertEquals(typeParameters.size, parameterTypes.size)

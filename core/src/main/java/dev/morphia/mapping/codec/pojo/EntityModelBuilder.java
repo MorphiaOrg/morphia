@@ -222,7 +222,7 @@ public class EntityModelBuilder {
             if (map != null) {
                 Type mapped = map.get(((TypeVariable<?>) genericType).getName());
                 if (mapped != null) {
-                    suggested = TypeData.newInstance(mapped);
+                    suggested = TypeData.get(mapped);
                 }
             }
         }

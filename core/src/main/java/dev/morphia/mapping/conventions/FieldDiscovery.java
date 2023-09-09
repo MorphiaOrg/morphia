@@ -29,7 +29,7 @@ public class FieldDiscovery implements MorphiaConvention {
             for (Class<?> type : list) {
                 for (Field field : type.getDeclaredFields()) {
 
-                    TypeData<?> typeData = builder.getTypeData(type, TypeData.newInstance(field), field.getGenericType());
+                    TypeData<?> typeData = builder.getTypeData(type, TypeData.get(field), field.getGenericType());
                     try {
                         builder.addProperty()
                                 .name(field.getName())
