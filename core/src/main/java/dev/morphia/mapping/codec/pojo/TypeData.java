@@ -49,7 +49,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      * </code>
      * </pre>
      *
-     * @param type           the type
+     * @param type the type
      */
     public TypeData(Class<T> type) {
         this.type = type;

@@ -418,7 +418,7 @@ public class Mapper {
     @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void map(String packageName) {
         try {
-            getClasses(contextClassLoader, packageName, getConfig().mapSubpackages())
+            getClasses(contextClassLoader, packageName)
                     .forEach(type -> {
                         try {
                             getEntityModel(type);
@@ -441,7 +441,7 @@ public class Mapper {
     public synchronized void mapPackage(String packageName) {
         Sofia.logConfiguredOperation("Mapper#mapPackage");
         try {
-            getClasses(contextClassLoader, packageName, getConfig().mapSubpackages())
+            getClasses(contextClassLoader, packageName)
                     .forEach(type -> {
                         try {
                             getEntityModel(type);
@@ -544,16 +544,16 @@ public class Mapper {
                 .build();
     }
 
-    private List<Class> getClasses(ClassLoader loader, String packageName, boolean mapSubPackages)
+    private List<Class> getClasses(ClassLoader loader, String packageName)
             throws ClassNotFoundException {
         final Set<Class> classes = new HashSet<>();
 
         ClassGraph classGraph = new ClassGraph()
                 .addClassLoader(loader)
                 .enableAllInfo();
-        if (mapSubPackages) {
-            classGraph.acceptPackages(packageName);
-            classGraph.acceptPackages(packageName + ".*");
+        if (packageName.endsWith(".*")) {
+            classGraph.acceptPackages(packageName.substring(0, packageName.length() - 2));
+            //            classGraph.acceptPackages(packageName + ".*");
         } else {
             classGraph.acceptPackagesNonRecursive(packageName);
         }

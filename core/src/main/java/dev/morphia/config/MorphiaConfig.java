@@ -11,15 +11,22 @@ import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.query.QueryFactory;
+import dev.morphia.sofia.Sofia;
 
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecProvider;
+import org.eclipse.microprofile.config.spi.ConfigSource;
 
 import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.SmallRyeConfigBuilder;
 import io.smallrye.config.WithConverter;
 import io.smallrye.config.WithDefault;
+
+import static io.smallrye.config.PropertiesConfigSourceProvider.classPathSources;
+import static java.lang.Thread.currentThread;
 
 /**
  * Please note that there is every expectation that this format/naming is stable. However, based on usage feedback prior to 3.0 some
@@ -33,6 +40,32 @@ import io.smallrye.config.WithDefault;
 @ConfigMapping(prefix = "morphia")
 public interface MorphiaConfig {
 
+    static MorphiaConfig load() {
+        return load(MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES);
+    }
+
+    /**
+     * Parses and loads the configuration found at the given location
+     *
+     * @param location the location of the configuration to load. This can be a file path, a classpath resource, a URL, etc.
+     *
+     * @return the loaded configuration
+     * @since 3.0
+     */
+    static MorphiaConfig load(String location) {
+        List<ConfigSource> configSources = classPathSources(location, currentThread().getContextClassLoader());
+        if (configSources.isEmpty()) {
+            throw new MappingException(Sofia.missingConfigFile(location));
+        }
+        return new SmallRyeConfigBuilder()
+                .addDefaultInterceptors()
+                .withMapping(MorphiaConfig.class)
+                .withSources(configSources)
+                .addDefaultSources()
+                .build()
+                .getConfigMapping(MorphiaConfig.class);
+    }
+
     /**
      * The database name that Morphia should use. This entry is required to be present and is the only necessary configuration element
      * you need to provide as all the other entries have discernible default values.
@@ -43,11 +76,11 @@ public interface MorphiaConfig {
 
     /**
      * If true, collection caps will be applied to the database at start up.
-     * 
+     *
      * @return true if the caps should be applied
      */
     @WithDefault("false")
-    boolean applyCaps();
+    Boolean applyCaps();
 
     /**
      * If true, document validations will be enabled for entities/collections with validation mappings.
@@ -57,7 +90,7 @@ public interface MorphiaConfig {
      * @see Validation
      */
     @WithDefault("false")
-    boolean applyDocumentValidations();
+    Boolean applyDocumentValidations();
 
     /**
      * If true, mapped indexes will be applied to the database at start up.
@@ -65,7 +98,7 @@ public interface MorphiaConfig {
      * @return true if the indexes should be applied
      */
     @WithDefault("false")
-    boolean applyIndexes();
+    Boolean applyIndexes();
 
     /**
      * Specifies a {@code CodecProvider} to supply user defined codecs that Morphia should use.
@@ -96,7 +129,7 @@ public interface MorphiaConfig {
 
     /**
      * The date storage configuration Morphia should use for JSR 310 types.
-     * 
+     *
      * @return the date storage configuration value
      */
     @WithDefault("utc")
@@ -104,7 +137,7 @@ public interface MorphiaConfig {
 
     /**
      * The function to use when calculating the discriminator value for an entity
-     * 
+     *
      * @return the function to use
      * @see DiscriminatorFunction
      */
@@ -124,11 +157,11 @@ public interface MorphiaConfig {
     /**
      * Enable polymorphic queries. By default, Morphia will only query for the given type. However, in cases where subtypes are stored
      * in the same location, enabling this feature will instruct Morphia to fetch any subtypes that satisfy the query elements.
-     * 
+     *
      * @return true if polymorphic queries are enabled
      */
     @WithDefault("false")
-    boolean enablePolymorphicQueries();
+    Boolean enablePolymorphicQueries();
 
     /**
      * Instructs Morphia to ignore final fields.
@@ -136,23 +169,14 @@ public interface MorphiaConfig {
      * @return true if Morphia should ignore final fields
      */
     @WithDefault("false")
-    boolean ignoreFinals();
+    Boolean ignoreFinals();
 
     /**
      * A comma delimited list of packages that Morphia should map.
      *
-     * @return the list of packages, if any, to scan for entities to map
-     * @see #mapSubpackages()
+     * @return the list of packages to scan for entities
      */
-    List<String> mapPackages();
-
-    /**
-     * Instructs Morphia to scan subpackages when mapping by package
-     *
-     * @return true if Morphia should map classes from the subpackages as well
-     */
-    @WithDefault("false")
-    boolean mapSubpackages();
+    List<String> packages();
 
     /**
      * Determines how properties are discovered. The traditional value is by scanning for fields which involves a bit more reflective
@@ -182,7 +206,7 @@ public interface MorphiaConfig {
 
     /**
      * Specifies the query factory to use. Typically, there is no need to set this value.
-     * 
+     *
      * @return the query factory
      */
     @WithConverter(QueryFactoryConverter.class)
@@ -195,7 +219,7 @@ public interface MorphiaConfig {
      * @return true if Morphia should store empty values for lists/maps/sets/arrays
      */
     @WithDefault("false")
-    boolean storeEmpties();
+    Boolean storeEmpties();
 
     /**
      * Instructs Morphia on how to handle null property values.
@@ -203,7 +227,7 @@ public interface MorphiaConfig {
      * @return true if Morphia should store null values
      */
     @WithDefault("false")
-    boolean storeNulls();
+    Boolean storeNulls();
 
     /**
      * @return the UUID representation to use in the driver

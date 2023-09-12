@@ -73,7 +73,6 @@ import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.*;
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.METHODS;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
-import static dev.morphia.query.filters.Filters.type;
 import static java.lang.String.format;
 import static java.util.List.of;
 import static java.util.stream.Collectors.toList;
@@ -89,7 +88,7 @@ import static org.testng.Assert.fail;
 public class TestMapping extends TestBase {
     public TestMapping() {
         super(buildConfig()
-                .mapPackages(of(MappedInterface.class.getPackageName(),
+                .packages(of(MappedInterface.class.getPackageName(),
                         ContainsMapWithEmbeddedInterface.class.getPackageName())));
     }
 
@@ -97,10 +96,10 @@ public class TestMapping extends TestBase {
     public static Object[][] discovery() {
         return new Object[][] {
                 new Object[] { buildConfig()
-                        .mapPackages(of(ShadowedGrandParent.class.getPackageName()))
+                        .packages(of(ShadowedGrandParent.class.getPackageName()))
                         .propertyDiscovery(FIELDS) },
                 new Object[] { buildConfig()
-                        .mapPackages(of(ShadowedGrandParent.class.getPackageName()))
+                        .packages(of(ShadowedGrandParent.class.getPackageName()))
                         .propertyDiscovery(METHODS) }
         };
     }
@@ -188,14 +187,14 @@ public class TestMapping extends TestBase {
     @Test
     public void collectionNaming() {
         withConfig(buildConfig()
-                .mapPackages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
+                .packages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
                 .collectionNaming(NamingStrategy.lowerCase()), () -> {
                     assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).getCollectionName(),
                             "containsmapwithembeddedinterface");
                     assertEquals(getMapper().getEntityModel(ContainsIntegerList.class).getCollectionName(), "cil");
                 });
         withConfig(buildConfig()
-                .mapPackages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
+                .packages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
                 .collectionNaming(NamingStrategy.kebabCase()), () -> {
                     assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).getCollectionName(),
                             "contains-map-with-embedded-interface");
@@ -218,7 +217,7 @@ public class TestMapping extends TestBase {
     @Test(expectedExceptions = ConstraintViolationException.class)
     public final void multipleIds() {
         withConfig(buildConfig()
-                .mapPackages(of(TwoIds.class.getPackageName())),
+                .packages(of(TwoIds.class.getPackageName())),
                 () -> {
                     getMapper().getEntityModel(TwoIds.class);
                 });
@@ -236,7 +235,7 @@ public class TestMapping extends TestBase {
     @Test
     public void shouldOnlyMapEntitiesInTheGivenPackage() {
         withConfig(buildConfig()
-                .mapPackages(of(Versioned.class.getPackageName())), () -> {
+                .packages(of(Versioned.class.getPackageName())), () -> {
 
                     // then
                     List<EntityModel> list = getMapper().getMappedEntities();
@@ -286,21 +285,21 @@ public class TestMapping extends TestBase {
     @Test
     public void testBadMappings() {
         withConfig(buildConfig()
-                .mapPackages(of(UnannotatedEntity.class.getPackageName())), () -> {
+                .packages(of(UnannotatedEntity.class.getPackageName())), () -> {
                     assertThrows(NotMappableException.class, () -> {
                         getMapper().getEntityModel(UnannotatedEntity.class);
                         fail("Missing @Entity and @Embedded should have been caught");
                     });
                 });
         withConfig(buildConfig()
-                .mapPackages(of(ThirdPartyEmbedded.class.getPackageName())), () -> {
+                .packages(of(ThirdPartyEmbedded.class.getPackageName())), () -> {
                     assertThrows(NotMappableException.class, () -> {
                         getMapper().getEntityModel(ThirdPartyEmbedded.class);
                         fail("Missing @Entity and @Embedded should have been caught");
                     });
                 });
         withConfig(buildConfig()
-                .mapPackages(of(NonStaticInnerClass.class.getPackageName())), () -> {
+                .packages(of(NonStaticInnerClass.class.getPackageName())), () -> {
                     assertThrows(MappingException.class, () -> {
                         getMapper().getEntityModel(NonStaticInnerClass.class);
                         fail("Validation: Non-static inner class allowed");
@@ -874,8 +873,7 @@ public class TestMapping extends TestBase {
     public void testSubPackagesMapping() {
         // when
         withConfig(buildConfig()
-                .mapPackages(of(Versioned.class.getPackageName()))
-                .mapSubpackages(true), () -> {
+                .packages(of(Versioned.class.getPackageName() + ".*")), () -> {
 
                     // then
                     List<EntityModel> list = getMapper().getMappedEntities();

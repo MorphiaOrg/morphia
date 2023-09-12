@@ -18,7 +18,7 @@ import static org.testng.Assert.assertNull;
 public class BitSetCodecTest extends TestBase {
     public BitSetCodecTest() {
         super(buildConfig()
-                .mapPackages(of("dev.morphia.test.mapping.codec")));
+                .packages(of("dev.morphia.test.mapping.codec")));
     }
 
     @Entity(value = "ClassWithBitSet")

@@ -12,8 +12,8 @@ class KotlinTypeDataTest : TestBase() {
     @Test
     fun testSubtypes() {
         withConfig(
-            MorphiaTestSetup.buildConfig(DelegatedNull::class.java),
-            Runnable {
+            buildConfig(DelegatedNull::class.java),
+            {
                 try {
                     typeData(DelegatedNull::class, "status", ReadWriteProperty::class.java)
                 } catch (e: ReflectiveOperationException) {

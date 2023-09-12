@@ -6,9 +6,8 @@ import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 
 import dev.morphia.config.MorphiaConfig;
-import dev.morphia.config.MorphiaConfigHelper;
+import dev.morphia.config.MorphiaConfigBuilder;
 import dev.morphia.test.TestBase.ZDTCodecProvider;
-import dev.morphia.test.config.MutableMorphiaConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,7 +140,7 @@ public class MorphiaTestSetup {
         var oldContainer = morphiaContainer;
         try (var holder = initMongoDbContainer(true)) {
             mongoHolder = holder;
-            morphiaContainer = new MorphiaContainer(mongoHolder.getMongoClient(), MorphiaConfigHelper.loadConfig());
+            morphiaContainer = new MorphiaContainer(mongoHolder.getMongoClient(), MorphiaConfig.load());
             body.run();
         } finally {
             mongoHolder = oldHolder;
@@ -159,9 +158,9 @@ public class MorphiaTestSetup {
         }
     }
 
-    protected static MutableMorphiaConfig buildConfig(Class<?>... types) {
-        return new MutableMorphiaConfig(MorphiaConfigHelper.loadConfig())
-                .mapPackages(stream(types)
+    protected static MorphiaConfigBuilder buildConfig(Class<?>... types) {
+        return new MorphiaConfigBuilder(MorphiaConfig.load())
+                .packages(stream(types)
                         .map(Class::getPackageName)
                         .collect(Collectors.toList()))
                 .database(TEST_DB_NAME);

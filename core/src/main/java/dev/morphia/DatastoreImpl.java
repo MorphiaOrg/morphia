@@ -130,7 +130,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.database = database.withCodecRegistry(this.codecRegistry);
         operations = new CollectionOperations();
 
-        config.mapPackages().forEach(packageName -> {
+        config.packages().forEach(packageName -> {
             Sofia.logMappingPackage(packageName);
             mapper.map(packageName);
         });
@@ -485,7 +485,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         } else {
             update = ((MergingEncoder<T>) new MergingEncoder(query,
                     (MorphiaCodec) codecRegistry.get(entity.getClass())))
-                            .encode(entity);
+                    .encode(entity);
         }
         UpdateResult execute = update.execute(new UpdateOptions()
                 .writeConcern(options.writeConcern()));

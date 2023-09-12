@@ -77,7 +77,7 @@ public class TestDatastore extends TestBase {
     public TestDatastore() {
         super(buildConfig()
                 .applyCaps(true)
-                .mapPackages(of(LifecycleTestObj.class.getPackageName(),
+                .packages(of(LifecycleTestObj.class.getPackageName(),
                         FacebookUser.class.getPackageName())));
     }
 
