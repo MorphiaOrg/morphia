@@ -312,17 +312,6 @@ public class Mapper {
     }
 
     /**
-     * Sets the options this Mapper should use
-     *
-     * @param options the options to use
-     * @deprecated no longer used
-     */
-    @SuppressWarnings("unused")
-    @Deprecated(since = "2.0", forRemoval = true)
-    public void setOptions(MapperOptions options) {
-    }
-
-    /**
      * Gets the write concern for entity or returns the default write concern for this datastore
      *
      * @param clazz the class to use when looking up the WriteConcern
