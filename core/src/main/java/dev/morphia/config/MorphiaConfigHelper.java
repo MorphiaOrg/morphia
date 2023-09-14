@@ -50,7 +50,7 @@ public class MorphiaConfigHelper {
      */
     @MorphiaInternal
     public static String dumpConfigurationFile(MapperOptions options, String database, boolean showComplete) {
-        return dumpConfigurationFile(new MapperOptionsWrapper(options, database), showComplete);
+        return dumpConfigurationFile(options.toConfig().database(database), showComplete);
     }
 
     /**
@@ -75,7 +75,7 @@ public class MorphiaConfigHelper {
         entries = stream(MorphiaConfig.class.getDeclaredMethods())
                 .sorted(Comparator.comparing(Method::getName))
                 .filter(m -> !Modifier.isStatic(m.getModifiers()))
-                .filter(m -> m.getParameterCount() == 0)
+                .filter(m -> m.getParameterCount() == 0 && !m.getReturnType().equals(MorphiaConfig.class))
                 .map(m -> getEntry(prefix, m))
                 .collect(Collectors.toList());
 
@@ -145,6 +145,9 @@ public class MorphiaConfigHelper {
             return value.toString().toLowerCase();
         } else if (value instanceof List) {
             var list = (List<?>) value;
+            if (list.isEmpty()) {
+                return ".*";
+            }
             StringJoiner joiner = new StringJoiner(",");
             for (Object o : list) {
                 joiner.add(convertToString(o));

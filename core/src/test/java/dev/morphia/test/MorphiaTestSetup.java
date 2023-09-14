@@ -6,7 +6,6 @@ import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 
 import dev.morphia.config.MorphiaConfig;
-import dev.morphia.config.MorphiaConfigBuilder;
 import dev.morphia.test.TestBase.ZDTCodecProvider;
 
 import org.slf4j.Logger;
@@ -158,8 +157,8 @@ public class MorphiaTestSetup {
         }
     }
 
-    protected static MorphiaConfigBuilder buildConfig(Class<?>... types) {
-        return new MorphiaConfigBuilder(MorphiaConfig.load())
+    protected static MorphiaConfig buildConfig(Class<?>... types) {
+        return MorphiaConfig.load()
                 .packages(stream(types)
                         .map(Class::getPackageName)
                         .collect(Collectors.toList()))

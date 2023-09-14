@@ -4,7 +4,6 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
-import dev.morphia.config.MapperOptionsWrapper;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.MapperOptions;
 
@@ -61,7 +60,7 @@ public final class Morphia {
      */
     @Deprecated(forRemoval = true, since = "2.4.0")
     public static Datastore createDatastore(MongoClient mongoClient, String dbName, MapperOptions options) {
-        MapperOptionsWrapper config = new MapperOptionsWrapper(options, dbName);
+        MorphiaConfig config = options.toConfig().database(dbName);
         LOG.info("Morphia 3.0 will be moving to a configuration file based setup.  As such MapperOptions will be removed in the next " +
                 "major release.  To remove this message, create the file 'META-INF/morphia-config.properties' in your resources folder " +
                 "using the following text.  Entries with default values may be omitted but are included here for completeness.\n" +

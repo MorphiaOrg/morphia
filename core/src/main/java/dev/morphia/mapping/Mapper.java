@@ -541,8 +541,11 @@ public class Mapper {
                 .addClassLoader(loader)
                 .enableAllInfo();
         if (packageName.endsWith(".*")) {
-            classGraph.acceptPackages(packageName.substring(0, packageName.length() - 2));
-            //            classGraph.acceptPackages(packageName + ".*");
+            String base = packageName.substring(0, packageName.length() - 2);
+            if (!base.isEmpty()) {
+                classGraph.acceptPackages(base);
+            }
+            classGraph.acceptPackages(packageName);
         } else {
             classGraph.acceptPackagesNonRecursive(packageName);
         }
@@ -551,7 +554,7 @@ public class Mapper {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
                 try {
                     classes.add(Class.forName(classInfo.getName(), true, loader));
-                } catch (NoClassDefFoundError ignored) {
+                } catch (Throwable ignored) {
                 }
             }
         }

@@ -11,15 +11,31 @@ The configuration mechanism, based on https://microprofile.io/microprofile-confi
 variations which were awkward, at best, and usually downright impossible when using the traditional programmatic configuration.
 Reference documentation for the configuration file can be found in the link:++javadoc/dev/morphia/config/MorphiaConfig.html++[javadoc] but
 we'll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed.
-However, if the default values are acceptable that element can be safely omitted from your file. The only element *required* to be
-present is `morphia.database`.
+However, if the default values are acceptable that element can be safely omitted from your file.
 
+`Morphia.createDatastore()` can be called with link:++javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient,dev.morphia.config.MorphiaConfig)++[]
+and link:++javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient)++[without] an explicit `MorphiaConfig`
+argument.  When not explicitly given a `MorphiaConfig`, Morphia will attempt to load the configuration file at the location show above.
+Failing to find a configuration file, it will create a new configuration using the default values which can be found in the javadoc.
+These values are unlikely to be suitable long term but should be sufficient for newcomers looking to test things out a little before
+committing to adopt Morphia.
+
+=== Manually loading configurations
+In some cases, you might find the need for multiple configuration files.  Such scenarios include varying test
+environments/configurations, multiple dataset configurations, or externally supplied configurations.  In such cases, you can manually
+load those configurations using link:++javadoc/dev/morphia/config/MorphiaConfig.html#load(java.lang.String)++[MorphiaConfig.load()].  You
+can then pass this instance to `createDatastore()`.
+
+=== Dynamic configuration creation
+For many, the ability to dynamically create `MorphiaConfig` instances is not just a nicety but a hard requirement.  In this
 === Collection and property naming
 
 * `morphia.collection-naming`
 * `morphia.property-naming`
 
-Traditionally Morphia has used with the class's "simple name" for the collection name if you chose to not manually map the name of an entity's collection. Similarly, an entity's properties were named after the Java field name unless mapped otherwise with the `@Property` annotation. In 2.0, however, we define naming strategies. The naming strategies supported out of the box are:
+Traditionally Morphia has used the class's "simple name" for the collection name if you chose to not manually map the name of an
+entity's collection. Similarly, an entity's properties were named after the Java field name unless mapped otherwise with the `@Property`
+annotation. In 2.0, however, we defined some naming strategies. The naming strategies supported out of the box are:
 
 1. `identity` This is the legacy behavior Morphia has always used.
 2. `lower` This is simply the lower case form of the `identity` strategy.
@@ -56,8 +72,9 @@ The choices here are simpler:
 1. `className()`/`lowerClassName()`
 2. `simpleName()`/`lowerSimpleName()`
 
-Simple name is simply the fully qualified classname without the package name. These call all be accessed via their named methods on
-link:++javadoc/dev/morphia/mapping/DiscriminatorFunction.html++[DiscriminatorFunction] and just like the `NamingStrategy` cases, if the provided options are not sufficient, you can implement your own by subclassing `DiscriminatorFunction` and implementing your own function.
+Simple name is the fully qualified classname without the package name. These can all be accessed via their named methods on
+link:++javadoc/dev/morphia/mapping/DiscriminatorFunction.html++[DiscriminatorFunction] and just like the `NamingStrategy` cases, if the
+provided options are not sufficient, you can implement your own by subclassing `DiscriminatorFunction` and implementing your own function.
 
 === User-defined Codecs
 
@@ -96,7 +113,9 @@ the modern configuration and is the recommended way to configure Morphia. Howeve
 have more data than can be easily updated within any reasonable limits. For those, cases using the legacy configuration is rather
 straightforward.
 
-Using the legacy configuration is a matter of defining a few entries in your configuration file.  An example of that is listed below.
+Using the legacy configuration is a matter of defining a few entries in your configuration file.  An example of that is listed below.  If
+you already have a `MorphiaConfig` in hand but would like to update it to reflect the legacy style configuration, you can call `.legacy()`
+on that reference and use the resulting `MorphiaConfig` instance.
 
 === Sample config files
 
@@ -114,6 +133,12 @@ include::example$complete-morphia-config.properties[]
 include::example$minimal-morphia-config.properties[]
 ----
 
+[NOTE]
+====
+The minimum config is, indeed, an empty (or even nonexistant) file as there are defaults for each value.  This is intended to "pave the
+on ramp" for those new to Morphia.  It is expected that some of those values, notably the database and packages fields, will eventually
+be updated with more suitable values.
+====
 ---
 
 .Legacy config file

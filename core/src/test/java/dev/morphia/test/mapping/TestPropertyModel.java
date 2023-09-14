@@ -110,7 +110,7 @@ public class TestPropertyModel extends TestBase {
         return new ArrayList<>(Arrays.asList(values));
     }
 
-    @Entity
+    @Entity(discriminator = "propTestEntity")
     private static class TestEntity {
         @Id
         private ObjectId id;

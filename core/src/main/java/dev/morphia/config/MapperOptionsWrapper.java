@@ -26,7 +26,11 @@ import static java.util.Collections.emptyList;
 public class MapperOptionsWrapper implements MorphiaConfig {
 
     private final MapperOptions options;
-    private final String database;
+    private String database;
+
+    public MapperOptionsWrapper(MapperOptions options) {
+        this.options = options;
+    }
 
     public MapperOptionsWrapper(MapperOptions options, String database) {
         this.options = options;

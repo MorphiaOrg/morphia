@@ -10,6 +10,8 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.config.MapperOptionsWrapper;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.LegacyQueryFactory;
@@ -23,7 +25,6 @@ import org.bson.codecs.configuration.CodecProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.config.MorphiaConfigHelper.*;
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
 import static org.bson.UuidRepresentation.STANDARD;
 
@@ -269,6 +270,10 @@ public class MapperOptions {
         return propertyDiscovery;
     }
 
+    public MorphiaConfig toConfig() {
+        return new MapperOptionsWrapper(this);
+    }
+
     /**
      * @deprecated 3.0 will evaluate both field and getter/setters for annotation so this setting becomes vestigial
      */
@@ -276,17 +281,6 @@ public class MapperOptions {
     public enum PropertyDiscovery {
         FIELDS,
         METHODS
-    }
-
-    /**
-     * Converts this MapperOptions instance in to the format needed for a configuration file
-     *
-     * @param database     the database name to use
-     * @param showComplete true if all the entries should be shown. If false, only those settings with nondefault values will be listed
-     * @return the config file contents
-     */
-    public String toConfigFormat(String database, boolean showComplete) {
-        return dumpConfigurationFile(this, database, showComplete);
     }
 
     /**

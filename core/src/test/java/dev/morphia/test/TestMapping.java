@@ -86,12 +86,6 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unchecked", "unused" })
 public class TestMapping extends TestBase {
-    public TestMapping() {
-        super(buildConfig()
-                .packages(of(MappedInterface.class.getPackageName(),
-                        ContainsMapWithEmbeddedInterface.class.getPackageName())));
-    }
-
     @DataProvider
     public static Object[][] discovery() {
         return new Object[][] {
