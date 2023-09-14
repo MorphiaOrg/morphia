@@ -281,9 +281,14 @@ can then pass this instance to <code>createDatastore()</code>.</p>
 <div class="sect2">
 <h3 id="_dynamic_configuration_creation"><a class="anchor" href="#_dynamic_configuration_creation"></a>Dynamic configuration creation</h3>
 <div class="paragraph">
-<p>For many, the ability to dynamically create <code>MorphiaConfig</code> instances is not just a nicety but a hard requirement.  In this
-=== Collection and property naming</p>
+<p>For many, the ability to dynamically create <code>MorphiaConfig</code> instances is not just a nicety but a hard requirement.  In this case, there
+are methods on <code>MorphiaConfig</code> to return a new version of the configuration with the updated value.  <code>MorphiaConfig</code> is immutable,
+however, so be sure to use the returned reference and not the original.  It should also be noted that once a <code>Datastore</code> is created using
+a <code>MorphiaConfig</code>, that configuration is fixed and can not be changed.  A new <code>Datastore</code> would need to be created with the updated version.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_collection_and_property_naming"><a class="anchor" href="#_collection_and_property_naming"></a>Collection and property naming</h3>
 <div class="ulist">
 <ul>
 <li>
