@@ -27,7 +27,11 @@ load those configurations using link:++javadoc/dev/morphia/config/MorphiaConfig.
 can then pass this instance to `createDatastore()`.
 
 === Dynamic configuration creation
-For many, the ability to dynamically create `MorphiaConfig` instances is not just a nicety but a hard requirement.  In this
+For many, the ability to dynamically create `MorphiaConfig` instances is not just a nicety but a hard requirement.  In this case, there
+are methods on `MorphiaConfig` to return a new version of the configuration with the updated value.  `MorphiaConfig` is immutable,
+however, so be sure to use the returned reference and not the original.  It should also be noted that once a `Datastore` is created using
+a `MorphiaConfig`, that configuration is fixed and can not be changed.  A new `Datastore` would need to be created with the updated version.
+
 === Collection and property naming
 
 * `morphia.collection-naming`
