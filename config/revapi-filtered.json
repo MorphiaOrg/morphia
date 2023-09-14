@@ -666,6 +666,12 @@
           "code": "java.annotation.added",
           "annotation": "@com.mongodb.lang.Nullable",
           "justification": "just documenting that null values are OK."
+        },
+        {
+          "ignore": true,
+          "code": "java.method.removed",
+          "old": "method java.lang.String dev.morphia.mapping.MapperOptions::toConfigFormat(java.lang.String, boolean)",
+          "justification": "experimental method"
         }
       ]
     }
