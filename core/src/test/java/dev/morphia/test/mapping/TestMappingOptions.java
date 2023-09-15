@@ -195,8 +195,8 @@ public class TestMappingOptions extends TestBase {
     @Test
     public void discriminator() {
         Datastore datastore = createDatastore(getMongoClient(), MorphiaConfig.load()
-                                                                             .database(getDatabase().getName())
-                                                                             .discriminator(lowerSimpleName()));
+                .database(getDatabase().getName())
+                .discriminator(lowerSimpleName()));
         datastore.getMapper().map(EntityDiscriminator.class, EmbeddedDiscriminator.class, HasMap.class);
 
         EntityModel entityModel = datastore.getMapper().getEntityModel(EntityDiscriminator.class);

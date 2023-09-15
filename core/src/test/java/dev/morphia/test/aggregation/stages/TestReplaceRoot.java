@@ -4,8 +4,8 @@ import java.util.List;
 
 import dev.morphia.query.Type;
 import dev.morphia.test.aggregation.AggregationTest;
-
 import dev.morphia.test.models.Author;
+
 import org.bson.Document;
 import org.testng.annotations.Test;
 

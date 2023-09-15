@@ -1,14 +1,8 @@
 package dev.morphia;
 
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 
 import dev.morphia.config.MorphiaConfig;
-import dev.morphia.mapping.MapperOptions;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static dev.morphia.config.MorphiaConfigHelper.*;
 

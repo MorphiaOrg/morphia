@@ -5,8 +5,8 @@ import com.mongodb.client.MongoCursor;
 
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Book;
-
 import dev.morphia.test.models.Author;
+
 import org.bson.Document;
 import org.testng.Assert;
 import org.testng.annotations.Test;

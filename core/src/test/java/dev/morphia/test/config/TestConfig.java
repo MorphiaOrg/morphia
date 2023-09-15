@@ -61,7 +61,7 @@ public class TestConfig extends TestBase {
 
         try (var writer = new FileWriter(new File(docsTarget, "legacy-morphia-config.properties"))) {
             var configContents = MorphiaConfigHelper.dumpConfigurationFile(new ManualMorphiaConfig()
-                                                                               .legacy(), false);
+                    .legacy(), false);
             writer.write(configContents);
             writer.flush();
         }
