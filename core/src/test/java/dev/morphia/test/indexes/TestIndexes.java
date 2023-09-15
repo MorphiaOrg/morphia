@@ -21,7 +21,7 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
-import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
+import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.indexes.errors.MultipleTextIndexes;

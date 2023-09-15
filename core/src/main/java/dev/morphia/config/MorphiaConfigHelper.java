@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 import dev.morphia.annotations.PossibleValues;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.NamingStrategy;
 
 import org.eclipse.microprofile.config.spi.Converter;
@@ -37,21 +36,6 @@ public class MorphiaConfigHelper {
     private final MorphiaConfig config;
     private final boolean showComplete;
     private final List<Entry> entries;
-
-    /**
-     * Logs the configuration file form of the MapperOptions without default values listed.
-     *
-     * @param options  the options to convert
-     * @param database the database name to configure
-     * @return
-     * @since 2.4
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public static String dumpConfigurationFile(MapperOptions options, String database, boolean showComplete) {
-        return dumpConfigurationFile(options.toConfig().database(database), showComplete);
-    }
 
     /**
      * @since 2.4

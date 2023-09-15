@@ -69,8 +69,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
-import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.*;
-import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.METHODS;
+import static dev.morphia.mapping.PropertyDiscovery.*;
+import static dev.morphia.mapping.PropertyDiscovery.METHODS;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
 import static java.lang.String.format;

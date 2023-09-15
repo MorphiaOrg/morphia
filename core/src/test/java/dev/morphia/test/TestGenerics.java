@@ -6,7 +6,7 @@ import java.util.UUID;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
+import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;

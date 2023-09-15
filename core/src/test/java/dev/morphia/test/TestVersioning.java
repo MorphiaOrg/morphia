@@ -19,7 +19,7 @@ import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Version;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
+import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.validation.ConstraintViolationException;

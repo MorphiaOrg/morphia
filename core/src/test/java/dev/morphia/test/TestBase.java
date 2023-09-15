@@ -22,7 +22,6 @@ import com.mongodb.lang.NonNull;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.DefaultQueryFactory;
@@ -117,14 +116,6 @@ public abstract class TestBase extends MorphiaTestSetup {
             e.printStackTrace();
         }
         assumeTrue(file.exists(), "Failed to process media files");
-    }
-
-    @DataProvider(name = "mapperOptions")
-    public Object[][] mapperOptions() {
-        return new Object[][] {
-                new Object[] { MapperOptions.DEFAULT },
-                new Object[] { MapperOptions.legacy().build() }
-        };
     }
 
     @DataProvider(name = "queryFactories")

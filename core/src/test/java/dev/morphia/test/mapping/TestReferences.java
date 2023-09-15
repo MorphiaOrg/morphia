@@ -27,7 +27,7 @@ import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.config.MorphiaConfig;
-import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
+import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;

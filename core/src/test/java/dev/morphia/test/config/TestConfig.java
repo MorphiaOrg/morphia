@@ -10,7 +10,6 @@ import dev.morphia.Morphia;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.config.MorphiaConfigHelper;
-import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.test.TestBase;
 

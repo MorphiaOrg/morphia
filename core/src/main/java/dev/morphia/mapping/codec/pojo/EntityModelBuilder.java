@@ -31,7 +31,7 @@ import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 import dev.morphia.sofia.Sofia;
 
-import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
+import static dev.morphia.mapping.PropertyDiscovery.FIELDS;
 import static java.util.List.of;
 
 /**

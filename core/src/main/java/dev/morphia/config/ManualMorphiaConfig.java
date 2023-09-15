@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
-import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
+import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.QueryFactory;
@@ -16,7 +16,7 @@ import org.bson.codecs.configuration.CodecProvider;
 
 import static dev.morphia.mapping.DateStorage.UTC;
 import static dev.morphia.mapping.DiscriminatorFunction.simpleName;
-import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.FIELDS;
+import static dev.morphia.mapping.PropertyDiscovery.FIELDS;
 import static dev.morphia.mapping.NamingStrategy.camelCase;
 import static dev.morphia.mapping.NamingStrategy.identity;
 import static java.lang.Boolean.FALSE;
