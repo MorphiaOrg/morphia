@@ -14,33 +14,26 @@ Using this instance, you can configure various aspects of how Morphia maps your 
 [source,java]
 ----
 final Datastore datastore = Morphia.createDatastore(MongoClients.create());
-// tell Morphia where to find your classes
-// can be called multiple times with different packages or classes
-datastore.getMapper().mapPackage("dev.morphia.example");
-
-datastore.ensureIndexes();
 ----
 
 This snippet creates the Morphia instance we'll be using in our simple application.
-The `Morphia` class is a factory for `Datastore` instances, if you will. For a more complete discussion on configuring Morphia, please
-see the xref:configuration.adoc for more details.
+The `Morphia` class is a factory for `Datastore` instances, if you will.  Given this minimal setup, Morphia will use a database named
+`morphia` and will scan your entire classpath for entities to map.  Obviously this full scan is less than ideal long term but serves
+to get you up and running quickly.  For a more complete discussion on configuring Morphia, please see the xref:configuration.adoc for
+more details.
 
-This will create a `Datastore` that connects to the configured database on the local machine using the default port of `27017`.
-
-With the second line we're telling Morphia to look at every class in the package we've given and find every class annotated with link:javadoc/dev/morphia/annotations/Entity.html[@Entity] (which we'll cover shortly) or link:javadoc/dev/morphia/annotations/Embedded.html[@Embedded] and register the mapping metadata we've put on our classes.
-This method can be called multiple times to cover all your entities wherever they might live in your application.
+This default setup will connect to the mongod running on the local machine using the default port of `27017`.  When Morphia scans looking
+for entities, it will for classes annotated with link:javadoc/dev/morphia/annotations/Entity.html[@Entity] (which we'll cover shortly) and
+register the mapping metadata we've put on our classes.
 
 == Mapping Options
 
-You can configure various mapping options via the `MorphiaConfig` class.
-There are a number of items to configure here but for now we 'll just cover two.
-For a discussion of the remainder, please see the xref:configuration.adoc[configuration guide].
-The two most common elements to configure are probably `storeEmpties` and `storeNulls`.
-By default Morphia will not store empty `List` or
-`Map` values nor will it store null values in to MongoDB.
-If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
-There are a few other options to configure on
-`MorphiaConfig`, but we'll not be covering them here.
+You can configure various mapping options via the `MorphiaConfig` class. There are a number of items to configure here but for now we'll
+just cover two. For a discussion of the remainder, please see the xref:configuration.adoc[configuration guide]. Two common elements to
+configure are probably `storeEmpties` and `storeNulls`. By default Morphia will not store empty `List` or `Map` values nor will it store
+null values in to MongoDB. If your application needs empty or null values to be present for whatever reason, setting these values to
+true will tell Morphia to save them for you. There are a few other options to configure on `MorphiaConfig`, but we'll not be covering
+them here. See the xref:configuration.adoc[configuration guide] for more details.
 
 == Mapping Classes
 
