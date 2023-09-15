@@ -51,10 +51,10 @@ public class TestEntityModel extends TestBase {
     }
 
     @Entity
-    interface TestEntity {
+    interface TestEntityInterface {
     }
 
-    private static class RootParent implements TestEntity {
+    private static class RootParent implements TestEntityInterface {
         @Id
         ObjectId id = null;
     }

@@ -4,7 +4,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.MapperOptions;
 
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -17,7 +16,7 @@ import static java.time.Instant.ofEpochMilli;
 import static java.time.ZoneId.of;
 
 /**
- * Encodes a ZonedDateTime to/from the database using the zone defined in {@link MapperOptions#getDateStorage()}
+ * Encodes a ZonedDateTime to/from the database.
  *
  * @morphia.internal
  * @since 2.3

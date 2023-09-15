@@ -10,8 +10,7 @@ import java.util.Map;
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.mapping.DiscriminatorFunction;
-import dev.morphia.mapping.MapperOptions;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -22,6 +21,7 @@ import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import static dev.morphia.Morphia.*;
+import static dev.morphia.mapping.DiscriminatorFunction.lowerSimpleName;
 import static dev.morphia.mapping.NamingStrategy.lowerCase;
 import static dev.morphia.query.filters.Filters.ne;
 import static org.testng.Assert.assertEquals;
@@ -30,7 +30,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "ConstantConditions", "unused" })
-public class TestMapperOptions extends TestBase {
+public class TestMappingOptions extends TestBase {
 
     @Test
     public void emptyListStoredWithOptions() {
@@ -194,10 +194,9 @@ public class TestMapperOptions extends TestBase {
 
     @Test
     public void discriminator() {
-        Datastore datastore = createDatastore(getMongoClient(), getDatabase().getName(),
-                MapperOptions.builder()
-                        .discriminator(DiscriminatorFunction.lowerSimpleName())
-                        .build());
+        Datastore datastore = createDatastore(getMongoClient(), MorphiaConfig.load()
+                                                                             .database(getDatabase().getName())
+                                                                             .discriminator(lowerSimpleName()));
         datastore.getMapper().map(EntityDiscriminator.class, EmbeddedDiscriminator.class, HasMap.class);
 
         EntityModel entityModel = datastore.getMapper().getEntityModel(EntityDiscriminator.class);

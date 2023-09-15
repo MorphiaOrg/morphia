@@ -5,8 +5,8 @@ import java.util.List;
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.query.Type;
 import dev.morphia.test.aggregation.AggregationTest;
-import dev.morphia.test.aggregation.model.Author;
 
+import dev.morphia.test.models.Author;
 import org.bson.Document;
 import org.testng.annotations.Test;
 

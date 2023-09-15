@@ -26,6 +26,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
@@ -403,8 +404,8 @@ public class TestReferences extends ProxyTestBase {
 
     @Test
     public void testMultipleDatabasesSingleThreaded() {
-        final Datastore ds1 = createDatastore(getMongoClient(), "db1");
-        final Datastore ds2 = createDatastore(getMongoClient(), "db2");
+        final Datastore ds1 = createDatastore(getMongoClient(), MorphiaConfig.load().database("db1"));
+        final Datastore ds2 = createDatastore(getMongoClient(), MorphiaConfig.load().database("db2"));
 
         final FacebookUser db1Friend = new FacebookUser(3, "DB1 FaceBook Friend");
         ds1.save(db1Friend);

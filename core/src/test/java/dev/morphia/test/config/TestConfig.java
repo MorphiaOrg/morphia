@@ -44,10 +44,6 @@ public class TestConfig extends TestBase {
     public void testConfigWithMapperOptions() throws IOException {
         var root = findProjectRoot();
 
-        MorphiaConfig config = MorphiaConfig.load();
-        MorphiaConfig edited = MorphiaConfig.load()
-                .enablePolymorphicQueries(true);
-
         var docsTarget = new File(root, "docs/modules/ROOT/examples");
 
         try (var writer = new FileWriter(new File(docsTarget, "complete-morphia-config.properties"))) {

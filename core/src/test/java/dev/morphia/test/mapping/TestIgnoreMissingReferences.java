@@ -42,7 +42,7 @@ public class TestIgnoreMissingReferences extends TestBase {
 
     }
 
-    @Entity
+    @Entity(discriminator = "missingReferences")
     private static class Container {
         @Id
         private ObjectId id;
