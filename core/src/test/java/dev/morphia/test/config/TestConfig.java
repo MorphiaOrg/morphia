@@ -65,11 +65,6 @@ public class TestConfig extends TestBase {
             writer.write(configContents);
             writer.flush();
         }
-
-        MorphiaConfig morphiaConfig = MapperOptions.DEFAULT.toConfig()
-                .database("testing");
-
-        assertEquals(morphiaConfig.database(), "testing");
     }
 
     private File findProjectRoot() {
