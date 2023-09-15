@@ -256,25 +256,20 @@ Using this instance, you can configure various aspects of how Morphia maps your 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">final Datastore datastore = Morphia.createDatastore(MongoClients.create());
-// tell Morphia where to find your classes
-// can be called multiple times with different packages or classes
-datastore.getMapper().mapPackage("dev.morphia.example");
-
-datastore.ensureIndexes();</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">final Datastore datastore = Morphia.createDatastore(MongoClients.create());</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>This snippet creates the Morphia instance we&#8217;ll be using in our simple application.
-The <code>Morphia</code> class is a factory for <code>Datastore</code> instances, if you will. For a more complete discussion on configuring Morphia, please
-see the xref:configuration.adoc for more details.</p>
+The <code>Morphia</code> class is a factory for <code>Datastore</code> instances, if you will.  Given this minimal setup, Morphia will use a database named
+<code>morphia</code> and will scan your entire classpath for entities to map.  Obviously this full scan is less than ideal long term but serves
+to get you up and running quickly.  For a more complete discussion on configuring Morphia, please see the xref:configuration.adoc for
+more details.</p>
 </div>
 <div class="paragraph">
-<p>This will create a <code>Datastore</code> that connects to the configured database on the local machine using the default port of <code>27017</code>.</p>
-</div>
-<div class="paragraph">
-<p>With the second line we&#8217;re telling Morphia to look at every class in the package we&#8217;ve given and find every class annotated with <a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> (which we&#8217;ll cover shortly) or <a href="javadoc/dev/morphia/annotations/Embedded.html">@Embedded</a> and register the mapping metadata we&#8217;ve put on our classes.
-This method can be called multiple times to cover all your entities wherever they might live in your application.</p>
+<p>This default setup will connect to the mongod running on the local machine using the default port of <code>27017</code>.  When Morphia scans looking
+for entities, it will for classes annotated with <a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> (which we&#8217;ll cover shortly) and
+register the mapping metadata we&#8217;ve put on our classes.</p>
 </div>
 </div>
 </div>
@@ -282,15 +277,12 @@ This method can be called multiple times to cover all your entities wherever the
 <h2 id="_mapping_options"><a class="anchor" href="#_mapping_options"></a>Mapping Options</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can configure various mapping options via the <code>MorphiaConfig</code> class.
-There are a number of items to configure here but for now we 'll just cover two.
-For a discussion of the remainder, please see the <a href="configuration.html" class="xref page">configuration guide</a>.
-The two most common elements to configure are probably <code>storeEmpties</code> and <code>storeNulls</code>.
-By default Morphia will not store empty <code>List</code> or
-<code>Map</code> values nor will it store null values in to MongoDB.
-If your application needs empty or null values to be present for whatever reason, setting these values to true will tell Morphia to save them for you.
-There are a few other options to configure on
-<code>MorphiaConfig</code>, but we&#8217;ll not be covering them here.</p>
+<p>You can configure various mapping options via the <code>MorphiaConfig</code> class. There are a number of items to configure here but for now we&#8217;ll
+just cover two. For a discussion of the remainder, please see the <a href="configuration.html" class="xref page">configuration guide</a>. Two common elements to
+configure are probably <code>storeEmpties</code> and <code>storeNulls</code>. By default Morphia will not store empty <code>List</code> or <code>Map</code> values nor will it store
+null values in to MongoDB. If your application needs empty or null values to be present for whatever reason, setting these values to
+true will tell Morphia to save them for you. There are a few other options to configure on <code>MorphiaConfig</code>, but we&#8217;ll not be covering
+them here. See the <a href="configuration.html" class="xref page">configuration guide</a> for more details.</p>
 </div>
 </div>
 </div>
