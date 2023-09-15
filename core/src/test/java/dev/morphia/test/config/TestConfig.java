@@ -7,6 +7,7 @@ import java.util.List;
 
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
+import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.config.MorphiaConfigHelper;
 import dev.morphia.mapping.MapperOptions;
@@ -41,25 +42,26 @@ public class TestConfig extends TestBase {
     }
 
     @Test
-    public void testConfigWithMapperOptions() throws IOException {
+    public void generateExampleConfigFiles() throws IOException {
         var root = findProjectRoot();
 
         var docsTarget = new File(root, "docs/modules/ROOT/examples");
 
         try (var writer = new FileWriter(new File(docsTarget, "complete-morphia-config.properties"))) {
-            var configContents = MorphiaConfigHelper.dumpConfigurationFile(MapperOptions.DEFAULT, "morphia", true);
+            var configContents = MorphiaConfigHelper.dumpConfigurationFile(new ManualMorphiaConfig(), true);
             writer.write(configContents);
             writer.flush();
         }
 
         try (var writer = new FileWriter(new File(docsTarget, "minimal-morphia-config.properties"))) {
-            var configContents = MorphiaConfigHelper.dumpConfigurationFile(MapperOptions.DEFAULT, "morphia", false);
+            var configContents = MorphiaConfigHelper.dumpConfigurationFile(new ManualMorphiaConfig(), false);
             writer.write(configContents);
             writer.flush();
         }
 
         try (var writer = new FileWriter(new File(docsTarget, "legacy-morphia-config.properties"))) {
-            var configContents = MorphiaConfigHelper.dumpConfigurationFile(MapperOptions.legacy().build(), "morphia", false);
+            var configContents = MorphiaConfigHelper.dumpConfigurationFile(new ManualMorphiaConfig()
+                                                                               .legacy(), false);
             writer.write(configContents);
             writer.flush();
         }

@@ -26,7 +26,7 @@ import static java.lang.Boolean.FALSE;
  * @hidden
  */
 @SuppressWarnings("removal")
-class ManualMorphiaConfig implements MorphiaConfig {
+public class ManualMorphiaConfig implements MorphiaConfig {
     Boolean applyCaps;
     Boolean applyDocumentValidations;
     Boolean applyIndexes;
@@ -49,7 +49,7 @@ class ManualMorphiaConfig implements MorphiaConfig {
     /**
      * @hidden
      */
-    ManualMorphiaConfig() {
+    public ManualMorphiaConfig() {
     }
 
     /**
