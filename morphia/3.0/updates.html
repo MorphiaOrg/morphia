@@ -398,7 +398,7 @@ Using <code>merge()</code>, a specific set of <code>$set</code> updates are issu
 <div class="paragraph">
 <p>This is useful but limited.
 What happens to any null fields and empty Lists?
-Using <code>MapperOptions</code>, Morphia can be configured to not persist those fields such that they never end up in the database.
+Using <code>MorphiaConfig</code>, Morphia can be configured to not persist those fields such that they never end up in the database.
 In the above scenario, however, Morphia is only issuing a <code>$set</code> for the fields that should be persisted which leaves potentially outdated information in the database. (e.g., say a process removes the final item from a List in memory.  <code>merge()</code> would actually <strong>leave</strong> that last item in the database because an update would not be issued for that empty List.) In 2.2, a new value is added to the optional <a href="javadoc/dev/morphia/InsertOneOptions.html">InsertOneOptions</a> to account for this.</p>
 </div>
 <div class="paragraph">
