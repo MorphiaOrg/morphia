@@ -79,24 +79,8 @@
                     <configuration>
                         <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
                         <analysisConfigurationFiles>
-                            <analysisConfigurationFile>${maven.multiModuleProjectDirectory}/config/revapi-filtered.json</analysisConfigurationFile>
+                            <analysisConfigurationFile>${maven.multiModuleProjectDirectory}/config/revapi.json</analysisConfigurationFile>
                         </analysisConfigurationFiles>
-                        <analysisConfiguration>
-                            <revapi.versions>
-                                <enabled>true</enabled>
-                                <versionIncreaseAllows>
-                                    <major>
-                                        <severity>BREAKING</severity>
-                                    </major>
-                                    <minor>
-                                        <severity>NON_BREAKING</severity>
-                                    </minor>
-                                    <patch>
-                                        <severity>EQUIVALENT</severity>
-                                    </patch>
-                                </versionIncreaseAllows>
-                            </revapi.versions>
-                        </analysisConfiguration>
                     </configuration>
                 </plugin>
             </plugins>

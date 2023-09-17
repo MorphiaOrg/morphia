@@ -67,6 +67,5 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 Changes-*.md
-/config/revapi.json
 github.properties
 test-output/

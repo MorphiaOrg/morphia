@@ -49,6 +49,25 @@
     }
   },
   {
+    "extension": "revapi.versions",
+    "configuration": {
+      "enabled": true,
+      "semantic0": true,
+      "strictSemver": true,
+      "versionIncreaseAllows": {
+        "major": {
+          "severity": "BREAKING"
+        },
+        "minor": {
+          "severity": "NON_BREAKING"
+        },
+        "patch": {
+          "severity": "EQUIVALENT"
+        }
+      }
+    }
+  },
+  {
     "extension": "revapi.differences",
     "configuration": {
       "ignore": true,
