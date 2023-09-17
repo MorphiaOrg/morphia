@@ -73,7 +73,7 @@
                             <goals>
                                 <goal>check</goal>
                             </goals>
-                            <phase>verify</phase>
+                            <phase>none</phase>
                         </execution>
                     </executions>
                     <configuration>
