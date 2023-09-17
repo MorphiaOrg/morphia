@@ -211,17 +211,22 @@ public class Mapper {
      * @return the EntityModel for the object given
      */
     public EntityModel getEntityModel(Class type) {
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        EntityModel model = mappedEntities.get(actual);
+        try {
+            final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+            EntityModel model = mappedEntities.get(actual);
 
-        if (model == null) {
-            if (!isMappable(actual)) {
-                throw new NotMappableException(type);
+            if (model == null) {
+                if (!isMappable(actual)) {
+                    throw new NotMappableException(type);
+                }
+                model = register(createEntityModel(type));
             }
-            model = register(createEntityModel(type));
-        }
 
-        return model;
+            return model;
+        } catch (NullPointerException e) {
+            System.out.println("********************* type = " + type);
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     /**
