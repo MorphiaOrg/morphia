@@ -412,6 +412,7 @@ public class Mapper {
     @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void map(String packageName) {
         try {
+            System.out.println("************** packageName = " + packageName);
             getClasses(contextClassLoader, packageName)
                     .forEach(type -> {
                         try {
