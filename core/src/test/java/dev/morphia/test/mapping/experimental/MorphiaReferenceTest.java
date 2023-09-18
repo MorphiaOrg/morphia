@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
+import static dev.morphia.mapping.experimental.MorphiaReference.wrap;
 import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -44,7 +45,7 @@ public class MorphiaReferenceTest extends TestBase {
         List<Book> list = addListOfBooks(author);
         getDs().save(author);
 
-        final Author loaded = getDs().find(Author.class).filter(eq("_id", author.getId())).first();
+        final Author loaded = getDs().find(Author.class).filter(eq("_id", author.id)).first();
         validateList(list, loaded);
     }
 
@@ -56,7 +57,7 @@ public class MorphiaReferenceTest extends TestBase {
         Map<String, Book> books = addBookMap(author);
         getDs().save(author);
 
-        final Author loaded = getDs().find(Author.class).filter(eq("_id", author.getId())).first();
+        final Author loaded = getDs().find(Author.class).filter(eq("_id", author.id)).first();
         validateMap(books, loaded);
     }
 
@@ -68,9 +69,9 @@ public class MorphiaReferenceTest extends TestBase {
         Set<Book> set = addSetOfBooks(author);
         getDs().save(author);
 
-        final Author loaded = getDs().find(Author.class).filter(eq("_id", author.getId())).first();
+        final Author loaded = getDs().find(Author.class).filter(eq("_id", author.id)).first();
         Assert.assertFalse(loaded.set.isResolved());
-        final Set<Book> set1 = loaded.getSet();
+        final Set<Book> set1 = loaded.set.get();
 
         assertEquals(set1.size(), set.size());
 
@@ -122,14 +123,14 @@ public class MorphiaReferenceTest extends TestBase {
         assertEquals(author, foundBook.author.get());
 
         assertTrue(loaded.set.isResolved());
-        final Set<Book> set1 = loaded.getSet();
+        final Set<Book> set1 = loaded.set.get();
         assertEquals(set.size(), set1.size());
         for (Book book1 : set) {
             assertTrue(set1.contains(book1), "Looking for " + book1 + " in " + set1);
         }
 
         assertTrue(loaded.list.isResolved());
-        assertListEquals(list, loaded.getList());
+        assertListEquals(list, loaded.list.get());
         for (Book book1 : list) {
             assertTrue(list.contains(book1), "Looking for " + book1 + " in " + list);
         }
@@ -139,7 +140,7 @@ public class MorphiaReferenceTest extends TestBase {
 
     protected Book addBook(Author author) {
         final Book book = new Book("Pride and Prejudice");
-        book.setAuthor(author);
+        book.author = wrap(getDs(), author);
         return getDs().save(book);
     }
 
@@ -151,11 +152,11 @@ public class MorphiaReferenceTest extends TestBase {
                 new Book("Mansfield Park"),
                 new Book("Emma"),
                 new Book("Northanger Abbey") }) {
-            book.setAuthor(author);
+            book.author = wrap(getDs(), author);
             getDs().save(book);
             books.put(book.name, book);
         }
-        author.setMap(books);
+        author.map = wrap(getDs(), books);
         return books;
     }
 
@@ -167,10 +168,10 @@ public class MorphiaReferenceTest extends TestBase {
         list.add(new Book("Emma"));
         list.add(new Book("Northanger Abbey"));
         for (Book book : list) {
-            book.setAuthor(author);
+            book.author = wrap(getDs(), author);
             getDs().save(book);
         }
-        author.setList(list);
+        author.list = wrap(getDs(), list);
         return list;
     }
 
@@ -182,28 +183,28 @@ public class MorphiaReferenceTest extends TestBase {
         set.add(new Book("Emma"));
         set.add(new Book("Northanger Abbey"));
         for (Book book : set) {
-            book.setAuthor(author);
+            book.author = wrap(getDs(), author);
             getDs().save(book);
         }
-        author.setSet(set);
+        author.set = wrap(getDs(), set);
         return set;
     }
 
     protected void validateList(List<Book> list, Author loaded) {
         Assert.assertFalse(loaded.list.isResolved());
-        assertEquals(list, loaded.getList());
+        assertEquals(list, loaded.list.get());
         assertTrue(loaded.list.isResolved());
     }
 
     protected void validateMap(Map<String, Book> books, Author loaded) {
         Assert.assertFalse(loaded.map.isResolved());
-        assertEquals(books, loaded.getMap());
+        assertEquals(books, loaded.map.get());
         assertTrue(loaded.map.isResolved());
     }
 
     protected void validateSet(Set<Book> set, Author loaded) {
         assertTrue(loaded.set.isResolved());
-        final Set<Book> set1 = loaded.getSet();
+        final Set<Book> set1 = loaded.set.get();
 
         assertEquals(set.size(), set1.size());
 
@@ -221,55 +222,15 @@ public class MorphiaReferenceTest extends TestBase {
 
         private String name;
 
-        private MorphiaReference<List<Book>> list;
-        private MorphiaReference<Set<Book>> set;
-        private MorphiaReference<Map<String, Book>> map;
+        MorphiaReference<List<Book>> list;
+        MorphiaReference<Set<Book>> set;
+        MorphiaReference<Map<String, Book>> map;
 
         public Author() {
         }
 
         public Author(String name) {
             this.name = name;
-        }
-
-        public ObjectId getId() {
-            return id;
-        }
-
-        public void setId(ObjectId id) {
-            this.id = id;
-        }
-
-        public List<Book> getList() {
-            return list.get();
-        }
-
-        public void setList(List<Book> list) {
-            this.list = MorphiaReference.wrap(list);
-        }
-
-        public Map<String, Book> getMap() {
-            return map.get();
-        }
-
-        public void setMap(Map<String, Book> map) {
-            this.map = MorphiaReference.wrap(map);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public Set<Book> getSet() {
-            return set.get();
-        }
-
-        public void setSet(Set<Book> set) {
-            this.set = MorphiaReference.wrap(set);
         }
 
         @Override
@@ -308,30 +269,6 @@ public class MorphiaReferenceTest extends TestBase {
         }
 
         public Book(String name) {
-            this.name = name;
-        }
-
-        public Author getAuthor() {
-            return author.get();
-        }
-
-        public void setAuthor(Author author) {
-            this.author = MorphiaReference.wrap(author);
-        }
-
-        public ObjectId getId() {
-            return id;
-        }
-
-        public void setId(ObjectId id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
             this.name = name;
         }
 

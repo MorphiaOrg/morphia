@@ -3,6 +3,7 @@ package dev.morphia.aggregation.codecs.stages;
 import java.util.List;
 import java.util.Locale;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Densify;
 import dev.morphia.aggregation.stages.Densify.Range;
 
@@ -13,6 +14,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class DensifyCodec extends StageCodec<Densify> {
+    public DensifyCodec(Datastore datastore) {
+        super(datastore);
+    }
+
     @Override
     public Class<Densify> getEncoderClass() {
         return Densify.class;

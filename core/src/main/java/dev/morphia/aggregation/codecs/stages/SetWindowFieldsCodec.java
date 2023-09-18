@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.SetWindowFields;
@@ -23,6 +24,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
 
     private Codec<Object> objectCodec;
+
+    public SetWindowFieldsCodec(Datastore datastore) {
+        super(datastore);
+    }
 
     public Codec<Object> getObjectCodec() {
         if (objectCodec == null) {

@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import dev.morphia.Datastore;
 import dev.morphia.query.LegacyQuery;
 import dev.morphia.sofia.Sofia;
 
@@ -10,8 +11,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.internal.DatastoreHolder.holder;
-
 /**
  * Defines a codec for Query instances
  *
@@ -19,12 +18,14 @@ import static dev.morphia.internal.DatastoreHolder.holder;
  */
 @Deprecated
 public class LegacyQueryCodec implements Codec<LegacyQuery> {
+    private Datastore datastore;
+
     /**
      * Creates a codec
      *
      */
-    public LegacyQueryCodec() {
-
+    public LegacyQueryCodec(Datastore datastore) {
+        this.datastore = datastore;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class LegacyQueryCodec implements Codec<LegacyQuery> {
 
     @Override
     public void encode(BsonWriter writer, LegacyQuery value, EncoderContext encoderContext) {
-        holder.get().getCodecRegistry().get(Document.class).encode(writer, value.toDocument(), encoderContext);
+        datastore.getCodecRegistry().get(Document.class).encode(writer, value.toDocument(), encoderContext);
     }
 
     @Override

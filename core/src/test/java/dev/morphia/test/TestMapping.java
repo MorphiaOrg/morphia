@@ -71,6 +71,7 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.*;
 import static dev.morphia.mapping.MapperOptions.PropertyDiscovery.METHODS;
+import static dev.morphia.mapping.experimental.MorphiaReference.wrap;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
 import static dev.morphia.query.filters.Filters.type;
@@ -206,7 +207,7 @@ public class TestMapping extends TestBase {
     @Test
     public void constructors() {
         ContainsFinalField value = new ContainsFinalField();
-        ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", MorphiaReference.wrap(value));
+        ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", wrap(getDs(), value));
 
         getDs().save(of(value, instance));
 
@@ -865,7 +866,7 @@ public class TestMapping extends TestBase {
     public void testReferenceWithoutIdValue() {
         assertThrows(ReferenceException.class, () -> {
             final Book book = new Book();
-            book.setAuthor(new Author());
+            book.author = wrap(getDs(), new Author());
             getDs().save(book);
         });
     }

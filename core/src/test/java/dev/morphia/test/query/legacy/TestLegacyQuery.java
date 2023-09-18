@@ -46,7 +46,6 @@ import dev.morphia.test.query.TestQuery.CappedPic;
 
 import org.awaitility.Awaitility;
 import org.bson.Document;
-import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 

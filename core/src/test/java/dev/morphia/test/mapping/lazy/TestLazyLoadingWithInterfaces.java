@@ -29,7 +29,7 @@ public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
         getDs().save(asList(b1, b2));
         final ClassA a = new ClassA();
         a.b = b1;
-        a.reference = MorphiaReference.wrap(b2);
+        a.reference = MorphiaReference.wrap(getDs(), b2);
 
         final List<InterfaceB> list = asList(b1, b2);
         final Set<InterfaceB> set = new HashSet<>(list);
@@ -37,9 +37,9 @@ public class TestLazyLoadingWithInterfaces extends ProxyTestBase {
         map.put("key1", b1);
         map.put("key2", b2);
 
-        a.set = wrap(set);
-        a.list = wrap(list);
-        a.map = wrap(map);
+        a.set = wrap(getDs(), set);
+        a.list = wrap(getDs(), list);
+        a.map = wrap(getDs(), map);
 
         getDs().save(a);
 

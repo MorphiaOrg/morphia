@@ -13,8 +13,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
-import static dev.morphia.internal.DatastoreHolder.holder;
-
 /**
  * Wrapper type for references to entities in other collections
  *
@@ -30,8 +28,10 @@ import static dev.morphia.internal.DatastoreHolder.holder;
 public abstract class MorphiaReference<T> {
     private boolean ignoreMissing;
     private boolean resolved;
+    private Datastore datastore;
 
-    MorphiaReference() {
+    MorphiaReference(Datastore datastore) {
+        this.datastore = datastore;
     }
 
     /**
@@ -42,15 +42,15 @@ public abstract class MorphiaReference<T> {
      * @return the MorphiaReference wrapper
      */
     @SuppressWarnings("unchecked")
-    public static <V> MorphiaReference<V> wrap(V value) {
+    public static <V> MorphiaReference<V> wrap(Datastore datastore, V value) {
         if (value instanceof List) {
-            return (MorphiaReference<V>) new ListReference<>((List<V>) value);
+            return (MorphiaReference<V>) new ListReference<>(datastore, (List<V>) value);
         } else if (value instanceof Set) {
-            return (MorphiaReference<V>) new SetReference<>((Set<V>) value);
+            return (MorphiaReference<V>) new SetReference<>(datastore, (Set<V>) value);
         } else if (value instanceof Map) {
-            return (MorphiaReference<V>) new MapReference<>((Map<Object, V>) value);
+            return (MorphiaReference<V>) new MapReference<>(datastore, (Map<Object, V>) value);
         } else {
-            return new SingleReference<>(value);
+            return new SingleReference<>(datastore, value);
         }
     }
 
@@ -73,7 +73,7 @@ public abstract class MorphiaReference<T> {
     public abstract List<Object> getIds();
 
     protected Datastore getDatastore() {
-        return holder.get();
+        return datastore;
     }
 
     /**
@@ -101,7 +101,7 @@ public abstract class MorphiaReference<T> {
     }
 
     protected Mapper getMapper() {
-        return holder.get().getMapper();
+        return datastore.getMapper();
     }
 
     /**

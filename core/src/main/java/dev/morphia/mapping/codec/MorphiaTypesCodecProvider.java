@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dev.morphia.DatastoreImpl;
+
 import org.bson.codecs.Codec;
 import org.bson.codecs.MapCodec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -16,26 +18,28 @@ import org.bson.codecs.configuration.CodecRegistry;
 @SuppressWarnings("unchecked")
 public class MorphiaTypesCodecProvider implements CodecProvider {
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
+    private DatastoreImpl datastore;
 
     /**
      * Create the provider
      *
      */
-    public MorphiaTypesCodecProvider() {
-        addCodec(new MorphiaDateCodec());
-        addCodec(new MorphiaMapCodec());
-        addCodec(new MorphiaLocalDateTimeCodec());
+    public MorphiaTypesCodecProvider(DatastoreImpl datastore) {
+        this.datastore = datastore;
+        addCodec(new MorphiaDateCodec(datastore));
+        addCodec(new MorphiaMapCodec(datastore));
+        addCodec(new MorphiaLocalDateTimeCodec(datastore));
         addCodec(new MorphiaLocalTimeCodec());
         addCodec(new ClassCodec());
         addCodec(new CenterCodec());
         addCodec(new HashMapCodec());
-        addCodec(new KeyCodec());
+        addCodec(new KeyCodec(datastore));
         addCodec(new LocaleCodec());
-        addCodec(new ObjectCodec());
+        addCodec(new ObjectCodec(datastore));
         addCodec(new ShapeCodec());
         addCodec(new URICodec());
         addCodec(new ByteWrapperArrayCodec());
-        addCodec(new LegacyQueryCodec());
+        addCodec(new LegacyQueryCodec(datastore));
         addCodec(new BitSetCodec());
 
         List.of(boolean.class, Boolean.class,
@@ -44,7 +48,7 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
                 float.class, Float.class,
                 int.class, Integer.class,
                 long.class, Long.class,
-                short.class, Short.class).forEach(c -> addCodec(new TypedArrayCodec(c)));
+                short.class, Short.class).forEach(c -> addCodec(new TypedArrayCodec(datastore, c)));
     }
 
     protected <T> void addCodec(Codec<T> codec) {
@@ -59,7 +63,7 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         } else if (AbstractMap.class.isAssignableFrom(clazz)) {
             return (Codec<T>) get(Map.class, registry);
         } else if (clazz.isArray() && !clazz.getComponentType().equals(byte.class)) {
-            return (Codec<T>) new ArrayCodec(clazz);
+            return (Codec<T>) new ArrayCodec(datastore, clazz);
         } else {
             return null;
         }

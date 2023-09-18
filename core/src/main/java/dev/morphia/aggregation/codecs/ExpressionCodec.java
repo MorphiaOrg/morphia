@@ -1,7 +1,7 @@
 package dev.morphia.aggregation.codecs;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.internal.DatastoreHolder;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.BsonReader;
@@ -12,7 +12,10 @@ import org.bson.codecs.EncoderContext;
 
 public class ExpressionCodec<T extends Expression> implements Codec<T> {
 
-    public ExpressionCodec() {
+    private Datastore datastore;
+
+    public ExpressionCodec(Datastore datastore) {
+        this.datastore = datastore;
     }
 
     @Override
@@ -23,7 +26,7 @@ public class ExpressionCodec<T extends Expression> implements Codec<T> {
     @Override
     public void encode(BsonWriter writer, T expression, EncoderContext encoderContext) {
         if (expression != null) {
-            expression.encode(DatastoreHolder.holder.get(), writer, encoderContext);
+            expression.encode(datastore, writer, encoderContext);
         } else {
             writer.writeNull();
         }

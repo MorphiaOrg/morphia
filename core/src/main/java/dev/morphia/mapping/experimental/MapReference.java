@@ -41,7 +41,8 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
      * @morphia.internal
      */
     @MorphiaInternal
-    public MapReference(Map<String, Object> ids, EntityModel entityModel) {
+    public MapReference(Datastore datastore, Map<String, Object> ids, EntityModel entityModel) {
+        super(datastore);
         for (Entry<String, Object> entry : ids.entrySet()) {
             CollectionReference.collate(entityModel, collections, entry.getValue());
         }
@@ -52,7 +53,8 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         resolve();
     }
 
-    MapReference(Map<Object, T> values) {
+    MapReference(Datastore datastore, Map<Object, T> values) {
+        super(datastore);
         this.values = values;
     }
 
@@ -72,7 +74,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         final Map<String, Object> ids = (Map<String, Object>) property.getDocumentValue(document);
         MapReference reference = null;
         if (ids != null) {
-            reference = new MapReference(ids, mapper.getEntityModel(subType));
+            reference = new MapReference(datastore, ids, mapper.getEntityModel(subType));
         }
 
         return reference;

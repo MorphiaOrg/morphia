@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.PipelineField;
 import dev.morphia.aggregation.stages.Projection;
 
@@ -10,6 +11,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 
 public class ProjectionCodec extends StageCodec<Projection> {
+    public ProjectionCodec(Datastore datastore) {
+        super(datastore);
+    }
+
     @Override
     public Class<Projection> getEncoderClass() {
         return Projection.class;

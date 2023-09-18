@@ -13,8 +13,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import org.bson.Document;
 
-import static dev.morphia.internal.DatastoreHolder.holder;
-
 /**
  * Defines a container of Criteria and a join method.
  *
@@ -119,12 +117,12 @@ public class CriteriaContainerImpl extends AbstractCriteria implements CriteriaC
     @Override
     public FieldEnd<? extends CriteriaContainer> criteria(String name) {
 
-        return new FieldEndImpl<>(name, this, getEntityModel(), query.isValidatingNames());
+        return new FieldEndImpl<>(query.getDatastore(), name, this, getEntityModel(), query.isValidatingNames());
     }
 
     private EntityModel getEntityModel() {
         if (model == null) {
-            model = holder.get().getMapper().getEntityModel(query.getEntityClass());
+            model = query.getDatastore().getMapper().getEntityModel(query.getEntityClass());
         }
 
         return model;

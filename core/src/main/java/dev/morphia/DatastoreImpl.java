@@ -76,7 +76,6 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.internal.DatastoreHolder.holder;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.set;
 import static dev.morphia.sofia.Sofia.noDocumentsUpdated;
@@ -149,16 +148,16 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private CodecRegistry buildRegistry() {
-        morphiaCodecProviders.add(new MorphiaCodecProvider(mapper));
+        morphiaCodecProviders.add(new MorphiaCodecProvider(this));
 
         CodecRegistry codecRegistry = database.getCodecRegistry();
         List<CodecProvider> providers = new ArrayList<>();
         mapper.getConfig().codecProvider().ifPresent(providers::add);
 
-        providers.addAll(List.of(new MorphiaTypesCodecProvider(),
+        providers.addAll(List.of(new MorphiaTypesCodecProvider(this),
                 new PrimitiveCodecRegistry(codecRegistry),
                 new EnumCodecProvider(),
-                new AggregationCodecProvider()));
+                new AggregationCodecProvider(this)));
 
         providers.addAll(morphiaCodecProviders);
         providers.add(codecRegistry);
@@ -670,8 +669,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     protected <T> T doTransaction(MorphiaSessionImpl morphiaSession, MorphiaTransaction<T> body) {
         try (morphiaSession) {
             return morphiaSession.getSession().withTransaction(() -> body.execute(morphiaSession));
-        } finally {
-            holder.set(morphiaSession.prior());
         }
     }
 
@@ -928,61 +925,51 @@ public class DatastoreImpl implements AdvancedDatastore {
     private class CollectionOperations extends DatastoreOperations {
         @Override
         public <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.countDocuments(query, options);
         }
 
         @Override
         public <T> DeleteResult deleteMany(MongoCollection<T> collection, Document queryDocument, DeleteOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.deleteMany(queryDocument, options);
         }
 
         @Override
         public <T> DeleteResult deleteOne(MongoCollection<T> collection, Document queryDocument, DeleteOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.deleteOne(queryDocument, options);
         }
 
         @Override
         public <E> FindIterable<E> find(MongoCollection<E> collection, Document query) {
-            holder.set(DatastoreImpl.this);
             return collection.find(query);
         }
 
         @Override
         public <T> T findOneAndDelete(MongoCollection<T> mongoCollection, Document queryDocument, FindAndDeleteOptions options) {
-            holder.set(DatastoreImpl.this);
             return mongoCollection.findOneAndDelete(queryDocument, options);
         }
 
         @Override
         public <T> T findOneAndUpdate(MongoCollection<T> collection, Document query, Document update, ModifyOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.findOneAndUpdate(query, update, options);
         }
 
         @Override
         public <T> InsertManyResult insertMany(MongoCollection<T> collection, List<T> list, InsertManyOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.insertMany(list, options.options());
         }
 
         @Override
         public <T> InsertOneResult insertOne(MongoCollection<T> collection, T entity, InsertOneOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.insertOne(entity, options.options());
         }
 
         @Override
         public <T> UpdateResult replaceOne(MongoCollection<T> collection, T entity, Document filter, ReplaceOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.replaceOne(filter, entity, options);
         }
 
         @Override
         public Document runCommand(Document command) {
-            holder.set(DatastoreImpl.this);
             return mongoClient
                     .getDatabase("admin")
                     .runCommand(command);
@@ -991,28 +978,24 @@ public class DatastoreImpl implements AdvancedDatastore {
         @Override
         public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
                 UpdateOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.updateMany(queryObject, updateOperations, options);
         }
 
         @Override
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, Document updateOperations,
                 UpdateOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.updateOne(queryObject, updateOperations, options);
         }
 
         @Override
         public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
                 UpdateOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.updateMany(queryObject, updateOperations, options);
         }
 
         @Override
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
                 UpdateOptions options) {
-            holder.set(DatastoreImpl.this);
             return collection.updateOne(queryObject, updateOperations, options);
         }
     }

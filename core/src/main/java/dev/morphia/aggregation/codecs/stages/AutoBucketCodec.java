@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.stages.AutoBucket;
@@ -11,6 +12,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 public class AutoBucketCodec extends StageCodec<AutoBucket> {
+
+    public AutoBucketCodec(Datastore datastore) {
+        super(datastore);
+    }
 
     @Override
     public Class getEncoderClass() {

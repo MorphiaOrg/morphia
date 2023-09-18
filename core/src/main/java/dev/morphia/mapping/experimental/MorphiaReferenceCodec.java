@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.Datastore;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseReferenceCodec;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -42,12 +43,12 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
     /**
      * Creates a codec
      *
-     * @param mapper        the mapper
+     * @param datastore
      * @param propertyModel the reference property model
      */
-    public MorphiaReferenceCodec(Mapper mapper, PropertyModel propertyModel) {
-        super(propertyModel);
-        this.mapper = mapper;
+    public MorphiaReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
+        super(datastore, propertyModel);
+        this.mapper = datastore.getMapper();
     }
 
     @Override
@@ -59,13 +60,13 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
         TypeData typeData = getTypeData().getTypeParameters().get(0);
         EntityModel fieldEntityModel = getEntityModelForField();
         if (Set.class.isAssignableFrom(typeData.getType())) {
-            return new SetReference<>(fieldEntityModel, (List) value);
+            return new SetReference<>(getDatastore(), fieldEntityModel, (List) value);
         } else if (Collection.class.isAssignableFrom(typeData.getType())) {
-            return new ListReference<>(fieldEntityModel, (List) value);
+            return new ListReference<>(getDatastore(), fieldEntityModel, (List) value);
         } else if (Map.class.isAssignableFrom(typeData.getType())) {
-            return new MapReference<>((Map) value, fieldEntityModel);
+            return new MapReference<>(getDatastore(), (Map) value, fieldEntityModel);
         } else {
-            return new SingleReference<>(fieldEntityModel, value);
+            return new SingleReference<>(getDatastore(), fieldEntityModel, value);
         }
     }
 
@@ -76,7 +77,7 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
             if (value instanceof MorphiaReference) {
                 wrap = (MorphiaReference<Object>) value;
             } else {
-                wrap = MorphiaReference.wrap(value);
+                wrap = MorphiaReference.wrap(getDatastore(), value);
             }
             DocumentWriter writer = new DocumentWriter(mapper.getConfig());
             document(writer, () -> {

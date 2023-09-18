@@ -929,7 +929,7 @@ public class TestUpdateOperations extends TestBase {
         pic.setName("fist again");
         ds.save(pic);
 
-        cpk.keys = MorphiaReference.wrap(List.of(pic));
+        cpk.keys = MorphiaReference.wrap(getDs(), List.of(pic));
 
         //test with Key<Pic>
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class)

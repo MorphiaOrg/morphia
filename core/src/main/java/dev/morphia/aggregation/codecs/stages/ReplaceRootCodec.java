@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.ReplaceRoot;
 
 import org.bson.BsonWriter;
@@ -9,6 +10,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 
 public class ReplaceRootCodec extends StageCodec<ReplaceRoot> {
+    public ReplaceRootCodec(Datastore datastore) {
+        super(datastore);
+    }
+
     @Override
     public Class<ReplaceRoot> getEncoderClass() {
         return ReplaceRoot.class;
