@@ -30,7 +30,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "ConstantConditions", "unused" })
-public class TestMapperOptions extends TestBase {
+public class TestConfigOptions extends TestBase {
 
     @Test
     public void emptyListStoredWithOptions() {

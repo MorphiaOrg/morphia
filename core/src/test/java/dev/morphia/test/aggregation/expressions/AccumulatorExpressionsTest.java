@@ -61,9 +61,9 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                                                 + "      sum: state1.sum + state2.sum\n"
                                                 + "   }\n"
                                                 + "}")
-                                                        .finalizeFunction("function(state) {\n" +
-                                                                "   return (state.sum / state.count)\n" +
-                                                                "}")))
+                                        .finalizeFunction("function(state) {\n" +
+                                                "   return (state.sum / state.count)\n" +
+                                                "}")))
                 .execute(Document.class)
                 .toList();
 

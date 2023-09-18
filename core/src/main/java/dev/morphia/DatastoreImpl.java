@@ -105,27 +105,14 @@ public class DatastoreImpl implements AdvancedDatastore {
     private MongoDatabase database;
     private DatastoreOperations operations;
 
-    public DatastoreImpl(MongoClient mongoClient, MorphiaConfig config) {
+    public DatastoreImpl(MongoClient client, MorphiaConfig config) {
+        this.mongoClient = client;
         this.database = mongoClient.getDatabase(config.database());
         this.mapper = new Mapper(config);
-        this.mongoClient = mongoClient;
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
 
-        morphiaCodecProviders.add(new MorphiaCodecProvider(mapper));
-
-        CodecRegistry codecRegistry = database.getCodecRegistry();
-        List<CodecProvider> providers = new ArrayList<>();
-        mapper.getConfig().codecProvider().ifPresent(providers::add);
-
-        providers.addAll(List.of(new MorphiaTypesCodecProvider(),
-                new PrimitiveCodecRegistry(codecRegistry),
-                new EnumCodecProvider(),
-                new AggregationCodecProvider()));
-
-        providers.addAll(morphiaCodecProviders);
-        providers.add(codecRegistry);
-        this.codecRegistry = fromProviders(providers);
+        codecRegistry = buildRegistry();
 
         this.database = database.withCodecRegistry(this.codecRegistry);
         operations = new CollectionOperations();
@@ -152,14 +139,31 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @morphia.internal
      * @since 2.0
      */
-    protected DatastoreImpl(DatastoreImpl datastore) {
-        this.database = datastore.database;
+    public DatastoreImpl(DatastoreImpl datastore) {
         this.mongoClient = datastore.mongoClient;
-        this.mapper = datastore.mapper;
+        this.database = mongoClient.getDatabase(datastore.mapper.getConfig().database());
+        this.mapper = datastore.mapper.copy();
         this.queryFactory = datastore.queryFactory;
-        this.codecRegistry = datastore.codecRegistry;
         this.operations = datastore.operations;
-        this.morphiaCodecProviders = datastore.morphiaCodecProviders;
+        codecRegistry = buildRegistry();
+    }
+
+    private CodecRegistry buildRegistry() {
+        morphiaCodecProviders.add(new MorphiaCodecProvider(mapper));
+
+        CodecRegistry codecRegistry = database.getCodecRegistry();
+        List<CodecProvider> providers = new ArrayList<>();
+        mapper.getConfig().codecProvider().ifPresent(providers::add);
+
+        providers.addAll(List.of(new MorphiaTypesCodecProvider(),
+                new PrimitiveCodecRegistry(codecRegistry),
+                new EnumCodecProvider(),
+                new AggregationCodecProvider()));
+
+        providers.addAll(morphiaCodecProviders);
+        providers.add(codecRegistry);
+        codecRegistry = fromProviders(providers);
+        return codecRegistry;
     }
 
     @Override
@@ -485,7 +489,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         } else {
             update = ((MergingEncoder<T>) new MergingEncoder(query,
                     (MorphiaCodec) codecRegistry.get(entity.getClass())))
-                            .encode(entity);
+                    .encode(entity);
         }
         UpdateResult execute = update.execute(new UpdateOptions()
                 .writeConcern(options.writeConcern()));

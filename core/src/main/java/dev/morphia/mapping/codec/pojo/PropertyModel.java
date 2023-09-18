@@ -95,6 +95,18 @@ public final class PropertyModel {
         loadNames = result;
     }
 
+    public PropertyModel(EntityModel owner, PropertyModel other) {
+        name = other.name;
+        typeData = other.typeData;
+        mappedName = other.mappedName;
+        accessor = other.accessor;
+        annotationMap.putAll(other.annotationMap);
+        loadNames = other.loadNames;
+        serialization = other.serialization;
+        entityModel = owner;
+        normalizedType = other.normalizedType;
+    }
+
     static PropertyModelBuilder builder(Mapper mapper) {
         return new PropertyModelBuilder(mapper);
     }
@@ -119,6 +131,10 @@ public final class PropertyModel {
             type = type.getComponentType();
         }
         return type;
+    }
+
+    public PropertyModel copy(EntityModel owner) {
+        return new PropertyModel(owner, this);
     }
 
     /**
@@ -177,7 +193,7 @@ public final class PropertyModel {
      * @return the name of the field's (key)name for mongodb, in order of loading.
      */
     public List<String> getLoadNames() {
-        return loadNames;
+        return new ArrayList<>(loadNames);
     }
 
     /**

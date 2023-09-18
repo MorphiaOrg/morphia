@@ -50,6 +50,7 @@ import dev.morphia.test.models.UsesCustomIdObject;
 
 import org.awaitility.Awaitility;
 import org.bson.Document;
+import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
@@ -838,6 +839,10 @@ public class TestQuery extends TestBase {
         Map<String, Object> queryPlanner = (Map<String, Object>) explain.get("queryPlanner");
         Map<String, Object> winningPlan = (Map<String, Object>) queryPlanner.get("winningPlan");
         Map<String, Object> inputStage = (Map<String, Object>) winningPlan.get("inputStage");
+        if (inputStage == null) {
+            Map<String, Object> queryPlan = (Map<String, Object>) winningPlan.get("queryPlan");
+            inputStage = (Map<String, Object>) queryPlan.get("inputStage");
+        }
         assertEquals(inputStage.get("stage"), "IXSCAN");
     }
 

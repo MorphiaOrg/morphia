@@ -89,7 +89,17 @@ public class Mapper {
     public Mapper(MorphiaConfig config) {
         this.config = config;
         contextClassLoader = Thread.currentThread().getContextClassLoader();
-        discriminatorLookup = new DiscriminatorLookup(contextClassLoader);
+        discriminatorLookup = new DiscriminatorLookup();
+    }
+
+    public Mapper(Mapper other) {
+        config = other.config;
+        contextClassLoader = Thread.currentThread().getContextClassLoader();
+        discriminatorLookup = new DiscriminatorLookup();
+        other.mappedEntities.values().forEach(entity -> {
+            register(entity.copy(), false);
+        });
+        listeners.addAll(other.listeners);
     }
 
     /**
@@ -101,6 +111,10 @@ public class Mapper {
     @Deprecated(forRemoval = true, since = "2.4.0")
     public void addInterceptor(EntityListener<?> ei) {
         listeners.add(ei);
+    }
+
+    public Mapper copy() {
+        return new Mapper(this);
     }
 
     /**
@@ -516,6 +530,10 @@ public class Mapper {
      */
     @MorphiaInternal
     public EntityModel register(EntityModel entityModel) {
+        return register(entityModel, true);
+    }
+
+    private EntityModel register(EntityModel entityModel, boolean validate) {
 
         discriminatorLookup.addModel(entityModel);
         mappedEntities.put(entityModel.getType(), entityModel);
@@ -526,7 +544,7 @@ public class Mapper {
             superClass.addSubtype(entityModel);
         }
 
-        if (!entityModel.isInterface()) {
+        if (validate && !entityModel.isInterface()) {
             new MappingValidator()
                     .validate(this, entityModel);
 

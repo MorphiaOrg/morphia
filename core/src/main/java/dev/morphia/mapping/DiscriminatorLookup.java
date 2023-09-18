@@ -47,11 +47,11 @@ public final class DiscriminatorLookup {
     /**
      * Creates a new lookup
      *
-     * @param classLoader the classloader to use for look ups
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public DiscriminatorLookup(ClassLoader classLoader) {
-        this.classLoader = classLoader;
+    public DiscriminatorLookup() {
+        this.classLoader = Thread.currentThread().getContextClassLoader();
+
     }
 
     /**
