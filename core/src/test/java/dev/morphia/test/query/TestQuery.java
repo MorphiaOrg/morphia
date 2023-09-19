@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.CursorType;
 import com.mongodb.MongoNamespace;
 import com.mongodb.client.MongoCollection;
@@ -842,6 +841,10 @@ public class TestQuery extends TestBase {
         Map<String, Object> queryPlanner = (Map<String, Object>) explain.get("queryPlanner");
         Map<String, Object> winningPlan = (Map<String, Object>) queryPlanner.get("winningPlan");
         Map<String, Object> inputStage = (Map<String, Object>) winningPlan.get("inputStage");
+        if (inputStage == null) {
+            Map<String, Object> queryPlan = (Map<String, Object>) winningPlan.get("queryPlan");
+            inputStage = (Map<String, Object>) queryPlan.get("inputStage");
+        }
         assertEquals(inputStage.get("stage"), "IXSCAN");
     }
 

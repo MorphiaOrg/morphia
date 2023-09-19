@@ -81,16 +81,18 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * Type-cache for proxy classes generated w/ Byte Buddy.
      */
     private final TypeCache<TypeCache.SimpleKey> typeCache = new TypeCache.WithInlineExpunction<>(Sort.SOFT);
+    private Datastore datastore;
 
     /**
      * Creates a codec
      *
-     * @param mapper
+     * @param datastore
      * @param propertyModel the reference property
      */
-    public ReferenceCodec(Mapper mapper, PropertyModel propertyModel) {
-        super(propertyModel);
-        this.mapper = mapper;
+    public ReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
+        super(datastore, propertyModel);
+        this.datastore = datastore;
+        this.mapper = datastore.getMapper();
         annotation = getReferenceAnnotation(propertyModel);
     }
 
@@ -381,8 +383,8 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     MorphiaReference<?> readList(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
-                ? new ListReference<>(getEntityModelForField(), value)
-                : new ListReference<>(mapped);
+                ? new ListReference<>(datastore, getEntityModelForField(), value)
+                : new ListReference<>(datastore, mapped);
     }
 
     MorphiaReference<?> readMap(Map<Object, Object> value) {
@@ -392,17 +394,17 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             ids.put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
         }
 
-        return new MapReference(ids, getEntityModelForField());
+        return new MapReference(datastore, ids, getEntityModelForField());
     }
 
     MorphiaReference<?> readSet(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
-                ? new SetReference<>(getEntityModelForField(), value)
-                : new SetReference<>(new LinkedHashSet<>(mapped));
+                ? new SetReference<>(datastore, getEntityModelForField(), value)
+                : new SetReference<>(datastore, new LinkedHashSet<>(mapped));
     }
 
     MorphiaReference<?> readSingle(Object value) {
-        return new SingleReference<>(getEntityModelForField(), value);
+        return new SingleReference<>(datastore, getEntityModelForField(), value);
     }
 }

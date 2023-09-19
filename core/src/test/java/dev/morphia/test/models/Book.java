@@ -26,25 +26,16 @@ public final class Book {
     public Book() {
     }
 
-    public Book(String title, Author author) {
+    public Book(String title, MorphiaReference<Author> author) {
         this.title = title;
-        this.author = MorphiaReference.wrap(author);
+        this.author = author;
     }
 
-    public Book(String title, Author author, Integer copies, String... tags) {
+    public Book(String title, MorphiaReference<Author> author, Integer copies, String... tags) {
         this.title = title;
-        this.author = MorphiaReference.wrap(author);
+        this.author = author;
         this.copies = copies;
         this.tags = asList(tags);
-    }
-
-    public MorphiaReference<Author> getAuthor() {
-        return author;
-    }
-
-    public Book setAuthor(Author author) {
-        this.author = MorphiaReference.wrap(author);
-        return this;
     }
 
     @Override

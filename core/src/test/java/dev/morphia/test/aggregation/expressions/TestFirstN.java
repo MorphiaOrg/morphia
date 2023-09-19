@@ -22,12 +22,12 @@ public class TestFirstN extends AggregationTest {
             return aggregation
                     .group(group(id()
                             .field("gameId", field("gameId")))
-                                    .field("gamescores", firstN(
-                                            condition(
-                                                    ComparisonExpressions.eq(field("gameId"), value("G2")),
-                                                    value(1),
-                                                    value(3)),
-                                            field("score"))));
+                            .field("gamescores", firstN(
+                                    condition(
+                                            ComparisonExpressions.eq(field("gameId"), value("G2")),
+                                            value(1),
+                                            value(3)),
+                                    field("score"))));
         });
     }
 

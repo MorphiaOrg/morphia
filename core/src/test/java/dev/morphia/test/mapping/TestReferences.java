@@ -27,7 +27,6 @@ import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
-import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.models.Author;
@@ -45,6 +44,7 @@ import org.testng.annotations.Test;
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
+import static dev.morphia.mapping.experimental.MorphiaReference.wrap;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.in;
 import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
@@ -88,11 +88,11 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(author);
 
         List<Book> books = List.of(
-                new Book("Sense and Sensibility", author),
-                new Book("Pride and Prejudice", author),
-                new Book("Mansfield Park", author),
-                new Book("Emma", author),
-                new Book("Northanger Abbey", author));
+                new Book("Sense and Sensibility", wrap(getDs(), author)),
+                new Book("Pride and Prejudice", wrap(getDs(), author)),
+                new Book("Mansfield Park", wrap(getDs(), author)),
+                new Book("Emma", wrap(getDs(), author)),
+                new Book("Northanger Abbey", wrap(getDs(), author)));
         getDs().save(books);
 
         author.setList(books);
@@ -339,7 +339,7 @@ public class TestReferences extends ProxyTestBase {
                     MethodMappedUser user = new MethodMappedUser();
                     MethodMappedFriend friend = new MethodMappedFriend();
                     user.setFriend(friend);
-                    user.setFriends(MorphiaReference.wrap(List.of(friend)));
+                    user.setFriends(wrap(getDs(), List.of(friend)));
 
                     getDs().save(List.of(friend, user));
 

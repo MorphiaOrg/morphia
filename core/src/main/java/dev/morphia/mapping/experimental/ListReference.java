@@ -3,6 +3,7 @@ package dev.morphia.mapping.experimental;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
@@ -17,13 +18,14 @@ public class ListReference<T> extends CollectionReference<List<T>> {
     private List<T> values;
 
     /**
-     * @param ids   the IDs of the entities
-     * @param model the EntityModel for the entity type
+     * @param datastore
+     * @param model     the EntityModel for the entity type
+     * @param ids       the IDs of the entities
      * @morphia.internal
      */
     @MorphiaInternal
-    public ListReference(EntityModel model, List ids) {
-        super(model, ids);
+    public ListReference(Datastore datastore, EntityModel model, List ids) {
+        super(datastore, model, ids);
     }
 
     /**
@@ -31,7 +33,8 @@ public class ListReference<T> extends CollectionReference<List<T>> {
      *
      * @param values the values to use
      */
-    public ListReference(List<T> values) {
+    public ListReference(Datastore datastore, List<T> values) {
+        super(datastore);
         this.values = values;
     }
 

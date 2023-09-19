@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.stages.Bucket;
 
@@ -11,6 +12,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class BucketCodec extends StageCodec<Bucket> {
+    public BucketCodec(Datastore datastore) {
+        super(datastore);
+    }
+
     @Override
     public Class getEncoderClass() {
         return Bucket.class;

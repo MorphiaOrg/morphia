@@ -50,7 +50,6 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyAccessor;
 
-import static dev.morphia.internal.DatastoreHolder.holder;
 import static java.util.Arrays.asList;
 
 /**
@@ -95,6 +94,18 @@ public final class PropertyModel {
         loadNames = result;
     }
 
+    public PropertyModel(EntityModel owner, PropertyModel other) {
+        name = other.name;
+        typeData = other.typeData;
+        mappedName = other.mappedName;
+        accessor = other.accessor;
+        annotationMap.putAll(other.annotationMap);
+        loadNames = other.loadNames;
+        serialization = other.serialization;
+        entityModel = owner;
+        normalizedType = other.normalizedType;
+    }
+
     static PropertyModelBuilder builder(Mapper mapper) {
         return new PropertyModelBuilder(mapper);
     }
@@ -119,6 +130,10 @@ public final class PropertyModel {
             type = type.getComponentType();
         }
         return type;
+    }
+
+    public PropertyModel copy(EntityModel owner) {
+        return new PropertyModel(owner, this);
     }
 
     /**
@@ -177,7 +192,7 @@ public final class PropertyModel {
      * @return the name of the field's (key)name for mongodb, in order of loading.
      */
     public List<String> getLoadNames() {
-        return loadNames;
+        return new ArrayList<>(loadNames);
     }
 
     /**
@@ -271,7 +286,7 @@ public final class PropertyModel {
     @Nullable
     public Codec<?> specializeCodec(Datastore datastore) {
         if (codec == null) {
-            configureCodec(datastore.getMapper());
+            configureCodec(datastore);
         }
         return codec;
     }
@@ -360,18 +375,18 @@ public final class PropertyModel {
         return serialization.shouldSerialize(value);
     }
 
-    private void configureCodec(Mapper mapper) {
+    private void configureCodec(Datastore datastore) {
         Handler handler = getHandler();
         if (handler != null) {
             try {
                 codec = handler.value()
-                        .getDeclaredConstructor(Mapper.class, PropertyModel.class)
-                        .newInstance(mapper, this);
+                        .getDeclaredConstructor(Datastore.class, PropertyModel.class)
+                        .newInstance(datastore, this);
             } catch (ReflectiveOperationException e) {
                 throw new MappingException(e.getMessage(), e);
             }
         } else if (typeData.getTypeParameters().isEmpty()) {
-            codec = (Codec<? super Object>) holder.get().getCodecRegistry().get(getType());
+            codec = (Codec<? super Object>) datastore.getCodecRegistry().get(getType());
         }
     }
 

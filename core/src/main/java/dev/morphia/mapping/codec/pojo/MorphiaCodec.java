@@ -24,7 +24,6 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.internal.DatastoreHolder.holder;
 import static dev.morphia.mapping.codec.Conversions.convert;
 import static org.bson.codecs.configuration.CodecRegistries.fromCodecs;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
@@ -48,18 +47,21 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final DiscriminatorLookup discriminatorLookup;
     private EntityEncoder<T> encoder;
     private EntityDecoder<T> decoder;
+    private Datastore datastore;
 
     /**
      * Creates a new codec
      *
+     * @param datastore
      * @param model                  the model backing this codec
      * @param propertyCodecProviders the codec provider for properties
      * @param discriminatorLookup    the discriminator to type lookup
      * @param registry               the codec registry for lookups
      */
-    public MorphiaCodec(EntityModel model,
+    public MorphiaCodec(Datastore datastore, EntityModel model,
             List<PropertyCodecProvider> propertyCodecProviders,
             DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
+        this.datastore = datastore;
         this.discriminatorLookup = discriminatorLookup;
 
         this.entityModel = model;
@@ -116,7 +118,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * @since 2.3
      */
     public Datastore getDatastore() {
-        return holder.get();
+        return datastore;
     }
 
     /**

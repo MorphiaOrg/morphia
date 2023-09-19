@@ -762,6 +762,10 @@ public class TestLegacyQuery extends TestBase {
         Map<String, Object> queryPlanner = (Map<String, Object>) explain.get("queryPlanner");
         Map<String, Object> winningPlan = (Map<String, Object>) queryPlanner.get("winningPlan");
         Map<String, Object> inputStage = (Map<String, Object>) winningPlan.get("inputStage");
+        if (inputStage == null) {
+            Map<String, Object> queryPlan = (Map<String, Object>) winningPlan.get("queryPlan");
+            inputStage = (Map<String, Object>) queryPlan.get("inputStage");
+        }
         assertEquals(inputStage.get("stage"), "IXSCAN");
     }
 

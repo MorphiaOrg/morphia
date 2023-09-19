@@ -3,6 +3,7 @@ package dev.morphia.aggregation.codecs.stages;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.FullDocumentBeforeChange;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.ChangeStream;
 
 import org.bson.BsonWriter;
@@ -12,6 +13,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class ChangeStreamCodec extends StageCodec<ChangeStream> {
+    public ChangeStreamCodec(Datastore datastore) {
+        super(datastore);
+    }
+
     @Override
     public Class<ChangeStream> getEncoderClass() {
         return ChangeStream.class;

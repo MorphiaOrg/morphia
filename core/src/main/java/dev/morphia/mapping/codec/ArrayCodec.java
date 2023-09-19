@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.internal.DatastoreHolder;
+import dev.morphia.DatastoreImpl;
 
 import org.bson.BsonBinarySubType;
 import org.bson.BsonReader;
@@ -17,13 +17,13 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.internal.DatastoreHolder.holder;
-
 class ArrayCodec implements Codec<Object> {
 
     private final Class<?> type;
+    private DatastoreImpl datastore;
 
-    <T> ArrayCodec(Class<T> type) {
+    <T> ArrayCodec(DatastoreImpl datastore, Class<T> type) {
+        this.datastore = datastore;
         this.type = type;
     }
 
@@ -55,7 +55,7 @@ class ArrayCodec implements Codec<Object> {
             if (element == null) {
                 writer.writeNull();
             } else {
-                Codec codec = DatastoreHolder.holder.get().getCodecRegistry().get(element.getClass());
+                Codec codec = datastore.getCodecRegistry().get(element.getClass());
                 codec.encode(writer, element, encoderContext);
             }
         }
@@ -74,9 +74,9 @@ class ArrayCodec implements Codec<Object> {
             reader.readNull();
             return null;
         } else if (bsonType == BsonType.BINARY && BsonBinarySubType.isUuid(reader.peekBinarySubType()) && reader.peekBinarySize() == 16) {
-            return holder.get().getCodecRegistry().get(UUID.class).decode(reader, decoderContext);
+            return datastore.getCodecRegistry().get(UUID.class).decode(reader, decoderContext);
         }
-        return holder.get().getCodecRegistry().get(type.getComponentType()).decode(reader, decoderContext);
+        return datastore.getCodecRegistry().get(type.getComponentType()).decode(reader, decoderContext);
     }
 
 }
