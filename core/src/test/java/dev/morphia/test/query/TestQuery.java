@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.CursorType;
 import com.mongodb.MongoNamespace;
 import com.mongodb.client.MongoCollection;
@@ -46,6 +47,7 @@ import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.Keys;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Student;
+import dev.morphia.test.models.User;
 import dev.morphia.test.models.UsesCustomIdObject;
 
 import org.awaitility.Awaitility;
@@ -97,12 +99,14 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNativeQuery() {
-        dev.morphia.test.models.User user = getDs().save(new dev.morphia.test.models.User("Malcolm 'Mal' Reynolds", now()));
+        User user = getDs().save(new User("Malcolm 'Mal' Reynolds", now()));
+        assertEquals(getDs().find(User.class, new Document("_id", user.getId())).first(), user);
+        assertEquals(getDs().find(User.class, new Document()).filter(eq("id", user.getId())).first(), user);
 
-        assertEquals(getDs().find(dev.morphia.test.models.User.class, new Document("_id", user.getId())).first(),
+        assertEquals(getDs().find(User.class, new Document("_id", user.getId())).first(),
                 user);
 
-        assertEquals(getDs().find(dev.morphia.test.models.User.class, new Document()).filter(eq("id", user.getId())).first(),
+        assertEquals(getDs().find(User.class, new Document()).filter(eq("id", user.getId())).first(),
                 user);
     }
 
@@ -512,7 +516,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testCriteriaContainers() {
         assertThrows(UnsupportedOperationException.class, () -> {
-            check(new DefaultQueryFactory().createQuery(getDs(), User.class).disableValidation());
+            check(new DefaultQueryFactory().createQuery(getDs(), UserInterface.class).disableValidation());
         });
     }
 
@@ -843,7 +847,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testMultipleFilters() {
-        var newQ = getDs().find(User.class).disableValidation();
+        var newQ = getDs().find(UserInterface.class).disableValidation();
         newQ.filter(
                 or(
                         exists("status").not(),
@@ -1315,7 +1319,7 @@ public class TestQuery extends TestBase {
     }
 
     @SuppressWarnings("removal")
-    private void check(Query<User> query) {
+    private void check(Query<UserInterface> query) {
         query.field("version").equal("latest")
                 .and(
                         query.or(
@@ -1381,7 +1385,7 @@ public class TestQuery extends TestBase {
     }
 
     @Entity
-    public interface User {
+    public interface UserInterface {
     }
 
     @Entity(value = "capped_pic", cap = @CappedAt(count = 1000))
@@ -1830,7 +1834,7 @@ public class TestQuery extends TestBase {
         private ObjectId value;
     }
 
-    static class UserImpl implements User {
+    static class UserImpl implements UserInterface {
         @Id
         @SuppressWarnings("unused")
         private ObjectId id;
