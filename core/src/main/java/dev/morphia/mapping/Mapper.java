@@ -226,6 +226,9 @@ public class Mapper {
      */
     public EntityModel getEntityModel(Class type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        if (actual == null && MorphiaProxy.class.equals(type)) {
+            throw new NotMappableException(type);
+        }
         EntityModel model = mappedEntities.get(actual);
 
         if (model == null) {
