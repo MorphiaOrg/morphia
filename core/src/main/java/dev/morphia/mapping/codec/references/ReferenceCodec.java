@@ -18,6 +18,7 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -81,7 +82,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * Type-cache for proxy classes generated w/ Byte Buddy.
      */
     private final TypeCache<TypeCache.SimpleKey> typeCache = new TypeCache.WithInlineExpunction<>(Sort.SOFT);
-    private Datastore datastore;
+    private DatastoreImpl datastore;
 
     /**
      * Creates a codec
@@ -89,7 +90,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * @param datastore
      * @param propertyModel the reference property
      */
-    public ReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
+    public ReferenceCodec(DatastoreImpl datastore, PropertyModel propertyModel) {
         super(datastore, propertyModel);
         this.datastore = datastore;
         this.mapper = datastore.getMapper();

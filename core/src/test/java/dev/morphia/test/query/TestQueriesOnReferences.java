@@ -39,7 +39,7 @@ public class TestQueriesOnReferences extends TestBase {
     public void testFindByReference2() {
         getDs().getMapper().map(Entity1.class, Entity2.class);
 
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         var e1_input = new Entity1();
         getDs().save(e1_input);
@@ -86,7 +86,7 @@ public class TestQueriesOnReferences extends TestBase {
     public void testMatchOnAReference() {
         getDs().getMapper().map(Entity1.class, Entity2.class);
 
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         var e1_input = new Entity1();
         getDs().save(e1_input);

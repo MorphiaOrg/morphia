@@ -93,8 +93,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
  * @hidden
  */
 @MorphiaInternal
-@SuppressWarnings({ "unchecked", "rawtypes", "removal" })
-public class DatastoreImpl implements AdvancedDatastore {
+@SuppressWarnings({ "unchecked", "rawtypes" })
+public class DatastoreImpl implements Datastore {
     private static final Logger LOG = LoggerFactory.getLogger(Datastore.class);
     private final MongoClient mongoClient;
     private final Mapper mapper;
@@ -217,16 +217,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return new AggregationImpl(this, source, getCollection(source));
     }
 
-    @Override
-    public dev.morphia.aggregation.AggregationPipeline createAggregation(Class source) {
-        return new dev.morphia.aggregation.AggregationPipelineImpl(this, getCollection(source), source);
-    }
-
-    @Override
-    public <T> dev.morphia.query.UpdateOperations<T> createUpdateOperations(Class<T> clazz) {
-        return new dev.morphia.query.UpdateOpsImpl<>(this, clazz);
-    }
-
     /**
      * Applies configuration options to the collection
      *
@@ -282,18 +272,11 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
     }
 
-    @Override
     public void enableDocumentValidation() {
         Sofia.logConfiguredOperation("Datastore#enableDocumentValidation()");
         for (EntityModel model : mapper.getMappedEntities()) {
             enableDocumentValidation(model);
         }
-    }
-
-    @Override
-    public void ensureIndexes() {
-        Sofia.logConfiguredOperation("Datastore#ensureIndexes");
-        applyIndexes();
     }
 
     public void applyIndexes() {
@@ -326,12 +309,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         return queryFactory.createQuery(this, type, nativeQuery);
     }
 
-    @Override
     public <T> Query<T> find(String collection, Class<T> type) {
         return queryFactory.createQuery(this, collection, type);
     }
 
-    @Override
     public <T> Query<T> find(String collection) {
         Class<T> type = mapper.getClassFromCollection(collection);
         return queryFactory.createQuery(this, type);
@@ -366,7 +347,6 @@ public class DatastoreImpl implements AdvancedDatastore {
      * @return the logged query
      * @morphia.internal
      */
-    @Override
     public String getLoggedQuery(FindOptions options) {
         if (options.isLogQuery()) {
             String json = "{}";
@@ -465,12 +445,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public void ensureCaps() {
-        Sofia.logConfiguredOperation("ensureCaps");
-        applyCaps();
-    }
-
-    @Override
     public <T> T merge(T entity, InsertOneOptions options) {
         final Object id = mapper.getId(entity);
         if (id == null) {
@@ -514,7 +488,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         return mapper;
     }
 
-    @Override
     public void shardCollections() {
         var entities = getMapper().getMappedEntities()
                 .stream().filter(m -> m.getAnnotation(ShardKeys.class) != null)
@@ -689,22 +662,6 @@ public class DatastoreImpl implements AdvancedDatastore {
         }
 
         return entities;
-    }
-
-    @Override
-    public dev.morphia.aggregation.AggregationPipeline createAggregation(String collection, Class<?> clazz) {
-        return new dev.morphia.aggregation.AggregationPipelineImpl(this, getDatabase().getCollection(collection), clazz);
-    }
-
-    @Override
-    public <T> Query<T> createQuery(Class<T> type, Document q) {
-        return queryFactory.createQuery(this, type, q);
-    }
-
-    @Override
-    @SuppressWarnings("removal")
-    public <T> Query<T> queryByExample(String collection, T ex) {
-        return queryByExample(ex);
     }
 
     /**

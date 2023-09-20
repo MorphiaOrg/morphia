@@ -7,7 +7,7 @@ import java.util.StringJoiner;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
@@ -28,9 +28,9 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 public abstract class MorphiaReference<T> {
     private boolean ignoreMissing;
     private boolean resolved;
-    private Datastore datastore;
+    private DatastoreImpl datastore;
 
-    MorphiaReference(Datastore datastore) {
+    MorphiaReference(DatastoreImpl datastore) {
         this.datastore = datastore;
     }
 
@@ -42,7 +42,7 @@ public abstract class MorphiaReference<T> {
      * @return the MorphiaReference wrapper
      */
     @SuppressWarnings("unchecked")
-    public static <V> MorphiaReference<V> wrap(Datastore datastore, V value) {
+    public static <V> MorphiaReference<V> wrap(DatastoreImpl datastore, V value) {
         if (value instanceof List) {
             return (MorphiaReference<V>) new ListReference<>(datastore, (List<V>) value);
         } else if (value instanceof Set) {
@@ -72,7 +72,7 @@ public abstract class MorphiaReference<T> {
      */
     public abstract List<Object> getIds();
 
-    protected Datastore getDatastore() {
+    protected DatastoreImpl getDatastore() {
         return datastore;
     }
 

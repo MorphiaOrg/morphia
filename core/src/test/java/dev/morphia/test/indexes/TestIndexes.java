@@ -113,7 +113,7 @@ public class TestIndexes extends TestBase {
     @Test(expectedExceptions = MongoCommandException.class)
     public void shouldNotAllowMultipleTextIndexes() {
         getMapper().map(MultipleTextIndexes.class);
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
     }
 
     @Test

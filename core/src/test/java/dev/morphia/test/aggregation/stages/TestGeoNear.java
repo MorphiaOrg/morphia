@@ -26,7 +26,7 @@ public class TestGeoNear extends AggregationTest {
         GeoCity sevilla = new GeoCity("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
         getDs().save(sevilla);
 
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         // when
         Iterator<GeoCity> cities = getDs().aggregate(GeoCity.class)

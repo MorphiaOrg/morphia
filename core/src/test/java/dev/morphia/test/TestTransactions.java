@@ -7,6 +7,7 @@ import com.mongodb.MongoQueryException;
 import com.mongodb.TransactionOptions;
 import com.mongodb.client.result.DeleteResult;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Lookup;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -45,20 +46,21 @@ public class TestTransactions extends TemplatedTestBase {
     @Test
     public void delete() {
         Rectangle rectangle = new Rectangle(1, 1);
-        getDs().save(rectangle);
+        Datastore datastore = getDs();
+        datastore.save(rectangle);
 
-        getDs().withTransaction(builder()
+        datastore.withTransaction(builder()
                 .defaultTransactionOptions(TransactionOptions.builder()
                         .writeConcern(MAJORITY)
                         .build())
                 .build(), session -> {
 
-                    assertNotNull(getDs().find(Rectangle.class).first());
+                    assertNotNull(datastore.find(Rectangle.class).first());
                     assertNotNull(session.find(Rectangle.class).first());
 
                     session.delete(rectangle);
 
-                    assertNotNull(getDs().find(Rectangle.class).first());
+                    assertNotNull(datastore.find(Rectangle.class).first());
                     assertNull(session.find(Rectangle.class).first());
                     return null;
                 });

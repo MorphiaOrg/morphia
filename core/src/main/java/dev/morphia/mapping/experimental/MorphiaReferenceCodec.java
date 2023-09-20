@@ -7,7 +7,7 @@ import java.util.Set;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.BaseReferenceCodec;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -46,7 +46,7 @@ public class MorphiaReferenceCodec extends BaseReferenceCodec<MorphiaReference> 
      * @param datastore
      * @param propertyModel the reference property model
      */
-    public MorphiaReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
+    public MorphiaReferenceCodec(DatastoreImpl datastore, PropertyModel propertyModel) {
         super(datastore, propertyModel);
         this.mapper = datastore.getMapper();
     }

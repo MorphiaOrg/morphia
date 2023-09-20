@@ -28,7 +28,7 @@ public class TestMaxMin extends TestBase {
     @BeforeMethod
     public void setUp() {
         getMapper().map(IndexedEntity.class);
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
     }
 
     @Test(expectedExceptions = MongoException.class)
@@ -45,13 +45,13 @@ public class TestMaxMin extends TestBase {
         final IndexedEntity b = new IndexedEntity("b");
         final IndexedEntity c = new IndexedEntity("c");
 
-        Datastore ds = getDs();
+        var ds = getDs();
 
         ds.save(a);
         ds.save(b);
         ds.save(c);
 
-        ds.ensureIndexes();
+        ds.applyIndexes();
         Assert.assertEquals(ds.find(IndexedEntity.class)
                 .iterator(new FindOptions()
                         .sort(descending("id"))

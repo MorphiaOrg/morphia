@@ -97,7 +97,7 @@ public class TestVersioning extends TestBase {
     public void testAlternateFailures() {
         assertThrows(MongoWriteException.class, () -> {
             getMapper().map(Country.class);
-            getDs().ensureIndexes();
+            getDs().applyIndexes();
 
             getDs().save(new Country("USA"));
             getDs().save(new Country("Sweden"));

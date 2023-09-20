@@ -2,7 +2,7 @@ package dev.morphia.mapping.codec;
 
 import java.util.Objects;
 
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -23,7 +23,7 @@ import org.bson.codecs.Codec;
 public abstract class BaseReferenceCodec<T> implements Codec<T> {
     private final PropertyModel property;
     private EntityModel entityModel;
-    private Datastore datastore;
+    private DatastoreImpl datastore;
 
     /**
      * Creates a codec
@@ -31,7 +31,7 @@ public abstract class BaseReferenceCodec<T> implements Codec<T> {
      * @param datastore
      * @param property  the property
      */
-    public BaseReferenceCodec(Datastore datastore, PropertyModel property) {
+    public BaseReferenceCodec(DatastoreImpl datastore, PropertyModel property) {
         this.datastore = datastore;
         this.property = property;
     }
@@ -39,7 +39,7 @@ public abstract class BaseReferenceCodec<T> implements Codec<T> {
     /**
      * @return the datastore
      */
-    public Datastore getDatastore() {
+    public DatastoreImpl getDatastore() {
         return datastore;
     }
 

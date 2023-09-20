@@ -21,7 +21,7 @@ public class TestSorts extends TemplatedTestBase {
     @Test
     public void metaAndSorts() {
         getMapper().map(Article.class);
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         Query<Article> query = getDs().find(Article.class)
                 .filter(text("coffee"));

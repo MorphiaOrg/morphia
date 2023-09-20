@@ -47,7 +47,7 @@ public class TestGeoQueries extends TestBase {
         getDs().save(new City("London", new Point(new Position(51.5286416, -0.1015987))));
         City sevilla = getDs().save(new City("Sevilla", new Point(new Position(37.4057731, -5.966287))));
 
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         // when
         List<City> matchingCity = getDs().find(City.class)
@@ -73,7 +73,7 @@ public class TestGeoQueries extends TestBase {
         datastore.save(List.of(new City("Manchester", new Point(new Position(53.4722454, -2.2235922))),
                 new City("Sevilla", new Point(new Position(37.3753708, -5.9550582)))));
 
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         // when
         List<City> cities = datastore.find(City.class)
@@ -283,7 +283,7 @@ public class TestGeoQueries extends TestBase {
         datastore.save(List.of(new City("Manchester", new Point(new Position(53.4722454, -2.2235922))),
                 new City("Sevilla", new Point(new Position(37.3753708, -5.9550582)))));
 
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         final Point searchPoint = new Point(new Position(50, 0.1278));
 

@@ -33,6 +33,7 @@ import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.Key;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Handler;
@@ -380,7 +381,7 @@ public final class PropertyModel {
         if (handler != null) {
             try {
                 codec = handler.value()
-                        .getDeclaredConstructor(Datastore.class, PropertyModel.class)
+                        .getDeclaredConstructor(DatastoreImpl.class, PropertyModel.class)
                         .newInstance(datastore, this);
             } catch (ReflectiveOperationException e) {
                 throw new MappingException(e.getMessage(), e);

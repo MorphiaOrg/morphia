@@ -821,7 +821,7 @@ public class TestQuery extends TestBase {
         withConfig(buildConfig(ContainsPic.class), () -> {
         });
 
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
         query.filter(gte("size", 10),
                 lt("size", 100));
@@ -1107,7 +1107,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testQueryUnmappedData() {
         getMapper().map(Class1.class);
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         getDs().getDatabase().getCollection("user").insertOne(
                 new Document()
@@ -1224,7 +1224,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testSimpleSort() {
         getMapper().map(Rectangle.class);
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
         Rectangle r1 = getDs().find(Rectangle.class).iterator(new FindOptions()

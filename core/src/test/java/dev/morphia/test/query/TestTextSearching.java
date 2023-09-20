@@ -24,7 +24,7 @@ public class TestTextSearching extends TestBase {
     @Test
     public void testTextSearch() {
         getMapper().map(Greeting.class);
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         getDs().save(new Greeting("good morning", "english"));
         getDs().save(new Greeting("good afternoon", "english"));
@@ -75,7 +75,7 @@ public class TestTextSearching extends TestBase {
     @Test
     public void testTextSearchSorting() {
         getMapper().map(Book.class);
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         getDs().save(asList(new Book("The Banquet", "Dante"),
                 new Book("Divine Comedy", "Dante"),
@@ -94,7 +94,7 @@ public class TestTextSearching extends TestBase {
     @Test
     public void testTextSearchValidationFailed() {
         getMapper().map(Book.class);
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         getDs().save(asList(new Book("The Banquet", "Dante"),
                 new Book("Divine Comedy", "Dante"),
@@ -113,7 +113,7 @@ public class TestTextSearching extends TestBase {
     @Test
     public void testTextSearchWithMeta() {
         getMapper().map(Book.class);
-        getDs().ensureIndexes();
+        getDs().applyIndexes();
 
         getDs().save(asList(new Book("The Banquet", "Dante"),
                 new Book("Divine Comedy", "Dante"),
