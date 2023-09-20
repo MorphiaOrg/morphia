@@ -10,7 +10,6 @@ import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.NonNull;
@@ -26,8 +25,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
-import dev.morphia.query.filters.Filters;
-import dev.morphia.query.filters.NearFilter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.query.updates.UpdateOperator;
@@ -140,12 +137,6 @@ class MorphiaQuery<T> implements Query<T> {
         return verbosity == null
                 ? iterable(options, collection).explain()
                 : iterable(options, collection).explain(verbosity);
-    }
-
-    @Override
-    @SuppressWarnings({ "removal", "unchecked" })
-    public FieldEnd<? extends Query<T>> field(String name) {
-        return new MorphiaQueryFieldEnd(name);
     }
 
     @Override
@@ -406,56 +397,4 @@ class MorphiaQuery<T> implements Query<T> {
 
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked", "DeprecatedIsStillUsed" })
-    @Deprecated(since = "2.0", forRemoval = true)
-    private class MorphiaQueryFieldEnd extends FieldEndImpl {
-        private final String name;
-
-        private MorphiaQueryFieldEnd(String name) {
-            super(datastore, name, MorphiaQuery.this, mapper.getEntityModel(getEntityClass()), validate);
-            this.name = name;
-        }
-
-        @Override
-        @SuppressWarnings("removal")
-        public CriteriaContainer within(Shape shape) {
-            Filter converted;
-            if (shape instanceof dev.morphia.query.Shape.Center) {
-                final dev.morphia.query.Shape.Center center = (dev.morphia.query.Shape.Center) shape;
-                converted = Filters.center(getField(), center.getCenter(), center.getRadius());
-            } else if (shape.getGeometry().equals("$box")) {
-                Point[] points = shape.getPoints();
-                converted = Filters.box(getField(), points[0], points[1]);
-            } else if (shape.getGeometry().equals("$polygon")) {
-                converted = Filters.polygon(getField(), shape.getPoints());
-            } else {
-                throw new UnsupportedOperationException(Sofia.conversionNotSupported(shape.getGeometry()));
-            }
-            if (isNot()) {
-                converted.not();
-            }
-            filter(converted);
-            return MorphiaQuery.this;
-        }
-
-        @Override
-        @SuppressWarnings("removal")
-        protected MorphiaQuery<T> addCriteria(FilterOperator op, Object val, boolean not) {
-            Filter converted = op.apply(name, val);
-            if (not) {
-                converted.not();
-            }
-            filter(converted);
-            return MorphiaQuery.this;
-        }
-
-        @Override
-        @SuppressWarnings("removal")
-        protected CriteriaContainer addGeoCriteria(FilterOperator op, Object val, Map opts) {
-            NearFilter apply = (NearFilter) op.apply(name, val);
-            apply.applyOpts(opts);
-            filter(apply);
-            return MorphiaQuery.this;
-        }
-    }
 }

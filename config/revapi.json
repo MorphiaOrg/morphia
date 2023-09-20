@@ -206,15 +206,6 @@
         },
         {
           "ignore": true,
-          "code": "java.method.visibilityReduced",
-          "old": "method com.mongodb.client.MongoCollection<T> dev.morphia.query.LegacyQuery<T>::getCollection()",
-          "new": "method com.mongodb.client.MongoCollection<T> dev.morphia.query.LegacyQuery<T>::getCollection(java.lang.String)",
-          "oldVisibility": "public",
-          "newVisibility": "private",
-          "justification": "internal method"
-        },
-        {
-          "ignore": true,
           "code": "java.method.returnTypeChanged",
           "old": "method <T> dev.morphia.aggregation.experimental.Aggregation<T> dev.morphia.Datastore::aggregate(java.lang.Class<T>)",
           "new": "method <T> dev.morphia.aggregation.Aggregation<T> dev.morphia.Datastore::aggregate(java.lang.Class<T>)",

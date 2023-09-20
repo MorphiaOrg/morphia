@@ -61,7 +61,7 @@ public class OperationTarget {
                 : null;
 
         Codec cachedCodec = null;
-        if (model != null && !(mappedValue instanceof LegacyQuery)) {
+        if (model != null) {
             cachedCodec = model.specializeCodec(datastore);
         }
         if (cachedCodec instanceof PropertyHandler) {

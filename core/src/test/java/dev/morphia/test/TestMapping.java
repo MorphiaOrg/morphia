@@ -33,7 +33,6 @@ import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryFactory;
 import dev.morphia.test.models.Author;
 import dev.morphia.test.models.BannedUser;
 import dev.morphia.test.models.BlogImage;
@@ -497,10 +496,8 @@ public class TestMapping extends TestBase {
                 });
     }
 
-    @Test(dataProvider = "queryFactories")
-    public void testFieldAsDiscriminator(QueryFactory queryFactory) {
+    public void testFieldAsDiscriminator() {
         withConfig(buildConfig()
-                .queryFactory(queryFactory)
                 .enablePolymorphicQueries(true), () -> {
                     BlogImage png = new Png();
                     png.content = "I'm a png";

@@ -83,9 +83,7 @@ public abstract class UpdateBase<T> {
     }
 
     private boolean validate() {
-        return query instanceof MorphiaQuery
-                ? ((MorphiaQuery) query).isValidate()
-                : ((LegacyQuery) query).isValidate();
+        return ((MorphiaQuery<?>) query).isValidate();
     }
 
     @Override

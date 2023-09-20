@@ -14,7 +14,6 @@ import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.PropertyDiscovery;
-import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.sofia.Sofia;
 
@@ -346,7 +345,6 @@ public interface MorphiaConfig {
         newConfig.discriminator = className();
         newConfig.collectionNaming = identity();
         newConfig.propertyNaming = identity();
-        newConfig.queryFactory = new LegacyQueryFactory();
 
         return newConfig;
 

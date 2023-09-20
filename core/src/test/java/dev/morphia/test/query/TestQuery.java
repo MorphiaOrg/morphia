@@ -34,7 +34,6 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.ArraySlice;
 import dev.morphia.query.CountOptions;
-import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
@@ -75,7 +74,6 @@ import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.singletonList;
 import static java.util.regex.Pattern.compile;
 import static java.util.regex.Pattern.quote;
-import static org.bson.Document.parse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.testng.Assert.assertEquals;
@@ -507,13 +505,6 @@ public class TestQuery extends TestBase {
         assertNotNull(r1);
         assertEquals(r1.getWidth(), 10, 0);
         assertEquals(r1.getHeight(), 10, 0);
-    }
-
-    @Test
-    public void testCriteriaContainers() {
-        assertThrows(UnsupportedOperationException.class, () -> {
-            check(new DefaultQueryFactory().createQuery(getDs(), User.class).disableValidation());
-        });
     }
 
     @Test
@@ -1317,31 +1308,6 @@ public class TestQuery extends TestBase {
         for (T t : list) {
             assertEquals(cursor.next(), t, list.toString());
         }
-    }
-
-    @SuppressWarnings("removal")
-    private void check(Query<User> query) {
-        query.field("version").equal("latest")
-                .and(
-                        query.or(
-                                query.criteria("fieldA").equal("a"),
-                                query.criteria("fieldB").equal("b")),
-                        query.and(
-                                query.criteria("fieldC").equal("c"),
-                                query.or(
-                                        query.criteria("fieldD").equal("d"),
-                                        query.criteria("fieldE").equal("e"))));
-
-        query.and(query.criteria("fieldF").equal("f"));
-
-        final Document queryObject = query.toDocument();
-
-        final Document parse = parse(
-                "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
-                        + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\","
-                        + "\"_t\": { \"$in\" : [ \"User\"]}}");
-
-        assertEquals(parse, queryObject);
     }
 
     private int[] copy(int[] array, int start, int count) {

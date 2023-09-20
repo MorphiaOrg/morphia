@@ -32,28 +32,7 @@ import static dev.morphia.query.MorphiaQuery.legacyOperation;
  * @param <T> The java type to query against
  */
 @SuppressWarnings("removal")
-public interface Query<T> extends CriteriaContainer, Iterable<T> {
-    /**
-     * Creates a container to hold 'and' clauses
-     *
-     * @param criteria the clauses to 'and' together
-     * @return the container
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default CriteriaContainer and(Criteria... criteria) {
-        return legacyOperation();
-    }
-
-    /**
-     * Creates a criteria to apply against a field
-     *
-     * @param field the field
-     * @return the FieldEnd to define the criteria
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default FieldEnd<? extends CriteriaContainer> criteria(String field) {
-        return legacyOperation();
-    }
+public interface Query<T> extends Iterable<T> {
 
     /**
      * Deletes elements matching this query
@@ -186,17 +165,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @since 2.2
      */
     Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity);
-
-    /**
-     * Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...}
-     *
-     * @param name the field
-     * @return the FieldEnd to define the criteria
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default FieldEnd<? extends Query<T>> field(String name) {
-        return legacyOperation();
-    }
 
     /**
      * Create a filter based on the specified condition and value.
@@ -370,17 +338,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      */
     @Deprecated(since = "2.0", forRemoval = true)
     MorphiaKeyCursor<T> keys(FindOptions options);
-
-    /**
-     * Creates a container to hold 'or' clauses
-     *
-     * @param criteria the clauses to 'or' together
-     * @return the container
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    default CriteriaContainer or(Criteria... criteria) {
-        return legacyOperation();
-    }
 
     /**
      * This is only intended for migration of legacy uses of UpdateOperations

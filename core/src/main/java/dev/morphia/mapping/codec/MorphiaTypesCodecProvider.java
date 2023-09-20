@@ -39,7 +39,6 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         addCodec(new ShapeCodec());
         addCodec(new URICodec());
         addCodec(new ByteWrapperArrayCodec());
-        addCodec(new LegacyQueryCodec(datastore));
         addCodec(new BitSetCodec());
 
         List.of(boolean.class, Boolean.class,

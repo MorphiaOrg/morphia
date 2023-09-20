@@ -24,8 +24,6 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
-import dev.morphia.query.DefaultQueryFactory;
-import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.test.mapping.codec.ZonedDateTimeCodec;
 
 import org.bson.Document;
@@ -38,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
@@ -116,14 +113,6 @@ public abstract class TestBase extends MorphiaTestSetup {
             e.printStackTrace();
         }
         assumeTrue(file.exists(), "Failed to process media files");
-    }
-
-    @DataProvider(name = "queryFactories")
-    public Object[][] queryFactories() {
-        return new Object[][] {
-                new Object[] { new DefaultQueryFactory() },
-                new Object[] { new LegacyQueryFactory() }
-        };
     }
 
     public static <T> T walk(Map map, List<String> steps) {
