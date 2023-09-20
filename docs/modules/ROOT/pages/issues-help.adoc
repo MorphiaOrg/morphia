@@ -4,6 +4,8 @@ We are lucky to have a vibrant MongoDB Java community with lots of varying exper
 We often find the quickest way to get support for general questions is through https://github.com/MorphiaOrg/morphia/discussions[GitHub discussions],
 https://community.mongodb.com/c/drivers-odms-connectors/[the mongoDB community forums], or through https://stackoverflow.com/questions/tagged/morphia[stackoverflow].
 
+There is also a small but growing community on discord which can be found https://discord.gg/saZsJescBa[here].
+
 == Bugs / Feature Requests
 
 If you think you’ve found a bug or want to see a new feature in the Morphia, please open an issue on

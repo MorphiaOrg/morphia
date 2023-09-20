@@ -23,7 +23,6 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.internal.DatastoreHolder;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
@@ -368,7 +367,6 @@ class MorphiaQuery<T> implements Query<T> {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
         try {
-            DatastoreHolder.holder.set(datastore);
             return options
                     .apply(iterable(options, collection), mapper, type)
                     .iterator();
@@ -414,7 +412,7 @@ class MorphiaQuery<T> implements Query<T> {
         private final String name;
 
         private MorphiaQueryFieldEnd(String name) {
-            super(name, MorphiaQuery.this, mapper.getEntityModel(getEntityClass()), validate);
+            super(datastore, name, MorphiaQuery.this, mapper.getEntityModel(getEntityClass()), validate);
             this.name = name;
         }
 

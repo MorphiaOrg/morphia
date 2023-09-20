@@ -136,6 +136,75 @@ public class EntityModel {
         listeners.add(new OnEntityListenerAdapter(getType()));
     }
 
+    public EntityModel(EntityModel other) {
+        type = other.type;
+
+        superClass = other.superClass;
+        discriminatorEnabled = other.discriminatorEnabled;
+        discriminatorKey = other.discriminatorKey;
+        discriminator = other.discriminator;
+
+        this.annotations = other.annotations;
+        this.propertyModelsByName = new LinkedHashMap<>();
+        this.propertyModelsByMappedName = new LinkedHashMap<>();
+        other.propertyModelsByName.values().forEach(otherProperty -> {
+            PropertyModel model = otherProperty.copy(this);
+            propertyModelsByMappedName.put(model.getMappedName(), model);
+            List<String> loadNames = model.getLoadNames();
+            for (int i = 1; i < loadNames.size(); i++) {
+                String name = loadNames.get(i);
+                if (propertyModelsByMappedName.put(name, model) != null) {
+                    throw new MappingException(Sofia.duplicatedMappedName(type.getCanonicalName(), name));
+                }
+            }
+            propertyModelsByName.putIfAbsent(model.getName(), model);
+        });
+
+        ShardKeys shardKeys = getAnnotation(ShardKeys.class);
+        if (shardKeys != null) {
+            this.shardKeys = stream(shardKeys.value())
+                    .map(k -> getProperty(k.value()))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        } else {
+            this.shardKeys = emptyList();
+        }
+
+        this.collectionName = other.collectionName;
+        creatorFactory = new InstanceCreatorFactoryImpl(this);
+
+        if (superClass != null) {
+            superClass.addSubtype(this);
+        }
+        PropertyModel otherId = other.idProperty;
+        idProperty = otherId != null ? getProperty(otherId.getName()) : null;
+
+        PropertyModel otherVersion = other.versionProperty;
+        versionProperty = otherVersion != null ? getProperty(otherVersion.getName()) : null;
+
+        other.subtypes.forEach(subType -> {
+            subType.addSubtype(this.copy());
+        });
+
+        final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
+        if (entityLisAnn != null) {
+            for (Class<?> aClass : entityLisAnn.value()) {
+                if (EntityListener.class.isAssignableFrom(aClass)) {
+                    listeners.add(new EntityListenerAdapter(aClass));
+                } else {
+                    listeners.add(new UntypedEntityListenerAdapter(aClass));
+                }
+            }
+        }
+
+        listeners.add(new OnEntityListenerAdapter(getType()));
+
+    }
+
+    public EntityModel copy() {
+        return new EntityModel(this);
+    }
+
     /**
      * Invokes any lifecycle methods
      *

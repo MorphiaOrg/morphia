@@ -15,6 +15,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
@@ -30,6 +31,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
@@ -39,6 +41,7 @@ import dev.morphia.query.Query;
 import dev.morphia.query.QueryException;
 import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
+import dev.morphia.test.datastore.MultipleDSEntity;
 import dev.morphia.test.models.Address;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.City;
@@ -67,6 +70,7 @@ import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
@@ -79,6 +83,23 @@ public class TestDatastore extends TestBase {
                 .applyCaps(true)
                 .packages(of(LifecycleTestObj.class.getPackageName(),
                         FacebookUser.class.getPackageName())));
+    }
+
+    @Test
+    public void testDatastoreClones() {
+        withConfig(buildConfig(MultipleDSEntity.class), () -> {
+            assertEquals(getMapper().getMappedEntities().size(), 1);
+
+            DatastoreImpl copied = new DatastoreImpl(getDs());
+
+            EntityModel model = getMapper().getEntityModel(MultipleDSEntity.class);
+            EntityModel copiedModel = copied.getMapper().getEntityModel(MultipleDSEntity.class);
+
+            assertNotSame(model, copiedModel);
+            assertNotSame(model.getProperty("_id"), copiedModel.getProperty("_id"));
+            assertNotSame(model.getProperty("name"), copiedModel.getProperty("name"));
+            assertNotSame(model.getProperty("count"), copiedModel.getProperty("count"));
+        });
     }
 
     @Test

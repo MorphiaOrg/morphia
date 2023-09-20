@@ -3,6 +3,7 @@ package dev.morphia.aggregation.codecs.stages;
 import java.util.List;
 import java.util.Map.Entry;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Facet;
 import dev.morphia.aggregation.stages.Stage;
 
@@ -14,6 +15,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 public class FacetCodec extends StageCodec<Facet> {
+    public FacetCodec(Datastore datastore) {
+        super(datastore);
+    }
+
     @Override
     public Class<Facet> getEncoderClass() {
         return Facet.class;

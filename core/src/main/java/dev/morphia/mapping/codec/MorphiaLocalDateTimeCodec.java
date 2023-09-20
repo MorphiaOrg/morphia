@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec;
 
 import java.time.LocalDateTime;
 
+import dev.morphia.Datastore;
 import dev.morphia.config.MorphiaConfig;
 
 import org.bson.BsonReader;
@@ -11,7 +12,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.internal.DatastoreHolder.holder;
 import static java.time.Instant.ofEpochMilli;
 
 /**
@@ -21,21 +21,23 @@ import static java.time.Instant.ofEpochMilli;
  */
 public class MorphiaLocalDateTimeCodec implements Codec<LocalDateTime> {
 
-    MorphiaLocalDateTimeCodec() {
+    private Datastore datastore;
 
+    MorphiaLocalDateTimeCodec(Datastore datastore) {
+        this.datastore = datastore;
     }
 
     @Override
     public LocalDateTime decode(BsonReader reader, DecoderContext decoderContext) {
         if (reader.getCurrentBsonType().equals(BsonType.INT64)) {
-            return ofEpochMilli(reader.readInt64()).atZone(holder.get().getMapper().getConfig().dateStorage().getZone()).toLocalDateTime();
+            return ofEpochMilli(reader.readInt64()).atZone(datastore.getMapper().getConfig().dateStorage().getZone()).toLocalDateTime();
         }
-        return ofEpochMilli(reader.readDateTime()).atZone(holder.get().getMapper().getConfig().dateStorage().getZone()).toLocalDateTime();
+        return ofEpochMilli(reader.readDateTime()).atZone(datastore.getMapper().getConfig().dateStorage().getZone()).toLocalDateTime();
     }
 
     @Override
     public void encode(BsonWriter writer, LocalDateTime value, EncoderContext encoderContext) {
-        writer.writeDateTime(value.atZone(holder.get().getMapper().getConfig().dateStorage().getZone()).toInstant().toEpochMilli());
+        writer.writeDateTime(value.atZone(datastore.getMapper().getConfig().dateStorage().getZone()).toInstant().toEpochMilli());
     }
 
     @Override

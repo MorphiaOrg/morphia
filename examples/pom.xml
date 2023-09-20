@@ -11,6 +11,10 @@
 
     <artifactId>examples</artifactId>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>dev.morphia.morphia</groupId>

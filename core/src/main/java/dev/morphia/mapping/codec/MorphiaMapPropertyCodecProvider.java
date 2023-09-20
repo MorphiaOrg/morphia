@@ -40,7 +40,7 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
             } catch (CodecConfigurationException e) {
                 if (valueType.getType().equals(Object.class)) {
                     try {
-                        return (Codec<T>) registry.get(TypeData.builder(Map.class).build());
+                        return (Codec<T>) registry.get(TypeData.get(Map.class));
                     } catch (CodecConfigurationException e1) {
                         // Ignore and return original exception
                     }

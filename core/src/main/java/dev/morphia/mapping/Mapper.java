@@ -89,7 +89,17 @@ public class Mapper {
     public Mapper(MorphiaConfig config) {
         this.config = config;
         contextClassLoader = Thread.currentThread().getContextClassLoader();
-        discriminatorLookup = new DiscriminatorLookup(contextClassLoader);
+        discriminatorLookup = new DiscriminatorLookup();
+    }
+
+    public Mapper(Mapper other) {
+        config = other.config;
+        contextClassLoader = Thread.currentThread().getContextClassLoader();
+        discriminatorLookup = new DiscriminatorLookup();
+        other.mappedEntities.values().forEach(entity -> {
+            register(entity.copy(), false);
+        });
+        listeners.addAll(other.listeners);
     }
 
     /**
@@ -101,6 +111,10 @@ public class Mapper {
     @Deprecated(forRemoval = true, since = "2.4.0")
     public void addInterceptor(EntityListener<?> ei) {
         listeners.add(ei);
+    }
+
+    public Mapper copy() {
+        return new Mapper(this);
     }
 
     /**
@@ -211,25 +225,17 @@ public class Mapper {
      * @return the EntityModel for the object given
      */
     public EntityModel getEntityModel(Class type) {
-        try {
-            final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-            if (actual == null && MorphiaProxy.class.equals(type)) {
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        EntityModel model = mappedEntities.get(actual);
+
+        if (model == null) {
+            if (!isMappable(actual)) {
                 throw new NotMappableException(type);
             }
-            EntityModel model = mappedEntities.get(actual);
-
-            if (model == null) {
-                if (!isMappable(actual)) {
-                    throw new NotMappableException(type);
-                }
-                model = register(createEntityModel(type));
-            }
-
-            return model;
-        } catch (NullPointerException e) {
-            System.out.println("********************* type = " + type);
-            throw new RuntimeException(e.getMessage(), e);
+            model = register(createEntityModel(type));
         }
+
+        return model;
     }
 
     /**
@@ -415,7 +421,6 @@ public class Mapper {
     @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void map(String packageName) {
         try {
-            System.out.println("************** packageName = " + packageName);
             getClasses(contextClassLoader, packageName)
                     .forEach(type -> {
                         try {
@@ -514,6 +519,10 @@ public class Mapper {
      */
     @MorphiaInternal
     public EntityModel register(EntityModel entityModel) {
+        return register(entityModel, true);
+    }
+
+    private EntityModel register(EntityModel entityModel, boolean validate) {
 
         discriminatorLookup.addModel(entityModel);
         mappedEntities.put(entityModel.getType(), entityModel);
@@ -524,7 +533,7 @@ public class Mapper {
             superClass.addSubtype(entityModel);
         }
 
-        if (!entityModel.isInterface()) {
+        if (validate && !entityModel.isInterface()) {
             new MappingValidator()
                     .validate(this, entityModel);
 

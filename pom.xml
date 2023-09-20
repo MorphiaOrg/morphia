@@ -14,6 +14,7 @@
 
     <name>Morphia</name>
     <url>https://github.com/MorphiaOrg/morphia</url>
+    <description>mongodb object-document mapper in Java based on https://github.com/mongodb/mongo-java-driver</description>
 
     <scm>
         <connection>scm:git:git@github.com:MorphiaOrg/morphia.git</connection>
@@ -22,6 +23,7 @@
     </scm>
 
     <properties>
+        <kotlin.version>1.9.10</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>4.10.2</driver.version>
         <driver.minor.version>4.7</driver.minor.version>
@@ -153,7 +155,6 @@
                 <artifactId>smallrye-config</artifactId>
                 <version>3.3.4</version>
             </dependency>
-
 
             <dependency>
                 <groupId>org.mongodb</groupId>

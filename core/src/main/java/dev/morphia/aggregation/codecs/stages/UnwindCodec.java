@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Unwind;
 
 import org.bson.BsonWriter;
@@ -10,6 +11,10 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class UnwindCodec extends StageCodec<Unwind> {
+    public UnwindCodec(Datastore datastore) {
+        super(datastore);
+    }
+
     @Override
     public Class<Unwind> getEncoderClass() {
         return Unwind.class;

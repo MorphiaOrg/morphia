@@ -57,6 +57,7 @@ import dev.morphia.query.updates.CurrentDateOperator.TypeSpecification;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.Circle;
+import dev.morphia.test.models.FacebookUser;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Shape;
@@ -148,6 +149,17 @@ public class TestUpdateOperations extends TestBase {
         // fails due to type now missing
         getDs().find(MapsOfStuff.class).iterator(new FindOptions().limit(1))
                 .next();
+    }
+
+    @Test(description = "see https://github.com/MorphiaOrg/morphia/issues/2472 for details")
+    public void testUpdateWithDocumentConversion() {
+        getDs().find(Hotel.class).filter(eq("_id", ObjectId.get()))
+                .disableValidation()
+                .update(
+                        set("last_updated", LocalDateTime.now()),
+                        push("logs", List.of(Map.of("1", 1L))),
+                        push("user_detail", List.of(new FacebookUser())))
+                .execute();
     }
 
     @Test
@@ -916,7 +928,7 @@ public class TestUpdateOperations extends TestBase {
         pic.setName("fist again");
         ds.save(pic);
 
-        cpk.keys = MorphiaReference.wrap(List.of(pic));
+        cpk.keys = MorphiaReference.wrap(getDs(), List.of(pic));
 
         //test with Key<Pic>
         Query<ContainsPicKey> query = ds.find(ContainsPicKey.class)

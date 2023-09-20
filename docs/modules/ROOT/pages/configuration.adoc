@@ -1,5 +1,12 @@
 == Configuration
 
+[NOTE]
+====
+After some feedback about some unexpected use cases, this transition has been postponed and the requisite `MapperOptions` based methods
+undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
+those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.
+====
+
 Starting in Morphia 3.0, configuration will be driven via a configuration file rather than programmatic configuration. The file
 should live in your build's resources folder and be named `META-INF/morphia-config.properties`. This is being done for a number of reasons:
 
