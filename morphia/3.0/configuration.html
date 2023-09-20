@@ -237,6 +237,22 @@
 <div class="sect1">
 <h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
 <div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>After some feedback about some unexpected use cases, this transition has been postponed and the requisite <code>MapperOptions</code> based methods
+undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
+those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Starting in Morphia 3.0, configuration will be driven via a configuration file rather than programmatic configuration. The file
 should live in your build&#8217;s resources folder and be named <code>META-INF/morphia-config.properties</code>. This is being done for a number of reasons:</p>
