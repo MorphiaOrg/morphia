@@ -64,6 +64,7 @@ import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
+import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.transactions.MorphiaSessionImpl;
 import dev.morphia.transactions.MorphiaTransaction;
@@ -457,15 +458,17 @@ public class DatastoreImpl implements Datastore {
         info.filter(query);
 
         Update<T> update;
+        UpdateResult execute;
+        UpdateOptions updateOptions = new UpdateOptions()
+                                          .writeConcern(options.writeConcern());
         if (!options.unsetMissing()) {
-            update = query.update(set(entity));
+            execute = query.update(updateOptions, set(entity));
         } else {
-            update = ((MergingEncoder<T>) new MergingEncoder(query,
+            var updates = ((MergingEncoder<T>) new MergingEncoder(query,
                     (MorphiaCodec) codecRegistry.get(entity.getClass())))
                     .encode(entity);
+            execute = query.update(updateOptions, updates.remove(0), updates.toArray(new UpdateOperator[0]));
         }
-        UpdateResult execute = update.execute(new UpdateOptions()
-                .writeConcern(options.writeConcern()));
         if (execute.getMatchedCount() != 1) {
             if (info.versioned()) {
                 info.rollbackVersion();

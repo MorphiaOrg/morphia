@@ -35,6 +35,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.query.ArraySlice;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
@@ -853,7 +854,7 @@ public class TestQuery extends TestBase {
                                         exists("belongsToContentId"),
                                         eq("showAtGuideLevel", Boolean.TRUE))));
 
-        var newDoc = newQ.toDocument();
+        var newDoc = ((MorphiaQuery<?>) newQ).toDocument();
         List<?> $and = (List<?>) newDoc.get("$and");
         assertEquals($and.size(), 2);
         assertDocumentEquals(newDoc, Document.parse("{\"$and\": [{\"$or\": [{\"status\": {\"$exists\": false}}, {\"status\": 0}]}, " +

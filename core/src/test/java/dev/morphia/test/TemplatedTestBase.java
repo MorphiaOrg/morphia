@@ -21,6 +21,7 @@ import dev.morphia.aggregation.AggregationImpl;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 
 import org.bson.Document;
@@ -79,7 +80,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
         loadData(getDs().getCollection(query.getEntityClass()).getNamespace().getCollectionName(), "data.json");
 
-        List<D> actual = runQuery(resourceName, query, options);
+        List<D> actual = runQuery(resourceName, (MorphiaQuery<D>) query, options);
 
         List<D> expected = map(query.getEntityClass(), loadExpected(resourceName));
 
@@ -174,8 +175,7 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     @NonNull
-    protected <D> List<D> runQuery(@NonNull String queryTemplate, @NonNull Query<D> query,
-            @NonNull FindOptions options) {
+    protected <D> List<D> runQuery(@NonNull String queryTemplate, @NonNull MorphiaQuery<D> query, @NonNull FindOptions options) {
         String queryName = format("%s/%s/query.json", prefix(), queryTemplate);
         try {
 

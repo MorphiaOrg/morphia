@@ -185,8 +185,7 @@ public class TestTransactions extends TemplatedTestBase {
             assertNull(getDs().find(Rectangle.class).first());
 
             Rectangle modified = session.find(Rectangle.class)
-                    .modify(inc("width", 13))
-                    .execute();
+                    .modify(inc("width", 13));
 
             assertNull(getDs().find(Rectangle.class).first());
             assertEquals(rectangle.getWidth(), modified.getWidth(), 0.5);
@@ -292,8 +291,7 @@ public class TestTransactions extends TemplatedTestBase {
             assertNull(getDs().find(Rectangle.class).first());
 
             session.find(Rectangle.class)
-                    .update(inc("width", 13))
-                    .execute();
+                    .update(inc("width", 13));
 
             assertEquals(session.find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
 

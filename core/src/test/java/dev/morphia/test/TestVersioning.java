@@ -74,8 +74,7 @@ public class TestVersioning extends TestBase {
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("id", entity.getId()));
-        query.update(set("name", "Value 3"))
-                .execute();
+        query.update(set("name", "Value 3"));
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
         assertEquals(entity.getName(), "Value 3");
@@ -166,10 +165,10 @@ public class TestVersioning extends TestBase {
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("name", "Value 1"));
-        entity = query.modify(set("name", "Value 3"))
-                .execute(new ModifyOptions()
-                        .returnDocument(ReturnDocument.AFTER)
-                        .upsert(true));
+        entity = query.modify(new ModifyOptions()
+                                  .returnDocument(ReturnDocument.AFTER)
+                                  .upsert(true),
+                          set("name", "Value 3"));
 
         assertEquals(entity.getName(), "Value 3");
         assertEquals(entity.getVersion().longValue(), 1);
@@ -187,8 +186,7 @@ public class TestVersioning extends TestBase {
 
         Query<Versioned> query = getDs().find(Versioned.class);
         query.filter(eq("_id", version1.getId()));
-        query.update(inc("count"))
-                .execute(new UpdateOptions().upsert(true));
+        query.update(new UpdateOptions().upsert(true), inc("count"));
 
         final Versioned version2 = getDs().find(Versioned.class)
                 .filter(eq("_id", version1.getId()))
@@ -330,8 +328,7 @@ public class TestVersioning extends TestBase {
         ds.save(initial);
 
         UpdateResult results = ds.find(VersionedType.class)
-                .update(set("text", "some new value"))
-                .execute();
+                .update(set("text", "some new value"));
         assertEquals(results.getModifiedCount(), 1);
         List<VersionedType> postUpdate = ds.find(VersionedType.class)
                 .filter(eq("text", "some new value"))
@@ -407,8 +404,7 @@ public class TestVersioning extends TestBase {
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("name", "Value 1"));
-        query.update(set("name", "Value 3"))
-                .execute(new UpdateOptions().upsert(true));
+        query.update(new UpdateOptions().upsert(true), set("name", "Value 3"));
 
         entity = datastore.find(Versioned.class).iterator(new FindOptions().limit(1)).tryNext();
         assertEquals(entity.getName(), "Value 3");

@@ -20,14 +20,7 @@ import org.bson.Document;
 @Deprecated(since = "2.3")
 public class Modify<T> extends UpdateBase<T> {
 
-    @SuppressWarnings("rawtypes")
-    Modify(DatastoreImpl datastore, MongoCollection<T> collection, Query<T> query, Class<T> type,
-            UpdateOpsImpl operations) {
-        super(datastore, collection, query, type, operations.getUpdates());
-
-    }
-
-    Modify(DatastoreImpl datastore, MongoCollection<T> collection, Query<T> query, Class<T> type,
+    Modify(DatastoreImpl datastore, MongoCollection<T> collection, MorphiaQuery<T> query, Class<T> type,
             List<UpdateOperator> updates) {
         super(datastore, collection, query, type, updates);
     }

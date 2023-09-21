@@ -88,16 +88,16 @@ public class TestDocumentValidation extends TestBase {
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         ModifyOptions options = new ModifyOptions()
                 .bypassDocumentValidation(false);
-        Modify<DocumentValidation> modify = query.modify(set("number", 5));
+
         try {
-            modify.execute(options);
+            query.modify(options, set("number", 5));
             fail("Document validation should have complained");
         } catch (MongoCommandException e) {
             // expected
         }
 
         options.bypassDocumentValidation(true);
-        modify.execute(options);
+        query.modify(options, set("number", 5));
 
         Assert.assertNotNull(query.filter(eq("number", 5))
                 .iterator(new FindOptions().limit(1))
@@ -150,13 +150,11 @@ public class TestDocumentValidation extends TestBase {
             Assert.assertThrows(MongoWriteException.class,
                     () -> getDs().find(Contact.class)
                             .filter(eq("_id", 1))
-                            .update(set("age", 42))
-                            .execute());
+                            .update(set("age", 42)));
 
             getDs().find(Contact.class)
                     .filter(eq("_id", 2))
-                    .update(unset("name"))
-                    .execute();
+                    .update(unset("name"));
         });
     }
 
@@ -252,16 +250,15 @@ public class TestDocumentValidation extends TestBase {
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         UpdateOptions options = new UpdateOptions()
                 .bypassDocumentValidation(false);
-        Update<DocumentValidation> update = query.update(set("number", 5));
         try {
-            update.execute(options);
+            query.update(options, set("number", 5));
             fail("Document validation should have complained");
         } catch (MongoWriteException e) {
             // expected
         }
 
         options.bypassDocumentValidation(true);
-        update.execute(options);
+        query.update(options, set("number", 5));
 
         Assert.assertNotNull(query.filter(eq("number", 5)).iterator(new FindOptions().limit(1))
                 .tryNext());

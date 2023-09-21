@@ -37,17 +37,17 @@ import org.slf4j.LoggerFactory;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.query.UpdateBase.coalesce;
-import static dev.morphia.query.filters.Filters.text;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 /**
  * @param <T> the type
  * @morphia.internal
+ * @hidden
  */
 @SuppressWarnings({ "removal", "deprecation" })
 @MorphiaInternal
-class MorphiaQuery<T> implements Query<T> {
+public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final DatastoreImpl datastore;
     private final Class<T> type;
@@ -140,19 +140,6 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    @SuppressWarnings({ "removal" })
-    public Query<T> filter(String condition, Object value) {
-        final String[] parts = condition.trim().split(" ");
-        if (parts.length < 1 || parts.length > 6) {
-            throw new IllegalArgumentException("'" + condition + "' is not a legal filter condition");
-        }
-
-        final FilterOperator op = (parts.length == 2) ? FilterOperator.fromString(parts[1]) : FilterOperator.EQUAL;
-
-        return filter(op.apply(parts[0].trim(), value));
-    }
-
-    @Override
     public String getLoggedQuery() {
         if (lastOptions != null && lastOptions.isLogQuery()) {
             String json = "{}";
@@ -199,13 +186,9 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Modify<T> modify(UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, collection, this, getEntityClass(), coalesce(first, updates));
-    }
-
-    @Override
-    public T modify(ModifyOptions options, UpdateOperator... updates) {
-        return new Modify<>(datastore, datastore.configureCollection(options, collection), this, getEntityClass(), List.of(updates))
+    public T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
+        return new Modify<>(datastore, datastore.configureCollection(options, collection), this, getEntityClass(),
+            coalesce(first, updates))
                 .execute(options);
     }
 
@@ -234,36 +217,25 @@ class MorphiaQuery<T> implements Query<T> {
                 datastore, type, getCollectionName());
     }
 
-    @Override
-    public Query<T> search(String searchText) {
-        return filter(text(searchText));
-    }
-
-    @Override
-    public Query<T> search(String searchText, String language) {
-        return filter(text(searchText).language(language));
-    }
-
     /**
      * Converts the query to a Document and updates for any discriminator values as my be necessary
      *
      * @return the query
      * @morphia.internal
      */
-    @Override
     @MorphiaInternal
     public Document toDocument() {
         return getQueryDocument();
     }
 
     @Override
-    @Deprecated
-    public Update<T> update(List<UpdateOperator> updates) {
+    public UpdateResult update(UpdateOptions options, UpdateOperator first, UpdateOperator... updates) {
         if (invalid != null) {
             throw invalid;
         }
         try {
-            return new Update<>(datastore, collection, this, type, updates);
+            return new Update<>(datastore, collection, this, type, coalesce(first, updates))
+                       .execute(options);
         } catch (ValidationException e) {
             invalid = e;
             throw e;
@@ -271,39 +243,17 @@ class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Update<T> update(UpdateOperator first, UpdateOperator... updates) {
+    public UpdateResult update(UpdateOptions options, Stage first, Stage... stages) {
         if (invalid != null) {
             throw invalid;
         }
         try {
-            return new Update<>(datastore, collection, this, type, coalesce(first, updates));
-        } catch (ValidationException e) {
-            invalid = e;
-            throw e;
-        }
-    }
-
-    @Override
-    public UpdateResult update(UpdateOptions options, Stage... updates) {
-        if (invalid != null) {
-            throw invalid;
-        }
-        try {
-            return new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, asList(updates))
+            return new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, coalesce(first, stages))
                     .execute(options);
         } catch (ValidationException e) {
             invalid = e;
             throw e;
         }
-    }
-
-    @Override
-    public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
-        if (invalid != null) {
-            throw invalid;
-        }
-        return new Update<>(datastore, datastore.configureCollection(options, collection), this, type, asList(updates))
-                .execute(options);
     }
 
     @Override

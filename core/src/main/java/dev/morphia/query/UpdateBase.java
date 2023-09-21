@@ -21,11 +21,12 @@ import static java.util.Arrays.asList;
 /**
  * @param <T>
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
 public abstract class UpdateBase<T> {
 
-    private final Query<T> query;
+    private final MorphiaQuery<T> query;
     private final MongoCollection<T> collection;
     private final Mapper mapper;
     private final Class<T> type;
@@ -34,7 +35,7 @@ public abstract class UpdateBase<T> {
 
     UpdateBase(DatastoreImpl datastore,
             @Nullable MongoCollection<T> collection,
-            @Nullable Query<T> query,
+            @Nullable MorphiaQuery<T> query,
             Class<T> type,
             List<UpdateOperator> updates) {
         this.datastore = datastore;
@@ -83,7 +84,7 @@ public abstract class UpdateBase<T> {
     }
 
     private boolean validate() {
-        return ((MorphiaQuery<?>) query).isValidate();
+        return query.isValidate();
     }
 
     @Override
@@ -99,16 +100,8 @@ public abstract class UpdateBase<T> {
         return datastore;
     }
 
-    protected Query<T> getQuery() {
+    protected MorphiaQuery<T> getQuery() {
         return query;
     }
 
-    /**
-     * @return the updates
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    protected List<UpdateOperator> getUpdates() {
-        return updates;
-    }
 }

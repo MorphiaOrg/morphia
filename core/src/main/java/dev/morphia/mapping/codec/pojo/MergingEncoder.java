@@ -1,5 +1,7 @@
 package dev.morphia.mapping.codec.pojo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.mongodb.lang.Nullable;
@@ -7,7 +9,6 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.Query;
-import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.updates.UpdateOperator;
 
@@ -26,7 +27,7 @@ import static dev.morphia.query.updates.UpdateOperators.unset;
 public class MergingEncoder<T> extends EntityEncoder {
     private final Query<T> query;
     private final DocumentWriter setOperations;
-    private Update<T> update;
+    private List<UpdateOperator> update;
 
     /**
      * @param query        the query
@@ -45,7 +46,7 @@ public class MergingEncoder<T> extends EntityEncoder {
      * @param entity
      * @return the update
      */
-    public Update<T> encode(Object entity) {
+    public List<UpdateOperator> encode(Object entity) {
         encode(setOperations, entity, EncoderContext.builder().build());
 
         for (Entry<String, Object> entry : setOperations.getDocument().entrySet()) {
@@ -77,9 +78,8 @@ public class MergingEncoder<T> extends EntityEncoder {
 
     private void add(UpdateOperator operator) {
         if (update == null) {
-            update = query.update(operator);
-        } else {
-            update.add(operator);
+            update = new ArrayList<>();
         }
+        update.add(operator);
     }
 }

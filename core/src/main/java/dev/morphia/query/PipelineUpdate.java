@@ -22,12 +22,12 @@ import org.bson.codecs.configuration.CodecRegistry;
  * @param <T>
  */
 class PipelineUpdate<T> {
-    private final Query<T> query;
+    private final MorphiaQuery<T> query;
     private final MongoCollection<T> collection;
     private final List<Stage> updates = new ArrayList<>();
     private final DatastoreImpl datastore;
 
-    PipelineUpdate(DatastoreImpl datastore, MongoCollection<T> collection, Query<T> query, List<Stage> updates) {
+    PipelineUpdate(DatastoreImpl datastore, MongoCollection<T> collection, MorphiaQuery<T> query, List<Stage> updates) {
         this.datastore = datastore;
         this.collection = collection;
         this.query = query;

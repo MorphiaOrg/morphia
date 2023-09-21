@@ -16,6 +16,8 @@ import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
+
 public class TestParentChildDisambiguation extends TestBase {
 
     @Test
@@ -23,15 +25,11 @@ public class TestParentChildDisambiguation extends TestBase {
 
         getMapper().map(Parent.class, Child.class);
 
-        UpdateOperator[] updateOperators = new UpdateOperator[2];
-
-        updateOperators[0] = UpdateOperators.setOnInsert(Map.of("child", new Child("purple")));
-        updateOperators[1] = UpdateOperators.setOnInsert(Map.of("name", "Fred"));
-
         getDs().find(Parent.class)
                 .filter(Filters.eq("name", "Fred"))
                 .update(new UpdateOptions().multi(true).upsert(true),
-                        updateOperators);
+                    setOnInsert(Map.of("child", new Child("purple"))),
+                    setOnInsert(Map.of("name", "Fred")));
 
         Parent parent = getDs().find(Parent.class).filter(Filters.eq("name", "Fred")).first();
 

@@ -40,8 +40,7 @@ public class TestArrayUpdates extends TestBase {
         assertNotNull(testQuery.iterator(new FindOptions().limit(1))
                 .tryNext());
 
-        testQuery.update(set("grades.$.data.name", "Makeup Test"))
-                .execute();
+        testQuery.update(set("grades.$.data.name", "Makeup Test"));
 
         assertNull(testQuery.iterator(new FindOptions().limit(1))
                 .tryNext());
@@ -70,8 +69,7 @@ public class TestArrayUpdates extends TestBase {
         getDs().find(BatchData.class)
                 .filter(eq("_id", id),
                         eq("files.fileName", "fileName1"))
-                .update(set("files.$.fileHash", "new hash"))
-                .execute();
+                .update(set("files.$.fileHash", "new hash"));
 
         BatchData data = getDs().find(BatchData.class)
                 .filter(eq("_id", id)).iterator(new FindOptions().limit(1))
@@ -108,9 +106,9 @@ public class TestArrayUpdates extends TestBase {
 
         Query<Student> student = datastore.find(Student.class).filter(eq("_id", 1L));
 
-        student.update(inc("grades.$[elem].marks", 5))
-                .execute(new UpdateOptions()
-                        .arrayFilter(lt("elem.marks", 90)));
+        student.update(new UpdateOptions()
+                           .arrayFilter(lt("elem.marks", 90)),
+                   inc("grades.$[elem].marks", 5));
 
         assertNull(grade80.iterator().tryNext());
         assertNotNull(grade90.iterator().tryNext());
@@ -122,9 +120,9 @@ public class TestArrayUpdates extends TestBase {
                 .tryNext());
         assertNotNull(grade90.iterator().tryNext());
 
-        student.update(inc("grades.$[elem].marks", 5))
-                .execute(new UpdateOptions()
-                        .arrayFilter(lt("elem.marks", 90).not()));
+        student.update(new UpdateOptions()
+                           .arrayFilter(lt("elem.marks", 90).not()),
+                   inc("grades.$[elem].marks", 5));
 
         assertNull(grade90.iterator().tryNext());
         assertNotNull(datastore.find(Student.class)
