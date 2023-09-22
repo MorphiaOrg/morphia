@@ -48,10 +48,8 @@ import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
-import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
-import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.CurrentDateOperator.TypeSpecification;
@@ -67,6 +65,7 @@ import dev.morphia.test.models.User;
 import dev.morphia.test.query.TestQuery.CappedPic;
 import dev.morphia.test.query.TestQuery.ContainsPic;
 import dev.morphia.test.query.TestQuery.Pic;
+import dev.morphia.utils.Documenter;
 
 import org.bson.BsonTimestamp;
 import org.bson.Document;
@@ -1466,7 +1465,7 @@ public class TestUpdateOperations extends TestBase {
                 new TranslationParams(updateName, mappedName, xor(updateName, 42)));
     }
 
-    private static class TranslationParams {
+    public static class TranslationParams {
         private String updateName;
         private String mappedName;
         final UpdateOperator operator;
@@ -1480,10 +1479,7 @@ public class TestUpdateOperations extends TestBase {
 
     @Test(dataProvider = "paths")
     public void testPathTranslations(TranslationParams params) {
-        Class<Hotel> type = Hotel.class;
-        Query<Hotel> query = getDs().find(type);
-        var update = new Update<>(getDs(), getDs().getCollection(type), (MorphiaQuery<Hotel>) query, type, List.of(params.operator));
-        Document document = update.toDocument();
+        Document document = Documenter.toDocument(getDs(), getMapper().getEntityModel(Hotel.class), List.of(params.operator), false);
         Codec<Document> documentCodec = getDs().getCodecRegistry().get(Document.class);
         var json = document.toJson(JsonWriterSettings.builder().indent(true).build(), documentCodec);
 

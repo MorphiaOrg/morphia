@@ -16,13 +16,14 @@ import org.bson.Document;
 
 /**
  * @morphia.internal
+ * @hidden
  */
-class Operations {
+public class Operations {
     private final Map<String, List<OperationTarget>> ops = new HashMap<>();
     private final Datastore datastore;
     private final EntityModel entityModel;
 
-    Operations(Datastore datastore, EntityModel model) {
+    public Operations(Datastore datastore, EntityModel model) {
         this.datastore = datastore;
         this.entityModel = model;
     }
@@ -57,14 +58,14 @@ class Operations {
      * @param operator the operator
      * @param value    the value
      */
-    void add(String operator, OperationTarget value) {
+    public void add(String operator, OperationTarget value) {
         ops.computeIfAbsent(operator, o -> new ArrayList<>()).add(value);
     }
 
     /**
      * @return the Document form of this instance
      */
-    Document toDocument() {
+    public Document toDocument() {
         versionUpdate();
 
         Document document = new Document();

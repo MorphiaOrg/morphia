@@ -22,27 +22,24 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
-import dev.morphia.query.internal.DatastoreAware;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
+import dev.morphia.utils.Documenter;
 
 import org.bson.Document;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.query.UpdateBase.coalesce;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 /**
  * @param <T> the type
@@ -87,6 +84,14 @@ public class MorphiaQuery<T> implements Query<T> {
         mapper = this.datastore.getMapper();
         collection = datastore.getCollection(type);
         collectionName = collection.getNamespace().getCollectionName();
+    }
+
+    @NonNull
+    static <T> List<T> coalesce(T first, T[] updates) {
+        List<T> operators = new ArrayList<>();
+        operators.add(first);
+        operators.addAll(asList(updates));
+        return operators;
     }
 
     static <V> V legacyOperation() {
@@ -191,9 +196,10 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
-        return new Modify<>(datastore, datastore.configureCollection(options, collection), this, getEntityClass(),
-                coalesce(first, updates))
-                .execute(options);
+        Document update = Documenter.toDocument(datastore, mapper.getEntityModel(getEntityClass()), coalesce(first, updates), validate);
+
+        return datastore.operations().findOneAndUpdate(datastore.configureCollection(options, collection),
+                toDocument(), update, options);
     }
 
     @MorphiaInternal
@@ -232,55 +238,24 @@ public class MorphiaQuery<T> implements Query<T> {
         return getQueryDocument();
     }
 
-    private static Document toDocument(DatastoreImpl datastore, EntityModel entityModel, List<UpdateOperator> updates,
-            boolean validate) {
-        final Operations operations = new Operations(datastore, entityModel);
-
-        for (UpdateOperator update : updates) {
-            PathTarget pathTarget = new PathTarget(datastore.getMapper(), entityModel, update.field(), validate);
-            if (update instanceof DatastoreAware) {
-                ((DatastoreAware) update).setDatastore(datastore);
-            }
-            operations.add(update.operator(), update.toTarget(pathTarget));
-        }
-        return operations.toDocument();
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private static List<Document> toDocument(DatastoreImpl datastore, List<Stage> updates) {
-        CodecRegistry registry = datastore.getCodecRegistry();
-        List<Document> documents = new ArrayList<>();
-        for (Stage update : updates) {
-            DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
-            Codec codec = registry.get(update.getClass());
-            codec.encode(writer, update, EncoderContext.builder().build());
-            documents.add(writer.getDocument());
-        }
-        return documents;
-    }
-
     @Override
     public UpdateResult update(UpdateOptions options, UpdateOperator first, UpdateOperator... updates) {
         if (invalid != null) {
             throw invalid;
         }
-        try {
-            EntityModel entityModel = mapper.getEntityModel(getEntityClass());
-            Document updateOperations = toDocument(datastore, entityModel, coalesce(first, updates), isValidate());
-            final Document queryObject = toDocument();
-            if (options.isUpsert()) {
-                if (entityModel.useDiscriminator()) {
-                    queryObject.put(entityModel.getDiscriminatorKey(), entityModel.getDiscriminator());
-                }
+        EntityModel entityModel = mapper.getEntityModel(getEntityClass());
+        Document updateOperations = Documenter.toDocument(datastore, entityModel, coalesce(first, updates), isValidate());
+        final Document queryObject = toDocument();
+        if (options.isUpsert()) {
+            if (entityModel.useDiscriminator()) {
+                queryObject.put(entityModel.getDiscriminatorKey(), entityModel.getDiscriminator());
             }
-
-            MongoCollection<T> mongoCollection = options.prepare(collection, datastore.getDatabase());
-
-            return options.multi() ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
-                    : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
-        } catch (ValidationException e) {
-            throw e;
         }
+
+        MongoCollection<T> mongoCollection = options.prepare(collection, datastore.getDatabase());
+
+        return options.multi() ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
+                : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
     }
 
     @Override
@@ -288,17 +263,12 @@ public class MorphiaQuery<T> implements Query<T> {
         if (invalid != null) {
             throw invalid;
         }
-        try {
-            List<Document> updateOperations = toDocument(datastore, coalesce(first, stages));
-            final Document queryObject = toDocument();
+        List<Document> updateOperations = Documenter.toDocument(datastore, coalesce(first, stages));
+        final Document queryObject = toDocument();
 
-            MongoCollection<T> mongoCollection = datastore.configureCollection(options, datastore.configureCollection(options, collection));
-            return options.multi() ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
-                    : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
-        } catch (ValidationException e) {
-            invalid = e;
-            throw e;
-        }
+        MongoCollection<T> mongoCollection = datastore.configureCollection(options, datastore.configureCollection(options, collection));
+        return options.multi() ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
+                : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
     }
 
     @Override
