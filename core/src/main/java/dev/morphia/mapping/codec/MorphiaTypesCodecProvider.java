@@ -33,7 +33,6 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         addCodec(new ClassCodec());
         addCodec(new CenterCodec());
         addCodec(new HashMapCodec());
-        addCodec(new KeyCodec(datastore));
         addCodec(new LocaleCodec());
         addCodec(new ObjectCodec(datastore));
         addCodec(new ShapeCodec());

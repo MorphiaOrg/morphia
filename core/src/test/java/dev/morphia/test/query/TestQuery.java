@@ -23,7 +23,6 @@ import com.mongodb.client.model.CollationStrength;
 
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
-import dev.morphia.Key;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -42,8 +41,6 @@ import dev.morphia.query.ValidationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.CustomId;
-import dev.morphia.test.models.FacebookUser;
-import dev.morphia.test.models.Keys;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Student;
 import dev.morphia.test.models.UsesCustomIdObject;
@@ -593,20 +590,6 @@ public class TestQuery extends TestBase {
     }
 
     @Test
-    public void testFetchKeys() {
-        PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
-        PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
-        PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
-        getDs().save(asList(pwk1, pwk2, pwk3));
-
-        MongoCursor<Key<PhotoWithKeywords>> keys = getDs().find(PhotoWithKeywords.class).keys();
-        assertTrue(keys.hasNext());
-        assertEquals(keys.next().getId(), pwk1.id);
-        assertEquals(keys.next().getId(), pwk2.id);
-        assertEquals(keys.next().getId(), pwk3.id);
-    }
-
-    @Test
     public void testFluentAndOrQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
@@ -702,74 +685,6 @@ public class TestQuery extends TestBase {
         getDs().find(CappedPic.class)
                 .disableValidation()
                 .filter(eq("bad.name", "blargle"));
-    }
-
-    @Test
-    public void testKeyList() {
-        final Rectangle rect = new Rectangle(1000, 1);
-
-        Rectangle rectangle = getDs().save(rect);
-        assertEquals(rectangle.getId(), rect.getId());
-
-        final FacebookUser fbUser1 = new FacebookUser(1, "scott");
-        final FacebookUser fbUser2 = new FacebookUser(2, "tom");
-        final FacebookUser fbUser3 = new FacebookUser(3, "oli");
-        final FacebookUser fbUser4 = new FacebookUser(4, "frank");
-        final List<FacebookUser> users = getDs().save(asList(fbUser1, fbUser2, fbUser3, fbUser4));
-        assertEquals(fbUser1.getId(), 1);
-
-        final List<Key<FacebookUser>> fbUserKeys = new ArrayList<>();
-        for (FacebookUser user : users) {
-            fbUserKeys.add(getMapper().getKey(user));
-        }
-
-        assertEquals(fbUserKeys.get(0).getId(), fbUser1.getId());
-        assertEquals(fbUserKeys.get(1).getId(), fbUser2.getId());
-        assertEquals(fbUserKeys.get(2).getId(), fbUser3.getId());
-        assertEquals(fbUserKeys.get(3).getId(), fbUser4.getId());
-
-        final Keys k1 = new Keys(getMapper().getKey(rectangle), fbUserKeys);
-        final Keys keys = getDs().save(k1);
-        assertEquals(k1.getId(), keys.getId());
-
-        final Datastore datastore = getDs();
-
-        final Keys k1Loaded = datastore.find(Keys.class)
-                .filter(eq("_id", k1.getId()))
-                .first();
-        for (Key<FacebookUser> key : k1Loaded.getUsers()) {
-            assertNotNull(key.getId());
-        }
-
-        assertNotNull(k1Loaded.getRect().getId());
-    }
-
-    @Test
-    public void testKeys() {
-        PhotoWithKeywords pwk1 = new PhotoWithKeywords("california", "nevada", "arizona");
-        PhotoWithKeywords pwk2 = new PhotoWithKeywords("Joe", "Sarah");
-        PhotoWithKeywords pwk3 = new PhotoWithKeywords("MongoDB", "World");
-        getDs().save(asList(pwk1, pwk2, pwk3));
-
-        MongoCursor<Key<PhotoWithKeywords>> keys = getDs()
-                .find(PhotoWithKeywords.class)
-                .keys();
-        assertTrue(keys.hasNext());
-        assertEquals(pwk1.id, keys.next().getId());
-        assertEquals(pwk2.id, keys.next().getId());
-        assertEquals(pwk3.id, keys.next().getId());
-
-        List<UsesCustomIdObject> list = asList(new UsesCustomIdObject(new CustomId("Turk"), "Turk"),
-                new UsesCustomIdObject(new CustomId("JD"), "Dorian"),
-                new UsesCustomIdObject(new CustomId("Carla"), "Espinosa"));
-        getDs().save(list);
-
-        Iterator<Key<UsesCustomIdObject>> complexKeys = getDs().find(UsesCustomIdObject.class).keys();
-        assertTrue(complexKeys.hasNext());
-        assertEquals(list.get(0).getId(), complexKeys.next().getId());
-        assertEquals(list.get(1).getId(), complexKeys.next().getId());
-        assertEquals(list.get(2).getId(), complexKeys.next().getId());
-        assertFalse(complexKeys.hasNext());
     }
 
     @Test

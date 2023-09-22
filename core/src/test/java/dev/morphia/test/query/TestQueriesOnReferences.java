@@ -2,7 +2,6 @@ package dev.morphia.test.query;
 
 import java.util.List;
 
-import dev.morphia.Key;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdGetter;
@@ -159,20 +158,6 @@ public class TestQueriesOnReferences extends TestBase {
                 .tryNext();
         assertNotNull(object);
 
-    }
-
-    @Test
-    public void testWithKeyQuery() {
-        final ContainsPic cpk = new ContainsPic();
-        final Pic p = new Pic();
-        cpk.setPic(p);
-        getDs().save(p);
-        getDs().save(cpk);
-
-        Query<ContainsPic> query = getDs().find(ContainsPic.class)
-                .filter(eq("pic", new Key<>(Pic.class, "pic", p.getId())));
-
-        assertEquals(query.first(new FindOptions().logQuery().limit(1)).getId(), cpk.getId(), query.getLoggedQuery());
     }
 
     @Entity

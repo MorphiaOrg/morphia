@@ -19,7 +19,6 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
-import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
@@ -111,20 +110,11 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     public static Object encodeId(Mapper mapper, Object value, EntityModel model) {
         Object idValue;
         Class<?> type;
-        if (value instanceof Key) {
-            idValue = ((Key) value).getId();
-            String collectionName = ((Key<?>) value).getCollection();
-            type = collectionName != null ? mapper.getClassFromCollection(collectionName) : ((Key<?>) value).getType();
-            if (type == null) {
-                throw new MappingException("The type for the reference could not be determined for the key " + value);
-            }
-        } else {
-            idValue = mapper.getId(value);
-            if (idValue == null) {
-                return !mapper.isMappable(value.getClass()) ? value : null;
-            }
-            type = value.getClass();
+        idValue = mapper.getId(value);
+        if (idValue == null) {
+            return !mapper.isMappable(value.getClass()) ? value : null;
         }
+        type = value.getClass();
 
         String valueCollectionName = mapper.getEntityModel(type).getCollectionName();
         String fieldCollectionName = model.getCollectionName();
@@ -293,25 +283,15 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     private Object encodeId(Object value) {
         Object idValue;
         final String valueCollectionName;
-        if (value instanceof Key) {
-            idValue = ((Key<?>) value).getId();
-            String collectionName = ((Key<?>) value).getCollection();
-            Class<?> type = ((Key<?>) value).getType();
-            if (collectionName == null || type == null) {
-                throw new QueryException("Missing type or collection information in key");
+        idValue = mapper.getId(value);
+        if (idValue == null && !annotation.ignoreMissing()) {
+            if (!mapper.isMappable(value.getClass())) {
+                return value;
             }
-            valueCollectionName = collectionName;
-        } else {
-            idValue = mapper.getId(value);
-            if (idValue == null && !annotation.ignoreMissing()) {
-                if (!mapper.isMappable(value.getClass())) {
-                    return value;
-                }
-                throw new QueryException("No ID value found on referenced entity.  Save referenced entities before defining references to"
-                        + " them.");
-            }
-            valueCollectionName = mapper.getEntityModel(value.getClass()).getCollectionName();
+            throw new QueryException("No ID value found on referenced entity.  Save referenced entities before defining references to"
+                    + " them.");
         }
+        valueCollectionName = mapper.getEntityModel(value.getClass()).getCollectionName();
 
         if (!annotation.idOnly()) {
             idValue = new DBRef(valueCollectionName, idValue);

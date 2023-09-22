@@ -18,7 +18,6 @@ import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
-import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.query.updates.UpdateOperator;
 
 /**
@@ -217,25 +216,6 @@ public interface Query<T> extends Iterable<T> {
      * @since 2.0
      */
     MorphiaCursor<T> iterator(FindOptions options);
-
-    /**
-     * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
-     *
-     * @return the keys of the documents returned by this query
-     * @deprecated use a project to retrieve only the ID values
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    MorphiaKeyCursor<T> keys();
-
-    /**
-     * Execute the query and get the results (as a {@code MorphiaCursor<Key<T>>})
-     *
-     * @param options the options to apply to the find operation
-     * @return the keys of the documents returned by this query
-     * @since 1.4
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    MorphiaKeyCursor<T> keys(FindOptions options);
 
     /**
      * Provides a {@link Stream} representation of the results of this query.

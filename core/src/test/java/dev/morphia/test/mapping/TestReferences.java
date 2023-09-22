@@ -13,11 +13,9 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.mongodb.DBRef;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.ReturnDocument;
 
 import dev.morphia.Datastore;
-import dev.morphia.Key;
 import dev.morphia.ModifyOptions;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.annotations.Embedded;
@@ -222,21 +220,6 @@ public class TestReferences extends ProxyTestBase {
                 .first();
         ((List<Object>) loaded.get("friends"))
                 .forEach(f -> assertEquals(f.getClass(), DBRef.class));
-    }
-
-    @Test
-    public void testFetchKeys() {
-        List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
-                new Complex(new ChildId("JD", 26), "Dorian"),
-                new Complex(new ChildId("Carla", 29), "Espinosa"));
-        getDs().save(list);
-
-        MongoCursor<Key<Complex>> keys = getDs().find(Complex.class).keys();
-        assertTrue(keys.hasNext());
-        assertEquals(keys.next().getId(), list.get(0).getId());
-        assertEquals(keys.next().getId(), list.get(1).getId());
-        assertEquals(keys.next().getId(), list.get(2).getId());
-        assertFalse(keys.hasNext());
     }
 
     @Test

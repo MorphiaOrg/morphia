@@ -18,7 +18,6 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityInterceptor;
 import dev.morphia.EntityListener;
-import dev.morphia.Key;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
@@ -276,45 +275,6 @@ public class Mapper {
     }
 
     /**
-     * Gets the Key for an entity
-     *
-     * @param entity the entity to process
-     * @param <T>    the type of the entity
-     * @return the Key
-     */
-    @Nullable
-    @Deprecated(since = "2.0", forRemoval = true)
-    public <T> Key<T> getKey(T entity) {
-        if (entity instanceof Key) {
-            return (Key<T>) entity;
-        }
-
-        final Object id = getId(entity);
-        final Class<T> aClass = (Class<T>) entity.getClass();
-        return id == null ? null : new Key<>(aClass, getEntityModel(aClass).getCollectionName(), id);
-    }
-
-    /**
-     * Gets the Key for an entity and a specific collection
-     *
-     * @param entity     the entity to process
-     * @param collection the collection to use in the Key rather than the mapped collection as defined on the entity's class
-     * @param <T>        the type of the entity
-     * @return the Key
-     */
-    @Nullable
-    @Deprecated(since = "2.0", forRemoval = true)
-    public <T> Key<T> getKey(T entity, String collection) {
-        if (entity instanceof Key) {
-            return (Key<T>) entity;
-        }
-
-        final Object id = getId(entity);
-        final Class<T> aClass = (Class<T>) entity.getClass();
-        return id == null ? null : new Key<>(aClass, collection, id);
-    }
-
-    /**
      * @return collection of EntityModels
      */
     public List<EntityModel> getMappedEntities() {
@@ -469,26 +429,6 @@ public class Mapper {
     @Deprecated(since = "2.4.0", forRemoval = true)
     public void mapPackageFromClass(Class clazz) {
         mapPackage(clazz.getPackage().getName());
-    }
-
-    /**
-     * Updates the collection value on a Key with the mapped value on the Key's type Class
-     *
-     * @param key the Key to update
-     * @return the collection name on the Key
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public String updateCollection(Key key) {
-        String collection = key.getCollection();
-        Class type = key.getType();
-        if (collection == null && type == null) {
-            throw new IllegalStateException("Key is invalid! " + key);
-        } else if (collection == null) {
-            collection = getEntityModel(type).getCollectionName();
-            key.setCollection(collection);
-        }
-
-        return collection;
     }
 
     /**

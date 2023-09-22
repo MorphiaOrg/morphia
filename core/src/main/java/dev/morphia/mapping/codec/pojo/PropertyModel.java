@@ -34,7 +34,6 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
-import dev.morphia.Key;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.Reference;
@@ -326,11 +325,10 @@ public final class PropertyModel {
     /**
      * @return true if this field is a reference to a foreign document
      * @see Reference
-     * @see Key
      * @see DBRef
      */
     public boolean isReference() {
-        return hasAnnotation(Reference.class) || Key.class == getType() || DBRef.class == getType();
+        return hasAnnotation(Reference.class) || DBRef.class == getType();
     }
 
     /**

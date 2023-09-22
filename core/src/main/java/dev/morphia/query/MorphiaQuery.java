@@ -27,7 +27,6 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
-import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.utils.Documenter;
@@ -183,7 +182,8 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
-        Document update = Documenter.toDocument(datastore, mapper.getEntityModel(getEntityClass()), Documenter.coalesce(first, updates), validate);
+        Document update = Documenter.toDocument(datastore, mapper.getEntityModel(getEntityClass()), Documenter.coalesce(first, updates),
+                validate);
 
         return datastore.operations().findOneAndUpdate(datastore.configureCollection(options, collection),
                 toDocument(), update, options);
@@ -197,21 +197,6 @@ public class MorphiaQuery<T> implements Query<T> {
     @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, collection));
-    }
-
-    @Override
-    public MorphiaKeyCursor<T> keys() {
-        return keys(new FindOptions());
-    }
-
-    @Override
-    public MorphiaKeyCursor<T> keys(FindOptions options) {
-        FindOptions includeId = new FindOptions().copy(options)
-                .projection()
-                .include("_id");
-
-        return new MorphiaKeyCursor<>(prepareCursor(includeId, datastore.getDatabase().getCollection(getCollectionName())),
-                datastore, type, getCollectionName());
     }
 
     /**

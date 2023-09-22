@@ -2,7 +2,6 @@ package dev.morphia.mapping.validation.fieldrules;
 
 import java.util.Set;
 
-import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.NotMappableException;
@@ -22,15 +21,11 @@ public class ReferenceToUnidentifiable extends PropertyConstraint {
         if (propertyModel.hasAnnotation(Reference.class)) {
             final Class realType = propertyModel.getNormalizedType();
 
-            if (realType.equals(Key.class)) {
-                ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(), Sofia.keyNotAllowedAsProperty()));
-            } else {
-                try {
-                    mapper.getEntityModel(realType);
-                } catch (NotMappableException ignored) {
-                    ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
-                            Sofia.referredTypeMissingId(propertyModel.getFullName(), propertyModel.getType().getName())));
-                }
+            try {
+                mapper.getEntityModel(realType);
+            } catch (NotMappableException ignored) {
+                ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
+                        Sofia.referredTypeMissingId(propertyModel.getFullName(), propertyModel.getType().getName())));
             }
         }
     }

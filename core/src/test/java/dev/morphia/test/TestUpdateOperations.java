@@ -45,7 +45,6 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.Query;
@@ -74,7 +73,6 @@ import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -873,71 +871,6 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @Test
-    public void testUpdateKeyList() {
-        final ContainsPicKey cpk = new ContainsPicKey();
-        cpk.name = "cpk one";
-
-        Datastore ds = getDs();
-        ds.save(cpk);
-
-        final Pic pic = new Pic();
-        pic.setName("fist again");
-        ds.save(pic);
-
-        cpk.keys = MorphiaReference.wrap(getDs(), List.of(pic));
-
-        //test with Key<Pic>
-        Query<ContainsPicKey> query = ds.find(ContainsPicKey.class)
-                .filter(eq("name", cpk.name));
-        final UpdateResult res = query.update(set("keys", cpk.keys));
-
-        assertThat(res.getModifiedCount(), is(1L));
-
-        //test reading the object.
-        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
-                .next();
-        assertThat(cpk2, is(notNullValue()));
-        assertThat(cpk.name, is(cpk2.name));
-        MatcherAssert.assertThat(cpk2.keys.get(), Matchers.hasItem(pic));
-    }
-
-    @Test
-    public void testUpdateKeyRef() {
-        final ContainsPicKey cpk = new ContainsPicKey();
-        cpk.name = "cpk one";
-
-        Datastore ds = getDs();
-        ds.save(cpk);
-
-        final Pic pic = new Pic();
-        pic.setName("fist again");
-        ds.save(pic);
-
-        Query<ContainsPicKey> query = ds.find(ContainsPicKey.class)
-                .filter(eq("name", cpk.name));
-        assertThat(query.update(set("pic", pic))
-                .getModifiedCount(), is(1L));
-
-        //test reading the object.
-        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
-                .next();
-        assertThat(cpk2, is(notNullValue()));
-        assertThat(cpk.name, is(cpk2.name));
-        assertThat(cpk2.pic, is(notNullValue()));
-        MatcherAssert.assertThat(pic, CoreMatchers.is(cpk2.pic.get()));
-
-        query.update(set("pic", pic));
-
-        //test reading the object.
-        final ContainsPicKey cpk3 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
-                .next();
-        assertThat(cpk3, is(notNullValue()));
-        assertThat(cpk.name, is(cpk3.name));
-        assertThat(cpk3.pic, is(notNullValue()));
-        MatcherAssert.assertThat(pic, CoreMatchers.is(cpk3.pic.get()));
-    }
-
-    @Test
     public void testUpdateMap() {
         final Map<TestEnum, EmbeddedObjTest> map = Map.of(TestEnum.ANYVAL, new EmbeddedObjTest("name", "value"));
         getDs().find(TestMapWithEnumKey.class)
@@ -1210,15 +1143,6 @@ public class TestUpdateOperations extends TestBase {
         private final Integer[] values = { 1, 2, 3 };
         @Id
         private ObjectId id;
-    }
-
-    @Entity
-    private static class ContainsPicKey {
-        @Id
-        private ObjectId id;
-        private String name = "test";
-        private MorphiaReference<Pic> pic;
-        private MorphiaReference<List<Pic>> keys;
     }
 
     @Entity
