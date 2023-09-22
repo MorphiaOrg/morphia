@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -22,8 +21,6 @@ import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
-
-import static dev.morphia.query.MorphiaQuery.legacyOperation;
 
 /**
  * @param <T> The java type to query against
@@ -272,7 +269,7 @@ public interface Query<T> extends Iterable<T> {
      * @param updates lists the set of updates to apply
      * @return the update operation
      */
-    default UpdateResult update(UpdateOperator first, UpdateOperator... updates){
+    default UpdateResult update(UpdateOperator first, UpdateOperator... updates) {
         return update(new UpdateOptions(), first, updates);
     }
 
@@ -289,7 +286,7 @@ public interface Query<T> extends Iterable<T> {
     /**
      * Creates an update operation based on this query
      *
-     * @param first   the first and required stage
+     * @param first  the first and required stage
      * @param stages any remaining stages
      * @return the update operation
      * @since 2.3

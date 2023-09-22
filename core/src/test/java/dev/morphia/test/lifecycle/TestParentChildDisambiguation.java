@@ -7,8 +7,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.query.filters.Filters;
-import dev.morphia.query.updates.UpdateOperator;
-import dev.morphia.query.updates.UpdateOperators;
 import dev.morphia.test.TestBase;
 
 import org.bson.Document;
@@ -28,8 +26,8 @@ public class TestParentChildDisambiguation extends TestBase {
         getDs().find(Parent.class)
                 .filter(Filters.eq("name", "Fred"))
                 .update(new UpdateOptions().multi(true).upsert(true),
-                    setOnInsert(Map.of("child", new Child("purple"))),
-                    setOnInsert(Map.of("name", "Fred")));
+                        setOnInsert(Map.of("child", new Child("purple"))),
+                        setOnInsert(Map.of("name", "Fred")));
 
         Parent parent = getDs().find(Parent.class).filter(Filters.eq("name", "Fred")).first();
 

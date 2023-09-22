@@ -107,8 +107,8 @@ public class TestArrayUpdates extends TestBase {
         Query<Student> student = datastore.find(Student.class).filter(eq("_id", 1L));
 
         student.update(new UpdateOptions()
-                           .arrayFilter(lt("elem.marks", 90)),
-                   inc("grades.$[elem].marks", 5));
+                .arrayFilter(lt("elem.marks", 90)),
+                inc("grades.$[elem].marks", 5));
 
         assertNull(grade80.iterator().tryNext());
         assertNotNull(grade90.iterator().tryNext());
@@ -121,8 +121,8 @@ public class TestArrayUpdates extends TestBase {
         assertNotNull(grade90.iterator().tryNext());
 
         student.update(new UpdateOptions()
-                           .arrayFilter(lt("elem.marks", 90).not()),
-                   inc("grades.$[elem].marks", 5));
+                .arrayFilter(lt("elem.marks", 90).not()),
+                inc("grades.$[elem].marks", 5));
 
         assertNull(grade90.iterator().tryNext());
         assertNotNull(datastore.find(Student.class)

@@ -36,10 +36,8 @@ import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryException;
-import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
 import dev.morphia.test.datastore.MultipleDSEntity;
 import dev.morphia.test.models.Address;
@@ -223,12 +221,13 @@ public class TestDatastore extends TestBase {
         getDs().save(new User("Christopher Turk", LocalDate.of(1974, Month.JUNE, 22)));
         withConfig(buildConfig()
                 .codecProvider(new AlwaysFailingCodecProvider()), () -> {
-                    assertThrows(QueryException.class, () -> getDs().save(new User("John \"J.D.\" Dorian", LocalDate.of(1974, Month.APRIL, 6))));
+                    assertThrows(QueryException.class,
+                            () -> getDs().save(new User("John \"J.D.\" Dorian", LocalDate.of(1974, Month.APRIL, 6))));
                     assertThrows(QueryException.class, () -> getDs().find(User.class).first());
 
                     assertThrows(QueryException.class, () -> getDs().getCodecRegistry()
-                                                                .get(String.class)
-                                                                .encode(new DocumentWriter(getMapper().getConfig()), "this should fail", EncoderContext.builder().build()));
+                            .get(String.class)
+                            .encode(new DocumentWriter(getMapper().getConfig()), "this should fail", EncoderContext.builder().build()));
                 });
     }
 
@@ -357,9 +356,9 @@ public class TestDatastore extends TestBase {
                 .filter(eq("id", 3L),
                         eq("username", "Jon Snow"))
                 .modify(new ModifyOptions()
-                            .returnDocument(BEFORE)
-                            .upsert(true),
-                    inc("loginCount", 4)));
+                        .returnDocument(BEFORE)
+                        .upsert(true),
+                        inc("loginCount", 4)));
 
         FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3)).first();
         assertEquals(user.loginCount, 4);
@@ -369,9 +368,9 @@ public class TestDatastore extends TestBase {
                 .filter(eq("id", 4L),
                         eq("username", "Ron Swanson"))
                 .modify(new ModifyOptions()
-                            .returnDocument(AFTER)
-                            .upsert(true),
-                    inc("loginCount"));
+                        .returnDocument(AFTER)
+                        .upsert(true),
+                        inc("loginCount"));
         assertEquals(results.loginCount, 1);
         assertEquals(results.username, "Ron Swanson");
 
@@ -398,12 +397,12 @@ public class TestDatastore extends TestBase {
         result = getDs().find(FacebookUser.class)
                 .filter(eq("username", "john doe"))
                 .modify(new ModifyOptions()
-                            .returnDocument(BEFORE)
-                            .collation(Collation.builder()
-                                                .locale("en")
-                                                .collationStrength(SECONDARY)
-                                                .build()),
-                    inc("loginCount"));
+                        .returnDocument(BEFORE)
+                        .collation(Collation.builder()
+                                .locale("en")
+                                .collationStrength(SECONDARY)
+                                .build()),
+                        inc("loginCount"));
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
                 .next().loginCount, 1);
         assertEquals(result.loginCount, 0);
@@ -414,9 +413,9 @@ public class TestDatastore extends TestBase {
                 .filter(eq("id", 3L),
                         eq("username", "Jon Snow"))
                 .modify(new ModifyOptions()
-                            .returnDocument(BEFORE)
-                            .upsert(true),
-                    inc("loginCount"));
+                        .returnDocument(BEFORE)
+                        .upsert(true),
+                        inc("loginCount"));
 
         assertNull(result);
         FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3)).iterator(new FindOptions().limit(1))
@@ -428,10 +427,9 @@ public class TestDatastore extends TestBase {
                 .filter(eq("id", 4L),
                         eq("username", "Ron Swanson"))
                 .modify(new ModifyOptions()
-                            .returnDocument(AFTER)
-                            .upsert(true),
-                    inc("loginCount"))
-        ;
+                        .returnDocument(AFTER)
+                        .upsert(true),
+                        inc("loginCount"));
 
         assertNotNull(result);
         user = getDs().find(FacebookUser.class).filter(eq("id", 4)).iterator(new FindOptions().limit(1))
@@ -577,7 +575,7 @@ public class TestDatastore extends TestBase {
                 new FacebookUser(2, "john doe")));
 
         Query<FacebookUser> query = getDs().find(FacebookUser.class)
-                                            .filter(eq("username", "john doe"));
+                .filter(eq("username", "john doe"));
 
         UpdateResult results = query.update(inc("loginCount"));
 
@@ -592,7 +590,7 @@ public class TestDatastore extends TestBase {
                         .locale("en")
                         .collationStrength(SECONDARY)
                         .build()),
-            inc("loginCount"));
+                inc("loginCount"));
         assertEquals(results.getModifiedCount(), 2);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
                 .next().loginCount, 1);

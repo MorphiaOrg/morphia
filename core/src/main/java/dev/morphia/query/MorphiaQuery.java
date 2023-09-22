@@ -34,7 +34,9 @@ import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,7 +192,7 @@ public class MorphiaQuery<T> implements Query<T> {
     @Override
     public T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
         return new Modify<>(datastore, datastore.configureCollection(options, collection), this, getEntityClass(),
-            coalesce(first, updates))
+                coalesce(first, updates))
                 .execute(options);
     }
 
@@ -231,7 +233,7 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     private static Document toDocument(DatastoreImpl datastore, EntityModel entityModel, List<UpdateOperator> updates,
-                                      boolean validate) {
+            boolean validate) {
         final Operations operations = new Operations(datastore, entityModel);
 
         for (UpdateOperator update : updates) {
@@ -244,6 +246,18 @@ public class MorphiaQuery<T> implements Query<T> {
         return operations.toDocument();
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private static List<Document> toDocument(DatastoreImpl datastore, List<Stage> updates) {
+        CodecRegistry registry = datastore.getCodecRegistry();
+        List<Document> documents = new ArrayList<>();
+        for (Stage update : updates) {
+            DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
+            Codec codec = registry.get(update.getClass());
+            codec.encode(writer, update, EncoderContext.builder().build());
+            documents.add(writer.getDocument());
+        }
+        return documents;
+    }
 
     @Override
     public UpdateResult update(UpdateOptions options, UpdateOperator first, UpdateOperator... updates) {
@@ -251,7 +265,7 @@ public class MorphiaQuery<T> implements Query<T> {
             throw invalid;
         }
         try {
-            EntityModel entityModel= mapper.getEntityModel(getEntityClass());
+            EntityModel entityModel = mapper.getEntityModel(getEntityClass());
             Document updateOperations = toDocument(datastore, entityModel, coalesce(first, updates), isValidate());
             final Document queryObject = toDocument();
             if (options.isUpsert()) {
@@ -263,7 +277,7 @@ public class MorphiaQuery<T> implements Query<T> {
             MongoCollection<T> mongoCollection = options.prepare(collection, datastore.getDatabase());
 
             return options.multi() ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
-                                   : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
+                    : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
         } catch (ValidationException e) {
             throw e;
         }
@@ -275,10 +289,12 @@ public class MorphiaQuery<T> implements Query<T> {
             throw invalid;
         }
         try {
-            PipelineUpdate<T> update =
-                new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, coalesce(first, stages));
-            UpdateResult result = update.execute(options);
-            return result;
+            List<Document> updateOperations = toDocument(datastore, coalesce(first, stages));
+            final Document queryObject = toDocument();
+
+            MongoCollection<T> mongoCollection = datastore.configureCollection(options, datastore.configureCollection(options, collection));
+            return options.multi() ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
+                    : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
         } catch (ValidationException e) {
             invalid = e;
             throw e;

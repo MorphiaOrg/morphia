@@ -166,9 +166,9 @@ public class TestVersioning extends TestBase {
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("name", "Value 1"));
         entity = query.modify(new ModifyOptions()
-                                  .returnDocument(ReturnDocument.AFTER)
-                                  .upsert(true),
-                          set("name", "Value 3"));
+                .returnDocument(ReturnDocument.AFTER)
+                .upsert(true),
+                set("name", "Value 3"));
 
         assertEquals(entity.getName(), "Value 3");
         assertEquals(entity.getVersion().longValue(), 1);

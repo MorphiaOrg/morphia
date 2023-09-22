@@ -16,7 +16,7 @@ import dev.morphia.query.updates.UpdateOperator;
 public class Update<T> extends UpdateBase<T> {
 
     public Update(DatastoreImpl datastore, MongoCollection<T> collection,
-                  MorphiaQuery<T> query, Class<T> type, List<UpdateOperator> updates) {
+            MorphiaQuery<T> query, Class<T> type, List<UpdateOperator> updates) {
         super(datastore, collection, query, type, updates);
     }
 

@@ -453,11 +453,11 @@ public class DatastoreImpl implements Datastore {
 
         VersionBumpInfo info = updateVersioning(entity);
 
-        final Query<T> query =  info.filter((Query<T>) find(entity.getClass()).filter(eq("_id", id)));
+        final Query<T> query = info.filter((Query<T>) find(entity.getClass()).filter(eq("_id", id)));
 
         UpdateResult execute;
         UpdateOptions updateOptions = new UpdateOptions()
-                                          .writeConcern(options.writeConcern());
+                .writeConcern(options.writeConcern());
         if (!options.unsetMissing()) {
             execute = query.update(updateOptions, set(entity));
         } else {
