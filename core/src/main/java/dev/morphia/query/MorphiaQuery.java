@@ -22,9 +22,12 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
+import dev.morphia.query.internal.DatastoreAware;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.query.updates.UpdateOperator;
@@ -38,7 +41,6 @@ import org.slf4j.LoggerFactory;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.query.UpdateBase.coalesce;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 
 /**
  * @param <T> the type
@@ -228,16 +230,41 @@ public class MorphiaQuery<T> implements Query<T> {
         return getQueryDocument();
     }
 
+    private static Document toDocument(DatastoreImpl datastore, EntityModel entityModel, List<UpdateOperator> updates,
+                                      boolean validate) {
+        final Operations operations = new Operations(datastore, entityModel);
+
+        for (UpdateOperator update : updates) {
+            PathTarget pathTarget = new PathTarget(datastore.getMapper(), entityModel, update.field(), validate);
+            if (update instanceof DatastoreAware) {
+                ((DatastoreAware) update).setDatastore(datastore);
+            }
+            operations.add(update.operator(), update.toTarget(pathTarget));
+        }
+        return operations.toDocument();
+    }
+
+
     @Override
     public UpdateResult update(UpdateOptions options, UpdateOperator first, UpdateOperator... updates) {
         if (invalid != null) {
             throw invalid;
         }
         try {
-            return new Update<>(datastore, collection, this, type, coalesce(first, updates))
-                       .execute(options);
+            EntityModel entityModel= mapper.getEntityModel(getEntityClass());
+            Document updateOperations = toDocument(datastore, entityModel, coalesce(first, updates), isValidate());
+            final Document queryObject = toDocument();
+            if (options.isUpsert()) {
+                if (entityModel.useDiscriminator()) {
+                    queryObject.put(entityModel.getDiscriminatorKey(), entityModel.getDiscriminator());
+                }
+            }
+
+            MongoCollection<T> mongoCollection = options.prepare(collection, datastore.getDatabase());
+
+            return options.multi() ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
+                                   : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
         } catch (ValidationException e) {
-            invalid = e;
             throw e;
         }
     }
@@ -248,8 +275,10 @@ public class MorphiaQuery<T> implements Query<T> {
             throw invalid;
         }
         try {
-            return new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, coalesce(first, stages))
-                    .execute(options);
+            PipelineUpdate<T> update =
+                new PipelineUpdate<>(datastore, datastore.configureCollection(options, collection), this, coalesce(first, stages));
+            UpdateResult result = update.execute(options);
+            return result;
         } catch (ValidationException e) {
             invalid = e;
             throw e;

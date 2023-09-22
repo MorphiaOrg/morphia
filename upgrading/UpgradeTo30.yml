@@ -1,0 +1,24 @@
+###
+### run this recipe with the following command:
+### mvn org.openrewrite.maven:rewrite-maven-plugin:4.37.0:runNoFork -DactiveRecipes=dev.morphia.UpgradeFrom22to23
+###
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: dev.morphia.UpgradeFrom22to23
+displayName: Migrate from Morphia 2.4.x to 3.0.0
+description: Deprecations removed and methods cleaned up
+recipeList:
+  - dev.morphia.upgradeTo30
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: dev.morphia.upgradeTo30
+recipeList:
+#  - org.openrewrite.java.ChangeType:
+#      oldFullyQualifiedTypeName: dev.morphia.annotations.experimental.IdField
+#      newFullyQualifiedTypeName: dev.morphia.annotations.IdField
+  - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
+      oldGroupId: dev.morphia.morphia
+      oldArtifactId: morphia-core
+      newVersion: 3.0.0
+      overrideManagedVersion: false

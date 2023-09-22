@@ -11,6 +11,7 @@ import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.internal.DatastoreAware;
 import dev.morphia.query.updates.UpdateOperator;
 

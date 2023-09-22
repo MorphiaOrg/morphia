@@ -37,15 +37,6 @@ class PipelineUpdate<T> {
     /**
      * Executes the update
      *
-     * @return the results
-     */
-    public UpdateResult execute() {
-        return execute(new UpdateOptions());
-    }
-
-    /**
-     * Executes the update
-     *
      * @param options the options to apply
      * @return the results
      */

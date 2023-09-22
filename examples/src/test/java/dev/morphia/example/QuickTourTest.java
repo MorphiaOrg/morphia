@@ -44,8 +44,7 @@ public class QuickTourTest extends TestBase {
 
         final Query<Employee> underPaidQuery = datastore.find(Employee.class)
                 .filter(lte("salary", 30000));
-        final UpdateResult results = underPaidQuery.update(inc("salary", 10000))
-                .execute();
+        final UpdateResult results = underPaidQuery.update(inc("salary", 10000));
 
         assertEquals(results.getModifiedCount(), 1);
 

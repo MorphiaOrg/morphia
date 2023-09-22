@@ -493,7 +493,7 @@ public class TestUpdateOperations extends TestBase {
     public void testInvalidPathsInUpdates() {
         Consumer<Datastore> test = (datastore) -> {
             Query<CappedPic> query = getDs().find(CappedPic.class);
-            assertThrows(ValidationException.class, () -> query.update(new UpdateOptions(), max("bad.name", 12)));
+            assertThrows(ValidationException.class, () -> query.update(max("bad.name", 12)));
             query.first();
         };
 

@@ -62,7 +62,6 @@ import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
-import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
@@ -454,10 +453,8 @@ public class DatastoreImpl implements Datastore {
 
         VersionBumpInfo info = updateVersioning(entity);
 
-        final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
-        info.filter(query);
+        final Query<T> query =  info.filter((Query<T>) find(entity.getClass()).filter(eq("_id", id)));
 
-        Update<T> update;
         UpdateResult execute;
         UpdateOptions updateOptions = new UpdateOptions()
                                           .writeConcern(options.writeConcern());
@@ -994,11 +991,12 @@ public class DatastoreImpl implements Datastore {
             }
         }
 
-        public <T> void filter(Query<T> query) {
+        public <T> Query<T> filter(Query<T> query) {
             if (versioned() && newVersion() != -1) {
                 query.filter(eq(versionProperty.getMappedName(), oldVersion()));
             }
 
+            return query;
         }
 
         public Long newVersion() {
