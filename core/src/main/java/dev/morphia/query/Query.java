@@ -20,7 +20,6 @@ import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.query.updates.UpdateOperator;
-import dev.morphia.sofia.Sofia;
 
 /**
  * @param <T> The java type to query against
@@ -44,9 +43,7 @@ public interface Query<T> extends Iterable<T> {
      * @param filters the filters to add
      * @return this
      */
-    default Query<T> filter(Filter... filters) {
-        throw new UnsupportedOperationException(Sofia.modernOperation());
-    }
+    Query<T> filter(Filter... filters);
 
     /**
      * Count the total number of values in the result, ignoring limit and offset

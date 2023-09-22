@@ -3,6 +3,7 @@ package dev.morphia.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.lang.NonNull;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -18,7 +19,17 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
+import static java.util.Arrays.asList;
+
 public class Documenter {
+    @NonNull
+    public static <T> List<T> coalesce(T first, T[] updates) {
+        List<T> operators = new ArrayList<>();
+        operators.add(first);
+        operators.addAll(asList(updates));
+        return operators;
+    }
+
     /**
      * Converts the updates to a Document
      *

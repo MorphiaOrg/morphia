@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 
 /**
  * @param <T> the type
@@ -84,18 +83,6 @@ public class MorphiaQuery<T> implements Query<T> {
         mapper = this.datastore.getMapper();
         collection = datastore.getCollection(type);
         collectionName = collection.getNamespace().getCollectionName();
-    }
-
-    @NonNull
-    static <T> List<T> coalesce(T first, T[] updates) {
-        List<T> operators = new ArrayList<>();
-        operators.add(first);
-        operators.addAll(asList(updates));
-        return operators;
-    }
-
-    static <V> V legacyOperation() {
-        throw new UnsupportedOperationException(Sofia.legacyOperation());
     }
 
     @Override
@@ -196,7 +183,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
-        Document update = Documenter.toDocument(datastore, mapper.getEntityModel(getEntityClass()), coalesce(first, updates), validate);
+        Document update = Documenter.toDocument(datastore, mapper.getEntityModel(getEntityClass()), Documenter.coalesce(first, updates), validate);
 
         return datastore.operations().findOneAndUpdate(datastore.configureCollection(options, collection),
                 toDocument(), update, options);
@@ -244,7 +231,7 @@ public class MorphiaQuery<T> implements Query<T> {
             throw invalid;
         }
         EntityModel entityModel = mapper.getEntityModel(getEntityClass());
-        Document updateOperations = Documenter.toDocument(datastore, entityModel, coalesce(first, updates), isValidate());
+        Document updateOperations = Documenter.toDocument(datastore, entityModel, Documenter.coalesce(first, updates), isValidate());
         final Document queryObject = toDocument();
         if (options.isUpsert()) {
             if (entityModel.useDiscriminator()) {
@@ -263,7 +250,7 @@ public class MorphiaQuery<T> implements Query<T> {
         if (invalid != null) {
             throw invalid;
         }
-        List<Document> updateOperations = Documenter.toDocument(datastore, coalesce(first, stages));
+        List<Document> updateOperations = Documenter.toDocument(datastore, Documenter.coalesce(first, stages));
         final Document queryObject = toDocument();
 
         MongoCollection<T> mongoCollection = datastore.configureCollection(options, datastore.configureCollection(options, collection));
@@ -336,7 +323,7 @@ public class MorphiaQuery<T> implements Query<T> {
         }
     }
 
-    Document getQueryDocument() {
+    private Document getQueryDocument() {
         if (invalid != null) {
             throw invalid;
         }

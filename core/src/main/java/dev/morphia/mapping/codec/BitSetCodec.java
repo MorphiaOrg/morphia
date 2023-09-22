@@ -40,7 +40,7 @@ public class BitSetCodec implements Codec<BitSet> {
         if (currentType == BsonType.DOCUMENT) {
             return decodeLegacy(reader, decoderContext);
         } else if (currentType == BsonType.ARRAY) {
-            return decodeModern(reader, decoderContext);
+            return decodeModern(reader);
         } else {
             throw new IllegalStateException("cannot decode BitSet from " + currentType);
         }
@@ -83,7 +83,7 @@ public class BitSetCodec implements Codec<BitSet> {
         return BitSet.valueOf(toArray(temp));
     }
 
-    private BitSet decodeModern(BsonReader reader, DecoderContext decoderContext) {
+    private BitSet decodeModern(BsonReader reader) {
         List<Long> temp = new ArrayList<>();
         reader.readStartArray();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
