@@ -11,13 +11,11 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.query.Query;
 import dev.morphia.transactions.MorphiaSession;
 import dev.morphia.transactions.MorphiaTransaction;
 
 import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
 
 /**
  * Datastore interface to get/delete/save objects
@@ -87,14 +85,6 @@ public interface Datastore {
     <T> Query<T> find(Class<T> type, Document nativeQuery);
 
     /**
-     * @return the codec registry
-     * @morphia.internal
-     * @since 2.3
-     */
-    @MorphiaInternal
-    CodecRegistry getCodecRegistry();
-
-    /**
      * @param type the type look up
      * @param <T>  the class type
      * @return the collection mapped for this class
@@ -111,14 +101,6 @@ public interface Datastore {
      */
     @MorphiaInternal
     MongoDatabase getDatabase();
-
-    /**
-     * @return the Mapper used by this Datastore
-     * @morphia.internal
-     * @since 1.5
-     */
-    @MorphiaInternal
-    Mapper getMapper();
 
     /**
      * Inserts an entity in to the mapped collection.

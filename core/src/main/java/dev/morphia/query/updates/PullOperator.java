@@ -1,6 +1,6 @@
 package dev.morphia.query.updates;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -34,7 +34,7 @@ public class PullOperator extends UpdateOperator {
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, value()) {
             @Override
-            public Object encode(Datastore datastore) {
+            public Object encode(MorphiaDatastore datastore) {
                 DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
                 document(writer, () -> {
                     ((Filter) getValue()).encode(datastore, writer, EncoderContext.builder().build());

@@ -1,13 +1,13 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.Limit;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class LimitCodec extends StageCodec<Limit> {
-    public LimitCodec(Datastore datastore) {
+    public LimitCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.Expressions;
 
 import org.bson.BsonWriter;
@@ -52,7 +52,7 @@ public class DateFromParts extends Expression {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, getOperation(), () -> {
             expression(datastore, writer, "year", year, encoderContext);
             expression(datastore, writer, "month", month, encoderContext);

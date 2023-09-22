@@ -3,8 +3,7 @@ package dev.morphia.query.updates;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import dev.morphia.Datastore;
-import dev.morphia.DatastoreImpl;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
@@ -27,7 +26,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 @MorphiaInternal
 public class SetOnInsertOperator extends UpdateOperator implements DatastoreAware {
     private final Map<String, Object> insertValues;
-    private DatastoreImpl datastore;
+    private MorphiaDatastore datastore;
 
     /**
      * @param values the values
@@ -44,7 +43,7 @@ public class SetOnInsertOperator extends UpdateOperator implements DatastoreAwar
      */
     @Override
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public void setDatastore(DatastoreImpl datastore) {
+    public void setDatastore(MorphiaDatastore datastore) {
         this.datastore = datastore;
     }
 
@@ -65,7 +64,7 @@ public class SetOnInsertOperator extends UpdateOperator implements DatastoreAwar
 
         return new OperationTarget(null, null) {
             @Override
-            public Object encode(Datastore datastore) {
+            public Object encode(MorphiaDatastore datastore) {
                 return writer.getDocument();
             }
         };

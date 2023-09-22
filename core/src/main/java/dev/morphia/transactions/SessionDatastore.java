@@ -17,11 +17,11 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import com.mongodb.session.ServerSession;
 
-import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
 import dev.morphia.ModifyOptions;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.ReplaceOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -40,7 +40,7 @@ import org.bson.Document;
  * @morphia.internal
  */
 @MorphiaInternal
-public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession {
+public class SessionDatastore extends MorphiaDatastore implements MorphiaSession {
 
     private final ClientSession session;
 
@@ -51,7 +51,7 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
      * @param session   the client session
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public MorphiaSessionImpl(DatastoreImpl datastore, ClientSession session) {
+    public SessionDatastore(MorphiaDatastore datastore, ClientSession session) {
         super(datastore);
         operations(new TransactionalOperations());
         this.session = session;

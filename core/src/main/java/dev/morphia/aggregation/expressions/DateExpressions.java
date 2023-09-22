@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.expressions;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.aggregation.expressions.impls.DateDeltaExpression;
 import dev.morphia.aggregation.expressions.impls.DateDiffExpression;
@@ -328,7 +328,7 @@ public final class DateExpressions {
 
         @Override
         @MorphiaInternal
-        public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
             ExpressionHelper.expression(datastore, writer, getOperation(), getValue(), encoderContext);
         }
     }

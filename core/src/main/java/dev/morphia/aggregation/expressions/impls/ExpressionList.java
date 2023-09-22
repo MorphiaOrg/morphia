@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
@@ -48,7 +48,7 @@ public class ExpressionList extends Expression implements SingleValuedExpression
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         array(writer, () -> {
             for (Expression expression : values) {
                 wrapExpression(datastore, writer, expression, encoderContext);

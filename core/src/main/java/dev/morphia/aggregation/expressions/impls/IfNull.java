@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.AggregationException;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.sofia.Sofia;
@@ -22,7 +22,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         array(writer, getOperation(), () -> {
             wrapExpression(datastore, writer, target, encoderContext);
             wrapExpression(datastore, writer, replacement, encoderContext);

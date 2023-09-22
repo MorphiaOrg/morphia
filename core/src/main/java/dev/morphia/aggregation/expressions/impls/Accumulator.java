@@ -2,7 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import java.util.List;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
@@ -28,7 +28,7 @@ public class Accumulator extends Expression {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeName(getOperation());
         ExpressionList values = getValue();
         if (values != null) {

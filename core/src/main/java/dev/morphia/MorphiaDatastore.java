@@ -65,8 +65,8 @@ import dev.morphia.query.QueryFactory;
 import dev.morphia.query.UpdateException;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
-import dev.morphia.transactions.MorphiaSessionImpl;
 import dev.morphia.transactions.MorphiaTransaction;
+import dev.morphia.transactions.SessionDatastore;
 
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -94,7 +94,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
  */
 @MorphiaInternal
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class DatastoreImpl implements Datastore {
+public class MorphiaDatastore implements Datastore {
     private static final Logger LOG = LoggerFactory.getLogger(Datastore.class);
     private final MongoClient mongoClient;
     private final Mapper mapper;
@@ -104,7 +104,7 @@ public class DatastoreImpl implements Datastore {
     private MongoDatabase database;
     private DatastoreOperations operations;
 
-    public DatastoreImpl(MongoClient client, MorphiaConfig config) {
+    public MorphiaDatastore(MongoClient client, MorphiaConfig config) {
         this.mongoClient = client;
         this.database = mongoClient.getDatabase(config.database());
         this.mapper = new Mapper(config);
@@ -138,7 +138,7 @@ public class DatastoreImpl implements Datastore {
      * @morphia.internal
      * @since 2.0
      */
-    public DatastoreImpl(DatastoreImpl datastore) {
+    public MorphiaDatastore(MorphiaDatastore datastore) {
         this.mongoClient = datastore.mongoClient;
         this.database = mongoClient.getDatabase(datastore.mapper.getConfig().database());
         this.mapper = datastore.mapper.copy();
@@ -318,7 +318,6 @@ public class DatastoreImpl implements Datastore {
         return queryFactory.createQuery(this, type);
     }
 
-    @Override
     public CodecRegistry getCodecRegistry() {
         return codecRegistry;
     }
@@ -461,8 +460,8 @@ public class DatastoreImpl implements Datastore {
         if (!options.unsetMissing()) {
             execute = query.update(updateOptions, set(entity));
         } else {
-            var updates = ((MergingEncoder<T>) new MergingEncoder(query,
-                    (MorphiaCodec) codecRegistry.get(entity.getClass())))
+            MorphiaCodec morphiaCodec = (MorphiaCodec) codecRegistry.get(entity.getClass());
+            var updates = ((MergingEncoder<T>) new MergingEncoder(query, morphiaCodec, mapper.getConfig()))
                     .encode(entity);
             execute = query.update(updateOptions, updates.remove(0), updates.toArray(new UpdateOperator[0]));
         }
@@ -619,13 +618,13 @@ public class DatastoreImpl implements Datastore {
     }
 
     @Override
-    public MorphiaSessionImpl startSession() {
-        return new MorphiaSessionImpl(this, mongoClient.startSession());
+    public SessionDatastore startSession() {
+        return new SessionDatastore(this, mongoClient.startSession());
     }
 
     @Override
-    public MorphiaSessionImpl startSession(ClientSessionOptions options) {
-        return new MorphiaSessionImpl(this, mongoClient.startSession(options));
+    public SessionDatastore startSession(ClientSessionOptions options) {
+        return new SessionDatastore(this, mongoClient.startSession(options));
     }
 
     @Override
@@ -639,7 +638,7 @@ public class DatastoreImpl implements Datastore {
     }
 
     @Nullable
-    protected <T> T doTransaction(MorphiaSessionImpl morphiaSession, MorphiaTransaction<T> body) {
+    protected <T> T doTransaction(SessionDatastore morphiaSession, MorphiaTransaction<T> body) {
         try (morphiaSession) {
             return morphiaSession.getSession().withTransaction(() -> body.execute(morphiaSession));
         }
@@ -691,7 +690,7 @@ public class DatastoreImpl implements Datastore {
         }
     }
 
-    protected DatastoreImpl operations(DatastoreOperations operations) {
+    protected MorphiaDatastore operations(DatastoreOperations operations) {
         this.operations = operations;
         return this;
     }
@@ -791,7 +790,7 @@ public class DatastoreImpl implements Datastore {
 
     public boolean hasLifecycle(EntityModel model, Class<? extends Annotation> type) {
         return model.hasLifecycle(type)
-                || mapper.getInterceptors().stream()
+                || mapper.getListeners().stream()
                         .anyMatch(listener -> listener.hasAnnotation(type));
     }
 

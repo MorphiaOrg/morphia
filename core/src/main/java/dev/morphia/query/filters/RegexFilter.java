@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
@@ -26,7 +26,7 @@ public class RegexFilter extends Filter {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(path(datastore.getMapper()));
         if (isNot()) {
             writer.writeStartDocument("$not");

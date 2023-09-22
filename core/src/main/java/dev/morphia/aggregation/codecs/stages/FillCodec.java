@@ -3,7 +3,7 @@ package dev.morphia.aggregation.codecs.stages;
 import java.util.List;
 import java.util.Locale;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.Fill;
 import dev.morphia.aggregation.stages.Fill.Method;
@@ -18,7 +18,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class FillCodec extends StageCodec<Fill> {
-    public FillCodec(Datastore datastore) {
+    public FillCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

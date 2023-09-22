@@ -3,7 +3,7 @@ package dev.morphia.mapping.codec;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
@@ -23,9 +23,9 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 @MorphiaInternal
 public class MorphiaMapCodec extends MapCodec {
 
-    private Datastore datastore;
+    private MorphiaDatastore datastore;
 
-    MorphiaMapCodec(Datastore datastore) {
+    MorphiaMapCodec(MorphiaDatastore datastore) {
         this.datastore = datastore;
     }
 

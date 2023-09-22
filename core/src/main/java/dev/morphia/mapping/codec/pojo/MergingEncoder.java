@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.Query;
 import dev.morphia.query.UpdateException;
@@ -32,14 +33,15 @@ public class MergingEncoder<T> extends EntityEncoder {
     /**
      * @param query        the query
      * @param morphiaCodec the codec
+     * @param config
      * @morphia.internal
      * @since 2.2
      */
     @MorphiaInternal
-    public MergingEncoder(Query<T> query, MorphiaCodec<T> morphiaCodec) {
+    public MergingEncoder(Query<T> query, MorphiaCodec<T> morphiaCodec, MorphiaConfig config) {
         super(morphiaCodec);
         this.query = query;
-        setOperations = new DocumentWriter(morphiaCodec.getMapper().getConfig());
+        setOperations = new DocumentWriter(config);
     }
 
     /**

@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.query.Sort;
 
@@ -24,7 +24,7 @@ public class NRankedResultsExpression extends Expression {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, getOperation(), () -> {
             expression(datastore, writer, "output", output, encoderContext);
             if (sortBy.length == 1) {

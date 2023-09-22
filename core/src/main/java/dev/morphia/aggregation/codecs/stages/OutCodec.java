@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.Out;
 
 import org.bson.BsonWriter;
@@ -9,7 +9,7 @@ import org.bson.codecs.EncoderContext;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 public class OutCodec extends StageCodec<Out> {
-    public OutCodec(Datastore datastore) {
+    public OutCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

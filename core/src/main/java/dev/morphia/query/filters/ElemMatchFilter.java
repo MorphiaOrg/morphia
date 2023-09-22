@@ -2,7 +2,7 @@ package dev.morphia.query.filters;
 
 import java.util.List;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -14,7 +14,7 @@ class ElemMatchFilter extends Filter {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(path(datastore.getMapper()));
         if (isNot()) {
             writer.writeStartDocument("$not");

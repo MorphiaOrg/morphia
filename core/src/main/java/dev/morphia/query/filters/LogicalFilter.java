@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -34,7 +34,7 @@ public class LogicalFilter extends Filter {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartArray(getName());
         for (Filter filter : filters) {
             document(writer, () -> filter.encode(datastore, writer, context));

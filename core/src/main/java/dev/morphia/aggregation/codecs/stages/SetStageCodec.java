@@ -1,13 +1,13 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.Set;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 public class SetStageCodec extends StageCodec<Set> {
-    public SetStageCodec(Datastore datastore) {
+    public SetStageCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

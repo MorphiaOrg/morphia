@@ -5,7 +5,7 @@ import java.util.StringJoiner;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
@@ -54,9 +54,10 @@ public class Expression {
      * @param writer         the writer
      * @param encoderContext the context
      * @morphia.internal
+     * @hidden
      */
     @MorphiaInternal
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         ExpressionHelper.expression(datastore, writer, operation, value, encoderContext);
     }
 

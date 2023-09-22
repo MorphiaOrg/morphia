@@ -2,7 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import java.util.Locale;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
@@ -40,7 +40,7 @@ public class DateDeltaExpression extends Expression {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, getOperation(), () -> {
             expression(datastore, writer, "startDate", startDate, encoderContext);
             writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));

@@ -1,6 +1,6 @@
 package dev.morphia.query.updates;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
@@ -26,7 +26,7 @@ public class UnsetOperator extends UpdateOperator {
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, "") {
             @Override
-            public Object encode(Datastore datastore) {
+            public Object encode(MorphiaDatastore datastore) {
                 return new Document(pathTarget.translatedPath(), "");
             }
         };

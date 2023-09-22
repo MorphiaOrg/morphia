@@ -4,13 +4,13 @@ import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
-import dev.morphia.DatastoreImpl;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.config.MorphiaConfig;
 
 import org.bson.Document;
 
 public class MorphiaContainer {
-    private DatastoreImpl datastore;
+    private MorphiaDatastore datastore;
     private MongoDatabase database;
     private final MorphiaConfig morphiaConfig;
     private final MongoClient mongoClient;
@@ -42,9 +42,9 @@ public class MorphiaContainer {
                 .runCommand(new Document("ismaster", 1));
     }
 
-    public DatastoreImpl getDs() {
+    public MorphiaDatastore getDs() {
         if (datastore == null) {
-            datastore = new DatastoreImpl(mongoClient, morphiaConfig);
+            datastore = new MorphiaDatastore(mongoClient, morphiaConfig);
         }
         return datastore;
     }

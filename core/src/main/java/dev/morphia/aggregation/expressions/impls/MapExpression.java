@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 
 import org.bson.BsonWriter;
@@ -26,7 +26,7 @@ public class MapExpression extends Expression {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, getOperation(), () -> {
             wrapExpression(datastore, writer, "input", input, encoderContext);
             wrapExpression(datastore, writer, "in", in, encoderContext);

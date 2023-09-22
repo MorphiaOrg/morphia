@@ -3,7 +3,7 @@ package dev.morphia.aggregation.expressions;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.CalculusExpression;
@@ -73,7 +73,7 @@ public final class WindowExpressions {
     public static Expression denseRank() {
         return new Expression("$denseRank") {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
                 document(writer, getOperation(), () -> {
                 });
             }
@@ -105,7 +105,7 @@ public final class WindowExpressions {
     public static Expression documentNumber() {
         return new Expression("$documentNumber") {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
                 document(writer, getOperation(), () -> {
                 });
             }
@@ -184,7 +184,7 @@ public final class WindowExpressions {
     public static Expression rank() {
         return new Expression("$rank") {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
                 document(writer, getOperation(), () -> {
                 });
             }

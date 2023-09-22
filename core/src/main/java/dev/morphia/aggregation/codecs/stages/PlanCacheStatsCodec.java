@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.PlanCacheStats;
 
 import org.bson.BsonWriter;
@@ -9,7 +9,7 @@ import org.bson.codecs.EncoderContext;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 public class PlanCacheStatsCodec extends StageCodec<PlanCacheStats> {
-    public PlanCacheStatsCodec(Datastore datastore) {
+    public PlanCacheStatsCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

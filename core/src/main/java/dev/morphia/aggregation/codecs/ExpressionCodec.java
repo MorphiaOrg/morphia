@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.codecs;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.sofia.Sofia;
 
@@ -12,9 +12,9 @@ import org.bson.codecs.EncoderContext;
 
 public class ExpressionCodec<T extends Expression> implements Codec<T> {
 
-    private Datastore datastore;
+    private MorphiaDatastore datastore;
 
-    public ExpressionCodec(Datastore datastore) {
+    public ExpressionCodec(MorphiaDatastore datastore) {
         this.datastore = datastore;
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.config.MorphiaConfigHelper;
@@ -35,7 +36,7 @@ public class TestConfig extends TestBase {
         // this will fail because some of the test entities are intentionally invalid to test validations.  But that it fails at all
         // means that the mapper is scanning *all* the classes as expected when no packages are specified.
         assertThrows(MappingException.class, () -> {
-            Datastore datastore = Morphia.createDatastore(getMongoClient(), config);
+            MorphiaDatastore datastore = (MorphiaDatastore) Morphia.createDatastore(getMongoClient(), config);
             assertFalse(datastore.getMapper().getMappedEntities().isEmpty(), "Should find packages to map by default");
         });
     }

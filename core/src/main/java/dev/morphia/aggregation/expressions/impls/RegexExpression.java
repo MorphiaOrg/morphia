@@ -2,7 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import java.util.regex.Pattern;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
@@ -23,7 +23,7 @@ public class RegexExpression extends Expression {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, getOperation(), () -> {
             expression(datastore, writer, "input", input, encoderContext);
             value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);

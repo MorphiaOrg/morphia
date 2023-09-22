@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.expressions;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.SetFieldExpression;
@@ -71,7 +71,7 @@ public final class Miscellaneous {
     public static Filter sampleRate(double rate) {
         return new Filter("$sampleRate", null, rate) {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
                 writeNamedValue(getName(), getValue(), datastore, writer, context);
             }
         };

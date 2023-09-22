@@ -5,7 +5,7 @@ import java.util.Map;
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Point;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
@@ -70,7 +70,7 @@ public class NearFilter extends Filter {
 
     @Override
     @MorphiaInternal
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(path(datastore.getMapper()));
         if (isNot()) {
             writer.writeStartDocument("$not");

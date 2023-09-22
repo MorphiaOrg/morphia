@@ -3,7 +3,7 @@ package dev.morphia.aggregation.expressions.impls;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -36,7 +36,7 @@ public class Fields<T> {
         return owner;
     }
 
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         for (PipelineField field : fields) {
             wrapExpression(datastore, writer, field.getName(), field.getValue(), encoderContext);
         }

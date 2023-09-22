@@ -1,6 +1,6 @@
 package dev.morphia.query.updates;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -32,7 +32,7 @@ public class SetEntityOperator extends UpdateOperator {
         return new OperationTarget(null, value()) {
             @Override
             @SuppressWarnings("unchecked")
-            public Object encode(Datastore datastore) {
+            public Object encode(MorphiaDatastore datastore) {
                 Object value = value();
                 EntityModel entityModel = datastore.getMapper().getEntityModel(value.getClass());
                 PropertyModel versionProperty = entityModel.getVersionProperty();

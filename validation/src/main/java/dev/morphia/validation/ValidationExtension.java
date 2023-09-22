@@ -3,9 +3,9 @@ package dev.morphia.validation;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import dev.morphia.EntityInterceptor;
+import dev.morphia.Datastore;
+import dev.morphia.EntityListener;
 import dev.morphia.annotations.PrePersist;
-import dev.morphia.mapping.Mapper;
 
 import org.bson.Document;
 
@@ -17,7 +17,7 @@ import jakarta.validation.ValidatorFactory;
  *
  * @since 2.3
  */
-public class ValidationExtension implements EntityInterceptor {
+public class ValidationExtension implements EntityListener<Object> {
     private final ValidatorFactory validationFactory;
 
     /**
@@ -37,7 +37,7 @@ public class ValidationExtension implements EntityInterceptor {
     @Override
     @PrePersist
     @SuppressWarnings("unchecked")
-    public void prePersist(Object ent, Document document, Mapper mapper) {
+    public void prePersist(Object ent, Document document, Datastore datastore) {
         final Set validate = validationFactory.getValidator().validate(ent);
         if (!validate.isEmpty()) {
             throw new VerboseJSR303ConstraintViolationException(validate);

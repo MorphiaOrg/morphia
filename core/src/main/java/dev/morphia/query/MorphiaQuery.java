@@ -16,9 +16,9 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
-import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -48,7 +48,7 @@ import static java.lang.String.format;
 @MorphiaInternal
 public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
-    private final DatastoreImpl datastore;
+    private final MorphiaDatastore datastore;
     private final Class<T> type;
     private final Mapper mapper;
     private final List<Filter> filters = new ArrayList<>();
@@ -63,7 +63,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
     protected MorphiaQuery(Datastore datastore, @Nullable String collectionName, Class<T> type) {
         this.type = type;
-        this.datastore = (DatastoreImpl) datastore;
+        this.datastore = (MorphiaDatastore) datastore;
         mapper = this.datastore.getMapper();
         seedQuery = null;
         this.collectionName = collectionName;
@@ -77,7 +77,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
     protected MorphiaQuery(Datastore datastore, Class<T> type, @Nullable Document query) {
         this.type = type;
-        this.datastore = (DatastoreImpl) datastore;
+        this.datastore = (MorphiaDatastore) datastore;
         this.seedQuery = query;
         mapper = this.datastore.getMapper();
         collection = datastore.getCollection(type);
@@ -175,7 +175,6 @@ public class MorphiaQuery<T> implements Query<T> {
         }
     }
 
-    @Override
     public Class<T> getEntityClass() {
         return type;
     }

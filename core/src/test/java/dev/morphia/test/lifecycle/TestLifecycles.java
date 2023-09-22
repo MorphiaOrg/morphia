@@ -14,7 +14,8 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
-import dev.morphia.EntityInterceptor;
+import dev.morphia.EntityListener;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -265,7 +266,7 @@ public class TestLifecycles extends TestBase {
         private LifecycleB b;
     }
 
-    private static class NonNullValidation implements EntityInterceptor {
+    private static class NonNullValidation implements EntityListener<Object> {
         @Override
         public boolean hasAnnotation(Class<? extends Annotation> type) {
             return type.equals(PrePersist.class);
@@ -273,7 +274,7 @@ public class TestLifecycles extends TestBase {
 
         @Override
         public void prePersist(@NotNull Object ent, @NotNull Document document, @NotNull Datastore datastore) {
-            final List<PropertyModel> fieldsToTest = datastore.getMapper().getEntityModel(ent.getClass())
+            final List<PropertyModel> fieldsToTest = ((MorphiaDatastore) datastore).getMapper().getEntityModel(ent.getClass())
                     .getProperties(NonNull.class);
             for (PropertyModel mf : fieldsToTest) {
                 if (mf.getValue(ent) == null) {

@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.AddFields;
 
 import org.bson.BsonWriter;
@@ -8,7 +8,7 @@ import org.bson.codecs.EncoderContext;
 
 public class AddFieldsCodec extends StageCodec<AddFields> {
 
-    public AddFieldsCodec(Datastore datastore) {
+    public AddFieldsCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

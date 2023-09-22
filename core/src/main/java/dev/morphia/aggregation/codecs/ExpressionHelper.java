@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.ArrayLiteral;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
@@ -36,7 +36,7 @@ public final class ExpressionHelper {
         writer.writeEndArray();
     }
 
-    public static void array(Datastore datastore, BsonWriter writer, String name, @Nullable List<Expression> list,
+    public static void array(MorphiaDatastore datastore, BsonWriter writer, String name, @Nullable List<Expression> list,
             EncoderContext encoderContext) {
         if (list != null) {
             array(writer, name, () -> {
@@ -63,7 +63,7 @@ public final class ExpressionHelper {
      */
     @MorphiaInternal
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static void wrapExpression(Datastore datastore, BsonWriter writer, @Nullable Expression expression,
+    public static void wrapExpression(MorphiaDatastore datastore, BsonWriter writer, @Nullable Expression expression,
             EncoderContext encoderContext) {
         if (expression != null) {
             if (expression instanceof SingleValuedExpression) {
@@ -112,7 +112,7 @@ public final class ExpressionHelper {
      * @morphia.internal
      */
     @MorphiaInternal
-    public static void expression(Datastore datastore, BsonWriter writer, String name, @Nullable Expression expression,
+    public static void expression(MorphiaDatastore datastore, BsonWriter writer, String name, @Nullable Expression expression,
             EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);
@@ -128,7 +128,8 @@ public final class ExpressionHelper {
      * @morphia.internal
      */
     @MorphiaInternal
-    public static void expression(Datastore datastore, BsonWriter writer, @Nullable Expression expression, EncoderContext encoderContext) {
+    public static void expression(MorphiaDatastore datastore, BsonWriter writer, @Nullable Expression expression,
+            EncoderContext encoderContext) {
         if (expression != null) {
             expression.encode(datastore, writer, encoderContext);
         }
@@ -143,7 +144,8 @@ public final class ExpressionHelper {
      * @morphia.internal
      */
     @MorphiaInternal
-    public static void value(Datastore datastore, BsonWriter writer, String name, @Nullable Object value, EncoderContext encoderContext) {
+    public static void value(MorphiaDatastore datastore, BsonWriter writer, String name, @Nullable Object value,
+            EncoderContext encoderContext) {
         if (value != null) {
             if (value instanceof List) {
                 List<Object> list = (List<Object>) value;
@@ -203,7 +205,7 @@ public final class ExpressionHelper {
      * @morphia.internal
      */
     @MorphiaInternal
-    public static void value(Datastore datastore, BsonWriter writer, @Nullable Object value, EncoderContext encoderContext) {
+    public static void value(MorphiaDatastore datastore, BsonWriter writer, @Nullable Object value, EncoderContext encoderContext) {
         if (value != null) {
             if (value instanceof Expression) {
                 ((Expression) value).encode(datastore, writer, encoderContext);
@@ -225,7 +227,7 @@ public final class ExpressionHelper {
      */
     @MorphiaInternal
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static void wrapExpression(Datastore datastore, BsonWriter writer, String name, @Nullable Expression expression,
+    public static void wrapExpression(MorphiaDatastore datastore, BsonWriter writer, String name, @Nullable Expression expression,
             EncoderContext encoderContext) {
         if (expression != null) {
             writer.writeName(name);

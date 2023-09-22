@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 
 import org.bson.BsonWriter;
@@ -20,7 +20,7 @@ public class SliceExpression extends Expression {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         ExpressionHelper.array(writer, getOperation(), () -> {
             expression(datastore, writer, array, encoderContext);
             if (position != null) {

@@ -5,7 +5,7 @@ import java.util.List;
 import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.DatastoreImpl;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -39,7 +39,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @morphia.internal
      */
     @MorphiaInternal
-    public SingleReference(DatastoreImpl datastore, EntityModel entityModel, Object id) {
+    public SingleReference(MorphiaDatastore datastore, EntityModel entityModel, Object id) {
         super(datastore);
         this.entityModel = entityModel;
         this.id = id;
@@ -55,7 +55,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
         }
     }
 
-    SingleReference(DatastoreImpl datastore, T value) {
+    SingleReference(MorphiaDatastore datastore, T value) {
         super(datastore);
         this.value = value;
     }
@@ -70,7 +70,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
      * @param document    the Document to decode
      * @return the entity
      */
-    public static MorphiaReference<?> decode(DatastoreImpl datastore,
+    public static MorphiaReference<?> decode(MorphiaDatastore datastore,
             Mapper mapper,
             PropertyModel mappedField,
             Class<?> paramType, Document document) {

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import dev.morphia.DatastoreImpl;
 import dev.morphia.InsertOneOptions;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.Group;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -66,7 +66,7 @@ public class TestMerge extends AggregationTest {
     public void testMergeWithUnsetMissing() {
         GenericEntity entity = new GenericEntity();
         entity.strings = Arrays.asList("Test1", null, "Test2");
-        DatastoreImpl ds = getDs();
+        MorphiaDatastore ds = getDs();
         ds.save(entity);
 
         entity.strings = Arrays.asList("Test1", null, "Test2");

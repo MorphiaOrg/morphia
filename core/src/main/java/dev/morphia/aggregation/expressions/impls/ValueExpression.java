@@ -2,7 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -17,7 +17,7 @@ public class ValueExpression extends Expression implements SingleValuedExpressio
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         if (object != null) {
             Codec codec = datastore.getCodecRegistry().get(object.getClass());
             encoderContext.encodeWithChildContext(codec, writer, object);

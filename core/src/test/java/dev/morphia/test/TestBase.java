@@ -19,7 +19,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.DatastoreImpl;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.reader.DocumentReader;
@@ -67,7 +67,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         getMorphiaContainer().reset();
     }
 
-    public DatastoreImpl getDs() {
+    public MorphiaDatastore getDs() {
         return getMorphiaContainer().getDs();
     }
 

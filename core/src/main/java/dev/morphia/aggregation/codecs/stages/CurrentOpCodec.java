@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.CurrentOp;
 
 import org.bson.BsonWriter;
@@ -10,7 +10,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class CurrentOpCodec extends StageCodec<CurrentOp> {
-    public CurrentOpCodec(Datastore datastore) {
+    public CurrentOpCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

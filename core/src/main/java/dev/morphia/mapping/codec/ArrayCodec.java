@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.DatastoreImpl;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonBinarySubType;
 import org.bson.BsonReader;
@@ -20,9 +20,9 @@ import org.bson.codecs.EncoderContext;
 class ArrayCodec implements Codec<Object> {
 
     private final Class<?> type;
-    private DatastoreImpl datastore;
+    private MorphiaDatastore datastore;
 
-    <T> ArrayCodec(DatastoreImpl datastore, Class<T> type) {
+    <T> ArrayCodec(MorphiaDatastore datastore, Class<T> type) {
         this.datastore = datastore;
         this.type = type;
     }

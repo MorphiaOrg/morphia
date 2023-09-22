@@ -4,7 +4,7 @@ import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Polygon;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
@@ -40,7 +40,7 @@ public class GeoWithinFilter extends Filter {
     }
 
     @Override
-    public final void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+    public final void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(path(datastore.getMapper()));
         writer.writeStartDocument(getName());
         writer.writeName("$geometry");

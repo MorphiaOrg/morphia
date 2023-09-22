@@ -2,7 +2,7 @@ package dev.morphia.query.filters;
 
 import com.mongodb.client.model.geojson.Point;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -16,7 +16,7 @@ class PolygonFilter extends Filter {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(path(datastore.getMapper()));
         writer.writeStartDocument("$geoWithin");
         writer.writeStartArray("$polygon");

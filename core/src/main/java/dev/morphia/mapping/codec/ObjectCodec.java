@@ -1,6 +1,6 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.mapping.MappingException;
 
 import org.bson.BsonReader;
@@ -20,13 +20,13 @@ import org.bson.codecs.configuration.CodecConfigurationException;
 public class ObjectCodec implements Codec<Object> {
 
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
-    private Datastore datastore;
+    private MorphiaDatastore datastore;
 
     /**
      * Creates a codec
      *
      */
-    public ObjectCodec(Datastore datastore) {
+    public ObjectCodec(MorphiaDatastore datastore) {
         this.datastore = datastore;
     }
 

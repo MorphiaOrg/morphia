@@ -4,11 +4,11 @@ import java.lang.annotation.Annotation;
 
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.EntityInterceptor;
+import dev.morphia.Datastore;
+import dev.morphia.EntityListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.test.TestBase;
 
 import org.bson.Document;
@@ -43,14 +43,14 @@ public class TestInterceptors extends TestBase {
         }
     }
 
-    public static class Interceptor implements EntityInterceptor {
+    public static class Interceptor implements EntityListener<Object> {
         @Override
         public boolean hasAnnotation(Class<? extends Annotation> type) {
             return PrePersist.class.equals(type);
         }
 
         @Override
-        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Mapper mapper) {
+        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Datastore datastore) {
             Assert.assertTrue(((E) ent).called);
         }
     }

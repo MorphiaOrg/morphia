@@ -2,7 +2,7 @@ package dev.morphia.mapping.codec;
 
 import java.time.LocalDateTime;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.config.MorphiaConfig;
 
 import org.bson.BsonReader;
@@ -21,9 +21,9 @@ import static java.time.Instant.ofEpochMilli;
  */
 public class MorphiaLocalDateTimeCodec implements Codec<LocalDateTime> {
 
-    private Datastore datastore;
+    private MorphiaDatastore datastore;
 
-    MorphiaLocalDateTimeCodec(Datastore datastore) {
+    MorphiaLocalDateTimeCodec(MorphiaDatastore datastore) {
         this.datastore = datastore;
     }
 

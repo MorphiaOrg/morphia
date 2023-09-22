@@ -2,7 +2,7 @@ package dev.morphia.query.filters;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
@@ -62,7 +62,7 @@ public class Filter {
      * @morphia.internal
      */
     @MorphiaInternal
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
         document(writer, path(datastore.getMapper()), () -> {
             if (not) {
                 document(writer, "$not", () -> {
@@ -148,7 +148,7 @@ public class Filter {
     }
 
     @Nullable
-    protected Object getValue(Datastore datastore) {
+    protected Object getValue(MorphiaDatastore datastore) {
         if (!mapped) {
             PathTarget target = pathTarget(datastore.getMapper());
             OperationTarget operationTarget = new OperationTarget(pathTarget, value);
@@ -179,7 +179,7 @@ public class Filter {
         return pathTarget;
     }
 
-    protected void writeNamedValue(@Nullable String name, @Nullable Object value, Datastore datastore, BsonWriter writer,
+    protected void writeNamedValue(@Nullable String name, @Nullable Object value, MorphiaDatastore datastore, BsonWriter writer,
             EncoderContext encoderContext) {
         writer.writeName(name);
         if (value != null) {
@@ -190,7 +190,7 @@ public class Filter {
         }
     }
 
-    protected void writeUnnamedValue(@Nullable Object value, Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    protected void writeUnnamedValue(@Nullable Object value, MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         if (value != null) {
             Codec codec = datastore.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);

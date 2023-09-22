@@ -16,7 +16,6 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.EntityInterceptor;
 import dev.morphia.EntityListener;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -264,13 +263,11 @@ public class Mapper {
     }
 
     /**
-     * Gets list of {@link EntityInterceptor}s
+     * Gets list of {@link EntityListener}s
      *
      * @return the Interceptors
-     * @deprecated
      */
-    @Deprecated(forRemoval = true, since = "2.4.0")
-    public List<EntityListener<?>> getInterceptors() {
+    public List<EntityListener<?>> getListeners() {
         return listeners;
     }
 

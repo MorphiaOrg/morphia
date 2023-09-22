@@ -3,7 +3,7 @@ package dev.morphia.aggregation.expressions.impls;
 import java.time.DayOfWeek;
 import java.util.Locale;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
 
 import org.bson.BsonWriter;
@@ -34,7 +34,7 @@ public class DateDiffExpression extends Expression {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, getOperation(), () -> {
             expression(datastore, writer, "startDate", startDate, encoderContext);
             expression(datastore, writer, "endDate", endDate, encoderContext);

@@ -2,10 +2,9 @@ package dev.morphia.mapping.codec.pojo;
 
 import java.util.List;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorLookup;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import dev.morphia.sofia.Sofia;
@@ -32,6 +31,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  * the codec used by Morphia
  *
  * @param <T> the entity type
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */
@@ -47,7 +47,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final DiscriminatorLookup discriminatorLookup;
     private EntityEncoder<T> encoder;
     private EntityDecoder<T> decoder;
-    private Datastore datastore;
+    private MorphiaDatastore datastore;
 
     /**
      * Creates a new codec
@@ -58,7 +58,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * @param discriminatorLookup    the discriminator to type lookup
      * @param registry               the codec registry for lookups
      */
-    public MorphiaCodec(Datastore datastore, EntityModel model,
+    public MorphiaCodec(MorphiaDatastore datastore, EntityModel model,
             List<PropertyCodecProvider> propertyCodecProviders,
             DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
         this.datastore = datastore;
@@ -117,7 +117,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * @return the datastore
      * @since 2.3
      */
-    public Datastore getDatastore() {
+    public MorphiaDatastore getDatastore() {
         return datastore;
     }
 
@@ -155,13 +155,6 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      */
     public EntityModel getEntityModel() {
         return entityModel;
-    }
-
-    /**
-     * @return the mapper being used
-     */
-    public Mapper getMapper() {
-        return getDatastore().getMapper();
     }
 
     /**

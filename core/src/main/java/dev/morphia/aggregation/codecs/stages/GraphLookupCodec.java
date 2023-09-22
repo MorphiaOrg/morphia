@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.GraphLookup;
 import dev.morphia.query.filters.Filter;
 
@@ -12,7 +12,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class GraphLookupCodec extends StageCodec<GraphLookup> {
-    public GraphLookupCodec(Datastore datastore) {
+    public GraphLookupCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

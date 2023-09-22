@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.AggregationException;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.sofia.Sofia;
@@ -17,7 +17,7 @@ public class Push extends Expression implements FieldHolder<Push> {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         writer.writeName(getOperation());
         if (field != null) {
             field.encode(datastore, writer, encoderContext);

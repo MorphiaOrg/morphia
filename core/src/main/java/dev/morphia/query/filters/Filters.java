@@ -8,7 +8,7 @@ import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.query.Type;
 
@@ -208,7 +208,7 @@ public final class Filters {
     public static Filter eq(String field, @Nullable Object val) {
         return new Filter("$eq", field, val) {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
                 if (isNot()) {
                     document(writer, path(datastore.getMapper()), () -> {
                         document(writer, "$not", () -> {
@@ -233,7 +233,7 @@ public final class Filters {
     public static Filter exists(String field) {
         return new Filter("$exists", field, null) {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
                 writer.writeStartDocument(path(datastore.getMapper()));
                 writer.writeName(getName());
                 writer.writeBoolean(!isNot());
@@ -252,7 +252,7 @@ public final class Filters {
     public static Filter expr(Expression expression) {
         return new Filter("$expr", null, expression) {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
                 writer.writeName("$expr");
                 Expression value = getValue();
                 if (value != null) {
@@ -378,7 +378,7 @@ public final class Filters {
     public static Filter jsonSchema(Document schema) {
         return new Filter("$jsonSchema", null, schema) {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
                 value(datastore, writer, "$jsonSchema", schema, context);
             }
         };
@@ -444,7 +444,7 @@ public final class Filters {
     public static Filter mod(String field, long divisor, long remainder) {
         return new Filter("$mod", field, null) {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
                 writer.writeStartDocument(path(datastore.getMapper()));
                 writer.writeName(getName());
                 writer.writeStartArray();
@@ -647,7 +647,7 @@ public final class Filters {
     public static Filter where(String val) {
         return new Filter("$where", null, val) {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
                 writer.writeName(getName());
                 Object where = getValue();
                 if (where != null) {

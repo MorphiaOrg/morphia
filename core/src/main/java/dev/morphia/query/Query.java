@@ -15,7 +15,6 @@ import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
-import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.updates.UpdateOperator;
@@ -174,13 +173,6 @@ public interface Query<T> extends Iterable<T> {
      */
     @Nullable
     T first(FindOptions options);
-
-    /**
-     * @return the entity {@link Class}.
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    Class<T> getEntityClass();
 
     /**
      * Create a modify operation based on this query

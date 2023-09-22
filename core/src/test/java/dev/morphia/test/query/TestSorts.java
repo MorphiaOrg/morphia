@@ -6,6 +6,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Text;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.test.TemplatedTestBase;
 
@@ -30,7 +31,7 @@ public class TestSorts extends TemplatedTestBase {
                 .sort(textScore("textScore"),
                         ascending("subject"));
 
-        testQuery(query, options, true);
+        testQuery((MorphiaQuery<?>) query, options, true);
     }
 
     @Entity(useDiscriminator = false)
@@ -48,10 +49,9 @@ public class TestSorts extends TemplatedTestBase {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof Article)) {
+            if (!(o instanceof Article article)) {
                 return false;
             }
-            Article article = (Article) o;
             return id == article.id && views == article.views && Double.compare(article.textScore, textScore) == 0 &&
                     Objects.equals(subject, article.subject) && Objects.equals(author, article.author);
         }

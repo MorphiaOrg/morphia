@@ -16,6 +16,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
@@ -215,11 +216,11 @@ public class EntityModel {
      */
     @SuppressWarnings("rawtypes")
     public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
-            Datastore datastore) {
+            MorphiaDatastore datastore) {
         listeners.forEach((listener) -> {
             invokeLifecycleEvent(event, entity, document, datastore, listener);
         });
-        datastore.getMapper().getInterceptors().forEach((listener) -> {
+        datastore.getMapper().getListeners().forEach((listener) -> {
             LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));
             invokeLifecycleEvent(event, entity, document, datastore, listener);
         });

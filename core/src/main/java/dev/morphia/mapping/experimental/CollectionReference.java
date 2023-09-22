@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import com.mongodb.DBRef;
 import com.mongodb.client.MongoCursor;
 
-import dev.morphia.DatastoreImpl;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -38,7 +38,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
     private EntityModel entityModel;
     private List ids;
 
-    protected CollectionReference(DatastoreImpl datastore, EntityModel entityModel, List ids) {
+    protected CollectionReference(MorphiaDatastore datastore, EntityModel entityModel, List ids) {
         super(datastore);
         this.entityModel = entityModel;
         if (ids != null) {
@@ -73,7 +73,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         return collections.computeIfAbsent(name, k -> new ArrayList<>());
     }
 
-    protected CollectionReference(DatastoreImpl datastore) {
+    protected CollectionReference(MorphiaDatastore datastore) {
         super(datastore);
     }
 

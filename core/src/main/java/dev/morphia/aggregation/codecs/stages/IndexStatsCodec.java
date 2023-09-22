@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.IndexStats;
 
 import org.bson.BsonWriter;
@@ -9,7 +9,7 @@ import org.bson.codecs.EncoderContext;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 public class IndexStatsCodec extends StageCodec<IndexStats> {
-    public IndexStatsCodec(Datastore datastore) {
+    public IndexStatsCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

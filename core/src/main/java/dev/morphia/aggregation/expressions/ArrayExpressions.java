@@ -2,7 +2,7 @@ package dev.morphia.aggregation.expressions;
 
 import java.util.List;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.aggregation.expressions.impls.ArrayExpression;
 import dev.morphia.aggregation.expressions.impls.ArrayFilterExpression;
@@ -243,7 +243,7 @@ public final class ArrayExpressions {
         }
         return new Expression("$sortArray") {
             @Override
-            public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
                 document(writer, getOperation(), () -> {
                     expression(datastore, writer, "input", input, encoderContext);
                     if (sort[0].getField().equals(Sort.NATURAL)) {

@@ -17,6 +17,7 @@ import com.mongodb.client.model.ReturnDocument;
 
 import dev.morphia.Datastore;
 import dev.morphia.ModifyOptions;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
@@ -299,7 +300,7 @@ public class TestReferences extends ProxyTestBase {
 
     @Test
     public void testLazyWithParent() {
-        Datastore datastore = getDs();
+        MorphiaDatastore datastore = getDs();
         datastore.getMapper().map(Entity1.class, Entity2.class, EntityBase.class);
 
         Entity1 entity1 = new Entity1("entity1");

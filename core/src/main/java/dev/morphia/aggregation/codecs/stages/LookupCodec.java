@@ -2,7 +2,7 @@ package dev.morphia.aggregation.codecs.stages;
 
 import java.util.List;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.aggregation.stages.Lookup;
 import dev.morphia.aggregation.stages.Stage;
@@ -15,7 +15,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 public class LookupCodec extends StageCodec<Lookup> {
-    public LookupCodec(Datastore datastore) {
+    public LookupCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

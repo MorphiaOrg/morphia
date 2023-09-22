@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -14,12 +14,12 @@ public class DocumentExpression extends Expression implements SingleValuedExpres
         super("unused");
     }
 
-    public void encode(String name, Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(String name, MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, name, () -> fields.encode(datastore, writer, encoderContext));
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, () -> fields.encode(datastore, writer, encoderContext));
     }
 

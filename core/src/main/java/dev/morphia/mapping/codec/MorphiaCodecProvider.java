@@ -8,7 +8,7 @@ import java.util.ServiceLoader;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
@@ -37,14 +37,14 @@ public class MorphiaCodecProvider implements CodecProvider {
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
     private final Mapper mapper;
     private final List<PropertyCodecProvider> propertyCodecProviders = new ArrayList<>();
-    private Datastore datastore;
+    private MorphiaDatastore datastore;
 
     /**
      * Creates a provider
      *
      * @param datastore
      */
-    public MorphiaCodecProvider(Datastore datastore) {
+    public MorphiaCodecProvider(MorphiaDatastore datastore) {
         this.datastore = datastore;
         this.mapper = datastore.getMapper();
 

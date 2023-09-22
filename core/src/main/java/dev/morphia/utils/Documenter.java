@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.DatastoreImpl;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
@@ -38,7 +38,7 @@ public class Documenter {
      * @morphia.internal
      */
     @MorphiaInternal
-    public static Document toDocument(DatastoreImpl datastore, EntityModel entityModel, List<UpdateOperator> updates,
+    public static Document toDocument(MorphiaDatastore datastore, EntityModel entityModel, List<UpdateOperator> updates,
             boolean validate) {
         final Operations operations = new Operations(datastore, entityModel);
 
@@ -53,7 +53,7 @@ public class Documenter {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static List<Document> toDocument(DatastoreImpl datastore, List<Stage> updates) {
+    public static List<Document> toDocument(MorphiaDatastore datastore, List<Stage> updates) {
         CodecRegistry registry = datastore.getCodecRegistry();
         List<Document> documents = new ArrayList<>();
         for (Stage update : updates) {

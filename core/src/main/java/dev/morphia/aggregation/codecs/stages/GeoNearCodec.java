@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.query.filters.Filter;
 
@@ -11,7 +11,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class GeoNearCodec extends StageCodec<GeoNear> {
-    public GeoNearCodec(Datastore datastore) {
+    public GeoNearCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

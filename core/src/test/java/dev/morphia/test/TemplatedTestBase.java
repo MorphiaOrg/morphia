@@ -22,7 +22,6 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
-import dev.morphia.query.Query;
 
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
@@ -75,12 +74,12 @@ public abstract class TemplatedTestBase extends TestBase {
         }
     }
 
-    public <D> void testQuery(Query<D> query, FindOptions options, boolean orderMatters) {
+    public <D> void testQuery(MorphiaQuery<D> query, FindOptions options, boolean orderMatters) {
         var resourceName = discoverResourceName(new Exception().getStackTrace());
 
         loadData(getDs().getCollection(query.getEntityClass()).getNamespace().getCollectionName(), "data.json");
 
-        List<D> actual = runQuery(resourceName, (MorphiaQuery<D>) query, options);
+        List<D> actual = runQuery(resourceName, query, options);
 
         List<D> expected = map(query.getEntityClass(), loadExpected(resourceName));
 

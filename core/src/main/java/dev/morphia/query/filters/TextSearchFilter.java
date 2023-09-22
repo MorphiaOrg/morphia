@@ -1,6 +1,6 @@
 package dev.morphia.query.filters;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -44,7 +44,7 @@ public class TextSearchFilter extends Filter {
     }
 
     @Override
-    public void encode(Datastore datastore, BsonWriter writer, EncoderContext context) {
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
         writer.writeStartDocument(getName());
         writeNamedValue("$search", searchText, datastore, writer, context);
         if (language != null) {

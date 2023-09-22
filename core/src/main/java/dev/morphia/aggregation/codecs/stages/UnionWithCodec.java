@@ -1,6 +1,6 @@
 package dev.morphia.aggregation.codecs.stages;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
@@ -18,7 +18,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
  */
 @MorphiaInternal
 public class UnionWithCodec extends StageCodec<UnionWith> {
-    public UnionWithCodec(Datastore datastore) {
+    public UnionWithCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringJoiner;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -20,10 +20,10 @@ import org.bson.Document;
  */
 public class Operations {
     private final Map<String, List<OperationTarget>> ops = new HashMap<>();
-    private final Datastore datastore;
+    private final MorphiaDatastore datastore;
     private final EntityModel entityModel;
 
-    public Operations(Datastore datastore, EntityModel model) {
+    public Operations(MorphiaDatastore datastore, EntityModel model) {
         this.datastore = datastore;
         this.entityModel = model;
     }

@@ -15,12 +15,12 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
 import dev.morphia.Datastore;
-import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
 import dev.morphia.MissingIdException;
 import dev.morphia.ModifyOptions;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
@@ -88,7 +88,7 @@ public class TestDatastore extends TestBase {
         withConfig(buildConfig(MultipleDSEntity.class), () -> {
             assertEquals(getMapper().getMappedEntities().size(), 1);
 
-            DatastoreImpl copied = new DatastoreImpl(getDs());
+            MorphiaDatastore copied = new MorphiaDatastore(getDs());
 
             EntityModel model = getMapper().getEntityModel(MultipleDSEntity.class);
             EntityModel copiedModel = copied.getMapper().getEntityModel(MultipleDSEntity.class);

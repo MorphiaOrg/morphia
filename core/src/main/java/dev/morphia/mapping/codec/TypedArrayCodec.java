@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -18,9 +18,9 @@ import static java.lang.String.format;
 class TypedArrayCodec implements Codec {
     private final Class type;
     private Codec codec;
-    private Datastore datastore;
+    private MorphiaDatastore datastore;
 
-    TypedArrayCodec(Datastore datastore, Class type) {
+    TypedArrayCodec(MorphiaDatastore datastore, Class type) {
         this.datastore = datastore;
         this.type = type;
     }

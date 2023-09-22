@@ -4,8 +4,6 @@ import com.mongodb.client.MongoClient;
 
 import dev.morphia.config.MorphiaConfig;
 
-import static dev.morphia.config.MorphiaConfigHelper.*;
-
 /**
  * Entry point for working with Morphia
  */
@@ -22,7 +20,7 @@ public final class Morphia {
      * @since 2.4.0
      */
     public static Datastore createDatastore(MongoClient mongoClient) {
-        return new DatastoreImpl(mongoClient, MorphiaConfig.load());
+        return new MorphiaDatastore(mongoClient, MorphiaConfig.load());
     }
 
     /**
@@ -34,7 +32,7 @@ public final class Morphia {
      * @since 3.0.0
      */
     public static Datastore createDatastore(MongoClient mongoClient, MorphiaConfig config) {
-        return new DatastoreImpl(mongoClient, config);
+        return new MorphiaDatastore(mongoClient, config);
     }
 
 }

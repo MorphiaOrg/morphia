@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dev.morphia.DatastoreImpl;
+import dev.morphia.MorphiaDatastore;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.MapCodec;
@@ -18,13 +18,13 @@ import org.bson.codecs.configuration.CodecRegistry;
 @SuppressWarnings("unchecked")
 public class MorphiaTypesCodecProvider implements CodecProvider {
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
-    private DatastoreImpl datastore;
+    private MorphiaDatastore datastore;
 
     /**
      * Create the provider
      *
      */
-    public MorphiaTypesCodecProvider(DatastoreImpl datastore) {
+    public MorphiaTypesCodecProvider(MorphiaDatastore datastore) {
         this.datastore = datastore;
         addCodec(new MorphiaDateCodec(datastore));
         addCodec(new MorphiaMapCodec(datastore));

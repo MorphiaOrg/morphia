@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.stages.AddFieldsCodec;
 import dev.morphia.aggregation.codecs.stages.AutoBucketCodec;
 import dev.morphia.aggregation.codecs.stages.BucketCodec;
@@ -54,10 +54,10 @@ public class AggregationCodecProvider implements CodecProvider {
 
     private final Codec expressionCodec;
     private Map<Class, StageCodec> codecs;
-    private Datastore datastore;
+    private MorphiaDatastore datastore;
 
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public AggregationCodecProvider(Datastore datastore) {
+    public AggregationCodecProvider(MorphiaDatastore datastore) {
         this.datastore = datastore;
         expressionCodec = new ExpressionCodec(datastore);
     }

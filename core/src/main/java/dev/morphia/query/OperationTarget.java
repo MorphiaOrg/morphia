@@ -4,7 +4,7 @@ import java.util.StringJoiner;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
@@ -45,7 +45,7 @@ public class OperationTarget {
      * @morphia.internal
      */
     @MorphiaInternal
-    public Object encode(Datastore datastore) {
+    public Object encode(MorphiaDatastore datastore) {
         if (target == null) {
             if (value == null) {
                 throw new NullPointerException();

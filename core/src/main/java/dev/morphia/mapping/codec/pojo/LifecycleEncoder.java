@@ -1,6 +1,6 @@
 package dev.morphia.mapping.codec.pojo;
 
-import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -29,7 +29,7 @@ public class LifecycleEncoder<T> extends EntityEncoder<T> {
     @Override
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = getMorphiaCodec().getEntityModel();
-        Datastore datastore = getMorphiaCodec().getDatastore();
+        MorphiaDatastore datastore = getMorphiaCodec().getDatastore();
 
         Document document = new Document();
         model.callLifecycleMethods(PrePersist.class, value, document, datastore);

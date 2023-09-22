@@ -70,7 +70,7 @@ public class EntityDecoder<T> implements Decoder<T> {
                 }
             } catch (BsonInvalidOperationException e) {
                 mark.reset();
-                final Object value = morphiaCodec.getDatastore().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
+                final Object value = morphiaCodec.getRegistry().get(Object.class).decode(reader, decoderContext);
                 instanceCreator.set(convert(value, model.getTypeData().getType()), model);
             }
         } else {

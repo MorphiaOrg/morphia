@@ -33,7 +33,7 @@ import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
-import dev.morphia.DatastoreImpl;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.Reference;
@@ -379,13 +379,13 @@ public final class PropertyModel {
         if (handler != null) {
             try {
                 codec = handler.value()
-                        .getDeclaredConstructor(DatastoreImpl.class, PropertyModel.class)
+                        .getDeclaredConstructor(MorphiaDatastore.class, PropertyModel.class)
                         .newInstance(datastore, this);
             } catch (ReflectiveOperationException e) {
                 throw new MappingException(e.getMessage(), e);
             }
         } else if (typeData.getTypeParameters().isEmpty()) {
-            codec = (Codec<? super Object>) datastore.getCodecRegistry().get(getType());
+            codec = (Codec<? super Object>) ((MorphiaDatastore) datastore).getCodecRegistry().get(getType());
         }
     }
 

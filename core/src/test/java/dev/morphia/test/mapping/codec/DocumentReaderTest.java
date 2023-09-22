@@ -193,7 +193,7 @@ public class DocumentReaderTest extends TestBase {
                     .find().first();
             fromDocument(HasNestedByteArray.class, first);
         } finally {
-            getDs().getMapper().getInterceptors().remove(interceptor);
+            getDs().getMapper().getListeners().remove(interceptor);
         }
     }
 
