@@ -1,40 +1,37 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //DEPS com.github.zafarkhaja:java-semver:0.9.0
-//DEPS org.jsoup:jsoup:1.15.3
+//DEPS com.fasterxml.jackson.core:jackson-databind:2.15.2
 
 import java.net.URL;
-import com.github.zafarkhaja.semver.Version;
-import org.jsoup.Jsoup;
 import java.util.stream.Collectors;
-
+import java.util.Spliterators;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.stream.StreamSupport;
+import com.github.zafarkhaja.semver.Version;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.stream.Collectors;
 
 public class BuildMatrix {
 
     public static void main(String... args) throws Exception {
-        var doc = Jsoup.parse(new URL("https://www.mongodb.com/try/download/community"), 10000);
-        var found = doc.getElementById("download-version")
-                .siblingElements()
-                .stream()
+        var json = "https://downloads.mongodb.org/current.json";
+        var mapper = new ObjectMapper();
 
-                .flatMap(it -> it.getElementsByTag("div").stream())
-                .flatMap(it -> it.getElementsByTag("ul").stream())
-                .flatMap(it -> it.getElementsByTag("li").stream())
-                .map(it -> substringBeforeSpace(it.text()))
+        var document = mapper.readTree(new URL(json));
+
+        var list = (ArrayNode)document.get("versions");
+
+        var result = StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(list.elements(), Spliterator.ORDERED), false)
+                .map(d -> ((JsonNode)d.get("version")).asText())
                 .map(Version::valueOf)
                 .filter(it -> it.getPreReleaseVersion() == null || it.getPreReleaseVersion().equals(""))
                 .filter(it -> it.greaterThanOrEqualTo(Version.valueOf("5.0.0")))
-                .map(it -> "'%s'".formatted(it))
                 .collect(Collectors.toList());
-
-        System.out.println(found);
-    }
-
-    private static String substringBeforeSpace(String text) {
-        int endIndex = text.indexOf(' ');
-        if (endIndex == -1) {
-            endIndex = text.length();
-        }
-        return text.substring(0, endIndex);
+        System.out.println(result);
     }
 }
