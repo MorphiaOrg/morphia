@@ -21,7 +21,7 @@ public class UnsetFieldExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "field", field, encoderContext);
             value(datastore, writer, "input", input, encoderContext);
         });

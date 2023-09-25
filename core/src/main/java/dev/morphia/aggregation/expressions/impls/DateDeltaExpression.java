@@ -41,7 +41,7 @@ public class DateDeltaExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "startDate", startDate, encoderContext);
             writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
             writer.writeInt64("amount", amount);

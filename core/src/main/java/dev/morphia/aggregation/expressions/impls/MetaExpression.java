@@ -14,6 +14,6 @@ public class MetaExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        ExpressionHelper.expression(datastore, writer, getOperation(), new ValueExpression("textScore"), encoderContext);
+        ExpressionHelper.expression(datastore, writer, operation(), new ValueExpression("textScore"), encoderContext);
     }
 }

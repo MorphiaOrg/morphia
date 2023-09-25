@@ -53,7 +53,7 @@ public class DateFromParts extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "year", year, encoderContext);
             expression(datastore, writer, "month", month, encoderContext);
             expression(datastore, writer, "day", day, encoderContext);

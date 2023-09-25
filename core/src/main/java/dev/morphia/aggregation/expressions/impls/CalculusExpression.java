@@ -33,7 +33,7 @@ public class CalculusExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "input", input, encoderContext);
             if (unit != null) {
                 writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));

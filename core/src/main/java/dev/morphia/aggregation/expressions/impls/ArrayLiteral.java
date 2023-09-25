@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.MorphiaDatastore;
 
+import dev.morphia.aggregation.codecs.ExpressionHelper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -33,7 +34,7 @@ public class ArrayLiteral extends ArrayExpression {
         } else {
             array(writer, () -> {
                 for (Object object : objects) {
-                    value(datastore, writer, object, encoderContext);
+                    ExpressionHelper.value(datastore, writer, object, encoderContext);
                 }
             });
         }

@@ -45,7 +45,7 @@ public class ZipExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             array(datastore, writer, "inputs", inputs, encoderContext);
             ExpressionHelper.expression(datastore, writer, "useLongestLength", useLongestLength, encoderContext);
             ExpressionHelper.expression(datastore, writer, "defaults", defaults, encoderContext);

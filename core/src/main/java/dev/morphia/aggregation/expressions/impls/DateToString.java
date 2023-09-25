@@ -30,7 +30,7 @@ public class DateToString extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "date", date, encoderContext);
             expression(datastore, writer, "format", format, encoderContext);
             expression(datastore, writer, "timezone", timeZone, encoderContext);

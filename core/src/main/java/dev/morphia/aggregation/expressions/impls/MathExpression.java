@@ -43,7 +43,7 @@ public class MathExpression extends Expression {
         ExpressionList value = getValue();
         if (value != null) {
             final List<Expression> operands = value.getValues();
-            writer.writeName(getOperation());
+            writer.writeName(operation());
             if (operands.size() > 1) {
                 writer.writeStartArray();
             }

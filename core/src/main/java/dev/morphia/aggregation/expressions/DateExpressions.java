@@ -329,7 +329,7 @@ public final class DateExpressions {
         @Override
         @MorphiaInternal
         public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-            ExpressionHelper.expression(datastore, writer, getOperation(), getValue(), encoderContext);
+            ExpressionHelper.expression(datastore, writer, operation(), getValue(), encoderContext);
         }
     }
 }

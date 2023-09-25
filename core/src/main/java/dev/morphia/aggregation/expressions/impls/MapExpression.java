@@ -27,7 +27,7 @@ public class MapExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             wrapExpression(datastore, writer, "input", input, encoderContext);
             wrapExpression(datastore, writer, "in", in, encoderContext);
             ExpressionHelper.expression(datastore, writer, "as", as, encoderContext);

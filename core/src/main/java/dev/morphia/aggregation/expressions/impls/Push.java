@@ -18,7 +18,7 @@ public class Push extends Expression implements FieldHolder<Push> {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeName(getOperation());
+        writer.writeName(operation());
         if (field != null) {
             field.encode(datastore, writer, encoderContext);
         } else if (document != null) {
@@ -29,7 +29,7 @@ public class Push extends Expression implements FieldHolder<Push> {
     @Override
     public Push field(String name, Expression expression) {
         if (field != null) {
-            throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
+            throw new AggregationException(Sofia.mixedModesNotAllowed(operation()));
         }
         if (document == null) {
             document = Expressions.of();
@@ -41,7 +41,7 @@ public class Push extends Expression implements FieldHolder<Push> {
 
     public Push single(Expression source) {
         if (document != null) {
-            throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
+            throw new AggregationException(Sofia.mixedModesNotAllowed(operation()));
         }
         this.field = source;
         return this;

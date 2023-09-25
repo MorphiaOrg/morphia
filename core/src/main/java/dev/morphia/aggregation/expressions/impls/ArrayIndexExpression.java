@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
@@ -33,11 +34,11 @@ public class ArrayIndexExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        array(writer, getOperation(), () -> {
+        array(writer, operation(), () -> {
             expression(datastore, writer, array, encoderContext);
             expression(datastore, writer, search, encoderContext);
-            value(datastore, writer, start, encoderContext);
-            value(datastore, writer, end, encoderContext);
+            ExpressionHelper.value(datastore, writer, start, encoderContext);
+            ExpressionHelper.value(datastore, writer, end, encoderContext);
         });
     }
 

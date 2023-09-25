@@ -24,7 +24,7 @@ public class RegexExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "input", input, encoderContext);
             value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);
             value(writer, "options", options);

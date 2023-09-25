@@ -39,7 +39,7 @@ public class ReplaceExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             wrapExpression(datastore, writer, "input", input, encoderContext);
             wrapExpression(datastore, writer, "find", find, encoderContext);
             wrapExpression(datastore, writer, "replacement", replacement, encoderContext);

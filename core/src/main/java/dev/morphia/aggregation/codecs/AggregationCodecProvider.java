@@ -52,25 +52,27 @@ import org.bson.codecs.configuration.CodecRegistry;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AggregationCodecProvider implements CodecProvider {
 
-    private final Codec expressionCodec;
+//    private final Codec expressionCodec;
     private Map<Class, StageCodec> codecs;
     private MorphiaDatastore datastore;
 
     @SuppressFBWarnings("EI_EXPOSE_REP2")
     public AggregationCodecProvider(MorphiaDatastore datastore) {
         this.datastore = datastore;
-        expressionCodec = new ExpressionCodec(datastore);
+//        expressionCodec = new ExpressionCodec(datastore);
     }
 
     @Override
     @Nullable
     public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
         Codec<T> codec = getCodecs().get(clazz);
+/*
         if (codec == null) {
             if (Expression.class.isAssignableFrom(clazz)) {
                 codec = expressionCodec;
             }
         }
+*/
         return codec;
     }
 

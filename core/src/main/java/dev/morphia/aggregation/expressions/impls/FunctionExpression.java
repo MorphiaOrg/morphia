@@ -35,7 +35,7 @@ public class FunctionExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             writer.writeString("body", body);
             ExpressionHelper.array(datastore, writer, "args", args, encoderContext);
             writer.writeString("lang", lang);

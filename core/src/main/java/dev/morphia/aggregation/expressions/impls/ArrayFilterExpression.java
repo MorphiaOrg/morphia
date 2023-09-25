@@ -27,7 +27,7 @@ public class ArrayFilterExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             wrapExpression(datastore, writer, "input", array, encoderContext);
             wrapExpression(datastore, writer, "cond", conditional, encoderContext);
             ExpressionHelper.expression(datastore, writer, "as", as, encoderContext);

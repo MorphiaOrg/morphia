@@ -48,7 +48,7 @@ public class DateTruncExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "date", date, encoderContext);
             writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
             if (binSize != null) {

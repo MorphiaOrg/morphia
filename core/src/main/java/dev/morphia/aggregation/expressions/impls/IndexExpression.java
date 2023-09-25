@@ -38,7 +38,7 @@ public class IndexExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        array(writer, getOperation(), () -> {
+        array(writer, operation(), () -> {
             expression(datastore, writer, string, encoderContext);
             expression(datastore, writer, substring, encoderContext);
             value(datastore, writer, start, encoderContext);

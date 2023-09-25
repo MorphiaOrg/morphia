@@ -41,7 +41,7 @@ public class AccumulatorExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             writer.writeString("init", initFunction);
             array(datastore, writer, "initArgs", initArgs, encoderContext);
             writer.writeString("accumulate", accumulateFunction);

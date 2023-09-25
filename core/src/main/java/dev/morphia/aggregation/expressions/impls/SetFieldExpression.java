@@ -23,7 +23,7 @@ public class SetFieldExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "field", field, encoderContext);
             ExpressionHelper.value(datastore, writer, "input", input, encoderContext);
             expression(datastore, writer, "value", value, encoderContext);

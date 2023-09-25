@@ -27,7 +27,7 @@ public class ShiftExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "output", output, encoderContext);
             writer.writeInt64("by", by);
             expression(datastore, writer, "default", defaultValue, encoderContext);

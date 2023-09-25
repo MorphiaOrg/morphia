@@ -23,7 +23,7 @@ public class ConvertExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "input", input, encoderContext);
             value(writer, "to", to.getName());
             expression(datastore, writer, "onError", onError, encoderContext);

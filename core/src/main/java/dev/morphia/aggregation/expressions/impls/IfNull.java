@@ -23,7 +23,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        array(writer, getOperation(), () -> {
+        array(writer, operation(), () -> {
             wrapExpression(datastore, writer, target, encoderContext);
             wrapExpression(datastore, writer, replacement, encoderContext);
             expression(datastore, writer, document, encoderContext);
@@ -33,7 +33,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     @Override
     public IfNull field(String name, Expression expression) {
         if (replacement != null) {
-            throw new AggregationException(Sofia.mixedModesNotAllowed(getOperation()));
+            throw new AggregationException(Sofia.mixedModesNotAllowed(operation()));
         }
         if (document == null) {
             document = Expressions.of();
@@ -41,18 +41,6 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
         document.field(name, expression);
 
         return this;
-    }
-
-    public DocumentExpression getDocument() {
-        return document;
-    }
-
-    public Expression getReplacement() {
-        return replacement;
-    }
-
-    public Expression getTarget() {
-        return target;
     }
 
     public IfNull replacement(Expression replacement) {
@@ -63,5 +51,17 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     public IfNull target(Expression target) {
         this.target = target;
         return this;
+    }
+
+    public Expression target() {
+        return target;
+    }
+
+    public Expression replacement() {
+        return replacement;
+    }
+
+    public DocumentExpression document() {
+        return document;
     }
 }

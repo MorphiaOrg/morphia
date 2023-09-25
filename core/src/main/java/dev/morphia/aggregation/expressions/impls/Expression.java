@@ -66,7 +66,7 @@ public class Expression {
      * @morphia.internal
      */
     @MorphiaInternal
-    public String getOperation() {
+    public String operation() {
         return operation;
     }
 

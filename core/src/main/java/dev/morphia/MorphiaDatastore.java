@@ -51,6 +51,7 @@ import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecRegistry;
+import dev.morphia.mapping.codec.expressions.MorphiaExpressionCodecProvider;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.MergingEncoder;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
@@ -157,6 +158,7 @@ public class MorphiaDatastore implements Datastore {
         providers.addAll(List.of(new MorphiaTypesCodecProvider(this),
                 new PrimitiveCodecRegistry(codecRegistry),
                 new EnumCodecProvider(),
+                new MorphiaExpressionCodecProvider(codecRegistry),
                 new AggregationCodecProvider(this)));
 
         providers.addAll(morphiaCodecProviders);

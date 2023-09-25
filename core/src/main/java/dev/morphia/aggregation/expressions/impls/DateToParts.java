@@ -32,7 +32,7 @@ public class DateToParts extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "date", date, encoderContext);
             expression(datastore, writer, "timezone", timeZone, encoderContext);
             ExpressionHelper.expression(datastore, writer, "iso8601", iso8601, encoderContext);

@@ -20,7 +20,7 @@ public class RangeExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        array(writer, getOperation(), () -> {
+        array(writer, operation(), () -> {
             writer.writeInt32(start);
             writer.writeInt32(end);
             if (step != null) {

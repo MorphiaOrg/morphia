@@ -244,7 +244,7 @@ public final class ArrayExpressions {
         return new Expression("$sortArray") {
             @Override
             public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, getOperation(), () -> {
+                document(writer, operation(), () -> {
                     expression(datastore, writer, "input", input, encoderContext);
                     if (sort[0].getField().equals(Sort.NATURAL)) {
                         ExpressionHelper.value(writer, "sortBy", sort[0].getOrder());

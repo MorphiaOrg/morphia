@@ -24,7 +24,7 @@ public class TrimExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             expression(datastore, writer, "input", input, encoderContext);
             expression(datastore, writer, "chars", chars, encoderContext);
         });

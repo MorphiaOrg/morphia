@@ -55,7 +55,7 @@ public final class ObjectExpressions {
 
         @Override
         public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-            expression(datastore, writer, getOperation(), getValue(), encoderContext);
+            expression(datastore, writer, operation(), getValue(), encoderContext);
         }
     }
 }

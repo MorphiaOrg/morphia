@@ -21,7 +21,7 @@ public class SliceExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        ExpressionHelper.array(writer, getOperation(), () -> {
+        ExpressionHelper.array(writer, operation(), () -> {
             expression(datastore, writer, array, encoderContext);
             if (position != null) {
                 writer.writeInt32(position);

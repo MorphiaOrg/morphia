@@ -58,7 +58,7 @@ public class SwitchExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, getOperation(), () -> {
+        document(writer, operation(), () -> {
             array(writer, "branches", () -> {
                 for (Pair branch : branches) {
                     document(writer, () -> {

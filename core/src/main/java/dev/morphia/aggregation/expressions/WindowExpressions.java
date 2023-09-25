@@ -74,7 +74,7 @@ public final class WindowExpressions {
         return new Expression("$denseRank") {
             @Override
             public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, getOperation(), () -> {
+                document(writer, operation(), () -> {
                 });
             }
         };
@@ -106,7 +106,7 @@ public final class WindowExpressions {
         return new Expression("$documentNumber") {
             @Override
             public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, getOperation(), () -> {
+                document(writer, operation(), () -> {
                 });
             }
         };
@@ -185,7 +185,7 @@ public final class WindowExpressions {
         return new Expression("$rank") {
             @Override
             public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, getOperation(), () -> {
+                document(writer, operation(), () -> {
                 });
             }
         };
