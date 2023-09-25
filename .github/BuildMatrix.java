@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class BuildMatrix {
 
     public static void main(String... args) throws Exception {
+        // props to Chris Dellaway for the pointer to this
         var json = "https://downloads.mongodb.org/current.json";
         var mapper = new ObjectMapper();
 
