@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import dev.morphia.Datastore;
