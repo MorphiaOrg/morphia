@@ -17,46 +17,73 @@ jobs:
       java: 20
       saveBuild: true
 
+  Matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          server-id: central
+          cache: maven
+
+      - name: Find MongoDB versions
+        id: mongo-versions
+        run: |
+          curl -Ls https://sh.jbang.dev | bash -s - app setup
+          echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
+
+    outputs:
+      version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
+
   Test:
     needs:
       - CodeAudits
       - Build
+      - Matrix
     strategy:
       matrix:
         java: [ 20, 11 ]
-        mongo: [ 6, 5, 4.4, 4.2, 4.0 ]
-        driver: [ 4.9.1 ]
+        mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
+        driver: [ 4.10.2 ]
         include:
           - java: 11
-            mongo: 6
+            mongo: 7
+            driver: 4.9.1
+          - java: 11
+            mongo: 7
             driver: 4.8.1
           - java: 11
-            mongo: 6
+            mongo: 7
             driver: 4.7.2
           - java: 11
-            mongo: 6
+            mongo: 7
             driver: 4.6.1
           - java: 11
-            mongo: 6
+            mongo: 7
             driver: 4.5.1
           - java: 11
-            mongo: 6
+            mongo: 7
             driver: 4.4.2
             optional: true
           - java: 11
-            mongo: 6
+            mongo: 7
             driver: 4.3.4
             optional: true
           - java: 11
-            mongo: 6
+            mongo: 7
             driver: 4.2.3
             optional: true
           - java: 11
-            mongo: 6
+            mongo: 7
             driver: 4.1.2
             optional: true
           - java: 11
-            mongo: 6
+            mongo: 7
             driver: 4.0.6
             optional: true
 
