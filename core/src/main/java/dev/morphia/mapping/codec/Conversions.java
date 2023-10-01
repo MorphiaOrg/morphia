@@ -65,6 +65,7 @@ public final class Conversions {
         register(Integer.class, byte.class, Integer::byteValue);
         register(int.class, byte.class, Integer::byteValue);
 
+        register(Long.class, Date.class, l -> Date.from(Instant.ofEpochMilli(l)));
         register(Long.class, Double.class, Long::doubleValue);
         register(Long.class, Float.class, Long::floatValue);
 
