@@ -89,7 +89,7 @@ class FieldCriteria extends AbstractCriteria {
             final Object object = obj.get(field); // operator within inner object
             Map<String, Object> inner;
             if (!(object instanceof Map)) {
-                inner = new HashMap<>();
+                inner = new Document();
                 obj.put(field, inner);
             } else {
                 inner = (Map<String, Object>) object;
