@@ -14,7 +14,7 @@ jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
-      java: 20
+      java: 21
       saveBuild: true
 
   Matrix:
@@ -47,7 +47,7 @@ jobs:
       - Matrix
     strategy:
       matrix:
-        java: [ 20, 11 ]
+        java: [ 21, 11 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: [ 4.10.2 ]
         include:
