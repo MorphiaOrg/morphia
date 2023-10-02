@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
+import dev.morphia.aggregation.expressions.impls.LogicalExpression;
 
 import static dev.morphia.aggregation.expressions.impls.ExpressionList.coalesce;
 

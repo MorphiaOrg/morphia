@@ -23,15 +23,30 @@ public class GeoNear extends Stage {
     private Number minDistance;
     private String key;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected GeoNear(Point point) {
         this();
         this.point = point;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected GeoNear() {
         super("$geoNear");
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected GeoNear(double[] coordinates) {
         this();
         this.coordinates = coordinates;
@@ -108,6 +123,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return the coordinates
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -117,6 +133,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return the distance field
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -126,6 +143,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return the distance multiplier
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -135,6 +153,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return the query
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -145,6 +164,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return includeLocs
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -154,6 +174,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return the key
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -163,6 +184,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return the max distance
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -172,6 +194,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return the min distance
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -181,6 +204,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return the point
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -190,6 +214,7 @@ public class GeoNear extends Stage {
 
     /**
      * @return spherical?
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

@@ -10,6 +10,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * Specifies that an Options class accepts an alternate collection specification.
  *
  * @param <T> the Options type
+ * @hidden
  * @morphia.internal
  * @since 2.3
  */
@@ -31,7 +32,10 @@ public interface CollectionConfigurable<T> extends CollectionConfiguration {
      * @param database   the database
      * @param <T>        the collection type
      * @return either the alternate collection if one is defined or the collection passed in
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     default <T> MongoCollection<T> prepare(MongoCollection<T> collection, MongoDatabase database) {
         String alternateName = collection();
         if (alternateName != null) {
@@ -46,7 +50,10 @@ public interface CollectionConfigurable<T> extends CollectionConfiguration {
      *
      * @return the collection name or null
      * @since 2.3
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     String collection();
 }

@@ -1,4 +1,5 @@
 /**
+ * @hidden
  * @morphia.internal
  */
 @NonNullApi

@@ -7,9 +7,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * @morphia.internal
  */
 @MorphiaInternal
-public class MetaExpression extends Expression {
-
-    public MetaExpression() {
-        super("$meta");
+public class DocumentNumberExpression extends Expression {
+    public DocumentNumberExpression() {
+        super("$documentNumber");
     }
 }

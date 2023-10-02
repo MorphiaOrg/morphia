@@ -12,6 +12,11 @@ public class CollectionStats extends Stage {
     private Integer scale;
     private boolean count;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected CollectionStats() {
         super("$collStats");
     }
@@ -50,6 +55,7 @@ public class CollectionStats extends Stage {
 
     /**
      * @return whether to get the count
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -59,6 +65,7 @@ public class CollectionStats extends Stage {
 
     /**
      * @return whether to add the histogram
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -68,6 +75,7 @@ public class CollectionStats extends Stage {
 
     /**
      * @return the scale
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

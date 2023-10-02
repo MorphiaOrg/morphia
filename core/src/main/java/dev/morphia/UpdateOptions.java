@@ -169,6 +169,7 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
 
     /**
      * @return true if the update should affect all entities
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

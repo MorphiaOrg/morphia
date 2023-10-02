@@ -21,13 +21,13 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
+import dev.morphia.mapping.IndexDirection;
+import dev.morphia.mapping.IndexType;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.indexes.errors.MultipleTextIndexes;
 import dev.morphia.test.models.methods.MethodMappedUser;
-import dev.morphia.utils.IndexDirection;
-import dev.morphia.utils.IndexType;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -35,9 +35,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
+import static dev.morphia.mapping.IndexType.DESC;
+import static dev.morphia.mapping.IndexType.TEXT;
 import static dev.morphia.test.util.IndexMatcher.hasIndexNamed;
-import static dev.morphia.utils.IndexType.DESC;
-import static dev.morphia.utils.IndexType.TEXT;
 import static java.util.stream.Collectors.toSet;
 import static org.bson.Document.parse;
 import static org.hamcrest.CoreMatchers.is;

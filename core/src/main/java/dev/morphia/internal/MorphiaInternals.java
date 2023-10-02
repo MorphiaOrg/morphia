@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * @hidden
  * @morphia.internal
  * @since 2.2
  */

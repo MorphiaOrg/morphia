@@ -3,6 +3,7 @@ package dev.morphia.aggregation.stages;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal
@@ -11,6 +12,7 @@ public class Count extends Stage {
 
     /**
      * @param name the field name
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -21,6 +23,7 @@ public class Count extends Stage {
 
     /**
      * @return the name
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

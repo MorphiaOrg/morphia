@@ -24,6 +24,7 @@ public class UnionWith extends Stage {
      *
      * @param collection the collection to process
      * @param stages     the pipeline
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -38,6 +39,7 @@ public class UnionWith extends Stage {
      *
      * @param type   the type to process
      * @param stages the pipeline
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -49,6 +51,7 @@ public class UnionWith extends Stage {
 
     /**
      * @return the collection name
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -59,6 +62,7 @@ public class UnionWith extends Stage {
 
     /**
      * @return the collection type
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -68,6 +72,7 @@ public class UnionWith extends Stage {
 
     /**
      * @return the pipeline
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

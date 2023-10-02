@@ -84,12 +84,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     private String collection;
 
     /**
-     * Creates an instance with default values
-     */
-    public FindOptions() {
-    }
-
-    /**
      * Enables writing to temporary files on the server. When set to true, the server
      * can write temporary data to disk while executing the find operation.
      *
@@ -108,6 +102,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      * @param type     the result type
      * @param <T>      the result type
      * @return the iterable instance for the query results
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -192,6 +187,11 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String collection() {
         return collection;
@@ -221,7 +221,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return a copy of this instance
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public FindOptions copy() {
         return new FindOptions().copy(this);
     }
@@ -231,6 +234,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      *
      * @param original the original to copy
      * @return the new copy
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -276,6 +280,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the cursor type
+     * @hidden
      * @morphia.internal
      * @since 2.3
      */
@@ -287,7 +292,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return true is disk use is allowed
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public Boolean getAllowDiskUse() {
         return allowDiskUse;
@@ -295,7 +303,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the batch size
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public int getBatchSize() {
         return this.batchSize;
@@ -303,7 +314,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the collation
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     @Deprecated(forRemoval = true, since = "2.3")
     public Collation getCollation() {
@@ -312,7 +326,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the comment
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     @Deprecated(forRemoval = true, since = "2.3")
     public String getComment() {
@@ -321,7 +338,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the cursor type
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     @Deprecated(forRemoval = true, since = "2.3")
     public CursorType getCursorType() {
@@ -330,7 +350,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the index hint
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     @Deprecated(forRemoval = true, since = "2.3")
     public Document getHint() {
@@ -339,7 +362,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the limit
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public int getLimit() {
         return this.limit;
@@ -347,7 +373,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the max value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     @Deprecated(forRemoval = true, since = "2.3")
     public Document getMax() {
@@ -357,7 +386,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     /**
      * @param timeUnit the time unit to apply
      * @return the max await time for the operation
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public long getMaxAwaitTime(TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
@@ -367,7 +399,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     /**
      * @param timeUnit the time unit to apply
      * @return the max time for the operation
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public long getMaxTime(TimeUnit timeUnit) {
         Assertions.notNull("timeUnit", timeUnit);
@@ -376,7 +411,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the min value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     @Deprecated(forRemoval = true, since = "2.3")
     public Document getMin() {
@@ -385,6 +423,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the projection
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -395,6 +434,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the query log id used for retrieving the logged query
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -405,7 +445,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the skip count
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public int getSkip() {
         return this.skip;
@@ -413,13 +456,21 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the sort criteria
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     @Deprecated(forRemoval = true, since = "2.3")
     public Document getSort() {
         return this.sort;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public int hashCode() {
         return Objects.hash(allowDiskUse, batchSize, limit, maxTimeMS, maxAwaitTimeMS, skip, sort, cursorType, noCursorTimeout, oplogReplay,
@@ -427,6 +478,11 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
                 queryLogId);
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -449,7 +505,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return is the cursor timeout enabled
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public boolean isNoCursorTimeout() {
         return this.noCursorTimeout;
@@ -503,6 +562,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      * This is an internal method. It's implementation and presence are subject to change.
      *
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -512,7 +572,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return is oplog replay enabled
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public boolean isOplogReplay() {
         return this.oplogReplay;
@@ -520,7 +583,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return are partial results enabled
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public boolean isPartial() {
         return this.partial;
@@ -528,7 +594,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return is return key only enabled
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public boolean isReturnKey() {
         return this.returnKey;
@@ -536,7 +605,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return is showing the record id enabled
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public boolean isShowRecordId() {
         return this.showRecordId;
@@ -560,6 +632,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the query log id used for retrieving the logged query
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -696,7 +769,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the projection
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public Projection projection() {
         if (projection == null) {
             projection = new Projection(this);
@@ -704,11 +780,21 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         return projection;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public ReadConcern readConcern() {
         return readConcern;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public ReadPreference readPreference() {
         return readPreference;
@@ -728,6 +814,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
 
     /**
      * @return the sort criteria
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -770,6 +857,11 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String toString() {
         return new StringJoiner(", ", FindOptions.class.getSimpleName() + "[", "]")

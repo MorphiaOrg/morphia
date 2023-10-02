@@ -1,4 +1,4 @@
-package dev.morphia.utils;
+package dev.morphia.mapping;
 
 /**
  * Defines the type of the index to create for a field.

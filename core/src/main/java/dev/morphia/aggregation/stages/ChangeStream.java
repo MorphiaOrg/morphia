@@ -45,6 +45,7 @@ public class ChangeStream extends Stage {
 
     /**
      * @return internal
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -65,6 +66,7 @@ public class ChangeStream extends Stage {
 
     /**
      * @return internal
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -85,6 +87,7 @@ public class ChangeStream extends Stage {
 
     /**
      * @return internal
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -105,6 +108,7 @@ public class ChangeStream extends Stage {
 
     /**
      * @return internal
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -127,6 +131,7 @@ public class ChangeStream extends Stage {
 
     /**
      * @return internal
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -149,6 +154,7 @@ public class ChangeStream extends Stage {
 
     /**
      * @return internal
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -168,6 +174,11 @@ public class ChangeStream extends Stage {
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String toString() {
         return format("ChangeStream{allChangesForCluster=%s, fullDocument=%s, fullDocumentBeforeChange=%s, resumeAfter=%s, "

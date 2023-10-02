@@ -38,6 +38,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     /**
      * @param ids         the IDs of the entities
      * @param entityModel the model of the entity type
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

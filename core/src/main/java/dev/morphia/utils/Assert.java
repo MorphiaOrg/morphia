@@ -8,6 +8,7 @@ import static java.lang.String.format;
 /**
  * Provides various assertions for Morphia during validation
  *
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

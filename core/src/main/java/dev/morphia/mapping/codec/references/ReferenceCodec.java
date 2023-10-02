@@ -63,6 +63,7 @@ import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.docume
 import static java.lang.String.format;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @SuppressWarnings({ "unchecked", "removal" })
@@ -102,6 +103,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * @param value  the value to encode
      * @param model  the mapped class of the field type
      * @return the encoded value
+     * @hidden
      * @morphia.internal
      */
     @Nullable

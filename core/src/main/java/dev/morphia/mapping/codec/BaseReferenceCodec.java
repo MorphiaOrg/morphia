@@ -17,6 +17,7 @@ import org.bson.codecs.Codec;
  * Defines codecs for properties
  *
  * @param <T> the property type
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

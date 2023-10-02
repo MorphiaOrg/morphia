@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.impls.DateDeltaExpression;
 import dev.morphia.aggregation.expressions.impls.DateDiffExpression;
+import dev.morphia.aggregation.expressions.impls.DateExpression;
 import dev.morphia.aggregation.expressions.impls.DateFromParts;
 import dev.morphia.aggregation.expressions.impls.DateFromString;
 import dev.morphia.aggregation.expressions.impls.DateToParts;
@@ -132,7 +133,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $dayOfMonth
      */
-    public static DateExpression dayOfMonth(Expression value) {
+    public static Expression dayOfMonth(Expression value) {
         return new DateExpression("$dayOfMonth", value);
     }
 
@@ -143,7 +144,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $dayOfWeek
      */
-    public static DateExpression dayOfWeek(Expression value) {
+    public static Expression dayOfWeek(Expression value) {
         return new DateExpression("$dayOfWeek", value);
     }
 
@@ -154,7 +155,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $dayOfYear
      */
-    public static DateExpression dayOfYear(Expression value) {
+    public static Expression dayOfYear(Expression value) {
         return new DateExpression("$dayOfYear", value);
     }
 
@@ -165,7 +166,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $hour
      */
-    public static DateExpression hour(Expression value) {
+    public static Expression hour(Expression value) {
         return new DateExpression("$hour", value);
     }
 
@@ -212,7 +213,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $millisecond
      */
-    public static DateExpression milliseconds(Expression value) {
+    public static Expression milliseconds(Expression value) {
         return new DateExpression("$millisecond", value);
     }
 
@@ -223,7 +224,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $minute
      */
-    public static DateExpression minute(Expression value) {
+    public static Expression minute(Expression value) {
         return new DateExpression("$minute", value);
     }
 
@@ -234,7 +235,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $month
      */
-    public static DateExpression month(Expression value) {
+    public static Expression month(Expression value) {
         return new DateExpression("$month", value);
     }
 
@@ -245,7 +246,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $second
      */
-    public static DateExpression second(Expression value) {
+    public static Expression second(Expression value) {
         return new DateExpression("$second", value);
     }
 
@@ -257,7 +258,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $toDate
      */
-    public static DateExpression toDate(Expression value) {
+    public static Expression toDate(Expression value) {
         return new DateExpression("$toDate", value);
     }
 
@@ -295,7 +296,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $week
      */
-    public static DateExpression week(Expression value) {
+    public static Expression week(Expression value) {
         return new DateExpression("$week", value);
     }
 
@@ -306,7 +307,7 @@ public final class DateExpressions {
      * @return the new expression
      * @aggregation.expression $year
      */
-    public static DateExpression year(Expression value) {
+    public static Expression year(Expression value) {
         return new DateExpression("$year", value);
     }
 

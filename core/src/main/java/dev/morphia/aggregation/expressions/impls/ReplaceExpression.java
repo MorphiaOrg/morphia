@@ -6,7 +6,10 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * Defines expressions for $replaceAll and $replaceOne
  *
  * @since 2.1
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class ReplaceExpression extends Expression {
     private final Expression find;
     private final Expression replacement;
@@ -17,6 +20,7 @@ public class ReplaceExpression extends Expression {
      * @param input       the input value/source
      * @param find        the search expression
      * @param replacement the replacement value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

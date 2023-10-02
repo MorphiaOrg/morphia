@@ -7,6 +7,7 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 
@@ -28,6 +29,11 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Wri
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String collection() {
         return collection;
@@ -148,7 +154,10 @@ public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements Wri
 
     /**
      * @return the write concern to use
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;

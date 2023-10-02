@@ -12,6 +12,7 @@ import org.bson.codecs.EncoderContext;
  * An enum codec
  *
  * @param <T> the type of the enum
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */

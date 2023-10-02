@@ -11,21 +11,29 @@ import dev.morphia.sofia.Sofia;
 /**
  * Defines an update operator
  *
- * @morphia.internal
  * @since 2.0
  */
-@MorphiaInternal
 public class UpdateOperator {
     private final String operator;
     private final String field;
     private Object value;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected UpdateOperator(String operator, String field, Object value) {
         this.operator = operator;
         this.field = field;
         this.value = value;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected UpdateOperator(String operator, String field, List<?> values) {
         if (values.isEmpty()) {
             throw new UpdateException(Sofia.valuesCannotBeNullOrEmpty());
@@ -37,6 +45,7 @@ public class UpdateOperator {
 
     /**
      * @return the field
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -46,6 +55,7 @@ public class UpdateOperator {
 
     /**
      * @return the operator
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -58,6 +68,7 @@ public class UpdateOperator {
      *
      * @param pathTarget the PathTarget
      * @return the OperationTarget
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -67,6 +78,7 @@ public class UpdateOperator {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -74,6 +86,11 @@ public class UpdateOperator {
         return value;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected void value(Object value) {
         this.value = value;
     }

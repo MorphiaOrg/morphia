@@ -136,6 +136,7 @@ public class MorphiaDatastore implements Datastore {
      * Copy constructor for a datastore
      *
      * @param datastore the datastore to clone
+     * @hidden
      * @morphia.internal
      * @since 2.0
      */
@@ -226,6 +227,7 @@ public class MorphiaDatastore implements Datastore {
      * @param options    the options to apply
      * @param collection the collection to configure
      * @return the configured collection
+     * @hidden
      * @morphia.internal
      */
     @NonNull
@@ -346,6 +348,7 @@ public class MorphiaDatastore implements Datastore {
 
     /**
      * @return the logged query
+     * @hidden
      * @morphia.internal
      */
     public String getLoggedQuery(FindOptions options) {
@@ -668,6 +671,7 @@ public class MorphiaDatastore implements Datastore {
     /**
      * @param model      internal
      * @param validation internal
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

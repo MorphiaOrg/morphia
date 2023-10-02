@@ -6,9 +6,12 @@ import java.util.List;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.CalculusExpression;
+import dev.morphia.aggregation.expressions.impls.DenseRankExpression;
+import dev.morphia.aggregation.expressions.impls.DocumentNumberExpression;
 import dev.morphia.aggregation.expressions.impls.ExpMovingAvg;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.MathExpression;
+import dev.morphia.aggregation.expressions.impls.RankExpression;
 import dev.morphia.aggregation.expressions.impls.ShiftExpression;
 import dev.morphia.aggregation.stages.SetWindowFields;
 
@@ -182,7 +185,7 @@ public final class WindowExpressions {
      * @see Aggregation#setWindowFields(SetWindowFields)
      * @since 2.3
      */
-    public static ShiftExpression shift(Expression output, long by, Expression defaultValue) {
+    public static Expression shift(Expression output, long by, Expression defaultValue) {
         return new ShiftExpression(output, by, defaultValue);
     }
 

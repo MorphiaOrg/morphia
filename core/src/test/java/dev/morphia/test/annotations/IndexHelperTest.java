@@ -19,14 +19,14 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.internal.CollationBuilder;
 import dev.morphia.annotations.internal.IndexHelper;
+import dev.morphia.mapping.IndexDirection;
+import dev.morphia.mapping.IndexType;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.ValidationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.MappedInterface;
-import dev.morphia.utils.IndexDirection;
-import dev.morphia.utils.IndexType;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;

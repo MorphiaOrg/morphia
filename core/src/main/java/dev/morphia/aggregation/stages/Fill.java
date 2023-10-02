@@ -32,6 +32,11 @@ public class Fill extends Stage {
     private List<String> partitionByFields;
     private Sort[] sortBy;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Fill() {
         super("$fill");
     }
@@ -71,6 +76,7 @@ public class Fill extends Stage {
 
     /**
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -91,6 +97,7 @@ public class Fill extends Stage {
 
     /**
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -112,6 +119,7 @@ public class Fill extends Stage {
 
     /**
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -133,6 +141,7 @@ public class Fill extends Stage {
 
     /**
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @Nullable

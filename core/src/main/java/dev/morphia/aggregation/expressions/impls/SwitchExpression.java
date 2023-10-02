@@ -16,6 +16,7 @@ public class SwitchExpression extends Expression {
     private Expression defaultCase;
 
     /**
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -47,14 +48,29 @@ public class SwitchExpression extends Expression {
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public List<Pair> branches() {
         return branches;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression defaultCase() {
         return defaultCase;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public static class Pair {
         private final Expression caseExpression;
         private final Expression then;

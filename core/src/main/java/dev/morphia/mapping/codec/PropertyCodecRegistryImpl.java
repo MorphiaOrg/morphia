@@ -30,6 +30,7 @@ import org.bson.codecs.pojo.TypeWithTypeParameters;
 /**
  * Defines an all purpose registry for property codecs
  *
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */

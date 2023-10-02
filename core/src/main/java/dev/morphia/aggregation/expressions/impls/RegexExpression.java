@@ -4,25 +4,47 @@ import java.util.regex.Pattern;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 public class RegexExpression extends Expression {
     private final Expression input;
     private String regex;
     private String options;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public RegexExpression(String operation, Expression input) {
         super(operation);
         this.input = input;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression input() {
         return input;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Nullable
     public String regex() {
         return regex;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Nullable
     public String options() {
         return options;

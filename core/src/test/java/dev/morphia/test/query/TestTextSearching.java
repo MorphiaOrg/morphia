@@ -7,10 +7,10 @@ import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexes;
+import dev.morphia.mapping.IndexType;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
 import dev.morphia.test.TestBase;
-import dev.morphia.utils.IndexType;
 
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;

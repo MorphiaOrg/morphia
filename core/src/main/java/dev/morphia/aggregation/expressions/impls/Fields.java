@@ -3,8 +3,15 @@ package dev.morphia.aggregation.expressions.impls;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 import static dev.morphia.aggregation.expressions.Expressions.field;
 
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
 @SuppressWarnings("unchecked")
 public class Fields {
     private final List<PipelineField> fields = new ArrayList<>();

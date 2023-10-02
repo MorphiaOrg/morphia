@@ -35,6 +35,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import static java.util.Arrays.asList;
 
 /**
+ * @hidden
  * @morphia.internal
  * @since 1.3
  */

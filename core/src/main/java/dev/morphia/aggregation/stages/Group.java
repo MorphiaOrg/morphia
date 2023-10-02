@@ -19,11 +19,21 @@ public class Group extends Stage {
     private final GroupId id;
     private Fields fields;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Group() {
         super("$group");
         id = null;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Group(GroupId id) {
         super("$group");
         this.id = id;
@@ -131,6 +141,7 @@ public class Group extends Stage {
 
     /**
      * @return the fields
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -141,6 +152,7 @@ public class Group extends Stage {
 
     /**
      * @return the ID
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -156,10 +168,20 @@ public class Group extends Stage {
         private Expression field;
         private DocumentExpression document;
 
+        /**
+         * @hidden
+         * @morphia.internal
+         */
+        @MorphiaInternal
         protected GroupId() {
             document = Expressions.of();
         }
 
+        /**
+         * @hidden
+         * @morphia.internal
+         */
+        @MorphiaInternal
         protected GroupId(Expression value) {
             if (value instanceof DocumentExpression) {
                 document = (DocumentExpression) value;
@@ -198,6 +220,7 @@ public class Group extends Stage {
 
         /**
          * @return the document
+         * @hidden
          * @morphia.internal
          */
         @Nullable
@@ -208,6 +231,7 @@ public class Group extends Stage {
 
         /**
          * @return the field
+         * @hidden
          * @morphia.internal
          */
         @Nullable

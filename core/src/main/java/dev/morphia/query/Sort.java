@@ -1,5 +1,7 @@
 package dev.morphia.query;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 /**
  * Used for sorting query results or defining a sort stage in an aggregation pipeline
  *
@@ -7,6 +9,11 @@ package dev.morphia.query;
  * @since 1.3
  */
 public class Sort {
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public static final String NATURAL = "$natural";
     private final String field;
     private final int order;
@@ -20,7 +27,10 @@ public class Sort {
      *
      * @param field the field
      * @param order the order
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     protected Sort(String field, int order) {
         this.field = field;
         this.order = order;
@@ -72,14 +82,20 @@ public class Sort {
      * </ul>
      *
      * @return the sort order
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public int getOrder() {
         return order;
     }
 
     /**
      * @return the sort field
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public String getField() {
         return field;
     }

@@ -47,6 +47,7 @@ public class Filter {
 
     /**
      * @return true if this filter has been notted
+     * @hidden
      * @morphia.internal
      * @see #not()
      */
@@ -59,6 +60,7 @@ public class Filter {
      * @param datastore the datastore
      * @param writer    the writer
      * @param context   the context
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -79,6 +81,7 @@ public class Filter {
      *
      * @param type the type
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -89,6 +92,7 @@ public class Filter {
 
     /**
      * @return the filter field
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -110,6 +114,7 @@ public class Filter {
 
     /**
      * @return the filter name
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -120,6 +125,7 @@ public class Filter {
 
     /**
      * @return the filter value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -128,6 +134,11 @@ public class Filter {
         return value;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected void setValue(Object value) {
         this.value = value;
     }
@@ -137,6 +148,7 @@ public class Filter {
      *
      * @param validate true to validate
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -147,6 +159,11 @@ public class Filter {
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Nullable
     protected Object getValue(MorphiaDatastore datastore) {
         if (!mapped) {
@@ -162,11 +179,21 @@ public class Filter {
         return value;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String toString() {
         return format("%s %s %s", field, name, value);
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected String path(Mapper mapper) {
         return pathTarget(mapper).translatedPath();
     }
@@ -179,6 +206,11 @@ public class Filter {
         return pathTarget;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected void writeNamedValue(@Nullable String name, @Nullable Object value, MorphiaDatastore datastore, BsonWriter writer,
             EncoderContext encoderContext) {
         writer.writeName(name);
@@ -190,6 +222,11 @@ public class Filter {
         }
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected void writeUnnamedValue(@Nullable Object value, MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         if (value != null) {
             Codec codec = datastore.getCodecRegistry().get(value.getClass());

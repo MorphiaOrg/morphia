@@ -21,6 +21,11 @@ public class SetWindowFields extends Stage {
     private Sort[] sorts;
     private Output[] outputs;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected SetWindowFields() {
         super("$setWindowFields");
     }
@@ -51,6 +56,7 @@ public class SetWindowFields extends Stage {
 
     /**
      * @return the outputs
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -60,6 +66,7 @@ public class SetWindowFields extends Stage {
 
     /**
      * @return the partition
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -92,6 +99,7 @@ public class SetWindowFields extends Stage {
 
     /**
      * @return the sort values
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -121,6 +129,7 @@ public class SetWindowFields extends Stage {
 
         /**
          * @return the name
+         * @hidden
          * @morphia.internal
          */
         @MorphiaInternal
@@ -130,6 +139,7 @@ public class SetWindowFields extends Stage {
 
         /**
          * @return the operator
+         * @hidden
          * @morphia.internal
          */
         @Nullable
@@ -161,6 +171,7 @@ public class SetWindowFields extends Stage {
 
         /**
          * @return the window
+         * @hidden
          * @morphia.internal
          */
         @Nullable
@@ -195,6 +206,7 @@ public class SetWindowFields extends Stage {
 
         /**
          * @return the documents
+         * @hidden
          * @morphia.internal
          */
         @Nullable
@@ -233,6 +245,7 @@ public class SetWindowFields extends Stage {
 
         /**
          * @return the range
+         * @hidden
          * @morphia.internal
          */
         @Nullable
@@ -243,6 +256,7 @@ public class SetWindowFields extends Stage {
 
         /**
          * @return the unit
+         * @hidden
          * @morphia.internal
          */
         @Nullable

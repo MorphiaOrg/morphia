@@ -21,6 +21,7 @@ public class ListReference<T> extends CollectionReference<List<T>> {
      * @param datastore
      * @param model     the EntityModel for the entity type
      * @param ids       the IDs of the entities
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

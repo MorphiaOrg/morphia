@@ -16,6 +16,11 @@ public class Unwind extends Stage {
     private String includeArrayIndex;
     private Boolean preserveNullAndEmptyArrays;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Unwind() {
         super("$unwind");
     }
@@ -47,6 +52,7 @@ public class Unwind extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -56,6 +62,7 @@ public class Unwind extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -65,6 +72,7 @@ public class Unwind extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -85,6 +93,7 @@ public class Unwind extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

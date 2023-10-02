@@ -3,6 +3,7 @@ package dev.morphia.aggregation.expressions.impls;
 import java.time.DayOfWeek;
 
 import dev.morphia.aggregation.expressions.TimeUnit;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Truncates a date.
@@ -18,6 +19,11 @@ public class DateTruncExpression extends Expression {
     private DayOfWeek startOfWeek;
     private Long binSize;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public DateTruncExpression(Expression date, TimeUnit unit) {
         super("$dateTrunc");
         this.date = date;
@@ -38,22 +44,47 @@ public class DateTruncExpression extends Expression {
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression date() {
         return date;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public TimeUnit unit() {
         return unit;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression timezone() {
         return timezone;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public DayOfWeek startOfWeek() {
         return startOfWeek;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Long binSize() {
         return binSize;
     }

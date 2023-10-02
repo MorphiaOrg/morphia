@@ -6,7 +6,7 @@ import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
-import dev.morphia.utils.IndexType;
+import dev.morphia.mapping.IndexType;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 

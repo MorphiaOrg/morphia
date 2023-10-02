@@ -29,6 +29,7 @@ import org.bson.types.ObjectId;
 import static java.lang.String.format;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

@@ -11,6 +11,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 /**
  * A provider of codecs for primitive types
  *
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

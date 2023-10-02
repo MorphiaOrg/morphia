@@ -4,21 +4,37 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.AggregationException;
 import dev.morphia.aggregation.expressions.Expressions;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
 public class Push extends Expression implements FieldHolder<Push> {
     private Expression field;
     private DocumentExpression document;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Push() {
         super("$push");
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Nullable
     public Expression field() {
         return field;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Nullable
     public DocumentExpression document() {
         return document;

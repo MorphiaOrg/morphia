@@ -8,7 +8,7 @@ import dev.morphia.annotations.Indexes;
 
 import org.bson.types.ObjectId;
 
-import static dev.morphia.utils.IndexType.TEXT;
+import static dev.morphia.mapping.IndexType.TEXT;
 
 @Entity
 @Indexes({ @Index(fields = @Field(value = "name", type = TEXT)),

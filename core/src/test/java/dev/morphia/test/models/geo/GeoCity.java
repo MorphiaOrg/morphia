@@ -5,7 +5,7 @@ import com.mongodb.client.model.geojson.Point;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
-import dev.morphia.utils.IndexDirection;
+import dev.morphia.mapping.IndexDirection;
 
 import org.bson.types.ObjectId;
 

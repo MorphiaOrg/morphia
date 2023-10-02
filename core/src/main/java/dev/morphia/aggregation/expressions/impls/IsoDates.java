@@ -16,6 +16,7 @@ public class IsoDates extends Expression {
     /**
      * @param operation
      * @param date
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -24,10 +25,20 @@ public class IsoDates extends Expression {
         this.date = date;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression date() {
         return date;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression timezone() {
         return timezone;
     }

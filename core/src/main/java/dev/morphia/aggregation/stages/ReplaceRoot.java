@@ -19,11 +19,21 @@ public class ReplaceRoot extends Stage {
     private Expression value;
     private DocumentExpression document;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected ReplaceRoot(Expression expression) {
         this();
         this.value = expression;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected ReplaceRoot() {
         super("$replaceRoot");
     }
@@ -95,6 +105,7 @@ public class ReplaceRoot extends Stage {
 
     /**
      * @return the expression
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -105,6 +116,7 @@ public class ReplaceRoot extends Stage {
 
     /**
      * @return the expression
+     * @hidden
      * @morphia.internal
      */
     @Nullable

@@ -94,6 +94,7 @@ public final class Expressions {
      * @param additional additional items
      * @param <T>        the element type
      * @return a list of them all
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

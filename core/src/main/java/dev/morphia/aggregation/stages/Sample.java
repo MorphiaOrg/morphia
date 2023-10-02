@@ -10,6 +10,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class Sample extends Stage {
     private final long size;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Sample(long size) {
         super("$sample");
         this.size = size;
@@ -40,6 +45,7 @@ public class Sample extends Stage {
 
     /**
      * @return the size
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

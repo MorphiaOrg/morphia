@@ -17,6 +17,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class AddFields extends Stage {
     private final DocumentExpression document = Expressions.of();
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected AddFields() {
         super("$addFields");
     }
@@ -56,6 +61,7 @@ public class AddFields extends Stage {
 
     /**
      * @return the fields
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

@@ -31,7 +31,6 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.query.ArraySlice;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
@@ -51,6 +50,7 @@ import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.Collation.builder;
+import static dev.morphia.query.ArraySlice.limit;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.Sort.naturalAscending;
@@ -724,7 +724,7 @@ public class TestQuery extends TestBase {
             getDs().find(IntVector.class)
                     .iterator(new FindOptions()
                             .projection().exclude("name")
-                            .projection().project("scalars", new ArraySlice(5)));
+                            .projection().project("scalars", limit(5)));
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
@@ -921,22 +921,22 @@ public class TestQuery extends TestBase {
 
         assertEquals(copy(ints, 0, 4),
                 getDs().find(IntVector.class).iterator(new FindOptions()
-                        .projection().project("scalars", new ArraySlice(4))
+                        .projection().project("scalars", limit(4))
                         .limit(1))
                         .next().scalars);
         assertEquals(copy(ints, 5, 4), getDs().find(IntVector.class).iterator(new FindOptions()
                 .projection()
-                .project("scalars", new ArraySlice(5, 4))
+                .project("scalars", limit(4).skip(5))
                 .limit(1))
                 .next().scalars);
         assertEquals(copy(ints, ints.length - 10, 6),
                 getDs().find(IntVector.class).iterator(new FindOptions()
-                        .projection().project("scalars", new ArraySlice(-10, 6))
+                        .projection().project("scalars", limit(6).skip(-10))
                         .limit(1))
                         .next().scalars);
         assertEquals(copy(ints, ints.length - 12, 12),
                 getDs().find(IntVector.class).iterator(new FindOptions()
-                        .projection().project("scalars", new ArraySlice(-12))
+                        .projection().project("scalars", limit(-12))
                         .limit(1))
                         .next().scalars);
     }

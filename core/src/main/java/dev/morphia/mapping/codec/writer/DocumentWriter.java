@@ -27,6 +27,7 @@ import org.bson.types.ObjectId;
 /**
  * Utility to write out to a Document
  *
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

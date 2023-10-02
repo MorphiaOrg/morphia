@@ -17,6 +17,11 @@ import static java.util.Arrays.asList;
 public class Documents extends Stage {
     private final List<DocumentExpression> expressions;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Documents(List<DocumentExpression> expressions) {
         super("$documents");
         this.expressions = expressions;
@@ -34,6 +39,7 @@ public class Documents extends Stage {
 
     /**
      * @return the expressions
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

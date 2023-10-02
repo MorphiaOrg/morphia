@@ -31,7 +31,7 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $addToSet
      */
-    public static AddToSetOperator addToSet(String field, Object value) {
+    public static UpdateOperator addToSet(String field, Object value) {
         return new AddToSetOperator(field, value);
     }
 
@@ -45,7 +45,7 @@ public final class UpdateOperators {
      * @update.operator $addToSet
      * @update.operator $each
      */
-    public static AddToSetOperator addToSet(String field, List<?> values) {
+    public static UpdateOperator addToSet(String field, List<?> values) {
         return new AddToSetOperator(field, values);
     }
 

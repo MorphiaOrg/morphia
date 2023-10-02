@@ -12,6 +12,7 @@ import dev.morphia.mapping.codec.pojo.TypeData;
 import static java.lang.String.format;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @SuppressWarnings("rawtypes")

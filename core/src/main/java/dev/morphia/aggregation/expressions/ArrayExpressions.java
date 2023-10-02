@@ -2,7 +2,6 @@ package dev.morphia.aggregation.expressions;
 
 import java.util.List;
 
-import dev.morphia.aggregation.expressions.impls.ArrayExpression;
 import dev.morphia.aggregation.expressions.impls.ArrayFilterExpression;
 import dev.morphia.aggregation.expressions.impls.ArrayIndexExpression;
 import dev.morphia.aggregation.expressions.impls.ArrayLiteral;
@@ -11,6 +10,7 @@ import dev.morphia.aggregation.expressions.impls.MapExpression;
 import dev.morphia.aggregation.expressions.impls.RangeExpression;
 import dev.morphia.aggregation.expressions.impls.ReduceExpression;
 import dev.morphia.aggregation.expressions.impls.SliceExpression;
+import dev.morphia.aggregation.expressions.impls.SortArrayExpression;
 import dev.morphia.aggregation.expressions.impls.ZipExpression;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.query.Sort;
@@ -34,7 +34,7 @@ public final class ArrayExpressions {
      * @param expressions the expressions
      * @return the new expression
      */
-    public static ArrayExpression array(Expression... expressions) {
+    public static Expression array(Expression... expressions) {
         return new ArrayLiteral(expressions);
     }
 
@@ -49,7 +49,7 @@ public final class ArrayExpressions {
      * @morphia.experimental
      */
     @MorphiaExperimental
-    public static ArrayExpression array(Object... objects) {
+    public static Expression array(Object... objects) {
         return new ArrayLiteral(objects);
     }
 

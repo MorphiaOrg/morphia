@@ -6,7 +6,10 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * @since 2.1
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class FunctionExpression extends Expression {
     private final String body;
     private final List<Expression> args;
@@ -16,7 +19,8 @@ public class FunctionExpression extends Expression {
      * Creates the new expression
      *
      * @param body the function definition
-     * @param args the funcation arguments
+     * @param args the function arguments
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -26,14 +30,29 @@ public class FunctionExpression extends Expression {
         this.args = args;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public String body() {
         return body;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public List<Expression> args() {
         return args;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public String lang() {
         return lang;
     }

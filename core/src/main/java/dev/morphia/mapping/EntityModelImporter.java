@@ -13,6 +13,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
  * NOTE: This interface is marked as an internal interface but is intended for use in more advanced scenarios. While this API should
  * remain relatively stable over time, breaking changes might happen occasionally.
  *
+ * @hidden
  * @morphia.internal
  * @morphia.experimental
  * @since 2.3

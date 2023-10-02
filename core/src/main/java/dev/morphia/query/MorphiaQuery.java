@@ -202,6 +202,7 @@ public class MorphiaQuery<T> implements Query<T> {
      * Converts the query to a Document and updates for any discriminator values as my be necessary
      *
      * @return the query
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

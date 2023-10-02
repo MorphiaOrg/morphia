@@ -21,6 +21,7 @@ import static dev.morphia.query.updates.UpdateOperators.unset;
 
 /**
  * @param <T> the entity type
+ * @hidden
  * @morphia.internal
  * @since 2.2
  */
@@ -34,6 +35,7 @@ public class MergingEncoder<T> extends EntityEncoder {
      * @param query        the query
      * @param morphiaCodec the codec
      * @param config
+     * @hidden
      * @morphia.internal
      * @since 2.2
      */

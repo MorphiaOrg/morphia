@@ -6,6 +6,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * Indicates a type that can accept a {@link MorphiaDatastore}
  *
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

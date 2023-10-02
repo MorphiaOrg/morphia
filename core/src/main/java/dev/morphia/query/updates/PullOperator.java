@@ -19,10 +19,11 @@ import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.docume
  * @morphia.internal
  */
 @MorphiaInternal
-public class PullOperator extends UpdateOperator {
+class PullOperator extends UpdateOperator {
     /**
      * @param field  the field
      * @param filter the filter to apply
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -30,6 +31,11 @@ public class PullOperator extends UpdateOperator {
         super("$pull", field, filter);
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, value()) {

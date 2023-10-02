@@ -27,6 +27,7 @@ public class NearFilter extends Filter {
 
     /**
      * @param opts the options to apply
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

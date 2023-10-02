@@ -38,7 +38,10 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
 
     /**
      * @return the configuration value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public boolean allowDiskUse() {
         return allowDiskUse;
@@ -65,6 +68,7 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
      * @param collection the collection to configure
      * @param resultType the result type
      * @return the updated collection
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -99,14 +103,20 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     /**
      * @param unit the target unit type
      * @return the configuration value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public long maxTime(TimeUnit unit) {
         return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
     }
 
     /**
      * @return the configuration value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public int batchSize() {
         return batchSize;
@@ -125,7 +135,10 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
 
     /**
      * @return the configuration value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public boolean bypassDocumentValidation() {
         return bypassDocumentValidation;
@@ -147,7 +160,10 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
 
     /**
      * @return the configuration value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public Collation collation() {
         return collation;
@@ -180,6 +196,11 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String collection() {
         return collection;
@@ -189,7 +210,10 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
      * @return the hint for which index to use. A null value means no hint is set.
      * @mongodb.server.release 3.6
      * @since 2.0
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public Document hint() {
         return hint;
@@ -210,7 +234,10 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
 
     /**
      * @return the configuration value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Deprecated(forRemoval = true, since = "2.3")
     public long maxTimeMS() {
         return maxTimeMS;
@@ -230,14 +257,20 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
 
     /**
      * @return the configuration value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public ReadConcern readConcern() {
         return readConcern;
     }
 
     /**
      * @return the configuration value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public ReadPreference readPreference() {
         return readPreference;
     }
@@ -264,6 +297,11 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String toString() {
         return new StringBuilder("AggregationOptions{")
@@ -293,7 +331,10 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
 
     /**
      * @return the configuration value
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;

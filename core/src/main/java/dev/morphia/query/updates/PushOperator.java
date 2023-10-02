@@ -14,10 +14,8 @@ import org.bson.Document;
 /**
  * Defines the $push update operator
  *
- * @morphia.internal
  * @since 2.0
  */
-@MorphiaInternal
 public class PushOperator extends UpdateOperator {
     private Integer position;
     private Integer slice;
@@ -27,6 +25,7 @@ public class PushOperator extends UpdateOperator {
     /**
      * @param field  the field
      * @param values the values
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -90,6 +89,11 @@ public class PushOperator extends UpdateOperator {
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
         Document document = new Document("$each", value());

@@ -24,6 +24,7 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.ReadConfigurable;
 
@@ -50,6 +51,11 @@ public class CountOptions extends com.mongodb.client.model.CountOptions
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String collection() {
         return collection;
@@ -101,6 +107,11 @@ public class CountOptions extends com.mongodb.client.model.CountOptions
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     @Deprecated(forRemoval = true, since = "2.3")
     public long getMaxTime(TimeUnit timeUnit) {
@@ -144,7 +155,10 @@ public class CountOptions extends com.mongodb.client.model.CountOptions
      *
      * @return the readConcern
      * @mongodb.server.release 3.2
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Override
     public ReadConcern readConcern() {
         return readConcern;
@@ -154,7 +168,10 @@ public class CountOptions extends com.mongodb.client.model.CountOptions
      * Returns the readPreference
      *
      * @return the readPreference
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Override
     public ReadPreference readPreference() {
         return readPreference;

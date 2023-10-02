@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.aggregation.AggregationException;
 import dev.morphia.aggregation.expressions.Expressions;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
 public class IfNull extends Expression implements FieldHolder<IfNull> {
@@ -9,6 +10,11 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     private Expression replacement;
     private DocumentExpression document;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public IfNull() {
         super("$ifNull");
     }
@@ -36,14 +42,29 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression target() {
         return target;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression replacement() {
         return replacement;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public DocumentExpression document() {
         return document;
     }

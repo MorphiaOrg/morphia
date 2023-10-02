@@ -10,12 +10,18 @@ public abstract class Stage {
     private final String stageName;
     private Aggregation<?> aggregation;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Stage(String stageName) {
         this.stageName = stageName;
     }
 
     /**
      * @param aggregation the aggregation
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -27,6 +33,7 @@ public abstract class Stage {
      * The name of the stage.
      *
      * @return the name
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -36,6 +43,7 @@ public abstract class Stage {
 
     /**
      * @return the aggregation
+     * @hidden
      * @morphia.internal
      * @since 2.2.4
      */

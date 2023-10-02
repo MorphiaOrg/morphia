@@ -1,9 +1,14 @@
-package dev.morphia.aggregation.expressions;
+package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.Sort;
 import dev.morphia.sofia.Sofia;
 
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
 public class SortArrayExpression extends Expression {
     private final Expression input;
 

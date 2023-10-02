@@ -19,11 +19,11 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Text;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.IndexType;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
-import dev.morphia.utils.IndexType;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -34,12 +34,13 @@ import org.slf4j.LoggerFactory;
 import static dev.morphia.annotations.Collation.DEFAULT_LOCALE;
 import static dev.morphia.annotations.internal.FieldBuilder.fieldBuilder;
 import static dev.morphia.annotations.internal.IndexBuilder.indexBuilder;
-import static dev.morphia.utils.IndexType.fromValue;
+import static dev.morphia.mapping.IndexType.fromValue;
 import static java.util.Collections.emptyList;
 
 /**
  * A helper class for dealing with index definitions
  *
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */
@@ -51,6 +52,7 @@ public final class IndexHelper {
 
     /**
      * @param mapper the mapper
+     * @hidden
      * @morphia.internal
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
@@ -179,6 +181,7 @@ public final class IndexHelper {
     /**
      * @param collection the collection
      * @param model      the model
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

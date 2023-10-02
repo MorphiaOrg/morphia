@@ -12,6 +12,7 @@ import static java.util.Arrays.asList;
 /**
  * Wraps a list of expressions as an Expression so we can generically deal with all values as Expressions
  *
+ * @hidden
  * @morphia.internal
  * @since 2.3
  */

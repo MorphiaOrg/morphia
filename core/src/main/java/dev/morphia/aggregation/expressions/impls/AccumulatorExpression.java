@@ -21,6 +21,7 @@ public class AccumulatorExpression extends Expression {
      * @param accumulateFunction
      * @param accumulateArgs
      * @param mergeFunction
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -32,30 +33,65 @@ public class AccumulatorExpression extends Expression {
         this.mergeFunction = mergeFunction;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public String initFunction() {
         return initFunction;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public String accumulateFunction() {
         return accumulateFunction;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public List<Expression> accumulateArgs() {
         return accumulateArgs;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public String mergeFunction() {
         return mergeFunction;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public String lang() {
         return lang;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public List<Expression> initArgs() {
         return initArgs;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public String finalizeFunction() {
         return finalizeFunction;
     }

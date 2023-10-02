@@ -27,6 +27,7 @@ import static org.bson.assertions.Assertions.notNull;
  * Holds type information about a type element
  *
  * @param <T> the underlying type being represented
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */

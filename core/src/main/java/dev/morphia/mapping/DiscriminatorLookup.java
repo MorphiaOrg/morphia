@@ -36,7 +36,9 @@ import static java.lang.String.format;
 /**
  * Provides lookup capabilities to find a type by its discriminator
  *
+ * @hidden
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
 public final class DiscriminatorLookup {

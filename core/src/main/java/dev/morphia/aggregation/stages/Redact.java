@@ -11,6 +11,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class Redact extends Stage {
     private Expression expression;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Redact() {
         super("$redact");
     }
@@ -44,6 +49,7 @@ public class Redact extends Stage {
 
     /**
      * @return the expression
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

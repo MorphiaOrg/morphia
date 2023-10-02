@@ -10,6 +10,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class PopOperator extends UpdateOperator {
     /**
      * @param field the field
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

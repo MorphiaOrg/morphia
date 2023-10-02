@@ -93,6 +93,7 @@ public class Shape {
     }
 
     /**
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

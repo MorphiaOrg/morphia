@@ -15,6 +15,11 @@ public class CurrentOp extends Stage {
     private boolean idleSessions;
     private boolean localOps;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected CurrentOp() {
         super("$currentOp");
     }
@@ -89,6 +94,7 @@ public class CurrentOp extends Stage {
 
     /**
      * @return include all users?
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -98,6 +104,7 @@ public class CurrentOp extends Stage {
 
     /**
      * @return include idle connections?
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -107,6 +114,7 @@ public class CurrentOp extends Stage {
 
     /**
      * @return include idle cursors?
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -116,6 +124,7 @@ public class CurrentOp extends Stage {
 
     /**
      * @return include idle sessions?
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -125,6 +134,7 @@ public class CurrentOp extends Stage {
 
     /**
      * @return is local ops?
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

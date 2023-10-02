@@ -11,6 +11,7 @@ import org.bson.codecs.pojo.TypeWithTypeParameters;
 /**
  * Provides property specific codecs for customized handling generally related to generics but not necessarily.
  *
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

@@ -271,6 +271,7 @@ public enum FilterOperator {
      * @param prop  the document property name
      * @param value the value to apply to the filter
      * @return the new Filter
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

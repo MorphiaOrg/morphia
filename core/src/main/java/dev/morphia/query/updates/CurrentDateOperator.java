@@ -1,5 +1,6 @@
 package dev.morphia.query.updates;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
 
@@ -17,11 +18,19 @@ public class CurrentDateOperator extends UpdateOperator {
      * Creates an operator for a field
      *
      * @param field the field to update
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     protected CurrentDateOperator(String field) {
         super("$currentDate", field, field);
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, typeSpec.toTarget());

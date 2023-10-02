@@ -5,6 +5,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import static java.lang.String.format;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

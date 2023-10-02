@@ -19,6 +19,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class Set extends Stage {
     private final DocumentExpression document = Expressions.of();
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Set() {
         super("$set");
     }
@@ -46,6 +51,7 @@ public class Set extends Stage {
 
     /**
      * @return the fields
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

@@ -9,6 +9,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * @param <T> the type being defined
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */
@@ -18,7 +19,10 @@ public interface ReadConfigurable<T> extends CollectionConfiguration {
      * Gets the read concern
      *
      * @return the read concern
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     @Deprecated(forRemoval = true, since = "2.3")
     default ReadConcern getReadConcern() {
@@ -27,13 +31,21 @@ public interface ReadConfigurable<T> extends CollectionConfiguration {
 
     /**
      * @return the read preference
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     @Deprecated(forRemoval = true, since = "2.3")
     default ReadPreference getReadPreference() {
         return readPreference();
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     default <C> MongoCollection<C> prepare(MongoCollection<C> collection) {
         MongoCollection<C> updated = collection;
         ReadConcern readConcern = readConcern();
@@ -52,13 +64,19 @@ public interface ReadConfigurable<T> extends CollectionConfiguration {
      * Gets the read concern
      *
      * @return the read concern
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     ReadConcern readConcern();
 
     /**
      * @return the read preference
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     ReadPreference readPreference();
 

@@ -33,6 +33,8 @@ import static java.util.Collections.sort;
 
 /**
  * Validator for mapped types
+ * 
+ * @hidden
  */
 public class MappingValidator {
 

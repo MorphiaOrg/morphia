@@ -11,6 +11,11 @@ import dev.morphia.query.filters.Filter;
 public class Match extends Stage {
     private final Filter[] filters;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Match(Filter... filters) {
         super("$match");
         this.filters = filters;
@@ -41,6 +46,7 @@ public class Match extends Stage {
 
     /**
      * @return the filters
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

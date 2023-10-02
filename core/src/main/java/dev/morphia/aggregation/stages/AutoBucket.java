@@ -24,6 +24,11 @@ public class AutoBucket extends Stage {
     private DocumentExpression output;
     private ValueExpression granularity;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected AutoBucket() {
         super("$bucketAuto");
     }
@@ -62,6 +67,7 @@ public class AutoBucket extends Stage {
 
     /**
      * @return the number of buckets
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -71,6 +77,7 @@ public class AutoBucket extends Stage {
 
     /**
      * @return the granularity
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -80,6 +87,7 @@ public class AutoBucket extends Stage {
 
     /**
      * @return the group by expression
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -89,6 +97,7 @@ public class AutoBucket extends Stage {
 
     /**
      * @return the output document
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

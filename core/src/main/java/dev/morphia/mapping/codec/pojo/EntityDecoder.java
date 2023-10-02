@@ -23,6 +23,7 @@ import static java.lang.String.format;
 
 /**
  * @param <T> the entity type
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */

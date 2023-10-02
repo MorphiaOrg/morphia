@@ -11,6 +11,7 @@ public class ZipExpression extends Expression {
 
     /**
      * @param inputs
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -35,14 +36,29 @@ public class ZipExpression extends Expression {
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public List<Expression> inputs() {
         return inputs;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public ValueExpression useLongestLength() {
         return useLongestLength;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression defaults() {
         return defaults;
     }

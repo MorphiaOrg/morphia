@@ -119,6 +119,7 @@ public class AnnotationBuilders extends AbstractMojo {
             builder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal");
             JavaDocSource<JavaClassSource> javaDoc = builder.getJavaDoc();
             javaDoc.addTagValue("@since", "2.3");
+            javaDoc.addTagValue("@hidden", "");
             javaDoc.addTagValue("@morphia.internal", "");
 
             MethodSource<JavaClassSource> constructor = builder.addMethod()

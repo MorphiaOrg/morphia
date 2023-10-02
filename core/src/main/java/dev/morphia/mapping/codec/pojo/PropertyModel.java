@@ -55,6 +55,7 @@ import static java.util.Arrays.asList;
 /**
  * Represents a field on a class and stores various metadata such as generic parameters.
  *
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */
@@ -115,6 +116,7 @@ public final class PropertyModel {
      *
      * @param toNormalize the type to normalize
      * @return the unwrapped type
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

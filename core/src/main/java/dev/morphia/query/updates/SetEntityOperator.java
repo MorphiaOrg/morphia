@@ -17,9 +17,10 @@ import org.bson.codecs.EncoderContext;
  * @since 2.0
  */
 @MorphiaInternal
-public class SetEntityOperator extends UpdateOperator {
+class SetEntityOperator extends UpdateOperator {
     /**
      * @param value the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -27,6 +28,11 @@ public class SetEntityOperator extends UpdateOperator {
         super("$set", "", value);
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(null, value()) {

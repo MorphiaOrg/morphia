@@ -46,6 +46,7 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
     /**
      * @param that the options to copy
      * @morphia.internal
+     * @hidden
      * @since 2.0
      */
     @MorphiaInternal
@@ -80,6 +81,7 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
     /**
      *
      * @return the collection
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -122,6 +124,7 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
 
     /**
      * @return the bypass document level validation flag
+     * @hidden
      * @morphia.internal
      * @see com.mongodb.client.model.InsertOneOptions#getBypassDocumentValidation()
      */
@@ -141,6 +144,7 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
 
     /**
      * @return the driver version of the options
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

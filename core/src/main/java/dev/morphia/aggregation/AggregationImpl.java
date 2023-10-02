@@ -67,6 +67,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @param <T>
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */
@@ -84,6 +85,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
      *
      * @param datastore  the datastore
      * @param collection the source collection
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -100,6 +102,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
      * @param datastore  the datastore
      * @param source     the source type
      * @param collection the source collection
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

@@ -28,6 +28,7 @@ public class InsertManyOptions implements WriteConfigurable<InsertManyOptions>, 
     /**
      * @param that the options to copy
      * @morphia.internal
+     * @hidden
      * @since 2.0
      */
     @MorphiaInternal
@@ -140,6 +141,7 @@ public class InsertManyOptions implements WriteConfigurable<InsertManyOptions>, 
     /**
      * @return the driver version of this instance
      * @morphia.internal
+     * @hidden
      * @since 2.3
      */
     @MorphiaInternal

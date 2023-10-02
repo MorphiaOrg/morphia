@@ -19,6 +19,7 @@ import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.docume
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal
@@ -29,7 +30,6 @@ public class OperationTarget {
     /**
      * @param target the target
      * @param value  the value
-     * @morphia.internal
      */
     @MorphiaInternal
     public OperationTarget(@Nullable PathTarget target, @Nullable Object value) {
@@ -42,7 +42,6 @@ public class OperationTarget {
      *
      * @param datastore the datastore
      * @return the encoded form
-     * @morphia.internal
      */
     @MorphiaInternal
     public Object encode(MorphiaDatastore datastore) {

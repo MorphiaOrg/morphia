@@ -8,6 +8,7 @@ import dev.morphia.mapping.MappingException;
 import org.bson.codecs.pojo.PropertyAccessor;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal
@@ -18,6 +19,7 @@ public class MethodAccessor implements PropertyAccessor<Object> {
     /**
      * @param getter
      * @param setter
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

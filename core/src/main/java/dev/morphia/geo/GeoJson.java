@@ -128,6 +128,7 @@ public final class GeoJson {
 
     /**
      * @param values the values to convert
+     * @hidden
      * @morphia.internal
      * @return the converted values
      */
@@ -143,6 +144,7 @@ public final class GeoJson {
 
     /**
      * @param values the values to convert
+     * @hidden
      * @morphia.internal
      * @return the converted values
      */

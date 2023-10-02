@@ -41,6 +41,7 @@ import static org.bson.assertions.Assertions.notNull;
 /**
  * A builder for programmatically creating {@code FieldModels}.
  *
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */
@@ -140,6 +141,7 @@ public final class PropertyModelBuilder {
 
     /**
      * @return the mapped name
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

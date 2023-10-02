@@ -1,4 +1,4 @@
-package dev.morphia.utils;
+package dev.morphia.mapping;
 
 /**
  * Defines the "direction" of an index.

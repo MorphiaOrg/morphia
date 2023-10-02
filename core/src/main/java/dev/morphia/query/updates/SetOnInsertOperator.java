@@ -24,12 +24,13 @@ import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.docume
  * @since 2.0
  */
 @MorphiaInternal
-public class SetOnInsertOperator extends UpdateOperator implements DatastoreAware {
+class SetOnInsertOperator extends UpdateOperator implements DatastoreAware {
     private final Map<String, Object> insertValues;
     private MorphiaDatastore datastore;
 
     /**
      * @param values the values
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -39,6 +40,7 @@ public class SetOnInsertOperator extends UpdateOperator implements DatastoreAwar
     }
 
     /**
+     * @hidden
      * @morphia.internal
      */
     @Override
@@ -47,6 +49,11 @@ public class SetOnInsertOperator extends UpdateOperator implements DatastoreAwar
         this.datastore = datastore;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public OperationTarget toTarget(PathTarget pathTarget) {

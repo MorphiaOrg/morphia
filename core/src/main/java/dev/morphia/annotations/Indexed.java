@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import dev.morphia.utils.IndexDirection;
+import dev.morphia.mapping.IndexDirection;
 
 /**
  * Specified on fields that should be Indexed.

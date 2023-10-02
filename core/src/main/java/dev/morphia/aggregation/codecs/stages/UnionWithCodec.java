@@ -13,6 +13,7 @@ import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 /**
  * Encodes a UnionWith stage
  *
+ * @hidden
  * @morphia.internal
  * @since 2.1
  */

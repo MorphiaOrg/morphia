@@ -8,6 +8,8 @@ import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.NonNull;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 /**
  * @param <T> the original type being iterated
  * @since 2.2
@@ -19,7 +21,10 @@ public class MorphiaCursor<T> implements MongoCursor<T> {
      * Creates a MorphiaCursor
      *
      * @param cursor the Iterator to use
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public MorphiaCursor(MongoCursor<T> cursor) {
         wrapped = cursor;
     }

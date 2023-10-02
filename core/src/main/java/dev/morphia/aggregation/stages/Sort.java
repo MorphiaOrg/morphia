@@ -17,6 +17,11 @@ import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.docume
 public class Sort extends Stage {
     private final List<SortType> sorts = new ArrayList<>();
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Sort() {
         super("$sort");
     }
@@ -74,6 +79,7 @@ public class Sort extends Stage {
 
     /**
      * @return the sorts
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -117,6 +123,7 @@ public class Sort extends Stage {
 
         /**
          * @param writer the writer to use
+         * @hidden
          * @morphia.internal
          */
         @MorphiaInternal
@@ -124,6 +131,7 @@ public class Sort extends Stage {
     }
 
     /**
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -138,6 +146,7 @@ public class Sort extends Stage {
 
         /**
          * @return the direction
+         * @hidden
          * @morphia.internal
          */
         @MorphiaInternal
@@ -147,6 +156,7 @@ public class Sort extends Stage {
 
         /**
          * @return the field
+         * @hidden
          * @morphia.internal
          */
         @MorphiaInternal

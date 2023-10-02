@@ -93,7 +93,9 @@
                 <version>3.6.0</version>
                 <configuration>
                     <failOnError>false</failOnError>
-                    <excludePackageNames>dev.morphia.sofia:*.internal:*.impls</excludePackageNames>
+                    <excludePackageNames>
+                        dev.morphia.utils:dev.morphia.sofia:*.internal:dev.morphia.mapping.*:dev.morphia.aggregation.codecs:dev.morphia.aggregation.codecs.stages
+                    </excludePackageNames>
                     <doclint>none</doclint>
                     <doctitle>Morphia ${project.version}</doctitle>
                     <links>

@@ -12,6 +12,7 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * @param <T> the entity type
+ * @hidden
  * @morphia.internal
  * @since 2.2
  */

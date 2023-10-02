@@ -89,6 +89,7 @@ public interface Datastore {
      * @param <T>  the class type
      * @return the collection mapped for this class
      * @morphia.internal
+     * @hidden
      * @since 2.3
      */
     @MorphiaInternal
@@ -97,6 +98,7 @@ public interface Datastore {
     /**
      * @return the MongoDatabase used by this DataStore
      * @morphia.internal
+     * @hidden
      * @since 1.5
      */
     @MorphiaInternal

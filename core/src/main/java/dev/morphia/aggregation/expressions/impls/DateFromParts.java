@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.aggregation.expressions.Expressions;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 public class DateFromParts extends Expression {
     private Expression year;
@@ -17,6 +18,11 @@ public class DateFromParts extends Expression {
 
     private Expression timezone;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public DateFromParts() {
         super("$dateFromParts");
     }
@@ -44,46 +50,101 @@ public class DateFromParts extends Expression {
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression year() {
         return year;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression month() {
         return month;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression day() {
         return day;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression hour() {
         return hour;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression minute() {
         return minute;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression second() {
         return second;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression millisecond() {
         return millisecond;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression isoWeekYear() {
         return isoWeekYear;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression isoWeek() {
         return isoWeek;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression isoDayOfWeek() {
         return isoDayOfWeek;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression timezone() {
         return timezone;
     }

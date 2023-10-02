@@ -19,6 +19,8 @@ package dev.morphia.aggregation;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.Document;
 
 /**
@@ -33,7 +35,10 @@ public class Accumulator implements AggregationElement {
      *
      * @param operation the accumulator operation
      * @param field     the field to use
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public Accumulator(String operation, String field) {
         this(operation, (Object) ("$" + field));
     }
@@ -43,7 +48,10 @@ public class Accumulator implements AggregationElement {
      *
      * @param operation the accumulator operation
      * @param field     the field to use
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public Accumulator(String operation, Object field) {
         this.operation = operation;
         this.value = field;
@@ -73,18 +81,29 @@ public class Accumulator implements AggregationElement {
 
     /**
      * @return the operation for this accumulator
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public String getOperation() {
         return operation;
     }
 
     /**
      * @return the value for this accumulator
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public Object getValue() {
         return value;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public Document toDocument() {
         Document document = new Document();

@@ -22,6 +22,9 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import static java.util.Arrays.asList;
 
+/**
+ * @hidden
+ */
 public class Documenter {
     @NonNull
     public static <T> List<T> coalesce(T first, T[] updates) {
@@ -35,6 +38,7 @@ public class Documenter {
      * Converts the updates to a Document
      *
      * @return the query
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

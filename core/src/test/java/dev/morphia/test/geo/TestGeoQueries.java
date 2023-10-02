@@ -13,11 +13,11 @@ import dev.morphia.Datastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
+import dev.morphia.mapping.IndexDirection;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TestBase;
-import dev.morphia.utils.IndexDirection;
 
 import org.bson.types.ObjectId;
 import org.testng.Assert;

@@ -89,6 +89,7 @@ public class Point implements Geometry {
     }
 
     /**
+     * @hidden
      * @morphia.internal
      * @return this Point converted to a driver Point
      */
@@ -100,6 +101,7 @@ public class Point implements Geometry {
 
     /**
      * @return this Point converted to a driver Point
+     * @hidden
      * @morphia.internal
      */
     @Override

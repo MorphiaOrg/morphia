@@ -1,10 +1,15 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 /**
  * @aggregation.expression $shift
  * @mongodb.server.release 5.0
  * @since 2.3
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class ShiftExpression extends Expression {
     private final Expression output;
     private final long by;

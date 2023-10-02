@@ -1,9 +1,8 @@
-package dev.morphia.aggregation.expressions;
+package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.expressions.impls.ExpressionList;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -13,11 +12,21 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @since 2.3
  */
 public class LogicalExpression extends Expression {
-    LogicalExpression(String operation) {
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public LogicalExpression(String operation) {
         super(operation, new ExpressionList());
     }
 
-    LogicalExpression(String operation, @NonNull ExpressionList list) {
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public LogicalExpression(String operation, @NonNull ExpressionList list) {
         super(operation, list);
     }
 

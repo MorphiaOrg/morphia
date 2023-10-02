@@ -14,6 +14,7 @@ public class DateToParts extends Expression {
 
     /**
      * @param date
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -22,14 +23,29 @@ public class DateToParts extends Expression {
         this.date = date;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression date() {
         return date;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression timeZone() {
         return timeZone;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public ValueExpression iso8601() {
         return iso8601;
     }

@@ -5,6 +5,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

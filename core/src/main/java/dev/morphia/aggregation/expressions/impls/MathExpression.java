@@ -9,12 +9,16 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  *
  * @mongodb.driver.manual reference/operator/aggregation/#arithmetic-expression-operators Arithmetic Expressions
  * @since 2.0
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class MathExpression extends Expression {
 
     /**
      * @param operation
      * @param operands
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -25,6 +29,7 @@ public class MathExpression extends Expression {
     /**
      * @param operation
      * @param operand
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -32,6 +37,11 @@ public class MathExpression extends Expression {
         super(operation, new ExpressionList(operand));
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public ExpressionList value() {
         return (ExpressionList) super.value();

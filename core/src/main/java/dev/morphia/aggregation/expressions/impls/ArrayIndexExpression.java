@@ -16,6 +16,7 @@ public class ArrayIndexExpression extends Expression {
     /**
      * @param array
      * @param search
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -25,19 +26,39 @@ public class ArrayIndexExpression extends Expression {
         this.search = search;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression array() {
         return array;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression search() {
         return search;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Nullable
     public Integer start() {
         return start;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Nullable
     public Integer end() {
         return end;

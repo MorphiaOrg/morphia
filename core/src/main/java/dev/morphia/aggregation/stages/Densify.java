@@ -55,6 +55,7 @@ public class Densify extends Stage {
 
     /**
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -78,6 +79,7 @@ public class Densify extends Stage {
 
     /**
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -87,6 +89,7 @@ public class Densify extends Stage {
 
     /**
      * @return this
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -95,6 +98,7 @@ public class Densify extends Stage {
     }
 
     /**
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -111,6 +115,11 @@ public class Densify extends Stage {
         private Object lowerBound;
         private Object upperBound;
 
+        /**
+         * @hidden
+         * @morphia.internal
+         */
+        @MorphiaInternal
         protected Range(RangeType type, Number step) {
             this.type = type;
             this.step = step;
@@ -158,6 +167,7 @@ public class Densify extends Stage {
 
         /**
          * @return this
+         * @hidden
          * @morphia.internal
          */
         @MorphiaInternal
@@ -167,6 +177,7 @@ public class Densify extends Stage {
 
         /**
          * @return this
+         * @hidden
          * @morphia.internal
          */
         @MorphiaInternal
@@ -176,6 +187,7 @@ public class Densify extends Stage {
 
         /**
          * @return this
+         * @hidden
          * @morphia.internal
          */
         @MorphiaInternal
@@ -185,6 +197,7 @@ public class Densify extends Stage {
 
         /**
          * @return this
+         * @hidden
          * @morphia.internal
          */
         @MorphiaInternal
@@ -205,6 +218,7 @@ public class Densify extends Stage {
 
         /**
          * @return this
+         * @hidden
          * @morphia.internal
          */
         @MorphiaInternal

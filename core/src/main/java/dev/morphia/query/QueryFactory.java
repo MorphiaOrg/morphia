@@ -3,14 +3,17 @@ package dev.morphia.query;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.Document;
 
 /**
  * A factory for queries.
  *
+ * @morphia.internal
  * @see Query
  */
+@MorphiaInternal
 public interface QueryFactory {
 
     /**

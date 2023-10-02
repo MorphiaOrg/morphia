@@ -46,6 +46,7 @@ import static java.util.Collections.emptyList;
 /**
  * A model of metadata about a type
  *
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */

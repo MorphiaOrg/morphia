@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.aggregation.expressions.Expressions;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 public class DateFromString extends Expression {
     private Expression dateString;
@@ -9,6 +10,11 @@ public class DateFromString extends Expression {
     private Expression onError;
     private Expression onNull;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public DateFromString() {
         super("$dateFromString");
     }
@@ -22,22 +28,47 @@ public class DateFromString extends Expression {
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression dateString() {
         return dateString;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression format() {
         return format;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression timeZone() {
         return timeZone;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression onError() {
         return onError;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression onNull() {
         return onNull;
     }

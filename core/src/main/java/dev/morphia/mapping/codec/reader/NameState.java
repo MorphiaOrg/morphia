@@ -5,6 +5,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonType;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

@@ -10,7 +10,6 @@ import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.result.InsertManyResult;
 
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
-import dev.morphia.aggregation.expressions.Miscellaneous;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
@@ -29,6 +28,7 @@ import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.Miscellaneous.rand;
+import static dev.morphia.aggregation.expressions.Miscellaneous.sampleRate;
 import static dev.morphia.query.filters.Filters.and;
 import static dev.morphia.query.filters.Filters.bitsAllClear;
 import static dev.morphia.query.filters.Filters.bitsAllSet;
@@ -313,7 +313,7 @@ public class FiltersTest extends TestBase {
         InsertManyResult bulk = getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
         assertEquals(bulk.getInsertedIds().size(), count);
         Document matches = getDs().aggregate(collectionName)
-                .match(Miscellaneous.sampleRate(0.33))
+                .match(sampleRate(0.33))
                 .count("numMatches")
                 .execute(Document.class)
                 .next();

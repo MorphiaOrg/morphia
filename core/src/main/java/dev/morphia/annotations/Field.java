@@ -24,7 +24,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import dev.morphia.utils.IndexType;
+import dev.morphia.mapping.IndexType;
 
 /**
  * Define a field to be used in an index;

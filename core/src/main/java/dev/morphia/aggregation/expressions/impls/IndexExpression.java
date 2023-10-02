@@ -21,6 +21,7 @@ public class IndexExpression extends Expression {
      * @param operation the index operation name
      * @param string    the string to search
      * @param substring the target string
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -30,19 +31,39 @@ public class IndexExpression extends Expression {
         this.substring = substring;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression string() {
         return string;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression substring() {
         return substring;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Nullable
     public Integer end() {
         return end;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Nullable
     public Integer start() {
         return start;

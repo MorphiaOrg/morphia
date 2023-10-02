@@ -20,6 +20,7 @@ public class DateDeltaExpression extends Expression {
      * @param startDate
      * @param amount
      * @param unit
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -30,18 +31,38 @@ public class DateDeltaExpression extends Expression {
         this.unit = unit;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression startDate() {
         return startDate;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public long amount() {
         return amount;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public TimeUnit unit() {
         return unit;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression timezone() {
         return timezone;
     }

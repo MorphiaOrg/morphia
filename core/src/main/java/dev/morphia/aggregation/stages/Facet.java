@@ -24,6 +24,11 @@ import static java.util.Arrays.asList;
 public class Facet extends Stage {
     private final LinkedHashMap<String, List<Stage>> fields = new LinkedHashMap<>();
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Facet() {
         super("$facet");
     }
@@ -63,6 +68,7 @@ public class Facet extends Stage {
 
     /**
      * @return the fields
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

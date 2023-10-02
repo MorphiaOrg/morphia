@@ -16,6 +16,7 @@ import static java.lang.String.format;
 
 /**
  * @param <T> the type
+ * @hidden
  * @morphia.internal
  * @since 2.2
  */

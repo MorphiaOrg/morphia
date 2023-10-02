@@ -1,7 +1,7 @@
 package dev.morphia.mapping.codec.expressions;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.expressions.SortArrayExpression;
+import dev.morphia.aggregation.expressions.impls.SortArrayExpression;
 import dev.morphia.query.Sort;
 
 import org.bson.BsonWriter;

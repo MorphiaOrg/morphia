@@ -18,10 +18,14 @@ package dev.morphia.query;
 
 import java.util.Arrays;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.Document;
 
 /**
  * Defines array slicing options for query projections.
+ * 
+ * @query.filter $slice
  */
 public class ArraySlice {
     private final Integer limit;
@@ -31,9 +35,8 @@ public class ArraySlice {
      * Specifies the number of array elements to return
      *
      * @param limit the number of array elements to return
-     * @query.filter $slice
      */
-    public ArraySlice(int limit) {
+    private ArraySlice(int limit) {
         this.limit = limit;
     }
 
@@ -44,21 +47,36 @@ public class ArraySlice {
      * @param limit the number of array elements to return
      * @query.filter $slice
      */
-    public ArraySlice(int skip, int limit) {
+    private ArraySlice(int skip, int limit) {
         this.skip = skip;
         this.limit = limit;
     }
 
+    public static ArraySlice limit(int limit) {
+        return new ArraySlice(limit);
+    }
+
+    public ArraySlice skip(Integer skip) {
+        this.skip = skip;
+        return this;
+    }
+
     /**
      * @return the limit to apply to the projection
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public Integer getLimit() {
         return limit;
     }
 
     /**
      * @return the skip value to apply to the projection
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public Integer getSkip() {
         return skip;
     }

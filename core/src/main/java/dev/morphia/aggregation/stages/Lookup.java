@@ -28,16 +28,31 @@ public class Lookup extends Stage {
     private DocumentExpression variables;
     private List<Stage> pipeline;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Lookup(Class<?> fromType) {
         super("$lookup");
         this.fromType = fromType;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Lookup(String from) {
         super("$lookup");
         this.from = from;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Lookup() {
         super("$lookup");
     }
@@ -123,6 +138,7 @@ public class Lookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -133,6 +149,7 @@ public class Lookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -143,6 +160,7 @@ public class Lookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -153,6 +171,7 @@ public class Lookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -163,6 +182,7 @@ public class Lookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -172,7 +192,8 @@ public class Lookup extends Stage {
     }
 
     /**
-     * @return the embeded pipeline
+     * @return the embedded pipeline
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -182,7 +203,8 @@ public class Lookup extends Stage {
     }
 
     /**
-     * @return the embeded pipeline's variables
+     * @return the embedded pipeline's variables
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

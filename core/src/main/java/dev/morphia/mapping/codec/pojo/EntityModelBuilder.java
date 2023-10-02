@@ -37,6 +37,7 @@ import static java.util.List.of;
 /**
  * Builder for EntityModels
  *
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */

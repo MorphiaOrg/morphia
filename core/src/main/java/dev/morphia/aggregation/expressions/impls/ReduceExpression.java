@@ -1,5 +1,12 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
 public class ReduceExpression extends Expression {
     private final Expression input;
     private final Expression initial;

@@ -10,6 +10,7 @@ import dev.morphia.sofia.Sofia;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

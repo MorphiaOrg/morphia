@@ -25,6 +25,11 @@ public class Bucket extends Stage {
     private Object defaultValue;
     private DocumentExpression output;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Bucket() {
         super("$bucket");
     }
@@ -81,6 +86,7 @@ public class Bucket extends Stage {
 
     /**
      * @return the boundaries
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -90,6 +96,7 @@ public class Bucket extends Stage {
 
     /**
      * @return the default value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -99,6 +106,7 @@ public class Bucket extends Stage {
 
     /**
      * @return the group by expression
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -108,6 +116,7 @@ public class Bucket extends Stage {
 
     /**
      * @return the output document
+     * @hidden
      * @morphia.internal
      */
     @Nullable

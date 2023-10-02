@@ -21,6 +21,7 @@ import static java.lang.String.format;
 
 /**
  * @param <T> the entity type
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */
@@ -74,6 +75,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
      * @param value          the value of the property
      * @param encoderContext the context
      * @since 2.3
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

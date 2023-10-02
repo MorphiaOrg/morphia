@@ -11,6 +11,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class SortByCount extends Stage {
     private final Expression expression;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected SortByCount(Expression expression) {
         super("$sortByCount");
         this.expression = expression;
@@ -41,6 +46,7 @@ public class SortByCount extends Stage {
 
     /**
      * @return the expression
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

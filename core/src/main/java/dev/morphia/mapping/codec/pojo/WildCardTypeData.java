@@ -8,6 +8,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * Represents a wild card type
  *
  * @param <T> the bounds type
+ * @hidden
  * @morphia.internal
  * @since 2.1.5
  */

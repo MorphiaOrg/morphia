@@ -23,6 +23,11 @@ public class Projection extends Stage {
     private Fields excludes;
     private boolean suppressId;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Projection() {
         super("$project");
     }
@@ -60,6 +65,7 @@ public class Projection extends Stage {
 
     /**
      * @return the fields
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

@@ -1,29 +1,56 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 public class ConvertExpression extends Expression {
     private final Expression input;
     private final ConvertType to;
     private Expression onError;
     private Expression onNull;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public ConvertExpression(Expression input, ConvertType to) {
         super("$convert");
         this.input = input;
         this.to = to;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression input() {
         return input;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public ConvertType to() {
         return to;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression onError() {
         return onError;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression onNull() {
         return onNull;
     }

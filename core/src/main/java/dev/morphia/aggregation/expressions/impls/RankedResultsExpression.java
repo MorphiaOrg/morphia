@@ -1,7 +1,13 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.Sort;
 
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
 public class RankedResultsExpression extends Expression {
     private final Expression output;
     private final Sort[] sortBy;

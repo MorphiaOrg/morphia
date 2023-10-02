@@ -10,6 +10,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class Skip extends Stage {
     private final long size;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Skip(long size) {
         super("$skip");
         this.size = size;
@@ -40,6 +45,7 @@ public class Skip extends Stage {
 
     /**
      * @return the size
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

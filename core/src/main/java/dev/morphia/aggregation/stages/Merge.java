@@ -31,20 +31,40 @@ public class Merge<M> extends Stage {
     private List<Stage> whenMatchedPipeline;
     private WhenNotMatched whenNotMatched;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Merge(Class<M> type) {
         this();
         this.type = type;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Merge() {
         super("$merge");
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Merge(String collection) {
         this();
         this.collection = collection;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Merge(String database, String collection) {
         this();
         this.database = database;
@@ -85,6 +105,7 @@ public class Merge<M> extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -94,6 +115,7 @@ public class Merge<M> extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -104,6 +126,7 @@ public class Merge<M> extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -113,6 +136,7 @@ public class Merge<M> extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -123,6 +147,7 @@ public class Merge<M> extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -133,6 +158,7 @@ public class Merge<M> extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -142,6 +168,7 @@ public class Merge<M> extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -151,6 +178,7 @@ public class Merge<M> extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

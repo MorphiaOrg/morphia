@@ -1,5 +1,6 @@
 package dev.morphia.query.updates;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.OperationTarget;
 
@@ -13,6 +14,11 @@ class BitOperator extends UpdateOperator {
         this.operation = operation;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, new Document(operation, value()));

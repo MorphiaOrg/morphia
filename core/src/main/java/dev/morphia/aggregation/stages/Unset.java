@@ -21,6 +21,11 @@ public class Unset extends Stage {
 
     private final List<Expression> fields = new ArrayList<>();
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Unset() {
         super("$unset");
     }
@@ -62,6 +67,7 @@ public class Unset extends Stage {
 
     /**
      * @return the fields
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

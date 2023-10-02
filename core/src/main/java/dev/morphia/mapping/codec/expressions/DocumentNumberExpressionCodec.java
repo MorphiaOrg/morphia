@@ -1,7 +1,7 @@
 package dev.morphia.mapping.codec.expressions;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.expressions.DocumentNumberExpression;
+import dev.morphia.aggregation.expressions.impls.DocumentNumberExpression;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;

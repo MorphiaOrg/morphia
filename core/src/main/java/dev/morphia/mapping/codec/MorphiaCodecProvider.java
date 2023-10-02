@@ -30,6 +30,7 @@ import org.bson.codecs.pojo.PropertyCodecProvider;
 /**
  * Provider for codecs for Morphia entities
  *
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

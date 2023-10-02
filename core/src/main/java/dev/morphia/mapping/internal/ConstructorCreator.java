@@ -37,6 +37,7 @@ import static java.util.Arrays.stream;
  * constructor that accepts a parameter for each mapped field on the class.
  *
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
 public class ConstructorCreator implements MorphiaInstanceCreator {

@@ -3,6 +3,7 @@ package dev.morphia.aggregation.expressions.impls;
 import java.time.DayOfWeek;
 
 import dev.morphia.aggregation.expressions.TimeUnit;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Returns the difference between two dates.
@@ -18,6 +19,11 @@ public class DateDiffExpression extends Expression {
     private Expression timezone;
     private DayOfWeek startOfWeek;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public DateDiffExpression(Expression startDate, Expression endDate, TimeUnit unit) {
         super("$dateDiff");
         this.startDate = startDate;
@@ -25,22 +31,47 @@ public class DateDiffExpression extends Expression {
         this.unit = unit;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression startDate() {
         return startDate;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression endDate() {
         return endDate;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public TimeUnit unit() {
         return unit;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression timezone() {
         return timezone;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public DayOfWeek startOfWeek() {
         return startOfWeek;
     }

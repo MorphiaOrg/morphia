@@ -12,9 +12,10 @@ import org.bson.Document;
  * @since 2.0
  */
 @MorphiaInternal
-public class UnsetOperator extends UpdateOperator {
+class UnsetOperator extends UpdateOperator {
     /**
      * @param field the field
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -22,6 +23,11 @@ public class UnsetOperator extends UpdateOperator {
         super("$unset", field, "unused");
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
         return new OperationTarget(pathTarget, "") {

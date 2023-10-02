@@ -16,6 +16,7 @@ import dev.morphia.sofia.Sofia;
 /**
  * The proxy for lazy references.
  *
+ * @hidden
  * @morphia.internal
  */
 @MorphiaInternal

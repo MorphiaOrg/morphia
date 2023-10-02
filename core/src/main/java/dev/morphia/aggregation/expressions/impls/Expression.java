@@ -17,6 +17,11 @@ public class Expression {
     private final String operation;
     private final Expression value;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression(String operation) {
         this.operation = operation;
         this.value = null;
@@ -25,6 +30,7 @@ public class Expression {
     /**
      * @param operation the expression name
      * @param value     the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -36,6 +42,7 @@ public class Expression {
     /**
      * @param operation the expression name
      * @param value     the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -46,6 +53,7 @@ public class Expression {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -55,6 +63,7 @@ public class Expression {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -63,6 +72,11 @@ public class Expression {
         return value;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String toString() {
         return new StringJoiner(", ", Expression.class.getSimpleName() + "[", "]")

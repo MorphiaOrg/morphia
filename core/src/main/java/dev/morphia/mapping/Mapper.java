@@ -13,7 +13,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
 import com.mongodb.WriteConcern;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityListener;
@@ -56,11 +55,9 @@ public class Mapper {
      */
     @MorphiaInternal
     public static final String IGNORED_FIELDNAME = ".";
-    /**
-     * @morphia.internal
-     */
     @MorphiaInternal
-    public static final List<Class<? extends Annotation>> MAPPING_ANNOTATIONS = List.of(Entity.class, Embedded.class, ExternalEntity.class);
+    private static final List<Class<? extends Annotation>> MAPPING_ANNOTATIONS = List.of(Entity.class, Embedded.class,
+            ExternalEntity.class);
     @MorphiaInternal
     public static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = List.of(PrePersist.class,
             PreLoad.class,
@@ -81,6 +78,7 @@ public class Mapper {
      * Creates a Mapper with the given options.
      *
      * @param config the config to use
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -90,6 +88,11 @@ public class Mapper {
         discriminatorLookup = new DiscriminatorLookup();
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Mapper(Mapper other) {
         config = other.config;
         contextClassLoader = Thread.currentThread().getContextClassLoader();
@@ -111,27 +114,19 @@ public class Mapper {
         listeners.add(ei);
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Mapper copy() {
         return new Mapper(this);
     }
 
     /**
-     * Updates a collection to use a specific WriteConcern
-     *
-     * @param collection the collection to update
-     * @param type       the entity type
-     * @return the updated collection
-     */
-    public MongoCollection enforceWriteConcern(MongoCollection collection, Class type) {
-        WriteConcern applied = getWriteConcern(type);
-        return applied != null
-                ? collection.withWriteConcern(applied)
-                : collection;
-    }
-
-    /**
      * @param type the class
      * @return the id property model
+     * @hidden
      * @morphia.internal
      * @since 2.2
      */
@@ -198,6 +193,7 @@ public class Mapper {
      *
      * @param collection the collection to check
      * @return the mapped types
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -211,7 +207,10 @@ public class Mapper {
 
     /**
      * @return the DiscriminatorLookup in use
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public DiscriminatorLookup getDiscriminatorLookup() {
         return discriminatorLookup;
     }
@@ -221,7 +220,10 @@ public class Mapper {
      *
      * @param type the type to process
      * @return the EntityModel for the object given
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public EntityModel getEntityModel(Class type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
         if (actual == null && MorphiaProxy.class.equals(type)) {
@@ -266,14 +268,20 @@ public class Mapper {
      * Gets list of {@link EntityListener}s
      *
      * @return the Interceptors
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public List<EntityListener<?>> getListeners() {
         return listeners;
     }
 
     /**
      * @return collection of EntityModels
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public List<EntityModel> getMappedEntities() {
         return new ArrayList<>(mappedEntities.values());
     }
@@ -290,6 +298,7 @@ public class Mapper {
      *
      * @param clazz the class to use when looking up the WriteConcern
      * @return the write concern for the type
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -308,7 +317,10 @@ public class Mapper {
 
     /**
      * @return true if there are global interceptors defined
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public boolean hasInterceptors() {
         return !listeners.isEmpty();
     }
@@ -320,6 +332,11 @@ public class Mapper {
      * @param <T>  the type
      * @return true if the type is mappable
      */
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public <T> boolean isMappable(Class<T> type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
         return hasAnnotation(actual, MAPPING_ANNOTATIONS);
@@ -330,7 +347,10 @@ public class Mapper {
      *
      * @param c the Class to check
      * @return true if the Class has been mapped
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public boolean isMapped(Class c) {
         return mappedEntities.containsKey(c);
     }
@@ -433,7 +453,10 @@ public class Mapper {
      *
      * @param model the query model
      * @param query the query document
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public void updateQueryWithDiscriminators(EntityModel model, Document query) {
         Entity annotation = model.getEntityAnnotation();
         if (annotation != null && annotation.useDiscriminator()
@@ -454,6 +477,7 @@ public class Mapper {
     /**
      * @param entityModel the model to register
      * @return the model
+     * @hidden
      * @morphia.internal
      * @since 2.3
      */

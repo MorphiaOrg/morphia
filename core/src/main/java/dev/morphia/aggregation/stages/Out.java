@@ -18,6 +18,11 @@ public class Out<O> extends Stage {
     private String collection;
     private String database;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Out() {
         super("$out");
     }
@@ -47,6 +52,7 @@ public class Out<O> extends Stage {
 
     /**
      * @return the collection name
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -56,6 +62,7 @@ public class Out<O> extends Stage {
 
     /**
      * @return the database name
+     * @hidden
      * @morphia.internal
      * @since 2.3
      */
@@ -80,6 +87,7 @@ public class Out<O> extends Stage {
 
     /**
      * @return the type representing the collection
+     * @hidden
      * @morphia.internal
      */
     @Nullable

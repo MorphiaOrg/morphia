@@ -38,7 +38,7 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $add
      */
-    public static MathExpression add(Expression first, Expression... additional) {
+    public static Expression add(Expression first, Expression... additional) {
         List<Expression> expressions = new ArrayList<>();
         expressions.add(first);
         expressions.addAll(asList(additional));

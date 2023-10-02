@@ -10,6 +10,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class Limit extends Stage {
     private final long limit;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Limit(long limit) {
         super("$limit");
         this.limit = limit;
@@ -40,6 +45,7 @@ public class Limit extends Stage {
 
     /**
      * @return the limit
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

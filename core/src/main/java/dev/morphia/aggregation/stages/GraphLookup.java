@@ -26,12 +26,20 @@ public class GraphLookup extends Stage {
      * Creates a new stage using the target collection
      *
      * @param from the target collection
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public GraphLookup(String from) {
         this();
         this.from = from;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected GraphLookup() {
         super("$graphLookup");
     }
@@ -40,7 +48,10 @@ public class GraphLookup extends Stage {
      * Creates a new stage using the target collection for the mapped type
      *
      * @param from the type to use for determining the target collection
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public GraphLookup(Class from) {
         this();
         this.fromType = from;
@@ -141,6 +152,7 @@ public class GraphLookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -151,6 +163,7 @@ public class GraphLookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -161,6 +174,7 @@ public class GraphLookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -171,6 +185,7 @@ public class GraphLookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -181,6 +196,7 @@ public class GraphLookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -191,6 +207,7 @@ public class GraphLookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -201,6 +218,7 @@ public class GraphLookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -211,6 +229,7 @@ public class GraphLookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable
@@ -221,6 +240,7 @@ public class GraphLookup extends Stage {
 
     /**
      * @return the value
+     * @hidden
      * @morphia.internal
      */
     @Nullable

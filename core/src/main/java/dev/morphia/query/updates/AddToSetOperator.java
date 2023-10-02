@@ -12,13 +12,17 @@ import org.bson.Document;
  * Defines the $addToSet operator
  *
  * @since 2.0
+ * @hidden
+ * @morphia.internal
  */
-public class AddToSetOperator extends UpdateOperator {
+@MorphiaInternal
+class AddToSetOperator extends UpdateOperator {
     private final boolean each;
 
     /**
      * @param field  the field
      * @param values the values
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
@@ -27,13 +31,14 @@ public class AddToSetOperator extends UpdateOperator {
         each = values instanceof Collection;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
-        if (each) {
-            return new OperationTarget(pathTarget, new Document("$each", value()));
-        } else {
-            return new OperationTarget(pathTarget, value());
-        }
+        return new OperationTarget(pathTarget, each ? new Document("$each", value()) : value());
     }
 
 }

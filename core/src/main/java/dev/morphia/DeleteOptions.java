@@ -50,6 +50,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
      * @param that the options to copy
      * @morphia.internal
      * @since 2.0
+     * @hidden
      */
     @MorphiaInternal
     public DeleteOptions(DeleteOptions that) {
@@ -157,6 +158,7 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
     /**
      * @return is this delete for multiple documents
      * @morphia.internal
+     * @hidden
      */
     @MorphiaInternal
     public boolean multi() {

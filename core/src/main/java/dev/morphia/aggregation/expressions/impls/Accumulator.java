@@ -7,13 +7,17 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * Base class for the accumulator expression types.
  *
+ * @hidden
+ * @morphia.internal
  * @since 2.0
  */
+@MorphiaInternal
 public class Accumulator extends Expression {
 
     /**
      * @param operation
      * @param values
+     * @hidden
      * @morphia.internal
      */
     @MorphiaInternal

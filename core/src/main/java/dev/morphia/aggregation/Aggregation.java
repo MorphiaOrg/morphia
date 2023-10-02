@@ -521,6 +521,7 @@ public interface Aggregation<T> {
      *
      * @param stage the new Stage
      * @return this
+     * @hidden
      * @morphia.internal
      * @since 2.3
      */
