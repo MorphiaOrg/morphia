@@ -1,13 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.Expressions;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 public class DateToString extends Expression {
     private Expression format;
@@ -42,11 +35,6 @@ public class DateToString extends Expression {
 
     public Expression onNull() {
         return onNull;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     public DateToString format(String format) {

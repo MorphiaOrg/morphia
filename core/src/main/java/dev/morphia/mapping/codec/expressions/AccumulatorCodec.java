@@ -1,18 +1,16 @@
 package dev.morphia.mapping.codec.expressions;
 
+import java.util.List;
+
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
 
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import java.util.List;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 

@@ -1,10 +1,5 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 public class ConvertExpression extends Expression {
     private final Expression input;
     private final ConvertType to;
@@ -31,11 +26,6 @@ public class ConvertExpression extends Expression {
 
     public Expression onNull() {
         return onNull;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

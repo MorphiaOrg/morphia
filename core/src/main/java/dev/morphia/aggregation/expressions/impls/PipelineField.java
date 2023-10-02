@@ -1,10 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 import static java.lang.String.format;
 
@@ -19,11 +15,6 @@ public class PipelineField {
     public PipelineField(String name, Expression value) {
         this.name = name;
         this.value = value;
-    }
-
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeName(name);
-        value.encode(datastore, writer, encoderContext);
     }
 
     public String getName() {

@@ -1,11 +1,8 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.expressions.TimeUnit;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 import java.time.DayOfWeek;
+
+import dev.morphia.aggregation.expressions.TimeUnit;
 
 /**
  * Truncates a date.
@@ -59,11 +56,6 @@ public class DateTruncExpression extends Expression {
 
     public Long binSize() {
         return binSize;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

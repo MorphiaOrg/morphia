@@ -1,12 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 
 public class RangeExpression extends Expression {
     private final int start;
@@ -30,17 +24,6 @@ public class RangeExpression extends Expression {
     @Nullable
     public Integer step() {
         return step;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        array(writer, operation(), () -> {
-            writer.writeInt32(start);
-            writer.writeInt32(end);
-            if (step != null) {
-                writer.writeInt32(step);
-            }
-        });
     }
 
     public RangeExpression step(Integer step) {

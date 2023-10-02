@@ -1,10 +1,7 @@
 package dev.morphia.aggregation.codecs.stages;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.expressions.impls.DocumentExpression;
-import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.Fields;
-import dev.morphia.aggregation.expressions.impls.PipelineField;
 import dev.morphia.aggregation.stages.Group;
 import dev.morphia.aggregation.stages.Group.GroupId;
 
@@ -13,7 +10,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
 public class GroupCodec extends StageCodec<Group> {

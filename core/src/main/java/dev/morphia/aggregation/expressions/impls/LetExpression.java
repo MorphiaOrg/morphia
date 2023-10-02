@@ -1,14 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.Expressions;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 
 public class LetExpression extends Expression {
     private final Expression in;
@@ -25,14 +17,6 @@ public class LetExpression extends Expression {
 
     public DocumentExpression variables() {
         return variables;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "vars", variables, encoderContext);
-            wrapExpression(datastore, writer, "in", in, encoderContext);
-        });
     }
 
     /**

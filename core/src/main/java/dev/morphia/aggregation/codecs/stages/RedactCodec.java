@@ -6,7 +6,7 @@ import dev.morphia.aggregation.stages.Redact;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
 public class RedactCodec extends StageCodec<Redact> {
     public RedactCodec(MorphiaDatastore datastore) {
@@ -20,6 +20,6 @@ public class RedactCodec extends StageCodec<Redact> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Redact value, EncoderContext encoderContext) {
-        wrapExpression(getDatastore(), writer, value.getExpression(), encoderContext);
+        encodeIfNotNull(getDatastore().getCodecRegistry(), writer, value.getExpression(), encoderContext);
     }
 }

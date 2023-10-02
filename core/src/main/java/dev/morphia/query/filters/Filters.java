@@ -18,8 +18,8 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
@@ -381,7 +381,7 @@ public final class Filters {
         return new Filter("$jsonSchema", null, schema) {
             @Override
             public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-                value(datastore, writer, "$jsonSchema", schema, context);
+                value(datastore.getCodecRegistry(), writer, "$jsonSchema", schema, context);
             }
         };
     }

@@ -2,11 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import java.util.List;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 public class ZipExpression extends Expression {
     private final List<Expression> inputs;
@@ -49,11 +45,6 @@ public class ZipExpression extends Expression {
 
     public Expression defaults() {
         return defaults;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

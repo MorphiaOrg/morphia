@@ -2,13 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 
 /**
  * @since 2.0
@@ -47,11 +41,6 @@ public class ArrayIndexExpression extends Expression {
     @Nullable
     public Integer end() {
         return end;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

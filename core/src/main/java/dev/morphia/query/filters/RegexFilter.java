@@ -10,7 +10,7 @@ import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 /**
  * Defines a regular expression filter
@@ -31,7 +31,9 @@ public class RegexFilter extends Filter {
         if (isNot()) {
             writer.writeStartDocument("$not");
         }
-        value(datastore, writer, "$regex", new BsonRegularExpression((String) getValue()), context);
+        writer.writeName("$regex");
+        datastore.getCodecRegistry().get(BsonRegularExpression.class)
+                .encode(writer, new BsonRegularExpression((String) getValue()), context);
         value(writer, "$options", options);
         if (isNot()) {
             writer.writeEndDocument();

@@ -13,7 +13,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.testng.annotations.BeforeMethod;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 import static org.testng.Assert.assertEquals;
 
 public class ExpressionsTestBase extends TemplatedTestBase {

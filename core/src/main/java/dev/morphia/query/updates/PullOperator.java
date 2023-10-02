@@ -10,7 +10,7 @@ import dev.morphia.query.filters.Filter;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 
 /**
  * Defines an operator for $pull

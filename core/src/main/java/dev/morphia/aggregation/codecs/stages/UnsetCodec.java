@@ -26,7 +26,7 @@ public class UnsetCodec extends StageCodec<Unset> {
     protected void encodeStage(BsonWriter writer, Unset value, EncoderContext encoderContext) {
         List<Expression> fields = value.getFields();
         if (fields.size() == 1) {
-            encodeIfNotNull(getCodecRegistry(), writer,fields.get(0), encoderContext);
+            encodeIfNotNull(getCodecRegistry(), writer, fields.get(0), encoderContext);
         } else if (fields.size() > 1) {
             Codec codec = getCodecRegistry().get(fields.getClass());
             encoderContext.encodeWithChildContext(codec, writer, fields);

@@ -2,13 +2,9 @@ package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.AggregationException;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.sofia.Sofia;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 public class Push extends Expression implements FieldHolder<Push> {
     private Expression field;
@@ -26,11 +22,6 @@ public class Push extends Expression implements FieldHolder<Push> {
     @Nullable
     public DocumentExpression document() {
         return document;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

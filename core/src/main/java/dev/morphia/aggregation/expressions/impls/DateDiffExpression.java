@@ -1,16 +1,8 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import java.time.DayOfWeek;
-import java.util.Locale;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 /**
  * Returns the difference between two dates.
@@ -51,11 +43,6 @@ public class DateDiffExpression extends Expression {
 
     public DayOfWeek startOfWeek() {
         return startOfWeek;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

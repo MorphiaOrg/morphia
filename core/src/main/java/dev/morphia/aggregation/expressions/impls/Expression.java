@@ -5,12 +5,7 @@ import java.util.StringJoiner;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 /**
  * Base class for all the expression types.
@@ -47,18 +42,6 @@ public class Expression {
     public Expression(String operation, List<Expression> value) {
         this.operation = operation;
         this.value = new ExpressionList(value);
-    }
-
-    /**
-     * @param datastore      the datastore
-     * @param writer         the writer
-     * @param encoderContext the context
-     * @morphia.internal
-     * @hidden
-     */
-    @MorphiaInternal
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        ExpressionHelper.expression(datastore, writer, operation, value, encoderContext);
     }
 
     /**

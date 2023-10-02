@@ -59,7 +59,7 @@ import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatcher.Junction;
 import net.bytebuddy.matcher.ElementMatchers;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 import static java.lang.String.format;
 
 /**

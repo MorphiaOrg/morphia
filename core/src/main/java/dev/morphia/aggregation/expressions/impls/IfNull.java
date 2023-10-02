@@ -1,14 +1,8 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.AggregationException;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.sofia.Sofia;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 public class IfNull extends Expression implements FieldHolder<IfNull> {
     private Expression target;
@@ -17,11 +11,6 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
 
     public IfNull() {
         super("$ifNull");
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

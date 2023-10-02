@@ -125,6 +125,7 @@ public class Merge<M> extends Stage {
      * @return the value
      * @morphia.internal
      */
+    @Nullable
     @MorphiaInternal
     public Map<String, Expression> getVariables() {
         return variables;

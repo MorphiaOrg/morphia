@@ -1,10 +1,5 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 public class ArrayFilterExpression extends Expression {
     private final Expression array;
     private final Expression conditional;
@@ -31,10 +26,5 @@ public class ArrayFilterExpression extends Expression {
 
     public ValueExpression as() {
         return as;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 }

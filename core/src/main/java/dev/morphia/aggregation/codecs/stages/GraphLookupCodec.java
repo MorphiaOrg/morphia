@@ -6,10 +6,11 @@ import dev.morphia.query.filters.Filter;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 public class GraphLookupCodec extends StageCodec<GraphLookup> {
     public GraphLookupCodec(MorphiaDatastore datastore) {
@@ -24,12 +25,13 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
     @Override
     protected void encodeStage(BsonWriter writer, GraphLookup value, EncoderContext encoderContext) {
         document(writer, () -> {
+            CodecRegistry registry = getCodecRegistry();
             if (value.getFrom() != null) {
                 value(writer, "from", value.getFrom());
             } else {
                 writer.writeString("from", getDatastore().getMapper().getEntityModel(value.getFromType()).getCollectionName());
             }
-            expression(getDatastore(), writer, "startWith", value.getStartWith(), encoderContext);
+            encodeIfNotNull(registry, writer, "startWith", value.getStartWith(), encoderContext);
             value(writer, "connectFromField", value.getConnectFromField());
             value(writer, "connectToField", value.getConnectToField());
             value(writer, "as", value.getAs());

@@ -1,10 +1,5 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 public class TrimExpression extends Expression {
     private final Expression input;
     private Expression chars;
@@ -25,10 +20,5 @@ public class TrimExpression extends Expression {
 
     public Expression chars() {
         return chars;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 }

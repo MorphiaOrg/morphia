@@ -11,7 +11,7 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.*;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 
 public abstract class StageCodec<T extends Stage> implements Codec<T> {
     private MorphiaDatastore datastore;

@@ -7,7 +7,7 @@ import dev.morphia.aggregation.stages.Sort.SortType;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 
 public class SortCodec extends StageCodec<Sort> {
     public SortCodec(MorphiaDatastore datastore) {

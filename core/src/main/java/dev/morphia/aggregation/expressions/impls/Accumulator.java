@@ -2,11 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import java.util.List;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 /**
  * Base class for the accumulator expression types.
@@ -23,11 +19,6 @@ public class Accumulator extends Expression {
     @MorphiaInternal
     public Accumulator(String operation, List<Expression> values) {
         super(operation, new ExpressionList(values));
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

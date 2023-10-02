@@ -1,10 +1,5 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 /**
  * Gives first/last results
  */
@@ -24,16 +19,5 @@ public class EndResultsExpression extends Expression {
 
     public Expression n() {
         return n;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
-        /*
-         * document(writer, operation(), () -> {
-         * expression(datastore, writer, "input", input, encoderContext);
-         * expression(datastore, writer, "n", n, encoderContext);
-         * });
-         */
     }
 }

@@ -1,14 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
-import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.codecs.ExpressionHelper;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 public class ExpMovingAvg extends Expression {
     private final Expression input;
@@ -40,10 +32,5 @@ public class ExpMovingAvg extends Expression {
 
     public Double alpha() {
         return alpha;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 }

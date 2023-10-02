@@ -1,16 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import java.util.Locale;
-
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 /**
  * Changes a Date object by a specified number of time units.
@@ -53,11 +44,6 @@ public class DateDeltaExpression extends Expression {
 
     public Expression timezone() {
         return timezone;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

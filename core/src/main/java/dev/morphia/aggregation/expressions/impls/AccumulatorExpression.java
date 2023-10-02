@@ -2,14 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import java.util.List;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 
 /**
  * @since 2.1
@@ -65,11 +58,6 @@ public class AccumulatorExpression extends Expression {
 
     public String finalizeFunction() {
         return finalizeFunction;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

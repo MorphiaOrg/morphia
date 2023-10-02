@@ -1,13 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 /**
  * Reusable type for ISO Date related expressions.
@@ -37,14 +30,6 @@ public class IsoDates extends Expression {
 
     public Expression timezone() {
         return timezone;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "date", date, encoderContext);
-            expression(datastore, writer, "timezone", timezone, encoderContext);
-        });
     }
 
     /**

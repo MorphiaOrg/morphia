@@ -10,11 +10,12 @@ import dev.morphia.aggregation.stages.Merge;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class MergeCodec extends StageCodec<Merge> {
@@ -55,13 +56,14 @@ public class MergeCodec extends StageCodec<Merge> {
             Map<String, Expression> variables = merge.getVariables();
             if (variables != null) {
                 document(writer, "let", () -> {
+                    CodecRegistry registry = getDatastore().getCodecRegistry();
                     for (Entry<String, Expression> entry : variables.entrySet()) {
-                        expression(getDatastore(), writer, entry.getKey(), entry.getValue(), encoderContext);
+                        encodeIfNotNull(registry, writer, entry.getKey(), entry.getValue(), encoderContext);
                     }
                 });
             }
             writeEnum(writer, "whenMatched", merge.getWhenMatched());
-            value(getDatastore(), writer, "whenMatched", merge.getWhenMatchedPipeline(), encoderContext);
+            value(getCodecRegistry(), writer, "whenMatched", merge.getWhenMatchedPipeline(), encoderContext);
             writeEnum(writer, "whenNotMatched", merge.getWhenNotMatched());
         });
     }

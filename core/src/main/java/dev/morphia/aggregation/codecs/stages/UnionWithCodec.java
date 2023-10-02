@@ -7,8 +7,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 /**
  * Encodes a UnionWith stage
@@ -35,7 +35,7 @@ public class UnionWithCodec extends StageCodec<UnionWith> {
 
         document(writer, () -> {
             value(writer, "coll", collectionName);
-            value(getDatastore(), writer, "pipeline", unionWith.getStages(), encoderContext);
+            value(getDatastore().getCodecRegistry(), writer, "pipeline", unionWith.getStages(), encoderContext);
         });
     }
 }

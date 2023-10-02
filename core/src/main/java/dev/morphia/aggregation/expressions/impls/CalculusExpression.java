@@ -1,16 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import java.util.Locale;
-
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.aggregation.expressions.WindowExpressions;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 /**
  * Common type for $derivative and $integral
@@ -37,11 +28,6 @@ public class CalculusExpression extends Expression {
 
     public TimeUnit unit() {
         return unit;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

@@ -11,7 +11,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.MapCodec;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 
 /**
  * Maps Map subtypes to/from the database. This is mostly a pass-through to the driver codec except for the encoding, non-String types

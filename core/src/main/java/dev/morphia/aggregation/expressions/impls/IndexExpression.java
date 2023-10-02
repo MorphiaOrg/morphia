@@ -2,11 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 /**
  * Defines the $indexOfBytes expression
@@ -50,11 +46,6 @@ public class IndexExpression extends Expression {
     @Nullable
     public Integer start() {
         return start;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

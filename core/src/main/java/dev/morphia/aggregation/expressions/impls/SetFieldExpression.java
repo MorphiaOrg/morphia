@@ -1,14 +1,5 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.codecs.ExpressionHelper;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-
 public class SetFieldExpression extends Expression {
     private final Expression field;
     private final Object input;
@@ -32,10 +23,5 @@ public class SetFieldExpression extends Expression {
     @Override
     public Expression value() {
         return value;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 }

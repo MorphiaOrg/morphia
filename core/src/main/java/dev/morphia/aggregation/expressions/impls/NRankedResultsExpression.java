@@ -1,15 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.query.Sort;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 public class NRankedResultsExpression extends Expression {
     private final Expression output;
@@ -33,24 +24,5 @@ public class NRankedResultsExpression extends Expression {
 
     public Sort[] sortBy() {
         return sortBy;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "output", output, encoderContext);
-            if (sortBy.length == 1) {
-                writer.writeName("sortBy");
-
-                ExpressionHelper.encode(writer, sortBy[0]);
-            } else {
-                array(writer, "sortBy", () -> {
-                    for (Sort sort : sortBy) {
-                        ExpressionHelper.encode(writer, sort);
-                    }
-                });
-            }
-            expression(datastore, writer, "n", n, encoderContext);
-        });
     }
 }

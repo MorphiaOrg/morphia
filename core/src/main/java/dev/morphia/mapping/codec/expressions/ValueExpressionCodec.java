@@ -7,8 +7,6 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
-
 public class ValueExpressionCodec extends BaseExpressionCodec<ValueExpression> {
 
     public ValueExpressionCodec(MorphiaDatastore datastore) {

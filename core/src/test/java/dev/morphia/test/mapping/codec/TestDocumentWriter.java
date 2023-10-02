@@ -9,8 +9,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
 

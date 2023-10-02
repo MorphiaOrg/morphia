@@ -1,13 +1,7 @@
 package dev.morphia.aggregation.expressions;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 /**
  * Defines helper methods for the object expressions
@@ -51,11 +45,6 @@ public final class ObjectExpressions {
                 value.add(expression);
             }
             return this;
-        }
-
-        @Override
-        public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-            throw new UnsupportedOperationException();
         }
     }
 }

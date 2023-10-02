@@ -15,8 +15,8 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 /**
  * @morphia.internal
@@ -69,7 +69,8 @@ public class OperationTarget {
         } else {
             DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
             Object finalMappedValue = mappedValue;
-            document(writer, () -> value(datastore, writer, "mapped", finalMappedValue, EncoderContext.builder().build()));
+            document(writer,
+                    () -> value(datastore.getCodecRegistry(), writer, "mapped", finalMappedValue, EncoderContext.builder().build()));
             mappedValue = writer.getDocument().get("mapped");
         }
         return new Document(target.translatedPath(), mappedValue);

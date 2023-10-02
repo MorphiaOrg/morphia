@@ -1,13 +1,5 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-
 /**
  * @aggregation.expression $shift
  * @mongodb.server.release 5.0
@@ -35,14 +27,5 @@ public class ShiftExpression extends Expression {
 
     public Expression defaultValue() {
         return defaultValue;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "output", output, encoderContext);
-            writer.writeInt64("by", by);
-            expression(datastore, writer, "default", defaultValue, encoderContext);
-        });
     }
 }

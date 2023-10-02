@@ -3,11 +3,7 @@ package dev.morphia.aggregation.expressions.impls;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 /**
  * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression
@@ -57,11 +53,6 @@ public class SwitchExpression extends Expression {
 
     public Expression defaultCase() {
         return defaultCase;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     public static class Pair {

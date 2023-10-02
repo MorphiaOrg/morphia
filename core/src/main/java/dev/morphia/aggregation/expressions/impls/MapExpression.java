@@ -2,11 +2,6 @@ package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 public class MapExpression extends Expression {
     private final Expression input;
     private final Expression in;
@@ -34,10 +29,5 @@ public class MapExpression extends Expression {
     @Nullable
     public String as() {
         return as;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 }

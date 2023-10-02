@@ -10,7 +10,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 
 @SuppressWarnings("removal")
 class CenterCodec implements Codec<dev.morphia.query.Shape.Center> {

@@ -1,10 +1,5 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 public class ReduceExpression extends Expression {
     private final Expression input;
     private final Expression initial;
@@ -27,10 +22,5 @@ public class ReduceExpression extends Expression {
 
     public Expression in() {
         return in;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 }

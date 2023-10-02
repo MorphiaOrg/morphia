@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonWriter;
@@ -12,19 +13,9 @@ public class DocumentExpression extends Expression implements SingleValuedExpres
         super("unused");
     }
 
+    @Nullable
     public Fields fields() {
         return fields;
-    }
-
-    public void encode(String name, MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
-        //        document(writer, name, () -> fields.encode(datastore, writer, encoderContext));
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
-        //        document(writer, () -> fields.encode(datastore, writer, encoderContext));
     }
 
     @Override

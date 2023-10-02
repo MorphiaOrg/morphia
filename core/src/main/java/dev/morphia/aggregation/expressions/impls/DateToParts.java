@@ -1,14 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 /**
  * Returns a document that contains the constituent parts of a given BSON Date value as individual properties. The properties returned
@@ -40,11 +32,6 @@ public class DateToParts extends Expression {
 
     public ValueExpression iso8601() {
         return iso8601;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
     }
 
     /**

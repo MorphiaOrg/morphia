@@ -11,8 +11,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 
 public class FacetCodec extends StageCodec<Facet> {
     public FacetCodec(MorphiaDatastore datastore) {

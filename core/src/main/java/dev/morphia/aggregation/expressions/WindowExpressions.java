@@ -12,7 +12,6 @@ import dev.morphia.aggregation.expressions.impls.MathExpression;
 import dev.morphia.aggregation.expressions.impls.ShiftExpression;
 import dev.morphia.aggregation.stages.SetWindowFields;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static java.util.Arrays.asList;
 
 /**

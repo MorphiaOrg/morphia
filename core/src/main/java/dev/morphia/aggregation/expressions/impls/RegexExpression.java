@@ -4,11 +4,6 @@ import java.util.regex.Pattern;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
 public class RegexExpression extends Expression {
     private final Expression input;
     private String regex;
@@ -31,18 +26,6 @@ public class RegexExpression extends Expression {
     @Nullable
     public String options() {
         return options;
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        throw new UnsupportedOperationException();
-        /*
-         * document(writer, operation(), () -> {
-         * expression(datastore, writer, "input", input, encoderContext);
-         * value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);
-         * value(writer, "options", options);
-         * });
-         */
     }
 
     /**

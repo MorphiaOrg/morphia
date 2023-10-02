@@ -7,15 +7,16 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.Fill;
 import dev.morphia.aggregation.stages.Fill.Method;
+import dev.morphia.mapping.codec.expressions.ExpressionCodecHelper;
 import dev.morphia.query.Sort;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 public class FillCodec extends StageCodec<Fill> {
     public FillCodec(MorphiaDatastore datastore) {
@@ -30,12 +31,11 @@ public class FillCodec extends StageCodec<Fill> {
     @Override
     protected void encodeStage(BsonWriter writer, Fill fill, EncoderContext encoderContext) {
         document(writer, () -> {
-            if (fill.partitionBy() != null) {
-                expression(getDatastore(), writer, "partitionBy", fill.partitionBy(), encoderContext);
-            }
+            CodecRegistry registry = getCodecRegistry();
+            encodeIfNotNull(registry, writer, "partitionBy", fill.partitionBy(), encoderContext);
             List<String> partitionByFields = fill.partitionByFields();
             if (partitionByFields != null) {
-                array(writer, "partitionByFields", () -> {
+                ExpressionCodecHelper.array(writer, "partitionByFields", () -> {
                     partitionByFields.forEach(writer::writeString);
                 });
             }
@@ -51,7 +51,7 @@ public class FillCodec extends StageCodec<Fill> {
                 fill.fields().forEach((key, value) -> {
                     if (value instanceof Expression) {
                         document(writer, key, () -> {
-                            expression(getDatastore(), writer, "value", (Expression) value, encoderContext);
+                            encodeIfNotNull(registry, writer, "value", (Expression) value, encoderContext);
                         });
                     } else if (value instanceof Fill.Method) {
                         document(writer, key, () -> {

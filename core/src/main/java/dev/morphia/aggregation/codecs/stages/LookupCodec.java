@@ -3,7 +3,7 @@ package dev.morphia.aggregation.codecs.stages;
 import java.util.List;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.codecs.ExpressionHelper;
+import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.stages.Lookup;
 import dev.morphia.aggregation.stages.Stage;
 
@@ -11,8 +11,9 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
 public class LookupCodec extends StageCodec<Lookup> {
     public LookupCodec(MorphiaDatastore datastore) {
@@ -43,7 +44,7 @@ public class LookupCodec extends StageCodec<Lookup> {
             writer.writeString("as", value.getAs());
             List<Stage> pipeline = value.getPipeline();
             if (pipeline != null) {
-                ExpressionHelper.expression(getDatastore(), writer, "let", value.getVariables(), encoderContext);
+                encodeIfNotNull(getCodecRegistry(), writer, "let", value.getVariables(), encoderContext);
                 array(writer, "pipeline", () -> {
                     for (Stage stage : pipeline) {
                         Codec<Stage> codec = (Codec<Stage>) getCodecRegistry().get(stage.getClass());

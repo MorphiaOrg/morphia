@@ -8,9 +8,10 @@ import dev.morphia.aggregation.stages.ChangeStream;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 public class ChangeStreamCodec extends StageCodec<ChangeStream> {
     public ChangeStreamCodec(MorphiaDatastore datastore) {
@@ -27,21 +28,22 @@ public class ChangeStreamCodec extends StageCodec<ChangeStream> {
         document(writer, () -> {
             value(writer, "allChangesForCluster", changeStream.allChangesForCluster());
             FullDocument fullDocument = changeStream.fullDocument();
+            CodecRegistry registry = getDatastore().getCodecRegistry();
             if (fullDocument != FullDocument.DEFAULT) {
-                value(getDatastore(), writer, "fullDocument", fullDocument.getValue(), encoderContext);
+                value(registry, writer, "fullDocument", fullDocument.getValue(), encoderContext);
             }
             FullDocumentBeforeChange beforeChange = changeStream.fullDocumentBeforeChange();
             if (beforeChange != FullDocumentBeforeChange.DEFAULT) {
-                value(getDatastore(), writer, "fullDocumentBeforeChange", beforeChange.getValue(), encoderContext);
+                value(registry, writer, "fullDocumentBeforeChange", beforeChange.getValue(), encoderContext);
             }
             if (changeStream.resumeAfter() != null) {
-                value(getDatastore(), writer, "resumeAfter", changeStream.resumeAfter(), encoderContext);
+                value(registry, writer, "resumeAfter", changeStream.resumeAfter(), encoderContext);
             }
             if (changeStream.startAfter() != null) {
-                value(getDatastore(), writer, "startAfter", changeStream.startAfter(), encoderContext);
+                value(registry, writer, "startAfter", changeStream.startAfter(), encoderContext);
             }
             if (changeStream.startAtOperationTime() != null) {
-                value(getDatastore(), writer, "startAtOperationTime", changeStream.startAtOperationTime(), encoderContext);
+                value(registry, writer, "startAtOperationTime", changeStream.startAtOperationTime(), encoderContext);
             }
         });
     }

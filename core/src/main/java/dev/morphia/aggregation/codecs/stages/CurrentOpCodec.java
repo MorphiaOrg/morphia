@@ -6,8 +6,8 @@ import dev.morphia.aggregation.stages.CurrentOp;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 public class CurrentOpCodec extends StageCodec<CurrentOp> {
     public CurrentOpCodec(MorphiaDatastore datastore) {

@@ -19,7 +19,7 @@ import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.codecs.pojo.PropertyCodecRegistry;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 
 /**
  * @hidden

@@ -20,6 +20,7 @@ public class ExpressionCodecHelper {
         body.run();
         writer.writeEndArray();
     }
+
     public static void array(BsonWriter writer, Runnable body) {
         writer.writeStartArray();
         body.run();
@@ -37,7 +38,7 @@ public class ExpressionCodecHelper {
         }
     }
 
-   public static void document(BsonWriter writer, String name, Runnable body) {
+    public static void document(BsonWriter writer, String name, Runnable body) {
         writer.writeStartDocument(name);
         body.run();
         writer.writeEndDocument();
@@ -85,16 +86,19 @@ public class ExpressionCodecHelper {
             writer.writeBoolean(name, value);
         }
     }
+
     public static void value(BsonWriter writer, String name, @Nullable Double value) {
         if (value != null) {
             writer.writeDouble(name, value);
         }
     }
+
     public static void value(BsonWriter writer, String name, @Nullable Integer value) {
         if (value != null) {
             writer.writeInt32(name, value);
         }
     }
+
     public static void value(BsonWriter writer, String name, @Nullable Long value) {
         if (value != null) {
             writer.writeInt64(name, value);
@@ -106,6 +110,7 @@ public class ExpressionCodecHelper {
             writer.writeString(name, value);
         }
     }
+
     public static void value(BsonWriter writer, String name, @Nullable Enum<?> value) {
         if (value != null) {
             writer.writeString(name, value.name().toLowerCase(Locale.ROOT));
@@ -114,7 +119,7 @@ public class ExpressionCodecHelper {
 
     @MorphiaInternal
     public static void value(CodecRegistry codecRegistry, BsonWriter writer, String name, @Nullable Object value,
-                             EncoderContext encoderContext) {
+            EncoderContext encoderContext) {
         if (value != null) {
             if (value instanceof List) {
                 List<Object> list = (List<Object>) value;
@@ -135,6 +140,5 @@ public class ExpressionCodecHelper {
             }
         }
     }
-
 
 }
