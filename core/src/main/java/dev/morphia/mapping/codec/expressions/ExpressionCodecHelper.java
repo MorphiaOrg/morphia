@@ -121,23 +121,9 @@ public class ExpressionCodecHelper {
     public static void value(CodecRegistry codecRegistry, BsonWriter writer, String name, @Nullable Object value,
             EncoderContext encoderContext) {
         if (value != null) {
-            if (value instanceof List) {
-                List<Object> list = (List<Object>) value;
-                array(writer, name, () -> {
-                    for (Object object : list) {
-                        if (object != null) {
-                            Codec codec = codecRegistry.get(object.getClass());
-                            encoderContext.encodeWithChildContext(codec, writer, object);
-                        } else {
-                            writer.writeNull();
-                        }
-                    }
-                });
-            } else {
-                writer.writeName(name);
-                Codec codec = codecRegistry.get(value.getClass());
-                encoderContext.encodeWithChildContext(codec, writer, value);
-            }
+            writer.writeName(name);
+            Codec codec = codecRegistry.get(value.getClass());
+            encoderContext.encodeWithChildContext(codec, writer, value);
         }
     }
 
