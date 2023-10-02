@@ -10,15 +10,16 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.mapping.codec.expressions.ExpressionCodecHelper;
 import dev.morphia.query.Type;
 
 import org.bson.BsonWriter;
 import org.bson.Document;
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
@@ -256,7 +257,8 @@ public final class Filters {
                 writer.writeName("$expr");
                 Expression value = getValue();
                 if (value != null) {
-                    wrapExpression(datastore, writer, value, context);
+                    Codec codec = datastore.getCodecRegistry().get(value.getClass());
+                    ExpressionCodecHelper.encodeIfNotNull(datastore.getCodecRegistry(), writer, value, context);
                 } else {
                     writer.writeNull();
                 }

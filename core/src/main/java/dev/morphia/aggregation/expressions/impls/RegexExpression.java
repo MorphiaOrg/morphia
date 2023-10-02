@@ -3,15 +3,11 @@ package dev.morphia.aggregation.expressions.impls;
 import java.util.regex.Pattern;
 
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.MorphiaDatastore;
 
-import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class RegexExpression extends Expression {
     private final Expression input;
@@ -40,13 +36,13 @@ public class RegexExpression extends Expression {
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         throw new UnsupportedOperationException();
-/*
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "input", input, encoderContext);
-            value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);
-            value(writer, "options", options);
-        });
-*/
+        /*
+         * document(writer, operation(), () -> {
+         * expression(datastore, writer, "input", input, encoderContext);
+         * value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);
+         * value(writer, "options", options);
+         * });
+         */
     }
 
     /**

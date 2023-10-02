@@ -33,17 +33,29 @@ public class DateDiffExpression extends Expression {
         this.unit = unit;
     }
 
+    public Expression startDate() {
+        return startDate;
+    }
+
+    public Expression endDate() {
+        return endDate;
+    }
+
+    public TimeUnit unit() {
+        return unit;
+    }
+
+    public Expression timezone() {
+        return timezone;
+    }
+
+    public DayOfWeek startOfWeek() {
+        return startOfWeek;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "startDate", startDate, encoderContext);
-            expression(datastore, writer, "endDate", endDate, encoderContext);
-            writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
-            expression(datastore, writer, "timezone", timezone, encoderContext);
-            if (startOfWeek != null) {
-                writer.writeString("startOfWeek", startOfWeek.name().toLowerCase(Locale.ROOT));
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

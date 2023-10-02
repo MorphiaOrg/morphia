@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonWriter;
@@ -16,6 +17,19 @@ public class RangeExpression extends Expression {
         super("$range");
         this.start = start;
         this.end = end;
+    }
+
+    public int start() {
+        return start;
+    }
+
+    public int end() {
+        return end;
+    }
+
+    @Nullable
+    public Integer step() {
+        return step;
     }
 
     @Override

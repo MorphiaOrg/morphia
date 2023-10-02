@@ -3,15 +3,15 @@ package dev.morphia.mapping.codec.expressions;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.ArrayLiteral;
 import dev.morphia.aggregation.expressions.impls.Expression;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
 
-
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ArrayLiteralCodec extends BaseExpressionCodec<ArrayLiteral> {
     public ArrayLiteralCodec(MorphiaDatastore datastore) {
         super(datastore);

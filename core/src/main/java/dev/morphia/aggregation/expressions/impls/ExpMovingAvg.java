@@ -1,13 +1,14 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.aggregation.codecs.ExpressionHelper;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class ExpMovingAvg extends Expression {
     private final Expression input;
@@ -28,16 +29,21 @@ public class ExpMovingAvg extends Expression {
         this.alpha = alpha;
     }
 
+    public Expression input() {
+        return input;
+    }
+
+    @Nullable
+    public Integer n() {
+        return n;
+    }
+
+    public Double alpha() {
+        return alpha;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            writer.writeName("input");
-            expression(datastore, writer, input, encoderContext);
-            if (n != null) {
-                value(writer, "N", n);
-            } else {
-                value(datastore, writer, "alpha", alpha, encoderContext);
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 }

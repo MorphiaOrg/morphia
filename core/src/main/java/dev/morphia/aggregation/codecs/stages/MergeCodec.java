@@ -11,8 +11,8 @@ import dev.morphia.aggregation.stages.Merge;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 

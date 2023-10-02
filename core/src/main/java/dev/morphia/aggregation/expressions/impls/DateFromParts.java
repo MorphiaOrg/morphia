@@ -51,21 +51,53 @@ public class DateFromParts extends Expression {
         return this;
     }
 
+    public Expression year() {
+        return year;
+    }
+
+    public Expression month() {
+        return month;
+    }
+
+    public Expression day() {
+        return day;
+    }
+
+    public Expression hour() {
+        return hour;
+    }
+
+    public Expression minute() {
+        return minute;
+    }
+
+    public Expression second() {
+        return second;
+    }
+
+    public Expression millisecond() {
+        return millisecond;
+    }
+
+    public Expression isoWeekYear() {
+        return isoWeekYear;
+    }
+
+    public Expression isoWeek() {
+        return isoWeek;
+    }
+
+    public Expression isoDayOfWeek() {
+        return isoDayOfWeek;
+    }
+
+    public Expression timezone() {
+        return timezone;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "year", year, encoderContext);
-            expression(datastore, writer, "month", month, encoderContext);
-            expression(datastore, writer, "day", day, encoderContext);
-            expression(datastore, writer, "hour", hour, encoderContext);
-            expression(datastore, writer, "minute", minute, encoderContext);
-            expression(datastore, writer, "second", second, encoderContext);
-            expression(datastore, writer, "millisecond", millisecond, encoderContext);
-            expression(datastore, writer, "isoWeekYear", isoWeekYear, encoderContext);
-            expression(datastore, writer, "isoWeek", isoWeek, encoderContext);
-            expression(datastore, writer, "isoDayOfWeek", isoDayOfWeek, encoderContext);
-            expression(datastore, writer, "timezone", timezone, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

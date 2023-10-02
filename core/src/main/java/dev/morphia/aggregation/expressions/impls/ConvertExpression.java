@@ -5,10 +5,6 @@ import dev.morphia.MorphiaDatastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
-
 public class ConvertExpression extends Expression {
     private final Expression input;
     private final ConvertType to;

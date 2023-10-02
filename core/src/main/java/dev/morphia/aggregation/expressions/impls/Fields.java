@@ -11,33 +11,35 @@ import org.bson.codecs.EncoderContext;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 
-public class Fields<T> {
+@SuppressWarnings("unchecked")
+public class Fields {
     private final List<PipelineField> fields = new ArrayList<>();
-    private T owner;
+    private Object owner;
 
-    protected Fields(T owner) {
+    protected Fields(Object owner) {
         this.owner = owner;
     }
 
     private Fields() {
     }
 
-    public static <T> Fields<T> on(T owner) {
-        return new Fields<>(owner);
+    public static Fields on(Object owner) {
+        return new Fields(owner);
     }
 
-    public T add(String name) {
+    public Object add(String name) {
         fields.add(new PipelineField(name, field(name)));
         return owner;
     }
 
-    public T add(String name, Expression expression) {
+    public <T> T add(String name, Expression expression) {
         fields.add(new PipelineField(name, expression));
-        return owner;
+        return (T) owner;
     }
 
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        if (1==1) throw new UnsupportedOperationException();
+        if (1 == 1)
+            throw new UnsupportedOperationException();
         for (PipelineField field : fields) {
             wrapExpression(datastore, writer, field.getName(), field.getValue(), encoderContext);
         }

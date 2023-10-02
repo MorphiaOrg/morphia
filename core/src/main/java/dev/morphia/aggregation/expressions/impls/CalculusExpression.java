@@ -31,14 +31,17 @@ public class CalculusExpression extends Expression {
         this.input = input;
     }
 
+    public Expression input() {
+        return input;
+    }
+
+    public TimeUnit unit() {
+        return unit;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "input", input, encoderContext);
-            if (unit != null) {
-                writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

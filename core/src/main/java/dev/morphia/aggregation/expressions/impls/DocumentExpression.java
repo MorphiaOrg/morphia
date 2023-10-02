@@ -5,28 +5,26 @@ import dev.morphia.MorphiaDatastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-
 public class DocumentExpression extends Expression implements SingleValuedExpression, FieldHolder<DocumentExpression> {
-    private final Fields<DocumentExpression> fields = Fields.on(this);
+    private final Fields fields = Fields.on(this);
 
     public DocumentExpression() {
         super("unused");
     }
 
-    public Fields<DocumentExpression> fields() {
+    public Fields fields() {
         return fields;
     }
 
     public void encode(String name, MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         throw new UnsupportedOperationException();
-//        document(writer, name, () -> fields.encode(datastore, writer, encoderContext));
+        //        document(writer, name, () -> fields.encode(datastore, writer, encoderContext));
     }
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         throw new UnsupportedOperationException();
-//        document(writer, () -> fields.encode(datastore, writer, encoderContext));
+        //        document(writer, () -> fields.encode(datastore, writer, encoderContext));
     }
 
     @Override

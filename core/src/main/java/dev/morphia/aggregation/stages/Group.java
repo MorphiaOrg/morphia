@@ -17,7 +17,7 @@ import dev.morphia.sofia.Sofia;
  */
 public class Group extends Stage {
     private final GroupId id;
-    private Fields<Group> fields;
+    private Fields fields;
 
     protected Group() {
         super("$group");
@@ -135,7 +135,7 @@ public class Group extends Stage {
      */
     @Nullable
     @MorphiaInternal
-    public Fields<Group> getFields() {
+    public Fields getFields() {
         return fields;
     }
 

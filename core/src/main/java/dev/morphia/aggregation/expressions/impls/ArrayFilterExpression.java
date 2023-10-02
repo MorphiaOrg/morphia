@@ -1,13 +1,9 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.codecs.ExpressionHelper;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 
 public class ArrayFilterExpression extends Expression {
     private final Expression array;

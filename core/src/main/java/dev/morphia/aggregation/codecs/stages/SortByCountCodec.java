@@ -6,6 +6,8 @@ import dev.morphia.aggregation.stages.SortByCount;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+
 public class SortByCountCodec extends StageCodec<SortByCount> {
     public SortByCountCodec(MorphiaDatastore datastore) {
         super(datastore);
@@ -18,6 +20,6 @@ public class SortByCountCodec extends StageCodec<SortByCount> {
 
     @Override
     protected void encodeStage(BsonWriter writer, SortByCount value, EncoderContext encoderContext) {
-        value.getExpression().encode(getDatastore(), writer, encoderContext);
+        encodeIfNotNull(getCodecRegistry(), writer,value.getExpression(), encoderContext);
     }
 }

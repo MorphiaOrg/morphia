@@ -28,14 +28,25 @@ public class DateToString extends Expression {
         return this;
     }
 
+    public Expression format() {
+        return format;
+    }
+
+    public Expression date() {
+        return date;
+    }
+
+    public Expression timeZone() {
+        return timeZone;
+    }
+
+    public Expression onNull() {
+        return onNull;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "date", date, encoderContext);
-            expression(datastore, writer, "format", format, encoderContext);
-            expression(datastore, writer, "timezone", timeZone, encoderContext);
-            expression(datastore, writer, "onNull", onNull, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 
     public DateToString format(String format) {

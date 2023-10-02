@@ -1,13 +1,13 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.aggregation.codecs.ExpressionHelper;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 public class UnsetFieldExpression extends Expression {
     private final Expression field;
@@ -19,11 +19,19 @@ public class UnsetFieldExpression extends Expression {
         this.input = input;
     }
 
+    public Expression field() {
+        return field;
+    }
+
+    public Object input() {
+        return input;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, operation(), () -> {
             expression(datastore, writer, "field", field, encoderContext);
-            value(datastore, writer, "input", input, encoderContext);
+            ExpressionHelper.value(datastore, writer, "input", input, encoderContext);
         });
     }
 }

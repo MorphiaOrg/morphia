@@ -31,6 +31,14 @@ public class IsoDates extends Expression {
         this.date = date;
     }
 
+    public Expression date() {
+        return date;
+    }
+
+    public Expression timezone() {
+        return timezone;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, operation(), () -> {

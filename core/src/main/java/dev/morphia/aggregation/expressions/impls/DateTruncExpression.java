@@ -1,16 +1,11 @@
 package dev.morphia.aggregation.expressions.impls;
 
-import java.time.DayOfWeek;
-import java.util.Locale;
-
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.TimeUnit;
-
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
+import java.time.DayOfWeek;
 
 /**
  * Truncates a date.
@@ -46,19 +41,29 @@ public class DateTruncExpression extends Expression {
         return this;
     }
 
+    public Expression date() {
+        return date;
+    }
+
+    public TimeUnit unit() {
+        return unit;
+    }
+
+    public Expression timezone() {
+        return timezone;
+    }
+
+    public DayOfWeek startOfWeek() {
+        return startOfWeek;
+    }
+
+    public Long binSize() {
+        return binSize;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "date", date, encoderContext);
-            writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
-            if (binSize != null) {
-                writer.writeInt64("binSize", binSize);
-            }
-            expression(datastore, writer, "timezone", timezone, encoderContext);
-            if (startOfWeek != null) {
-                writer.writeString("startOfWeek", startOfWeek.name().toLowerCase(Locale.ROOT));
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

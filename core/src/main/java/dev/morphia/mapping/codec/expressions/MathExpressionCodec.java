@@ -1,15 +1,15 @@
 package dev.morphia.mapping.codec.expressions;
 
+import java.util.List;
+
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
 import dev.morphia.aggregation.expressions.impls.MathExpression;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import java.util.List;
-
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
 public class MathExpressionCodec extends BaseExpressionCodec<MathExpression> {

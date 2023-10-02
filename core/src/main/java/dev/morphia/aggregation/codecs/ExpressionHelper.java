@@ -20,11 +20,14 @@ import org.bson.BsonWriter;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
 /**
  * @morphia.internal
  * @since 2.1
  */
+@Deprecated
+
 @MorphiaInternal
 public final class ExpressionHelper {
     private ExpressionHelper() {
@@ -66,28 +69,33 @@ public final class ExpressionHelper {
     public static void wrapExpression(MorphiaDatastore datastore, BsonWriter writer, @Nullable Expression expression,
             EncoderContext encoderContext) {
         if (expression != null) {
+            CodecRegistry registry = datastore.getCodecRegistry();
+            Codec codec = registry.get(expression.getClass());
             if (expression instanceof SingleValuedExpression) {
-                expression.encode(datastore, writer, encoderContext);
+                codec.encode(writer, expression, encoderContext);
             } else {
                 document(writer, () -> {
-                    expression.encode(datastore, writer, encoderContext);
+                    codec.encode(writer, expression, encoderContext);
                 });
             }
         }
     }
 
+    @Deprecated
     public static void document(BsonWriter writer, Runnable body) {
         writer.writeStartDocument();
         body.run();
         writer.writeEndDocument();
     }
 
+    @Deprecated
     public static void document(BsonWriter writer, String name, Runnable body) {
         writer.writeStartDocument(name);
         body.run();
         writer.writeEndDocument();
     }
 
+    @Deprecated
     public static Document document(Mapper mapper, Document seed, Consumer<BsonWriter> body) {
         DocumentWriter writer = new DocumentWriter(mapper.getConfig(), seed);
         writer.writeStartDocument();

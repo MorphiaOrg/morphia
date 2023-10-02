@@ -1,15 +1,14 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
+
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
 /**
  * @since 2.0

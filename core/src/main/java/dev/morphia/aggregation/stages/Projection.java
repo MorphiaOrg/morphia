@@ -19,8 +19,8 @@ import static dev.morphia.aggregation.expressions.Expressions.value;
  * @aggregation.expression $projection
  */
 public class Projection extends Stage {
-    private Fields<Projection> includes;
-    private Fields<Projection> excludes;
+    private Fields includes;
+    private Fields excludes;
     private boolean suppressId;
 
     protected Projection() {

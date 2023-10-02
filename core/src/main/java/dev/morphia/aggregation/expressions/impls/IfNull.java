@@ -8,9 +8,7 @@ import dev.morphia.sofia.Sofia;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 
 public class IfNull extends Expression implements FieldHolder<IfNull> {
     private Expression target;

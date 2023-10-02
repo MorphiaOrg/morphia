@@ -10,6 +10,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+
 public class UnsetCodec extends StageCodec<Unset> {
     public UnsetCodec(MorphiaDatastore datastore) {
         super(datastore);
@@ -24,7 +26,7 @@ public class UnsetCodec extends StageCodec<Unset> {
     protected void encodeStage(BsonWriter writer, Unset value, EncoderContext encoderContext) {
         List<Expression> fields = value.getFields();
         if (fields.size() == 1) {
-            fields.get(0).encode(getDatastore(), writer, encoderContext);
+            encodeIfNotNull(getCodecRegistry(), writer,fields.get(0), encoderContext);
         } else if (fields.size() > 1) {
             Codec codec = getCodecRegistry().get(fields.getClass());
             encoderContext.encodeWithChildContext(codec, writer, fields);

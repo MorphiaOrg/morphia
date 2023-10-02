@@ -8,8 +8,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
-
 /**
  * Base class for the accumulator expression types.
  *

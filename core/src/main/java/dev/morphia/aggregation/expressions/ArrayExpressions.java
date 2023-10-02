@@ -15,8 +15,6 @@ import dev.morphia.aggregation.expressions.impls.ZipExpression;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.query.Sort;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 import static java.util.Arrays.asList;
 
 /**

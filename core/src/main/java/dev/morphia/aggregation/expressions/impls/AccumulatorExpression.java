@@ -39,17 +39,37 @@ public class AccumulatorExpression extends Expression {
         this.mergeFunction = mergeFunction;
     }
 
+    public String initFunction() {
+        return initFunction;
+    }
+
+    public String accumulateFunction() {
+        return accumulateFunction;
+    }
+
+    public List<Expression> accumulateArgs() {
+        return accumulateArgs;
+    }
+
+    public String mergeFunction() {
+        return mergeFunction;
+    }
+
+    public String lang() {
+        return lang;
+    }
+
+    public List<Expression> initArgs() {
+        return initArgs;
+    }
+
+    public String finalizeFunction() {
+        return finalizeFunction;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            writer.writeString("init", initFunction);
-            array(datastore, writer, "initArgs", initArgs, encoderContext);
-            writer.writeString("accumulate", accumulateFunction);
-            array(datastore, writer, "accumulateArgs", accumulateArgs, encoderContext);
-            writer.writeString("merge", mergeFunction);
-            writer.writeString("finalize", finalizeFunction);
-            writer.writeString("lang", lang);
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

@@ -39,14 +39,25 @@ public class DateDeltaExpression extends Expression {
         this.unit = unit;
     }
 
+    public Expression startDate() {
+        return startDate;
+    }
+
+    public long amount() {
+        return amount;
+    }
+
+    public TimeUnit unit() {
+        return unit;
+    }
+
+    public Expression timezone() {
+        return timezone;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "startDate", startDate, encoderContext);
-            writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));
-            writer.writeInt64("amount", amount);
-            expression(datastore, writer, "timezone", timezone, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

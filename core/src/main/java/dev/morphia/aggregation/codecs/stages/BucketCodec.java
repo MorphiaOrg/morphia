@@ -1,15 +1,14 @@
 package dev.morphia.aggregation.codecs.stages;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.stages.Bucket;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 
 public class BucketCodec extends StageCodec<Bucket> {
     public BucketCodec(MorphiaDatastore datastore) {
@@ -24,13 +23,10 @@ public class BucketCodec extends StageCodec<Bucket> {
     @Override
     protected void encodeStage(BsonWriter writer, Bucket value, EncoderContext encoderContext) {
         document(writer, () -> {
-            expression(getDatastore(), writer, "groupBy", value.getGroupBy(), encoderContext);
-            expression(getDatastore(), writer, "boundaries", value.getBoundaries(), encoderContext);
-            value(getDatastore(), writer, "default", value.getDefaultValue(), encoderContext);
-            DocumentExpression output = value.getOutput();
-            if (output != null) {
-                output.encode("output", getDatastore(), writer, encoderContext);
-            }
+            encodeIfNotNull(getCodecRegistry(), writer, "groupBy", value.getGroupBy(), encoderContext);
+            encodeIfNotNull(getCodecRegistry(), writer, "boundaries", value.getBoundaries(), encoderContext);
+            value(getDatastore().getCodecRegistry(), writer, "default", value.getDefaultValue(), encoderContext);
+            encodeIfNotNull(getCodecRegistry(), writer, "output", value.getOutput(), encoderContext);
         });
     }
 }

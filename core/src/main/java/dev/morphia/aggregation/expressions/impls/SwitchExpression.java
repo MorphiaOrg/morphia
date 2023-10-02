@@ -9,11 +9,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
-
 /**
  * Evaluates a series of case expressions. When it finds an expression which evaluates to true, $switch executes a specified expression
  * and breaks out of the control flow.

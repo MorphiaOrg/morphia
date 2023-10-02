@@ -3,7 +3,6 @@ package dev.morphia.aggregation.expressions;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.CalculusExpression;
@@ -12,9 +11,6 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.MathExpression;
 import dev.morphia.aggregation.expressions.impls.ShiftExpression;
 import dev.morphia.aggregation.stages.SetWindowFields;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static java.util.Arrays.asList;
@@ -71,13 +67,7 @@ public final class WindowExpressions {
      * @since 2.3
      */
     public static Expression denseRank() {
-        return new Expression("$denseRank") {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, operation(), () -> {
-                });
-            }
-        };
+        return new DenseRankExpression();
     }
 
     /**
@@ -103,13 +93,7 @@ public final class WindowExpressions {
      * @since 2.3
      */
     public static Expression documentNumber() {
-        return new Expression("$documentNumber") {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, operation(), () -> {
-                });
-            }
-        };
+        return new DocumentNumberExpression();
     }
 
     /**
@@ -182,13 +166,7 @@ public final class WindowExpressions {
      * @since 2.3
      */
     public static Expression rank() {
-        return new Expression("$rank") {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, operation(), () -> {
-                });
-            }
-        };
+        return new RankExpression();
     }
 
     /**
@@ -240,4 +218,5 @@ public final class WindowExpressions {
         expressions.addAll(asList(additional));
         return new Accumulator("$stdDevSamp", expressions);
     }
+
 }

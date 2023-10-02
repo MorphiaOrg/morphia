@@ -17,11 +17,11 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
 
     private Codec<Object> objectCodec;
@@ -46,10 +46,7 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
     @Override
     protected void encodeStage(BsonWriter writer, SetWindowFields value, EncoderContext encoderContext) {
         document(writer, () -> {
-            if (value.partition() != null) {
-                writer.writeName("partitionBy");
-                expression(getDatastore(), writer, value.partition(), encoderContext);
-            }
+            encodeIfNotNull(getCodecRegistry(), writer, "partitionBy", value.partition(), encoderContext);
             Sort[] sorts = value.sorts();
             if (sorts != null) {
                 document(writer, "sortBy", () -> {
@@ -70,7 +67,7 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
     }
 
     private void documents(BsonWriter writer, String name, @Nullable List<Object> list,
-                           EncoderContext encoderContext) {
+            EncoderContext encoderContext) {
         if (list != null) {
             array(writer, name, () -> {
                 for (Object document : list) {

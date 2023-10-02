@@ -1,32 +1,42 @@
 package dev.morphia.mapping.codec.expressions;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.expressions.impls.Accumulator ;
+import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.List;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
-
-public class AccumulatorCodec extends BaseExpressionCodec<Accumulator > {
+public class AccumulatorCodec extends BaseExpressionCodec<Accumulator> {
     public AccumulatorCodec(MorphiaDatastore datastore) {
         super(datastore);
     }
 
     @Override
-    public void encode(BsonWriter writer, Accumulator  accumulator, EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Accumulator accumulator, EncoderContext encoderContext) {
         writer.writeName(accumulator.operation());
         ExpressionList values = accumulator.value();
         if (values != null) {
-            Codec<ExpressionList> codec = datastore.getCodecRegistry().get(ExpressionList.class);
-            codec.encode(writer, values, encoderContext);
+            CodecRegistry registry = datastore.getCodecRegistry();
+            List<Expression> list = values.getValues();
+            if (list.size() == 1) {
+                encodeIfNotNull(registry, writer, list.get(0), encoderContext);
+            } else {
+                array(writer, () -> {
+                    for (Expression expression : list) {
+                        encodeIfNotNull(registry, writer, expression, encoderContext);
+                    }
+                });
+            }
         } else {
             writer.writeNull();
         }

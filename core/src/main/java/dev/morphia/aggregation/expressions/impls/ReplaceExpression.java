@@ -6,9 +6,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
-
 /**
  * Defines expressions for $replaceAll and $replaceOne
  *

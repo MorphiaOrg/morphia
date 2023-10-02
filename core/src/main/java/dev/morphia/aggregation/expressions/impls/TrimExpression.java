@@ -5,9 +5,6 @@ import dev.morphia.MorphiaDatastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-
 public class TrimExpression extends Expression {
     private final Expression input;
     private Expression chars;

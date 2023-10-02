@@ -4,12 +4,14 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.stages.AutoBucket;
-
+import dev.morphia.mapping.codec.expressions.ExpressionCodecHelper;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
 public class AutoBucketCodec extends StageCodec<AutoBucket> {
 
@@ -25,13 +27,11 @@ public class AutoBucketCodec extends StageCodec<AutoBucket> {
     @Override
     protected void encodeStage(BsonWriter writer, AutoBucket value, EncoderContext encoderContext) {
         document(writer, () -> {
-            expression(getDatastore(), writer, "groupBy", value.getGroupBy(), encoderContext);
-            ExpressionHelper.expression(getDatastore(), writer, "buckets", value.getBuckets(), encoderContext);
-            ExpressionHelper.expression(getDatastore(), writer, "granularity", value.getGranularity(), encoderContext);
-            DocumentExpression output = value.getOutput();
-            if (output != null) {
-                output.encode("output", getDatastore(), writer, encoderContext);
-            }
+            CodecRegistry registry = getDatastore().getCodecRegistry();
+            encodeIfNotNull(registry, writer, "groupBy", value.getGroupBy(), encoderContext);
+            encodeIfNotNull(registry, writer, "buckets", value.getBuckets(), encoderContext);
+            encodeIfNotNull(registry, writer, "granularity", value.getGranularity(), encoderContext);
+            encodeIfNotNull(registry, writer, "output", value.getOutput(), encoderContext);
         });
     }
 }

@@ -3,11 +3,11 @@ package dev.morphia.mapping.codec.expressions;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.SortArrayExpression;
 import dev.morphia.query.Sort;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
 public class SortArrayExpressionCodec extends BaseExpressionCodec<SortArrayExpression> {

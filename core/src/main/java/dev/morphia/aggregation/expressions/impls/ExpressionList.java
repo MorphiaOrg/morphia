@@ -11,8 +11,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 import static java.util.Arrays.asList;
 
 /**
@@ -50,13 +48,13 @@ public class ExpressionList extends Expression implements SingleValuedExpression
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         throw new UnsupportedOperationException();
-/*
-        array(writer, () -> {
-            for (Expression expression : values) {
-                wrapExpression(datastore, writer, expression, encoderContext);
-            }
-        });
-*/
+        /*
+         * array(writer, () -> {
+         * for (Expression expression : values) {
+         * wrapExpression(datastore, writer, expression, encoderContext);
+         * }
+         * });
+         */
     }
 
     @Override

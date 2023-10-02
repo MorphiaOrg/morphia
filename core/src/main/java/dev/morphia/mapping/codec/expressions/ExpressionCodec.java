@@ -20,6 +20,7 @@ public class ExpressionCodec extends BaseExpressionCodec<Expression> {
             writer.writeNull();
         }
     }
+
     @Override
     public final Class<Expression> getEncoderClass() {
         return Expression.class;

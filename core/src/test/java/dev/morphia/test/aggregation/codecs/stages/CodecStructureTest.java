@@ -246,7 +246,8 @@ public class CodecStructureTest extends TestBase {
     private void evaluate(Document expected, Expression value) {
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         document(writer, () -> {
-            value.encode(getDs(), writer, EncoderContext.builder().build());
+            Codec codec = getDs().getCodecRegistry().get(value.getClass());
+            codec.encode(writer, value, EncoderContext.builder().build());
         });
         Document actual = writer.getDocument();
 

@@ -14,7 +14,6 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
 public class GroupCodec extends StageCodec<Group> {
@@ -29,39 +28,23 @@ public class GroupCodec extends StageCodec<Group> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Group group, EncoderContext encoderContext) {
+        CodecRegistry codecRegistry = getCodecRegistry();
         document(writer, () -> {
             GroupId id = group.getId();
-            CodecRegistry codecRegistry = getCodecRegistry();
             if (id != null) {
                 writer.writeName("_id");
-                DocumentExpression document = id.getDocument();
-                if (document != null) {
-                    Codec<DocumentExpression> codec = codecRegistry.get(DocumentExpression.class);
-                    codec.encode(writer, document, encoderContext);
-                } else {
-                    Expression field = id.getField();
-                    if (field != null) {
-                        Codec codec = codecRegistry.get(field.getClass());
-                        document(writer, () -> {
-                            codec.encode(writer, field, encoderContext);
-                        });
-                    }
+                if (!encodeIfNotNull(getCodecRegistry(), writer, id.getDocument(), encoderContext)) {
+                    encodeIfNotNull(getCodecRegistry(), writer, id.getField(), encoderContext);
                 }
             } else {
                 writer.writeNull("_id");
             }
 
-            Fields<Group> fields = group.getFields();
+            Fields fields = group.getFields();
             if (fields != null) {
-                MorphiaDatastore datastore = getDatastore();
-                for (PipelineField field : fields.getFields()) {
-
-                    String name = field.getName();
-                    Expression value = field.getValue();
-                    encodeIfNotNull(codecRegistry, writer, name, value, encoderContext);
-                }
+                Codec<Fields> codec = codecRegistry.get(Fields.class);
+                codec.encode(writer, fields, encoderContext);
             }
-
         });
     }
 }

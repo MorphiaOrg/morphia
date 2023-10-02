@@ -25,6 +25,18 @@ public class ShiftExpression extends Expression {
         this.defaultValue = defaultValue;
     }
 
+    public Expression output() {
+        return output;
+    }
+
+    public long by() {
+        return by;
+    }
+
+    public Expression defaultValue() {
+        return defaultValue;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, operation(), () -> {

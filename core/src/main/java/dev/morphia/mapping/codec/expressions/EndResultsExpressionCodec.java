@@ -2,12 +2,12 @@ package dev.morphia.mapping.codec.expressions;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.EndResultsExpression;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
 public class EndResultsExpressionCodec extends BaseExpressionCodec<EndResultsExpression> {

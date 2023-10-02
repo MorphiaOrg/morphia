@@ -21,12 +21,21 @@ public class SetFieldExpression extends Expression {
         this.value = value;
     }
 
+    public Expression field() {
+        return field;
+    }
+
+    public Object input() {
+        return input;
+    }
+
+    @Override
+    public Expression value() {
+        return value;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "field", field, encoderContext);
-            ExpressionHelper.value(datastore, writer, "input", input, encoderContext);
-            expression(datastore, writer, "value", value, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 }

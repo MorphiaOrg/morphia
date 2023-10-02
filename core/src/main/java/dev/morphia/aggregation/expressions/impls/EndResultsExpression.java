@@ -5,9 +5,6 @@ import dev.morphia.MorphiaDatastore;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-
 /**
  * Gives first/last results
  */
@@ -32,11 +29,11 @@ public class EndResultsExpression extends Expression {
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         throw new UnsupportedOperationException();
-/*
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "input", input, encoderContext);
-            expression(datastore, writer, "n", n, encoderContext);
-        });
-*/
+        /*
+         * document(writer, operation(), () -> {
+         * expression(datastore, writer, "input", input, encoderContext);
+         * expression(datastore, writer, "n", n, encoderContext);
+         * });
+         */
     }
 }

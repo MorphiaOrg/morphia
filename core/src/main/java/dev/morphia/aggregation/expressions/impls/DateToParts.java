@@ -30,13 +30,21 @@ public class DateToParts extends Expression {
         this.date = date;
     }
 
+    public Expression date() {
+        return date;
+    }
+
+    public Expression timeZone() {
+        return timeZone;
+    }
+
+    public ValueExpression iso8601() {
+        return iso8601;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "date", date, encoderContext);
-            expression(datastore, writer, "timezone", timeZone, encoderContext);
-            ExpressionHelper.expression(datastore, writer, "iso8601", iso8601, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

@@ -8,8 +8,6 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
-
 public class AddFieldsCodec extends StageCodec<AddFields> {
 
     public AddFieldsCodec(MorphiaDatastore datastore) {
@@ -24,9 +22,9 @@ public class AddFieldsCodec extends StageCodec<AddFields> {
     @Override
     protected void encodeStage(BsonWriter writer, AddFields value, EncoderContext encoderContext) {
         Codec<DocumentExpression> codec = getCodecRegistry().get(DocumentExpression.class);
-//        document(writer, () -> {
-            codec.encode(writer, value.getDocument(), encoderContext);
-//        });
-//        value.getDocument().encode(getDatastore(), writer, encoderContext);
+        //        document(writer, () -> {
+        codec.encode(writer, value.getDocument(), encoderContext);
+        //        });
+        //        value.getDocument().encode(getDatastore(), writer, encoderContext);
     }
 }
