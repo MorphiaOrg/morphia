@@ -7,8 +7,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.*;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 
 public class AccumulatorExpressionCodec extends BaseExpressionCodec<AccumulatorExpression> {
     public AccumulatorExpressionCodec(MorphiaDatastore datastore) {

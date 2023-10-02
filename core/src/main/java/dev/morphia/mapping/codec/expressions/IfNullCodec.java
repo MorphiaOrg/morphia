@@ -7,6 +7,9 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+
 public class IfNullCodec extends BaseExpressionCodec<IfNull> {
     private final MorphiaDatastore datastore;
 
@@ -17,11 +20,11 @@ public class IfNullCodec extends BaseExpressionCodec<IfNull> {
 
     @Override
     public void encode(BsonWriter writer, IfNull value, EncoderContext encoderContext) {
-        ExpressionCodecHelper.array(writer, value.operation(), () -> {
+        array(writer, value.operation(), () -> {
             CodecRegistry codecRegistry = datastore.getCodecRegistry();
-            ExpressionCodecHelper.encodeIfNotNull(codecRegistry, writer, value.target(), encoderContext);
-            ExpressionCodecHelper.encodeIfNotNull(codecRegistry, writer, value.replacement(), encoderContext);
-            ExpressionCodecHelper.encodeIfNotNull(codecRegistry, writer, value.document(), encoderContext);
+            encodeIfNotNull(codecRegistry, writer, value.target(), encoderContext);
+            encodeIfNotNull(codecRegistry, writer, value.replacement(), encoderContext);
+            encodeIfNotNull(codecRegistry, writer, value.document(), encoderContext);
         });
 
     }

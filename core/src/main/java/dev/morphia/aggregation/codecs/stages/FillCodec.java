@@ -7,13 +7,13 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.Fill;
 import dev.morphia.aggregation.stages.Fill.Method;
-import dev.morphia.mapping.codec.expressions.ExpressionCodecHelper;
 import dev.morphia.query.Sort;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
@@ -35,7 +35,7 @@ public class FillCodec extends StageCodec<Fill> {
             encodeIfNotNull(registry, writer, "partitionBy", fill.partitionBy(), encoderContext);
             List<String> partitionByFields = fill.partitionByFields();
             if (partitionByFields != null) {
-                ExpressionCodecHelper.array(writer, "partitionByFields", () -> {
+                array(writer, "partitionByFields", () -> {
                     partitionByFields.forEach(writer::writeString);
                 });
             }
