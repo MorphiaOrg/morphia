@@ -1,10 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 public class DocumentExpression extends Expression implements SingleValuedExpression, FieldHolder<DocumentExpression> {
     private final Fields fields = Fields.on(this);

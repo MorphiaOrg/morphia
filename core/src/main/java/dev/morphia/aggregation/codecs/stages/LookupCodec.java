@@ -3,7 +3,6 @@ package dev.morphia.aggregation.codecs.stages;
 import java.util.List;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.stages.Lookup;
 import dev.morphia.aggregation.stages.Stage;
 
