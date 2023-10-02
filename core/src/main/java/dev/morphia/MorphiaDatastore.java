@@ -158,7 +158,7 @@ public class MorphiaDatastore implements Datastore {
         providers.addAll(List.of(new MorphiaTypesCodecProvider(this),
                 new PrimitiveCodecRegistry(codecRegistry),
                 new EnumCodecProvider(),
-                new MorphiaExpressionCodecProvider(codecRegistry),
+                new MorphiaExpressionCodecProvider(this),
                 new AggregationCodecProvider(this)));
 
         providers.addAll(morphiaCodecProviders);

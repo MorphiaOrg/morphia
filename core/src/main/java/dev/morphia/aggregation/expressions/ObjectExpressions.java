@@ -46,7 +46,7 @@ public final class ObjectExpressions {
          */
         @SuppressWarnings("unchecked")
         public MergeObjects add(Expression expression) {
-            ExpressionList value = (ExpressionList) getValue();
+            ExpressionList value = (ExpressionList) value();
             if (value != null) {
                 value.add(expression);
             }
@@ -55,7 +55,7 @@ public final class ObjectExpressions {
 
         @Override
         public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-            expression(datastore, writer, operation(), getValue(), encoderContext);
+            throw new UnsupportedOperationException();
         }
     }
 }

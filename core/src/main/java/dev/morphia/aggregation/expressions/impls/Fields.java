@@ -37,6 +37,7 @@ public class Fields<T> {
     }
 
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        if (1==1) throw new UnsupportedOperationException();
         for (PipelineField field : fields) {
             wrapExpression(datastore, writer, field.getName(), field.getValue(), encoderContext);
         }

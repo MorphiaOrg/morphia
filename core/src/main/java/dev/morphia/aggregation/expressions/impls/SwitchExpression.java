@@ -56,28 +56,34 @@ public class SwitchExpression extends Expression {
         return this;
     }
 
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            array(writer, "branches", () -> {
-                for (Pair branch : branches) {
-                    document(writer, () -> {
-                        wrapExpression(datastore, writer, "case", branch.caseExpression, encoderContext);
-                        wrapExpression(datastore, writer, "then", branch.then, encoderContext);
-                    });
-                }
-            });
-            expression(datastore, writer, "default", defaultCase, encoderContext);
-        });
+    public List<Pair> branches() {
+        return branches;
     }
 
-    private static class Pair {
+    public Expression defaultCase() {
+        return defaultCase;
+    }
+
+    @Override
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        throw new UnsupportedOperationException();
+    }
+
+    public static class Pair {
         private final Expression caseExpression;
         private final Expression then;
 
         Pair(Expression caseExpression, Expression then) {
             this.caseExpression = caseExpression;
             this.then = then;
+        }
+
+        public Expression caseExpression() {
+            return caseExpression;
+        }
+
+        public Expression then() {
+            return then;
         }
     }
 }

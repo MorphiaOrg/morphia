@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
@@ -36,14 +37,27 @@ public class IndexExpression extends Expression {
         this.substring = substring;
     }
 
+    public Expression string() {
+        return string;
+    }
+
+    public Expression substring() {
+        return substring;
+    }
+
+    @Nullable
+    public Integer end() {
+        return end;
+    }
+
+    @Nullable
+    public Integer start() {
+        return start;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        array(writer, operation(), () -> {
-            expression(datastore, writer, string, encoderContext);
-            expression(datastore, writer, substring, encoderContext);
-            value(datastore, writer, start, encoderContext);
-            value(datastore, writer, end, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

@@ -19,6 +19,14 @@ public class LetExpression extends Expression {
         this.in = in;
     }
 
+    public Expression in() {
+        return in;
+    }
+
+    public DocumentExpression variables() {
+        return variables;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, operation(), () -> {

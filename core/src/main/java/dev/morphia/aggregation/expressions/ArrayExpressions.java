@@ -2,8 +2,6 @@ package dev.morphia.aggregation.expressions;
 
 import java.util.List;
 
-import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.aggregation.expressions.impls.ArrayExpression;
 import dev.morphia.aggregation.expressions.impls.ArrayFilterExpression;
 import dev.morphia.aggregation.expressions.impls.ArrayIndexExpression;
@@ -16,10 +14,6 @@ import dev.morphia.aggregation.expressions.impls.SliceExpression;
 import dev.morphia.aggregation.expressions.impls.ZipExpression;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.query.Sort;
-import dev.morphia.sofia.Sofia;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
@@ -238,26 +232,7 @@ public final class ArrayExpressions {
      * @since 2.3
      */
     public static Expression sortArray(Expression input, Sort... sort) {
-        if (sort.length == 0) {
-            throw new IllegalArgumentException(Sofia.atLeastOneSortRequired());
-        }
-        return new Expression("$sortArray") {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-                document(writer, operation(), () -> {
-                    expression(datastore, writer, "input", input, encoderContext);
-                    if (sort[0].getField().equals(Sort.NATURAL)) {
-                        ExpressionHelper.value(writer, "sortBy", sort[0].getOrder());
-                    } else {
-                        document(writer, "sortBy", () -> {
-                            for (Sort s : sort) {
-                                writer.writeInt64(s.getField(), s.getOrder());
-                            }
-                        });
-                    }
-                });
-            }
-        };
+        return new SortArrayExpression(input, sort);
     }
 
     /**

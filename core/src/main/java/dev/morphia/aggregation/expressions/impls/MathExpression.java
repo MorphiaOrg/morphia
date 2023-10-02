@@ -40,7 +40,7 @@ public class MathExpression extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        ExpressionList value = getValue();
+        ExpressionList value = value();
         if (value != null) {
             final List<Expression> operands = value.getValues();
             writer.writeName(operation());
@@ -61,7 +61,7 @@ public class MathExpression extends Expression {
     }
 
     @Override
-    public ExpressionList getValue() {
-        return (ExpressionList) super.getValue();
+    public ExpressionList value() {
+        return (ExpressionList) super.value();
     }
 }

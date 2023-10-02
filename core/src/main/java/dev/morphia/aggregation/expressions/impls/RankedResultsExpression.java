@@ -21,8 +21,18 @@ public class RankedResultsExpression extends Expression {
         this.sortBy = sortBy;
     }
 
+    public Expression output() {
+        return output;
+    }
+
+    public Sort[] sortBy() {
+        return sortBy;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        throw new UnsupportedOperationException();
+/*
         document(writer, operation(), () -> {
             expression(datastore, writer, "output", output, encoderContext);
             if (sortBy.length == 1) {
@@ -37,5 +47,6 @@ public class RankedResultsExpression extends Expression {
                 });
             }
         });
+*/
     }
 }

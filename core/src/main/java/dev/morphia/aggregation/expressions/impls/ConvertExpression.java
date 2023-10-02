@@ -21,14 +21,25 @@ public class ConvertExpression extends Expression {
         this.to = to;
     }
 
+    public Expression input() {
+        return input;
+    }
+
+    public ConvertType to() {
+        return to;
+    }
+
+    public Expression onError() {
+        return onError;
+    }
+
+    public Expression onNull() {
+        return onNull;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "input", input, encoderContext);
-            value(writer, "to", to.getName());
-            expression(datastore, writer, "onError", onError, encoderContext);
-            expression(datastore, writer, "onNull", onNull, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

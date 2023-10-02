@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import java.util.regex.Pattern;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 
 import org.bson.BsonRegularExpression;
@@ -22,13 +23,30 @@ public class RegexExpression extends Expression {
         this.input = input;
     }
 
+    public Expression input() {
+        return input;
+    }
+
+    @Nullable
+    public String regex() {
+        return regex;
+    }
+
+    @Nullable
+    public String options() {
+        return options;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        throw new UnsupportedOperationException();
+/*
         document(writer, operation(), () -> {
             expression(datastore, writer, "input", input, encoderContext);
             value(datastore, writer, "regex", new BsonRegularExpression(regex), encoderContext);
             value(writer, "options", options);
         });
+*/
     }
 
     /**

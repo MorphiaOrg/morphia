@@ -41,7 +41,6 @@ import dev.morphia.aggregation.codecs.stages.StageCodec;
 import dev.morphia.aggregation.codecs.stages.UnionWithCodec;
 import dev.morphia.aggregation.codecs.stages.UnsetCodec;
 import dev.morphia.aggregation.codecs.stages.UnwindCodec;
-import dev.morphia.aggregation.expressions.impls.Expression;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -52,28 +51,18 @@ import org.bson.codecs.configuration.CodecRegistry;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class AggregationCodecProvider implements CodecProvider {
 
-//    private final Codec expressionCodec;
     private Map<Class, StageCodec> codecs;
     private MorphiaDatastore datastore;
 
     @SuppressFBWarnings("EI_EXPOSE_REP2")
     public AggregationCodecProvider(MorphiaDatastore datastore) {
         this.datastore = datastore;
-//        expressionCodec = new ExpressionCodec(datastore);
     }
 
     @Override
     @Nullable
     public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
-        Codec<T> codec = getCodecs().get(clazz);
-/*
-        if (codec == null) {
-            if (Expression.class.isAssignableFrom(clazz)) {
-                codec = expressionCodec;
-            }
-        }
-*/
-        return codec;
+        return (Codec<T>) getCodecs().get(clazz);
     }
 
     private Map<Class, StageCodec> getCodecs() {

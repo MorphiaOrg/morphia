@@ -19,6 +19,18 @@ public class SliceExpression extends Expression {
         this.size = size;
     }
 
+    public Expression array() {
+        return array;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public Integer position() {
+        return position;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         ExpressionHelper.array(writer, operation(), () -> {

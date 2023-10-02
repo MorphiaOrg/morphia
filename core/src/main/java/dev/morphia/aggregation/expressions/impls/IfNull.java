@@ -23,11 +23,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        array(writer, operation(), () -> {
-            wrapExpression(datastore, writer, target, encoderContext);
-            wrapExpression(datastore, writer, replacement, encoderContext);
-            expression(datastore, writer, document, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 
     @Override

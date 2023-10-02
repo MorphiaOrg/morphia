@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.AggregationException;
 import dev.morphia.aggregation.expressions.Expressions;
@@ -16,14 +17,19 @@ public class Push extends Expression implements FieldHolder<Push> {
         super("$push");
     }
 
+    @Nullable
+    public Expression field() {
+        return field;
+    }
+
+    @Nullable
+    public DocumentExpression document() {
+        return document;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeName(operation());
-        if (field != null) {
-            field.encode(datastore, writer, encoderContext);
-        } else if (document != null) {
-            document.encode(datastore, writer, encoderContext);
-        }
+        throw new UnsupportedOperationException();
     }
 
     @Override

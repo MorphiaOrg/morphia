@@ -76,7 +76,7 @@ public class Expression {
      */
     @Nullable
     @MorphiaInternal
-    public Expression getValue() {
+    public Expression value() {
         return value;
     }
 

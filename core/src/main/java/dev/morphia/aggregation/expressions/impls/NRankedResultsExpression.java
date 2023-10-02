@@ -23,6 +23,18 @@ public class NRankedResultsExpression extends Expression {
         this.sortBy = sortBy;
     }
 
+    public Expression output() {
+        return output;
+    }
+
+    public Expression n() {
+        return n;
+    }
+
+    public Sort[] sortBy() {
+        return sortBy;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, operation(), () -> {

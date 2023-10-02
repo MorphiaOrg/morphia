@@ -115,7 +115,6 @@ public class ReplaceWith extends Stage {
         return value;
     }
 
-
     @Nullable
     public Expression getExpression() {
         return value != null ? value : document;

@@ -1,9 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
-
 import dev.morphia.MorphiaDatastore;
-
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -13,6 +11,11 @@ public class ValueExpression extends Expression implements SingleValuedExpressio
     public ValueExpression(@Nullable Object value) {
         super("unused");
         object = value;
+    }
+
+    @Override
+    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        throw new UnsupportedOperationException();
     }
 
     @Nullable

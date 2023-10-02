@@ -21,11 +21,22 @@ public class EndResultsExpression extends Expression {
         this.n = n;
     }
 
+    public Expression input() {
+        return input;
+    }
+
+    public Expression n() {
+        return n;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        throw new UnsupportedOperationException();
+/*
         document(writer, operation(), () -> {
             expression(datastore, writer, "input", input, encoderContext);
             expression(datastore, writer, "n", n, encoderContext);
         });
+*/
     }
 }

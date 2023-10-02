@@ -9,6 +9,7 @@ import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.models.User;
 
 import org.bson.Document;
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.testng.annotations.BeforeMethod;
 
@@ -27,7 +28,8 @@ public class ExpressionsTestBase extends TemplatedTestBase {
         Document expected = Document.parse(expectedString);
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         document(writer, () -> {
-            value.encode(getDs(), writer, EncoderContext.builder().build());
+            Codec codec = getDs().getCodecRegistry().get(value.getClass());
+            codec.encode(writer, value, EncoderContext.builder().build());
         });
 
         Document actual = writer.getDocument();

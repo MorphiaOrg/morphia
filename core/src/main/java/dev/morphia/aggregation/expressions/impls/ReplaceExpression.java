@@ -37,12 +37,20 @@ public class ReplaceExpression extends Expression {
         this.replacement = replacement;
     }
 
+    public Expression find() {
+        return find;
+    }
+
+    public Expression replacement() {
+        return replacement;
+    }
+
+    public Expression input() {
+        return input;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            wrapExpression(datastore, writer, "input", input, encoderContext);
-            wrapExpression(datastore, writer, "find", find, encoderContext);
-            wrapExpression(datastore, writer, "replacement", replacement, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 }

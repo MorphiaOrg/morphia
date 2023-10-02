@@ -20,12 +20,20 @@ public class ReduceExpression extends Expression {
         this.in = in;
     }
 
+    public Expression input() {
+        return input;
+    }
+
+    public Expression initial() {
+        return initial;
+    }
+
+    public Expression in() {
+        return in;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            wrapExpression(datastore, writer, "input", input, encoderContext);
-            wrapExpression(datastore, writer, "initialValue", initial, encoderContext);
-            wrapExpression(datastore, writer, "in", in, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 }

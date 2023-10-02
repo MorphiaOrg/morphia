@@ -21,6 +21,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
 
     private Codec<Object> objectCodec;
@@ -68,12 +69,13 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
         });
     }
 
-    private void documents(BsonWriter writer, @Nullable List<Object> list, String documents,
-            EncoderContext encoderContext) {
+    private void documents(BsonWriter writer, String name, @Nullable List<Object> list,
+                           EncoderContext encoderContext) {
         if (list != null) {
-            array(writer, documents, () -> {
+            array(writer, name, () -> {
                 for (Object document : list) {
-                    getObjectCodec().encode(writer, document, encoderContext);
+                    Codec codec = getCodecRegistry().get(document.getClass());
+                    codec.encode(writer, document, encoderContext);
                 }
             });
         }
@@ -82,7 +84,8 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
     @SuppressWarnings("rawtypes")
     private void operator(BsonWriter writer, EncoderContext encoderContext, @Nullable Expression operator) {
         if (operator != null) {
-            expression(getDatastore(), writer, operator, encoderContext);
+            Codec codec = getCodecRegistry().get(operator.getClass());
+            codec.encode(writer, operator, encoderContext);
         }
     }
 
@@ -90,8 +93,8 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
         Window window = output.windowDef();
         if (window != null) {
             document(writer, "window", () -> {
-                documents(writer, window.documents(), "documents", encoderContext);
-                documents(writer, window.range(), "range", encoderContext);
+                documents(writer, "documents", window.documents(), encoderContext);
+                documents(writer, "range", window.range(), encoderContext);
                 TimeUnit unit = window.unit();
                 if (unit != null) {
                     writer.writeString("unit", unit.name().toLowerCase(Locale.ROOT));

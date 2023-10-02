@@ -14,13 +14,19 @@ public class DocumentExpression extends Expression implements SingleValuedExpres
         super("unused");
     }
 
+    public Fields<DocumentExpression> fields() {
+        return fields;
+    }
+
     public void encode(String name, MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, name, () -> fields.encode(datastore, writer, encoderContext));
+        throw new UnsupportedOperationException();
+//        document(writer, name, () -> fields.encode(datastore, writer, encoderContext));
     }
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, () -> fields.encode(datastore, writer, encoderContext));
+        throw new UnsupportedOperationException();
+//        document(writer, () -> fields.encode(datastore, writer, encoderContext));
     }
 
     @Override

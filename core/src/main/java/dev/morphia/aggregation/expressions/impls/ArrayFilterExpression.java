@@ -25,12 +25,20 @@ public class ArrayFilterExpression extends Expression {
         return this;
     }
 
+    public Expression array() {
+        return array;
+    }
+
+    public Expression conditional() {
+        return conditional;
+    }
+
+    public ValueExpression as() {
+        return as;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            wrapExpression(datastore, writer, "input", array, encoderContext);
-            wrapExpression(datastore, writer, "cond", conditional, encoderContext);
-            ExpressionHelper.expression(datastore, writer, "as", as, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 }

@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 
@@ -12,7 +13,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
 public class MapExpression extends Expression {
     private final Expression input;
     private final Expression in;
-    private ValueExpression as;
+    private String as;
 
     public MapExpression(Expression input, Expression in) {
         super("$map");
@@ -21,16 +22,25 @@ public class MapExpression extends Expression {
     }
 
     public MapExpression as(String as) {
-        this.as = new ValueExpression(as);
+        this.as = as;
         return this;
+    }
+
+    public Expression input() {
+        return input;
+    }
+
+    public Expression in() {
+        return in;
+    }
+
+    @Nullable
+    public String as() {
+        return as;
     }
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            wrapExpression(datastore, writer, "input", input, encoderContext);
-            wrapExpression(datastore, writer, "in", in, encoderContext);
-            ExpressionHelper.expression(datastore, writer, "as", as, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 }

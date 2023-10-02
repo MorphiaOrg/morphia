@@ -29,26 +29,11 @@ public class Accumulator extends Expression {
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        writer.writeName(operation());
-        ExpressionList values = getValue();
-        if (values != null) {
-            List<Expression> list = values.getValues();
-            if (list.size() > 1) {
-                writer.writeStartArray();
-            }
-            for (Expression expression : list) {
-                wrapExpression(datastore, writer, expression, encoderContext);
-            }
-            if (list.size() > 1) {
-                writer.writeEndArray();
-            }
-        } else {
-            writer.writeNull();
-        }
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public ExpressionList getValue() {
-        return (ExpressionList) super.getValue();
+    public ExpressionList value() {
+        return (ExpressionList) super.value();
     }
 }

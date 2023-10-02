@@ -8,8 +8,10 @@ import dev.morphia.aggregation.stages.ReplaceWith;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.wrapExpression;
+import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
 
 public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
     public ReplaceWithCodec(MorphiaDatastore datastore) {
@@ -24,13 +26,23 @@ public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
     @Override
     protected void encodeStage(BsonWriter writer, ReplaceWith replace, EncoderContext encoderContext) {
         Expression value = replace.getValue();
-
+        CodecRegistry codecRegistry = getDatastore().getCodecRegistry();
+        if (value != null) {
+            encodeIfNotNull(codecRegistry, writer, value, encoderContext);
+        } else {
+            DocumentExpression document = replace.getDocument();
+            Codec codec = codecRegistry.get(document.getClass());
+            codec.encode(writer, document, encoderContext);
+        }
+        // ----
+/*
         if (value == null) {
             value = replace.getDocument();
         }
 
-        Codec codec = getDatastore().getCodecRegistry().get(value.getClass());
+        Codec codec = codecRegistry.get(value.getClass());
         codec.encode(writer, value, encoderContext);
+*/
 
     }
 }

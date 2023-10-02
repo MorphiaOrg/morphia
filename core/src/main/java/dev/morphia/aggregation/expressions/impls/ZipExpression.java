@@ -43,13 +43,21 @@ public class ZipExpression extends Expression {
         return this;
     }
 
+    public List<Expression> inputs() {
+        return inputs;
+    }
+
+    public ValueExpression useLongestLength() {
+        return useLongestLength;
+    }
+
+    public Expression defaults() {
+        return defaults;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            array(datastore, writer, "inputs", inputs, encoderContext);
-            ExpressionHelper.expression(datastore, writer, "useLongestLength", useLongestLength, encoderContext);
-            ExpressionHelper.expression(datastore, writer, "defaults", defaults, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

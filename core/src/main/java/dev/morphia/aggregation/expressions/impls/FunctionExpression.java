@@ -33,6 +33,18 @@ public class FunctionExpression extends Expression {
         this.args = args;
     }
 
+    public String body() {
+        return body;
+    }
+
+    public List<Expression> args() {
+        return args;
+    }
+
+    public String lang() {
+        return lang;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         document(writer, operation(), () -> {

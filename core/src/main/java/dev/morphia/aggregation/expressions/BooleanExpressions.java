@@ -1,11 +1,7 @@
 package dev.morphia.aggregation.expressions;
 
-import com.mongodb.lang.NonNull;
-
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import static dev.morphia.aggregation.expressions.impls.ExpressionList.coalesce;
 
@@ -79,31 +75,4 @@ public final class BooleanExpressions {
         return new LogicalExpression("$or");
     }
 
-    /**
-     * Defines a logical expression.
-     *
-     * @since 2.3
-     */
-    public static class LogicalExpression extends Expression {
-        private LogicalExpression(String operation) {
-            super(operation, new ExpressionList());
-        }
-
-        private LogicalExpression(String operation, @NonNull ExpressionList list) {
-            super(operation, list);
-        }
-
-        /**
-         * Adds a new expression to this LogicalExpression.
-         *
-         * @param expression the new expression
-         * @return this
-         * @since 2.3
-         */
-        @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
-        public LogicalExpression add(Expression expression) {
-            ((ExpressionList) getValue()).add(expression);
-            return this;
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.codecs.ExpressionHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -9,7 +10,6 @@ import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.expression;
-import static dev.morphia.aggregation.codecs.ExpressionHelper.value;
 
 /**
  * @since 2.0
@@ -32,14 +32,27 @@ public class ArrayIndexExpression extends Expression {
         this.search = search;
     }
 
+    public Expression array() {
+        return array;
+    }
+
+    public Expression search() {
+        return search;
+    }
+
+    @Nullable
+    public Integer start() {
+        return start;
+    }
+
+    @Nullable
+    public Integer end() {
+        return end;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        array(writer, operation(), () -> {
-            expression(datastore, writer, array, encoderContext);
-            expression(datastore, writer, search, encoderContext);
-            ExpressionHelper.value(datastore, writer, start, encoderContext);
-            ExpressionHelper.value(datastore, writer, end, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**

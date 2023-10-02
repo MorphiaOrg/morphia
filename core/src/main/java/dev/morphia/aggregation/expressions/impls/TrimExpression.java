@@ -22,11 +22,16 @@ public class TrimExpression extends Expression {
         return this;
     }
 
+    public Expression input() {
+        return input;
+    }
+
+    public Expression chars() {
+        return chars;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
-        document(writer, operation(), () -> {
-            expression(datastore, writer, "input", input, encoderContext);
-            expression(datastore, writer, "chars", chars, encoderContext);
-        });
+        throw new UnsupportedOperationException();
     }
 }

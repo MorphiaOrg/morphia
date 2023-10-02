@@ -49,15 +49,18 @@ public class ExpressionList extends Expression implements SingleValuedExpression
 
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+        throw new UnsupportedOperationException();
+/*
         array(writer, () -> {
             for (Expression expression : values) {
                 wrapExpression(datastore, writer, expression, encoderContext);
             }
         });
+*/
     }
 
     @Override
-    public Expression getValue() {
+    public Expression value() {
         throw new UnsupportedOperationException("should have called getValues() here");
     }
 

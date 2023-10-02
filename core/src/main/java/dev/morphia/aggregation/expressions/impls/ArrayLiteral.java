@@ -1,8 +1,9 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
-
 import dev.morphia.aggregation.codecs.ExpressionHelper;
+
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -24,10 +25,15 @@ public class ArrayLiteral extends ArrayExpression {
         this.objects = objects;
     }
 
+    @Nullable
+    public Object[] objects() {
+        return objects;
+    }
+
     @Override
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         if (objects == null) {
-            Expression value = getValue();
+            Expression value = value();
             if (value != null) {
                 value.encode(datastore, writer, encoderContext);
             }
