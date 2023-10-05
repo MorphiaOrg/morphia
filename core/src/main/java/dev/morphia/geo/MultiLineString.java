@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mongodb.lang.Nullable;
-
 import dev.morphia.annotations.Id;
 
 import org.bson.types.ObjectId;
@@ -72,14 +70,4 @@ public class MultiLineString implements Geometry {
                 + '}';
     }
 
-    @Override
-    public com.mongodb.client.model.geojson.MultiLineString convert() {
-        return convert(null);
-    }
-
-    @Override
-    public com.mongodb.client.model.geojson.MultiLineString convert(@Nullable CoordinateReferenceSystem crs) {
-        return new com.mongodb.client.model.geojson.MultiLineString(crs != null ? crs.convert() : null,
-                GeoJson.convertLineStrings(coordinates));
-    }
 }

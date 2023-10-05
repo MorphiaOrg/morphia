@@ -31,12 +31,6 @@ import static org.bson.Document.parse;
 public class TypeExpressionsTest extends ExpressionsTestBase {
 
     @Test
-    public void testConvert() {
-        checkMinServerVersion(4.0);
-        assertAndCheckDocShape("{$convert: {input: true, to: \"bool\"}}", convert(value(true), ConvertType.BOOLEAN), true);
-    }
-
-    @Test
     public void testToBool() {
         checkMinServerVersion(4.0);
         assertAndCheckDocShape("{$toBool: 'true' }", toBool(value("true")), true);

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mongodb.lang.Nullable;
-
 import dev.morphia.annotations.Id;
 
 import org.bson.types.ObjectId;
@@ -71,14 +69,4 @@ public class MultiPoint implements Geometry {
                 + '}';
     }
 
-    @Override
-    public com.mongodb.client.model.geojson.MultiPoint convert() {
-        return convert(null);
-    }
-
-    @Override
-    public com.mongodb.client.model.geojson.MultiPoint convert(@Nullable CoordinateReferenceSystem crs) {
-        return new com.mongodb.client.model.geojson.MultiPoint(crs != null ? crs.convert() : null,
-                GeoJson.convertPoints(coordinates));
-    }
 }

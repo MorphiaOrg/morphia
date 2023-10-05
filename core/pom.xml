@@ -96,7 +96,7 @@
                     <excludePackageNames>
                         dev.morphia.utils:dev.morphia.sofia:*.internal:dev.morphia.mapping.*:dev.morphia.aggregation.codecs:dev.morphia.aggregation.codecs.stages
                     </excludePackageNames>
-                    <doclint>none</doclint>
+                    <doclint>all</doclint>
                     <doctitle>Morphia ${project.version}</doctitle>
                     <links>
                         <link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs/mongodb-driver-core</link>

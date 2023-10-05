@@ -10,7 +10,6 @@ import java.lang.annotation.Target;
  * Annotation which helps migrate schemas by loading one of several possible properties in the document into fields or methods. This is
  * typically used when a field is renamed, allowing the field to be populated by both its current name and any prior names.
  * </p>
- * <p/>
  * When placed on a field, the additional names (document field) will be checked when this field is loaded. If the document contains data
  * for more than one of the names, an exception will be thrown.
  */

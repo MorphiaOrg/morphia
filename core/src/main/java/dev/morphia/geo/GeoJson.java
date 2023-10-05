@@ -115,18 +115,6 @@ public final class GeoJson {
     }
 
     /**
-     * Return a GeometryCollection that will let you create a GeoJSON GeometryCollection.
-     *
-     * @param geometries a series of Geometry instances that will make up this GeometryCollection
-     * @return a GeometryCollection made up of all the geometries
-     * @mongodb.server.release 2.6
-     * @see <a href="http://docs.mongodb.org/manual/apps/geospatial-indexes/#geojson-objects">GeoJSON</a>
-     */
-    public static GeometryCollection geometryCollection(Geometry... geometries) {
-        return new GeometryCollection(geometries);
-    }
-
-    /**
      * @param values the values to convert
      * @hidden
      * @morphia.internal

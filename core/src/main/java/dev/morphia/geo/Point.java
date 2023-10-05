@@ -3,11 +3,6 @@ package dev.morphia.geo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mongodb.client.model.geojson.Position;
-import com.mongodb.lang.Nullable;
-
-import dev.morphia.annotations.internal.MorphiaInternal;
-
 /**
  * Represents a GeoJSON Point type. Will be persisted into the database according to <a href="http://geojson.org/geojson-spec.html#id2">the
  * specification</a>. Therefore because of this, this entity will never have its own ID or store the its Class name.
@@ -88,25 +83,4 @@ public class Point implements Geometry {
         return String.format("Point{coordinates=%s}", coordinates);
     }
 
-    /**
-     * @hidden
-     * @morphia.internal
-     * @return this Point converted to a driver Point
-     */
-    @Override
-    @MorphiaInternal
-    public com.mongodb.client.model.geojson.Point convert() {
-        return convert(null);
-    }
-
-    /**
-     * @return this Point converted to a driver Point
-     * @hidden
-     * @morphia.internal
-     */
-    @Override
-    @MorphiaInternal
-    public com.mongodb.client.model.geojson.Point convert(@Nullable CoordinateReferenceSystem crs) {
-        return new com.mongodb.client.model.geojson.Point(crs != null ? crs.convert() : null, new Position(getLongitude(), getLatitude()));
-    }
 }

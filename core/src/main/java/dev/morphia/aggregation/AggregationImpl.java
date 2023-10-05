@@ -66,7 +66,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @param <T>
+ * @param <T> the starting type of the aggregation
  * @hidden
  * @morphia.internal
  * @since 2.0

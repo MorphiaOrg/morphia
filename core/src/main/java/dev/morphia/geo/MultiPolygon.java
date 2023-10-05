@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mongodb.client.model.geojson.PolygonCoordinates;
-import com.mongodb.lang.Nullable;
-
 /**
  * This class represents a set of polygons, which will saved into MongoDB as per the <a href="http://geojson.org/geojson-spec
  * .html#id7">GeoJSON
@@ -67,17 +64,4 @@ public class MultiPolygon implements Geometry {
                 + '}';
     }
 
-    @Override
-    public com.mongodb.client.model.geojson.MultiPolygon convert() {
-        return convert(null);
-    }
-
-    @Override
-    public com.mongodb.client.model.geojson.MultiPolygon convert(@Nullable CoordinateReferenceSystem crs) {
-        List<PolygonCoordinates> coords = new ArrayList<PolygonCoordinates>();
-        for (Polygon list : coordinates) {
-            coords.add(list.convert(crs).getCoordinates());
-        }
-        return new com.mongodb.client.model.geojson.MultiPolygon(crs != null ? crs.convert() : null, coords);
-    }
 }
