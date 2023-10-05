@@ -11,8 +11,8 @@ import org.bson.Document;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.document;
+import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
@@ -49,7 +49,7 @@ public class TestLookupWithPipeline extends AggregationTest {
                                                                         .field("$gte",
                                                                                 array(field("instock"), field("$order_qty"))))
 
-                                                                ))),
+                                                ))),
                                 project()
                                         .exclude("stock_item")
                                         .exclude("_id")))

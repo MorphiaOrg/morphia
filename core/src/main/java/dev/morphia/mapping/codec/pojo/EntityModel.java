@@ -135,7 +135,7 @@ public class EntityModel {
         }
 
         OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
-        if(adapter != null) {
+        if (adapter != null) {
             listeners.add(adapter);
         }
     }
@@ -202,7 +202,7 @@ public class EntityModel {
         }
 
         OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
-        if(adapter != null) {
+        if (adapter != null) {
             listeners.add(adapter);
         }
     }

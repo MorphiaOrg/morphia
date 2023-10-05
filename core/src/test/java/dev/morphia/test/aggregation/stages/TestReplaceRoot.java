@@ -10,8 +10,8 @@ import org.bson.Document;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.ifNull;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.document;
+import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.stages.ReplaceRoot.replaceRoot;
