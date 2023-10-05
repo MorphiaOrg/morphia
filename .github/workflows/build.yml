@@ -50,7 +50,7 @@ jobs:
       - Matrix
     strategy:
       matrix:
-        java: 17
+        java: [ 17 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: [ 4.10.2 ]
         include:
