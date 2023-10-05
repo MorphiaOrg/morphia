@@ -56,6 +56,7 @@ jobs:
         include:
           - java: 21
             mongo: 7
+            driver: 4.10.2
           - java: 17
             mongo: 7
             driver: 4.9.1
