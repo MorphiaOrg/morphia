@@ -9,7 +9,6 @@ import java.util.Map;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.LoadOnly;
-import dev.morphia.annotations.NotSaved;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
 
@@ -48,7 +47,7 @@ public class MorphiaPropertySerialization implements PropertySerialization {
                 return false;
             }
         }
-        return doesNotHaveAnnotation(LoadOnly.class) && doesNotHaveAnnotation(NotSaved.class);
+        return doesNotHaveAnnotation(LoadOnly.class);
     }
 
     private boolean doesNotHaveAnnotation(Class<? extends Annotation> annotationClass) {
