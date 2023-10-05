@@ -32,17 +32,6 @@ public class CollectionStats extends Stage {
     }
 
     /**
-     * Creates a new collStats stage
-     *
-     * @return the new stage
-     * @deprecated use {@link #collStats()}
-     */
-    @Deprecated(forRemoval = true)
-    public static CollectionStats with() {
-        return new CollectionStats();
-    }
-
-    /**
      * Adds the total number of documents in the collection to the return document.
      *
      * @param count true to include the count

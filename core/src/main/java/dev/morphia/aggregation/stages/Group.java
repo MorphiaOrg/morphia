@@ -90,29 +90,6 @@ public class Group extends Stage {
     }
 
     /**
-     * Creates a group stage with an ID definition
-     *
-     * @param id the group ID
-     * @return the new stage
-     * @deprecated use {@link #group(GroupId)}
-     */
-    @Deprecated(forRemoval = true)
-    public static Group of(GroupId id) {
-        return new Group(id);
-    }
-
-    /**
-     * Creates a group stage with no ID definition
-     *
-     * @return the new stage
-     * @deprecated user {@link #group()}
-     */
-    @Deprecated(forRemoval = true)
-    public static Group of() {
-        return new Group();
-    }
-
-    /**
      * Adds a field to the group. This method is equivalent to calling {@code field("name", Expression.field("name"))}
      *
      * @param name the field name
@@ -174,7 +151,7 @@ public class Group extends Stage {
          */
         @MorphiaInternal
         protected GroupId() {
-            document = Expressions.of();
+            document = Expressions.document();
         }
 
         /**

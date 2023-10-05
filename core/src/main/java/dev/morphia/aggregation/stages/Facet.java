@@ -44,17 +44,6 @@ public class Facet extends Stage {
     }
 
     /**
-     * Creates a new facet stage
-     *
-     * @return the new stage
-     * @deprecated use {@link #facet()}
-     */
-    @Deprecated(forRemoval = true)
-    public static Facet of() {
-        return new Facet();
-    }
-
-    /**
      * Adds a field to the facet
      *
      * @param name   the field name

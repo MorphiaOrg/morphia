@@ -1,5 +1,6 @@
 package dev.morphia.test;
 
+import java.lang.annotation.Annotation;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import com.mongodb.client.result.UpdateResult;
 
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
+import dev.morphia.EntityListener;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
 import dev.morphia.MissingIdException;
@@ -598,10 +600,15 @@ public class TestDatastore extends TestBase {
                 .next().loginCount, 2);
     }
 
-    private static class LifecycleListener {
+    private static class LifecycleListener implements EntityListener<LifecycleTestObj> {
         private static boolean prePersist;
         private static boolean prePersistWithEntity;
         private static boolean foundDatastore;
+
+        @Override
+        public boolean hasAnnotation(Class<? extends Annotation> type) {
+            return type.equals(PrePersist.class);
+        }
 
         @PrePersist
         void prePersist(Datastore datastore) {

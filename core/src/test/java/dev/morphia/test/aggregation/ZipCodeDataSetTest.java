@@ -87,11 +87,11 @@ public class ZipCodeDataSetTest extends TestBase {
                         .exclude("_id")
                         .include("state", field("_id"))
                         .include("biggestCity",
-                                Expressions.of()
+                                Expressions.document()
                                         .field("name", field("biggestCity"))
                                         .field("pop", field("biggestPop")))
                         .include("smallestCity",
-                                Expressions.of()
+                                Expressions.document()
                                         .field("name", field("smallestCity"))
                                         .field("pop", field("smallestPop"))));
 

@@ -15,7 +15,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * @aggregation.expression $addFields
  */
 public class AddFields extends Stage {
-    private final DocumentExpression document = Expressions.of();
+    private final DocumentExpression document = Expressions.document();
 
     /**
      * @hidden
@@ -33,17 +33,6 @@ public class AddFields extends Stage {
      * @since 2.2
      */
     public static AddFields addFields() {
-        return new AddFields();
-    }
-
-    /**
-     * Creates a new AddFields stage to bind field
-     *
-     * @return the new stage
-     * @deprecated use {@link #addFields()}
-     */
-    @Deprecated(forRemoval = true)
-    public static AddFields of() {
         return new AddFields();
     }
 

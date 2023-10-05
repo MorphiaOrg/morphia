@@ -25,7 +25,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
             throw new AggregationException(Sofia.mixedModesNotAllowed(operation()));
         }
         if (document == null) {
-            document = Expressions.of();
+            document = Expressions.document();
         }
         document.field(name, expression);
 

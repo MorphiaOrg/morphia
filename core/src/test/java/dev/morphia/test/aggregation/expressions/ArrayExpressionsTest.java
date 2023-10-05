@@ -126,7 +126,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testObjectToArray() {
         assertAndCheckDocShape("{ $objectToArray: { item: 'foo', qty: 25 } }",
-                objectToArray(Expressions.of()
+                objectToArray(Expressions.document()
                         .field("item", value("foo"))
                         .field("qty", value(25))),
                 List.of(parse("{ 'k' : 'item', 'v' : 'foo' }"), parse("{ 'k' : 'qty', 'v' : 25 }")));

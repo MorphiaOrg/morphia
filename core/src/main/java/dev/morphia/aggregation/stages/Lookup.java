@@ -62,30 +62,6 @@ public class Lookup extends Stage {
      *
      * @param from the type to use for determining the target collection
      * @return the new stage
-     * @deprecated use {@link #lookup(Class)}
-     */
-    @Deprecated(forRemoval = true)
-    public static Lookup from(Class<?> from) {
-        return new Lookup(from);
-    }
-
-    /**
-     * Creates a new stage using the target collection
-     *
-     * @param from the target collection
-     * @return the new stage
-     * @deprecated use {@link #lookup(String)}
-     */
-    @Deprecated(forRemoval = true)
-    public static Lookup from(String from) {
-        return new Lookup(from);
-    }
-
-    /**
-     * Creates a new stage using the target collection for the mapped type
-     *
-     * @param from the type to use for determining the target collection
-     * @return the new stage
      * @since 2.2
      */
     public static Lookup lookup(Class<?> from) {
@@ -221,7 +197,7 @@ public class Lookup extends Stage {
      */
     public Lookup let(String name, Expression expression) {
         if (variables == null) {
-            variables = Expressions.of();
+            variables = Expressions.document();
         }
         variables.field(name, expression);
         return this;

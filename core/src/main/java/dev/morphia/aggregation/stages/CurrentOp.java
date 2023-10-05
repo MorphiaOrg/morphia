@@ -35,17 +35,6 @@ public class CurrentOp extends Stage {
     }
 
     /**
-     * Creates a new stage
-     *
-     * @return the new stage
-     * @deprecated user {@link #currentOp()}
-     */
-    @Deprecated(forRemoval = true)
-    public static CurrentOp of() {
-        return new CurrentOp();
-    }
-
-    /**
      * <li>If set to false, $currentOp will only report on operations/idle connections/idle cursors/idle sessions belonging to the user who
      * ran the command.
      * <li>If set to true, $currentOp will report operations belonging to all users.

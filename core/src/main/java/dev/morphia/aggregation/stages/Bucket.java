@@ -45,17 +45,6 @@ public class Bucket extends Stage {
     }
 
     /**
-     * Creates a new bucket stage
-     *
-     * @return the new stage
-     * @deprecated use {@link #bucket()}
-     */
-    @Deprecated(forRemoval = true)
-    public static Bucket of() {
-        return new Bucket();
-    }
-
-    /**
      * An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts
      * as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
      * <p>
@@ -149,7 +138,7 @@ public class Bucket extends Stage {
      */
     public Bucket outputField(String name, Expression value) {
         if (output == null) {
-            output = Expressions.of();
+            output = Expressions.document();
         }
         output.field(name, value);
         return this;

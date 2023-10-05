@@ -62,30 +62,6 @@ public class GraphLookup extends Stage {
      *
      * @param from the target collection name
      * @return this
-     * @deprecated user {@link #graphLookup(String)}
-     */
-    @Deprecated(forRemoval = true)
-    public static GraphLookup from(String from) {
-        return new GraphLookup(from);
-    }
-
-    /**
-     * Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField.
-     *
-     * @param from the target collection name
-     * @return this
-     * @deprecated use {@link #graphLookup(Class)}
-     */
-    @Deprecated(forRemoval = true)
-    public static GraphLookup from(Class from) {
-        return new GraphLookup(from);
-    }
-
-    /**
-     * Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField.
-     *
-     * @param from the target collection name
-     * @return this
      * @since 2.2
      */
     public static GraphLookup graphLookup(String from) {

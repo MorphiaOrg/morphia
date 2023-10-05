@@ -1,8 +1,10 @@
 package dev.morphia.mapping.lifecycle;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 
 import org.bson.Document;
@@ -10,12 +12,19 @@ import org.bson.Document;
 import static java.lang.String.format;
 
 public class OnEntityListenerAdapter extends EntityListenerAdapter {
-    public OnEntityListenerAdapter(Class<?> listenerType) {
+    private OnEntityListenerAdapter(Class<?> listenerType) {
         super(listenerType);
     }
 
+    @Nullable
+    public static OnEntityListenerAdapter listen(Class<?> type) {
+        OnEntityListenerAdapter adapter = new OnEntityListenerAdapter(type);
+        boolean annotatedMethods = adapter.getMethods().values().stream().anyMatch(methods -> !methods.isEmpty());
+        return annotatedMethods ? adapter : null;
+    }
+
     @Override
-    void invoke(Class<?> annotation, Object entity, Document document, Datastore datastore) {
+    void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Datastore datastore) {
         List<Method> list = getMethods().get(annotation);
         if (list != null) {
             list

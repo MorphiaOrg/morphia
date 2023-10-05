@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.ifNull;
 import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.of;
+import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.Miscellaneous.setField;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
@@ -64,7 +64,7 @@ public class TestReplaceWith extends AggregationTest {
 
         actual = getDs().aggregate(Author.class)
                 .replaceWith(replaceWith(mergeObjects()
-                        .add(of()
+                        .add(document()
                                 .field("_id", field("_id"))
                                 .field("first", value(""))
                                 .field("last", value("")))

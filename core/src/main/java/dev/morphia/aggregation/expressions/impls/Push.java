@@ -46,7 +46,7 @@ public class Push extends Expression implements FieldHolder<Push> {
             throw new AggregationException(Sofia.mixedModesNotAllowed(operation()));
         }
         if (document == null) {
-            document = Expressions.of();
+            document = Expressions.document();
         }
         document.field(name, expression);
 

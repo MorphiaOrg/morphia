@@ -33,18 +33,6 @@ public class Match extends Stage {
     }
 
     /**
-     * Creates the new stage using the filters for matching
-     *
-     * @param filters the filters to apply
-     * @return this
-     * @deprecated use {@link #match(Filter...)}
-     */
-    @Deprecated(forRemoval = true)
-    public static Match on(Filter... filters) {
-        return new Match(filters);
-    }
-
-    /**
      * @return the filters
      * @hidden
      * @morphia.internal

@@ -196,24 +196,6 @@ public final class StringExpressions {
     }
 
     /**
-     * Deprecated. Use $substrBytes or $substrCP.
-     * <p>
-     * *note*: Included for completeness and discoverability.
-     *
-     * @param input  the string to process
-     * @param start  the starting position
-     * @param length the number of characters
-     * @return the new expression
-     * @aggregation.expression $substr
-     * @deprecated Deprecated since version 3.4: $substr is now an alias for {@link #substrBytes(Expression, int, int)}
-     */
-    @Deprecated
-    @SuppressWarnings("unused")
-    public static Expression substr(Expression input, int start, int length) {
-        throw new UnsupportedOperationException("Use $substrBytes or $substrCP.");
-    }
-
-    /**
      * Returns the substring of a string. Starts with the character at the specified UTF-8 byte index (zero-based) in the string and
      * continues for the specified number of bytes.
      *

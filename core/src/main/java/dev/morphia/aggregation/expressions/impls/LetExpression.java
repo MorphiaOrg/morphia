@@ -5,7 +5,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 
 public class LetExpression extends Expression {
     private final Expression in;
-    private final DocumentExpression variables = Expressions.of();
+    private final DocumentExpression variables = Expressions.document();
 
     /**
      * @hidden

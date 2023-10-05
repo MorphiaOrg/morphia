@@ -44,17 +44,6 @@ public class AutoBucket extends Stage {
     }
 
     /**
-     * Creates a new auto bucket
-     *
-     * @return the new bucket
-     * @deprecated use {@link #autoBucket()}
-     */
-    @Deprecated(forRemoval = true)
-    public static AutoBucket of() {
-        return new AutoBucket();
-    }
-
-    /**
      * A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.
      *
      * @param buckets the number of buckets
@@ -140,7 +129,7 @@ public class AutoBucket extends Stage {
      */
     public AutoBucket outputField(String name, Expression value) {
         if (output == null) {
-            output = Expressions.of();
+            output = Expressions.document();
         }
         output.field(name, value);
         return this;

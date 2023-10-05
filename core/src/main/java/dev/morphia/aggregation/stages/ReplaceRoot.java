@@ -61,30 +61,6 @@ public class ReplaceRoot extends Stage {
     }
 
     /**
-     * Creates a new stage
-     *
-     * @return the new stage
-     * @deprecated use {@link #replaceRoot()}
-     */
-    @Deprecated(forRemoval = true)
-    public static ReplaceRoot with() {
-        return new ReplaceRoot();
-    }
-
-    /**
-     * Creates a new stage to replace the root with the given expression. This expression must evaluate to a document. No further
-     * fields can be added to this stage.
-     *
-     * @param expression the document expression
-     * @return the new stage
-     * @deprecated use {@link #replaceRoot(Expression)}
-     */
-    @Deprecated(forRemoval = true)
-    public static ReplaceRoot with(Expression expression) {
-        return new ReplaceRoot(expression);
-    }
-
-    /**
      * Adds a new field
      *
      * @param name       the field name
@@ -96,7 +72,7 @@ public class ReplaceRoot extends Stage {
             throw new AggregationException(Sofia.mixedModesNotAllowed(stageName()));
         }
         if (document == null) {
-            document = Expressions.of();
+            document = Expressions.document();
         }
         document.field(name, expression);
 

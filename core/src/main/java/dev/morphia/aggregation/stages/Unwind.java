@@ -30,19 +30,6 @@ public class Unwind extends Stage {
      *
      * @param name the array field
      * @return this
-     * @deprecated use {@link #unwind(String)}
-     */
-    @Deprecated(forRemoval = true)
-    public static Unwind on(String name) {
-        return new Unwind()
-                .path(name);
-    }
-
-    /**
-     * Creates a stage with the named array field
-     *
-     * @param name the array field
-     * @return this
      * @since 2.2
      */
     public static Unwind unwind(String name) {

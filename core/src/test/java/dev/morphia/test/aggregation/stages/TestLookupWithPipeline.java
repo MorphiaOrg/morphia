@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.of;
+import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
@@ -40,16 +40,16 @@ public class TestLookupWithPipeline extends AggregationTest {
                         .pipeline(
                                 match(
                                         expr(
-                                                of().field(
+                                                document().field(
                                                         "$and",
-                                                        array(of()
+                                                        array(document()
                                                                 .field("$eq",
                                                                         array(field("stock"), field("$order_item"))),
-                                                                of()
+                                                                document()
                                                                         .field("$gte",
                                                                                 array(field("instock"), field("$order_qty"))))
 
-                                                ))),
+                                                                ))),
                                 project()
                                         .exclude("stock_item")
                                         .exclude("_id")))

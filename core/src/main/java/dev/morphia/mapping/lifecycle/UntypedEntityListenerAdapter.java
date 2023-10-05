@@ -1,5 +1,6 @@
 package dev.morphia.mapping.lifecycle;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class UntypedEntityListenerAdapter extends EntityListenerAdapter {
         super(type);
     }
 
-    void invoke(Class<?> annotation, Object entity, Document document, Datastore datastore) {
+    void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Datastore datastore) {
         List<Method> list = getMethods().get(annotation);
         if (list != null) {
             list.forEach(method -> {

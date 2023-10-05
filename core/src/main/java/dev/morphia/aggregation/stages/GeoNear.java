@@ -75,30 +75,6 @@ public class GeoNear extends Stage {
     }
 
     /**
-     * Creates a new geoNear stage
-     *
-     * @param point the center point
-     * @return the new stage
-     * @deprecated user {@link #geoNear(Point)}
-     */
-    @Deprecated(forRemoval = true)
-    public static GeoNear to(Point point) {
-        return new GeoNear(point);
-    }
-
-    /**
-     * Creates a new geoNear stage
-     *
-     * @param coordinates the center point coordinates
-     * @return the new stage
-     * @deprecated use {@link #geoNear(double[])}
-     */
-    @Deprecated(forRemoval = true)
-    public static GeoNear to(double[] coordinates) {
-        return new GeoNear(coordinates);
-    }
-
-    /**
      * The output field that contains the calculated distance.
      *
      * @param distanceField the field name

@@ -134,7 +134,10 @@ public class EntityModel {
             }
         }
 
-        listeners.add(new OnEntityListenerAdapter(getType()));
+        OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
+        if(adapter != null) {
+            listeners.add(adapter);
+        }
     }
 
     public EntityModel(EntityModel other) {
@@ -198,8 +201,10 @@ public class EntityModel {
             }
         }
 
-        listeners.add(new OnEntityListenerAdapter(getType()));
-
+        OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
+        if(adapter != null) {
+            listeners.add(adapter);
+        }
     }
 
     public EntityModel copy() {

@@ -32,18 +32,6 @@ public class Limit extends Stage {
     }
 
     /**
-     * Creates the new stage.
-     *
-     * @param limit the limit to apply
-     * @return this
-     * @deprecated use {@link #limit(long)}
-     */
-    @Deprecated(forRemoval = true)
-    public static Limit of(long limit) {
-        return new Limit(limit);
-    }
-
-    /**
      * @return the limit
      * @hidden
      * @morphia.internal

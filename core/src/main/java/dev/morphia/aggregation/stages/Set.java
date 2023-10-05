@@ -17,7 +17,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * @since 2.3
  */
 public class Set extends Stage {
-    private final DocumentExpression document = Expressions.of();
+    private final DocumentExpression document = Expressions.document();
 
     /**
      * @hidden

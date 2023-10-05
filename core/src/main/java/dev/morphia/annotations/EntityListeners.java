@@ -21,9 +21,6 @@ import dev.morphia.EntityListener;
 public @interface EntityListeners {
     /**
      * @return The listeners to use for this entity
-     * @deprecated In the next version, this will be restricted to subclasses of {@link EntityListener}. Migrating your listeners to be
-     *             subclasses now will prevent any compilation issues in the future.
      */
-    @Deprecated(since = "2.4.0")
-    Class<?>[] value() default {};
+    Class<? extends EntityListener<?>>[] value() default {};
 }

@@ -79,17 +79,6 @@ public final class Expressions {
     }
 
     /**
-     * Creates a new DocumentExpression.
-     *
-     * @return the new expression
-     * @deprecated use {@link #document()} or {@link #document(String, Expression)}
-     */
-    @Deprecated(forRemoval = true, since = "2.3")
-    public static DocumentExpression of() {
-        return new DocumentExpression();
-    }
-
-    /**
      * @param first      the first item
      * @param additional additional items
      * @param <T>        the element type
