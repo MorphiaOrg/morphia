@@ -290,13 +290,11 @@ them here. See the <a href="configuration.html" class="xref page">configuration 
 <h2 id="_mapping_classes"><a class="anchor" href="#_mapping_classes"></a>Mapping Classes</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are two ways that Morphia can handle your classes: as top level entities or embedded in others.
-Any class annotated with
-<a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> is treated as a top level document stored directly in a collection.
-Any class with <a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> must have a field annotated with
-<a href="javadoc/dev/morphia/annotations/Id.html">@Id</a> to define which field to use as the <code>_id</code> value in the document written to MongoDB.
-<a href="javadoc/dev/morphia/annotations/Embedded.html">@Embedded</a> indicates that the class will result in a subdocument inside another document.  <a href="javadoc/dev/morphia/annotations/Embedded.html">@Embedded</a> classes do not require the presence of an
-<a href="javadoc/dev/morphia/annotations/Id.html">@Id</a> field.</p>
+<p>There are two ways that Morphia can handle your classes: as top level entities or embedded in others. Any class with
+<a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> must have a field annotated with <a href="javadoc/dev/morphia/annotations/Id.html">@Id</a>
+to define which field to use as the <code>_id</code> value in the document written to MongoDB if the entity is to be stored as a top level type and
+not just used as property type on another entity. If an entity will only ever be stored as a property of another type, it does not
+require the presence of an <a href="javadoc/dev/morphia/annotations/Id.html">@Id</a> field.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -306,7 +304,7 @@ Any class with <a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>In order to be considered for persistence by Morphia, classes <strong>must</strong> be annotated with either <code>@Entity</code> or <code>@Embedded</code>.
+<p>In order to be considered for persistence by Morphia, classes <strong>must</strong> be annotated with either <code>@Entity</code> or <code>@ExternalEntity</code>.
 Classes lacking either of these annotations will effectively be ignored by Morphia.</p>
 </div>
 </td>
