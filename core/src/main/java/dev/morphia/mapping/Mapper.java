@@ -16,7 +16,6 @@ import com.mongodb.WriteConcern;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityListener;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.PostLoad;
@@ -56,8 +55,7 @@ public class Mapper {
     @MorphiaInternal
     public static final String IGNORED_FIELDNAME = ".";
     @MorphiaInternal
-    private static final List<Class<? extends Annotation>> MAPPING_ANNOTATIONS = List.of(Entity.class, Embedded.class,
-            ExternalEntity.class);
+    private static final List<Class<? extends Annotation>> MAPPING_ANNOTATIONS = List.of(Entity.class, ExternalEntity.class);
     @MorphiaInternal
     public static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = List.of(PrePersist.class,
             PreLoad.class,

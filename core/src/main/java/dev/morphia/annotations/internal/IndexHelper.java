@@ -248,7 +248,7 @@ public final class IndexHelper {
     }
 
     private List<Index> collectIndexes(EntityModel entityModel, List<EntityModel> parentModels) {
-        if (parentModels.contains(entityModel) || entityModel.getEmbeddedAnnotation() != null && parentModels.isEmpty()) {
+        if (parentModels.contains(entityModel)) {
             return emptyList();
         }
 

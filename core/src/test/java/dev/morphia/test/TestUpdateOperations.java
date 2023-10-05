@@ -39,7 +39,6 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
@@ -1175,7 +1174,7 @@ public class TestUpdateOperations extends TestBase {
         }
     }
 
-    @Embedded
+    @Entity
     private static class EmbeddedObjTest {
         private String name;
         private String value;

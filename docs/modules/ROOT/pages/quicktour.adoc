@@ -37,17 +37,15 @@ them here. See the xref:configuration.adoc[configuration guide] for more details
 
 == Mapping Classes
 
-There are two ways that Morphia can handle your classes: as top level entities or embedded in others.
-Any class annotated with
-link:javadoc/dev/morphia/annotations/Entity.html[@Entity] is treated as a top level document stored directly in a collection.
-Any class with link:javadoc/dev/morphia/annotations/Entity.html[@Entity] must have a field annotated with
-link:javadoc/dev/morphia/annotations/Id.html[@Id] to define which field to use as the `_id` value in the document written to MongoDB.
-link:javadoc/dev/morphia/annotations/Embedded.html[@Embedded] indicates that the class will result in a subdocument inside another document.  link:javadoc/dev/morphia/annotations/Embedded.html[@Embedded] classes do not require the presence of an
-link:javadoc/dev/morphia/annotations/Id.html[@Id] field.
+There are two ways that Morphia can handle your classes: as top level entities or embedded in others. Any class with
+link:javadoc/dev/morphia/annotations/Entity.html[@Entity] must have a field annotated with link:javadoc/dev/morphia/annotations/Id.html[@Id]
+to define which field to use as the `_id` value in the document written to MongoDB if the entity is to be stored as a top level type and
+not just used as property type on another entity. If an entity will only ever be stored as a property of another type, it does not
+require the presence of an link:javadoc/dev/morphia/annotations/Id.html[@Id] field.
 
 [NOTE]
 ====
-In order to be considered for persistence by Morphia, classes *must* be annotated with either `@Entity` or `@Embedded`.
+In order to be considered for persistence by Morphia, classes *must* be annotated with either `@Entity` or `@ExternalEntity`.
 Classes lacking either of these annotations will effectively be ignored by Morphia.
 ====
 

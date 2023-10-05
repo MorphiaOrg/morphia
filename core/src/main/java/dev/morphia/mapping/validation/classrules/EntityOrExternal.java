@@ -12,15 +12,14 @@ import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import static dev.morphia.sofia.Sofia.mappingAnnotationNeeded;
 
 /**
- * Checks that @Entity or @Embed are used on a type.
+ * Checks that @Entity or @ExternalEntity are used on a type.
  */
-public class EntityOrEmbed implements ClassConstraint {
+public class EntityOrExternal implements ClassConstraint {
 
     @Override
     public void check(Mapper mapper, EntityModel entityModel, Set<ConstraintViolation> ve) {
         if (entityModel.getEntityAnnotation() == null
-                && entityModel.getAnnotation(ExternalEntity.class) == null
-                && entityModel.getEmbeddedAnnotation() == null) {
+                && entityModel.getAnnotation(ExternalEntity.class) == null) {
             ve.add(new ConstraintViolation(Level.FATAL, entityModel, getClass(), mappingAnnotationNeeded(entityModel.getType().getName())));
         }
     }

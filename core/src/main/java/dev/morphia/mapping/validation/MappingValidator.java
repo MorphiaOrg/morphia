@@ -12,8 +12,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.mapping.validation.classrules.DuplicatedAttributeNames;
-import dev.morphia.mapping.validation.classrules.EntityAndEmbed;
-import dev.morphia.mapping.validation.classrules.EntityOrEmbed;
+import dev.morphia.mapping.validation.classrules.EntityOrExternal;
 import dev.morphia.mapping.validation.classrules.MultipleId;
 import dev.morphia.mapping.validation.classrules.MultipleVersions;
 import dev.morphia.mapping.validation.classrules.ShardKeyNames;
@@ -80,8 +79,7 @@ public class MappingValidator {
         // class-level
         constraints.add(new MultipleId());
         constraints.add(new MultipleVersions());
-        constraints.add(new EntityAndEmbed());
-        constraints.add(new EntityOrEmbed());
+        constraints.add(new EntityOrExternal());
         constraints.add(new DuplicatedAttributeNames());
         // field-level
         constraints.add(new IdDoesNotMix());

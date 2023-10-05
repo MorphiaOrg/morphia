@@ -14,7 +14,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.InsertOneResult;
 
 import dev.morphia.annotations.CappedAt;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
@@ -173,7 +172,7 @@ abstract class AbstractPerson {
 
 }
 
-@Embedded
+@Entity
 class Address {
     @Property("c")
     private final String city;

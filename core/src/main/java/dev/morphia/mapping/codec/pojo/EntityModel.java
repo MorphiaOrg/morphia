@@ -17,7 +17,6 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
 import dev.morphia.annotations.PostLoad;
@@ -267,14 +266,6 @@ public class EntityModel {
      */
     public String getDiscriminatorKey() {
         return discriminatorKey;
-    }
-
-    /**
-     * @return the embeddedAn
-     */
-    @Nullable
-    public Embedded getEmbeddedAnnotation() {
-        return getAnnotation(Embedded.class);
     }
 
     /**

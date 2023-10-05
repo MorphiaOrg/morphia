@@ -19,7 +19,6 @@ import dev.morphia.Datastore;
 import dev.morphia.ModifyOptions;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.Aggregation;
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdGetter;
@@ -559,7 +558,7 @@ public class TestReferences extends ProxyTestBase {
 
     }
 
-    @Embedded
+    @Entity
     public static class ChildId {
         private String name;
         private int age;

@@ -1,6 +1,5 @@
 package dev.morphia.mapping.conventions;
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.internal.EntityBuilder;
@@ -21,7 +20,6 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         MorphiaConfig config = mapper.getConfig();
 
         final Entity entity = modelBuilder.getAnnotation(Entity.class);
-        final Embedded embedded = modelBuilder.getAnnotation(Embedded.class);
         final ExternalEntity externalEntity = modelBuilder.getAnnotation(ExternalEntity.class);
         if (entity != null) {
             modelBuilder.enableDiscriminator(entity.useDiscriminator());
@@ -38,10 +36,6 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
                     .useDiscriminator(externalEntity.useDiscriminator())
                     .build());
             modelBuilder.targetType(externalEntity.target());
-        } else {
-            modelBuilder.enableDiscriminator(embedded == null || embedded.useDiscriminator());
-            modelBuilder.discriminatorKey(applyDefaults(embedded != null ? embedded.discriminatorKey() : Mapper.IGNORED_FIELDNAME,
-                    config.discriminatorKey()));
         }
 
         config.discriminator().apply(modelBuilder);
