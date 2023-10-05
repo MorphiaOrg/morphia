@@ -112,17 +112,6 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
     }
 
     /**
-     * Gets the the bypass document level validation flag
-     *
-     * @return the bypass document level validation flag
-     */
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Boolean getBypassDocumentValidation() {
-        return bypassDocumentValidation();
-    }
-
-    /**
      * @return the bypass document level validation flag
      * @hidden
      * @morphia.internal
@@ -136,29 +125,23 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
 
     /**
      * @return the driver version of the options
-     */
-    @Deprecated(forRemoval = true, since = "2.3")
-    public com.mongodb.client.model.InsertOneOptions getOptions() {
-        return options;
-    }
-
-    /**
-     * @return the driver version of the options
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
-    public com.mongodb.client.model.InsertOneOptions options() {
+    public com.mongodb.client.model.InsertOneOptions driver() {
         return options;
     }
 
     /**
      * Applies the rules for storing null/empty values for fields not present in the object to be merged.
      *
-     * @return this true if the rules for storing null/empty values should be applied
+     * @return true if the rules for storing null/empty values should be applied
      * @since 2.2
+     * @hidden
+     * @morphia.internal
      */
-    @Deprecated(forRemoval = true, since = "2.3")
+    @MorphiaInternal
     public boolean unsetMissing() {
         return unset;
     }
@@ -190,7 +173,10 @@ public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
      * The write concern to use for the insertion. By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;

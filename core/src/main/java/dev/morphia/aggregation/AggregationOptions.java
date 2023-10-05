@@ -37,17 +37,6 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     private Document hint;
 
     /**
-     * @return the configuration value
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean allowDiskUse() {
-        return allowDiskUse;
-    }
-
-    /**
      * Enables writing to temporary files.
      *
      * @param allowDiskUse true to enable
@@ -112,17 +101,6 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     }
 
     /**
-     * @return the configuration value
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public int batchSize() {
-        return batchSize;
-    }
-
-    /**
      * Sets the batch size for fetching results.
      *
      * @param batchSize the size
@@ -131,17 +109,6 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     public AggregationOptions batchSize(int batchSize) {
         this.batchSize = batchSize;
         return this;
-    }
-
-    /**
-     * @return the configuration value
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean bypassDocumentValidation() {
-        return bypassDocumentValidation;
     }
 
     /**
@@ -156,17 +123,6 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     public AggregationOptions bypassDocumentValidation(boolean bypassDocumentValidation) {
         this.bypassDocumentValidation = bypassDocumentValidation;
         return this;
-    }
-
-    /**
-     * @return the configuration value
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Collation collation() {
-        return collation;
     }
 
     /**
@@ -207,19 +163,6 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     }
 
     /**
-     * @return the hint for which index to use. A null value means no hint is set.
-     * @mongodb.server.release 3.6
-     * @since 2.0
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Document hint() {
-        return hint;
-    }
-
-    /**
      * Sets the hint for which index to use. A null value means no hint is set.
      *
      * @param hint the hint
@@ -230,17 +173,6 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     public AggregationOptions hint(String hint) {
         this.hint = new Document("hint", hint);
         return this;
-    }
-
-    /**
-     * @return the configuration value
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public long maxTimeMS() {
-        return maxTimeMS;
     }
 
     /**

@@ -15,31 +15,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  */
 @MorphiaInternal
 public interface ReadConfigurable<T> extends CollectionConfiguration {
-    /**
-     * Gets the read concern
-     *
-     * @return the read concern
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    default ReadConcern getReadConcern() {
-        return readConcern();
-    }
-
-    /**
-     * @return the read preference
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    default ReadPreference getReadPreference() {
-        return readPreference();
-    }
 
     /**
      * @hidden

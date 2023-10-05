@@ -919,12 +919,12 @@ public class MorphiaDatastore implements Datastore {
 
         @Override
         public <T> InsertManyResult insertMany(MongoCollection<T> collection, List<T> list, InsertManyOptions options) {
-            return collection.insertMany(list, options.options());
+            return collection.insertMany(list, options.driver());
         }
 
         @Override
         public <T> InsertOneResult insertOne(MongoCollection<T> collection, T entity, InsertOneOptions options) {
-            return collection.insertOne(entity, options.options());
+            return collection.insertOne(entity, options.driver());
         }
 
         @Override

@@ -77,6 +77,11 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String collection() {
         return collection;
@@ -149,14 +154,6 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
 
     /**
      * @return is this delete for multiple documents
-     */
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean isMulti() {
-        return multi;
-    }
-
-    /**
-     * @return is this delete for multiple documents
      * @morphia.internal
      * @hidden
      */
@@ -189,9 +186,72 @@ public final class DeleteOptions extends com.mongodb.client.model.DeleteOptions
      * The write concern to use for the delete.
      *
      * @return the write concern, or null if the default will be used.
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public Collation getCollation() {
+        return super.getCollation();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public Bson getHint() {
+        return super.getHint();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public String getHintString() {
+        return super.getHintString();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public BsonValue getComment() {
+        return super.getComment();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public Bson getLet() {
+        return super.getLet();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

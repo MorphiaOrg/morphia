@@ -220,12 +220,12 @@ public class SessionDatastore extends MorphiaDatastore implements MorphiaSession
 
         @Override
         public <T> InsertManyResult insertMany(MongoCollection<T> collection, List<T> list, InsertManyOptions options) {
-            return collection.insertMany(session, list, options.options());
+            return collection.insertMany(session, list, options.driver());
         }
 
         @Override
         public <T> InsertOneResult insertOne(MongoCollection<T> collection, T entity, InsertOneOptions options) {
-            return collection.insertOne(session, entity, options.options());
+            return collection.insertOne(session, entity, options.driver());
         }
 
         @Override

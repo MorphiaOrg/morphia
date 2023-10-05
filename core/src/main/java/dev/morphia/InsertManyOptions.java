@@ -56,6 +56,11 @@ public class InsertManyOptions implements WriteConfigurable<InsertManyOptions>, 
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     @Nullable
     public String collection() {
@@ -67,7 +72,10 @@ public class InsertManyOptions implements WriteConfigurable<InsertManyOptions>, 
      *
      * @return whether to bypass document validation, or null if unspecified.
      * @mongodb.server.release 3.2
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     @Nullable
     public Boolean bypassDocumentValidation() {
         return options.getBypassDocumentValidation();
@@ -95,47 +103,21 @@ public class InsertManyOptions implements WriteConfigurable<InsertManyOptions>, 
         return this;
     }
 
-    /**
-     * Gets whether to bypass document validation, or null if unspecified. The default is null.
-     *
-     * @return whether to bypass document validation, or null if unspecified.
-     * @mongodb.server.release 3.2
-     */
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Boolean getBypassDocumentValidation() {
-        return options.getBypassDocumentValidation();
-    }
-
     @Override
     public InsertManyOptions writeConcern(@Nullable WriteConcern writeConcern) {
         this.writeConcern = writeConcern;
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
-    }
-
-    /**
-     * @return the driver version of this instance
-     */
-    @Deprecated(forRemoval = true, since = "2.3")
-    public com.mongodb.client.model.InsertManyOptions getOptions() {
-        return options;
-    }
-
-    /**
-     * Gets whether the documents should be inserted in the order provided, stopping on the first failed insertion. The default is true.
-     * If false, the server will attempt to insert all the documents regardless of an failures.
-     *
-     * @return whether the the documents should be inserted in order
-     */
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean isOrdered() {
-        return options.isOrdered();
     }
 
     /**
@@ -145,7 +127,7 @@ public class InsertManyOptions implements WriteConfigurable<InsertManyOptions>, 
      * @since 2.3
      */
     @MorphiaInternal
-    public com.mongodb.client.model.InsertManyOptions options() {
+    public com.mongodb.client.model.InsertManyOptions driver() {
         return options;
     }
 

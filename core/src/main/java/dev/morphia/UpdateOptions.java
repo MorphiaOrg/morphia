@@ -74,6 +74,11 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
         return this;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public String collection() {
         return collection;
@@ -161,14 +166,6 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
 
     /**
      * @return true if the update should affect all entities
-     */
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean isMulti() {
-        return multi;
-    }
-
-    /**
-     * @return true if the update should affect all entities
      * @hidden
      * @morphia.internal
      */
@@ -214,8 +211,101 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
      * The write concern to use for the insertion. By default the write concern configured for the MongoCollection instance will be used.
      *
      * @return the write concern, or null if the default will be used.
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public WriteConcern writeConcern() {
         return writeConcern;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public Boolean getBypassDocumentValidation() {
+        return super.getBypassDocumentValidation();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public Collation getCollation() {
+        return super.getCollation();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public List<? extends Bson> getArrayFilters() {
+        return super.getArrayFilters();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public Bson getHint() {
+        return super.getHint();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public String getHintString() {
+        return super.getHintString();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public BsonValue getComment() {
+        return super.getComment();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public Bson getLet() {
+        return super.getLet();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public boolean isUpsert() {
+        return super.isUpsert();
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

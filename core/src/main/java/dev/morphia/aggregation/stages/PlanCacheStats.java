@@ -21,17 +21,6 @@ public class PlanCacheStats extends Stage {
      * Creates the new stage
      *
      * @return the new stage
-     * @deprecated use {@link #planCacheStats()}
-     */
-    @Deprecated(forRemoval = true)
-    public static PlanCacheStats of() {
-        return new PlanCacheStats();
-    }
-
-    /**
-     * Creates the new stage
-     *
-     * @return the new stage
      * @since 2.2
      * @hidden
      * @morphia.internal
