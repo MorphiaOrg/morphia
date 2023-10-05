@@ -61,9 +61,9 @@ public final class MorphiaInternals {
     }
 
     /**
-     * @param version the required mininum version
-     * @param block
-     * @return
+     * @param version the required minimum version
+     * @param block   the block to invoke
+     * @return the block's result
      */
     public static <V> V tryInvoke(DriverVersion version, Supplier<V> block, Supplier<V> fallback) {
         if (versions.get(version) == null) {

@@ -6,8 +6,6 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
-import dev.morphia.aggregation.expressions.impls.ConvertType;
-
 import org.bson.Document;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
@@ -15,7 +13,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.TypeExpressions.convert;
 import static dev.morphia.aggregation.expressions.TypeExpressions.isNumber;
 import static dev.morphia.aggregation.expressions.TypeExpressions.toBool;
 import static dev.morphia.aggregation.expressions.TypeExpressions.toDate;
