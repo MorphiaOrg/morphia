@@ -54,6 +54,10 @@ jobs:
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: [ 4.10.2 ]
         include:
+          - java: 21
+            mongo: 7
+            driver: 4.10.2
+            optional: true
           - java: 17
             mongo: 7
             driver: 4.9.1
