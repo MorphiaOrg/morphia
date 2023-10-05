@@ -5,7 +5,6 @@ dev.morphia.aggregation.expressions.impls
 dev.morphia.aggregation.stages
 dev.morphia.annotations
 dev.morphia.config
-dev.morphia.geo
 dev.morphia.mapping
 dev.morphia.query
 dev.morphia.query.filters
