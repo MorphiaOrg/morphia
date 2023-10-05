@@ -10,23 +10,19 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
-import dev.morphia.query.internal.DatastoreAware;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 
 /**
  * @morphia.internal
  * @since 2.0
  */
 @MorphiaInternal
-class SetOnInsertOperator extends UpdateOperator implements DatastoreAware {
+class SetOnInsertOperator extends UpdateOperator {
     private final Map<String, Object> insertValues;
-    private MorphiaDatastore datastore;
 
     /**
      * @param values the values
@@ -43,22 +39,13 @@ class SetOnInsertOperator extends UpdateOperator implements DatastoreAware {
      * @hidden
      * @morphia.internal
      */
-    @Override
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public void setDatastore(MorphiaDatastore datastore) {
-        this.datastore = datastore;
-    }
-
-    /**
-     * @hidden
-     * @morphia.internal
-     */
     @MorphiaInternal
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public OperationTarget toTarget(PathTarget pathTarget) {
+    public OperationTarget toOperationTarget(MorphiaDatastore datastore, EntityModel model, boolean validate) {
+        var pathTarget = new PathTarget(datastore.getMapper(), model, field(), validate);
+
         Mapper mapper = pathTarget.mapper();
-        EntityModel model = mapper.getEntityModel(pathTarget.root().getType());
         DocumentWriter writer = new DocumentWriter(mapper.getConfig());
         document(writer, () -> {
             insertValues.forEach((key, value) -> {

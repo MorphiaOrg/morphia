@@ -12,7 +12,7 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 
 public class FieldsCodec implements Codec<Fields> {
     private final MorphiaDatastore datastore;

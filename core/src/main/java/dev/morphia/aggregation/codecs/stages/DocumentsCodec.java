@@ -6,8 +6,8 @@ import dev.morphia.aggregation.stages.Documents;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.array;
+import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 
 public class DocumentsCodec extends StageCodec<Documents> {
     public DocumentsCodec(MorphiaDatastore datastore) {

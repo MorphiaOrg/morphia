@@ -6,7 +6,7 @@ import dev.morphia.aggregation.expressions.impls.MergeObjects;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 
 public class MergeObjectsCodec extends BaseExpressionCodec<MergeObjects> {
     public MergeObjectsCodec(MorphiaDatastore datastore) {

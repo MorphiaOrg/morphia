@@ -7,8 +7,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
+import static dev.morphia.mapping.codec.CodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.value;
 
 /**
  * Encodes a UnionWith stage

@@ -47,6 +47,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
+import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import dev.morphia.query.ValidationException;
@@ -64,11 +65,10 @@ import dev.morphia.test.models.User;
 import dev.morphia.test.query.TestQuery.CappedPic;
 import dev.morphia.test.query.TestQuery.ContainsPic;
 import dev.morphia.test.query.TestQuery.Pic;
-import dev.morphia.utils.Documenter;
 
 import org.bson.BsonTimestamp;
 import org.bson.Document;
-import org.bson.codecs.Codec;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.hamcrest.CoreMatchers;
@@ -121,6 +121,8 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "ConstantConditions", "unused", "removal" })
 public class TestUpdateOperations extends TestBase {
+
+    private static final JsonWriterSettings WRITER_SETTINGS = JsonWriterSettings.builder().indent(true).build();
 
     public TestUpdateOperations() {
         super(buildConfig(LogHolder.class, CappedPic.class, Shape.class));
@@ -1403,9 +1405,11 @@ public class TestUpdateOperations extends TestBase {
 
     @Test(dataProvider = "paths")
     public void testPathTranslations(TranslationParams params) {
-        Document document = Documenter.toDocument(getDs(), getMapper().getEntityModel(Hotel.class), List.of(params.operator), false);
-        Codec<Document> documentCodec = getDs().getCodecRegistry().get(Document.class);
-        var json = document.toJson(JsonWriterSettings.builder().indent(true).build(), documentCodec);
+        CodecRegistry registry = getDs().getCodecRegistry();
+        Operations value = new Operations(getMapper().getEntityModel(Hotel.class), List.of(params.operator), false);
+
+        var json = value.toDocument(getDs())
+                .toJson(WRITER_SETTINGS, registry.get(Document.class));
 
         String format = format("\"%s\"", params.mappedName);
         assertTrue(json.contains(format), format("failed to find '%s' in:%n%s", format, json));

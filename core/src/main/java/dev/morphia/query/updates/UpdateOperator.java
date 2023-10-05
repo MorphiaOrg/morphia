@@ -2,8 +2,10 @@ package dev.morphia.query.updates;
 
 import java.util.List;
 
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.UpdateException;
 import dev.morphia.sofia.Sofia;
@@ -67,13 +69,15 @@ public class UpdateOperator {
      * Creates the OperationTarget for serialization
      *
      * @param pathTarget the PathTarget
+     * @param datastore
+     * @param validate
      * @return the OperationTarget
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
-    public OperationTarget toTarget(PathTarget pathTarget) {
-        return new OperationTarget(pathTarget, value());
+    public OperationTarget toOperationTarget(MorphiaDatastore datastore, EntityModel model, boolean validate) {
+        return new OperationTarget(new PathTarget(datastore.getMapper(), model, field(), validate), value());
     }
 
     /**

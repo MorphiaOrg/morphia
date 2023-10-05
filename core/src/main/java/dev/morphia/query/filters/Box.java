@@ -2,41 +2,44 @@ package dev.morphia.query.filters;
 
 import com.mongodb.client.model.geojson.Point;
 
-import dev.morphia.MorphiaDatastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-class Box extends Filter {
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
+public class Box extends Filter {
 
     private final Point bottomLeft;
     private final Point upperRight;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected Box(String field, Point bottomLeft, Point upperRight) {
         super("$box", field, null);
         this.bottomLeft = bottomLeft;
         this.upperRight = upperRight;
     }
 
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(datastore.getMapper()));
-        writer.writeStartDocument("$geoWithin");
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public Point bottomLeft() {
+        return bottomLeft;
+    }
 
-        writer.writeStartArray(getName());
-        writer.writeStartArray();
-        for (Double value : bottomLeft.getPosition().getValues()) {
-            writer.writeDouble(value);
-        }
-        writer.writeEndArray();
-        writer.writeStartArray();
-        for (Double value : upperRight.getPosition().getValues()) {
-            writer.writeDouble(value);
-        }
-        writer.writeEndArray();
-        writer.writeEndArray();
-
-        writer.writeEndDocument();
-        writer.writeEndDocument();
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public Point upperRight() {
+        return upperRight;
     }
 }

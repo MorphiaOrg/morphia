@@ -278,9 +278,9 @@ public class FiltersTest extends TestBase {
     @Test
     public void testOr() {
         getDs().find(Budget.class)
-                .filter(or()
-                        .add(lt("budget", 10000))
-                        .add(gt("budget", 12)))
+                .filter(or(
+                        lt("budget", 10000),
+                        gt("budget", 12)))
                 .iterator();
     }
 

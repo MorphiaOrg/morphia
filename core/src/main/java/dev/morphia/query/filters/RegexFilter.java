@@ -4,13 +4,7 @@ import java.util.regex.Pattern;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonRegularExpression;
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Defines a regular expression filter
@@ -21,24 +15,13 @@ import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
 public class RegexFilter extends Filter {
     private String options;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     RegexFilter(String field, @Nullable String pattern) {
         super("$regex", field, pattern);
-    }
-
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(datastore.getMapper()));
-        if (isNot()) {
-            writer.writeStartDocument("$not");
-        }
-        writer.writeName("$regex");
-        datastore.getCodecRegistry().get(BsonRegularExpression.class)
-                .encode(writer, new BsonRegularExpression((String) getValue()), context);
-        value(writer, "$options", options);
-        if (isNot()) {
-            writer.writeEndDocument();
-        }
-        writer.writeEndDocument();
     }
 
     /**
@@ -132,5 +115,14 @@ public class RegexFilter extends Filter {
         if (!options.contains(option)) {
             options += option;
         }
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public String options() {
+        return options;
     }
 }

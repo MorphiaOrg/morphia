@@ -3,14 +3,17 @@ package dev.morphia.query.updates;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.filters.Filter;
 
 import org.bson.Document;
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 
 /**
  * Defines an operator for $pull
@@ -37,13 +40,18 @@ class PullOperator extends UpdateOperator {
      */
     @MorphiaInternal
     @Override
-    public OperationTarget toTarget(PathTarget pathTarget) {
+    public OperationTarget toOperationTarget(MorphiaDatastore datastore, EntityModel model, boolean validate) {
+        var pathTarget = new PathTarget(datastore.getMapper(), model, field(), validate);
+
         return new OperationTarget(pathTarget, value()) {
             @Override
             public Object encode(MorphiaDatastore datastore) {
                 DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
+                CodecRegistry registry = datastore.getCodecRegistry();
                 document(writer, () -> {
-                    ((Filter) getValue()).encode(datastore, writer, EncoderContext.builder().build());
+                    Filter filter = (Filter) getValue();
+                    Codec codec = registry.get(filter.getClass());
+                    codec.encode(writer, filter, EncoderContext.builder().build());
                 });
 
                 return new Document(pathTarget.translatedPath(), writer.getDocument());

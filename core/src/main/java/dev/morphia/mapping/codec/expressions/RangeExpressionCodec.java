@@ -6,7 +6,7 @@ import dev.morphia.aggregation.expressions.impls.RangeExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
+import static dev.morphia.mapping.codec.CodecHelper.array;
 
 public class RangeExpressionCodec extends BaseExpressionCodec<RangeExpression> {
     public RangeExpressionCodec(MorphiaDatastore datastore) {

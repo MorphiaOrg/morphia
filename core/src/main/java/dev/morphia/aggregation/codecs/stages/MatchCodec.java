@@ -5,9 +5,10 @@ import dev.morphia.aggregation.stages.Match;
 import dev.morphia.query.filters.Filter;
 
 import org.bson.BsonWriter;
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 
 public class MatchCodec extends StageCodec<Match> {
 
@@ -25,7 +26,8 @@ public class MatchCodec extends StageCodec<Match> {
     protected void encodeStage(BsonWriter writer, Match value, EncoderContext encoderContext) {
         document(writer, () -> {
             for (Filter filter : value.getFilters()) {
-                filter.encode(getDatastore(), writer, encoderContext);
+                Codec codec = getCodecRegistry().get(filter.getClass());
+                codec.encode(writer, filter, encoderContext);
             }
         });
     }

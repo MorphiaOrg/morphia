@@ -6,8 +6,8 @@ import dev.morphia.aggregation.expressions.impls.FunctionExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.array;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 
 public class FunctionExpressionCodec extends BaseExpressionCodec<FunctionExpression> {
     public FunctionExpressionCodec(MorphiaDatastore datastore) {

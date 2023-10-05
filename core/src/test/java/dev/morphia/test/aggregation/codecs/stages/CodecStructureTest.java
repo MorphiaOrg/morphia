@@ -50,7 +50,7 @@ import static dev.morphia.aggregation.expressions.SystemVariables.DESCEND;
 import static dev.morphia.aggregation.expressions.SystemVariables.NOW;
 import static dev.morphia.aggregation.expressions.SystemVariables.PRUNE;
 import static dev.morphia.aggregation.expressions.SystemVariables.ROOT;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
 import static org.bson.Document.parse;

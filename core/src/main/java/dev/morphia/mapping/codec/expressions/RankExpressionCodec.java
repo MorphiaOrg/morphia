@@ -6,7 +6,7 @@ import dev.morphia.aggregation.expressions.impls.RankExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 
 public class RankExpressionCodec extends BaseExpressionCodec<RankExpression> {
     public RankExpressionCodec(MorphiaDatastore datastore) {

@@ -29,15 +29,17 @@ import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
-import dev.morphia.utils.Documenter;
 
 import org.bson.Document;
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.coalesce;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @param <T> the type
@@ -181,11 +183,12 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
-        Document update = Documenter.toDocument(datastore, mapper.getEntityModel(getEntityClass()), Documenter.coalesce(first, updates),
-                validate);
+        EntityModel entityModel = mapper.getEntityModel(getEntityClass());
+
+        Operations value = new Operations(entityModel, coalesce(first, updates), validate);
 
         return datastore.operations().findOneAndUpdate(datastore.configureCollection(options, collection),
-                toDocument(), update, options);
+                toDocument(), value.toDocument(datastore), options);
     }
 
     @MorphiaInternal
@@ -216,7 +219,9 @@ public class MorphiaQuery<T> implements Query<T> {
             throw invalid;
         }
         EntityModel entityModel = mapper.getEntityModel(getEntityClass());
-        Document updateOperations = Documenter.toDocument(datastore, entityModel, Documenter.coalesce(first, updates), isValidate());
+        Document updateOperations = new Operations(entityModel, coalesce(first, updates), isValidate())
+                .toDocument(datastore);
+
         final Document queryObject = toDocument();
         if (options.isUpsert()) {
             if (entityModel.useDiscriminator()) {
@@ -235,11 +240,20 @@ public class MorphiaQuery<T> implements Query<T> {
         if (invalid != null) {
             throw invalid;
         }
-        List<Document> updateOperations = Documenter.toDocument(datastore, Documenter.coalesce(first, stages));
+        var updateOperations = coalesce(first, stages)
+                .stream()
+                .map(update -> {
+                    DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
+                    Codec codec = datastore.getCodecRegistry().get(update.getClass());
+                    codec.encode(writer, update, EncoderContext.builder().build());
+                    return writer.getDocument();
+                })
+                .collect(toList());
         final Document queryObject = toDocument();
 
         MongoCollection<T> mongoCollection = datastore.configureCollection(options, datastore.configureCollection(options, collection));
-        return options.multi() ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
+        return options.multi()
+                ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
                 : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
     }
 
@@ -317,7 +331,8 @@ public class MorphiaQuery<T> implements Query<T> {
             document(writer, () -> {
                 EncoderContext context = EncoderContext.builder().build();
                 for (Filter filter : filters) {
-                    filter.encode(datastore, writer, context);
+                    Codec codec = datastore.getCodecRegistry().get(filter.getClass());
+                    codec.encode(writer, filter, context);
                 }
             });
 

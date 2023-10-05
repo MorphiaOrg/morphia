@@ -10,7 +10,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 
 public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
     public ReplaceWithCodec(MorphiaDatastore datastore) {

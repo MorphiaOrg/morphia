@@ -6,7 +6,7 @@ import dev.morphia.aggregation.stages.Out;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 
 public class OutCodec extends StageCodec<Out> {
     public OutCodec(MorphiaDatastore datastore) {

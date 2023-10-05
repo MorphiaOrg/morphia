@@ -11,8 +11,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.array;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.array;
+import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 
 public class AccumulatorCodec extends BaseExpressionCodec<Accumulator> {
     public AccumulatorCodec(MorphiaDatastore datastore) {

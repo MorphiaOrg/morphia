@@ -3,8 +3,7 @@ package dev.morphia.aggregation.expressions;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
 import dev.morphia.aggregation.expressions.impls.LogicalExpression;
-
-import static dev.morphia.aggregation.expressions.impls.ExpressionList.coalesce;
+import dev.morphia.mapping.codec.CodecHelper;
 
 /**
  * Defines helper methods for the boolean expressions
@@ -26,7 +25,7 @@ public final class BooleanExpressions {
      * @aggregation.expression $and
      */
     public static LogicalExpression and(Expression first, Expression... additional) {
-        return new LogicalExpression("$and", coalesce(first, additional));
+        return new LogicalExpression("$and", new ExpressionList(CodecHelper.coalesce(first, additional)));
     }
 
     /**
@@ -62,7 +61,7 @@ public final class BooleanExpressions {
      * @aggregation.expression $or
      */
     public static LogicalExpression or(Expression first, Expression... additional) {
-        return new LogicalExpression("$or", coalesce(first, additional));
+        return new LogicalExpression("$or", new ExpressionList(CodecHelper.coalesce(first, additional)));
     }
 
     /**

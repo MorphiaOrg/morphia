@@ -7,9 +7,9 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
+import static dev.morphia.mapping.codec.CodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.value;
 
 public class SetFieldExpressionCodec extends BaseExpressionCodec<SetFieldExpression> {
     public SetFieldExpressionCodec(MorphiaDatastore datastore) {

@@ -8,8 +8,8 @@ import dev.morphia.aggregation.expressions.impls.PipelineField;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 
 public class DocumentExpressionCodec extends BaseExpressionCodec<DocumentExpression> {
     public DocumentExpressionCodec(MorphiaDatastore datastore) {

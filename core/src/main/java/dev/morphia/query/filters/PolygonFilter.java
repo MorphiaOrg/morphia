@@ -2,33 +2,32 @@ package dev.morphia.query.filters;
 
 import com.mongodb.client.model.geojson.Point;
 
-import dev.morphia.MorphiaDatastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-class PolygonFilter extends Filter {
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
+public class PolygonFilter extends Filter {
     private final Point[] points;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     PolygonFilter(String field, Point[] points) {
         super("$polygon", field, null);
         this.points = points;
     }
 
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(datastore.getMapper()));
-        writer.writeStartDocument("$geoWithin");
-        writer.writeStartArray("$polygon");
-        for (Point point : points) {
-            writer.writeStartArray();
-            for (Double value : point.getPosition().getValues()) {
-                writer.writeDouble(value);
-            }
-            writer.writeEndArray();
-        }
-        writer.writeEndArray();
-        writer.writeEndDocument();
-        writer.writeEndDocument();
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public Point[] points() {
+        return points;
     }
 }

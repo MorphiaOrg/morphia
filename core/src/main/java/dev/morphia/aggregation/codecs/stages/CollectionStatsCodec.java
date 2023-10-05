@@ -6,7 +6,7 @@ import dev.morphia.aggregation.stages.CollectionStats;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 
 public class CollectionStatsCodec extends StageCodec<CollectionStats> {
     public CollectionStatsCodec(MorphiaDatastore datastore) {

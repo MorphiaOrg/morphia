@@ -132,7 +132,7 @@ public class MorphiaExpressionCodecProvider implements CodecProvider {
         return codec;
     }
 
-    protected void addCodec(BaseExpressionCodec<?> codec) {
+    private void addCodec(BaseExpressionCodec<?> codec) {
         codecs.put(codec.getEncoderClass(), codec);
     }
 

@@ -15,7 +15,6 @@ import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
 import static java.lang.String.format;
 
 /**
@@ -63,17 +62,9 @@ public class Filter {
      * @hidden
      * @morphia.internal
      */
-    @MorphiaInternal
+    @Deprecated
     public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        document(writer, path(datastore.getMapper()), () -> {
-            if (not) {
-                document(writer, "$not", () -> {
-                    writeNamedValue(name, getValue(datastore), datastore, writer, context);
-                });
-            } else {
-                writeNamedValue(name, getValue(datastore), datastore, writer, context);
-            }
-        });
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -117,7 +108,6 @@ public class Filter {
      * @hidden
      * @morphia.internal
      */
-    @Nullable
     @MorphiaInternal
     public String getName() {
         return name;
@@ -165,7 +155,7 @@ public class Filter {
      */
     @MorphiaInternal
     @Nullable
-    protected Object getValue(MorphiaDatastore datastore) {
+    public Object getValue(MorphiaDatastore datastore) {
         if (!mapped) {
             PathTarget target = pathTarget(datastore.getMapper());
             OperationTarget operationTarget = new OperationTarget(pathTarget, value);
@@ -194,7 +184,7 @@ public class Filter {
      * @morphia.internal
      */
     @MorphiaInternal
-    protected String path(Mapper mapper) {
+    public String path(Mapper mapper) {
         return pathTarget(mapper).translatedPath();
     }
 

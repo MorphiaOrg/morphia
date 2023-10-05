@@ -4,12 +4,9 @@ import java.util.Map;
 
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Point;
+import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 /**
  * Defines a filter for $near and $nearSphere queries
@@ -21,6 +18,11 @@ public class NearFilter extends Filter {
     private Double minDistance;
     private CoordinateReferenceSystem crs;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     NearFilter(String filterName, String field, Point point) {
         super(filterName, field, point);
     }
@@ -69,30 +71,31 @@ public class NearFilter extends Filter {
         return this;
     }
 
-    @Override
+    /**
+     * @hidden
+     * @morphia.internal
+     */
     @MorphiaInternal
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(datastore.getMapper()));
-        if (isNot()) {
-            writer.writeStartDocument("$not");
-        }
-        writer.writeStartDocument(getName());
-        writer.writeName("$geometry");
-        writeUnnamedValue(getValue(datastore), datastore, writer, context);
-        if (maxDistance != null) {
-            writeNamedValue("$maxDistance", maxDistance, datastore, writer, context);
-        }
-        if (minDistance != null) {
-            writeNamedValue("$minDistance", minDistance, datastore, writer, context);
-        }
-        if (crs != null) {
-            writeNamedValue("crs", crs, datastore, writer, context);
-        }
-        writer.writeEndDocument();
-        if (isNot()) {
-            writer.writeEndDocument();
-        }
-        writer.writeEndDocument();
+    public Double maxDistance() {
+        return maxDistance;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public Double minDistance() {
+        return minDistance;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @Nullable
+    @MorphiaInternal
+    public CoordinateReferenceSystem crs() {
+        return crs;
+    }
 }

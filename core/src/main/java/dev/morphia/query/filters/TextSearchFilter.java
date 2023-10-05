@@ -1,9 +1,6 @@
 package dev.morphia.query.filters;
 
-import dev.morphia.MorphiaDatastore;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Defines a text search filter
@@ -43,22 +40,6 @@ public class TextSearchFilter extends Filter {
         return this;
     }
 
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(getName());
-        writeNamedValue("$search", searchText, datastore, writer, context);
-        if (language != null) {
-            writeNamedValue("$language", language, datastore, writer, context);
-        }
-        if (Boolean.TRUE.equals(caseSensitive)) {
-            writeNamedValue("$caseSensitive", caseSensitive, datastore, writer, context);
-        }
-        if (Boolean.TRUE.equals(diacriticSensitive)) {
-            writeNamedValue("$diacriticSensitive", diacriticSensitive, datastore, writer, context);
-        }
-        writer.writeEndDocument();
-    }
-
     /**
      * Sets the language to use
      *
@@ -68,5 +49,41 @@ public class TextSearchFilter extends Filter {
     public TextSearchFilter language(String language) {
         this.language = language;
         return this;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public String searchText() {
+        return searchText;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public String language() {
+        return language;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public Boolean caseSensitive() {
+        return caseSensitive;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public Boolean diacriticSensitive() {
+        return diacriticSensitive;
     }
 }

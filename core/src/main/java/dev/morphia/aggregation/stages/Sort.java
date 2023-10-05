@@ -7,7 +7,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 
 /**
  * Sorts all input documents and returns them to the pipeline in sorted order.

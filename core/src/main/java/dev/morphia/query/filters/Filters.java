@@ -8,19 +8,11 @@ import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.mapping.codec.expressions.ExpressionCodecHelper;
 import dev.morphia.query.Type;
 
-import org.bson.BsonWriter;
 import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 
@@ -53,7 +45,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $and
      */
-    public static LogicalFilter and(Filter... filters) {
+    public static Filter and(Filter... filters) {
         return new LogicalFilter("$and", filters);
     }
 
@@ -207,21 +199,7 @@ public final class Filters {
      * @query.filter $eq
      */
     public static Filter eq(String field, @Nullable Object val) {
-        return new Filter("$eq", field, val) {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-                if (isNot()) {
-                    document(writer, path(datastore.getMapper()), () -> {
-                        document(writer, "$not", () -> {
-                            writer.writeName(getName());
-                            writeUnnamedValue(getValue(datastore), datastore, writer, context);
-                        });
-                    });
-                } else {
-                    writeNamedValue(path(datastore.getMapper()), getValue(datastore), datastore, writer, context);
-                }
-            }
-        };
+        return new EqFilter(field, val);
     }
 
     /**
@@ -232,15 +210,7 @@ public final class Filters {
      * @query.filter $exists
      */
     public static Filter exists(String field) {
-        return new Filter("$exists", field, null) {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-                writer.writeStartDocument(path(datastore.getMapper()));
-                writer.writeName(getName());
-                writer.writeBoolean(!isNot());
-                writer.writeEndDocument();
-            }
-        };
+        return new ExistsFilter(field);
     }
 
     /**
@@ -251,24 +221,7 @@ public final class Filters {
      * @query.filter $expr
      */
     public static Filter expr(Expression expression) {
-        return new Filter("$expr", null, expression) {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-                writer.writeName("$expr");
-                Expression value = getValue();
-                if (value != null) {
-                    Codec codec = datastore.getCodecRegistry().get(value.getClass());
-                    ExpressionCodecHelper.encodeIfNotNull(datastore.getCodecRegistry(), writer, value, context);
-                } else {
-                    writer.writeNull();
-                }
-            }
-
-            @Override
-            public Expression getValue() {
-                return (Expression) super.getValue();
-            }
-        };
+        return new ExprFilter(expression);
     }
 
     /**
@@ -378,12 +331,7 @@ public final class Filters {
      * @since 2.1
      */
     public static Filter jsonSchema(Document schema) {
-        return new Filter("$jsonSchema", null, schema) {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-                value(datastore.getCodecRegistry(), writer, "$jsonSchema", schema, context);
-            }
-        };
+        return new JsonSchemaFilter(schema);
     }
 
     /**
@@ -444,18 +392,7 @@ public final class Filters {
      * @query.filter $mod
      */
     public static Filter mod(String field, long divisor, long remainder) {
-        return new Filter("$mod", field, null) {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-                writer.writeStartDocument(path(datastore.getMapper()));
-                writer.writeName(getName());
-                writer.writeStartArray();
-                writeUnnamedValue(divisor, datastore, writer, context);
-                writeUnnamedValue(remainder, datastore, writer, context);
-                writer.writeEndArray();
-                writer.writeEndDocument();
-            }
-        };
+        return new ModFilter(field, divisor, remainder);
     }
 
     /**
@@ -525,7 +462,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $nor
      */
-    public static LogicalFilter nor(Filter... filters) {
+    public static Filter nor(Filter... filters) {
         return new LogicalFilter("$nor", filters);
     }
 
@@ -536,7 +473,7 @@ public final class Filters {
      * @return the filter
      * @query.filter $or
      */
-    public static LogicalFilter or(Filter... filters) {
+    public static Filter or(Filter... filters) {
         return new LogicalFilter("$or", filters);
     }
 
@@ -647,22 +584,7 @@ public final class Filters {
      * @query.filter $where
      */
     public static Filter where(String val) {
-        return new Filter("$where", null, val) {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-                writer.writeName(getName());
-                Object where = getValue();
-                if (where != null) {
-                    String value = where.toString().trim();
-                    if (!value.startsWith("function()")) {
-                        value = format("function() { %s }", value);
-                    }
-                    writer.writeString(value);
-                } else {
-                    writer.writeNull();
-                }
-            }
-        };
+        return new WhereFilter(val);
     }
 
 }

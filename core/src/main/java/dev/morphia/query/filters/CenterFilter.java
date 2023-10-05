@@ -3,38 +3,31 @@ package dev.morphia.query.filters;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.MorphiaDatastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-class CenterFilter extends Filter {
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
+public class CenterFilter extends Filter {
     private final double radius;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected CenterFilter(String filterName, String field, Point value, double radius) {
         super(filterName, field, value);
         this.radius = radius;
     }
 
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(datastore.getMapper()));
-        writer.writeStartDocument("$geoWithin");
-
-        writer.writeStartArray(getName());
-        Point center = getValue();
-        writer.writeStartArray();
-        for (Double value : center.getPosition().getValues()) {
-            writer.writeDouble(value);
-        }
-        writer.writeEndArray();
-        writer.writeDouble(radius);
-        writer.writeEndArray();
-
-        writer.writeEndDocument();
-        writer.writeEndDocument();
-    }
-
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     @NonNull
     public Point getValue() {
@@ -43,6 +36,14 @@ class CenterFilter extends Filter {
             return (Point) value;
         }
         throw new NullPointerException();
+    }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public double radius() {
+        return radius;
     }
 }

@@ -1,8 +1,10 @@
-package dev.morphia.mapping.codec.expressions;
+package dev.morphia.mapping.codec;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
@@ -14,7 +16,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-public class ExpressionCodecHelper {
+import static java.util.Arrays.asList;
+
+public class CodecHelper {
     public static void array(BsonWriter writer, String name, Runnable body) {
         writer.writeStartArray(name);
         body.run();
@@ -36,6 +40,14 @@ public class ExpressionCodecHelper {
                 }
             });
         }
+    }
+
+    @NonNull
+    public static <T> List<T> coalesce(T first, T[] updates) {
+        List<T> operators = new ArrayList<>();
+        operators.add(first);
+        operators.addAll(asList(updates));
+        return operators;
     }
 
     public static void document(BsonWriter writer, String name, Runnable body) {
@@ -126,5 +138,4 @@ public class ExpressionCodecHelper {
             encoderContext.encodeWithChildContext(codec, writer, value);
         }
     }
-
 }

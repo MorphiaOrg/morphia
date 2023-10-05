@@ -10,7 +10,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 
 public class UnsetCodec extends StageCodec<Unset> {
     public UnsetCodec(MorphiaDatastore datastore) {

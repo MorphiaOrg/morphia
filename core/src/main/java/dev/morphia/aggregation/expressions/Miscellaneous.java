@@ -1,15 +1,11 @@
 package dev.morphia.aggregation.expressions;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.SetFieldExpression;
 import dev.morphia.aggregation.expressions.impls.UnsetFieldExpression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
 import dev.morphia.query.filters.Filter;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
 
 /**
  * Defines miscellaneous operators for aggregations.
@@ -69,12 +65,7 @@ public final class Miscellaneous {
      * @since 2.2
      */
     public static Filter sampleRate(double rate) {
-        return new Filter("$sampleRate", null, rate) {
-            @Override
-            public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-                writeNamedValue(getName(), getValue(), datastore, writer, context);
-            }
-        };
+        return new SampleRateFilter(rate);
     }
 
     /**
@@ -142,4 +133,5 @@ public final class Miscellaneous {
     public static Expression unsetField(Expression field, Object input) {
         return new UnsetFieldExpression(field, input);
     }
+
 }

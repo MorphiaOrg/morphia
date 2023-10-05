@@ -10,8 +10,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
+import static dev.morphia.mapping.codec.CodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.value;
 
 public class ChangeStreamCodec extends StageCodec<ChangeStream> {
     public ChangeStreamCodec(MorphiaDatastore datastore) {
@@ -30,11 +30,11 @@ public class ChangeStreamCodec extends StageCodec<ChangeStream> {
             FullDocument fullDocument = changeStream.fullDocument();
             CodecRegistry registry = getDatastore().getCodecRegistry();
             if (fullDocument != FullDocument.DEFAULT) {
-                value(registry, writer, "fullDocument", fullDocument.getValue(), encoderContext);
+                value(writer, "fullDocument", fullDocument.getValue());
             }
             FullDocumentBeforeChange beforeChange = changeStream.fullDocumentBeforeChange();
             if (beforeChange != FullDocumentBeforeChange.DEFAULT) {
-                value(registry, writer, "fullDocumentBeforeChange", beforeChange.getValue(), encoderContext);
+                value(writer, "fullDocumentBeforeChange", beforeChange.getValue());
             }
             if (changeStream.resumeAfter() != null) {
                 value(registry, writer, "resumeAfter", changeStream.resumeAfter(), encoderContext);

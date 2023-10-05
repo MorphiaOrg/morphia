@@ -6,7 +6,7 @@ import dev.morphia.aggregation.expressions.impls.DenseRankExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.document;
 
 public class DenseRankExpressionCodec extends BaseExpressionCodec<DenseRankExpression> {
     public DenseRankExpressionCodec(MorphiaDatastore datastore) {

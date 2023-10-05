@@ -10,8 +10,8 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
+import static dev.morphia.mapping.codec.CodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.value;
 
 public class DensifyCodec extends StageCodec<Densify> {
     public DensifyCodec(MorphiaDatastore datastore) {
@@ -27,7 +27,7 @@ public class DensifyCodec extends StageCodec<Densify> {
     protected void encodeStage(BsonWriter writer, Densify value, EncoderContext encoderContext) {
         document(writer, () -> {
             CodecRegistry registry = getDatastore().getCodecRegistry();
-            value(registry, writer, "field", value.field(), encoderContext);
+            value(writer, "field", value.field());
             document(writer, "range", () -> {
                 Range range = value.range();
                 value(registry, writer, "step", range.step(), encoderContext);

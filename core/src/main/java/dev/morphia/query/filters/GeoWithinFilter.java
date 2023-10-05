@@ -22,10 +22,20 @@ import org.bson.codecs.EncoderContext;
 public class GeoWithinFilter extends Filter {
     private CoordinateReferenceSystem crs;
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     GeoWithinFilter(String field, Polygon value) {
         super("$geoWithin", field, value);
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     GeoWithinFilter(String field, MultiPolygon value) {
         super("$geoWithin", field, value);
     }

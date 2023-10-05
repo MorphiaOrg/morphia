@@ -5,11 +5,12 @@ import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.query.filters.Filter;
 
 import org.bson.BsonWriter;
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.document;
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.value;
+import static dev.morphia.mapping.codec.CodecHelper.document;
+import static dev.morphia.mapping.codec.CodecHelper.value;
 
 public class GeoNearCodec extends StageCodec<GeoNear> {
     public GeoNearCodec(MorphiaDatastore datastore) {
@@ -36,7 +37,8 @@ public class GeoNearCodec extends StageCodec<GeoNear> {
             if (filters != null) {
                 document(writer, "query", () -> {
                     for (Filter filter : filters) {
-                        filter.encode(getDatastore(), writer, encoderContext);
+                        Codec codec = registry.get(filter.getClass());
+                        codec.encode(writer, filter, encoderContext);
                     }
                 });
             }

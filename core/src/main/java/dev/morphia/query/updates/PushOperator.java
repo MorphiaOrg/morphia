@@ -2,8 +2,10 @@ package dev.morphia.query.updates;
 
 import java.util.List;
 
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.Sort;
 import dev.morphia.query.UpdateException;
@@ -95,7 +97,8 @@ public class PushOperator extends UpdateOperator {
      */
     @MorphiaInternal
     @Override
-    public OperationTarget toTarget(PathTarget pathTarget) {
+    public OperationTarget toOperationTarget(MorphiaDatastore datastore, EntityModel model, boolean validate) {
+        var pathTarget = new PathTarget(datastore.getMapper(), model, field(), validate);
         Document document = new Document("$each", value());
         if (position != null) {
             document.put("$position", position);

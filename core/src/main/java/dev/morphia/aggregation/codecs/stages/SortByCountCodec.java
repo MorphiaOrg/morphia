@@ -6,7 +6,7 @@ import dev.morphia.aggregation.stages.SortByCount;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.expressions.ExpressionCodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 
 public class SortByCountCodec extends StageCodec<SortByCount> {
     public SortByCountCodec(MorphiaDatastore datastore) {

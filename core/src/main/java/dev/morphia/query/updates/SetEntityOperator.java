@@ -34,7 +34,9 @@ class SetEntityOperator extends UpdateOperator {
      */
     @MorphiaInternal
     @Override
-    public OperationTarget toTarget(PathTarget pathTarget) {
+    public OperationTarget toOperationTarget(MorphiaDatastore datastore, EntityModel model, boolean validate) {
+        var pathTarget = new PathTarget(datastore.getMapper(), model, field(), validate);
+
         return new OperationTarget(null, value()) {
             @Override
             @SuppressWarnings("unchecked")
