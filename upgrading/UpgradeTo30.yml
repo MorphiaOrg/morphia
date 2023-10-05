@@ -4,7 +4,7 @@
 ###
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: dev.morphia.UpgradeFrom22to23
+name: dev.morphia.UpgradeTo30
 displayName: Migrate from Morphia 2.4.x to 3.0.0
 description: Deprecations removed and methods cleaned up
 recipeList:
@@ -22,3 +22,18 @@ recipeList:
       oldArtifactId: morphia-core
       newVersion: 3.0.0
       overrideManagedVersion: false
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.geo.GeoJson
+      newFullyQualifiedTypeName: com.mongodb.client.model.geojson.GeoJson
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.geo.GeoJsonType
+      newFullyQualifiedTypeName: com.mongodb.client.model.geojson.GeoJsonType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.geo.LineString
+      newFullyQualifiedTypeName: com.mongodb.client.model.geojson.LineString
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.geo.MultiLineString
+      newFullyQualifiedTypeName: com.mongodb.client.model.geojson.MultiLineString
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.geo.Polygon
+      newFullyQualifiedTypeName: com.mongodb.client.model.geojson.Polygon
