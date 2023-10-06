@@ -121,7 +121,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $indexOfArray
      */
-    public static Expression indexOfArray(Expression array, Expression search) {
+    public static ArrayIndexExpression indexOfArray(Expression array, Expression search) {
         return new ArrayIndexExpression(array, search);
     }
 

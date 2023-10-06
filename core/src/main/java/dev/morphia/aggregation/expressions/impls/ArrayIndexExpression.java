@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.aggregation.expressions.ArrayExpressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -9,6 +10,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * found, returns -1.
  * 
  * @since 2.0
+ * @see ArrayExpressions#indexOfArray(Expression, Expression)
  */
 public class ArrayIndexExpression extends Expression {
     private final Expression array;
