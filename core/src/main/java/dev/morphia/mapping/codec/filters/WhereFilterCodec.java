@@ -1,7 +1,6 @@
-package dev.morphia.mapping.codec;
+package dev.morphia.mapping.codec.filters;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.mapping.codec.filters.BaseFilterCodec;
 import dev.morphia.query.filters.WhereFilter;
 
 import org.bson.BsonWriter;

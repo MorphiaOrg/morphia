@@ -1,4 +1,4 @@
-package dev.morphia.mapping.codec;
+package dev.morphia.mapping.codec.expressions;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;

@@ -1,8 +1,8 @@
-package dev.morphia.mapping.codec;
+package dev.morphia.mapping.codec.filters;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.mapping.codec.filters.BaseFilterCodec;
+import dev.morphia.mapping.codec.CodecHelper;
 import dev.morphia.query.filters.ExprFilter;
 
 import org.bson.BsonWriter;

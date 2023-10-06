@@ -22,13 +22,11 @@ import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
 import com.mongodb.CursorType;
-import com.mongodb.DBObject;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.assertions.Assertions;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Collation;
-import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
@@ -279,194 +277,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * @return the cursor type
-     * @hidden
-     * @morphia.internal
-     * @since 2.3
-     */
-    @Nullable
-    @MorphiaInternal
-    public CursorType cursorType() {
-        return cursorType;
-    }
-
-    /**
-     * @return true is disk use is allowed
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Boolean getAllowDiskUse() {
-        return allowDiskUse;
-    }
-
-    /**
-     * @return the batch size
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public int getBatchSize() {
-        return this.batchSize;
-    }
-
-    /**
-     * @return the collation
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Collation getCollation() {
-        return this.collation;
-    }
-
-    /**
-     * @return the comment
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    public String getComment() {
-        return this.comment.toString();
-    }
-
-    /**
-     * @return the cursor type
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    public CursorType getCursorType() {
-        return this.cursorType;
-    }
-
-    /**
-     * @return the index hint
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Document getHint() {
-        return this.hint;
-    }
-
-    /**
-     * @return the limit
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public int getLimit() {
-        return this.limit;
-    }
-
-    /**
-     * @return the max value
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Document getMax() {
-        return this.max;
-    }
-
-    /**
-     * @param timeUnit the unit of time to apply
-     * @return the max await time for the operation
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public long getMaxAwaitTime(TimeUnit timeUnit) {
-        Assertions.notNull("timeUnit", timeUnit);
-        return timeUnit.convert(this.maxAwaitTimeMS, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * @param timeUnit the unit of time to apply
-     * @return the max time for the operation
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public long getMaxTime(TimeUnit timeUnit) {
-        Assertions.notNull("timeUnit", timeUnit);
-        return timeUnit.convert(this.maxTimeMS, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * @return the min value
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Document getMin() {
-        return this.min;
-    }
-
-    /**
-     * @return the projection
-     * @hidden
-     * @morphia.internal
-     */
-    @Nullable
-    @MorphiaInternal
-    public Projection getProjection() {
-        return this.projection;
-    }
-
-    /**
-     * @return the query log id used for retrieving the logged query
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public String getQueryLogId() {
-        return queryLogId;
-    }
-
-    /**
-     * @return the skip count
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public int getSkip() {
-        return this.skip;
-    }
-
-    /**
-     * @return the sort criteria
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    public Document getSort() {
-        return this.sort;
-    }
-
-    /**
      * @hidden
      * @morphia.internal
      */
@@ -504,17 +314,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * @return is the cursor timeout enabled
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean isNoCursorTimeout() {
-        return this.noCursorTimeout;
-    }
-
-    /**
      * Sets the index hint
      *
      * @param hint the hint
@@ -542,17 +341,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      * @param hint the hint
      * @return this
      */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions hint(DBObject hint) {
-        return hint(new Document(hint.toMap()));
-    }
-
-    /**
-     * Defines the index hint value
-     *
-     * @param hint the hint
-     * @return this
-     */
     public FindOptions hintString(String hint) {
         this.hintString = hint;
         return this;
@@ -568,50 +356,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     @MorphiaInternal
     public boolean isLogQuery() {
         return queryLogId != null;
-    }
-
-    /**
-     * @return is oplog replay enabled
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean isOplogReplay() {
-        return this.oplogReplay;
-    }
-
-    /**
-     * @return are partial results enabled
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean isPartial() {
-        return this.partial;
-    }
-
-    /**
-     * @return is return key only enabled
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean isReturnKey() {
-        return this.returnKey;
-    }
-
-    /**
-     * @return is showing the record id enabled
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Deprecated(forRemoval = true, since = "2.3")
-    public boolean isShowRecordId() {
-        return this.showRecordId;
     }
 
     /**
@@ -674,17 +418,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * Defines the max value
-     *
-     * @param max the max
-     * @return this
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions max(DBObject max) {
-        return hint(new Document(max.toMap()));
-    }
-
-    /**
      * Sets the max await time
      *
      * @param maxAwaitTime the max
@@ -721,17 +454,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     public FindOptions min(Document min) {
         this.min = new Document(min);
         return this;
-    }
-
-    /**
-     * Defines the min value
-     *
-     * @param min the min
-     * @return this
-     */
-    @Deprecated(since = "2.0", forRemoval = true)
-    public FindOptions min(DBObject min) {
-        return hint(new Document(min.toMap()));
     }
 
     /**
@@ -810,18 +532,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     public FindOptions readPreference(ReadPreference readPreference) {
         this.readPreference = readPreference;
         return this;
-    }
-
-    /**
-     * @return the sort criteria
-     * @hidden
-     * @morphia.internal
-     */
-    @Nullable
-    @Deprecated(forRemoval = true, since = "2.3")
-    @MorphiaInternal
-    public Document sort() {
-        return this.sort;
     }
 
     /**

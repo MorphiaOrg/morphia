@@ -1,8 +1,7 @@
-package dev.morphia.mapping.codec;
+package dev.morphia.mapping.codec.filters;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.SampleRateFilter;
-import dev.morphia.mapping.codec.filters.BaseFilterCodec;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;

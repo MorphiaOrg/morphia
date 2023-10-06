@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.mapping.codec.expressions.FieldsCodec;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.MapCodec;
@@ -31,11 +32,9 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         addCodec(new MorphiaLocalDateTimeCodec(datastore));
         addCodec(new MorphiaLocalTimeCodec());
         addCodec(new ClassCodec());
-        addCodec(new CenterCodec());
         addCodec(new HashMapCodec());
         addCodec(new LocaleCodec());
         addCodec(new ObjectCodec(datastore));
-        addCodec(new ShapeCodec());
         addCodec(new URICodec());
         addCodec(new ByteWrapperArrayCodec());
         addCodec(new BitSetCodec());

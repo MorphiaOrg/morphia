@@ -1,4 +1,4 @@
-package dev.morphia.mapping.codec;
+package dev.morphia.mapping.codec.references;
 
 import java.util.Objects;
 

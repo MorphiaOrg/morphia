@@ -9,11 +9,11 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.BaseReferenceCodec;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.references.BaseReferenceCodec;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;

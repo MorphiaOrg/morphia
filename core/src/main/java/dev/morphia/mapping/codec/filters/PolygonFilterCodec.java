@@ -1,9 +1,8 @@
-package dev.morphia.mapping.codec;
+package dev.morphia.mapping.codec.filters;
 
 import com.mongodb.client.model.geojson.Point;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.mapping.codec.filters.BaseFilterCodec;
 import dev.morphia.query.filters.PolygonFilter;
 
 import org.bson.BsonWriter;

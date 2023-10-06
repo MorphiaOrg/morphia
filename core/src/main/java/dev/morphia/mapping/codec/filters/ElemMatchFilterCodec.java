@@ -1,9 +1,8 @@
-package dev.morphia.mapping.codec;
+package dev.morphia.mapping.codec.filters;
 
 import java.util.List;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.mapping.codec.filters.BaseFilterCodec;
 import dev.morphia.query.filters.ElemMatchFilter;
 import dev.morphia.query.filters.Filter;
 

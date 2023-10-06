@@ -107,17 +107,6 @@ public class CountOptions extends com.mongodb.client.model.CountOptions
         return this;
     }
 
-    /**
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Override
-    @Deprecated(forRemoval = true, since = "2.3")
-    public long getMaxTime(TimeUnit timeUnit) {
-        return super.getMaxTime(timeUnit);
-    }
-
     @Override
     public CountOptions maxTime(long maxTime, TimeUnit timeUnit) {
         super.maxTime(maxTime, timeUnit);

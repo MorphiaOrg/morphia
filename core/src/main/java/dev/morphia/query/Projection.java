@@ -128,8 +128,8 @@ public class Projection {
     }
 
     private Document meta(Mapper mapper, Class<?> clazz) {
-        String fieldName = new PathTarget(mapper, clazz, meta.getField(), false).translatedPath();
-        return new Document(fieldName, meta.toDatabase().get(meta.getField()));
+        String fieldName = new PathTarget(mapper, clazz, meta.field(), false).translatedPath();
+        return new Document(fieldName, meta.toDatabase().get(meta.field()));
     }
 
     private Document project(Mapper mapper, Class<?> clazz) {

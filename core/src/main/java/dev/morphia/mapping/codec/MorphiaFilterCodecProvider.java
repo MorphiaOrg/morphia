@@ -5,7 +5,22 @@ import java.util.Map;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.mapping.codec.filters.BaseFilterCodec;
+import dev.morphia.mapping.codec.filters.BoxCodec;
+import dev.morphia.mapping.codec.filters.CenterFilterCodec;
+import dev.morphia.mapping.codec.filters.ElemMatchFilterCodec;
+import dev.morphia.mapping.codec.filters.EqFilterCodec;
+import dev.morphia.mapping.codec.filters.ExistsFilterCodec;
+import dev.morphia.mapping.codec.filters.ExprFilterCodec;
 import dev.morphia.mapping.codec.filters.FilterCodec;
+import dev.morphia.mapping.codec.filters.GeoIntersectsFilterCodec;
+import dev.morphia.mapping.codec.filters.JsonSchemaFilterCodec;
+import dev.morphia.mapping.codec.filters.LogicalFilterCodec;
+import dev.morphia.mapping.codec.filters.NearFilterCodec;
+import dev.morphia.mapping.codec.filters.PolygonFilterCodec;
+import dev.morphia.mapping.codec.filters.RegexFilterCodec;
+import dev.morphia.mapping.codec.filters.SampleRateFilterCodec;
+import dev.morphia.mapping.codec.filters.TextSearchFilterCodec;
+import dev.morphia.mapping.codec.filters.WhereFilterCodec;
 import dev.morphia.query.filters.Filter;
 
 import org.bson.codecs.Codec;

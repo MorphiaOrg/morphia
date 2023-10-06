@@ -1,5 +1,7 @@
 package dev.morphia.query;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.Document;
 
 /**
@@ -21,25 +23,6 @@ public class Meta {
     private Meta(String metaDataKeyword, String fieldName) {
         this.metaDataKeyword = metaDataKeyword;
         this.field = fieldName;
-    }
-
-    /**
-     * Specify the meta
-     *
-     * @param metaDataKeyword - metadata keyword to create
-     */
-    @Deprecated(forRemoval = true)
-    public Meta(MetaDataKeyword metaDataKeyword) {
-        this(metaDataKeyword.name(), metaDataKeyword.name());
-    }
-
-    /**
-     * @param metaDataKeyword - metadata keyword to create
-     * @param field           - metadata object field name
-     */
-    @Deprecated(forRemoval = true)
-    public Meta(MetaDataKeyword metaDataKeyword, String field) {
-        this(metaDataKeyword.name(), field);
     }
 
     /**
@@ -87,37 +70,21 @@ public class Meta {
     }
 
     /**
-     * factory method for textScore metaDataKeyword
-     *
-     * @return instance of 'textScore' Meta
-     */
-    @Deprecated(forRemoval = true)
-    public static Meta textScore() {
-        return new Meta(MetaDataKeyword.textScore);
-    }
-
-    /**
      * @return metadata object field name
+     * @hidden
+     * @morphia.internal
      */
-    public String getField() {
+    @MorphiaInternal
+    public String field() {
         return field;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     Document toDatabase() {
         return new Document(field, new Document(META, metaDataKeyword));
-    }
-
-    /**
-     * Representing specified metadata keyword
-     *
-     * @aggregation.expression $meta
-     */
-    @Deprecated(forRemoval = true)
-    public enum MetaDataKeyword {
-        /**
-         * the textscore keyword
-         */
-        textScore
-
     }
 }

@@ -51,17 +51,4 @@ public interface QueryFactory {
      * @see #createQuery(Datastore, Class)
      */
     <T> Query<T> createQuery(Datastore datastore, String collection, Class<T> type);
-
-    /**
-     * Creates an unvalidated {@link Query} typically for use in aggregation pipelines.
-     *
-     * @param datastore the Datastore to use
-     * @param <T>       the type of the result
-     * @return the query
-     * @deprecated this method is no longer used
-     */
-    @Deprecated(forRemoval = true)
-    default <T> Query<T> createQuery(Datastore datastore) {
-        throw new UnsupportedOperationException();
-    }
 }
