@@ -1,3 +1,6 @@
+/**
+ * Defines the transaction types.
+ */
 @NonNullApi
 package dev.morphia.transactions;
 

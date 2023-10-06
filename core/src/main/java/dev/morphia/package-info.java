@@ -1,3 +1,6 @@
+/**
+ * Base Morphia package
+ */
 @NonNullApi
 package dev.morphia;
 

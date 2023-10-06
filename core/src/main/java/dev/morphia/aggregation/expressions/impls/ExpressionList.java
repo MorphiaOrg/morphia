@@ -20,27 +20,53 @@ import static java.util.Arrays.asList;
 public class ExpressionList extends Expression implements SingleValuedExpression {
     private final List<Expression> values;
 
+    /**
+     * @param values the values
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public ExpressionList(List<Expression> values) {
         super("unused");
         this.values = new ArrayList<>(values);
     }
 
+    /**
+     * @param values the values
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public ExpressionList(Expression... values) {
         super("unused");
         this.values = new ArrayList<>(asList(values));
     }
 
+    /**
+     * @param expression the expression
+     */
     public void add(Expression expression) {
         values.add(expression);
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
     @Override
+    @MorphiaInternal
     public Expression value() {
-        throw new UnsupportedOperationException("should have called getValues() here");
+        throw new UnsupportedOperationException("should have called values() here");
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the value
+     */
     @NonNull
-    public List<Expression> getValues() {
+    @MorphiaInternal
+    public List<Expression> values() {
         return values;
     }
 }

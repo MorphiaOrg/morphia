@@ -13,7 +13,7 @@ public class DateToParts extends Expression {
     private ValueExpression iso8601;
 
     /**
-     * @param date
+     * @param date the date
      * @hidden
      * @morphia.internal
      */
@@ -26,6 +26,7 @@ public class DateToParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the date
      */
     @MorphiaInternal
     public Expression date() {
@@ -35,6 +36,7 @@ public class DateToParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the timezone
      */
     @MorphiaInternal
     public Expression timeZone() {
@@ -44,6 +46,7 @@ public class DateToParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return If set to true, modifies the output document to use ISO week date fields.
      */
     @MorphiaInternal
     public ValueExpression iso8601() {

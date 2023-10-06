@@ -33,7 +33,7 @@ public final class ComparisonExpressions {
     }
 
     /**
-     * Returns true if the values are equivalent.
+     * Creates an equality check expression
      *
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
@@ -47,8 +47,10 @@ public final class ComparisonExpressions {
     /**
      * Compares two values and returns:
      *
+     * <ol>
      * <li>true when the first value is greater than the second value.
      * <li>false when the first value is less than or equivalent to the second value.
+     * </ol>
      *
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
@@ -62,8 +64,10 @@ public final class ComparisonExpressions {
     /**
      * Compares two values and returns:
      *
+     * <ol>
      * <li>true when the first value is greater than or equivalent to the second value.
      * <li>false when the first value is less than the second value.
+     * </ol>
      *
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
@@ -75,7 +79,7 @@ public final class ComparisonExpressions {
     }
 
     /**
-     * Returns true if the first value is less than the second.
+     * Creates a "less than" comparison.
      *
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
@@ -89,8 +93,10 @@ public final class ComparisonExpressions {
     /**
      * Compares two values and returns:
      *
+     * <ol>
      * <li>true when the first value is less than or equivalent to the second value.
      * <li>false when the first value is greater than the second value.
+     * </ol>
      *
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against
@@ -102,7 +108,7 @@ public final class ComparisonExpressions {
     }
 
     /**
-     * Returns true if the values are not equivalent.
+     * Creates an inequality check expression
      *
      * @param first  an expression for the value to compare
      * @param second an expression yielding the value to check against

@@ -2,6 +2,9 @@ package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+/**
+ * Converts a value to a specified type.
+ */
 public class ConvertExpression extends Expression {
     private final Expression input;
     private final ConvertType to;
@@ -9,6 +12,8 @@ public class ConvertExpression extends Expression {
     private Expression onNull;
 
     /**
+     * @param input the input expression
+     * @param to    the target type
      * @hidden
      * @morphia.internal
      */
@@ -22,6 +27,7 @@ public class ConvertExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the input expression
      */
     @MorphiaInternal
     public Expression input() {
@@ -31,6 +37,7 @@ public class ConvertExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the target type
      */
     @MorphiaInternal
     public ConvertType to() {
@@ -40,6 +47,7 @@ public class ConvertExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the onError expression
      */
     @MorphiaInternal
     public Expression onError() {
@@ -49,6 +57,7 @@ public class ConvertExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the onNull expression
      */
     @MorphiaInternal
     public Expression onNull() {

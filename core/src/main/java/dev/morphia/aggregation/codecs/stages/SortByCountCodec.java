@@ -20,6 +20,6 @@ public class SortByCountCodec extends StageCodec<SortByCount> {
 
     @Override
     protected void encodeStage(BsonWriter writer, SortByCount value, EncoderContext encoderContext) {
-        encodeIfNotNull(getCodecRegistry(), writer, value.getExpression(), encoderContext);
+        encodeIfNotNull(getCodecRegistry(), writer, value.expression(), encoderContext);
     }
 }

@@ -18,6 +18,7 @@ public class Expression {
     private final Expression value;
 
     /**
+     * @param operation the expression name
      * @hidden
      * @morphia.internal
      */

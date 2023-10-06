@@ -38,9 +38,12 @@ public class MorphiaConfigHelper {
     private final List<Entry> entries;
 
     /**
+     * @param config       the configuration
+     * @param showComplete if true, full config with defaulted values displayed
      * @since 2.4
      * @hidden
      * @morphia.internal
+     * @return the configuration in config file format
      */
     @MorphiaInternal
     public static String dumpConfigurationFile(MorphiaConfig config, boolean showComplete) {
@@ -48,8 +51,8 @@ public class MorphiaConfigHelper {
     }
 
     /**
-     * @param config
-     * @param showComplete
+     * @param config       the configuration
+     * @param showComplete if true, full config with defaulted values displayed
      * @hidden
      */
     MorphiaConfigHelper(MorphiaConfig config, boolean showComplete) {

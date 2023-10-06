@@ -16,8 +16,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class MathExpression extends Expression {
 
     /**
-     * @param operation
-     * @param operands
+     * @param operation the operation
+     * @param operands  the operands
      * @hidden
      * @morphia.internal
      */
@@ -27,8 +27,8 @@ public class MathExpression extends Expression {
     }
 
     /**
-     * @param operation
-     * @param operand
+     * @param operation the operation
+     * @param operand   the operand
      * @hidden
      * @morphia.internal
      */

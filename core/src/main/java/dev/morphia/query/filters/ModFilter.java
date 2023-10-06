@@ -21,8 +21,8 @@ class ModFilter extends Filter {
         writer.writeStartDocument(path(datastore.getMapper()));
         writer.writeName(getName());
         writer.writeStartArray();
-        writeUnnamedValue(divisor, datastore, writer, context);
-        writeUnnamedValue(remainder, datastore, writer, context);
+        writeValue(divisor, datastore, writer, context);
+        writeValue(remainder, datastore, writer, context);
         writer.writeEndArray();
         writer.writeEndDocument();
     }

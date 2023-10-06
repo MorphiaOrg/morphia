@@ -23,8 +23,8 @@ public class SortCodec extends StageCodec<Sort> {
     protected void encodeStage(BsonWriter writer, Sort value, EncoderContext encoderContext) {
         document(writer, () -> {
             for (SortType sort : value.getSorts()) {
-                writer.writeName(sort.getField());
-                sort.getDirection().encode(writer);
+                writer.writeName(sort.field());
+                sort.direction().encode(writer);
             }
         });
     }

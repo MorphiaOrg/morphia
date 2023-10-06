@@ -3,6 +3,8 @@ package dev.morphia.validation;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
+import com.mongodb.lang.NonNull;
+
 import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
 import dev.morphia.annotations.PrePersist;
@@ -30,7 +32,7 @@ public class ValidationExtension implements EntityListener<Object> {
     }
 
     @Override
-    public boolean hasAnnotation(Class<? extends Annotation> type) {
+    public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
         return PrePersist.class.equals(type);
     }
 

@@ -21,6 +21,9 @@ public class UpdateOperator {
     private Object value;
 
     /**
+     * @param operator the operator name
+     * @param field    the field to update
+     * @param value    the update value
      * @hidden
      * @morphia.internal
      */
@@ -32,6 +35,9 @@ public class UpdateOperator {
     }
 
     /**
+     * @param operator the operator name
+     * @param field    the field to update
+     * @param values   the update values
      * @hidden
      * @morphia.internal
      */
@@ -68,9 +74,9 @@ public class UpdateOperator {
     /**
      * Creates the OperationTarget for serialization
      *
-     * @param pathTarget the PathTarget
-     * @param datastore
-     * @param validate
+     * @param datastore the datastore to use
+     * @param model     the entity model
+     * @param validate  if the target path should be validated
      * @return the OperationTarget
      * @hidden
      * @morphia.internal
@@ -91,6 +97,7 @@ public class UpdateOperator {
     }
 
     /**
+     * @param value the update value
      * @hidden
      * @morphia.internal
      */

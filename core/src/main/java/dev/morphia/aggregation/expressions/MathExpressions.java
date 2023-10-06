@@ -3,6 +3,8 @@ package dev.morphia.aggregation.expressions;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.MathExpression;
 
@@ -15,7 +17,7 @@ import static java.util.Arrays.asList;
  * @since 2.0
  */
 public final class MathExpressions {
-    protected MathExpressions() {
+    private MathExpressions() {
     }
 
     /**
@@ -145,7 +147,7 @@ public final class MathExpressions {
      * @aggregation.expression $multiply
      */
     public static Expression multiply(Expression first, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>(asList(first));
+        List<Expression> expressions = new ArrayList<>(List.of(first));
         expressions.addAll(asList(additional));
         return new MathExpression("$multiply", expressions);
     }
@@ -206,11 +208,11 @@ public final class MathExpressions {
      * NOTE: Prior to 4.2, the place value wasn't available. Pass null if your server is older than 4.2.
      *
      * @param number the value
-     * @param place  the place to trunc to
+     * @param place  the place to trunc to. may be null.
      * @return the new expression
      * @aggregation.expression $trunc
      */
-    public static Expression trunc(Expression number, Expression place) {
+    public static Expression trunc(Expression number, @Nullable Expression place) {
         ArrayList<Expression> params = new ArrayList<>();
         params.add(number);
         if (place != null) {

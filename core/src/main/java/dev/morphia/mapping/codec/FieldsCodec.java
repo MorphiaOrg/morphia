@@ -29,9 +29,9 @@ public class FieldsCodec implements Codec<Fields> {
     @Override
     public void encode(BsonWriter writer, Fields fields, EncoderContext encoderContext) {
         CodecRegistry registry = datastore.getCodecRegistry();
-        for (PipelineField field : fields.getFields()) {
-            String name = field.getName();
-            Expression value = field.getValue();
+        for (PipelineField field : fields.fields()) {
+            String name = field.name();
+            Expression value = field.value();
             encodeIfNotNull(registry, writer, name, value, encoderContext);
         }
 

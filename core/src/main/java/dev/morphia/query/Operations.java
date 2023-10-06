@@ -28,6 +28,11 @@ public class Operations {
     private final List<UpdateOperator> updates;
     private final boolean validate;
 
+    /**
+     * @param model    the entity model
+     * @param updates  the updates
+     * @param validate validate or not
+     */
     public Operations(EntityModel model, List<UpdateOperator> updates, boolean validate) {
         this.model = model;
         this.updates = updates;
@@ -75,6 +80,7 @@ public class Operations {
     //    }
 
     /**
+     * @param datastore the datastore
      * @return the Document form of this instance
      */
     public Document toDocument(MorphiaDatastore datastore) {

@@ -24,7 +24,7 @@ public class ProjectionCodec extends StageCodec<Projection> {
     protected void encodeStage(BsonWriter writer, Projection projection, EncoderContext encoderContext) {
         document(writer, () -> {
             for (PipelineField field : projection.getFields()) {
-                encodeIfNotNull(getCodecRegistry(), writer, field.getName(), field.getValue(), encoderContext);
+                encodeIfNotNull(getCodecRegistry(), writer, field.name(), field.value(), encoderContext);
             }
         });
     }

@@ -118,6 +118,25 @@ public final class WindowExpressions {
     }
 
     /**
+     * Returns the exponential moving average of numeric expressions applied to documents in a partition defined in the $setWindowFields
+     * stage.
+     * <p>
+     * $expMovingAvg is only available in the $setWindowFields stage.
+     *
+     * @param input Specifies the expression to evaluate. Non-numeric expressions are ignored.
+     * @param alpha A double that specifies the exponential decay value to use in the exponential moving average calculation. A higher
+     *              alpha value assigns a lower mathematical significance to previous results from the calculation.
+     * @return the new expression
+     * @mongodb.server.release 5.0
+     * @aggregation.expression $expMovingAvg
+     * @see Aggregation#setWindowFields(SetWindowFields)
+     * @since 2.3
+     */
+    public static Expression expMovingAvg(Expression input, double alpha) {
+        return new ExpMovingAvg(input, alpha);
+    }
+
+    /**
      * Returns the approximation of the area under a curve, which is calculated using the trapezoidal rule where each set of adjacent
      * documents form a trapezoid using the:
      *

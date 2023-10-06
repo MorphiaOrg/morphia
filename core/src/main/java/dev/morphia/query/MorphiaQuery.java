@@ -63,6 +63,11 @@ public class MorphiaQuery<T> implements Query<T> {
     private boolean validate = true;
     private FindOptions lastOptions;
 
+    /**
+     * @param datastore      the datastore
+     * @param collectionName the collection name
+     * @param type           the type to query against
+     */
     protected MorphiaQuery(Datastore datastore, @Nullable String collectionName, Class<T> type) {
         this.type = type;
         this.datastore = (MorphiaDatastore) datastore;
@@ -77,6 +82,11 @@ public class MorphiaQuery<T> implements Query<T> {
         }
     }
 
+    /**
+     * @param datastore the datastore
+     * @param type      the type to query against
+     * @param query     the query
+     */
     protected MorphiaQuery(Datastore datastore, Class<T> type, @Nullable Document query) {
         this.type = type;
         this.datastore = (MorphiaDatastore) datastore;

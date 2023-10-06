@@ -92,8 +92,10 @@ public class Unwind extends Stage {
     /**
      * Optional.
      *
+     * <ol>
      * <li>If true, if the path is null, missing, or an empty array, $unwind outputs the document.
      * <li>If false, if path is null, missing, or an empty array, $unwind does not output a document.
+     * </ol>
      *
      * @param preserveNullAndEmptyArrays true to preserve
      * @return this

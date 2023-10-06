@@ -20,6 +20,7 @@ public class ReplaceRoot extends Stage {
     private DocumentExpression document;
 
     /**
+     * @param expression the expression
      * @hidden
      * @morphia.internal
      */

@@ -12,6 +12,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 @MorphiaInternal
 public class DateExpression extends Expression {
     /**
+     * @param operation the operation name
+     * @param value     the value
      * @hidden
      * @morphia.internal
      */

@@ -32,6 +32,7 @@ public class Merge<M> extends Stage {
     private WhenNotMatched whenNotMatched;
 
     /**
+     * @param type the target merge type
      * @hidden
      * @morphia.internal
      */
@@ -51,6 +52,7 @@ public class Merge<M> extends Stage {
     }
 
     /**
+     * @param collection the target collection
      * @hidden
      * @morphia.internal
      */
@@ -61,6 +63,8 @@ public class Merge<M> extends Stage {
     }
 
     /**
+     * @param database   the target database
+     * @param collection the target collection
      * @hidden
      * @morphia.internal
      */

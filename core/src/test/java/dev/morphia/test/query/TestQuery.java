@@ -83,7 +83,7 @@ import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-@SuppressWarnings({ "unchecked", "unused" })
+@SuppressWarnings({ "unchecked", "unused", "resource" })
 public class TestQuery extends TestBase {
     public TestQuery() {
         super(buildConfig(CappedPic.class)
@@ -211,12 +211,10 @@ public class TestQuery extends TestBase {
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern("PIC"))
+                .filter(regex("name", "PIC"))
                 .count(), 0);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern("PIC")
+                .filter(regex("name", "PIC")
                         .options("i"))
                 .count(), 4);
         assertEquals(getDs().find(Pic.class)
@@ -229,32 +227,26 @@ public class TestQuery extends TestBase {
                 .count(), 4);
 
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern("PIC1"))
+                .filter(regex("name", "PIC1"))
                 .count(), 0);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern("PIC1")
+                .filter(regex("name", "PIC1")
                         .options("i"))
                 .count(), 1);
 
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern("C1$"))
+                .filter(regex("name", "C1$"))
                 .count(), 0);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern("C1$")
+                .filter(regex("name", "C1$")
                         .options("i"))
                 .count(), 1);
 
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern("^PIC"))
+                .filter(regex("name", "^PIC"))
                 .count(), 0);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern("^PIC")
+                .filter(regex("name", "^PIC")
                         .options("i"))
                 .count(), 4);
     }
@@ -267,40 +259,32 @@ public class TestQuery extends TestBase {
                 new Pic("hacksaw [|^^^^^^^")));
 
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(compile(quote("^"))))
+                .filter(regex("name", compile(quote("^"))))
                 .count(), 1);
 
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(compile(quote("aw [|^^"))))
+                .filter(regex("name", compile(quote("aw [|^^"))))
                 .count(), 1);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(compile(quote("AW [|^^"))))
+                .filter(regex("name", compile(quote("AW [|^^"))))
                 .count(), 0);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(compile(quote("aw [|^^")))
+                .filter(regex("name", compile(quote("aw [|^^")))
                         .options("i"))
                 .count(), 1);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(compile(quote("AW [|^^")))
+                .filter(regex("name", compile(quote("AW [|^^")))
                         .options("i"))
                 .count(), 1);
 
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(compile("^" + quote(">++('>   fish"))))
+                .filter(regex("name", compile("^" + quote(">++('>   fish"))))
                 .count(), 1);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(compile("^" + quote(">++('>   FIsh"))))
+                .filter(regex("name", compile("^" + quote(">++('>   FIsh"))))
                 .count(), 0);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(compile("^" + quote(">++('>   FISH")))
+                .filter(regex("name", compile("^" + quote(">++('>   FISH")))
                         .options("i"))
                 .count(), 1);
 
@@ -311,30 +295,25 @@ public class TestQuery extends TestBase {
                 .filter(eq("name", ">++('>   FISH BONES"))
                 .count(), 0);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name").pattern(quote(">++('>   fish bones")))
+                .filter(regex("name", quote(">++('>   fish bones")))
                 .count(), 1);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern("^" + quote(">++('>   FISH BONES") + "$")
+                .filter(regex("name", "^" + quote(">++('>   FISH BONES") + "$")
                         .options("i"))
                 .count(), 1);
 
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(quote(">++('>   fish bones") + "$"))
+                .filter(regex("name", quote(">++('>   fish bones") + "$"))
                 .count(), 1);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(quote("'>   FISH BONES") + "$"))
+                .filter(regex("name", quote("'>   FISH BONES") + "$"))
                 .count(), 0);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(quote("'>   fish bones") + "$")
+                .filter(regex("name", quote("'>   fish bones") + "$")
                         .caseInsensitive())
                 .count(), 1);
         assertEquals(getDs().find(Pic.class)
-                .filter(regex("name")
-                        .pattern(quote("'>   FISH BONES") + "$")
+                .filter(regex("name", quote("'>   FISH BONES") + "$")
                         .caseInsensitive())
                 .count(), 1);
     }
@@ -610,7 +589,7 @@ public class TestQuery extends TestBase {
 
         final Query<PhotoWithKeywords> query = getDs().find(PhotoWithKeywords.class);
         query.filter(
-                regex("keywords.keyword").pattern("^ralph").not());
+                regex("keywords.keyword", "^ralph").not());
 
         FindOptions options = new FindOptions().logQuery();
         query.iterator();

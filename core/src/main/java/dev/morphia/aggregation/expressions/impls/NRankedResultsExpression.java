@@ -14,6 +14,10 @@ public class NRankedResultsExpression extends Expression {
     private final Sort[] sortBy;
 
     /**
+     * @param operation the operation name
+     * @param n         the n expression
+     * @param output    the output expression
+     * @param sortBy    the sort
      * @hidden
      * @morphia.internal
      */
@@ -28,6 +32,7 @@ public class NRankedResultsExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the output
      */
     @MorphiaInternal
     public Expression output() {
@@ -37,6 +42,7 @@ public class NRankedResultsExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the n expression
      */
     @MorphiaInternal
     public Expression n() {
@@ -46,6 +52,7 @@ public class NRankedResultsExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the sort
      */
     @MorphiaInternal
     public Sort[] sortBy() {

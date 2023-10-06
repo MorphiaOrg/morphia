@@ -4,13 +4,16 @@ import java.util.List;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+/**
+ * Merge two arrays together.
+ */
 public class ZipExpression extends Expression {
     private final List<Expression> inputs;
     private ValueExpression useLongestLength;
     private Expression defaults;
 
     /**
-     * @param inputs
+     * @param inputs the inputs
      * @hidden
      * @morphia.internal
      */
@@ -39,6 +42,7 @@ public class ZipExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the inputs
      */
     @MorphiaInternal
     public List<Expression> inputs() {
@@ -48,6 +52,7 @@ public class ZipExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return use longest length
      */
     @MorphiaInternal
     public ValueExpression useLongestLength() {
@@ -57,6 +62,7 @@ public class ZipExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the defaults
      */
     @MorphiaInternal
     public Expression defaults() {

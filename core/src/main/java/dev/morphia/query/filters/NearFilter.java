@@ -1,7 +1,5 @@
 package dev.morphia.query.filters;
 
-import java.util.Map;
-
 import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.lang.Nullable;
@@ -19,23 +17,15 @@ public class NearFilter extends Filter {
     private CoordinateReferenceSystem crs;
 
     /**
+     * @param filterName the filter name
+     * @param field      the field
+     * @param point      the point
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
     NearFilter(String filterName, String field, Point point) {
         super(filterName, field, point);
-    }
-
-    /**
-     * @param opts the options to apply
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public void applyOpts(Map<?, ?> opts) {
-        maxDistance = (Double) opts.get("$maxDistance");
-        minDistance = (Double) opts.get("$minDistance");
     }
 
     /**
@@ -74,6 +64,7 @@ public class NearFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the max distance
      */
     @MorphiaInternal
     public Double maxDistance() {
@@ -83,6 +74,7 @@ public class NearFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the min distance
      */
     @MorphiaInternal
     public Double minDistance() {
@@ -92,6 +84,7 @@ public class NearFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the reference system
      */
     @Nullable
     @MorphiaInternal

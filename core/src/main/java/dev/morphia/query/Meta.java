@@ -17,10 +17,8 @@ public class Meta {
      * @param metaDataKeyword metadata keyword to create
      * @param fieldName       the field to store the value in
      * @since 2.2
-     * @deprecated use the various factory methods. these constructors will go private in a future release.
      */
-    @Deprecated(forRemoval = true)
-    public Meta(String metaDataKeyword, String fieldName) {
+    private Meta(String metaDataKeyword, String fieldName) {
         this.metaDataKeyword = metaDataKeyword;
         this.field = fieldName;
     }
@@ -116,6 +114,9 @@ public class Meta {
      */
     @Deprecated(forRemoval = true)
     public enum MetaDataKeyword {
+        /**
+         * the textscore keyword
+         */
         textScore
 
     }

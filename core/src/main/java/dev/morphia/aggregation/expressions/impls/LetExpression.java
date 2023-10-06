@@ -3,11 +3,15 @@ package dev.morphia.aggregation.expressions.impls;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+/**
+ * Binds variables for use in the specified expression, and returns the result of the expression.
+ */
 public class LetExpression extends Expression {
     private final Expression in;
     private final DocumentExpression variables = Expressions.document();
 
     /**
+     * @param in the in expression
      * @hidden
      * @morphia.internal
      */
@@ -20,6 +24,7 @@ public class LetExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the in expression
      */
     @MorphiaInternal
     public Expression in() {
@@ -29,6 +34,7 @@ public class LetExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the variables
      */
     @MorphiaInternal
     public DocumentExpression variables() {

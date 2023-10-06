@@ -29,6 +29,7 @@ public class Lookup extends Stage {
     private List<Stage> pipeline;
 
     /**
+     * @param fromType the source type
      * @hidden
      * @morphia.internal
      */
@@ -39,6 +40,7 @@ public class Lookup extends Stage {
     }
 
     /**
+     * @param from the source type
      * @hidden
      * @morphia.internal
      */

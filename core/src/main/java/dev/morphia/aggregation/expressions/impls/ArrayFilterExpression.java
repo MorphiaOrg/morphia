@@ -2,12 +2,19 @@ package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+/**
+ * Selects a subset of the array to return an array with only the elements that match the filter condition.
+ *
+ * @aggregation.expression $filter
+ */
 public class ArrayFilterExpression extends Expression {
     private final Expression array;
     private final Expression conditional;
     private ValueExpression as;
 
     /**
+     * @param array       the array express
+     * @param conditional the conditional to apply
      * @hidden
      * @morphia.internal
      */
@@ -18,6 +25,10 @@ public class ArrayFilterExpression extends Expression {
         this.conditional = conditional;
     }
 
+    /**
+     * @param as the as expression
+     * @return this
+     */
     public ArrayFilterExpression as(String as) {
         this.as = new ValueExpression(as);
         return this;
@@ -26,6 +37,7 @@ public class ArrayFilterExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the array expression
      */
     @MorphiaInternal
     public Expression array() {
@@ -35,6 +47,7 @@ public class ArrayFilterExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the conditional
      */
     @MorphiaInternal
     public Expression conditional() {
@@ -44,6 +57,7 @@ public class ArrayFilterExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the as expression
      */
     @MorphiaInternal
     public ValueExpression as() {

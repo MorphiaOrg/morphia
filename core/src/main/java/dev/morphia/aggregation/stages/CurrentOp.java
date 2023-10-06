@@ -35,9 +35,11 @@ public class CurrentOp extends Stage {
     }
 
     /**
+     * <ol>
      * <li>If set to false, $currentOp will only report on operations/idle connections/idle cursors/idle sessions belonging to the user who
      * ran the command.
      * <li>If set to true, $currentOp will report operations belonging to all users.
+     * </ol>
      *
      * @param allUsers include allUsers if true
      * @return this

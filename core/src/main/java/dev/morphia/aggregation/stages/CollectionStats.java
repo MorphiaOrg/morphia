@@ -84,8 +84,8 @@ public class CollectionStats extends Stage {
     }
 
     /**
-     * Specify the scale factor (i.e. storageStats: { scale: <number> }) to use the specified scale factor for the various size data. For
-     * example, to display kilobytes rather than bytes, specify a scale value of 1024.
+     * Specify the scale factor (i.e. storageStats: { scale: &lt;number&gt; }) to use the specified scale factor for the various size data.
+     * For example, to display kilobytes rather than bytes, specify a scale value of 1024.
      * <p>
      * If you specify a non-integer scale factor, MongoDB uses the integer part of the specified factor. For example, if you specify a
      * scale factor of 1023.999, MongoDB uses 1023 as the scale factor.

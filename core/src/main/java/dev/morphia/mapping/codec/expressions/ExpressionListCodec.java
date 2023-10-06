@@ -18,7 +18,7 @@ public class ExpressionListCodec extends BaseExpressionCodec<ExpressionList> {
     @Override
     public void encode(BsonWriter writer, ExpressionList list, EncoderContext encoderContext) {
         array(writer, () -> {
-            for (Expression expression : list.getValues()) {
+            for (Expression expression : list.values()) {
                 encodeIfNotNull(datastore.getCodecRegistry(), writer, expression, encoderContext);
             }
         });

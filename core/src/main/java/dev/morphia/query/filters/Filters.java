@@ -153,8 +153,10 @@ public final class Filters {
      * <p>
      * To use $centerSphere, specify an array that contains:
      *
+     * <ol>
      * <li>The grid coordinates of the circle’s center point, and
      * <li>The circle’s radius measured in radians. To calculate radians, see Calculate Distance Using Spherical Geometry.
+     * </ol>
      *
      * @param field  the field to check
      * @param center the center point of the shape
@@ -487,19 +489,6 @@ public final class Filters {
      */
     public static Filter polygon(String field, Point... points) {
         return new PolygonFilter(field, points);
-    }
-
-    /**
-     * Selects documents where values match a specified regular expression.
-     *
-     * @param field the field to check
-     * @return the filter
-     * @query.filter $regex
-     * @deprecated use {@link #regex(String, String)} or {@link #regex(String, Pattern)} instead
-     */
-    @Deprecated(since = "2.4.0", forRemoval = true)
-    public static RegexFilter regex(String field) {
-        return new RegexFilter(field, null);
     }
 
     /**

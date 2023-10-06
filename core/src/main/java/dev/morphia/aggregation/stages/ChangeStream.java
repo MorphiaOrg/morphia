@@ -27,6 +27,16 @@ public class ChangeStream extends Stage {
     private Document startAfter;
     private LocalDateTime startAtOperationTime;
 
+    /**
+     * Defines a Change Stream cursor on a collection, a database, or an entire cluster. Must be used as the first stage in an aggregation
+     * pipeline.
+     *
+     * @aggregation.expression $changeStream
+     * @since 2.3
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected ChangeStream() {
         super("$changeStream");
     }
@@ -122,7 +132,7 @@ public class ChangeStream extends Stage {
      * startAtOperationTime fields.
      *
      * @param resumeAfter the token to resume after
-     * @return thois
+     * @return this
      */
     public ChangeStream resumeAfter(Document resumeAfter) {
         this.resumeAfter = new Document(resumeAfter);
@@ -145,7 +155,7 @@ public class ChangeStream extends Stage {
      * startAtOperationTime fields.
      *
      * @param startAfter the token to start after
-     * @return thois
+     * @return this
      */
     public ChangeStream startAfter(Document startAfter) {
         this.startAfter = new Document(startAfter);

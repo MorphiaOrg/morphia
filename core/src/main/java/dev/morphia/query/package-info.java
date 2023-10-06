@@ -1,3 +1,6 @@
+/**
+ * Defines the types needed to execute queries.
+ */
 @NonNullApi
 package dev.morphia.query;
 

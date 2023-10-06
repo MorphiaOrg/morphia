@@ -57,6 +57,7 @@ public class LogicalFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the filters
      */
     @MorphiaInternal
     public List<Filter> filters() {

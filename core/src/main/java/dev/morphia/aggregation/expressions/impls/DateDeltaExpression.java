@@ -16,10 +16,10 @@ public class DateDeltaExpression extends Expression {
     private Expression timezone;
 
     /**
-     * @param operator
-     * @param startDate
-     * @param amount
-     * @param unit
+     * @param operator  the operator name
+     * @param startDate the start date
+     * @param amount    the offset amount
+     * @param unit      the unit of time
      * @hidden
      * @morphia.internal
      */
@@ -34,6 +34,7 @@ public class DateDeltaExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the start date
      */
     @MorphiaInternal
     public Expression startDate() {
@@ -43,6 +44,7 @@ public class DateDeltaExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the offset amount
      */
     @MorphiaInternal
     public long amount() {
@@ -52,6 +54,7 @@ public class DateDeltaExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the unit of time
      */
     @MorphiaInternal
     public TimeUnit unit() {
@@ -61,6 +64,7 @@ public class DateDeltaExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the timezone
      */
     @MorphiaInternal
     public Expression timezone() {
@@ -68,7 +72,7 @@ public class DateDeltaExpression extends Expression {
     }
 
     /**
-     * The timezone to carry out the operation. <tzExpression> must be a valid expression that resolves to a string formatted as either
+     * The timezone to carry out the operation. {@code timezone} must be a valid expression that resolves to a string formatted as either
      * an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      *
      * @param timezone the timezone expression

@@ -113,7 +113,7 @@ public final class ArrayExpressions {
     }
 
     /**
-     * Searches an array for an occurrence of a specified value and returns the array index of the first occurernce. If the substring is not
+     * Searches an array for an occurrence of a specified value and returns the array index of the first occurrence. If the substring is not
      * found, returns -1.
      *
      * @param array  the array to use

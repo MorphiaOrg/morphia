@@ -23,7 +23,7 @@ public final class SystemVariables {
      * References the start of the field path being processed in the aggregation pipeline stage. Unless documented otherwise, all
      * stages start with CURRENT the same as ROOT.
      * <p>
-     * CURRENT is modifiable. However, since $<field> is equivalent to $$CURRENT.<field>, rebinding CURRENT changes the
+     * CURRENT is modifiable. However, since $&lt;field&gt; is equivalent to $$CURRENT.&lt;field&gt;, rebinding CURRENT changes the
      * meaning of $ accesses.
      *
      * @aggregation.expression $$CURRENT

@@ -18,6 +18,7 @@ public class Documents extends Stage {
     private final List<DocumentExpression> expressions;
 
     /**
+     * @param expressions the document expressions
      * @hidden
      * @morphia.internal
      */

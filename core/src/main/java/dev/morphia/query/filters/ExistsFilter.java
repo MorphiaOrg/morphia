@@ -9,6 +9,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 @MorphiaInternal
 public class ExistsFilter extends Filter {
     /**
+     * @param field the field
      * @hidden
      * @morphia.internal
      */

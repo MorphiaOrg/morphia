@@ -4,6 +4,9 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+/**
+ * Defines a document expression
+ */
 public class DocumentExpression extends Expression implements SingleValuedExpression, FieldHolder<DocumentExpression> {
     private final Fields fields = Fields.on(this);
 
@@ -19,6 +22,7 @@ public class DocumentExpression extends Expression implements SingleValuedExpres
     /**
      * @hidden
      * @morphia.internal
+     * @return the fields
      */
     @MorphiaInternal
     @Nullable

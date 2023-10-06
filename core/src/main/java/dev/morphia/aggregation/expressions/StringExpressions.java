@@ -50,8 +50,8 @@ public final class StringExpressions {
     }
 
     /**
-     * Searches a string for an occurence of a substring and returns the UTF-8 code point index of the first occurence. If the substring is
-     * not found, returns -1
+     * Searches a string for an occurrence of a substring and returns the UTF-8 code point index of the first occurrence. If the
+     * substring is not found, returns -1
      *
      * @param string    the string to search
      * @param substring the target string

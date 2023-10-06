@@ -12,6 +12,7 @@ public class Match extends Stage {
     private final Filter[] filters;
 
     /**
+     * @param filters the filters to match on
      * @hidden
      * @morphia.internal
      */

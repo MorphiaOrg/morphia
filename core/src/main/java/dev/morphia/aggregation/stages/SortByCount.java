@@ -12,6 +12,7 @@ public class SortByCount extends Stage {
     private final Expression expression;
 
     /**
+     * @param expression the expression
      * @hidden
      * @morphia.internal
      */
@@ -38,7 +39,7 @@ public class SortByCount extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    public Expression getExpression() {
+    public Expression expression() {
         return expression;
     }
 }

@@ -20,6 +20,8 @@ public class DateTruncExpression extends Expression {
     private Long binSize;
 
     /**
+     * @param date the date
+     * @param unit the unit of time
      * @hidden
      * @morphia.internal
      */
@@ -47,6 +49,7 @@ public class DateTruncExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the date
      */
     @MorphiaInternal
     public Expression date() {
@@ -56,6 +59,7 @@ public class DateTruncExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the unit of time
      */
     @MorphiaInternal
     public TimeUnit unit() {
@@ -65,6 +69,7 @@ public class DateTruncExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the timezone
      */
     @MorphiaInternal
     public Expression timezone() {
@@ -74,6 +79,7 @@ public class DateTruncExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the start of the week
      */
     @MorphiaInternal
     public DayOfWeek startOfWeek() {
@@ -83,6 +89,7 @@ public class DateTruncExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the bin size
      */
     @MorphiaInternal
     public Long binSize() {
@@ -101,7 +108,7 @@ public class DateTruncExpression extends Expression {
     }
 
     /**
-     * The timezone to carry out the operation. <tzExpression> must be a valid expression that resolves to a string formatted as either
+     * The timezone to carry out the operation. {@code timezone} must be a valid expression that resolves to a string formatted as either
      * an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      *
      * @param timezone the timezone expression

@@ -13,7 +13,7 @@ public class LimitCodec extends StageCodec<Limit> {
 
     @Override
     public void encodeStage(BsonWriter writer, Limit value, EncoderContext encoderContext) {
-        writer.writeInt64(value.getLimit());
+        writer.writeInt64(value.limit());
     }
 
     @Override

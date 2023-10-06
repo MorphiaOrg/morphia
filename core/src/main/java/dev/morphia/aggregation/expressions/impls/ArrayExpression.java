@@ -12,6 +12,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 @MorphiaInternal
 public class ArrayExpression extends Expression implements SingleValuedExpression {
     /**
+     * @param operation the operation name
+     * @param value     the array contents
      * @hidden
      * @morphia.internal
      */

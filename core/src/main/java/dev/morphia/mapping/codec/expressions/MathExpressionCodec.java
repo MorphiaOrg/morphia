@@ -21,7 +21,7 @@ public class MathExpressionCodec extends BaseExpressionCodec<MathExpression> {
     public void encode(BsonWriter writer, MathExpression expression, EncoderContext encoderContext) {
         ExpressionList value = expression.value();
         if (value != null) {
-            final List<Expression> operands = value.getValues();
+            final List<Expression> operands = value.values();
             writer.writeName(expression.operation());
             if (operands.size() > 1) {
                 writer.writeStartArray();

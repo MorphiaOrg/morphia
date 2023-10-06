@@ -14,6 +14,9 @@ public class EndResultsExpression extends Expression {
     private final Expression n;
 
     /**
+     * @param operation the operation
+     * @param n         the n value
+     * @param input     the input
      * @hidden
      * @morphia.internal
      */
@@ -27,6 +30,7 @@ public class EndResultsExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the input
      */
     @MorphiaInternal
     public Expression input() {
@@ -36,6 +40,7 @@ public class EndResultsExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the n value
      */
     @MorphiaInternal
     public Expression n() {

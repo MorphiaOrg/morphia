@@ -41,21 +41,17 @@ public class ArraySlice {
     }
 
     /**
-     * Specifies the number of array elements to skip.
-     *
-     * @param skip  the number of array elements to skip
-     * @param limit the number of array elements to return
-     * @query.filter $slice
+     * @param limit the limit to impose
+     * @return this
      */
-    private ArraySlice(int skip, int limit) {
-        this.skip = skip;
-        this.limit = limit;
-    }
-
     public static ArraySlice limit(int limit) {
         return new ArraySlice(limit);
     }
 
+    /**
+     * @param skip the amount to skip
+     * @return this
+     */
     public ArraySlice skip(Integer skip) {
         this.skip = skip;
         return this;

@@ -17,6 +17,7 @@ public class ArrayLiteral extends ArrayExpression {
     private Object[] objects;
 
     /**
+     * @param values the values
      * @hidden
      * @morphia.internal
      */
@@ -26,6 +27,7 @@ public class ArrayLiteral extends ArrayExpression {
     }
 
     /**
+     * @param objects the values
      * @hidden
      * @morphia.internal
      */
@@ -38,6 +40,7 @@ public class ArrayLiteral extends ArrayExpression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the objects
      */
     @MorphiaInternal
     @Nullable

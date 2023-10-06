@@ -4,11 +4,29 @@ package dev.morphia.mapping;
  * Defines the type of the index to create for a field.
  */
 public enum IndexType {
+    /**
+     * ascending
+     */
     ASC(1),
+    /**
+     * descending
+     */
     DESC(-1),
+    /**
+     * geo2d
+     */
     GEO2D("2d"),
+    /**
+     * geo2d sphere
+     */
     GEO2DSPHERE("2dsphere"),
+    /**
+     * hashed
+     */
     HASHED("hashed"),
+    /**
+     * text
+     */
     TEXT("text");
 
     private final Object type;

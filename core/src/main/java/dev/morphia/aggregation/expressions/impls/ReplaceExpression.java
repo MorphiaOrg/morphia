@@ -34,14 +34,32 @@ public class ReplaceExpression extends Expression {
         this.replacement = replacement;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the find
+     */
+    @MorphiaInternal
     public Expression find() {
         return find;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the replacement
+     */
+    @MorphiaInternal
     public Expression replacement() {
         return replacement;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the input
+     */
+    @MorphiaInternal
     public Expression input() {
         return input;
     }

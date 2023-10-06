@@ -10,6 +10,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 @MorphiaInternal
 public class ExprFilter extends Filter {
     /**
+     * @param expression the expression
      * @hidden
      * @morphia.internal
      */
@@ -18,11 +19,11 @@ public class ExprFilter extends Filter {
         super("$expr", null, expression);
     }
 
-    @Override
     /**
      * @hidden
      * @morphia.internal
      */
+    @Override
     @MorphiaInternal
     public Expression getValue() {
         return (Expression) super.getValue();

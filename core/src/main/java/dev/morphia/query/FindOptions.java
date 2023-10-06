@@ -384,7 +384,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * @param timeUnit the time unit to apply
+     * @param timeUnit the unit of time to apply
      * @return the max await time for the operation
      * @hidden
      * @morphia.internal
@@ -397,7 +397,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * @param timeUnit the time unit to apply
+     * @param timeUnit the unit of time to apply
      * @return the max time for the operation
      * @hidden
      * @morphia.internal

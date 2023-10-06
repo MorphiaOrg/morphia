@@ -241,27 +241,27 @@ public class SessionDatastore extends MorphiaDatastore implements MorphiaSession
         }
 
         @Override
-        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document query, Document updates,
                 UpdateOptions options) {
-            return collection.updateMany(session, queryObject, updateOperations, options);
+            return collection.updateMany(session, query, updates, options);
         }
 
         @Override
-        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document query, List<Document> updates,
                 UpdateOptions options) {
-            return collection.updateMany(session, queryObject, updateOperations, options);
+            return collection.updateMany(session, query, updates, options);
         }
 
         @Override
-        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document query, Document updates,
                 UpdateOptions options) {
-            return collection.updateOne(session, queryObject, updateOperations, options);
+            return collection.updateOne(session, query, updates, options);
         }
 
         @Override
-        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document query, List<Document> updates,
                 UpdateOptions options) {
-            return collection.updateOne(session, queryObject, updateOperations, options);
+            return collection.updateOne(session, query, updates, options);
         }
     }
 

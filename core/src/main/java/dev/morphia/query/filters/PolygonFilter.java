@@ -13,6 +13,8 @@ public class PolygonFilter extends Filter {
     private final Point[] points;
 
     /**
+     * @param field  the field
+     * @param points the points
      * @hidden
      * @morphia.internal
      */
@@ -25,6 +27,7 @@ public class PolygonFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the points
      */
     @MorphiaInternal
     public Point[] points() {

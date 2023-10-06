@@ -4,10 +4,14 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+/**
+ * Holds a simple value
+ */
 public class ValueExpression extends Expression implements SingleValuedExpression {
     private final Object object;
 
     /**
+     * @param value the value
      * @hidden
      * @morphia.internal
      */
@@ -20,6 +24,7 @@ public class ValueExpression extends Expression implements SingleValuedExpressio
     /**
      * @hidden
      * @morphia.internal
+     * @return the value
      */
     @MorphiaInternal
     @Nullable

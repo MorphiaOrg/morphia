@@ -41,9 +41,10 @@ import io.github.classgraph.ScanResult;
 
 /**
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
-@SuppressWarnings({ "unchecked", "rawtypes", "removal" })
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class Mapper {
     private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
 
@@ -87,22 +88,21 @@ public class Mapper {
     }
 
     /**
+     * @param other the original to copy
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
-    public Mapper(Mapper other) {
+    private Mapper(Mapper other) {
         config = other.config;
         contextClassLoader = Thread.currentThread().getContextClassLoader();
         discriminatorLookup = new DiscriminatorLookup();
-        other.mappedEntities.values().forEach(entity -> {
-            register(entity.copy(), false);
-        });
+        other.mappedEntities.values().forEach(entity -> register(entity.copy(), false));
         listeners.addAll(other.listeners);
     }
 
     /**
-     * Adds an {@link EntityInterceptor}
+     * Adds an {@link EntityListener}
      *
      * @param ei the interceptor to add
      * @deprecated use {@link dev.morphia.annotations.EntityListeners} to define any lifecycle event listeners
@@ -115,6 +115,7 @@ public class Mapper {
     /**
      * @hidden
      * @morphia.internal
+     * @return the copied Mapper
      */
     @MorphiaInternal
     public Mapper copy() {
@@ -329,8 +330,6 @@ public class Mapper {
      * @param type the class to check
      * @param <T>  the type
      * @return true if the type is mappable
-     */
-    /**
      * @hidden
      * @morphia.internal
      */

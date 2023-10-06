@@ -24,6 +24,7 @@ public class GeoNear extends Stage {
     private String key;
 
     /**
+     * @param point the point
      * @hidden
      * @morphia.internal
      */
@@ -43,6 +44,7 @@ public class GeoNear extends Stage {
     }
 
     /**
+     * @param coordinates the coordinates
      * @hidden
      * @morphia.internal
      */
@@ -265,8 +267,10 @@ public class GeoNear extends Stage {
     /**
      * Optional. Determines how MongoDB calculates the distance between two points:
      *
+     * <ol>
      * <li>When true, MongoDB uses $nearSphere semantics and calculates distances using spherical geometry.
      * <li>When false, MongoDB uses $near semantics: spherical geometry for 2dsphere indexes and planar geometry for 2d indexes.
+     * </ol>
      *
      * @param spherical true if spherical
      * @return this

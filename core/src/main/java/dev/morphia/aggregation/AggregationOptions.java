@@ -143,11 +143,11 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
      * initially.
      *
      * @param collection the name of the collection to use
-     * @return
+     * @return this
      * @since 2.3
      */
     @Override
-    public AggregationOptions collection(String collection) {
+    public AggregationOptions collection(@Nullable String collection) {
         this.collection = collection;
         return this;
     }
@@ -236,18 +236,9 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     @MorphiaInternal
     @Override
     public String toString() {
-        return new StringBuilder("AggregationOptions{")
-                .append("allowDiskUse=").append(allowDiskUse)
-                .append(", batchSize=").append(batchSize)
-                .append(", bypassDocumentValidation=").append(bypassDocumentValidation)
-                .append(", collation=").append(collation)
-                .append(", maxTimeMS=").append(maxTimeMS)
-                .append(", readPreference=").append(readPreference)
-                .append(", readConcern=").append(readConcern)
-                .append(", writeConcern=").append(writeConcern)
-                .append(", hint=").append(hint)
-                .append('}')
-                .toString();
+        return ("AggregationOptions{allowDiskUse=%s, batchSize=%d, bypassDocumentValidation=%s, collation=%s, maxTimeMS=%d, " +
+                "readPreference=%s, readConcern=%s, writeConcern=%s, hint=%s}").formatted(allowDiskUse, batchSize,
+                        bypassDocumentValidation, collation, maxTimeMS, readPreference, readConcern, writeConcern, hint);
     }
 
     /**

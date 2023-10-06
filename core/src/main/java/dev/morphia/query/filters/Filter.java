@@ -34,10 +34,18 @@ public class Filter {
     private PathTarget pathTarget;
     private boolean mapped;
 
+    /**
+     * @param name the name of the filter
+     */
     protected Filter(String name) {
         this.name = name;
     }
 
+    /**
+     * @param name  the name of the filter
+     * @param field the field
+     * @param value the value
+     */
     protected Filter(String name, @Nullable String field, @Nullable Object value) {
         this.name = name;
         this.field = field != null ? field : "";
@@ -125,6 +133,7 @@ public class Filter {
     }
 
     /**
+     * @param value the value
      * @hidden
      * @morphia.internal
      */
@@ -150,8 +159,10 @@ public class Filter {
     }
 
     /**
+     * @param datastore the datastore
      * @hidden
      * @morphia.internal
+     * @return the value
      */
     @MorphiaInternal
     @Nullable
@@ -180,8 +191,10 @@ public class Filter {
     }
 
     /**
+     * @param mapper the mapper
      * @hidden
      * @morphia.internal
+     * @return the path to use
      */
     @MorphiaInternal
     public String path(Mapper mapper) {
@@ -197,27 +210,15 @@ public class Filter {
     }
 
     /**
+     * @param value          the value to write
+     * @param datastore      the datastore
+     * @param writer         the writer
+     * @param encoderContext the encoder context
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
-    protected void writeNamedValue(@Nullable String name, @Nullable Object value, MorphiaDatastore datastore, BsonWriter writer,
-            EncoderContext encoderContext) {
-        writer.writeName(name);
-        if (value != null) {
-            Codec codec = datastore.getCodecRegistry().get(value.getClass());
-            encoderContext.encodeWithChildContext(codec, writer, value);
-        } else {
-            writer.writeNull();
-        }
-    }
-
-    /**
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    protected void writeUnnamedValue(@Nullable Object value, MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
+    protected void writeValue(@Nullable Object value, MorphiaDatastore datastore, BsonWriter writer, EncoderContext encoderContext) {
         if (value != null) {
             Codec codec = datastore.getCodecRegistry().get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);

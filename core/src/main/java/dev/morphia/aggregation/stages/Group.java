@@ -30,6 +30,7 @@ public class Group extends Stage {
     }
 
     /**
+     * @param id the group ID`
      * @hidden
      * @morphia.internal
      */
@@ -155,6 +156,7 @@ public class Group extends Stage {
         }
 
         /**
+         * @param value the group ID expression
          * @hidden
          * @morphia.internal
          */

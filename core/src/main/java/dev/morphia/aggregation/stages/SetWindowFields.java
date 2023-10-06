@@ -108,6 +108,11 @@ public class SetWindowFields extends Stage {
         return sorts;
     }
 
+    /**
+     * Specifies the field(s) to append to the documents in the output returned by the $setWindowFields stage.
+     * 
+     * @see SetWindowFields
+     */
     public static class Output {
         private final String name;
         private Expression operator;
@@ -181,6 +186,9 @@ public class SetWindowFields extends Stage {
         }
     }
 
+    /**
+     * Specifies the window boundaries and parameters.
+     */
     public static class Window {
         private final Output output;
         private List<Object> documents;

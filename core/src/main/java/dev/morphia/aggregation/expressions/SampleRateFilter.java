@@ -9,6 +9,12 @@ import dev.morphia.query.filters.Filter;
  */
 @MorphiaInternal
 public class SampleRateFilter extends Filter {
+    /**
+     * @param rate the rate
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public SampleRateFilter(double rate) {
         super("$sampleRate", null, rate);
     }

@@ -344,10 +344,19 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return addStage(stream);
     }
 
+    /**
+     * @return the stages
+     */
     public List<Stage> getStages() {
         return stages;
     }
 
+    /**
+     * @return the encoded pipeline
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<Document> pipeline() {
         return stages.stream()

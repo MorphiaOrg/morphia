@@ -19,6 +19,8 @@ public class CalculusExpression extends Expression {
     private TimeUnit unit;
 
     /**
+     * @param operation the operation name
+     * @param input     the input expression
      * @hidden
      * @morphia.internal
      */
@@ -31,6 +33,7 @@ public class CalculusExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the input expression
      */
     @MorphiaInternal
     public Expression input() {
@@ -40,6 +43,7 @@ public class CalculusExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the unit of time
      */
     @MorphiaInternal
     public TimeUnit unit() {
@@ -47,7 +51,7 @@ public class CalculusExpression extends Expression {
     }
 
     /**
-     * Sets the time unit for the expression
+     * Sets the unit of time for the expression
      *
      * @param unit the unit
      * @return this

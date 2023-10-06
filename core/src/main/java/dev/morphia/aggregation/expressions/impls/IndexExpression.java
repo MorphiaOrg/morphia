@@ -34,6 +34,7 @@ public class IndexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the string
      */
     @MorphiaInternal
     public Expression string() {
@@ -43,6 +44,7 @@ public class IndexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the substring
      */
     @MorphiaInternal
     public Expression substring() {
@@ -52,6 +54,7 @@ public class IndexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the end
      */
     @MorphiaInternal
     @Nullable
@@ -62,6 +65,7 @@ public class IndexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the start
      */
     @MorphiaInternal
     @Nullable

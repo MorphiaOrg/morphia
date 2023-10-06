@@ -154,7 +154,13 @@ public class Fill extends Stage {
      * Possible methods for defining fill strategies.
      */
     public enum Method {
+        /**
+         * the linear method
+         */
         LINEAR,
+        /**
+         * the locf method
+         */
         LOCF
     }
 }

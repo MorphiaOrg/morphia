@@ -11,7 +11,7 @@ import dev.morphia.aggregation.expressions.impls.Expression;
  * @since 2.0
  */
 public final class TypeExpressions {
-    protected TypeExpressions() {
+    private TypeExpressions() {
     }
 
     /**
@@ -27,7 +27,7 @@ public final class TypeExpressions {
     }
 
     /**
-     * Checks if the specified expression resolves to one of the <a hre="https://docs.mongodb.com/manual/reference/bson-types/#bson-types">
+     * Checks if the specified expression resolves to one of the <a href="https://docs.mongodb.com/manual/reference/bson-types/#bson-types">
      * numeric BSON types.</a>
      *
      * @param input the value to check

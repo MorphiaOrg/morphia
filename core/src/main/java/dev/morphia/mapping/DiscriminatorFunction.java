@@ -84,5 +84,11 @@ public abstract class DiscriminatorFunction {
         builder.discriminator(discriminator);
     }
 
+    /**
+     * Computes the discriminator value for an Entity
+     * 
+     * @param builder the model builder
+     * @return the discriminator value
+     */
     protected abstract String compute(EntityModelBuilder builder);
 }

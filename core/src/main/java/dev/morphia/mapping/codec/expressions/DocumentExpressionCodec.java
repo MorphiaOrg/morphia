@@ -22,8 +22,8 @@ public class DocumentExpressionCodec extends BaseExpressionCodec<DocumentExpress
         document(writer, () -> {
             Fields fields = value.fields();
             if (fields != null) {
-                for (PipelineField field : fields.getFields()) {
-                    encodeIfNotNull(datastore.getCodecRegistry(), writer, field.getName(), field.getValue(), encoderContext);
+                for (PipelineField field : fields.fields()) {
+                    encodeIfNotNull(datastore.getCodecRegistry(), writer, field.name(), field.value(), encoderContext);
                 }
             }
         });

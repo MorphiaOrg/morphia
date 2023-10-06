@@ -17,10 +17,10 @@ public class AccumulatorExpression extends Expression {
     private String finalizeFunction;
 
     /**
-     * @param initFunction
-     * @param accumulateFunction
-     * @param accumulateArgs
-     * @param mergeFunction
+     * @param initFunction       the initial function
+     * @param accumulateFunction the accumulate function
+     * @param accumulateArgs     the accumulator arguments
+     * @param mergeFunction      the merge function
      * @hidden
      * @morphia.internal
      */
@@ -36,6 +36,7 @@ public class AccumulatorExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the initializer function
      */
     @MorphiaInternal
     public String initFunction() {
@@ -45,6 +46,7 @@ public class AccumulatorExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the accumulator function
      */
     @MorphiaInternal
     public String accumulateFunction() {
@@ -54,6 +56,7 @@ public class AccumulatorExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the accumulator arguments
      */
     @MorphiaInternal
     public List<Expression> accumulateArgs() {
@@ -63,6 +66,7 @@ public class AccumulatorExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the merge function
      */
     @MorphiaInternal
     public String mergeFunction() {
@@ -72,6 +76,7 @@ public class AccumulatorExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the function language
      */
     @MorphiaInternal
     public String lang() {
@@ -81,6 +86,7 @@ public class AccumulatorExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the arguments passed to the init function.
      */
     @MorphiaInternal
     public List<Expression> initArgs() {
@@ -90,6 +96,7 @@ public class AccumulatorExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the finalize function
      */
     @MorphiaInternal
     public String finalizeFunction() {

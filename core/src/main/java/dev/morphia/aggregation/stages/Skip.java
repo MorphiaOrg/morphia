@@ -11,6 +11,7 @@ public class Skip extends Stage {
     private final long size;
 
     /**
+     * @param size the amount to skip
      * @hidden
      * @morphia.internal
      */

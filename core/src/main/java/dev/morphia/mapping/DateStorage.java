@@ -11,6 +11,9 @@ import static java.time.ZoneId.systemDefault;
  * @since 2.0
  */
 public enum DateStorage {
+    /**
+     * the UTC format
+     */
     UTC {
         @Override
         public ZoneId getZone() {
@@ -18,6 +21,9 @@ public enum DateStorage {
         }
     },
 
+    /**
+     * the system default format
+     */
     SYSTEM_DEFAULT {
         @Override
         public ZoneId getZone() {

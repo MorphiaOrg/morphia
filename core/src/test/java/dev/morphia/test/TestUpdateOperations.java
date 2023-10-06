@@ -661,8 +661,7 @@ public class TestUpdateOperations extends TestBase {
         getDs().save(asList(dumbColl, dumbColl2));
 
         Query<DumbColl> query = getDs().find(DumbColl.class)
-                .filter(regex("opaqueId")
-                        .pattern("ID")
+                .filter(regex("opaqueId", "ID")
                         .caseInsensitive());
 
         assertEquals(query.first().fromArray.size(), 2);
@@ -679,14 +678,12 @@ public class TestUpdateOperations extends TestBase {
         getDs().save(asList(dumbColl, dumbColl2));
 
         getDs().find(DumbColl.class)
-                .filter(regex("opaqueId")
-                        .pattern("ID")
+                .filter(regex("opaqueId", "ID")
                         .caseInsensitive())
                 .update(pull("fromArray", Filters.eq("whereId", "not there")));
 
         getDs().find(DumbColl.class)
-                .filter(regex("opaqueId")
-                        .pattern("ID")
+                .filter(regex("opaqueId", "ID")
                         .caseInsensitive())
                 .update(pullAll("fromArray", List.of(new DumbArrayElement("something"))));
     }

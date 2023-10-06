@@ -11,6 +11,7 @@ public class Limit extends Stage {
     private final long limit;
 
     /**
+     * @param limit the limit to impose
      * @hidden
      * @morphia.internal
      */
@@ -37,7 +38,7 @@ public class Limit extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    public long getLimit() {
+    public long limit() {
         return limit;
     }
 }

@@ -14,6 +14,10 @@ public class CenterFilter extends Filter {
     private final double radius;
 
     /**
+     * @param filterName the filter name
+     * @param field      the field
+     * @param value      the value
+     * @param radius     the radius
      * @hidden
      * @morphia.internal
      */
@@ -41,6 +45,7 @@ public class CenterFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the radius
      */
     @MorphiaInternal
     public double radius() {

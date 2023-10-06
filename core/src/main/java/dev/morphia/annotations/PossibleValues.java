@@ -22,6 +22,9 @@ import dev.morphia.annotations.internal.MorphiaExperimental;
 @Target(ElementType.METHOD)
 @MorphiaExperimental
 public @interface PossibleValues {
+    /**
+     * @return the possible values
+     */
     String[] value();
 
     /**

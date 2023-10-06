@@ -23,6 +23,7 @@ public class ReplaceWith extends Stage {
     private DocumentExpression document;
 
     /**
+     * @param expression the expression
      * @hidden
      * @morphia.internal
      */
@@ -88,7 +89,7 @@ public class ReplaceWith extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    public DocumentExpression getDocument() {
+    public DocumentExpression document() {
         return document;
     }
 
@@ -99,12 +100,8 @@ public class ReplaceWith extends Stage {
      */
     @Nullable
     @MorphiaInternal
-    public Expression getValue() {
+    public Expression value() {
         return value;
     }
 
-    @Nullable
-    public Expression getExpression() {
-        return value != null ? value : document;
-    }
 }

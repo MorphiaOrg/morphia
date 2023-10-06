@@ -5,6 +5,11 @@ import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
+/**
+ * Evaluates an expression and returns the value of the expression if the expression evaluates to a non-null value. If the
+ * expression evaluates to a null value, including instances of undefined values or missing fields, returns the value of the
+ * replacement expression.
+ */
 public class IfNull extends Expression implements FieldHolder<IfNull> {
     private Expression target;
     private Expression replacement;
@@ -32,11 +37,19 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
         return this;
     }
 
+    /**
+     * @param replacement the replacement
+     * @return this
+     */
     public IfNull replacement(Expression replacement) {
         this.replacement = replacement;
         return this;
     }
 
+    /**
+     * @param target the target
+     * @return this
+     */
     public IfNull target(Expression target) {
         this.target = target;
         return this;
@@ -45,6 +58,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     /**
      * @hidden
      * @morphia.internal
+     * @return the target
      */
     @MorphiaInternal
     public Expression target() {
@@ -54,6 +68,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     /**
      * @hidden
      * @morphia.internal
+     * @return the replacement
      */
     @MorphiaInternal
     public Expression replacement() {
@@ -63,6 +78,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     /**
      * @hidden
      * @morphia.internal
+     * @return the document
      */
     @MorphiaInternal
     public DocumentExpression document() {

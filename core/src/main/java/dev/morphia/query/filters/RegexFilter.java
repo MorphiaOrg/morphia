@@ -1,7 +1,5 @@
 package dev.morphia.query.filters;
 
-import java.util.regex.Pattern;
-
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -16,6 +14,8 @@ public class RegexFilter extends Filter {
     private String options;
 
     /**
+     * @param field   the field
+     * @param pattern the pattern
      * @hidden
      * @morphia.internal
      */
@@ -32,32 +32,6 @@ public class RegexFilter extends Filter {
      */
     public RegexFilter options(String options) {
         this.options = options;
-        return this;
-    }
-
-    /**
-     * The regular expression
-     *
-     * @param pattern the regular expression
-     * @return this
-     * @deprecated use {@link Filters#regex(String, String)}
-     */
-    @Deprecated(since = "2.4.0", forRemoval = true)
-    public RegexFilter pattern(String pattern) {
-        setValue(pattern);
-        return this;
-    }
-
-    /**
-     * The regular expression
-     *
-     * @param pattern the regular expression
-     * @return this
-     * @deprecated use {@link Filters#regex(String, Pattern)}
-     */
-    @Deprecated(since = "2.4.0", forRemoval = true)
-    public RegexFilter pattern(Pattern pattern) {
-        setValue(pattern.pattern());
         return this;
     }
 
@@ -120,6 +94,7 @@ public class RegexFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the options
      */
     @MorphiaInternal
     public String options() {

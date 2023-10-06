@@ -15,6 +15,11 @@ public class ShiftExpression extends Expression {
     private final long by;
     private final Expression defaultValue;
 
+    /**
+     * @param output       the output
+     * @param by           the amount to shift by
+     * @param defaultValue the default value
+     */
     public ShiftExpression(Expression output, long by, Expression defaultValue) {
         super("$shift");
         this.output = output;
@@ -22,14 +27,32 @@ public class ShiftExpression extends Expression {
         this.defaultValue = defaultValue;
     }
 
+    /**
+     * @return the output
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Expression output() {
         return output;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the amount to shift by
+     */
+    @MorphiaInternal
     public long by() {
         return by;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the default values
+     */
+    @MorphiaInternal
     public Expression defaultValue() {
         return defaultValue;
     }

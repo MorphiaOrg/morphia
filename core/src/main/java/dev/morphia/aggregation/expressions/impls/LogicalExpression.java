@@ -13,6 +13,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class LogicalExpression extends Expression {
     /**
+     * @param operation the operation name
      * @hidden
      * @morphia.internal
      */
@@ -22,12 +23,27 @@ public class LogicalExpression extends Expression {
     }
 
     /**
+     * @param operation the operation name
+     * @param list      the expressions to evaluate
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
     public LogicalExpression(String operation, @NonNull ExpressionList list) {
         super(operation, list);
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the value as an ExpressionList
+     */
+    @NonNull
+    @Override
+    @MorphiaInternal
+    @SuppressWarnings("DataFlowIssue")
+    public ExpressionList value() {
+        return (ExpressionList) super.value();
     }
 
     /**
@@ -39,7 +55,7 @@ public class LogicalExpression extends Expression {
      */
     @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     public LogicalExpression add(Expression expression) {
-        ((ExpressionList) value()).add(expression);
+        value().add(expression);
         return this;
     }
 }

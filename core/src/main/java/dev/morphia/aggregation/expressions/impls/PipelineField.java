@@ -13,20 +13,41 @@ public class PipelineField {
     private final String name;
     private final Expression value;
 
+    /**
+     * @param name  the name
+     * @param value the value
+     */
     public PipelineField(String name, Expression value) {
         this.name = name;
         this.value = value;
     }
 
-    public String getName() {
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the name
+     */
+    @MorphiaInternal
+    public String name() {
         return name;
     }
 
-    public Expression getValue() {
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the value
+     */
+    @MorphiaInternal
+    public Expression value() {
         return value;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
     @Override
+    @MorphiaInternal
     public String toString() {
         return format("PipelineField{name='%s', value=%s}", name, value);
     }

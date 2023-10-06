@@ -103,11 +103,23 @@ public class Densify extends Stage {
      */
     @MorphiaInternal
     public enum RangeType {
+        /**
+         * a bounded range
+         */
         BOUNDED,
+        /**
+         * the full range
+         */
         FULL,
+        /**
+         * a partition
+         */
         PARTITION
     }
 
+    /**
+     * Defines a range.
+     */
     public static class Range {
         private final RangeType type;
         private final Number step;
@@ -116,6 +128,8 @@ public class Densify extends Stage {
         private Object upperBound;
 
         /**
+         * @param type the range type
+         * @param step the step size
          * @hidden
          * @morphia.internal
          */
@@ -130,7 +144,7 @@ public class Densify extends Stage {
          *
          * @param lowerBound the lower bound
          * @param upperBound the upper bound
-         * @param step
+         * @param step       the step size
          * @return the Range to pass to {@link #densify(String, Range)}
          */
         public static Range bounded(Object lowerBound, Object upperBound, Number step) {

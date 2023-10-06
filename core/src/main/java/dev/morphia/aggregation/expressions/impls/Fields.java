@@ -5,8 +5,6 @@ import java.util.List;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-
 /**
  * @hidden
  * @morphia.internal
@@ -17,31 +15,45 @@ public class Fields {
     private final List<PipelineField> fields = new ArrayList<>();
     private Object owner;
 
-    protected Fields(Object owner) {
+    private Fields(Object owner) {
         this.owner = owner;
     }
 
-    private Fields() {
-    }
-
+    /**
+     * @param owner the owner
+     * @return the new fields
+     */
     public static Fields on(Object owner) {
         return new Fields(owner);
     }
 
-    public Object add(String name) {
-        fields.add(new PipelineField(name, field(name)));
-        return owner;
-    }
-
+    /**
+     * @param name       the name
+     * @param expression the expression
+     * @param <T>        the type of the owner
+     * @return the owner
+     */
     public <T> T add(String name, Expression expression) {
         fields.add(new PipelineField(name, expression));
         return (T) owner;
     }
 
-    public List<PipelineField> getFields() {
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the fields
+     */
+    @MorphiaInternal
+    public List<PipelineField> fields() {
         return fields;
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the number of fields
+     */
+    @MorphiaInternal
     public int size() {
         return fields.size();
     }

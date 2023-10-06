@@ -33,6 +33,7 @@ public class FunctionExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the function body
      */
     @MorphiaInternal
     public String body() {
@@ -42,6 +43,7 @@ public class FunctionExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the arguments
      */
     @MorphiaInternal
     public List<Expression> args() {
@@ -51,6 +53,7 @@ public class FunctionExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the lang
      */
     @MorphiaInternal
     public String lang() {

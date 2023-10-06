@@ -15,8 +15,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class Accumulator extends Expression {
 
     /**
-     * @param operation
-     * @param values
+     * @param operation the operation name
+     * @param values    the values
      * @hidden
      * @morphia.internal
      */
@@ -25,6 +25,11 @@ public class Accumulator extends Expression {
         super(operation, new ExpressionList(values));
     }
 
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     @Override
     public ExpressionList value() {
         return (ExpressionList) super.value();

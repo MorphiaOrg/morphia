@@ -44,6 +44,11 @@ import static java.lang.Thread.currentThread;
 @ConfigMapping(prefix = "morphia")
 public interface MorphiaConfig {
 
+    /**
+     * Tries to load a configuration from the default location.
+     * 
+     * @return the loaded config
+     */
     static MorphiaConfig load() {
         return load(MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES);
     }

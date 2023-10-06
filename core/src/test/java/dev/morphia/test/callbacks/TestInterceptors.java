@@ -45,7 +45,7 @@ public class TestInterceptors extends TestBase {
 
     public static class Interceptor implements EntityListener<Object> {
         @Override
-        public boolean hasAnnotation(Class<? extends Annotation> type) {
+        public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
             return PrePersist.class.equals(type);
         }
 

@@ -24,12 +24,12 @@ public class ReplaceWithCodec extends StageCodec<ReplaceWith> {
 
     @Override
     protected void encodeStage(BsonWriter writer, ReplaceWith replace, EncoderContext encoderContext) {
-        Expression value = replace.getValue();
+        Expression value = replace.value();
         CodecRegistry codecRegistry = getDatastore().getCodecRegistry();
         if (value != null) {
             encodeIfNotNull(codecRegistry, writer, value, encoderContext);
         } else {
-            DocumentExpression document = replace.getDocument();
+            DocumentExpression document = replace.document();
             Codec codec = codecRegistry.get(document.getClass());
             codec.encode(writer, document, encoderContext);
         }

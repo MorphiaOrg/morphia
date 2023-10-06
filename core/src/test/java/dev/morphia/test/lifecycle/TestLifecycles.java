@@ -31,7 +31,6 @@ import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.jetbrains.annotations.NotNull;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -268,12 +267,12 @@ public class TestLifecycles extends TestBase {
 
     private static class NonNullValidation implements EntityListener<Object> {
         @Override
-        public boolean hasAnnotation(Class<? extends Annotation> type) {
+        public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
             return type.equals(PrePersist.class);
         }
 
         @Override
-        public void prePersist(@NotNull Object ent, @NotNull Document document, @NotNull Datastore datastore) {
+        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Datastore datastore) {
             final List<PropertyModel> fieldsToTest = ((MorphiaDatastore) datastore).getMapper().getEntityModel(ent.getClass())
                     .getProperties(NonNull.class);
             for (PropertyModel mf : fieldsToTest) {

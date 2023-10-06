@@ -6,12 +6,17 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+/**
+ * Applies a regular expression (regex) to a string.
+ */
 public class RegexExpression extends Expression {
     private final Expression input;
     private String regex;
     private String options;
 
     /**
+     * @param operation the operation name
+     * @param input     the input value
      * @hidden
      * @morphia.internal
      */
@@ -24,6 +29,7 @@ public class RegexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the input
      */
     @MorphiaInternal
     public Expression input() {
@@ -33,6 +39,7 @@ public class RegexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the regex
      */
     @MorphiaInternal
     @Nullable
@@ -43,6 +50,7 @@ public class RegexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the options
      */
     @MorphiaInternal
     @Nullable

@@ -15,6 +15,8 @@ public class ExpMovingAvg extends Expression {
     private final Double alpha;
 
     /**
+     * @param input the input
+     * @param n     the n value
      * @hidden
      * @morphia.internal
      */
@@ -27,6 +29,8 @@ public class ExpMovingAvg extends Expression {
     }
 
     /**
+     * @param input the input
+     * @param alpha the alpha value
      * @hidden
      * @morphia.internal
      */
@@ -41,6 +45,7 @@ public class ExpMovingAvg extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the input
      */
     @MorphiaInternal
     public Expression input() {
@@ -50,6 +55,7 @@ public class ExpMovingAvg extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the n value
      */
     @MorphiaInternal
     @Nullable
@@ -60,7 +66,9 @@ public class ExpMovingAvg extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the alpha value
      */
+    @Nullable
     @MorphiaInternal
     public Double alpha() {
         return alpha;

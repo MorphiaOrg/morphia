@@ -20,6 +20,9 @@ public class DateDiffExpression extends Expression {
     private DayOfWeek startOfWeek;
 
     /**
+     * @param startDate the start date
+     * @param endDate   the end date
+     * @param unit      the unit of time
      * @hidden
      * @morphia.internal
      */
@@ -34,6 +37,7 @@ public class DateDiffExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the start date
      */
     @MorphiaInternal
     public Expression startDate() {
@@ -43,6 +47,7 @@ public class DateDiffExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the end date
      */
     @MorphiaInternal
     public Expression endDate() {
@@ -52,6 +57,7 @@ public class DateDiffExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the unit of time
      */
     @MorphiaInternal
     public TimeUnit unit() {
@@ -61,6 +67,7 @@ public class DateDiffExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the timezone
      */
     @MorphiaInternal
     public Expression timezone() {
@@ -70,6 +77,7 @@ public class DateDiffExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the start of week day
      */
     @MorphiaInternal
     public DayOfWeek startOfWeek() {
@@ -88,11 +96,12 @@ public class DateDiffExpression extends Expression {
     }
 
     /**
-     * The timezone to carry out the operation. <tzExpression> must be a valid expression that resolves to a string formatted as either
+     * The timezone to carry out the operation. {@code timezone} must be a valid expression that resolves to a string formatted as either
      * an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
      *
      * @param timezone the timezone expression
      * @since 2.3
+     * @return this
      */
     public DateDiffExpression timezone(Expression timezone) {
         this.timezone = timezone;

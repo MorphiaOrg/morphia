@@ -11,6 +11,7 @@ public abstract class Stage {
     private Aggregation<?> aggregation;
 
     /**
+     * @param stageName the stage name
      * @hidden
      * @morphia.internal
      */

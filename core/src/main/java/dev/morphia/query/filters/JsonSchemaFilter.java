@@ -13,6 +13,7 @@ public class JsonSchemaFilter extends Filter {
     private final Document schema;
 
     /**
+     * @param schema the schema
      * @hidden
      * @morphia.internal
      */
@@ -25,6 +26,7 @@ public class JsonSchemaFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the schema
      */
     @MorphiaInternal
     public Document schema() {

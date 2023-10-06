@@ -52,7 +52,7 @@ public class Sort extends Stage {
     }
 
     /**
-     * Adds an descending sort definition on the field.
+     * Adds a descending sort definition on the field.
      *
      * @param field      the sort field
      * @param additional any additional fields to sort on
@@ -91,18 +91,27 @@ public class Sort extends Stage {
      * The sort types
      */
     public enum Direction {
+        /**
+         * ascending
+         */
         ASCENDING {
             @Override
             public void encode(BsonWriter writer) {
                 writer.writeInt32(1);
             }
         },
+        /**
+         * descending
+         */
         DESCENDING {
             @Override
             public void encode(BsonWriter writer) {
                 writer.writeInt32(-1);
             }
         },
+        /**
+         * sort by meta/textScore
+         */
         META {
             @Override
             public void encode(BsonWriter writer) {
@@ -124,11 +133,11 @@ public class Sort extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    public class SortType {
+    public static class SortType {
         private final String field;
         private final Direction direction;
 
-        protected SortType(String field, Direction direction) {
+        private SortType(String field, Direction direction) {
             this.field = field;
             this.direction = direction;
         }
@@ -139,7 +148,7 @@ public class Sort extends Stage {
          * @morphia.internal
          */
         @MorphiaInternal
-        public Direction getDirection() {
+        public Direction direction() {
             return direction;
         }
 
@@ -149,7 +158,7 @@ public class Sort extends Stage {
          * @morphia.internal
          */
         @MorphiaInternal
-        public String getField() {
+        public String field() {
             return field;
         }
     }

@@ -5,6 +5,12 @@ package dev.morphia.mapping;
  */
 @Deprecated(since = "2.4", forRemoval = true)
 public enum PropertyDiscovery {
+    /**
+     * look at fields
+     */
     FIELDS,
+    /**
+     * look at methods
+     */
     METHODS
 }

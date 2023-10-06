@@ -65,10 +65,10 @@ public class Projection extends Stage {
             fields.add(new PipelineField("_id", value(0)));
         }
         if (includes != null) {
-            fields.addAll(includes.getFields());
+            fields.addAll(includes.fields());
         }
         if (excludes != null) {
-            fields.addAll(excludes.getFields());
+            fields.addAll(excludes.fields());
         }
         return fields;
     }
@@ -120,7 +120,7 @@ public class Projection extends Stage {
 
     private void validateProjections() {
         if (includes != null && excludes != null) {
-            if (excludes.size() > 1 || !"_id".equals(excludes.getFields().get(0).getName())) {
+            if (excludes.size() > 1 || !"_id".equals(excludes.fields().get(0).name())) {
                 throw new ValidationException(Sofia.mixedProjections());
             }
         }

@@ -403,7 +403,7 @@ public interface Aggregation<T> {
     Aggregation<T> set(Set set);
 
     /**
-     * @param fields
+     * @param fields the window fields
      * @return this
      * @mongodb.server.release 5.0
      * @aggregation.expression $setWindowFields

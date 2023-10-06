@@ -25,7 +25,7 @@ public class AccumulatorCodec extends BaseExpressionCodec<Accumulator> {
         ExpressionList values = accumulator.value();
         if (values != null) {
             CodecRegistry registry = datastore.getCodecRegistry();
-            List<Expression> list = values.getValues();
+            List<Expression> list = values.values();
             if (list.size() == 1) {
                 encodeIfNotNull(registry, writer, list.get(0), encoderContext);
             } else {

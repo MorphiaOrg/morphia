@@ -51,6 +51,7 @@ public class SwitchExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the branche
      */
     @MorphiaInternal
     public List<Pair> branches() {
@@ -60,6 +61,7 @@ public class SwitchExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the default case
      */
     @MorphiaInternal
     public Expression defaultCase() {
@@ -80,10 +82,21 @@ public class SwitchExpression extends Expression {
             this.then = then;
         }
 
+        /**
+         * @return the case expression
+         * @hidden
+         * @morphia.internal
+         */
+        @MorphiaInternal
         public Expression caseExpression() {
             return caseExpression;
         }
 
+        /**
+         * @return the then expression
+         * @hidden
+         * @morphia.internal
+         */
         public Expression then() {
             return then;
         }

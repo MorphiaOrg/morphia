@@ -245,6 +245,7 @@ public interface Query<T> extends Iterable<T> {
     /**
      * Creates an update operation based on this query
      *
+     * @param first   the first and required update
      * @param updates lists the set of updates to apply
      * @param options the options to apply
      * @return the update operation
@@ -267,6 +268,7 @@ public interface Query<T> extends Iterable<T> {
     /**
      * Creates an update operation based on this query
      *
+     * @param first   the first and required stage
      * @param updates lists the set of updates to apply
      * @param options the options to apply
      * @return the update operation

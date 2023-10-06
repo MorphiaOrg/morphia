@@ -1,21 +1,22 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.DateExpressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Reusable type for ISO Date related expressions.
  *
- * @see dev.morphia.aggregation.expressions.DateExpressions#isoDayOfWeek(Expression)
- * @see dev.morphia.aggregation.expressions.DateExpressions#isoWeek(Expression)
- * @see dev.morphia.aggregation.expressions.DateExpressions#isoWeekYear(Expression)
+ * @see DateExpressions#isoDayOfWeek(Expression)
+ * @see DateExpressions#isoWeek(Expression)
+ * @see DateExpressions#isoWeekYear(Expression)
  */
 public class IsoDates extends Expression {
     private final Expression date;
     private Expression timezone;
 
     /**
-     * @param operation
-     * @param date
+     * @param operation the operation name
+     * @param date      the date
      * @hidden
      * @morphia.internal
      */
@@ -28,6 +29,7 @@ public class IsoDates extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the date
      */
     @MorphiaInternal
     public Expression date() {
@@ -37,6 +39,7 @@ public class IsoDates extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the timezone
      */
     @MorphiaInternal
     public Expression timezone() {

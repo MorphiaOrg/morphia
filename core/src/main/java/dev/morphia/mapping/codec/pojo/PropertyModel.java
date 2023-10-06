@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.StringJoiner;
 
 import com.mongodb.DBRef;
+import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
@@ -200,6 +201,7 @@ public final class PropertyModel {
     /**
      * @return the mapped name for the model
      */
+    @NonNull
     public String getMappedName() {
         return mappedName;
     }

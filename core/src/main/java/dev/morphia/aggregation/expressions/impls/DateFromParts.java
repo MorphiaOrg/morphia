@@ -3,6 +3,9 @@ package dev.morphia.aggregation.expressions.impls;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+/**
+ * Constructs and returns a Date object given the date’s constituent properties.
+ */
 public class DateFromParts extends Expression {
     private Expression year;
     private Expression month;
@@ -53,6 +56,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the year
      */
     @MorphiaInternal
     public Expression year() {
@@ -62,6 +66,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the month
      */
     @MorphiaInternal
     public Expression month() {
@@ -71,6 +76,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the day
      */
     @MorphiaInternal
     public Expression day() {
@@ -80,6 +86,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the hour
      */
     @MorphiaInternal
     public Expression hour() {
@@ -89,6 +96,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the minute
      */
     @MorphiaInternal
     public Expression minute() {
@@ -98,6 +106,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the second
      */
     @MorphiaInternal
     public Expression second() {
@@ -107,6 +116,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the milliseconds
      */
     @MorphiaInternal
     public Expression millisecond() {
@@ -116,6 +126,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the week of the year
      */
     @MorphiaInternal
     public Expression isoWeekYear() {
@@ -125,6 +136,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the week
      */
     @MorphiaInternal
     public Expression isoWeek() {
@@ -134,6 +146,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the day of the week
      */
     @MorphiaInternal
     public Expression isoDayOfWeek() {
@@ -143,6 +156,7 @@ public class DateFromParts extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the timezone
      */
     @MorphiaInternal
     public Expression timezone() {
@@ -345,6 +359,9 @@ public class DateFromParts extends Expression {
      * </ul>
      * <p>
      * Optional
+     * 
+     * @param value the timezone
+     * @return this
      */
     public DateFromParts timezone(Expression value) {
         this.timezone = value;
@@ -365,6 +382,9 @@ public class DateFromParts extends Expression {
      * </ul>
      * <p>
      * Optional
+     * 
+     * @param value the timezone
+     * @return this
      */
     public DateFromParts timezone(String value) {
         return timezone(Expressions.value(value));

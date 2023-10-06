@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.NamingStrategy;
@@ -76,10 +78,17 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         uuidRepresentation = base.uuidRepresentation();
     }
 
+    /**
+     * @return a new config
+     */
     public static ManualMorphiaConfig configure() {
         return new ManualMorphiaConfig();
     }
 
+    /**
+     * @param base the config to copy
+     * @return the new config
+     */
     public static ManualMorphiaConfig configure(MorphiaConfig base) {
         return new ManualMorphiaConfig(base);
     }
@@ -184,7 +193,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
                         propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls(), uuidRepresentation());
     }
 
-    private <T> T orDefault(T localValue, T defaultValue) {
+    private <T> T orDefault(@Nullable T localValue, T defaultValue) {
         return localValue != null ? localValue : defaultValue;
     }
 }

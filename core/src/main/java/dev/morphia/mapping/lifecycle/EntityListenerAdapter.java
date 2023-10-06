@@ -45,7 +45,7 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     @Override
-    public boolean hasAnnotation(Class<? extends Annotation> type) {
+    public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
         return !methods.get(type).isEmpty();
     }
 

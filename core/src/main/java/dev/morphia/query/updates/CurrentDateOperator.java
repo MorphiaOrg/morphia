@@ -52,15 +52,21 @@ public class CurrentDateOperator extends UpdateOperator {
     }
 
     /**
-     * Type type options when setting the current date
+     * The type options when setting the current date
      */
     public enum TypeSpecification {
+        /**
+         * the date type
+         */
         DATE {
             @Override
             Object toTarget() {
                 return true;
             }
         },
+        /**
+         * the timestamp type
+         */
         TIMESTAMP {
             @Override
             Object toTarget() {

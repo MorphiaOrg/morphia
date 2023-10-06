@@ -15,6 +15,9 @@ public class Box extends Filter {
     private final Point upperRight;
 
     /**
+     * @param field      the field
+     * @param bottomLeft the bottom left point
+     * @param upperRight the upper right point
      * @hidden
      * @morphia.internal
      */
@@ -28,6 +31,7 @@ public class Box extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the bottom left
      */
     @MorphiaInternal
     public Point bottomLeft() {
@@ -37,6 +41,7 @@ public class Box extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the upper right
      */
     @MorphiaInternal
     public Point upperRight() {

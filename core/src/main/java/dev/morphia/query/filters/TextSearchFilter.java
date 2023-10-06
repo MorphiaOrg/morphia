@@ -13,13 +13,19 @@ public class TextSearchFilter extends Filter {
     private Boolean caseSensitive;
     private Boolean diacriticSensitive;
 
+    /**
+     * @param searchText the search text
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     protected TextSearchFilter(String searchText) {
         super("$text");
         this.searchText = searchText;
     }
 
     /**
-     * Sets the search as case sensitive or not
+     * Sets the search as case-sensitive or not
      *
      * @param caseSensitive the case sensitivity
      * @return this
@@ -54,6 +60,7 @@ public class TextSearchFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the search text
      */
     @MorphiaInternal
     public String searchText() {
@@ -63,6 +70,7 @@ public class TextSearchFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return the language
      */
     @MorphiaInternal
     public String language() {
@@ -72,6 +80,7 @@ public class TextSearchFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return true if case sensitive
      */
     @MorphiaInternal
     public Boolean caseSensitive() {
@@ -81,6 +90,7 @@ public class TextSearchFilter extends Filter {
     /**
      * @hidden
      * @morphia.internal
+     * @return true if diacritic sensitive
      */
     @MorphiaInternal
     public Boolean diacriticSensitive() {

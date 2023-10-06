@@ -5,6 +5,9 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
+ * Searches an array for an occurrence of a specified value and returns the array index of the first occurrence. If the substring is not
+ * found, returns -1.
+ * 
  * @since 2.0
  */
 public class ArrayIndexExpression extends Expression {
@@ -14,8 +17,8 @@ public class ArrayIndexExpression extends Expression {
     private Integer end;
 
     /**
-     * @param array
-     * @param search
+     * @param array  the array expression
+     * @param search the search expression
      * @hidden
      * @morphia.internal
      */
@@ -29,6 +32,7 @@ public class ArrayIndexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the array expression
      */
     @MorphiaInternal
     public Expression array() {
@@ -38,6 +42,7 @@ public class ArrayIndexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the search expression
      */
     @MorphiaInternal
     public Expression search() {
@@ -47,6 +52,7 @@ public class ArrayIndexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the start index
      */
     @MorphiaInternal
     @Nullable
@@ -57,6 +63,7 @@ public class ArrayIndexExpression extends Expression {
     /**
      * @hidden
      * @morphia.internal
+     * @return the end index
      */
     @MorphiaInternal
     @Nullable

@@ -11,6 +11,7 @@ public class Sample extends Stage {
     private final long size;
 
     /**
+     * @param size the sample size
      * @hidden
      * @morphia.internal
      */

@@ -27,6 +27,9 @@ import com.mongodb.client.model.CollationStrength;
  * @since 1.3
  */
 public @interface Collation {
+    /**
+     * The default locale name
+     */
     String DEFAULT_LOCALE = "<default>";
 
     /**

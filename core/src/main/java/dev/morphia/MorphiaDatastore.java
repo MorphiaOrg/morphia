@@ -106,6 +106,13 @@ public class MorphiaDatastore implements Datastore {
     private MongoDatabase database;
     private DatastoreOperations operations;
 
+    /**
+     * @param client the mongo client
+     * @param config the config
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public MorphiaDatastore(MongoClient client, MorphiaConfig config) {
         this.mongoClient = client;
         this.database = mongoClient.getDatabase(config.database());
@@ -315,15 +322,29 @@ public class MorphiaDatastore implements Datastore {
         return queryFactory.createQuery(this, type, nativeQuery);
     }
 
+    /**
+     * @param collection the collection
+     * @param type       the type Class
+     * @param <T>        the query type
+     * @return the new query
+     */
     public <T> Query<T> find(String collection, Class<T> type) {
         return queryFactory.createQuery(this, collection, type);
     }
 
+    /**
+     * @param collection the collection
+     * @param <T>        the query type
+     * @return the new query
+     */
     public <T> Query<T> find(String collection) {
         Class<T> type = mapper.getClassFromCollection(collection);
         return queryFactory.createQuery(this, type);
     }
 
+    /**
+     * @return the codec registry
+     */
     public CodecRegistry getCodecRegistry() {
         return codecRegistry;
     }
@@ -346,33 +367,6 @@ public class MorphiaDatastore implements Datastore {
     @Override
     public MongoDatabase getDatabase() {
         return database;
-    }
-
-    /**
-     * @return the logged query
-     * @hidden
-     * @morphia.internal
-     */
-    public String getLoggedQuery(FindOptions options) {
-        if (options.isLogQuery()) {
-            String json = "{}";
-            Document first = getDatabase()
-                    .getCollection("system.profile")
-                    .find(new Document("command.comment", "logged query: " + options.queryLogId()),
-                            Document.class)
-                    .projection(new Document("command.filter", 1))
-                    .first();
-            if (first != null) {
-                Document command = (Document) first.get("command");
-                Document filter = (Document) command.get("filter");
-                if (filter != null) {
-                    json = filter.toJson(codecRegistry.get(Document.class));
-                }
-            }
-            return json;
-        } else {
-            throw new IllegalStateException(Sofia.queryNotLogged());
-        }
     }
 
     @Override
@@ -640,10 +634,19 @@ public class MorphiaDatastore implements Datastore {
         return entity;
     }
 
+    /**
+     * @return the operations
+     */
     public DatastoreOperations operations() {
         return operations;
     }
 
+    /**
+     * @param morphiaSession the session
+     * @param body           the transaction body
+     * @param <T>            the type of the result
+     * @return the result
+     */
     @Nullable
     protected <T> T doTransaction(SessionDatastore morphiaSession, MorphiaTransaction<T> body) {
         try (morphiaSession) {
@@ -698,6 +701,10 @@ public class MorphiaDatastore implements Datastore {
         }
     }
 
+    /**
+     * @param operations the operations
+     * @return this
+     */
     protected MorphiaDatastore operations(DatastoreOperations operations) {
         this.operations = operations;
         return this;
@@ -849,39 +856,170 @@ public class MorphiaDatastore implements Datastore {
         }
     }
 
+    /**
+     * Defines the various operations the driver performs on behalf of a Datastore
+     */
     public abstract static class DatastoreOperations {
+        /**
+         * Counts the number of documents in the collection according to the given options.
+         * 
+         * @param collection the collection to use
+         * @param query      the query to use
+         * @param options    the options to apply
+         * @return the count of documents found
+         * @param <T> the entity type
+         */
         public abstract <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options);
 
-        public abstract <T> DeleteResult deleteMany(MongoCollection<T> collection, Document queryDocument, DeleteOptions options);
+        /**
+         * Removes all documents from the collection that match the given query filter. If no documents match, the collection is not
+         * modified.
+         * 
+         * @param collection the collection to use
+         * @param query      the query to use
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
+        public abstract <T> DeleteResult deleteMany(MongoCollection<T> collection, Document query, DeleteOptions options);
 
-        public abstract <T> DeleteResult deleteOne(MongoCollection<T> collection, Document queryDocument, DeleteOptions options);
+        /**
+         * Removes one document from the collection that match the given query filter. If no documents match, the collection is not
+         * modified.
+         * 
+         * @param collection the collection to use
+         * @param query      the query to use
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
+        public abstract <T> DeleteResult deleteOne(MongoCollection<T> collection, Document query, DeleteOptions options);
 
-        public abstract <E> FindIterable<E> find(MongoCollection<E> collection, Document query);
+        /**
+         * Finds all documents in the collection.
+         *
+         * @param collection the collection to use
+         * @param query      the query to use
+         * @return the results
+         * @param <T> the entity type
+         */
+        public abstract <T> FindIterable<T> find(MongoCollection<T> collection, Document query);
 
+        /**
+         * Atomically find a document and remove it.
+         *
+         * @param collection the collection to use
+         * @param query      the query to use
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
         @Nullable
-        public abstract <T> T findOneAndDelete(MongoCollection<T> mongoCollection, Document queryDocument, FindAndDeleteOptions options);
+        public abstract <T> T findOneAndDelete(MongoCollection<T> collection, Document query, FindAndDeleteOptions options);
 
+        /**
+         * Atomically find a document and update it.
+         *
+         * @param collection the collection to use
+         * @param query      the query to use
+         * @param update     the update to apply
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
         @Nullable
-        public abstract <T> T findOneAndUpdate(MongoCollection<T> collection, Document toDocument, Document update, ModifyOptions options);
+        public abstract <T> T findOneAndUpdate(MongoCollection<T> collection, Document query, Document update, ModifyOptions options);
 
+        /**
+         * Inserts one or more documents.
+         *
+         * @param collection the collection to use
+         * @param list       the entities to insert
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
         public abstract <T> InsertManyResult insertMany(MongoCollection<T> collection, List<T> list, InsertManyOptions options);
 
+        /**
+         * Inserts one document.
+         *
+         * @param collection the collection to use
+         * @param entity     the entity to insert
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
         public abstract <T> InsertOneResult insertOne(MongoCollection<T> collection, T entity, InsertOneOptions options);
 
+        /**
+         * Replaces one document.
+         *
+         * @param collection the collection to use
+         * @param entity     the entity to replace
+         * @param filter     the filter to use
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
         public abstract <T> UpdateResult replaceOne(MongoCollection<T> collection, T entity, Document filter, ReplaceOptions options);
 
+        /**
+         * Runs a command on the server
+         * 
+         * @param command the command
+         * @return the results
+         */
         public abstract Document runCommand(Document command);
 
-        public abstract <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+        /**
+         * Updates one or more documents.
+         *
+         * @param collection the collection to use
+         * @param query      the entity to replace
+         * @param updates    the updates to apply
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
+        public abstract <T> UpdateResult updateMany(MongoCollection<T> collection, Document query, Document updates, UpdateOptions options);
+
+        /**
+         * Updates one or more documents.
+         *
+         * @param collection the collection to use
+         * @param query      the entity to replace
+         * @param updates    the updates to apply
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
+        public abstract <T> UpdateResult updateMany(MongoCollection<T> collection, Document query, List<Document> updates,
                 UpdateOptions options);
 
-        public abstract <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
-                UpdateOptions options);
+        /**
+         * Updates one document.
+         *
+         * @param collection the collection to use
+         * @param query      the entity to replace
+         * @param updates    the updates to apply
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
+        public abstract <T> UpdateResult updateOne(MongoCollection<T> collection, Document query, Document updates, UpdateOptions options);
 
-        public abstract <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, Document updateOperations,
-                UpdateOptions options);
-
-        public abstract <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+        /**
+         * Updates one document.
+         *
+         * @param collection the collection to use
+         * @param query      the entity to replace
+         * @param updates    the updates to apply
+         * @param options    the options to apply
+         * @return the results
+         * @param <T> the entity type
+         */
+        public abstract <T> UpdateResult updateOne(MongoCollection<T> collection, Document query, List<Document> updates,
                 UpdateOptions options);
 
     }
@@ -940,27 +1078,27 @@ public class MorphiaDatastore implements Datastore {
         }
 
         @Override
-        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document query, Document updates,
                 UpdateOptions options) {
-            return collection.updateMany(queryObject, updateOperations, options);
+            return collection.updateMany(query, updates, options);
         }
 
         @Override
-        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, Document updateOperations,
+        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document query, Document updates,
                 UpdateOptions options) {
-            return collection.updateOne(queryObject, updateOperations, options);
+            return collection.updateOne(query, updates, options);
         }
 
         @Override
-        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+        public <T> UpdateResult updateMany(MongoCollection<T> collection, Document query, List<Document> updates,
                 UpdateOptions options) {
-            return collection.updateMany(queryObject, updateOperations, options);
+            return collection.updateMany(query, updates, options);
         }
 
         @Override
-        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document queryObject, List<Document> updateOperations,
+        public <T> UpdateResult updateOne(MongoCollection<T> collection, Document query, List<Document> updates,
                 UpdateOptions options) {
-            return collection.updateOne(queryObject, updateOperations, options);
+            return collection.updateOne(query, updates, options);
         }
     }
 
@@ -988,18 +1126,14 @@ public class MorphiaDatastore implements Datastore {
             this.versionProperty = versionProperty;
         }
 
-        public Object entity() {
-            return entity;
-        }
-
         public void filter(Document filter) {
-            if (versioned()) {
+            if (versionProperty != null) {
                 filter.put(versionProperty.getMappedName(), oldVersion());
             }
         }
 
         public <T> Query<T> filter(Query<T> query) {
-            if (versioned() && newVersion() != -1) {
+            if (versionProperty != null && newVersion() != -1) {
                 query.filter(eq(versionProperty.getMappedName(), oldVersion()));
             }
 
@@ -1015,7 +1149,7 @@ public class MorphiaDatastore implements Datastore {
         }
 
         public void rollbackVersion() {
-            if (entity != null && versionProperty != null) {
+            if (versionProperty != null) {
                 versionProperty.setValue(entity, oldVersion);
             }
         }
