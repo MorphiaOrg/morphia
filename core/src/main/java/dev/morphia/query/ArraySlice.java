@@ -43,6 +43,7 @@ public class ArraySlice {
     /**
      * @param limit the limit to impose
      * @return this
+     * @query.filter $slice
      */
     public static ArraySlice limit(int limit) {
         return new ArraySlice(limit);
