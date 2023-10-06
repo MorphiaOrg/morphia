@@ -105,7 +105,7 @@ import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-@SuppressWarnings({ "ConstantConditions", "unused"})
+@SuppressWarnings({ "ConstantConditions", "unused" })
 public class TestUpdateOperations extends TestBase {
 
     private static final JsonWriterSettings WRITER_SETTINGS = JsonWriterSettings.builder().indent(true).build();

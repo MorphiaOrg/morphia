@@ -56,7 +56,7 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     public void testPipeline(ServerVersion serverVersion, String resourceNamed, boolean removeIds, boolean orderMatters,
-                             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
+            Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         String collection = "aggtest";
         checkMinServerVersion(serverVersion);
         var resourceName = discoverResourceName(new Exception().getStackTrace());

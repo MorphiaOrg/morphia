@@ -44,7 +44,7 @@ public class AggregationTest extends TemplatedTestBase {
     }
 
     public void testPipeline(ServerVersion serverVersion, String resourceName,
-                             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
+            Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         testPipeline(serverVersion, resourceName, true, true, pipeline);
     }
 

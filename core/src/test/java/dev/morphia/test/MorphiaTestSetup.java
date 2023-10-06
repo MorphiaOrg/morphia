@@ -96,18 +96,17 @@ public class MorphiaTestSetup {
         }
     }
 
-    protected void checkMinDriverVersion(double version) {
-        checkMinDriverVersion(Version.valueOf(version + ".0"));
-    }
+    protected void checkMinDriverVersion(DriverVersion version) {
+        String property = System.getProperty("driver.version");
+        Version driverVersion = property != null ? Version.valueOf(property) : null;
 
-    protected void checkMinDriverVersion(Version version) {
-        assumeTrue(driverIsAtLeastVersion(version),
+        assumeTrue(driverVersion == null || driverVersion.greaterThanOrEqualTo(version.version()),
                 format("Server should be at least %s but found %s", version, getServerVersion()));
     }
 
     protected void checkMinServerVersion(ServerVersion version) {
         assumeTrue(serverIsAtLeastVersion(version.version()),
-            format("Server should be at least %s but found %s", version.version(), getServerVersion()));
+                format("Server should be at least %s but found %s", version.version(), getServerVersion()));
     }
 
     protected MongoClient getMongoClient() {
@@ -161,13 +160,4 @@ public class MorphiaTestSetup {
                 .database(TEST_DB_NAME);
     }
 
-    /**
-     * @param version the minimum version allowed
-     * @return true if server is at least specified version
-     */
-    private boolean driverIsAtLeastVersion(Version version) {
-        String property = System.getProperty("driver.version");
-        Version driverVersion = property != null ? Version.valueOf(property) : null;
-        return driverVersion == null || driverVersion.greaterThanOrEqualTo(version);
-    }
 }

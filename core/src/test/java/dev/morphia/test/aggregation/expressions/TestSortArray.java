@@ -13,12 +13,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.Sort.naturalAscending;
-import static dev.morphia.test.ServerVersion.MDB52;
+import static dev.morphia.test.ServerVersion.v52;
 
 public class TestSortArray extends AggregationTest {
     @Test
     public void testField() {
-        testPipeline(MDB52, "field", (aggregation) -> {
+        testPipeline(v52, "field", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -29,7 +29,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testSubfield() {
-        testPipeline(MDB52, "subfield", (aggregation) -> {
+        testPipeline(v52, "subfield", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -40,7 +40,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testMultipleFields() {
-        testPipeline(MDB52, "multipleFields", (aggregation) -> {
+        testPipeline(v52, "multipleFields", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -52,7 +52,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testArrayOfIntegers() {
-        testPipeline(MDB52, "arrayOfIntegers", (aggregation) -> {
+        testPipeline(v52, "arrayOfIntegers", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -64,7 +64,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testMixedTypes() {
-        testPipeline(MDB52, "mixedTypes", (aggregation) -> {
+        testPipeline(v52, "mixedTypes", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()

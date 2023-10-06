@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.stages;
 
-import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoCursor;
 
 import dev.morphia.test.aggregation.AggregationTest;
@@ -18,6 +17,7 @@ import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Out.to;
 import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.test.DriverVersion.v41;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
@@ -47,7 +47,7 @@ public class TestOut extends AggregationTest {
 
     @Test
     public void testOutAlternateDatabase() {
-        checkMinDriverVersion(4.1);
+        checkMinDriverVersion(v41);
 
         getDs().save(asList(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
                 new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),

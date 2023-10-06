@@ -13,11 +13,12 @@ import static dev.morphia.aggregation.expressions.DateExpressions.dateAdd;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.TimeUnit.DAY;
 import static dev.morphia.aggregation.stages.Projection.project;
+import static dev.morphia.test.DriverVersion.v42;
 
 public class TestDateAdd extends AggregationTest {
     @Test
     public void testDateAdd() {
-        checkMinDriverVersion(4.2);
+        checkMinDriverVersion(v42);
 
         insert("shipping", parseDocs(
                 "{ '_id' : ObjectId('603dd4b2044b995ad331c0b2'), custId: 456, purchaseDate: ISODate('2020-12-31') }",

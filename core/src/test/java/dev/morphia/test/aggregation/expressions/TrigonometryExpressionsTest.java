@@ -1,8 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import com.github.zafarkhaja.semver.Version;
-
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;

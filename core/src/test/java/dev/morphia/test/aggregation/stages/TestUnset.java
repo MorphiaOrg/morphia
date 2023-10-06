@@ -13,6 +13,7 @@ import static dev.morphia.aggregation.expressions.Miscellaneous.unsetField;
 import static dev.morphia.aggregation.expressions.SystemVariables.ROOT;
 import static dev.morphia.aggregation.stages.ReplaceWith.replaceWith;
 import static dev.morphia.aggregation.stages.Unset.unset;
+import static dev.morphia.test.DriverVersion.v45;
 import static org.testng.Assert.assertEquals;
 
 public class TestUnset extends AggregationTest {
@@ -40,7 +41,7 @@ public class TestUnset extends AggregationTest {
 
     @Test
     public void testUnsetField() {
-        checkMinDriverVersion(4.5);
+        checkMinDriverVersion(v45);
         insert("inventory", parseDocs(
                 "{ '_id' : 1, 'item' : 'sweatshirt', 'price.usd': 45.99, qty: 300 }",
                 "{ '_id' : 2, 'item' : 'winter coat', 'price.usd': 499.99, qty: 200 }",

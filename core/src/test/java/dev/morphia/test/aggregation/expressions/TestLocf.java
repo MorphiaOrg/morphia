@@ -9,12 +9,12 @@ import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.WindowExpressions.locf;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
-import static dev.morphia.test.ServerVersion.MDB52;
+import static dev.morphia.test.ServerVersion.v52;
 
 public class TestLocf extends AggregationTest {
     @Test
     public void testMissingValues() {
-        testPipeline(MDB52, "missingValues", true, false, (aggregation) -> {
+        testPipeline(v52, "missingValues", true, false, (aggregation) -> {
             return aggregation
                     .setWindowFields(setWindowFields()
                             .sortBy(Sort.ascending("time"))
