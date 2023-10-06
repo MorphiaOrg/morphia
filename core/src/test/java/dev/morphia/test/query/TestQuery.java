@@ -144,7 +144,7 @@ public class TestQuery extends TestBase {
     public void multiKeyValueQueries() {
         checkMinDriverVersion(4.6);
 
-        getMapper().map(List.of(KeyValue.class));
+        getMapper().map(KeyValue.class);
         getDs().ensureIndexes(KeyValue.class);
         final KeyValue value = new KeyValue();
         final List<Object> keys = Arrays.asList("key1", "key2");
@@ -583,7 +583,6 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testFluentNotQuery() {
-        checkMinServerVersion(4.0);
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 

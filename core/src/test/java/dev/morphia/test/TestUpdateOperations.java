@@ -1,16 +1,3 @@
-/*
- * Copyright (C) 2010 Olafur Gauti Gudmundsson
- * <p/>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
- * obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
- * and limitations under the License.
- */
-
 package dev.morphia.test;
 
 import java.time.Instant;
@@ -118,7 +105,7 @@ import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-@SuppressWarnings({ "ConstantConditions", "unused", "removal" })
+@SuppressWarnings({ "ConstantConditions", "unused"})
 public class TestUpdateOperations extends TestBase {
 
     private static final JsonWriterSettings WRITER_SETTINGS = JsonWriterSettings.builder().indent(true).build();
@@ -928,7 +915,6 @@ public class TestUpdateOperations extends TestBase {
 
     @Test
     public void testUpdateWithStages(/* MapperOptions options */) {
-        checkMinServerVersion(4.2);
         getDs().save(List.of(
                 new Student(1, 95, 92, 90, LocalDate.of(2020, Month.JANUARY, 5)),
                 new Student(2, 98, 100, 102, LocalDate.of(2020, Month.JANUARY, 5)),

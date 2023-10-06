@@ -8,11 +8,12 @@ import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Documents.documents;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
+import static dev.morphia.test.ServerVersion.MDB51;
 
 public class TestDocuments extends AggregationTest {
     @Test
     public void testLookup() {
-        testPipeline(5.1, "lookup", aggregation -> {
+        testPipeline(MDB51, "lookup", aggregation -> {
             return aggregation
                     .match()
                     .lookup(lookup()

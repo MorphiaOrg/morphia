@@ -43,7 +43,7 @@ class OperationAuditTest {
                         "\$listSessions",
                         "\$listLocalSessions",
                         "\$search", /* not terribly well doc'd.  atlas only? */
-                        "\$shardedDataDistribution" /* not terribly well doc'd.  atlas only? */
+                        "\$shardedDataDistribution", /* not terribly well doc'd.  atlas only? */
                         "\$substr" /* not terribly well doc'd.  atlas only? */
                     )
                 )

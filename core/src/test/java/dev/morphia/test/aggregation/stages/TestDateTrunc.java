@@ -17,8 +17,6 @@ import static java.time.DayOfWeek.MONDAY;
 public class TestDateTrunc extends AggregationTest {
     @Test
     public void testDateTrunc() {
-        checkMinServerVersion(5.0);
-
         cakeSales();
 
         List<Document> actual = getDs().aggregate("cakeSales")

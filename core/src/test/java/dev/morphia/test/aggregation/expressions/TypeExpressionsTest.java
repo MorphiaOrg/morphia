@@ -29,13 +29,11 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testToBool() {
-        checkMinServerVersion(4.0);
         assertAndCheckDocShape("{$toBool: 'true' }", toBool(value("true")), true);
     }
 
     @Test
     public void testIsNumber() {
-        checkMinServerVersion(4.4);
         insert("examples", List.of(
                 parse("{ '_id' : 1, 'reading' : 42 }"),
                 parse("{ '_id' : 2, 'reading' : 'slowly' }")));
@@ -56,7 +54,6 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testToDate() {
-        checkMinServerVersion(4.0);
         Date date = new Date(LocalDate.of(2018, 3, 3)
                 .toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.UTC) * 1000);
         assertAndCheckDocShape("{$toDate: '2018-03-03' }", toDate(value("2018-03-03")), date);
@@ -64,31 +61,26 @@ public class TypeExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testToDecimal() {
-        checkMinServerVersion(4.0);
         assertAndCheckDocShape("{$toDecimal: true }", toDecimal(value(true)), new Decimal128(1));
     }
 
     @Test
     public void testToDouble() {
-        checkMinServerVersion(4.0);
         assertAndCheckDocShape("{$toDouble: true }", toDouble(value(true)), 1.0);
     }
 
     @Test
     public void testToInt() {
-        checkMinServerVersion(4.0);
         assertAndCheckDocShape("{$toInt: true }", toInt(value(true)), 1);
     }
 
     @Test
     public void testToLong() {
-        checkMinServerVersion(4.0);
         assertAndCheckDocShape("{$toLong: true }", toLong(value(true)), 1L);
     }
 
     @Test
     public void testToObjectId() {
-        checkMinServerVersion(4.0);
         assertAndCheckDocShape("{$toObjectId: '5ab9cbfa31c2ab715d42129e'}", toObjectId(value("5ab9cbfa31c2ab715d42129e")),
                 new ObjectId("5ab9cbfa31c2ab715d42129e"));
     }

@@ -35,7 +35,6 @@ import static org.testng.Assert.assertNull;
 public class TestTransactions extends TemplatedTestBase {
     @BeforeMethod
     public void before() {
-        checkMinServerVersion(4.0);
         checkForReplicaSet();
         getDs().save(new Rectangle(1, 1));
         getDs().find(Rectangle.class).findAndDelete();
@@ -162,7 +161,7 @@ public class TestTransactions extends TemplatedTestBase {
     @Test
     public void aggregation() {
         getDs().withTransaction(session -> {
-            testPipeline(0.0, "", false, false,
+            testPipeline(ServerVersion.ANY, "", false, false,
                     aggregation -> {
                         loadData("aggTest2", "data2.json");
                         return aggregation
@@ -260,7 +259,6 @@ public class TestTransactions extends TemplatedTestBase {
 
     @Test
     public void testTransactions() {
-        checkMinServerVersion(5.0);
         getDs().withTransaction(session -> {
             // save company
             Company company = new Company();

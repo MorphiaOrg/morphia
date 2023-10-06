@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import dev.morphia.aggregation.Aggregation;
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Martian;
 import dev.morphia.test.models.User;
@@ -42,8 +43,8 @@ public class AggregationTest extends TemplatedTestBase {
                 .codecProvider(new ZDTCodecProvider()));
     }
 
-    public void testPipeline(double serverVersion, String resourceName,
-            Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
+    public void testPipeline(ServerVersion serverVersion, String resourceName,
+                             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         testPipeline(serverVersion, resourceName, true, true, pipeline);
     }
 

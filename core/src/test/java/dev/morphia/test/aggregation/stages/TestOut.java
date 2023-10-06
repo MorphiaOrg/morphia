@@ -47,7 +47,6 @@ public class TestOut extends AggregationTest {
 
     @Test
     public void testOutAlternateDatabase() {
-        checkMinServerVersion(Version.valueOf("4.4.0"));
         checkMinDriverVersion(4.1);
 
         getDs().save(asList(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),

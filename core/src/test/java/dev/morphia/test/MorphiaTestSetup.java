@@ -105,13 +105,9 @@ public class MorphiaTestSetup {
                 format("Server should be at least %s but found %s", version, getServerVersion()));
     }
 
-    protected void checkMinServerVersion(double version) {
-        checkMinServerVersion(Version.valueOf(version + ".0"));
-    }
-
-    protected void checkMinServerVersion(Version version) {
-        assumeTrue(serverIsAtLeastVersion(version),
-                format("Server should be at least %s but found %s", version, getServerVersion()));
+    protected void checkMinServerVersion(ServerVersion version) {
+        assumeTrue(serverIsAtLeastVersion(version.version()),
+            format("Server should be at least %s but found %s", version.version(), getServerVersion()));
     }
 
     protected MongoClient getMongoClient() {

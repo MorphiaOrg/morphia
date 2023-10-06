@@ -14,6 +14,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static dev.morphia.mapping.ShardKeyType.HASHED;
+import static dev.morphia.test.ServerVersion.MDB60;
 import static org.testng.Assert.assertEquals;
 
 public class TestSharding extends TestBase {
@@ -26,7 +27,7 @@ public class TestSharding extends TestBase {
 
     @Test
     public void testShardCollection() {
-        checkMinServerVersion(6.0);
+        checkMinServerVersion(MDB60);
         withSharding(() -> {
             var datastore = getDs();
             datastore.getDatabase().createCollection("split_brain"); // make sure the db exists on 4.0.x

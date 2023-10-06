@@ -5,6 +5,7 @@ import java.util.List;
 
 import dev.morphia.aggregation.stages.Densify;
 import dev.morphia.aggregation.stages.Densify.Range;
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.bson.Document;
@@ -16,7 +17,7 @@ import static org.testng.Assert.assertEquals;
 public class TestDensify extends AggregationTest {
     @Test
     public void testDensify() {
-        checkMinServerVersion(5.1);
+        checkMinServerVersion(ServerVersion.MDB51);
         insert("weather", parseDocs(
                 "{ 'metadata': { 'sensorId': 5578, 'type': 'temperature' }, 'timestamp': ISODate('2021-05-18T00:00:00.000Z'), 'temp': 12 }",
                 "{ 'metadata': { 'sensorId': 5578, 'type': 'temperature' }, 'timestamp': ISODate('2021-05-18T04:00:00.000Z'), 'temp': 11 }",

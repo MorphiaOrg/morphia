@@ -208,7 +208,6 @@ public class TestDateExpression extends ExpressionsTestBase {
 
     @Test
     public void testToDate() {
-        checkMinServerVersion(4.0);
         insert("orders", List.of(
                 parse(" { _id: 1, item: 'apple', qty: 5, order_date: '2018-03-10'}"),
                 parse("{ _id: 2, item: 'pie', qty: 10,  order_date: '2018-03-12'}"),

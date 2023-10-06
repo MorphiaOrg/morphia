@@ -13,11 +13,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.Sort.naturalAscending;
+import static dev.morphia.test.ServerVersion.MDB52;
 
 public class TestSortArray extends AggregationTest {
     @Test
     public void testField() {
-        testPipeline(5.2, "field", (aggregation) -> {
+        testPipeline(MDB52, "field", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -28,7 +29,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testSubfield() {
-        testPipeline(5.2, "subfield", (aggregation) -> {
+        testPipeline(MDB52, "subfield", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -39,7 +40,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testMultipleFields() {
-        testPipeline(5.2, "multipleFields", (aggregation) -> {
+        testPipeline(MDB52, "multipleFields", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -51,7 +52,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testArrayOfIntegers() {
-        testPipeline(5.2, "arrayOfIntegers", (aggregation) -> {
+        testPipeline(MDB52, "arrayOfIntegers", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -63,7 +64,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testMixedTypes() {
-        testPipeline(5.2, "mixedTypes", (aggregation) -> {
+        testPipeline(MDB52, "mixedTypes", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()

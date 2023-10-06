@@ -15,11 +15,12 @@ import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.test.ServerVersion.MDB52;
 
 public class TestBottomN extends AggregationTest {
     @Test
     public void testAcrossGames() {
-        testPipeline(5.2, "acrossGames", false, false, (aggregation) -> {
+        testPipeline(MDB52, "acrossGames", false, false, (aggregation) -> {
             return aggregation
                     .group(group(id(field("gameId")))
                             .field("playerId", bottomN(
@@ -31,7 +32,7 @@ public class TestBottomN extends AggregationTest {
 
     @Test
     public void testComputedN() {
-        testPipeline(5.2, "computedN", false, false, (aggregation) -> {
+        testPipeline(MDB52, "computedN", false, false, (aggregation) -> {
             return aggregation
                     .group(group(id(document("gameId", field("gameId"))))
                             .field("gamescores", bottomN(
@@ -47,7 +48,7 @@ public class TestBottomN extends AggregationTest {
 
     @Test
     public void testSingleGame() {
-        testPipeline(5.2, "singleGame", false, false, (aggregation) -> {
+        testPipeline(MDB52, "singleGame", false, false, (aggregation) -> {
             return aggregation
                     .match(eq("gameId", "G1"))
                     .group(group(id(field("gameId")))

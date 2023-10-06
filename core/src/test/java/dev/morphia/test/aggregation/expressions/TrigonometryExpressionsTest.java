@@ -23,10 +23,6 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tan;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tanh;
 
 public class TrigonometryExpressionsTest extends ExpressionsTestBase {
-    @BeforeMethod
-    public void before() {
-        checkMinServerVersion(4.2);
-    }
 
     @Test
     public void testAcos() {
@@ -70,7 +66,6 @@ public class TrigonometryExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testCosh() {
-        checkMinServerVersion(Version.valueOf("4.2.0"));
         assertAndCheckDocShape("{ $cosh: 0}", cosh(value(0)), 1.0);
     }
 
@@ -91,7 +86,6 @@ public class TrigonometryExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testSinh() {
-        checkMinServerVersion(Version.valueOf("4.2.0"));
         assertAndCheckDocShape("{ $sinh: 3}", sinh(value(3)), 10.017874927409903D);
     }
 
@@ -102,7 +96,6 @@ public class TrigonometryExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testTanh() {
-        checkMinServerVersion(Version.valueOf("4.2.0"));
         assertAndCheckDocShape("{ $tanh: 0.5 }", tanh(value(0.5)), 0.46211715726000974D);
     }
 }

@@ -22,8 +22,6 @@ import static dev.morphia.query.filters.Filters.expr;
 public class TestDateSubtract extends AggregationTest {
     @Test
     public void testDateSubtract() {
-        checkMinServerVersion(5.0);
-
         insert("connectionTime", parseDocs(
                 "{ _id: 1, custId: 457, login: ISODate('2020-12-25T19:04:00Z'), logout: ISODate('2020-12-28T09:04:00Z')}",
                 "{ _id: 2, custId: 457, login: ISODate('2021-01-27T05:12:00Z'), logout: ISODate('2021-01-28T13:05:00Z') }",
