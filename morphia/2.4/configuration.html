@@ -287,8 +287,33 @@ should live in your build&#8217;s resources folder and be named <code>META-INF/m
 variations which were awkward, at best, and usually downright impossible when using the traditional programmatic configuration.
 Reference documentation for the configuration file can be found in the <a href="javadoc/dev/morphia/config/MorphiaConfig.html">javadoc</a> but
 we&#8217;ll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed.
-However, if the default values are acceptable that element can be safely omitted from your file. The only element <strong>required</strong> to be
-present is <code>morphia.database</code>.</p>
+However, if the default values are acceptable that element can be safely omitted from your file.</p>
+</div>
+<div class="paragraph">
+<p><code>Morphia.createDatastore()</code> can be called <a href="javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient,dev.morphia.config.MorphiaConfig)">with</a>
+and <a href="javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient)">without</a> an explicit <code>MorphiaConfig</code>
+argument.  When not explicitly given a <code>MorphiaConfig</code>, Morphia will attempt to load the configuration file at the location show above.
+Failing to find a configuration file, it will create a new configuration using the default values which can be found in the javadoc.
+These values are unlikely to be suitable long term but should be sufficient for newcomers looking to test things out a little before
+committing to adopt Morphia.</p>
+</div>
+<div class="sect2">
+<h3 id="_manually_loading_configurations"><a class="anchor" href="#_manually_loading_configurations"></a>Manually loading configurations</h3>
+<div class="paragraph">
+<p>In some cases, you might find the need for multiple configuration files.  Such scenarios include varying test
+environments/configurations, multiple dataset configurations, or externally supplied configurations.  In such cases, you can manually
+load those configurations using <a href="javadoc/dev/morphia/config/MorphiaConfig.html#load(java.lang.String)">MorphiaConfig.load()</a>.  You
+can then pass this instance to <code>createDatastore()</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamic_configuration_creation"><a class="anchor" href="#_dynamic_configuration_creation"></a>Dynamic configuration creation</h3>
+<div class="paragraph">
+<p>For many, the ability to dynamically create <code>MorphiaConfig</code> instances is not just a nicety but a hard requirement.  In this case, there
+are methods on <code>MorphiaConfig</code> to return a new version of the configuration with the updated value.  <code>MorphiaConfig</code> is immutable,
+however, so be sure to use the returned reference and not the original.  It should also be noted that once a <code>Datastore</code> is created using
+a <code>MorphiaConfig</code>, that configuration is fixed and can not be changed.  A new <code>Datastore</code> would need to be created with the updated version.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_collection_and_property_naming"><a class="anchor" href="#_collection_and_property_naming"></a>Collection and property naming</h3>
@@ -303,7 +328,9 @@ present is <code>morphia.database</code>.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Traditionally Morphia has used with the class&#8217;s "simple name" for the collection name if you chose to not manually map the name of an entity&#8217;s collection. Similarly, an entity&#8217;s properties were named after the Java field name unless mapped otherwise with the <code>@Property</code> annotation. In 2.0, however, we define naming strategies. The naming strategies supported out of the box are:</p>
+<p>Traditionally Morphia has used the class&#8217;s "simple name" for the collection name if you chose to not manually map the name of an
+entity&#8217;s collection. Similarly, an entity&#8217;s properties were named after the Java field name unless mapped otherwise with the <code>@Property</code>
+annotation. In 2.0, however, we defined some naming strategies. The naming strategies supported out of the box are:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -381,8 +408,9 @@ The choices here are simpler:</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>Simple name is simply the fully qualified classname without the package name. These call all be accessed via their named methods on
-<a href="javadoc/dev/morphia/mapping/DiscriminatorFunction.html">DiscriminatorFunction</a> and just like the <code>NamingStrategy</code> cases, if the provided options are not sufficient, you can implement your own by subclassing <code>DiscriminatorFunction</code> and implementing your own function.</p>
+<p>Simple name is the fully qualified classname without the package name. These can all be accessed via their named methods on
+<a href="javadoc/dev/morphia/mapping/DiscriminatorFunction.html">DiscriminatorFunction</a> and just like the <code>NamingStrategy</code> cases, if the
+provided options are not sufficient, you can implement your own by subclassing <code>DiscriminatorFunction</code> and implementing your own function.</p>
 </div>
 </div>
 <div class="sect2">
@@ -445,7 +473,9 @@ have more data than can be easily updated within any reasonable limits. For thos
 straightforward.</p>
 </div>
 <div class="paragraph">
-<p>Using the legacy configuration is a matter of defining a few entries in your configuration file.  An example of that is listed below.</p>
+<p>Using the legacy configuration is a matter of defining a few entries in your configuration file.  An example of that is listed below.  If
+you already have a <code>MorphiaConfig</code> in hand but would like to update it to reflect the legacy style configuration, you can call <code>.legacy()</code>
+on that reference and use the resulting <code>MorphiaConfig</code> instance.</p>
 </div>
 </div>
 <div class="sect2">
@@ -466,18 +496,22 @@ morphia.apply-document-validations=false
 ######
 morphia.apply-indexes=false
 ######
+# default=true
+######
+morphia.auto-import-models=false
+######
 # Optional
 ######
 morphia.codec-provider=
 ######
 # default=camelCase
-# possible values=camelCase, identity, kebabCase, lowerCase, snakeCase
+# possible values=camelCase, identity, kebabCase, lowerCase, snakeCase, fqcn
 ######
 morphia.collection-naming=camelCase
 ######
-# Required
+# default=morphia
 ######
-morphia.database=dummy
+morphia.database=morphia
 ######
 # default=utc
 # possible values=utc, system_default
@@ -485,7 +519,7 @@ morphia.database=dummy
 morphia.date-storage=utc
 ######
 # default=simpleName
-# possible values=className, lowerClassName, lowerSimpleName, simpleName
+# possible values=className, lowerClassName, lowerSimpleName, simpleName, fqcn
 ######
 morphia.discriminator=simpleName
 ######
@@ -501,13 +535,9 @@ morphia.enable-polymorphic-queries=false
 ######
 morphia.ignore-finals=false
 ######
-# Required
+# default=.*
 ######
-morphia.map-packages=
-######
-# default=false
-######
-morphia.map-subpackages=false
+morphia.packages=.*
 ######
 # default=fields
 # possible values=fields, methods
@@ -515,7 +545,7 @@ morphia.map-subpackages=false
 morphia.property-discovery=fields
 ######
 # default=identity
-# possible values=camelCase, identity, kebabCase, lowerCase, snakeCase
+# possible values=camelCase, identity, kebabCase, lowerCase, snakeCase, fqcn
 ######
 morphia.property-naming=identity
 ######
@@ -542,13 +572,9 @@ morphia.uuid-representation=standard</code></pre>
 <div class="title">Minimal config file</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">######
-# Required
+# default=true
 ######
-morphia.database=dummy
-######
-# Required
-######
-morphia.map-packages=</code></pre>
+morphia.auto-import-models=false</code></pre>
 </div>
 </div>
 <hr>
@@ -556,14 +582,14 @@ morphia.map-packages=</code></pre>
 <div class="title">Legacy config file</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">######
+# default=true
+######
+morphia.auto-import-models=false
+######
 # default=camelCase
-# possible values=camelCase, identity, kebabCase, lowerCase, snakeCase
+# possible values=camelCase, identity, kebabCase, lowerCase, snakeCase, fqcn
 ######
 morphia.collection-naming=identity
-######
-# Required
-######
-morphia.database=dummy
 ######
 # default=utc
 # possible values=utc, system_default
@@ -571,17 +597,13 @@ morphia.database=dummy
 morphia.date-storage=system_default
 ######
 # default=simpleName
-# possible values=className, lowerClassName, lowerSimpleName, simpleName
+# possible values=className, lowerClassName, lowerSimpleName, simpleName, fqcn
 ######
 morphia.discriminator=className
 ######
 # default=_t
 ######
 morphia.discriminator-key=className
-######
-# Required
-######
-morphia.map-packages=
 ######
 # default=dev.morphia.query.DefaultQueryFactory
 ######
