@@ -23,7 +23,7 @@ public class TestEntityModel extends TestBase {
     @Test
     public void childParentPairings() {
         withConfig(buildConfig()
-                .mapPackages(of(ChildLevel3a.class.getPackageName())), () -> {
+                .packages(of(ChildLevel3a.class.getPackageName())), () -> {
                     EntityModel entityModel = getMapper().getEntityModel(RootParent.class);
                     Set<EntityModel> subtypes = entityModel.getSubtypes();
                     assertEquals(subtypes.size(), 6);

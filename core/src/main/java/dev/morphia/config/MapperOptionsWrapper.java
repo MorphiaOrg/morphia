@@ -34,22 +34,22 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     }
 
     @Override
-    public boolean applyCaps() {
+    public Boolean applyCaps() {
         return false;
     }
 
     @Override
-    public boolean applyDocumentValidations() {
+    public Boolean applyDocumentValidations() {
         return false;
     }
 
     @Override
-    public boolean applyIndexes() {
+    public Boolean applyIndexes() {
         return false;
     }
 
     @Override
-    public boolean autoImportModels() {
+    public Boolean autoImportModels() {
         return options.autoImportModels();
     }
 
@@ -84,23 +84,18 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     }
 
     @Override
-    public boolean enablePolymorphicQueries() {
+    public Boolean enablePolymorphicQueries() {
         return options.isEnablePolymorphicQueries();
     }
 
     @Override
-    public boolean ignoreFinals() {
+    public Boolean ignoreFinals() {
         return options.isIgnoreFinals();
     }
 
     @Override
-    public List<String> mapPackages() {
+    public List<String> packages() {
         return emptyList();
-    }
-
-    @Override
-    public boolean mapSubpackages() {
-        return options.isMapSubPackages();
     }
 
     @Override
@@ -119,12 +114,12 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     }
 
     @Override
-    public boolean storeEmpties() {
+    public Boolean storeEmpties() {
         return options.isStoreEmpties();
     }
 
     @Override
-    public boolean storeNulls() {
+    public Boolean storeNulls() {
         return options.isStoreNulls();
     }
 

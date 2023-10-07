@@ -1,39 +1,28 @@
 package dev.morphia.config;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import dev.morphia.annotations.PossibleValues;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MapperOptions;
 import dev.morphia.mapping.NamingStrategy;
-import dev.morphia.sofia.Sofia;
 
-import org.eclipse.microprofile.config.spi.ConfigSource;
 import org.eclipse.microprofile.config.spi.Converter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.smallrye.config.ConfigMapping;
-import io.smallrye.config.EnvConfigSource;
-import io.smallrye.config.SmallRyeConfigBuilder;
-import io.smallrye.config.SysPropConfigSource;
 import io.smallrye.config.WithConverter;
 import io.smallrye.config.WithDefault;
 
 import static dev.morphia.annotations.internal.PossibleValuesBuilder.possibleValuesBuilder;
-import static io.smallrye.config.PropertiesConfigSourceProvider.classPathSources;
 import static java.lang.String.join;
-import static java.lang.Thread.currentThread;
 import static java.util.Arrays.stream;
-import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.joining;
 
 /**
@@ -43,9 +32,7 @@ import static java.util.stream.Collectors.joining;
  */
 @MorphiaInternal
 public class MorphiaConfigHelper {
-    private static final Logger LOG = LoggerFactory.getLogger(MorphiaConfig.class);
-
-    private static final String MORPHIA_CONFIG_PROPERTIES = "META-INF/morphia-config.properties";
+    static final String MORPHIA_CONFIG_PROPERTIES = "META-INF/morphia-config.properties";
     final String prefix;
     private final MorphiaConfig config;
     private final boolean showComplete;
@@ -66,8 +53,21 @@ public class MorphiaConfigHelper {
     }
 
     /**
-     * @param config
-     * @param showComplete
+     * @param config       the configuration
+     * @param showComplete if true, full config with defaulted values displayed
+     * @since 2.4
+     * @hidden
+     * @morphia.internal
+     * @return the configuration in config file format
+     */
+    @MorphiaInternal
+    public static String dumpConfigurationFile(MorphiaConfig config, boolean showComplete) {
+        return new MorphiaConfigHelper(config, showComplete).toString();
+    }
+
+    /**
+     * @param config       the configuration
+     * @param showComplete if true, full config with defaulted values displayed
      * @hidden
      */
     MorphiaConfigHelper(MorphiaConfig config, boolean showComplete) {
@@ -76,51 +76,10 @@ public class MorphiaConfigHelper {
         prefix = getPrefix();
         entries = stream(MorphiaConfig.class.getDeclaredMethods())
                 .sorted(Comparator.comparing(Method::getName))
+                .filter(m -> !Modifier.isStatic(m.getModifiers()))
+                .filter(m -> m.getParameterCount() == 0 && !m.getReturnType().equals(MorphiaConfig.class))
                 .map(m -> getEntry(prefix, m))
-                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-    }
-
-    private static Map<String, String> getEnvProperties() {
-        return unmodifiableMap(new TreeMap<>(System.getenv()));
-    }
-
-    /**
-     * @hidden
-     * @return
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public static MorphiaConfig loadConfig() {
-        return loadConfig(MORPHIA_CONFIG_PROPERTIES);
-    }
-
-    /**
-     * @hidden
-     * @return
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public static MorphiaConfig loadConfig(String path) {
-        List<ConfigSource> configSources = classPathSources(path.startsWith("META-INF/") ? path : "META-INF/" + path,
-                currentThread().getContextClassLoader());
-        if (configSources.isEmpty()) {
-            LOG.warn(Sofia.missingConfigFile(path));
-            return MorphiaConfigHelper.defaultConfig();
-        }
-        return new SmallRyeConfigBuilder()
-                .addDefaultInterceptors()
-                .withMapping(MorphiaConfig.class)
-                .withSources(new EnvConfigSource(getEnvProperties(), 300),
-                        new SysPropConfigSource())
-                .withSources(configSources)
-                .addDefaultSources()
-                .build()
-                .getConfigMapping(MorphiaConfig.class);
-    }
-
-    private static MorphiaConfig defaultConfig() {
-        return new DefaultMorphiaConfig();
 
     }
 
@@ -147,18 +106,13 @@ public class MorphiaConfigHelper {
             }
         }
 
-        if (m.getAnnotation(MorphiaInternal.class) != null) {
-            return null;
-        } else {
-
-            return new Entry(
-                    prefix + NamingStrategy.kebabCase().apply(m.getName()),
-                    Optional.class.isAssignableFrom(m.getReturnType()),
-                    getValue(m),
-                    getDefault(m),
-                    getPossibles(m),
-                    converter);
-        }
+        return new Entry(
+                prefix + NamingStrategy.kebabCase().apply(m.getName()),
+                Optional.class.isAssignableFrom(m.getReturnType()),
+                getValue(m),
+                getDefault(m),
+                getPossibles(m),
+                converter);
     }
 
     private static String getPrefix() {
@@ -193,6 +147,9 @@ public class MorphiaConfigHelper {
             return value.toString().toLowerCase();
         } else if (value instanceof List) {
             var list = (List<?>) value;
+            if (list.isEmpty()) {
+                return ".*";
+            }
             StringJoiner joiner = new StringJoiner(",");
             for (Object o : list) {
                 joiner.add(convertToString(o));

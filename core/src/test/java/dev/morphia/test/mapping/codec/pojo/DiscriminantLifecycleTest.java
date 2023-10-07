@@ -23,7 +23,7 @@ public class DiscriminantLifecycleTest extends TestBase {
 
     public DiscriminantLifecycleTest() {
         super(buildConfig()
-                .mapPackages(of("dev.morphia.test.mapping.codec.pojo")));
+                .packages(of("dev.morphia.test.mapping.codec.pojo")));
     }
 
     @DataProvider(name = "classes")

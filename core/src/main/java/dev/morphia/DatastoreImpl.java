@@ -116,7 +116,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.database = database.withCodecRegistry(this.codecRegistry);
         operations = new CollectionOperations();
 
-        config.mapPackages().forEach(packageName -> {
+        config.packages().forEach(packageName -> {
             Sofia.logMappingPackage(packageName);
             mapper.map(packageName);
         });

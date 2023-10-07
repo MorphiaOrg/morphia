@@ -223,9 +223,15 @@ public class Mapper {
      *
      * @param type the type to process
      * @return the EntityModel for the object given
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public EntityModel getEntityModel(Class type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        if (actual == null && MorphiaProxy.class.equals(type)) {
+            throw new NotMappableException(type);
+        }
         EntityModel model = mappedEntities.get(actual);
 
         if (model == null) {
@@ -432,7 +438,7 @@ public class Mapper {
     @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void map(String packageName) {
         try {
-            getClasses(contextClassLoader, packageName, getConfig().mapSubpackages())
+            getClasses(contextClassLoader, packageName)
                     .forEach(type -> {
                         try {
                             getEntityModel(type);
@@ -455,7 +461,7 @@ public class Mapper {
     public synchronized void mapPackage(String packageName) {
         Sofia.logConfiguredOperation("Mapper#mapPackage");
         try {
-            getClasses(contextClassLoader, packageName, getConfig().mapSubpackages())
+            getClasses(contextClassLoader, packageName)
                     .forEach(type -> {
                         try {
                             getEntityModel(type);
@@ -562,16 +568,19 @@ public class Mapper {
                 .build();
     }
 
-    private List<Class> getClasses(ClassLoader loader, String packageName, boolean mapSubPackages)
+    private List<Class> getClasses(ClassLoader loader, String packageName)
             throws ClassNotFoundException {
         final Set<Class> classes = new HashSet<>();
 
         ClassGraph classGraph = new ClassGraph()
                 .addClassLoader(loader)
                 .enableAllInfo();
-        if (mapSubPackages) {
+        if (packageName.endsWith(".*")) {
+            String base = packageName.substring(0, packageName.length() - 2);
+            if (!base.isEmpty()) {
+                classGraph.acceptPackages(base);
+            }
             classGraph.acceptPackages(packageName);
-            classGraph.acceptPackages(packageName + ".*");
         } else {
             classGraph.acceptPackagesNonRecursive(packageName);
         }
@@ -580,7 +589,7 @@ public class Mapper {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
                 try {
                     classes.add(Class.forName(classInfo.getName(), true, loader));
-                } catch (NoClassDefFoundError ignored) {
+                } catch (Throwable ignored) {
                 }
             }
         }

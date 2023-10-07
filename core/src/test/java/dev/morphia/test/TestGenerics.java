@@ -29,7 +29,7 @@ import static org.testng.Assert.assertNotNull;
 public class TestGenerics extends TestBase {
     public TestGenerics() {
         super(buildConfig()
-                .mapPackages(of(Element.class.getPackageName())));
+                .packages(of(Element.class.getPackageName())));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class TestGenerics extends TestBase {
     @Test
     public void testMethodMappedGenericEntities() {
         withConfig(buildConfig()
-                .mapPackages(of(MethodMappedSpecializedEntity.class.getPackageName()))
+                .packages(of(MethodMappedSpecializedEntity.class.getPackageName()))
                 .propertyDiscovery(PropertyDiscovery.METHODS), () -> {
 
                     EntityModel entityModel = getMapper().getEntityModel(MethodMappedSpecializedEntity.class);
