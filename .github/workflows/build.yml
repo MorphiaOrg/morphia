@@ -48,6 +48,7 @@ jobs:
 
     outputs:
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
+      driver_snapshot: ${{ steps.driver-snapshot.outputs.driver_snapshot }}
 
   Test:
     needs:
@@ -63,6 +64,7 @@ jobs:
           - java: 21
             mongo: 7
             driver: ${{ needs.matrix.outputs.driver_snapshot }}
+            optional: true
           - java: 21
             mongo: 7
             driver: 4.10.2
