@@ -41,7 +41,7 @@ jobs:
           echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
 
       - name: Find Driver snapshot version
-        id: mongo-versions
+        id: driver-snapshot
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           echo "driver_snapshot=$( ~/.jbang/bin/jbang --verbose .github/DriverSnapshot.java )" >> $GITHUB_OUTPUT
