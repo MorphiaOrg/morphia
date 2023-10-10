@@ -29,7 +29,7 @@ public class Child extends EmbeddedType {
             return false;
         }
         return Objects.equals(childField, child.childField) && Objects.equals(first, child.first) &&
-               Objects.equals(last, child.last);
+                Objects.equals(last, child.last);
     }
 
     @Override

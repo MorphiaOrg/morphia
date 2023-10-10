@@ -113,8 +113,8 @@ public class TestIndexes extends TestBase {
     @Test(expectedExceptions = MongoCommandException.class)
     public void shouldNotAllowMultipleTextIndexes() {
         withTestConfig(buildConfig()
-                           .applyIndexes(true), List.of(MultipleTextIndexes.class), () -> {
-        });
+                .applyIndexes(true), List.of(MultipleTextIndexes.class), () -> {
+                });
     }
 
     @Test

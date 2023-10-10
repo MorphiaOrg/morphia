@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,9 +65,7 @@ import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.literal;
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.SystemVariables.NOW;
 import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.regex;
@@ -921,12 +918,12 @@ public class TestUpdateOperations extends TestBase {
     @Test
     public void testUpdateWithStages(/* MapperOptions options */) {
         getDs().save(List.of(
-            new Student(1L, new Grade(80, singletonMap("name", "Homework")),
-                new Grade(90, singletonMap("name", "Test"))),
-            new Student(2L, new Grade(80, singletonMap("name", "Homework")),
-                new Grade(87, singletonMap("name", "Test"))),
-            new Student(3L, new Grade(80, singletonMap("name", "Homework")),
-                new Grade(63, singletonMap("name", "Test")))));
+                new Student(1L, new Grade(80, singletonMap("name", "Homework")),
+                        new Grade(90, singletonMap("name", "Test"))),
+                new Student(2L, new Grade(80, singletonMap("name", "Homework")),
+                        new Grade(87, singletonMap("name", "Test"))),
+                new Student(3L, new Grade(80, singletonMap("name", "Homework")),
+                        new Grade(63, singletonMap("name", "Test")))));
 
         Query<Student> query = getDs().find(Student.class)
                 .filter(eq("id", 3));

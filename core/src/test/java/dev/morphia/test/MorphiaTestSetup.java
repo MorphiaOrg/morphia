@@ -176,12 +176,12 @@ public class MorphiaTestSetup {
 
     protected static MorphiaConfig buildConfig(Class<?>... types) {
         MorphiaConfig config = new ManualMorphiaTestConfig()
-                                   .database(TEST_DB_NAME);
+                .database(TEST_DB_NAME);
         if (types.length != 0)
             config = config
-                .packages(stream(types)
-                        .map(Class::getPackageName)
-                        .collect(Collectors.toList()));
+                    .packages(stream(types)
+                            .map(Class::getPackageName)
+                            .collect(Collectors.toList()));
         return config;
     }
 }

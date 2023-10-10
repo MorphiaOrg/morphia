@@ -11,8 +11,8 @@ import dev.morphia.mapping.IndexType;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
 import dev.morphia.test.TestBase;
-
 import dev.morphia.test.models.Book;
+
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
