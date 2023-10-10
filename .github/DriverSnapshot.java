@@ -35,7 +35,6 @@ public class DriverSnapshot {
                 .map(v -> v.asText())
                 .map(v -> Version.valueOf(v))
                 .filter(it -> it.greaterThanOrEqualTo(Version.valueOf("5.0.0-SNAPSHOT")))
-                .map(it -> "'%s'".formatted(it))
                 .collect(Collectors.toList());
         System.out.println(result.get(0));
     }

@@ -22,6 +22,16 @@
         <url>git@github.com:MorphiaOrg/morphia.git</url>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <properties>
         <kotlin.version>1.9.10</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
