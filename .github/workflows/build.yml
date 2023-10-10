@@ -40,6 +40,12 @@ jobs:
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
 
+      - name: Find Driver snapshot version
+        id: mongo-versions
+        run: |
+          curl -Ls https://sh.jbang.dev | bash -s - app setup
+          echo "driver_snapshot=$( ~/.jbang/bin/jbang --verbose .github/DriverSnapshot.java )" >> $GITHUB_OUTPUT
+
     outputs:
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
 
@@ -54,6 +60,9 @@ jobs:
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: [ 4.10.2 ]
         include:
+          - java: 21
+            mongo: 7
+            driver: ${{ needs.matrix.outputs.driver_snapshot }}
           - java: 21
             mongo: 7
             driver: 4.10.2
