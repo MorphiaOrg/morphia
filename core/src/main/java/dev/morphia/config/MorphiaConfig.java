@@ -373,10 +373,8 @@ public interface MorphiaConfig {
      */
     default MorphiaConfig packages(List<String> value) {
         var newConfig = new ManualMorphiaConfig(this);
+        newConfig.packages = value;
 
-        if (!value.isEmpty()) {
-            newConfig.packages = new ArrayList<>(value);
-        }
         return newConfig;
     }
 

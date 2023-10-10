@@ -57,7 +57,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     /**
      * @hidden
      */
-    ManualMorphiaConfig(MorphiaConfig base) {
+    protected ManualMorphiaConfig(MorphiaConfig base) {
         applyCaps = base.applyCaps();
         applyDocumentValidations = base.applyDocumentValidations();
         applyIndexes = base.applyIndexes();
@@ -193,7 +193,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
                         propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls(), uuidRepresentation());
     }
 
-    private <T> T orDefault(@Nullable T localValue, T defaultValue) {
+    protected <T> T orDefault(@Nullable T localValue, T defaultValue) {
         return localValue != null ? localValue : defaultValue;
     }
 }

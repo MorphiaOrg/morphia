@@ -10,9 +10,10 @@ import static java.util.Arrays.asList;
 @Entity
 public class Student {
     @Id
-    private long id;
+    long id;
 
-    private List<Grade> grades;
+    List<Grade> grades;
+    public String notes;
 
     public Student() {
     }

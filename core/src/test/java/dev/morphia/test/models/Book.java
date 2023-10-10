@@ -4,8 +4,12 @@ import java.util.List;
 import java.util.Objects;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Index;
+import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
+import dev.morphia.mapping.IndexType;
 import dev.morphia.mapping.experimental.MorphiaReference;
 
 import org.bson.types.ObjectId;
@@ -14,16 +18,23 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 @Entity(value = "books", useDiscriminator = false)
+@Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
 public final class Book {
     @Id
     public ObjectId id;
     @Property("name")
     public String title;
     public MorphiaReference<Author> author;
+    public String authorString;
     public Integer copies;
     public List<String> tags;
 
     public Book() {
+    }
+
+    public Book(String title, String authorString) {
+        this.title = title;
+        this.authorString = authorString;
     }
 
     public Book(String title, MorphiaReference<Author> author) {

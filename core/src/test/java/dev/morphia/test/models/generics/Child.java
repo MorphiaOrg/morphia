@@ -1,10 +1,19 @@
 package dev.morphia.test.models.generics;
 
+import java.util.Objects;
+
 public class Child extends EmbeddedType {
 
     private String childField;
+    private String first;
+    private String last;
 
     public Child() {
+    }
+
+    public Child(String first, String last) {
+        this.first = first;
+        this.last = last;
     }
 
     public Child(String childField) {
@@ -12,22 +21,19 @@ public class Child extends EmbeddedType {
     }
 
     @Override
-    public int hashCode() {
-        return childField != null ? childField.hashCode() : 0;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Child child)) {
             return false;
         }
+        return Objects.equals(childField, child.childField) && Objects.equals(first, child.first) &&
+               Objects.equals(last, child.last);
+    }
 
-        Child that = (Child) o;
-
-        return !(childField != null ? !childField.equals(that.childField) : that.childField != null);
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(childField, first, last);
     }
 }

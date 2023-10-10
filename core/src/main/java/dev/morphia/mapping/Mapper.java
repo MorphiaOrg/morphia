@@ -374,7 +374,7 @@ public class Mapper {
      * @deprecated This is handled via the config file and should not be called manually
      */
     @Deprecated(since = "2.4.0", forRemoval = true)
-    public List<EntityModel> map(List<Class> classes) {
+    public List<EntityModel> map(List<Class<?>> classes) {
         Sofia.logConfiguredOperation("Mapper#map");
         for (Class type : classes) {
             if (!isMappable(type)) {

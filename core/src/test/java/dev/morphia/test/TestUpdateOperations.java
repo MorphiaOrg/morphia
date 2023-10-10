@@ -43,11 +43,14 @@ import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.Circle;
 import dev.morphia.test.models.FacebookUser;
+import dev.morphia.test.models.Grade;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.Shape;
+import dev.morphia.test.models.Student;
 import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.User;
+import dev.morphia.test.models.generics.Child;
 import dev.morphia.test.query.TestQuery.CappedPic;
 import dev.morphia.test.query.TestQuery.ContainsPic;
 import dev.morphia.test.query.TestQuery.Pic;
@@ -64,6 +67,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.literal;
+import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.SystemVariables.NOW;
 import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.query.filters.Filters.eq;
@@ -92,6 +96,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Collections.singletonMap;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -916,19 +921,21 @@ public class TestUpdateOperations extends TestBase {
     @Test
     public void testUpdateWithStages(/* MapperOptions options */) {
         getDs().save(List.of(
-                new Student(1, 95, 92, 90, LocalDate.of(2020, Month.JANUARY, 5)),
-                new Student(2, 98, 100, 102, LocalDate.of(2020, Month.JANUARY, 5)),
-                new Student(3, 95, 110, null, LocalDate.of(2020, Month.JANUARY, 4))));
+            new Student(1L, new Grade(80, singletonMap("name", "Homework")),
+                new Grade(90, singletonMap("name", "Test"))),
+            new Student(2L, new Grade(80, singletonMap("name", "Homework")),
+                new Grade(87, singletonMap("name", "Test"))),
+            new Student(3L, new Grade(80, singletonMap("name", "Homework")),
+                new Grade(63, singletonMap("name", "Test")))));
 
         Query<Student> query = getDs().find(Student.class)
                 .filter(eq("id", 3));
-        assertNull(query.first().test3);
+        assertNull(query.first().notes);
 
         query.update(set()
-                .field("test3", literal(98))
-                .field("modified", NOW));
+                .field("notes", value("hard worker")));
 
-        assertEquals(query.first().test3, 98);
+        assertEquals(query.first().notes, "hard worker");
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -1039,24 +1046,6 @@ public class TestUpdateOperations extends TestBase {
         return logs;
     }
 
-    @Entity("students")
-    private static class Student {
-        private final Integer test1;
-        private final Integer test2;
-        private final Integer test3;
-        private final LocalDate modified;
-        @Id
-        private int id;
-
-        public Student(int id, Integer test1, Integer test2, Integer test3, LocalDate modified) {
-            this.id = id;
-            this.test1 = test1;
-            this.test2 = test2;
-            this.test3 = test3;
-            this.modified = modified;
-        }
-    }
-
     private Integer[] get(ContainsIntArray array) {
         return getDs().find(ContainsIntArray.class)
                 .filter(eq("_id", array.id))
@@ -1075,44 +1064,6 @@ public class TestUpdateOperations extends TestBase {
     private enum TestEnum {
         ANYVAL,
         ANOTHERVAL
-    }
-
-    @Entity
-    private static final class Child {
-        private String first;
-        private String last;
-
-        private Child(String first, String last) {
-            this.first = first;
-            this.last = last;
-        }
-
-        private Child() {
-        }
-
-        @Override
-        public int hashCode() {
-            int result = first != null ? first.hashCode() : 0;
-            result = 31 * result + (last != null ? last.hashCode() : 0);
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Child)) {
-                return false;
-            }
-
-            final Child child = (Child) o;
-
-            if (!Objects.equals(first, child.first)) {
-                return false;
-            }
-            return Objects.equals(last, child.last);
-        }
     }
 
     @Entity

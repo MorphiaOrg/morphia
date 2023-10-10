@@ -427,26 +427,26 @@ public class TestMapping extends TestBase {
         assertFalse(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
         assertFalse(getDs().getMapper().isMapped(ThirdPartyEntity.class));
 
-        assertThrows(MappingException.class, () -> getDs().getMapper().map(ThirdPartyEntity.class));
-        assertThrows(MappingException.class, () -> getDs().getMapper().map(ThirdPartyEmbedded.class));
+        assertThrows(MappingException.class, () -> withTestConfig(buildConfig(), List.of(ThirdPartyEntity.class), () -> {
+        }));
+        assertThrows(MappingException.class, () -> withTestConfig(buildConfig(), List.of(ThirdPartyEmbedded.class), () -> {
+        }));
 
-        getDs().getMapper().mapPackageFromClass(HoldsUnannotated.class);
+        withConfig(buildConfig(HoldsUnannotated.class), () -> {
+            assertTrue(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
+            assertTrue(getDs().getMapper().isMapped(ThirdPartyEntity.class));
 
-        assertTrue(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
-        assertTrue(getDs().getMapper().isMapped(ThirdPartyEntity.class));
+            HoldsUnannotated holdsUnannotated = new HoldsUnannotated();
+            holdsUnannotated.embedded = new ThirdPartyEmbedded();
+            holdsUnannotated.embedded.number = 42L;
+            holdsUnannotated.embedded.field = "Left";
+            getDs().save(holdsUnannotated);
 
-        HoldsUnannotated holdsUnannotated = new HoldsUnannotated();
-        holdsUnannotated.embedded = new ThirdPartyEmbedded();
-        holdsUnannotated.embedded.number = 42L;
-        holdsUnannotated.embedded.field = "Left";
-        getDs().save(holdsUnannotated);
+            assertEquals(getDs().find(HoldsUnannotated.class).first(), holdsUnannotated);
 
-        assertEquals(getDs().find(HoldsUnannotated.class).first(), holdsUnannotated);
+        });
 
-        withConfig(buildConfig(), () -> {
-            assertFalse(getDs().getMapper().map(ThirdPartyEntityProxy.class).isEmpty());
-            assertFalse(getDs().getMapper().map(ThirdPartyEmbeddedProxy.class).isEmpty());
-
+        withTestConfig(buildConfig(), List.of(ThirdPartyEntityProxy.class, ThirdPartyEmbeddedProxy.class), () -> {
             EntityModel model = getDs().getMapper().getEntityModel(ThirdPartyEntity.class);
             assertEquals(model.getCollectionName(), "extEnt");
             assertEquals(model.getDiscriminator(), "ext");

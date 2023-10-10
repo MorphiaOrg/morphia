@@ -94,21 +94,22 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testAlternateFailures() {
-        assertThrows(MongoWriteException.class, () -> {
-            getMapper().map(Country.class);
-            getDs().applyIndexes();
+        withTestConfig(buildConfig()
+                .applyIndexes(true),
+                List.of(Country.class), () -> {
+                    assertThrows(MongoWriteException.class, () -> {
+                        getDs().save(new Country("USA"));
+                        getDs().save(new Country("Sweden"));
 
-            getDs().save(new Country("USA"));
-            getDs().save(new Country("Sweden"));
+                        Country first = getDs().find(Country.class)
+                                .filter(eq("name", "Sweden"))
+                                .first();
 
-            Country first = getDs().find(Country.class)
-                    .filter(eq("name", "Sweden"))
-                    .first();
+                        first.name = "USA";
 
-            first.name = "USA";
-
-            getDs().save(first);
-        });
+                        getDs().save(first);
+                    });
+                });
     }
 
     @Entity

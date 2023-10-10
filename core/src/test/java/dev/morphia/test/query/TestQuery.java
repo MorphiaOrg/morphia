@@ -1246,7 +1246,7 @@ public class TestQuery extends TestBase {
         getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
     }
 
-    @Entity
+    @Entity(discriminator = "userInterface")
     public interface User {
     }
 
@@ -1696,6 +1696,7 @@ public class TestQuery extends TestBase {
         private ObjectId value;
     }
 
+    @Entity(discriminator = "userImpl")
     static class UserImpl implements User {
         @Id
         @SuppressWarnings("unused")

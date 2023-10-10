@@ -43,6 +43,7 @@ import dev.morphia.test.models.DocumentValidation;
 import dev.morphia.test.models.User;
 
 import org.bson.Document;
+import org.bson.json.JsonWriterSettings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -54,6 +55,7 @@ import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -304,7 +306,9 @@ public class TestDocumentValidation extends TestBase {
                 .runCommand(new Document("listCollections", 1)
                         .append("filter", new Document("name", "validation")));
 
-        List<Document> firstBatch = (List<Document>) ((Document) document.get("cursor")).get("firstBatch");
+        Document cursor = (Document)document.get("cursor");
+        List<Document> firstBatch = (List<Document>) cursor.get("firstBatch");
+        assertFalse(firstBatch.isEmpty(), cursor.toJson(JsonWriterSettings.builder().indent(true).build()));
         return (Document) firstBatch.get(0).get("options");
     }
 

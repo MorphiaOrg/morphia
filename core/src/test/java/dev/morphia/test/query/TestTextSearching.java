@@ -12,6 +12,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
 import dev.morphia.test.TestBase;
 
+import dev.morphia.test.models.Book;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
@@ -107,7 +108,7 @@ public class TestTextSearching extends TestBase {
                 .iterator(new FindOptions().sort(Meta.textScore("score")))
                 .toList();
         assertEquals(books.size(), 3);
-        assertEquals(books.get(0).author, "Dante");
+        assertEquals(books.get(0).authorString, "Dante");
     }
 
     @Test
@@ -127,24 +128,7 @@ public class TestTextSearching extends TestBase {
                 .toList();
         assertEquals(books.size(), 3);
         for (Book book : books) {
-            assertEquals(book.author, "Dante");
-        }
-    }
-
-    @Entity
-    @Indexes(@Index(fields = @Field(value = "$**", type = IndexType.TEXT)))
-    private static class Book {
-        @Id
-        private ObjectId id;
-        private String title;
-        private String author;
-
-        Book() {
-        }
-
-        private Book(String title, String author) {
-            this.author = author;
-            this.title = title;
+            assertEquals(book.authorString, "Dante");
         }
     }
 

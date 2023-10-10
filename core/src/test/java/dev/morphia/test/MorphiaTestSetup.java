@@ -1,12 +1,16 @@
 package dev.morphia.test;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.test.TestBase.ZDTCodecProvider;
+import dev.morphia.test.config.ManualMorphiaTestConfig;
+import dev.morphia.test.config.MorphiaTestConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,10 +146,28 @@ public class MorphiaTestSetup {
         }
     }
 
+    private void map(List<Class<?>> classes) {
+        Mapper mapper = getMorphiaContainer().getDs().getMapper();
+        classes.forEach(mapper::getEntityModel);
+    }
+
+    protected void withTestConfig(MorphiaConfig config, List<Class<?>> types, Runnable body) {
+        withConfig(new ManualMorphiaTestConfig(config).classes(types), body);
+    }
+
     protected void withConfig(MorphiaConfig config, Runnable body) {
         var oldContainer = morphiaContainer;
         try {
             morphiaContainer = new MorphiaContainer(mongoHolder.getMongoClient(), config);
+            if (config instanceof MorphiaTestConfig testConfig) {
+                List<Class<?>> classes = testConfig.classes();
+                if (classes != null) {
+                    getMorphiaContainer().getDs().getMapper().map(classes);
+                }
+                if (config.applyIndexes()) {
+                    getMorphiaContainer().getDs().applyIndexes();
+                }
+            }
             body.run();
         } finally {
             morphiaContainer = oldContainer;
@@ -153,11 +175,13 @@ public class MorphiaTestSetup {
     }
 
     protected static MorphiaConfig buildConfig(Class<?>... types) {
-        return MorphiaConfig.load()
+        MorphiaConfig config = new ManualMorphiaTestConfig()
+                                   .database(TEST_DB_NAME);
+        if (types.length != 0)
+            config = config
                 .packages(stream(types)
                         .map(Class::getPackageName)
-                        .collect(Collectors.toList()))
-                .database(TEST_DB_NAME);
+                        .collect(Collectors.toList()));
+        return config;
     }
-
 }
