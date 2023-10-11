@@ -13,7 +13,6 @@ import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.QueryFactory;
 
-import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecProvider;
 
 import static dev.morphia.mapping.DateStorage.UTC;
@@ -46,7 +45,6 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     QueryFactory queryFactory;
     Boolean storeEmpties;
     Boolean storeNulls;
-    UuidRepresentation uuidRepresentation;
 
     /**
      * @hidden
@@ -75,7 +73,6 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         queryFactory = base.queryFactory();
         storeEmpties = base.storeEmpties();
         storeNulls = base.storeNulls();
-        uuidRepresentation = base.uuidRepresentation();
     }
 
     /**
@@ -178,19 +175,14 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     }
 
     @Override
-    public UuidRepresentation uuidRepresentation() {
-        return orDefault(uuidRepresentation, UuidRepresentation.STANDARD);
-    }
-
-    @Override
     public String toString() {
         return ("MorphiaConfig{applyCaps=%s, applyDocumentValidations=%s, applyIndexes=%s, database='%s', codecProvider=%s, " +
                 "collectionNaming=%s, dateStorage=%s, discriminator=%s, discriminatorKey='%s', enablePolymorphicQueries=%s, " +
                 "ignoreFinals=%s, packages=%s, propertyDiscovery=%s, propertyNaming=%s, queryFactory=%s, " +
-                "storeEmpties=%s, storeNulls=%s, uuidRepresentation=%s}").formatted(
+                "storeEmpties=%s, storeNulls=%s}").formatted(
                         applyCaps(), applyDocumentValidations(), applyIndexes(), database(), codecProvider(), collectionNaming(),
                         dateStorage(), discriminator(), discriminatorKey(), enablePolymorphicQueries(), ignoreFinals(), packages(),
-                        propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls(), uuidRepresentation());
+                        propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls());
     }
 
     protected <T> T orDefault(@Nullable T localValue, T defaultValue) {

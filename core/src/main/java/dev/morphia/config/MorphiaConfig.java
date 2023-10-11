@@ -16,7 +16,6 @@ import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.sofia.Sofia;
 
-import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecProvider;
 import org.eclipse.microprofile.config.spi.ConfigSource;
 
@@ -495,28 +494,6 @@ public interface MorphiaConfig {
         var newConfig = new ManualMorphiaConfig(this);
 
         newConfig.storeNulls = value;
-        return newConfig;
-    }
-
-    /**
-     * @return the UUID representation to use in the driver
-     * @deprecated This should be configured in the MongoClient given to Morphia
-     */
-    @WithDefault("standard")
-    @Deprecated(forRemoval = true, since = "2.4.0")
-    UuidRepresentation uuidRepresentation();
-
-    /**
-     * Updates this configuration with a new value and returns a new instance. The original instance is unchanged.
-     *
-     * @param value the new value
-     * @return a new instance with the updated configuration
-     * @since 3.0
-     */
-    default MorphiaConfig uuidRepresentation(UuidRepresentation value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.uuidRepresentation = value;
         return newConfig;
     }
 
