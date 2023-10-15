@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.filters;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.mapping.codec.CodecHelper;
 import dev.morphia.query.filters.NearFilter;
 
 import org.bson.BsonWriter;
@@ -31,7 +32,7 @@ public class NearFilterCodec extends BaseFilterCodec<NearFilter> {
     private void encodeFilter(BsonWriter writer, NearFilter near, EncoderContext context) {
         document(writer, near.getName(), () -> {
             writer.writeName("$geometry");
-            writeUnnamedValue(near.getValue(datastore), datastore, writer, context);
+            CodecHelper.unnamedValue(writer, datastore, near.getValue(datastore), context);
             value(writer, "$maxDistance", near.maxDistance());
             value(writer, "$minDistance", near.minDistance());
             value(datastore.getCodecRegistry(), writer, "crs", near.crs(), context);

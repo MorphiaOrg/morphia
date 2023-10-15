@@ -2,6 +2,7 @@ package dev.morphia.mapping.codec.filters;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.SampleRateFilter;
+import dev.morphia.mapping.codec.CodecHelper;
 
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
@@ -13,7 +14,7 @@ public class SampleRateFilterCodec extends BaseFilterCodec<SampleRateFilter> {
 
     @Override
     public void encode(BsonWriter writer, SampleRateFilter filter, EncoderContext encoderContext) {
-        writeNamedValue(filter.getName(), filter.getValue(), datastore, writer, encoderContext);
+        CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(), encoderContext);
     }
 
     @Override

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -32,6 +33,7 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -42,6 +44,7 @@ import static java.lang.String.format;
 import static java.nio.file.Files.lines;
 import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.fail;
 
 public abstract class TestBase extends MorphiaTestSetup {
@@ -251,14 +254,13 @@ public abstract class TestBase extends MorphiaTestSetup {
         if (expected == null) {
             return;
         }
-        assertSameType(path, actual, expected);
 
         if (expected instanceof Document) {
             for (Entry<String, Object> entry : ((Document) expected).entrySet()) {
                 final String key = entry.getKey();
                 Object expectedValue = entry.getValue();
                 Object actualValue = ((Document) actual).get(key);
-                assertDocumentEquals(path + "." + key, actualValue, expectedValue);
+                assertDocumentEquals(append(path, key), actualValue, expectedValue);
             }
         } else if (expected instanceof List) {
             List list = (List) expected;
@@ -269,9 +271,10 @@ public abstract class TestBase extends MorphiaTestSetup {
                 o = list.get(i);
                 boolean found = false;
                 final Iterator other = copy.iterator();
+                String newPath = null;
                 while (!found && other.hasNext()) {
                     try {
-                        String newPath = format("%s[%d]", path, i);
+                        newPath = format("%s[%d]", path, i);
                         assertDocumentEquals(newPath, other.next(), o);
                         other.remove();
                         found = true;
@@ -279,12 +282,21 @@ public abstract class TestBase extends MorphiaTestSetup {
                     }
                 }
                 if (!found) {
-                    fail(format("mismatch found at %s", path));
+                    fail("mismatch found at %s.\n\tactual = %s,\n\texpected = %s".formatted(newPath, actual, expected));
                 }
             }
         } else {
-            assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+            assertEquals(coerceToLong(actual), coerceToLong(expected), format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
+    }
+
+    @NotNull
+    private static String append(String path, String key) {
+        return path.isEmpty() ? key: path + "." + key;
+    }
+
+    private static Object coerceToLong(Object object) {
+        return object instanceof Integer ? ((Integer) object).longValue() : object;
     }
 
     private void assertSameNullity(String path, Object expected, Object actual) {

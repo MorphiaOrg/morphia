@@ -51,7 +51,7 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     public final String prefix() {
-        String root = getClass().getSimpleName().substring(4);
+        String root = getClass().getSimpleName().replace("Test", "");
         return toLowerCase(root.charAt(0)) + root.substring(1);
     }
 

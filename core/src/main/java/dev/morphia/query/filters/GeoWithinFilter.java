@@ -4,12 +4,7 @@ import com.mongodb.client.model.geojson.CoordinateReferenceSystem;
 import com.mongodb.client.model.geojson.MultiPolygon;
 import com.mongodb.client.model.geojson.Polygon;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-
-import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
-import org.bson.codecs.EncoderContext;
 
 /**
  * Defines a $geoWithin filter.
@@ -49,19 +44,4 @@ public class GeoWithinFilter extends Filter {
         return this;
     }
 
-    @Override
-    public final void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(datastore.getMapper()));
-        writer.writeStartDocument(getName());
-        writer.writeName("$geometry");
-
-        Object shape = getValue();
-        if (shape != null) {
-            Codec codec = datastore.getCodecRegistry().get(shape.getClass());
-            codec.encode(writer, shape, context);
-        }
-
-        writer.writeEndDocument();
-        writer.writeEndDocument();
-    }
 }

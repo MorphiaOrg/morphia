@@ -43,6 +43,7 @@ public class MorphiaFilterCodecProvider implements CodecProvider {
         addCodec(new GeoIntersectsFilterCodec(datastore));
         addCodec(new JsonSchemaFilterCodec(datastore));
         addCodec(new LogicalFilterCodec(datastore));
+        addCodec(new ModFilterCodec(datastore));
         addCodec(new NearFilterCodec(datastore));
         addCodec(new PolygonFilterCodec(datastore));
         addCodec(new RegexFilterCodec(datastore));

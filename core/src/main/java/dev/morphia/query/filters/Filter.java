@@ -64,18 +64,6 @@ public class Filter {
     }
 
     /**
-     * @param datastore the datastore
-     * @param writer    the writer
-     * @param context   the context
-     * @hidden
-     * @morphia.internal
-     */
-    @Deprecated
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Sets the query entity type on the filter
      *
      * @param type the type

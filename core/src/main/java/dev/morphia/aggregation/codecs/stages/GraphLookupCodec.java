@@ -5,6 +5,7 @@ import dev.morphia.aggregation.stages.GraphLookup;
 import dev.morphia.query.filters.Filter;
 
 import org.bson.BsonWriter;
+import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 
@@ -22,6 +23,7 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
         return GraphLookup.class;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     protected void encodeStage(BsonWriter writer, GraphLookup value, EncoderContext encoderContext) {
         document(writer, () -> {
@@ -41,7 +43,8 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
             if (restriction != null) {
                 document(writer, "restrictSearchWithMatch", () -> {
                     for (Filter filter : restriction) {
-                        filter.encode(getDatastore(), writer, encoderContext);
+                        Codec codec = getCodecRegistry().get(filter.getClass());
+                        codec.encode(writer, filter, encoderContext);
                     }
                 });
             }

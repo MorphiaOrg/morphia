@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.filters;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.mapping.codec.CodecHelper;
 import dev.morphia.query.filters.Filter;
 
 import org.bson.BsonWriter;
@@ -18,10 +19,10 @@ public class FilterCodec extends BaseFilterCodec<Filter> {
         document(writer, filter.path(datastore.getMapper()), () -> {
             if (filter.isNot()) {
                 document(writer, "$not", () -> {
-                    writeNamedValue(filter.getName(), filter.getValue(datastore), datastore, writer, encoderContext);
+                    CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
                 });
             } else {
-                writeNamedValue(filter.getName(), filter.getValue(datastore), datastore, writer, encoderContext);
+                CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
             }
         });
     }

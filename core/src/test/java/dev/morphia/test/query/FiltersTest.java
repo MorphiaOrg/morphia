@@ -13,9 +13,11 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
+import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.Type;
-import dev.morphia.test.TestBase;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.aggregation.model.Inventory;
 import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
 
@@ -40,6 +42,7 @@ import static dev.morphia.query.filters.Filters.in;
 import static dev.morphia.query.filters.Filters.jsonSchema;
 import static dev.morphia.query.filters.Filters.lt;
 import static dev.morphia.query.filters.Filters.lte;
+import static dev.morphia.query.filters.Filters.mod;
 import static dev.morphia.query.filters.Filters.nin;
 import static dev.morphia.query.filters.Filters.nor;
 import static dev.morphia.query.filters.Filters.or;
@@ -55,7 +58,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings("resource")
-public class FiltersTest extends TestBase {
+public class FiltersTest extends TemplatedTestBase {
     @Test
     public void testAnd() {
         getDs().find(Budget.class)
@@ -257,6 +260,15 @@ public class FiltersTest extends TestBase {
                 .findFirst()
                 .orElseThrow();
         assertEquals(document.get("score"), 1.0, query.getLoggedQuery());
+
+    }
+
+    @Test
+    public void testMod() {
+        var query = getDs().find(Inventory.class)
+                .disableValidation()
+                .filter(mod("qty", 4, 0));
+        testQuery((MorphiaQuery<?>) query, new FindOptions(), true);
 
     }
 

@@ -7,6 +7,7 @@ import java.util.Locale;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.SingleValuedExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -136,6 +137,37 @@ public class CodecHelper {
             writer.writeName(name);
             Codec codec = codecRegistry.get(value.getClass());
             encoderContext.encodeWithChildContext(codec, writer, value);
+        }
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static void namedValue(BsonWriter writer, MorphiaDatastore datastore, @Nullable String name, @Nullable Object value,
+            EncoderContext encoderContext) {
+        writer.writeName(name);
+        if (value != null) {
+            Codec codec = datastore.getCodecRegistry().get(value.getClass());
+            encoderContext.encodeWithChildContext(codec, writer, value);
+        } else {
+            writer.writeNull();
+        }
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static void unnamedValue(BsonWriter writer, MorphiaDatastore datastore, @Nullable Object value,
+            EncoderContext encoderContext) {
+        if (value != null) {
+            Codec codec = datastore.getCodecRegistry().get(value.getClass());
+            encoderContext.encodeWithChildContext(codec, writer, value);
+        } else {
+            writer.writeNull();
         }
     }
 }

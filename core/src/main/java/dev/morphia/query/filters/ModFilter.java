@@ -1,11 +1,13 @@
 package dev.morphia.query.filters;
 
-import dev.morphia.MorphiaDatastore;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
-import org.bson.BsonWriter;
-import org.bson.codecs.EncoderContext;
-
-class ModFilter extends Filter {
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
+public class ModFilter extends Filter {
     private final long divisor;
 
     private final long remainder;
@@ -16,14 +18,23 @@ class ModFilter extends Filter {
         this.remainder = remainder;
     }
 
-    @Override
-    public void encode(MorphiaDatastore datastore, BsonWriter writer, EncoderContext context) {
-        writer.writeStartDocument(path(datastore.getMapper()));
-        writer.writeName(getName());
-        writer.writeStartArray();
-        writeValue(divisor, datastore, writer, context);
-        writeValue(remainder, datastore, writer, context);
-        writer.writeEndArray();
-        writer.writeEndDocument();
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the divisor
+     */
+    @MorphiaInternal
+    public long divisor() {
+        return divisor;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     * @return the remainder
+     */
+    @MorphiaInternal
+    public long remainder() {
+        return remainder;
     }
 }
