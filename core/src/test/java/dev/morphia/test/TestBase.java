@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -44,7 +43,6 @@ import static java.lang.String.format;
 import static java.nio.file.Files.lines;
 import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.fail;
 
 public abstract class TestBase extends MorphiaTestSetup {
@@ -292,7 +290,7 @@ public abstract class TestBase extends MorphiaTestSetup {
 
     @NotNull
     private static String append(String path, String key) {
-        return path.isEmpty() ? key: path + "." + key;
+        return path.isEmpty() ? key : path + "." + key;
     }
 
     private static Object coerceToLong(Object object) {
