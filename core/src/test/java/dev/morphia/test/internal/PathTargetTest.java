@@ -48,93 +48,100 @@ public class PathTargetTest extends TestBase {
 
     @Test
     public void arrays() {
-        getMapper().map(EntityWithListsAndArrays.class, EmbeddedType.class, Another.class, Child.class);
-        Mapper mapper = getMapper();
-        EntityModel entityModel = mapper.getEntityModel(EntityWithListsAndArrays.class);
+        withTestConfig(List.of(EntityWithListsAndArrays.class, EmbeddedType.class, Another.class, Child.class), () -> {
+            Mapper mapper = getMapper();
+            EntityModel entityModel = mapper.getEntityModel(EntityWithListsAndArrays.class);
 
-        PathTarget pathTarget = new PathTarget(mapper, entityModel, "listEmbeddedType.1.anotherField");
-        Assert.assertEquals(pathTarget.translatedPath(), "listEmbeddedType.1.anotherField");
-        Assert.assertEquals(mapper.getEntityModel(Another.class).getProperty("anotherField"), pathTarget.target());
+            PathTarget pathTarget = new PathTarget(mapper, entityModel, "listEmbeddedType.1.anotherField");
+            Assert.assertEquals(pathTarget.translatedPath(), "listEmbeddedType.1.anotherField");
+            Assert.assertEquals(mapper.getEntityModel(Another.class).getProperty("anotherField"), pathTarget.target());
 
-        Assert.assertEquals(new PathTarget(mapper, entityModel, "listEmbeddedType.$").translatedPath(), "listEmbeddedType.$");
-        Assert.assertEquals(new PathTarget(mapper, entityModel, "listEmbeddedType.1").translatedPath(), "listEmbeddedType.1");
+            Assert.assertEquals(new PathTarget(mapper, entityModel, "listEmbeddedType.$").translatedPath(), "listEmbeddedType.$");
+            Assert.assertEquals(new PathTarget(mapper, entityModel, "listEmbeddedType.1").translatedPath(), "listEmbeddedType.1");
+        });
     }
 
     @Test
     public void disableValidation() {
-        getMapper().map(FatherEntity.class);
-        Mapper mapper = getMapper();
+        withTestConfig(List.of(FatherEntity.class), () -> {
+            Mapper mapper = getMapper();
 
-        final PathTarget pathTarget = new PathTarget(mapper, FatherEntity.class, "nested.field.fail", false);
-        Assert.assertEquals(pathTarget.translatedPath(), "nested.field.fail");
-        Assert.assertNull(pathTarget.target());
+            final PathTarget pathTarget = new PathTarget(mapper, FatherEntity.class, "nested.field.fail", false);
+            Assert.assertEquals(pathTarget.translatedPath(), "nested.field.fail");
+            Assert.assertNull(pathTarget.target());
+        });
     }
 
     @Test
     public void dottedPath() {
-        getMapper().map(State.class, CityPopulation.class);
-        Mapper mapper = getMapper();
+        withTestConfig(List.of(State.class, CityPopulation.class), () -> {
+            Mapper mapper = getMapper();
 
-        PathTarget pathTarget = new PathTarget(mapper, State.class, "biggestCity.population");
-        Assert.assertEquals(pathTarget.translatedPath(), "biggestCity.pop");
-        Assert.assertEquals(mapper.getEntityModel(CityPopulation.class).getProperty("population"), pathTarget.target());
+            PathTarget pathTarget = new PathTarget(mapper, State.class, "biggestCity.population");
+            Assert.assertEquals(pathTarget.translatedPath(), "biggestCity.pop");
+            Assert.assertEquals(mapper.getEntityModel(CityPopulation.class).getProperty("population"), pathTarget.target());
+        });
     }
 
     @Test
     public void interfaces() {
-        getMapper().map(HoldsAnInterface.class, MappedInterface.class,
-                InterfaceTypeA.class, InterfaceTypeB.class);
+        withTestConfig(List.of(HoldsAnInterface.class, MappedInterface.class,
+                InterfaceTypeA.class, InterfaceTypeB.class), () -> {
 
-        Mapper mapper = getMapper();
-        EntityModel entityModel = mapper.getEntityModel(HoldsAnInterface.class);
+                    Mapper mapper = getMapper();
+                    EntityModel entityModel = mapper.getEntityModel(HoldsAnInterface.class);
 
-        PathTarget pathTarget = new PathTarget(mapper, entityModel, "mapped.value");
-        Assert.assertEquals(pathTarget.translatedPath(), "mapped.value");
-        Assert.assertEquals(mapper.getEntityModel(InterfaceTypeB.class).getProperty("value"), pathTarget.target());
+                    PathTarget pathTarget = new PathTarget(mapper, entityModel, "mapped.value");
+                    Assert.assertEquals(pathTarget.translatedPath(), "mapped.value");
+                    Assert.assertEquals(mapper.getEntityModel(InterfaceTypeB.class).getProperty("value"), pathTarget.target());
 
-        pathTarget = new PathTarget(mapper, entityModel, "mapped.field");
-        Assert.assertEquals(pathTarget.translatedPath(), "mapped.field");
-        Assert.assertEquals(mapper.getEntityModel(InterfaceTypeA.class).getProperty("field"), pathTarget.target());
+                    pathTarget = new PathTarget(mapper, entityModel, "mapped.field");
+                    Assert.assertEquals(pathTarget.translatedPath(), "mapped.field");
+                    Assert.assertEquals(mapper.getEntityModel(InterfaceTypeA.class).getProperty("field"), pathTarget.target());
+                });
     }
 
     @Test
     public void maps() {
-        getMapper().map(Student.class);
-        Mapper mapper = getMapper();
-        EntityModel entityModel = mapper.getEntityModel(Student.class);
+        withTestConfig(List.of(Student.class), () -> {
+            Mapper mapper = getMapper();
+            EntityModel entityModel = mapper.getEntityModel(Student.class);
 
-        PathTarget pathTarget = new PathTarget(mapper, entityModel, "grades.$.data.name");
-        Assert.assertEquals(pathTarget.translatedPath(), "grades.$.d.name");
-        Assert.assertEquals(mapper.getEntityModel(Grade.class).getProperty("data"), pathTarget.target());
+            PathTarget pathTarget = new PathTarget(mapper, entityModel, "grades.$.data.name");
+            Assert.assertEquals(pathTarget.translatedPath(), "grades.$.d.name");
+            Assert.assertEquals(mapper.getEntityModel(Grade.class).getProperty("data"), pathTarget.target());
 
-        pathTarget = new PathTarget(mapper, entityModel, "grades.$.d.name");
-        Assert.assertEquals(pathTarget.translatedPath(), "grades.$.d.name");
-        Assert.assertEquals(mapper.getEntityModel(Grade.class).getProperty("d"), pathTarget.target());
+            pathTarget = new PathTarget(mapper, entityModel, "grades.$.d.name");
+            Assert.assertEquals(pathTarget.translatedPath(), "grades.$.d.name");
+            Assert.assertEquals(mapper.getEntityModel(Grade.class).getProperty("d"), pathTarget.target());
+        });
     }
 
     @Test
     public void propertyNameResolution() {
-        getMapper().map(City.class, EmbeddedType.class);
-        Mapper mapper = getMapper();
-        EntityModel entityModel = mapper.getEntityModel(City.class);
+        withTestConfig(List.of(City.class, EmbeddedType.class), () -> {
+            Mapper mapper = getMapper();
+            EntityModel entityModel = mapper.getEntityModel(City.class);
 
-        PathTarget pathTarget = new PathTarget(mapper, entityModel, "name");
-        Assert.assertEquals(pathTarget.translatedPath(), "city");
-        Assert.assertEquals(entityModel.getProperty("name"), pathTarget.target());
+            PathTarget pathTarget = new PathTarget(mapper, entityModel, "name");
+            Assert.assertEquals(pathTarget.translatedPath(), "city");
+            Assert.assertEquals(entityModel.getProperty("name"), pathTarget.target());
 
-        pathTarget = new PathTarget(mapper, entityModel, "city");
-        Assert.assertEquals(pathTarget.translatedPath(), "city");
-        Assert.assertEquals(entityModel.getProperty("city"), pathTarget.target());
+            pathTarget = new PathTarget(mapper, entityModel, "city");
+            Assert.assertEquals(pathTarget.translatedPath(), "city");
+            Assert.assertEquals(entityModel.getProperty("city"), pathTarget.target());
+        });
     }
 
     @Test
     public void subClasses() {
-        getMapper().map(FatherEntity.class, ChildEntity.class, Another.class);
-        Mapper mapper = getMapper();
+        withTestConfig(List.of(FatherEntity.class, ChildEntity.class, Another.class), () -> {
+            Mapper mapper = getMapper();
 
-        PathTarget pathTarget = new PathTarget(mapper, FatherEntity.class, "embedded.anotherField");
-        Assert.assertEquals(pathTarget.translatedPath(), "embedded.anotherField");
-        Assert.assertEquals(mapper.getEntityModel(Another.class).getProperty("anotherField"), pathTarget.target());
+            PathTarget pathTarget = new PathTarget(mapper, FatherEntity.class, "embedded.anotherField");
+            Assert.assertEquals(pathTarget.translatedPath(), "embedded.anotherField");
+            Assert.assertEquals(mapper.getEntityModel(Another.class).getProperty("anotherField"), pathTarget.target());
+        });
     }
 
     @Entity

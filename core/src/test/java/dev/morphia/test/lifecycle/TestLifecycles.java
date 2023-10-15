@@ -24,7 +24,6 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
 import dev.morphia.mapping.DateStorage;
-import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
@@ -44,8 +43,7 @@ import static org.testng.Assert.assertTrue;
 public class TestLifecycles extends TestBase {
     @Test
     public void ensureDateConfigurationIsAppliedEverywhere() {
-        withConfig(buildConfig().dateStorage(DateStorage.SYSTEM_DEFAULT), () -> {
-            getDs().getMapper().map(SimpleBean.class);
+        withTestConfig(buildConfig().dateStorage(DateStorage.SYSTEM_DEFAULT), List.of(SimpleBean.class), () -> {
             SimpleBean simpleBean = new SimpleBean();
             simpleBean.id = ObjectId.get();
             simpleBean.ldt = LocalDateTime.of(2021, Month.APRIL, 15, 18, 0, 0, 0);
@@ -66,12 +64,13 @@ public class TestLifecycles extends TestBase {
 
     @Test
     public void classMethodPairings() {
-        List<EntityModel> map = getMapper().map(Parent.class, Child.class);
-        var parent = map.get(0);
-        var child = map.get(1);
+        withTestConfig(List.of(Parent.class, Child.class), () -> {
+            var parent = getMapper().getEntityModel(Parent.class);
+            var child = getMapper().getEntityModel(Child.class);
 
-        assertTrue(parent.hasLifecycle(PrePersist.class));
-        assertFalse(child.hasLifecycle(PrePersist.class));
+            assertTrue(parent.hasLifecycle(PrePersist.class));
+            assertFalse(child.hasLifecycle(PrePersist.class));
+        });
     }
 
     @Test
@@ -130,8 +129,7 @@ public class TestLifecycles extends TestBase {
     @Test
     public void testGlobalInterceptorRunsAfterEntityCallback() {
         getMapper().addInterceptor(new NonNullValidation());
-        getMapper().map(ValidNullHolder.class);
-        getMapper().map(InvalidNullHolder.class);
+        getMapper().map(ValidNullHolder.class, InvalidNullHolder.class);
 
         getDs().save(new ValidNullHolder());
         try {

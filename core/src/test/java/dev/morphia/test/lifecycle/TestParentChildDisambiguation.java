@@ -1,5 +1,6 @@
 package dev.morphia.test.lifecycle;
 
+import java.util.List;
 import java.util.Map;
 
 import dev.morphia.UpdateOptions;
@@ -20,22 +21,19 @@ public class TestParentChildDisambiguation extends TestBase {
 
     @Test
     public void testUpdate() {
+        withTestConfig(List.of(Parent.class, Child.class), () -> {
+            getDs().find(Parent.class)
+                    .filter(Filters.eq("name", "Fred"))
+                    .update(new UpdateOptions().multi(true).upsert(true),
+                            setOnInsert(Map.of("child", new Child("purple"))),
+                            setOnInsert(Map.of("name", "Fred")));
+            Parent parent = getDs().find(Parent.class).filter(Filters.eq("name", "Fred")).first();
 
-        getMapper().map(Parent.class, Child.class);
-
-        getDs().find(Parent.class)
-                .filter(Filters.eq("name", "Fred"))
-                .update(new UpdateOptions().multi(true).upsert(true),
-                        setOnInsert(Map.of("child", new Child("purple"))),
-                        setOnInsert(Map.of("name", "Fred")));
-
-        Parent parent = getDs().find(Parent.class).filter(Filters.eq("name", "Fred")).first();
-
-        Assert.assertNotNull(parent);
-        Assert.assertNotNull(parent.child);
-        Assert.assertEquals(parent.child.color, "purple");
+            Assert.assertNotNull(parent);
+            Assert.assertNotNull(parent.child);
+            Assert.assertEquals(parent.child.color, "purple");
+        });
     }
-
 }
 
 abstract class MorphiaDurable {
@@ -51,6 +49,7 @@ abstract class MorphiaDurable {
 @Entity(value = "parent", useDiscriminator = false)
 class Parent extends MorphiaDurable {
     Child child;
+
     String name;
 }
 

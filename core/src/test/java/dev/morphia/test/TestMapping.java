@@ -427,9 +427,9 @@ public class TestMapping extends TestBase {
         assertFalse(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
         assertFalse(getDs().getMapper().isMapped(ThirdPartyEntity.class));
 
-        assertThrows(MappingException.class, () -> withTestConfig(buildConfig(), List.of(ThirdPartyEntity.class), () -> {
+        assertThrows(MappingException.class, () -> withTestConfig(List.of(ThirdPartyEntity.class), () -> {
         }));
-        assertThrows(MappingException.class, () -> withTestConfig(buildConfig(), List.of(ThirdPartyEmbedded.class), () -> {
+        assertThrows(MappingException.class, () -> withTestConfig(List.of(ThirdPartyEmbedded.class), () -> {
         }));
 
         withConfig(buildConfig(HoldsUnannotated.class), () -> {
@@ -446,7 +446,7 @@ public class TestMapping extends TestBase {
 
         });
 
-        withTestConfig(buildConfig(), List.of(ThirdPartyEntityProxy.class, ThirdPartyEmbeddedProxy.class), () -> {
+        withTestConfig(List.of(ThirdPartyEntityProxy.class, ThirdPartyEmbeddedProxy.class), () -> {
             EntityModel model = getDs().getMapper().getEntityModel(ThirdPartyEntity.class);
             assertEquals(model.getCollectionName(), "extEnt");
             assertEquals(model.getDiscriminator(), "ext");

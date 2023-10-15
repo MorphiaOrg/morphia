@@ -2,6 +2,9 @@ package dev.morphia.test.models.generics;
 
 import java.util.Objects;
 
+import dev.morphia.annotations.Entity;
+
+@Entity
 public class Child extends EmbeddedType {
 
     private String childField;

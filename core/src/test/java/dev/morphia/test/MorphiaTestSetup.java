@@ -155,6 +155,10 @@ public class MorphiaTestSetup {
         withConfig(new ManualMorphiaTestConfig(config).classes(types), body);
     }
 
+    protected void withTestConfig(List<Class<?>> types, Runnable body) {
+        withTestConfig(buildConfig(), types, body);
+    }
+
     protected void withConfig(MorphiaConfig config, Runnable body) {
         var oldContainer = morphiaContainer;
         try {

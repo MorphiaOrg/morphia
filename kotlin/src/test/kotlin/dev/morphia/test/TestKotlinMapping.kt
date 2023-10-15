@@ -12,7 +12,7 @@ import org.testng.annotations.Test
 open class TestKotlinMapping : TestBase() {
     @Test
     open fun dataClasses() {
-        withTestConfig(buildConfig(), listOf(MyClass::class.java)) {
+        withTestConfig(listOf(MyClass::class.java)) {
             val myClass = MyClass(ObjectId(), 42)
             ds.save(myClass)
             val loaded = ds.find(MyClass::class.java).first()
@@ -23,7 +23,7 @@ open class TestKotlinMapping : TestBase() {
 
     @Test
     fun versioning() {
-        withTestConfig(buildConfig(), listOf(VersionedDataClass::class.java)) {
+        withTestConfig(listOf(VersionedDataClass::class.java)) {
             val versioned = VersionedDataClass(null, "temp")
             ds.save(versioned)
             val loaded = ds.find(VersionedDataClass::class.java).first()
@@ -35,7 +35,7 @@ open class TestKotlinMapping : TestBase() {
 
     @Test
     fun delegated() {
-        withTestConfig(buildConfig(), listOf(DelegatedNull::class.java)) {
+        withTestConfig(listOf(DelegatedNull::class.java)) {
             val delegated = DelegatedNull()
             delegated.status = "I'm all set"
             ds.save(delegated)
