@@ -16,7 +16,6 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.query.filters.Filter;
-import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.updates.UpdateOperator;
 
 /**
