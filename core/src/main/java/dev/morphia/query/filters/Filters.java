@@ -14,7 +14,6 @@ import dev.morphia.query.Type;
 import org.bson.Document;
 
 import static java.util.Arrays.asList;
-import static org.bson.Document.parse;
 
 /**
  * Defines helper methods to generate filter operations for queries.
@@ -308,20 +307,6 @@ public final class Filters {
      */
     public static Filter in(String field, Iterable<?> val) {
         return new Filter("$in", field, val);
-    }
-
-    /**
-     * Filters documents against the given JSON Schema.
-     *
-     * @param field the field to check
-     * @param val   the value to check
-     * @return the filter
-     * @query.filter $jsonSchema
-     * @deprecated use {@link #jsonSchema(Document)} instead
-     */
-    @Deprecated(forRemoval = true)
-    public static Filter jsonSchema(String field, Object val) {
-        return jsonSchema(parse(val.toString()));
     }
 
     /**
