@@ -226,16 +226,16 @@ public class TestGenerics extends TestBase {
         private ObjectId id;
     }
 
-
     private static class MongoEntity<T> {
 
     }
 
     @Entity
     private static class MyEmbeddedEntity
-        extends MongoEntity<MyEmbeddedEntity> {
+            extends MongoEntity<MyEmbeddedEntity> {
 
         private String name = "foo";
+
         public MyEmbeddedEntity() {
         }
 
@@ -254,7 +254,6 @@ public class TestGenerics extends TestBase {
 
         @Id
         private String id;
-
 
         private String address;
 

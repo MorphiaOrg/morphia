@@ -79,7 +79,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
                         and(
                                 gte(value("$$num"), value(-9223372036854775807L)),
                                 lte(value("$$num"), value(9223372036854775807L))))
-                                        .as("num"),
+                        .as("num"),
                 List.of(1, 2, 3.1, 4L));
     }
 

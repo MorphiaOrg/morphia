@@ -93,7 +93,6 @@ public class TypeDataTest extends TestBase {
 
         private String name = "foo";
 
-
     }
 
     @Entity
@@ -101,7 +100,6 @@ public class TypeDataTest extends TestBase {
 
         @Id
         private String id;
-
 
         private String address;
 

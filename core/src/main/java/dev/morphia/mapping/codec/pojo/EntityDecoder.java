@@ -44,7 +44,7 @@ public class EntityDecoder<T> implements Decoder<T> {
         } else {
             entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
                     morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
-                            .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
+                    .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
         }
 
         return entity;

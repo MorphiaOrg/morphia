@@ -75,7 +75,7 @@ public class TestAggregation extends TestBase {
                         id()
                                 .field("month", month(field("date")))
                                 .field("year", year(field("date"))))
-                                        .field("count", sum(value(1))));
+                        .field("count", sum(value(1))));
 
         MorphiaCursor<User> cursor = pipeline.execute(User.class);
         while (cursor.hasNext()) {
@@ -179,7 +179,7 @@ public class TestAggregation extends TestBase {
         final MorphiaCursor<GeoCity> pipeline = getDs().aggregate(GeoCity.class) /* the class is irrelevant for this test */
                 .group(group(
                         id("state"))
-                                .field("total_pop", sum(field("pop"))))
+                        .field("total_pop", sum(field("pop"))))
                 .match(gte("total_pop", 10000000))
                 .execute(GeoCity.class);
         while (pipeline.hasNext()) {

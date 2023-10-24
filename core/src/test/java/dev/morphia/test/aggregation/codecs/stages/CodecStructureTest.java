@@ -237,7 +237,7 @@ public class CodecStructureTest extends TestBase {
         DocumentWriter writer = new DocumentWriter(getMapper());
         ((Codec) getDs().getCodecRegistry()
                 .get(value.getClass()))
-                        .encode(writer, value, EncoderContext.builder().build());
+                .encode(writer, value, EncoderContext.builder().build());
         Document actual = writer.getDocument();
 
         assertDocumentEquals(actual, expected);
