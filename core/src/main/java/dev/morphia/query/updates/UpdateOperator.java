@@ -77,4 +77,9 @@ public class UpdateOperator {
     protected void value(Object value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return String.format("UpdateOperator{operator='%s', field='%s', value=%s}", operator, field, value);
+    }
 }

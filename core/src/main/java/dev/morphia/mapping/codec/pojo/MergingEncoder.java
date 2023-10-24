@@ -4,6 +4,8 @@ import java.util.Map.Entry;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.LoadOnly;
+import dev.morphia.annotations.NotSaved;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.Query;
@@ -70,7 +72,7 @@ public class MergingEncoder<T> extends EntityEncoder {
     @Override
     protected void encodeValue(BsonWriter writer, EncoderContext encoderContext, PropertyModel model, @Nullable Object value) {
         super.encodeValue(writer, encoderContext, model, value);
-        if (!model.shouldSerialize(value)) {
+        if (!model.shouldSerialize(value) && !model.hasAnnotation(LoadOnly.class) && !model.hasAnnotation(NotSaved.class)) {
             add(unset(model.getMappedName()));
         }
     }
