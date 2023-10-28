@@ -113,6 +113,13 @@ jobs:
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
+  Output:
+    runs-on: ubuntu-latest
+    needs:
+      - Matrix
+    steps:
+      - run: echo releasable = ${{ needs.Matrix.outputs.releasable }}
+
   Release:
     if: ${{ needs.Matrix.outputs.releasable == true }}
     needs:
