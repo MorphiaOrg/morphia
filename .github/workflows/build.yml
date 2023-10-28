@@ -41,7 +41,7 @@ jobs:
           echo "**************** git hub event ref = ${{ github.event.ref }}"
           if [ ${{ github.event.ref }} =~ ^refs/heads/[0-9]+\.[0-9]+\.x$ \
             -o ${{ github.event.ref }} =~ ^refs/tags/v[0-9]+\.[0-9]+.[0-9]+$ \
-            -o ${{ github.event.ref }} == 'refs/heads/master' )" ]
+            -o ${{ github.event.ref }} == 'refs/heads/master' ]
           then
             echo "releasable=true" >> $GITHUB_OUTPUT
           else 
