@@ -44,9 +44,9 @@ jobs:
             || [[ "${{ github.event.ref }}" =~ ^refs/heads/[0-9]+\.[0-9]+\.x$ ]] \
             || [[ "${{ github.event.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+.[0-9]+$ ]]
           then
-            echo "releasable=true"
+            echo "releasable=true" >> $GITHUB_OUTPUT
           else
-            echo "releasable=false"
+            echo "releasable=false" >> $GITHUB_OUTPUT
           fi          
                   
 
