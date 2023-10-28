@@ -124,7 +124,7 @@ jobs:
     needs:
 #      - Test
       - Matrix
-    if: ${{ needs.Matrix.outputs.releasable == true }}
+    if: ${{ needs.Matrix.outputs.releasable }}
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     secrets:
       GH_PUSH_TOKEN       : ${{ secrets.GH_PUSH_TOKEN }}
