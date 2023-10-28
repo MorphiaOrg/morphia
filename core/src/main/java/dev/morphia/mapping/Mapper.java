@@ -84,6 +84,7 @@ public class Mapper {
      *
      * @param config the config to use
      * @morphia.internal
+     * @hidden
      */
     @MorphiaInternal
     public Mapper(MorphiaConfig config) {
@@ -92,14 +93,41 @@ public class Mapper {
         discriminatorLookup = new DiscriminatorLookup();
     }
 
+    /**
+     *
+     * @param other the original
+     * @hidden
+     */
     public Mapper(Mapper other) {
         config = other.config;
-        contextClassLoader = Thread.currentThread().getContextClassLoader();
+        contextClassLoader = other.contextClassLoader;
         discriminatorLookup = new DiscriminatorLookup();
         other.mappedEntities.values().forEach(entity -> {
-            register(entity.copy(), false);
+            clone(entity);
         });
         listeners.addAll(other.listeners);
+    }
+
+    @Nullable
+    private EntityModel clone(@Nullable EntityModel original) {
+        if (original == null) {
+            return null;
+        } else if (isMapped(original.getType())) {
+            return getEntityModel(original.getType());
+        }
+        EntityModel superClone = clone(original.superClass);
+        if (superClone == null || superClone.getSubtype(original.getType()) == null) {
+            EntityModel copy = documentNewModel(new EntityModel(original));
+
+            Set<EntityModel> subtypes = original.subtypes.stream().map(subtype -> {
+                EntityModel clonedSubtype = clone(subtype);
+                clonedSubtype.superClass = copy;
+                return clonedSubtype;
+            }).collect(Collectors.toSet());
+            copy.subtypes.addAll(subtypes);
+        }
+
+        return getEntityModel(original.getType());
     }
 
     /**
@@ -238,7 +266,8 @@ public class Mapper {
             if (!isMappable(actual)) {
                 throw new NotMappableException(type);
             }
-            model = register(createEntityModel(type));
+            model = register(new EntityModelBuilder(this, type)
+                    .build());
         }
 
         return model;
@@ -541,10 +570,7 @@ public class Mapper {
 
     private EntityModel register(EntityModel entityModel, boolean validate) {
 
-        discriminatorLookup.addModel(entityModel);
-        mappedEntities.put(entityModel.getType(), entityModel);
-        mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                .add(entityModel);
+        documentNewModel(entityModel);
         EntityModel superClass = entityModel.getSuperClass();
         if (superClass != null) {
             superClass.addSubtype(entityModel);
@@ -558,14 +584,12 @@ public class Mapper {
         return entityModel;
     }
 
-    /**
-     * @param clazz the model type
-     * @param <T>   type model type
-     * @return the new model
-     */
-    private <T> EntityModel createEntityModel(Class<T> clazz) {
-        return new EntityModelBuilder(this, clazz)
-                .build();
+    private EntityModel documentNewModel(EntityModel entityModel) {
+        discriminatorLookup.addModel(entityModel);
+        mappedEntities.put(entityModel.getType(), entityModel);
+        mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
+                .add(entityModel);
+        return entityModel;
     }
 
     private List<Class> getClasses(ClassLoader loader, String packageName)
