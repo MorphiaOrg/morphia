@@ -38,6 +38,7 @@ jobs:
       - name: Is releasable branch
         id: releasable
         run: |
+          echo "**************** git hub event ref = ${{ github.event.ref }}"
           echo "releasable=$( test \
             ${{ github.event.ref }} =~ ^refs/heads/[0-9]+\.[0-9]+\.x$ \
             ${{ github.event.ref }} =~ ^refs/tags/v[0-9]+\.[0-9]+.[0-9]+$ \
