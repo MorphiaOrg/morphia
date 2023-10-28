@@ -39,10 +39,15 @@ jobs:
         id: releasable
         run: |
           echo "**************** git hub event ref = ${{ github.event.ref }}"
-          echo "releasable=$( test \
-            ${{ github.event.ref }} =~ ^refs/heads/[0-9]+\.[0-9]+\.x$ \
+          if [ ${{ github.event.ref }} =~ ^refs/heads/[0-9]+\.[0-9]+\.x$ \
             -o ${{ github.event.ref }} =~ ^refs/tags/v[0-9]+\.[0-9]+.[0-9]+$ \
-            -o ${{ github.event.ref }} == 'refs/heads/master' )" >> $GITHUB_OUTPUT
+            -o ${{ github.event.ref }} == 'refs/heads/master' )" ]
+          then
+            echo "releasable=true" >> $GITHUB_OUTPUT
+          else 
+            echo "releasable=false" >> $GITHUB_OUTPUT
+          fi
+          
 
     outputs:
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
