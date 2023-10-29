@@ -113,7 +113,7 @@ jobs:
       - Matrix
     runs-on: ubuntu-latest
     steps:
-      - run: "echo releasable = ${{ needs.Matrix.outputs.releasable" }}
+      - run: "echo releasable = ${{ needs.Matrix.outputs.releasable }} "
 
   Release:
     needs:
