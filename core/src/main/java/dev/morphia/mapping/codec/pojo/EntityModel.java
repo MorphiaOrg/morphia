@@ -64,8 +64,8 @@ public class EntityModel {
     private final String discriminator;
     private final Class<?> type;
     private final String collectionName;
-    private final Set<EntityModel> subtypes = new CopyOnWriteArraySet<>();
-    private EntityModel superClass;
+    public final Set<EntityModel> subtypes = new CopyOnWriteArraySet<>();
+    public EntityModel superClass;
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
     private final List<EntityListener<?>> listeners = new ArrayList<>();
@@ -143,7 +143,6 @@ public class EntityModel {
     public EntityModel(EntityModel other) {
         type = other.type;
 
-        superClass = other.superClass;
         discriminatorEnabled = other.discriminatorEnabled;
         discriminatorKey = other.discriminatorKey;
         discriminator = other.discriminator;
@@ -152,7 +151,7 @@ public class EntityModel {
         this.propertyModelsByName = new LinkedHashMap<>();
         this.propertyModelsByMappedName = new LinkedHashMap<>();
         other.propertyModelsByName.values().forEach(otherProperty -> {
-            PropertyModel model = otherProperty.copy(this);
+            PropertyModel model = new PropertyModel(this, otherProperty);
             propertyModelsByMappedName.put(model.getMappedName(), model);
             List<String> loadNames = model.getLoadNames();
             for (int i = 1; i < loadNames.size(); i++) {
@@ -177,18 +176,11 @@ public class EntityModel {
         this.collectionName = other.collectionName;
         creatorFactory = new InstanceCreatorFactoryImpl(this);
 
-        if (superClass != null) {
-            superClass.addSubtype(this);
-        }
         PropertyModel otherId = other.idProperty;
         idProperty = otherId != null ? getProperty(otherId.getName()) : null;
 
         PropertyModel otherVersion = other.versionProperty;
         versionProperty = otherVersion != null ? getProperty(otherVersion.getName()) : null;
-
-        other.subtypes.forEach(subType -> {
-            subType.addSubtype(this.copy());
-        });
 
         final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
         if (entityLisAnn != null) {
@@ -205,10 +197,6 @@ public class EntityModel {
         if (adapter != null) {
             listeners.add(adapter);
         }
-    }
-
-    public EntityModel copy() {
-        return new EntityModel(this);
     }
 
     /**
@@ -333,6 +321,13 @@ public class EntityModel {
         return name != null ? propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name)) : null;
     }
 
+    @Nullable
+    public EntityModel getSubtype(Class<?> type) {
+        return subtypes.stream().filter(subtype -> subtype.type.equals(type))
+                .findFirst()
+                .orElse(null);
+    }
+
     /**
      * Get the subtypes of this model
      *
@@ -350,7 +345,7 @@ public class EntityModel {
         return superClass;
     }
 
-    public void setSuperClass(EntityModel model) {
+    public void setSuperClass(@Nullable EntityModel model) {
         superClass = model;
     }
 

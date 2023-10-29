@@ -97,6 +97,8 @@ public final class PropertyModel {
     }
 
     public PropertyModel(EntityModel owner, PropertyModel other) {
+        entityModel = owner;
+
         name = other.name;
         typeData = other.typeData;
         mappedName = other.mappedName;
@@ -104,7 +106,6 @@ public final class PropertyModel {
         annotationMap.putAll(other.annotationMap);
         loadNames = other.loadNames;
         serialization = other.serialization;
-        entityModel = owner;
         normalizedType = other.normalizedType;
     }
 
@@ -133,10 +134,6 @@ public final class PropertyModel {
             type = type.getComponentType();
         }
         return type;
-    }
-
-    public PropertyModel copy(EntityModel owner) {
-        return new PropertyModel(owner, this);
     }
 
     /**
