@@ -7,4 +7,13 @@
       "as": "inventory_docs"
     }
   }
-]
+],
+{
+    "$project": {
+      "item": 1,
+      "substringField": {
+        "$substr": ["$item", 0, 3]
+      },
+      "inventory_docs": 1
+    }
+  }
