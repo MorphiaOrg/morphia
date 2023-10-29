@@ -47,7 +47,6 @@ jobs:
           else
             echo "releasable=false" >> $GITHUB_OUTPUT
           fi          
-                  
 
     outputs:
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
@@ -111,7 +110,7 @@ jobs:
     needs:
       - Test
       - Matrix
-    if: ${{ needs.Matrix.outputs.releasable }}
+    if: ${{ needs.Matrix.outputs.releasable == true }}
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     secrets:
       GH_PUSH_TOKEN       : ${{ secrets.GH_PUSH_TOKEN }}
