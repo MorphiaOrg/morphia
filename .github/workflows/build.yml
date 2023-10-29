@@ -4,8 +4,6 @@ on:
   push:
     branches-ignore:
       - 'dependabot/**'
-    tags:
-      - '*'
   workflow_dispatch:
 
 jobs:
@@ -40,6 +38,19 @@ jobs:
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
 
+      - name: Is releasable branch
+        id: releasable
+        run: |
+          if [ "${{ github.event.ref }}" == 'refs/heads/master' ] \
+            || [ "${{ github.event.ref }}" == 'refs/heads/main' ] \
+            || [[ "${{ github.event.ref }}" =~ ^refs/heads/[0-9]+\.[0-9]+\.x$ ]] \
+            || [[ "${{ github.event.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+.[0-9]+$ ]]
+          then
+            echo "releasable=true" >> $GITHUB_OUTPUT
+          else
+            echo "releasable=false" >> $GITHUB_OUTPUT
+          fi          
+
       - name: Find Driver snapshot version
         id: driver-snapshot
         run: |
@@ -48,6 +59,7 @@ jobs:
 
     outputs:
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
+      releasable: ${{ steps.releasable.outputs.releasable }}
       driver_snapshot: ${{ steps.driver-snapshot.outputs.driver_snapshot }}
 
   Test:
@@ -91,6 +103,18 @@ jobs:
             mongo: 7
             driver: 4.3.4
             optional: true
+          - java: 17
+            mongo: 7
+            driver: 4.2.3
+            optional: true
+          - java: 17
+            mongo: 7
+            driver: 4.1.2
+            optional: true
+          - java: 17
+            mongo: 7
+            driver: 4.0.6
+            optional: true
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
@@ -100,9 +124,10 @@ jobs:
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
   Release:
-    if: github.ref_type == 'branch' || github.ref_type == 'tag'
     needs:
+      - Matrix
       - Test
+    if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     with:
       java: 17
