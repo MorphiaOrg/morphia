@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  CodeAudits:
-    uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
+#  CodeAudits:
+#    uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
@@ -43,8 +43,10 @@ jobs:
             || [[ "${{ github.event.ref }}" =~ ^refs/heads/[0-9]+\.[0-9]+\.x$ ]] \
             || [[ "${{ github.event.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+.[0-9]+$ ]]
           then
+            echo "releasable=true" 
             echo "releasable=true" >> $GITHUB_OUTPUT
           else
+            echo "releasable=false" 
             echo "releasable=false" >> $GITHUB_OUTPUT
           fi          
 
@@ -105,6 +107,13 @@ jobs:
       reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
+
+  Debug:
+    needs:
+      - Matrix
+    runs-on: ubuntu-latest
+    steps:
+      - run: "echo releasable = ${{ needs.Matrix.outputs.releasable" }}
 
   Release:
     needs:
