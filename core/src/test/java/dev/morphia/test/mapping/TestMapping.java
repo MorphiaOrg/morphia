@@ -1,4 +1,4 @@
-package dev.morphia.test;
+package dev.morphia.test.mapping;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.mongodb.client.model.Filters;
@@ -30,9 +29,12 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
-import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.test.TestBase;
+import dev.morphia.test.mapping.shadowing.ShadowedChild;
+import dev.morphia.test.mapping.shadowing.ShadowedGrandChild;
+import dev.morphia.test.mapping.shadowing.ShadowedGrandParent;
 import dev.morphia.test.models.Author;
 import dev.morphia.test.models.BannedUser;
 import dev.morphia.test.models.BlogImage;
@@ -73,7 +75,6 @@ import static dev.morphia.mapping.PropertyDiscovery.METHODS;
 import static dev.morphia.mapping.experimental.MorphiaReference.wrap;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
-import static java.lang.String.format;
 import static java.util.List.of;
 import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
@@ -100,75 +101,23 @@ public class TestMapping extends TestBase {
 
     @Test(dataProvider = "discovery")
     public void testShadowing(MorphiaConfig config) {
-        withConfig(config, () -> {
-
-            var check = new Check();
-            check.accept(ShadowedGrandParent.class);
-            check.accept(ShadowedChild.class);
-            check.accept(ShadowedGrandChild.class);
-        });
-
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    private class Check implements Consumer<Class<?>> {
-        @Override
-        public void accept(Class<?> classType) {
-            Class<?> actual = getMapper().getEntityModel(classType).getProperty("shadowed").getType();
-            assertEquals(actual, classType,
-                    format("Expected the field 'shadowed' to be type '%s' on '%s' but was '%s'", classType.getSimpleName(),
-                            classType.getSimpleName(), actual.getSimpleName()));
-        }
+        assumeTrue(config.propertyDiscovery() != FIELDS, "Shadowing only works with METHODS discovery");
+        withTestConfig(config, List.of(ShadowedGrandParent.class, ShadowedChild.class, ShadowedGrandChild.class),
+                () -> {
+                    checkShadowing("shadowed", ShadowedGrandParent.class, ShadowedGrandParent.class);
+                    checkShadowing("shadowed", ShadowedChild.class, ShadowedChild.class);
+                    checkShadowing("shadowed", ShadowedGrandChild.class, ShadowedGrandChild.class);
+                });
 
     }
 
-    @Entity(value = "grandParent")
-    public static class ShadowedGrandParent {
-        @Id
-        private ObjectId id;
-        private ShadowedGrandParent shadowed;
-
-        public ObjectId getId() {
-            return id;
-        }
-
-        public void setId(ObjectId id) {
-            this.id = id;
-        }
-
-        public ShadowedGrandParent getShadowed() {
-            return shadowed;
-        }
-
-        public void setShadowed(ShadowedGrandParent shadowed) {
-            this.shadowed = shadowed;
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Entity(value = "child")
-    public static class ShadowedChild extends ShadowedGrandParent {
-        private ShadowedChild shadowed;
-
-        public ShadowedChild getShadowed() {
-            return shadowed;
-        }
-
-        public void setShadowed(ShadowedChild shadowed) {
-            this.shadowed = shadowed;
-        }
-    }
-
-    @Entity
-    public static class ShadowedGrandChild extends ShadowedChild {
-        private ShadowedGrandChild shadowed;
-
-        public ShadowedGrandChild getShadowed() {
-            return shadowed;
-        }
-
-        public void setShadowed(ShadowedGrandChild shadowed) {
-            this.shadowed = shadowed;
+    private void checkShadowing(String name, Class<?> classType, Class<?> propertyType) {
+        try {
+            Class<?> actual = getMapper().getEntityModel(classType).getProperty(name).getType();
+            assertEquals(actual, propertyType, "Expected the field '%s' to be type '%s' on '%s' but was '%s'".formatted(
+                    name, propertyType.getSimpleName(), classType.getSimpleName(), actual.getSimpleName()));
+        } catch (NullPointerException e) {
+            throw e;
         }
     }
 
@@ -208,13 +157,11 @@ public class TestMapping extends TestBase {
         assertEquals(instance, first);
     }
 
-    @Test(expectedExceptions = ConstraintViolationException.class)
+    @Test(expectedExceptions = MappingException.class)
     public final void multipleIds() {
-        withConfig(buildConfig()
-                .packages(of(TwoIds.class.getPackageName())),
-                () -> {
-                    getMapper().getEntityModel(TwoIds.class);
-                });
+        withConfig(buildConfig().packages(of(TwoIds.class.getPackageName())), () -> {
+            getMapper().getEntityModel(TwoIds.class);
+        });
     }
 
     @Test

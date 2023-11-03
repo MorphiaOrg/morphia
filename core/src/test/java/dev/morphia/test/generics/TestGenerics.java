@@ -1,4 +1,4 @@
-package dev.morphia.test;
+package dev.morphia.test.generics;
 
 import java.util.List;
 import java.util.UUID;
@@ -10,6 +10,7 @@ import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.FindOptions;
+import dev.morphia.test.TestBase;
 import dev.morphia.test.models.SpecializedEntity;
 import dev.morphia.test.models.generics.Another;
 import dev.morphia.test.models.generics.Child;

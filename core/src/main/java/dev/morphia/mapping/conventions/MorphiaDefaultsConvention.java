@@ -6,28 +6,27 @@ import dev.morphia.annotations.internal.EntityBuilder;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 
 /**
  * A set of conventions to apply to Morphia entities
  */
 @MorphiaInternal
-@SuppressWarnings({ "unchecked", "deprecation" })
 public class MorphiaDefaultsConvention implements MorphiaConvention {
 
     @Override
-    public void apply(Mapper mapper, EntityModelBuilder modelBuilder) {
+    public void apply(Mapper mapper, EntityModel model) {
         MorphiaConfig config = mapper.getConfig();
 
-        final Entity entity = modelBuilder.getAnnotation(Entity.class);
-        final ExternalEntity externalEntity = modelBuilder.getAnnotation(ExternalEntity.class);
+        final Entity entity = model.getAnnotation(Entity.class);
+        final ExternalEntity externalEntity = model.getAnnotation(ExternalEntity.class);
         if (entity != null) {
-            modelBuilder.enableDiscriminator(entity.useDiscriminator());
-            modelBuilder.discriminatorKey(applyDefaults(entity.discriminatorKey(), config.discriminatorKey()));
+            model.discriminatorEnabled(entity.useDiscriminator());
+            model.discriminatorKey(applyDefaults(entity.discriminatorKey(), config.discriminatorKey()));
         } else if (externalEntity != null) {
-            modelBuilder.enableDiscriminator(externalEntity.useDiscriminator());
-            modelBuilder.discriminatorKey(applyDefaults(externalEntity.discriminatorKey(), config.discriminatorKey()));
-            modelBuilder.annotation(EntityBuilder.entityBuilder()
+            model.discriminatorEnabled(externalEntity.useDiscriminator());
+            model.discriminatorKey(applyDefaults(externalEntity.discriminatorKey(), config.discriminatorKey()));
+            model.annotation(EntityBuilder.entityBuilder()
                     .cap(externalEntity.cap())
                     .concern(externalEntity.concern())
                     .discriminator(externalEntity.discriminator())
@@ -35,10 +34,9 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
                     .value(externalEntity.value())
                     .useDiscriminator(externalEntity.useDiscriminator())
                     .build());
-            modelBuilder.targetType(externalEntity.target());
         }
 
-        config.discriminator().apply(modelBuilder);
+        config.discriminator().apply(model);
     }
 
     String applyDefaults(String configured, String defaultValue) {
@@ -48,5 +46,4 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
             return defaultValue;
         }
     }
-
 }

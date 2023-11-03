@@ -5,18 +5,18 @@ import java.util.Map;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
-import dev.morphia.mapping.validation.ConstraintViolationException;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.test.TestBase;
 
 import org.testng.annotations.Test;
 
 public class DuplicatePropertyNameTest extends TestBase {
-    @Test(expectedExceptions = ConstraintViolationException.class)
+    @Test(expectedExceptions = MappingException.class)
     public void testDuplicatedPropertyNameDifferentType() {
         getMapper().map(DuplicatedPropertyName2.class);
     }
 
-    @Test(expectedExceptions = ConstraintViolationException.class)
+    @Test(expectedExceptions = MappingException.class)
     public void testDuplicatedPropertyNameSameType() {
         getMapper().map(DuplicatedPropertyName.class);
     }

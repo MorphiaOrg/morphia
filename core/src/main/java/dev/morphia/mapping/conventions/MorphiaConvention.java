@@ -1,7 +1,7 @@
 package dev.morphia.mapping.conventions;
 
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 
 /**
  * Applies certain conventions specific for Morphia
@@ -13,5 +13,5 @@ public interface MorphiaConvention {
      * @param mapper
      * @param builder the builder to apply the convention to
      */
-    void apply(Mapper mapper, EntityModelBuilder builder);
+    void apply(Mapper mapper, EntityModel builder);
 }

@@ -2,11 +2,19 @@ package dev.morphia.mapping.codec.pojo;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
@@ -19,6 +27,7 @@ import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
@@ -27,8 +36,14 @@ import dev.morphia.annotations.ShardKeys;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.conventions.ConfigureProperties;
+import dev.morphia.mapping.conventions.FieldDiscovery;
+import dev.morphia.mapping.conventions.MethodDiscovery;
+import dev.morphia.mapping.conventions.MorphiaConvention;
+import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 import dev.morphia.mapping.lifecycle.OnEntityListenerAdapter;
 import dev.morphia.mapping.lifecycle.UntypedEntityListenerAdapter;
@@ -38,9 +53,11 @@ import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static dev.morphia.mapping.PropertyDiscovery.FIELDS;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
+import static java.util.List.of;
 
 /**
  * A model of metadata about a type
@@ -54,89 +71,47 @@ import static java.util.Collections.emptyList;
 public class EntityModel {
     private static final Logger LOG = LoggerFactory.getLogger(EntityModel.class);
 
-    private final Map<Class<? extends Annotation>, Annotation> annotations;
-    private final Map<String, PropertyModel> propertyModelsByName;
-    private final Map<String, PropertyModel> propertyModelsByMappedName;
-    private final List<PropertyModel> shardKeys;
+    private final Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
+    private final Map<String, PropertyModel> propertyModelsByName = new UniqueMap();
+    final Map<String, PropertyModel> propertyModelsByMappedName = new UniqueMap();
+
+    private Map<String, Map<String, Type>> parameterization;
+
+    private List<PropertyModel> shardKeys;
+
     private final InstanceCreatorFactory creatorFactory;
-    private final boolean discriminatorEnabled;
-    private final String discriminatorKey;
-    private final String discriminator;
-    private final Class<?> type;
-    private final String collectionName;
+    private boolean discriminatorEnabled;
+    private String discriminatorKey;
+    private String discriminator;
+    private Class<?> type;
+    private String collectionName;
     public final Set<EntityModel> subtypes = new CopyOnWriteArraySet<>();
     public EntityModel superClass;
-    private final PropertyModel idProperty;
-    private final PropertyModel versionProperty;
+    private PropertyModel idProperty;
+    private PropertyModel versionProperty;
     private final List<EntityListener<?>> listeners = new ArrayList<>();
+    private final Set<Class<?>> classes = new LinkedHashSet<>();
 
-    /**
-     * Creates a new instance
-     *
-     * @param builder the builder to pull values from
-     */
-    EntityModel(EntityModelBuilder builder) {
-        type = builder.targetType();
+    public EntityModel(Mapper mapper, Class<?> type) {
         if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
             throw new MappingException(Sofia.noInnerClasses(type.getName()));
         }
-
-        superClass = builder.superclass();
-        discriminatorEnabled = builder.isDiscriminatorEnabled();
-        discriminatorKey = builder.discriminatorKey();
-        discriminator = builder.discriminator();
-
-        this.annotations = builder.annotations();
-        this.propertyModelsByName = new LinkedHashMap<>();
-        this.propertyModelsByMappedName = new LinkedHashMap<>();
-        builder.propertyModels().forEach(modelBuilder -> {
-            PropertyModel model = modelBuilder
-                    .owner(this)
-                    .build();
-            propertyModelsByMappedName.put(model.getMappedName(), model);
-            for (String name : modelBuilder.alternateNames()) {
-                if (propertyModelsByMappedName.put(name, model) != null) {
-                    throw new MappingException(Sofia.duplicatedMappedName(type.getCanonicalName(), name));
-                }
-            }
-            propertyModelsByName.putIfAbsent(model.getName(), model);
-        });
-
-        ShardKeys shardKeys = getAnnotation(ShardKeys.class);
-        if (shardKeys != null) {
-            this.shardKeys = stream(shardKeys.value())
-                    .map(k -> getProperty(k.value()))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-        } else {
-            this.shardKeys = emptyList();
-        }
-
-        this.collectionName = builder.getCollectionName();
+        this.type = type;
         creatorFactory = new InstanceCreatorFactoryImpl(this);
+        //        this.targetType = type;
 
-        if (superClass != null) {
-            superClass.addSubtype(this);
-        }
-        idProperty = getProperty(builder.idPropertyName());
-        versionProperty = getProperty(builder.versionPropertyName());
-
-        builder.interfaces().forEach(i -> i.addSubtype(this));
-
-        final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
-        if (entityLisAnn != null) {
-            for (Class<?> aClass : entityLisAnn.value()) {
-                if (EntityListener.class.isAssignableFrom(aClass)) {
-                    listeners.add(new EntityListenerAdapter(aClass));
-                } else {
-                    listeners.add(new UntypedEntityListenerAdapter(aClass));
-                }
+        if (type.getSuperclass() != null) {
+            this.superClass = mapper.mapEntity(type.getSuperclass());
+            if (superClass != null) {
+                superClass.addSubtype(this);
             }
         }
 
-        OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
-        if (adapter != null) {
-            listeners.add(adapter);
+        new MappingUtil(mapper);
+
+        ExternalEntity externalEntity = getAnnotation(ExternalEntity.class);
+        if (externalEntity != null) {
+            this.type = externalEntity.target();
         }
     }
 
@@ -147,21 +122,13 @@ public class EntityModel {
         discriminatorKey = other.discriminatorKey;
         discriminator = other.discriminator;
 
-        this.annotations = other.annotations;
-        this.propertyModelsByName = new LinkedHashMap<>();
-        this.propertyModelsByMappedName = new LinkedHashMap<>();
-        other.propertyModelsByName.values().forEach(otherProperty -> {
-            PropertyModel model = new PropertyModel(this, otherProperty);
-            propertyModelsByMappedName.put(model.getMappedName(), model);
-            List<String> loadNames = model.getLoadNames();
-            for (int i = 1; i < loadNames.size(); i++) {
-                String name = loadNames.get(i);
-                if (propertyModelsByMappedName.put(name, model) != null) {
-                    throw new MappingException(Sofia.duplicatedMappedName(type.getCanonicalName(), name));
-                }
-            }
-            propertyModelsByName.putIfAbsent(model.getName(), model);
-        });
+        this.annotations.putAll(other.annotations);
+        other.propertyModelsByName.values()
+                .forEach(otherProperty -> {
+                    PropertyModel model = new PropertyModel(this, otherProperty);
+                    addProperty(model);
+                    model.alternateNames(model.getLoadNames().toArray(new String[0]));
+                });
 
         ShardKeys shardKeys = getAnnotation(ShardKeys.class);
         if (shardKeys != null) {
@@ -199,6 +166,17 @@ public class EntityModel {
         }
     }
 
+    public boolean addProperty(PropertyModel property) {
+        var added = propertyModelsByName.putIfAbsent(property.getName(), property) == null;
+        added &= propertyModelsByMappedName.put(property.getMappedName(), property) == null;
+
+        return added;
+    }
+
+    public void annotation(Annotation annotation) {
+        annotations.putIfAbsent(annotation.annotationType(), annotation);
+    }
+
     /**
      * Invokes any lifecycle methods
      *
@@ -217,6 +195,24 @@ public class EntityModel {
             LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));
             invokeLifecycleEvent(event, entity, document, datastore, listener);
         });
+    }
+
+    public Set<Class<?>> classHierarchy() {
+        return classes;
+    }
+
+    public void discriminator(String discriminator) {
+        this.discriminator = discriminator;
+    }
+
+    public EntityModel discriminatorKey(String discriminatorKey) {
+        this.discriminatorKey = discriminatorKey;
+        return this;
+    }
+
+    public EntityModel discriminatorEnabled(boolean discriminatorEnabled) {
+        this.discriminatorEnabled = discriminatorEnabled;
+        return this;
     }
 
     /**
@@ -275,6 +271,11 @@ public class EntityModel {
     @Nullable
     public PropertyModel getIdProperty() {
         return idProperty;
+    }
+
+    @Nullable
+    public void setIdProperty(PropertyModel model) {
+        idProperty = model;
     }
 
     /**
@@ -356,12 +357,34 @@ public class EntityModel {
         return type;
     }
 
+    public void setType(Class<?> type) {
+        this.type = type;
+    }
+
+    public TypeData<?> getTypeData(Class<?> type, TypeData<?> suggested, Type genericType) {
+
+        if (genericType instanceof TypeVariable) {
+            Map<String, Type> map = parameterization.get(type.getName());
+            if (map != null) {
+                Type mapped = map.get(((TypeVariable<?>) genericType).getName());
+                if (mapped != null) {
+                    suggested = TypeData.get(mapped);
+                }
+            }
+        }
+        return suggested;
+    }
+
     /**
      * @return the version property for the class
      */
     @Nullable
     public PropertyModel getVersionProperty() {
         return versionProperty;
+    }
+
+    public void setVersionProperty(PropertyModel model) {
+        versionProperty = model;
     }
 
     /**
@@ -455,4 +478,177 @@ public class EntityModel {
             ei.postPersist(entity, document, datastore);
         }
     }
+
+    private class UniqueMap extends LinkedHashMap<String, PropertyModel> {
+        @Override
+        public PropertyModel put(String name, PropertyModel value) {
+            PropertyModel propertyModel = putIfAbsent(name, value);
+            if (propertyModel != null) {
+                throw new MappingException(Sofia.duplicatedMappedName(type.getCanonicalName(), name));
+            }
+            return propertyModel;
+        }
+    }
+
+    private class MappingUtil {
+
+        private final Mapper mapper;
+
+        public MappingUtil(Mapper mapper) {
+            this.mapper = mapper;
+            buildHierarchy();
+            propagateTypes();
+
+            List<MorphiaConvention> conventions = new ArrayList<>(of(
+                    new MorphiaDefaultsConvention(),
+                    mapper.getConfig().propertyDiscovery() == FIELDS ? new FieldDiscovery() : new MethodDiscovery(),
+                    new ConfigureProperties()));
+
+            ServiceLoader.load(MorphiaConvention.class)
+                    .forEach(conventions::add);
+
+            for (MorphiaConvention convention : conventions) {
+                convention.apply(mapper, EntityModel.this);
+            }
+
+            if (discriminatorEnabled) {
+                Objects.requireNonNull(discriminatorKey, Sofia.notNull("discriminatorKey"));
+                Objects.requireNonNull(discriminator, Sofia.notNull("discriminator"));
+            }
+
+            build();
+        }
+
+        private void build() {
+            ShardKeys ann = getAnnotation(ShardKeys.class);
+            if (ann != null) {
+                shardKeys = stream(ann.value())
+                        .map(k -> getProperty(k.value()))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            } else {
+                shardKeys = emptyList();
+            }
+
+            collectionName = getCollectionName();
+
+            if (superClass != null) {
+                superClass.addSubtype(EntityModel.this);
+            }
+
+            final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
+            if (entityLisAnn != null) {
+                for (Class<?> aClass : entityLisAnn.value()) {
+                    if (EntityListener.class.isAssignableFrom(aClass)) {
+                        listeners.add(new EntityListenerAdapter(aClass));
+                    } else {
+                        listeners.add(new UntypedEntityListenerAdapter(aClass));
+                    }
+                }
+            }
+
+            OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
+            if (adapter != null) {
+                listeners.add(adapter);
+            }
+
+        }
+
+        private void buildHierarchy() {
+            for (Annotation annotation : type.getAnnotations()) {
+                annotation(annotation);
+            }
+            Set<Class<?>> interfaces = new LinkedHashSet<>();
+            interfaces.addAll(findInterfaces(type));
+
+            classes.addAll(findParentClasses(type.getSuperclass()));
+            classes.forEach(c -> interfaces.addAll(findInterfaces(c)));
+
+            interfaces.stream()
+                    .map(mapper::mapEntity)
+                    .filter(Objects::nonNull)
+                    .forEach(i -> i.addSubtype(EntityModel.this));
+
+        }
+
+        private List<? extends Class<?>> findInterfaces(Class<?> type) {
+            List<Class<?>> list = new ArrayList<>();
+            List<Class<?>> interfaces = Arrays.asList(type.getInterfaces());
+            for (Annotation annotation : type.getAnnotations()) {
+                annotation(annotation);
+            }
+            list.addAll(interfaces);
+            list.addAll(interfaces.stream()
+                    .flatMap(i -> findInterfaces(i).stream())
+                    .collect(Collectors.toList()));
+
+            return list;
+        }
+
+        private Set<Class<?>> findParentClasses(Class<?> type) {
+            Set<Class<?>> classes = new LinkedHashSet<>();
+            while (type != null && !type.isEnum() && !type.equals(Object.class)) {
+                classes.add(type);
+                for (Annotation annotation : type.getAnnotations()) {
+                    annotation(annotation);
+                }
+                type = type.getSuperclass();
+            }
+            return classes;
+        }
+
+        private Map<String, Map<String, Type>> findParameterization(Class<?> type) {
+            if (type.getSuperclass() == null) {
+                return new LinkedHashMap<>();
+            }
+            Map<String, Map<String, Type>> parentMap = findParameterization(type.getSuperclass());
+            Map<String, Type> typeMap = mapArguments(type.getSuperclass(), type.getGenericSuperclass());
+
+            parentMap.put(type.getSuperclass().getName(), typeMap);
+            return parentMap;
+        }
+
+        private void propagateTypes() {
+            parameterization = findParameterization(type);
+
+            List<Map<String, Type>> parameters = new ArrayList<>(parameterization.values());
+
+            for (int index = 0; index < parameters.size(); index++) {
+                Map<String, Type> current = parameters.get(index);
+                if (index + 1 < parameters.size()) {
+                    for (Entry<String, Type> entry : current.entrySet()) {
+                        int peek = index + 1;
+                        while (entry.getValue() instanceof TypeVariable && peek < parameters.size()) {
+                            TypeVariable<?> typeVariable = (TypeVariable<?>) entry.getValue();
+                            Map<String, Type> next = parameters.get(peek++);
+                            entry.setValue(next.get(typeVariable.getName()));
+                        }
+                    }
+                }
+            }
+        }
+
+        private Map<String, Type> mapArguments(@Nullable Class<?> type, Type typeSignature) {
+            Map<String, Type> map = new HashMap<>();
+            if (type != null && typeSignature instanceof ParameterizedType) {
+                TypeVariable<?>[] typeParameters = type.getTypeParameters();
+                if (typeParameters.length != 0) {
+                    Type[] arguments = ((ParameterizedType) typeSignature).getActualTypeArguments();
+                    for (int i = 0; i < typeParameters.length; i++) {
+                        TypeVariable<?> typeParameter = typeParameters[i];
+                        map.put(typeParameter.getName(), arguments[i]);
+                    }
+                }
+            }
+            return map;
+        }
+
+        protected String getCollectionName() {
+            Entity entityAn = getAnnotation(Entity.class);
+            return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
+                    ? entityAn.value()
+                    : mapper.getConfig().collectionNaming().apply(type.getSimpleName());
+        }
+    }
+
 }

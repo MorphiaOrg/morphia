@@ -1,7 +1,8 @@
-package dev.morphia.test
+package dev.morphia.test.kotlin
 
 import dev.morphia.mapping.codec.pojo.TypeData
-import dev.morphia.test.models.DelegatedNull
+import dev.morphia.test.TestBase
+import dev.morphia.test.kotlin.models.DelegatedNull
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties

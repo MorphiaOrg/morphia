@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -30,6 +31,8 @@ import static org.testng.Assert.assertTrue;
 public class BuildConfigTest {
     final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
+    final Pattern pattern = Pattern.compile("[0-9]+\\.[0-9]+\\.x");
+
     @Test
     public void testDocsConfig() throws IOException, XmlPullParserException {
         Version pomVersion = pomVersion();
@@ -39,7 +42,9 @@ public class BuildConfigTest {
 
         String version = map.get("version").toString();
         var gitBranch = gitInfo.get("git.branch").toString();
-        if (gitBranch.startsWith("dependabot/")) {
+        if (gitBranch.startsWith("dependabot/")
+                || !gitBranch.equals("master")
+                        && !pattern.matcher(gitBranch).matches()) {
             return;
         }
         boolean master = "master".equals(gitBranch);
