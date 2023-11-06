@@ -72,7 +72,7 @@ public class Mapper {
     /**
      * Set of classes that registered by this mapper
      */
-    private final Map<Class, EntityModel> mappedEntities = new ConcurrentHashMap<>();
+    private final Map<String, EntityModel> mappedEntities = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
     private final List<EntityListener<?>> listeners = new ArrayList<>();
     private final MorphiaConfig config;
@@ -117,7 +117,7 @@ public class Mapper {
         }
         EntityModel superClone = clone(original.superClass);
         if (superClone == null || superClone.getSubtype(original.getType()) == null) {
-            EntityModel copy = documentNewModel(new EntityModel(original));
+            EntityModel copy = register(new EntityModel(original), false);
 
             Set<EntityModel> subtypes = original.subtypes.stream().map(subtype -> {
                 EntityModel clonedSubtype = clone(subtype);
@@ -260,7 +260,7 @@ public class Mapper {
         if (actual == null && MorphiaProxy.class.equals(type)) {
             throw new NotMappableException(type);
         }
-        EntityModel model = mappedEntities.get(actual);
+        EntityModel model = mappedEntities.get(actual.getName());
 
         if (model == null) {
             if (!isMappable(actual)) {
@@ -418,7 +418,7 @@ public class Mapper {
      * @return true if the Class has been mapped
      */
     public boolean isMapped(Class c) {
-        return mappedEntities.containsKey(c);
+        return mappedEntities.containsKey(c.getName());
     }
 
     /**
@@ -570,7 +570,10 @@ public class Mapper {
 
     private EntityModel register(EntityModel entityModel, boolean validate) {
 
-        documentNewModel(entityModel);
+        discriminatorLookup.addModel(entityModel);
+        mappedEntities.put(entityModel.getType().getName(), entityModel);
+        mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
+                .add(entityModel);
         EntityModel superClass = entityModel.getSuperClass();
         if (superClass != null) {
             superClass.addSubtype(entityModel);
@@ -581,14 +584,6 @@ public class Mapper {
                     .validate(this, entityModel);
 
         }
-        return entityModel;
-    }
-
-    private EntityModel documentNewModel(EntityModel entityModel) {
-        discriminatorLookup.addModel(entityModel);
-        mappedEntities.put(entityModel.getType(), entityModel);
-        mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                .add(entityModel);
         return entityModel;
     }
 

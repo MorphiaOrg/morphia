@@ -27,8 +27,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import org.bson.codecs.configuration.CodecConfigurationException;
 
 import static java.lang.String.format;
@@ -48,7 +46,6 @@ public final class DiscriminatorLookup {
      * Creates a new lookup
      *
      */
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public DiscriminatorLookup() {
         this.classLoader = Thread.currentThread().getContextClassLoader();
 
@@ -85,8 +82,6 @@ public final class DiscriminatorLookup {
 
         if (clazz == null) {
             throw new CodecConfigurationException(format("A class could not be found for the discriminator: '%s'.", discriminator));
-        } else {
-            discriminatorClassMap.put(discriminator, clazz);
         }
         return clazz;
     }
