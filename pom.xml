@@ -39,6 +39,11 @@
         <surefire.version>3.1.0</surefire.version>
         <testng.version>7.8.0</testng.version>
         <zt.exec.version>1.12</zt.exec.version>
+
+        <jreleaser.announce>RELEASE</jreleaser.announce>
+        <jreleaser.announce.bluesky>RELEASE</jreleaser.announce.bluesky>
+        <jreleaser.announce.mastodon>RELEASE</jreleaser.announce.mastodon>
+
     </properties>
 
     <build>
