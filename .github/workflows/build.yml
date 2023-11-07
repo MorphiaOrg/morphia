@@ -68,6 +68,7 @@ jobs:
       - Build
       - Matrix
     strategy:
+      fail-fast: false
       matrix:
         java: [ 17 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
