@@ -45,6 +45,7 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.annotations.internal.ValidationBuilder.validationBuilder;
@@ -62,6 +63,11 @@ public class TestDocumentValidation extends TestBase {
     public TestDocumentValidation() {
         super(buildConfig()
                 .applyDocumentValidations(true));
+    }
+
+    @BeforeMethod
+    public void checkVersion() {
+        checkMinDriverVersion(DriverVersion.v43);
     }
 
     @Test

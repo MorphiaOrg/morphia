@@ -6,6 +6,7 @@ public enum DriverVersion {
     ANY(0, 0),
     v41(4, 1),
     v42(4, 2),
+    v43(4, 3),
     v45(4, 5),
     v46(4, 6),
     v47(4, 7);
