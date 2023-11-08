@@ -33,37 +33,6 @@ class OperationAuditTest {
             created += second
         }
 
-        with(
-            OperationAudit.parse(taglet = "@aggregation.expression")
-                .audit(
-                    "aggregation-pipeline",
-                    "https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline",
-                    listOf(
-                        "$",
-                        "\$listSessions",
-                        "\$listLocalSessions",
-                        "\$search", /* not terribly well doc'd.  atlas only? */
-                        "\$shardedDataDistribution", /* not terribly well doc'd.  atlas only? */
-                        "\$substr" /* not terribly well doc'd.  atlas only? */
-                    )
-                )
-        ) {
-            remaining += first
-            created += second
-        }
-
-        with(
-            OperationAudit.parse(taglet = "@aggregation.expression")
-                .audit(
-                    "aggregation-expressions",
-                    "https://docs.mongodb.com/manual/reference/operator/aggregation/index.html",
-                    listOf("$", "\$addFields", "\$group", "\$project")
-                )
-        ) {
-            remaining += first
-            created += second
-        }
-
         println("$remaining items to handle")
         assertEquals(created, 0)
     }

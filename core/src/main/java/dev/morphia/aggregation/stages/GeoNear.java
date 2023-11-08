@@ -9,7 +9,7 @@ import dev.morphia.query.filters.Filter;
 /**
  * Outputs documents in order of nearest to farthest from a specified point.
  *
- * @aggregation.expression $geoNear
+ * @aggregation.stage $geoNear
  */
 public class GeoNear extends Stage {
     private Point point;

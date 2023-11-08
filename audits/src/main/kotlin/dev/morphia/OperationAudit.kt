@@ -19,18 +19,19 @@ private val core = File("../core/src/main/java")
 class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
     companion object {
         fun parse(taglet: String): OperationAudit {
-            return OperationAudit(
-                core
-                    .walkBottomUp()
-                    .filter { it.extension == "java" }
-                    .map { Roaster.parse(JavaType::class.java, it) }
-                    .filterIsInstance<MethodHolder<*>>()
-                    .flatMap { it.methods }
-                    .filterIsInstance<MethodSource<*>>()
-                    .filter { it.javaDoc.tagNames.contains(taglet) }
-                    .groupBy { it.javaDoc.getTags(taglet)[0].value.substringAfter(" ") }
-            )
+            return OperationAudit(findMethods(taglet))
         }
+
+        fun findMethods(taglet: String) =
+            core
+                .walkBottomUp()
+                .filter { it.extension == "java" }
+                .map { Roaster.parse(JavaType::class.java, it) }
+                .filterIsInstance<MethodHolder<*>>()
+                .flatMap { it.methods }
+                .filterIsInstance<MethodSource<*>>()
+                .filter { it.javaDoc.tagNames.contains(taglet) }
+                .groupBy { it.javaDoc.getTags(taglet)[0].value.substringAfter(" ") }
     }
 
     val github by lazy {

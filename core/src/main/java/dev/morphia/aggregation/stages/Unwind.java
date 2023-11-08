@@ -9,7 +9,7 @@ import static dev.morphia.aggregation.expressions.Expressions.field;
  * Deconstructs an array field from the input documents to output a document for each element. Each output document is the input document
  * with the value of the array field replaced by the element.
  *
- * @aggregation.expression $unwind
+ * @aggregation.stage $unwind
  */
 public class Unwind extends Stage {
     private Expression path;

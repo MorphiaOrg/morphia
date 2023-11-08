@@ -5,7 +5,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * Limits the number of documents passed to the next stage in the pipeline.
  *
- * @aggregation.expression $limit
+ * @aggregation.stage $limit
  */
 public class Limit extends Stage {
     private final long limit;

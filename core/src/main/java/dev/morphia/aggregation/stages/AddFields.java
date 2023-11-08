@@ -12,7 +12,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and adds
  * the new fields.
  *
- * @aggregation.expression $addFields
+ * @aggregation.stage $addFields
  */
 public class AddFields extends Stage {
     private final DocumentExpression document = Expressions.document();

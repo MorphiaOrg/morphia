@@ -16,7 +16,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * inclusive lower bound and the exclusive upper bound for the bucket, and a count field that contains the number of documents in the
  * bucket. The count field is included by default when the output is not specified.
  *
- * @aggregation.expression $bucketAuto
+ * @aggregation.stage $bucketAuto
  */
 public class AutoBucket extends Stage {
     private Expression groupBy;

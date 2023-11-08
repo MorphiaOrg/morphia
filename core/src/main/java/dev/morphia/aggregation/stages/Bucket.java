@@ -17,7 +17,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * <p>
  * $bucket only produces output documents for buckets that contain at least one input document.
  *
- * @aggregation.expression $bucket
+ * @aggregation.stage $bucket
  */
 public class Bucket extends Stage {
     private Expression groupBy;

@@ -6,7 +6,7 @@ import dev.morphia.query.filters.Filter;
 /**
  * Limits the number of documents passed to the next stage in the pipeline.
  *
- * @aggregation.expression $match
+ * @aggregation.stage $match
  */
 public class Match extends Stage {
     private final Filter[] filters;

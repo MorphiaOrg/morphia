@@ -13,7 +13,7 @@ import dev.morphia.sofia.Sofia;
 /**
  * Groups input documents by the specified _id expression and for each distinct grouping, outputs a document.
  *
- * @aggregation.expression $group
+ * @aggregation.stage $group
  */
 public class Group extends Stage {
     private final GroupId id;

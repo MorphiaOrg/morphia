@@ -19,7 +19,7 @@ import static java.util.Arrays.asList;
  * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
  *
  * @param <M> the entity type
- * @aggregation.expression $merge
+ * @aggregation.stage $merge
  */
 public class Merge<M> extends Stage {
     private Class<M> type;
