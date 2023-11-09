@@ -172,7 +172,7 @@
             <dependency>
                 <groupId>io.smallrye.config</groupId>
                 <artifactId>smallrye-config</artifactId>
-                <version>3.4.2</version>
+                <version>3.4.3</version>
             </dependency>
 
             <dependency>
