@@ -64,7 +64,6 @@ jobs:
 
   Test:
     needs:
-      - CodeAudits
       - Build
       - Matrix
     strategy:
