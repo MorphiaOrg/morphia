@@ -1,4 +1,4 @@
-package dev.morphia
+package dev.morphia.audits
 
 import java.io.File
 import java.io.FileReader

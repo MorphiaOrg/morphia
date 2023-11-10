@@ -1,6 +1,6 @@
-package dev.morphia
+package dev.morphia.audits
 
-import dev.morphia.model.Operator
+import dev.morphia.audits.model.Operator
 import java.io.FileReader
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader
 import org.kohsuke.github.GHIssueState.OPEN

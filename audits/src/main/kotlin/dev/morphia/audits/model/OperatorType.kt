@@ -1,4 +1,4 @@
-package dev.morphia.model
+package dev.morphia.audits.model
 
 enum class OperatorType {
     EXPRESSION,

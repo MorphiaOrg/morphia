@@ -1,12 +1,12 @@
-package dev.morphia.model
+package dev.morphia.audits.model
 
-import dev.morphia.RstAuditor
-import dev.morphia.findIndent
-import dev.morphia.model.OperatorType.EXPRESSION
-import dev.morphia.model.OperatorType.STAGE
-import dev.morphia.notControl
-import dev.morphia.removeWhile
-import dev.morphia.sections
+import dev.morphia.audits.RstAuditor
+import dev.morphia.audits.findIndent
+import dev.morphia.audits.model.OperatorType.EXPRESSION
+import dev.morphia.audits.model.OperatorType.STAGE
+import dev.morphia.audits.notControl
+import dev.morphia.audits.removeWhile
+import dev.morphia.audits.sections
 import java.io.File
 
 class Operator(var name: String) {

@@ -13,7 +13,7 @@ import static dev.morphia.test.ServerVersion.v51;
 public class TestDocuments extends AggregationTest {
     @Test
     public void testLookup() {
-        testPipeline(v51, "lookup", aggregation -> {
+        testPipeline(v51, aggregation -> {
             return aggregation
                     .match()
                     .lookup(lookup()

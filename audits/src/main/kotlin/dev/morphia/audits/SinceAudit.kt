@@ -1,12 +1,12 @@
-package dev.morphia
+package dev.morphia.audits
 
-import dev.morphia.model.MorphiaClass
-import dev.morphia.model.MorphiaMethod
-import dev.morphia.model.State
-import dev.morphia.model.State.ABSENT
-import dev.morphia.model.State.DEPRECATED
-import dev.morphia.model.State.PRESENT
-import dev.morphia.model.Version
+import dev.morphia.audits.model.MorphiaClass
+import dev.morphia.audits.model.MorphiaMethod
+import dev.morphia.audits.model.State
+import dev.morphia.audits.model.State.ABSENT
+import dev.morphia.audits.model.State.DEPRECATED
+import dev.morphia.audits.model.State.PRESENT
+import dev.morphia.audits.model.Version
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileWriter
@@ -145,7 +145,7 @@ class SinceAudit {
                 .filter { movedToParent(it.fullyQualified()) }
 
         reportMethods(
-            "Methods missing in ${newer} that weren't deprecated in ${older}".format(newer, older),
+            "Methods missing in $newer that weren't deprecated in $older".format(newer, older),
             older,
             newer,
             list
@@ -282,12 +282,12 @@ class SinceAudit {
             methodHistory.values
                 .filter { it.versions[newer] != ABSENT && it.versions[older] == DEPRECATED }
                 .sortedBy { it.fullyQualified() }
-        reportMethods("Deprecated methods in ${older} still in ${newer}", older, newer, list, false)
+        reportMethods("Deprecated methods in $older still in $newer", older, newer, list, false)
     }
 
     private fun reportNewDeprecatedMethods() {
         reportMethods(
-            "New deprecated methods in ${newer}",
+            "New deprecated methods in $newer",
             older,
             newer,
             newMethods(newer, older, DEPRECATED, ABSENT),
@@ -297,7 +297,7 @@ class SinceAudit {
 
     private fun reportNewDeprecatedClasses() {
         reportClasses(
-            "New deprecated classes in ${newer}",
+            "New deprecated classes in $newer",
             older,
             newer,
             newClasses(newer, older, DEPRECATED, ABSENT),
@@ -307,7 +307,7 @@ class SinceAudit {
 
     private fun reportNewClasses() {
         reportClasses(
-            "New classes in ${newer}",
+            "New classes in $newer",
             older,
             newer,
             newClasses(newer, older, PRESENT, ABSENT),
@@ -317,7 +317,7 @@ class SinceAudit {
 
     private fun reportNewMethods() {
         reportMethods(
-            "New methods in ${newer}",
+            "New methods in $newer",
             older,
             newer,
             newMethods(newer, older, PRESENT, ABSENT),

@@ -1,5 +1,6 @@
 package dev.morphia
 
+import dev.morphia.audits.OperationAudit
 import org.testng.Assert.assertEquals
 import org.testng.annotations.Test
 

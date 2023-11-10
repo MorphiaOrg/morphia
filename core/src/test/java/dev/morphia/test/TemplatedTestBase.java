@@ -7,11 +7,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.lang.NonNull;
@@ -25,6 +22,7 @@ import dev.morphia.query.MorphiaQuery;
 
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
+import org.bson.json.JsonParseException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,6 @@ import org.testng.annotations.Test;
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
-import static org.bson.json.JsonWriterSettings.builder;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
@@ -55,7 +52,9 @@ public abstract class TemplatedTestBase extends TestBase {
         return toLowerCase(root.charAt(0)) + root.substring(1);
     }
 
-    public void testPipeline(ServerVersion serverVersion, String resourceNamed, boolean removeIds, boolean orderMatters,
+    public void testPipeline(ServerVersion serverVersion,
+            boolean removeIds,
+            boolean orderMatters,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         String collection = "aggtest";
         checkMinServerVersion(serverVersion);
@@ -112,7 +111,12 @@ public abstract class TemplatedTestBase extends TestBase {
         }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             while (reader.ready()) {
-                data.add(Document.parse(reader.readLine()));
+                String json = reader.readLine();
+                try {
+                    data.add(Document.parse(json));
+                } catch (JsonParseException e) {
+                    throw new JsonParseException(e.getMessage() + "\n" + json);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -142,35 +146,74 @@ public abstract class TemplatedTestBase extends TestBase {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected List<Document> runPipeline(String pipelineTemplate, Aggregation<Document> aggregation) {
         String pipelineName = format("%s/%s/pipeline.json", prefix(), pipelineTemplate);
-        try {
-            List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
+        List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
 
-            InputStream stream = getClass().getResourceAsStream(pipelineName);
-            if (stream == null) {
-                fail(format("missing data file: src/test/resources/%s/%s",
-                        getClass().getPackageName().replace('.', '/'),
-                        pipelineName));
-            }
-
-            Iterator<Map<String, Object>> iterator = mapper.readValue(stream, List.class)
-                    .iterator();
-            for (Document stage : pipeline) {
-                Object next = iterator.next();
-                assertEquals(mapper.readValue(stage.toJson(), Map.class), next,
-                        pipeline.stream()
-                                .map(d -> d.toJson(builder()
-                                        .indent(true)
-                                        .build()))
-                                .collect(Collectors.joining("\n", "[\n", "\n]")));
-            }
-
-            try (var cursor = aggregation.execute(Document.class)) {
-                return cursor.toList();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
+        InputStream stream = getClass().getResourceAsStream(pipelineName);
+        if (stream == null) {
+            fail(format("missing data file: src/test/resources/%s/%s",
+                    getClass().getPackageName().replace('.', '/'),
+                    pipelineName));
         }
 
+        List<Document> target = parsePipeline(stream);
+        var iterator = target.iterator();
+        for (Document stage : pipeline) {
+            assertDocumentEquals(Document.parse(stage.toJson()), iterator.next()/*
+                                                                                 * ,
+                                                                                 * "Should generate the same pipeline" +
+                                                                                 * pipeline.stream()
+                                                                                 * .map(d -> d.toJson(builder()
+                                                                                 * .indent(true)
+                                                                                 * .build()))
+                                                                                 * .collect(Collectors.joining("\n", "[\n", "\n]"))
+                                                                                 */);
+        }
+
+        try (var cursor = aggregation.execute(Document.class)) {
+            return cursor.toList();
+        }
+
+    }
+
+    private List<Document> parsePipeline(InputStream stream) {
+        List<String> list = new ArrayList<>(new BufferedReader(new InputStreamReader(stream))
+                .lines()
+                .map(String::trim)
+                .toList());
+        if (list.get(0).equals("[")) {
+            list.remove(0);
+        }
+        if (list.get(list.size() - 1).equals("]")) {
+            list.remove(list.size() - 1);
+        }
+
+        var json = list.iterator();
+        List<Document> stages = new ArrayList<>();
+        String current = "";
+        while (json.hasNext()) {
+            while (!balanced(current += json.next())) {
+            }
+            //            current += json.next();
+            //            if (balanced(current)) {
+            stages.add(Document.parse(current));
+            current = "";
+            //            }
+        }
+
+        return stages;
+    }
+
+    private boolean balanced(String input) {
+        int open = 0;
+        int close = 0;
+        for (char c : input.toCharArray()) {
+            if (c == '{')
+                open++;
+            if (c == '}')
+                close++;
+        }
+
+        return open == close;
     }
 
     @NonNull
@@ -195,7 +238,7 @@ public abstract class TemplatedTestBase extends TestBase {
         }
     }
 
-    private String discoverResourceName(StackTraceElement[] stackTrace) {
+    protected String discoverResourceName(StackTraceElement[] stackTrace) {
         String methodName = Arrays.stream(stackTrace)
                 .filter(e -> isTestMethod(e))
                 .findFirst()

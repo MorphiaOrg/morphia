@@ -18,7 +18,7 @@ import static dev.morphia.test.ServerVersion.v52;
 public class TestMinN extends AggregationTest {
     @Test
     public void testComputedN() {
-        testPipeline(v52, "computedN", false, false, (aggregation) -> {
+        testPipeline(v52, false, false, (aggregation) -> {
             return aggregation
                     .group(group(id().field("gameId", field("gameId")))
                             .field("gamescores", minN(
@@ -29,7 +29,7 @@ public class TestMinN extends AggregationTest {
 
     @Test
     public void testSingleGame() {
-        testPipeline(v52, "singleGame", false, false, (aggregation) -> {
+        testPipeline(v52, false, false, (aggregation) -> {
             return aggregation
                     .match(eq("gameId", "G1"))
                     .group(group(id(field("gameId")))
@@ -42,7 +42,7 @@ public class TestMinN extends AggregationTest {
 
     @Test
     public void testAcrossGames() {
-        testPipeline(v52, "acrossGames", false, false, (aggregation) -> {
+        testPipeline(v52, false, false, (aggregation) -> {
             return aggregation
                     .group(group(id("$gameId"))
                             .field("minScores", minN(

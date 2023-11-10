@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Supplier;
 
 import com.mongodb.client.MongoCollection;
@@ -148,7 +147,8 @@ public abstract class TestBase extends MorphiaTestSetup {
     protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
         assertEquals(actual.size(), expected.size());
         expected.forEach(
-                d -> assertTrueLazy(actual.contains(d), () -> format("Should have found <<%s>> in the actual list:%n%s", d, actual)));
+                d -> assertTrueLazy(actual.contains(coerceToLong(d)), () -> format("Should have found <<%s>> in the actual list:%n%s", d,
+                        actual)));
     }
 
     public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
@@ -220,7 +220,7 @@ public abstract class TestBase extends MorphiaTestSetup {
 
     protected void insert(String collectionName, List<Document> list) {
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
-        collection.deleteMany(new Document());
+        collection.drop();
         if (!list.isEmpty()) {
             InsertManyResult insertManyResult = collection.insertMany(list);
             assertEquals(insertManyResult.getInsertedIds().size(), list.size());
@@ -253,15 +253,15 @@ public abstract class TestBase extends MorphiaTestSetup {
             return;
         }
 
-        if (expected instanceof Document) {
-            for (Entry<String, Object> entry : ((Document) expected).entrySet()) {
-                final String key = entry.getKey();
-                Object expectedValue = entry.getValue();
-                Object actualValue = ((Document) actual).get(key);
-                assertDocumentEquals(append(path, key), actualValue, expectedValue);
-            }
-        } else if (expected instanceof List) {
-            List list = (List) expected;
+        if (expected instanceof Document document) {
+            document.entrySet()
+                    .forEach(entry -> {
+                        final String key = entry.getKey();
+                        Object actualValue = ((Document) actual).get(key);
+                        Object expectedValue = entry.getValue();
+                        assertDocumentEquals(append(path, key), actualValue, expectedValue);
+                    });
+        } else if (expected instanceof List list) {
             List copy = new ArrayList<>((List) actual);
 
             Object o;
@@ -283,6 +283,7 @@ public abstract class TestBase extends MorphiaTestSetup {
                     fail("mismatch found at %s.\n\tactual = %s,\n\texpected = %s".formatted(newPath, actual, expected));
                 }
             }
+
         } else {
             assertEquals(coerceToLong(actual), coerceToLong(expected), format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }

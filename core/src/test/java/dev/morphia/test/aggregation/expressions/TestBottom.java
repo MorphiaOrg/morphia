@@ -16,24 +16,20 @@ import static dev.morphia.test.ServerVersion.v52;
 public class TestBottom extends AggregationTest {
     @Test
     public void testSingleGame() {
-        testPipeline(v52, "singleGame", false, false, (aggregation) -> {
-            return aggregation
-                    .match(eq("gameId", "G1"))
-                    .group(group(id(field("gameId")))
-                            .field("playerId", bottom(
-                                    array(field("playerId"), field("score")),
-                                    descending("score"))));
-        });
+        testPipeline(v52, false, false, (aggregation) -> aggregation
+                .match(eq("gameId", "G1"))
+                .group(group(id(field("gameId")))
+                        .field("playerId", bottom(
+                                array(field("playerId"), field("score")),
+                                descending("score")))));
     }
 
     @Test
     public void testAcrossGames() {
-        testPipeline(v52, "acrossGames", false, false, (aggregation) -> {
-            return aggregation
-                    .group(group(id(field("gameId")))
-                            .field("playerId", bottom(
-                                    array(field("playerId"), field("score")),
-                                    descending("score"))));
-        });
+        testPipeline(v52, false, false, (aggregation) -> aggregation
+                .group(group(id(field("gameId")))
+                        .field("playerId", bottom(
+                                array(field("playerId"), field("score")),
+                                descending("score")))));
     }
 }

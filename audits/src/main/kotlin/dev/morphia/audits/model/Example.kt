@@ -1,4 +1,4 @@
-package dev.morphia.model
+package dev.morphia.audits.model
 
 import java.io.File
 
@@ -49,7 +49,7 @@ class Example(
             var output = File(folder, "data.json")
             output.parentFile.mkdirs()
 
-            output.appendText(inputData.sanitizeData().joinToString("\n"))
+            output.writeText(inputData.sanitizeData().joinToString("\n"))
         }
     }
 

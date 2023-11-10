@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.codecs.stages;
 
+import java.util.List;
+
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.PipelineField;
 import dev.morphia.aggregation.stages.Projection;
@@ -23,7 +25,8 @@ public class ProjectionCodec extends StageCodec<Projection> {
     @Override
     protected void encodeStage(BsonWriter writer, Projection projection, EncoderContext encoderContext) {
         document(writer, () -> {
-            for (PipelineField field : projection.getFields()) {
+            List<PipelineField> list = projection.getFields();
+            for (PipelineField field : list) {
                 encodeIfNotNull(getCodecRegistry(), writer, field.name(), field.value(), encoderContext);
             }
         });

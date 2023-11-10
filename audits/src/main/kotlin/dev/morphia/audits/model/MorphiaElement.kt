@@ -1,13 +1,14 @@
-package dev.morphia.model
+package dev.morphia.audits.model
 
-import dev.morphia.download
+import dev.morphia.audits.download
+import dev.morphia.audits.model.State.ABSENT
 import java.io.File
 import java.net.URL
 import java.util.jar.JarFile
 
 class MorphiaClass(val pkgName: String, val name: String) {
     var versions: MutableMap<Version, State> =
-        Version.values().map { it to State.ABSENT }.toMap().toMutableMap()
+        Version.values().map { it to ABSENT }.toMap().toMutableMap()
 
     override fun toString(): String {
         return "MorphiaClass(pkgName='$pkgName', name='$name')"
@@ -32,7 +33,7 @@ class MorphiaMethod(val pkgName: String, val className: String, name: String) {
     }
 
     var versions: MutableMap<Version, State> =
-        Version.values().map { it to State.ABSENT }.toMap().toMutableMap()
+        Version.values().map { it to ABSENT }.toMap().toMutableMap()
 
     override fun toString(): String {
         return "MorphiaMethod(name='${pkgName}.${className}#${name}', versions=$versions)"

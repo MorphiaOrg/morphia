@@ -7,7 +7,8 @@ public enum ServerVersion {
     v51(5, 1),
     v52(5, 2),
     v53(5, 3),
-    v60(6, 0);
+    v60(6, 0),
+    v63(6, 3);
 
     private final int major;
 

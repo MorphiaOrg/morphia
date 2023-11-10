@@ -1,7 +1,7 @@
-package dev.morphia.model
+package dev.morphia.audits.model
 
-import dev.morphia.findIndent
-import dev.morphia.notControl
+import dev.morphia.audits.findIndent
+import dev.morphia.audits.notControl
 
 class CodeBlock {
     private var prefix = ""

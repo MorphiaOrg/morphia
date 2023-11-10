@@ -1,7 +1,9 @@
 package dev.morphia
 
-import dev.morphia.model.Operator
-import dev.morphia.model.Results
+import dev.morphia.audits.GithubProject
+import dev.morphia.audits.RstAuditor
+import dev.morphia.audits.model.Operator
+import dev.morphia.audits.model.Results
 import org.testng.Assert.assertEquals
 import org.testng.annotations.Test
 
@@ -12,7 +14,7 @@ class RstAuditorTest {
 
     @Test
     fun testOperator() {
-        var operator = Operator("firstN-array-element")
+        var operator = Operator("bitAnd")
     }
 
     @Test

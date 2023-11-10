@@ -1,8 +1,9 @@
 package dev.morphia
 
-import dev.morphia.model.MorphiaMethod
-import dev.morphia.model.State
-import dev.morphia.model.Version
+import dev.morphia.audits.SinceAudit
+import dev.morphia.audits.model.MorphiaMethod
+import dev.morphia.audits.model.State
+import dev.morphia.audits.model.Version
 import org.testng.Assert
 
 class SinceAuditTest {

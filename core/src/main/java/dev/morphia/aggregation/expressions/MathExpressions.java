@@ -48,6 +48,18 @@ public final class MathExpressions {
     }
 
     /**
+     * Returns the result of a bitwise and operation on an array of int or long values.
+     *
+     * @param first  the first expression to use
+     * @param second the second expression to use
+     * @return the new expression
+     * @aggregation.expression $bitAnd
+     */
+    public static Expression bitAnd(Expression first, Expression second) {
+        return new MathExpression("$bitAnd", List.of(first, second));
+    }
+
+    /**
      * Returns the smallest integer greater than or equal to the specified number.
      *
      * @param value the value

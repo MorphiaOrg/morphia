@@ -161,15 +161,14 @@ public class TestTransactions extends TemplatedTestBase {
     @Test
     public void aggregation() {
         getDs().withTransaction(session -> {
-            testPipeline(ServerVersion.ANY, "", false, false,
-                    aggregation -> {
-                        loadData("aggTest2", "data2.json");
-                        return aggregation
-                                .lookup(Lookup.lookup("aggTest2")
-                                        .localField("item")
-                                        .foreignField("sku")
-                                        .as("inventory_docs"));
-                    });
+            testPipeline(ServerVersion.ANY, false, false, aggregation -> {
+                loadData("aggTest2", "data2.json");
+                return aggregation
+                        .lookup(Lookup.lookup("aggTest2")
+                                .localField("item")
+                                .foreignField("sku")
+                                .as("inventory_docs"));
+            });
             return null;
         });
     }

@@ -18,7 +18,7 @@ import static dev.morphia.test.ServerVersion.v52;
 public class TestSortArray extends AggregationTest {
     @Test
     public void testField() {
-        testPipeline(v52, "field", (aggregation) -> {
+        testPipeline(v52, (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -29,7 +29,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testSubfield() {
-        testPipeline(v52, "subfield", (aggregation) -> {
+        testPipeline(v52, (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -40,7 +40,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testMultipleFields() {
-        testPipeline(v52, "multipleFields", (aggregation) -> {
+        testPipeline(v52, (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -52,7 +52,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testArrayOfIntegers() {
-        testPipeline(v52, "arrayOfIntegers", (aggregation) -> {
+        testPipeline(v52, (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -64,7 +64,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testMixedTypes() {
-        testPipeline(v52, "mixedTypes", (aggregation) -> {
+        testPipeline(v52, (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()

@@ -18,7 +18,7 @@ public class TestFill extends AggregationTest {
     public void testConstantValue() {
         checkMinDriverVersion(v42);
 
-        testPipeline(v53, "constantValue", aggregation -> {
+        testPipeline(v53, aggregation -> {
             return aggregation
                     .fill(fill()
                             .field("bootsSold", value(0))
@@ -31,7 +31,7 @@ public class TestFill extends AggregationTest {
     public void testDistinctPartitions() {
         checkMinDriverVersion(v42);
 
-        testPipeline(v53, "distinctPartitions", aggregation -> {
+        testPipeline(v53, aggregation -> {
             return aggregation
                     .fill(fill()
                             .sortBy(ascending("date"))
@@ -44,7 +44,7 @@ public class TestFill extends AggregationTest {
     public void testLastObserved() {
         checkMinDriverVersion(v42);
 
-        testPipeline(v53, "lastObserved", aggregation -> {
+        testPipeline(v53, aggregation -> {
             return aggregation
                     .fill(fill()
                             .sortBy(ascending("date"))
@@ -54,7 +54,7 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testLinearInterpolation() {
-        testPipeline(v53, "linearInterpolation", aggregation -> {
+        testPipeline(v53, aggregation -> {
             return aggregation
                     .fill(fill()
                             .sortBy(ascending("time"))

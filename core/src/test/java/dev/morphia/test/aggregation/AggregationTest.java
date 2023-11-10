@@ -16,6 +16,9 @@
 
 package dev.morphia.test.aggregation;
 
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -28,11 +31,13 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
 public class AggregationTest extends TemplatedTestBase {
@@ -43,9 +48,35 @@ public class AggregationTest extends TemplatedTestBase {
                 .codecProvider(new ZDTCodecProvider()));
     }
 
-    public void testPipeline(ServerVersion serverVersion, String resourceName,
+    @AfterClass
+    public void testCoverage() {
+        var type = getClass();
+        // src/test/resources/dev/morphia/test/aggregation/expressions/bitAnd
+        String path = type.getPackageName();
+        String simpleName = type.getSimpleName().substring(4);
+        var operatorName = Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
+        var resourceFolder = new File("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
+        var list = Arrays.stream(resourceFolder.list())
+                .map(s -> new File(resourceFolder, s))
+                .toList();
+
+        List<String> examples = list.stream()
+                .filter(d -> new File(d, "pipeline.json").exists())
+                .map(File::getName)
+                .toList();
+        examples.forEach(example -> {
+            var methodName = Character.toUpperCase(example.charAt(0)) + example.substring(1);
+            try {
+                Method method = type.getDeclaredMethod("test" + methodName);
+            } catch (NoSuchMethodException e) {
+                fail("Missing test case for $%s: %s".formatted(operatorName, example));
+            }
+        });
+    }
+
+    public void testPipeline(ServerVersion serverVersion,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        testPipeline(serverVersion, resourceName, true, true, pipeline);
+        testPipeline(serverVersion, true, true, pipeline);
     }
 
     protected void cakeSales() {

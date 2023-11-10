@@ -15,7 +15,7 @@ import static dev.morphia.test.ServerVersion.v53;
 public class TestLinearFill extends AggregationTest {
     @Test
     public void missingValues() {
-        testPipeline(v53, "missingValues", true, false, (aggregation) -> {
+        testPipeline(v53, true, false, (aggregation) -> {
             return aggregation
                     .setWindowFields(setWindowFields()
                             .sortBy(Sort.ascending("time"))
@@ -27,7 +27,7 @@ public class TestLinearFill extends AggregationTest {
 
     @Test
     public void testMultipleFills() {
-        testPipeline(v53, "multipleFills", true, false, (aggregation) -> {
+        testPipeline(v53, true, false, (aggregation) -> {
             return aggregation
                     .setWindowFields(setWindowFields()
                             .sortBy(Sort.ascending("time"))

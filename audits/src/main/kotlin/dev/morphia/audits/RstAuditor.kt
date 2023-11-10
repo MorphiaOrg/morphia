@@ -1,10 +1,10 @@
-package dev.morphia
+package dev.morphia.audits
 
-import dev.morphia.OperationAudit.Companion.findMethods
-import dev.morphia.model.Operator
-import dev.morphia.model.OperatorType.EXPRESSION
-import dev.morphia.model.OperatorType.STAGE
-import dev.morphia.model.Results
+import dev.morphia.audits.OperationAudit.Companion.findMethods
+import dev.morphia.audits.model.Operator
+import dev.morphia.audits.model.OperatorType.EXPRESSION
+import dev.morphia.audits.model.OperatorType.STAGE
+import dev.morphia.audits.model.Results
 import java.io.File
 
 class RstAuditor(val taglet: String) {
