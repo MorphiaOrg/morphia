@@ -44,6 +44,7 @@ import org.bson.types.ObjectId;
 
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_6_0;
+import static dev.morphia.internal.MorphiaInternals.DriverVersion.v5_0_0;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 
 /**
@@ -112,14 +113,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             iterable.projection(projection.map(mapper, type));
         }
 
-        tryInvoke(v4_1_0, () -> {
-            return iterable.allowDiskUse(allowDiskUse);
-        });
+        tryInvoke(v4_1_0, () -> iterable.allowDiskUse(allowDiskUse));
         iterable.batchSize(batchSize);
         iterable.collation(collation);
-        tryInvoke(v4_6_0, () -> {
-            return iterable.comment(comment);
-        });
+        tryInvoke(v4_6_0, () -> iterable.comment(comment));
         if (cursorType != null) {
             iterable.cursorType(cursorType);
         }
@@ -131,7 +128,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         iterable.maxTime(maxTimeMS, TimeUnit.MILLISECONDS);
         iterable.min(min);
         iterable.noCursorTimeout(noCursorTimeout);
-        iterable.oplogReplay(oplogReplay);
+        tryInvoke(v5_0_0, () -> iterable.oplogReplay(oplogReplay));
         iterable.partial(partial);
         iterable.returnKey(returnKey);
         iterable.showRecordId(showRecordId);
@@ -151,9 +148,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             }
             iterable.sort(mapped);
         }
-        tryInvoke(v4_6_0, () -> {
-            return iterable.let(variables);
-        });
+        tryInvoke(v4_6_0, () -> iterable.let(variables));
         return iterable;
     }
 
