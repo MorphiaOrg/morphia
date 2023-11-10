@@ -17,10 +17,8 @@
 package dev.morphia.test.aggregation;
 
 import java.io.File;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.function.Function;
 
@@ -40,7 +38,6 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
 public class AggregationTest extends TemplatedTestBase {
@@ -55,12 +52,12 @@ public class AggregationTest extends TemplatedTestBase {
     public void testCoverage() {
         var type = getClass();
         var methods = stream(type.getDeclaredMethods())
-            .filter(m -> m.getName().startsWith("testExample"))
-            .map(m -> {
-                String name = m.getName().substring(4);
-                return Character.toLowerCase(name.charAt(0)) + name.substring(1);
-            })
-                          .toList();
+                .filter(m -> m.getName().startsWith("testExample"))
+                .map(m -> {
+                    String name = m.getName().substring(4);
+                    return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+                })
+                .toList();
 
         if (methods.isEmpty()) {
             return;
@@ -71,8 +68,8 @@ public class AggregationTest extends TemplatedTestBase {
         var resourceFolder = new File("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
 
         List<File> list = Arrays.stream(resourceFolder.list())
-                                .map(s -> new File(resourceFolder, s))
-                                .toList();
+                .map(s -> new File(resourceFolder, s))
+                .toList();
 
         List<String> examples = list.stream()
                 .filter(d -> new File(d, "pipeline.json").exists())
