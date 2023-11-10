@@ -31,7 +31,6 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
@@ -48,7 +47,7 @@ public class AggregationTest extends TemplatedTestBase {
                 .codecProvider(new ZDTCodecProvider()));
     }
 
-//    @AfterClass
+    //    @AfterClass
     public void testCoverage() {
         var type = getClass();
         // src/test/resources/dev/morphia/test/aggregation/expressions/bitAnd
@@ -58,8 +57,8 @@ public class AggregationTest extends TemplatedTestBase {
         var resourceFolder = new File("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
 
         List<File> list = Arrays.stream(resourceFolder.list())
-                         .map(s -> new File(resourceFolder, s))
-                         .toList();
+                .map(s -> new File(resourceFolder, s))
+                .toList();
 
         List<String> examples = list.stream()
                 .filter(d -> new File(d, "pipeline.json").exists())
