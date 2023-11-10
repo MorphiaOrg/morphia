@@ -13,7 +13,7 @@ import dev.morphia.sofia.Sofia;
  * Replaces the input document with the specified document. The operation replaces all existing fields in the input document, including
  * the _id field.
  *
- * @aggregation.expression $replaceRoot
+ * @aggregation.stage $replaceRoot
  */
 public class ReplaceRoot extends Stage {
     private Expression value;

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Removes/excludes fields from documents.
  *
- * @aggregation.expression $unset
+ * @aggregation.stage $unset
  */
 public class Unset extends Stage {
     private static final Logger LOG = LoggerFactory.getLogger(Unset.class);

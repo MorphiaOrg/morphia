@@ -11,7 +11,7 @@ import static java.util.Arrays.asList;
  * Returns literal documents from input values.
  *
  * @mongodb.server.release 5.1
- * @aggregation.expression $documents
+ * @aggregation.stage $documents
  * @since 2.3
  */
 public class Documents extends Stage {

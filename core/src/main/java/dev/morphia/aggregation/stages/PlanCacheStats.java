@@ -5,7 +5,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.
  *
- * @aggregation.expression $planCacheStats
+ * @aggregation.stage $planCacheStats
  */
 public class PlanCacheStats extends Stage {
     /**

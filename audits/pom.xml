@@ -109,5 +109,73 @@
                 <skipTests>false</skipTests>
             </properties>
         </profile>
+        <profile>
+            <id>clone docs</id>
+            <activation>
+                <file>
+                    <missing>target/mongodb-docs</missing>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>git</executable>
+                                    <arguments>
+                                        <argument>clone</argument>
+                                        <argument>--depth</argument>
+                                        <argument>1</argument>
+                                        <argument>https://github.com/mongodb/docs.git</argument>
+                                        <argument>target/mongodb-docs</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>update docs</id>
+            <activation>
+                <file>
+                    <exists>target/mongodb-docs</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>git</executable>
+                                    <workingDirectory>target/mongodb-docs</workingDirectory>
+                                    <arguments>
+                                        <argument>pull</argument>
+                                        <argument>-q</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>

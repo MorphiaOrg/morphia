@@ -46,7 +46,7 @@ public interface Aggregation<T> {
      *
      * @param bucket the bucket definition
      * @return this
-     * @aggregation.expression $bucketAuto
+     * @aggregation.stage $bucketAuto
      * @mongodb.server.release 3.4
      */
     Aggregation<T> autoBucket(AutoBucket bucket);
@@ -62,7 +62,7 @@ public interface Aggregation<T> {
      *
      * @param bucket the bucket definition
      * @return this
-     * @aggregation.expression $bucket
+     * @aggregation.stage $bucket
      * @mongodb.server.release 3.4
      */
     Aggregation<T> bucket(Bucket bucket);
@@ -72,7 +72,7 @@ public interface Aggregation<T> {
      *
      * @param stats the stats configuration
      * @return this
-     * @aggregation.expression $collStats
+     * @aggregation.stage $collStats
      */
     Aggregation<T> collStats(CollectionStats stats);
 
@@ -81,7 +81,7 @@ public interface Aggregation<T> {
      *
      * @param name the field name for the resulting count value
      * @return this
-     * @aggregation.expression $count
+     * @aggregation.stage $count
      * @mongodb.server.release 3.4
      */
     Aggregation<T> count(String name);
@@ -101,7 +101,7 @@ public interface Aggregation<T> {
      *
      * @param currentOp the configuration
      * @return this
-     * @aggregation.expression $currentOp
+     * @aggregation.stage $currentOp
      * @mongodb.server.release 3.6
      */
     Aggregation<T> currentOp(CurrentOp currentOp);
@@ -112,7 +112,7 @@ public interface Aggregation<T> {
      * @param densify the Densify stage
      * @return this
      * @mongodb.server.release 5.1
-     * @aggregation.expression $densify
+     * @aggregation.stage $densify
      * @since 2.3
      */
     Aggregation<T> densify(Densify densify);
@@ -123,7 +123,7 @@ public interface Aggregation<T> {
      * @param documents the documents to use
      * @return this
      * @mongodb.server.release 5.1
-     * @aggregation.expression $documents
+     * @aggregation.stage $documents
      * @since 2.3
      */
     Aggregation<T> documents(DocumentExpression... documents);
@@ -160,7 +160,7 @@ public interface Aggregation<T> {
      *
      * @param facet the facet definition
      * @return this
-     * @aggregation.expression $facet
+     * @aggregation.stage $facet
      * @mongodb.server.release 3.4
      */
     Aggregation<T> facet(Facet facet);
@@ -176,7 +176,7 @@ public interface Aggregation<T> {
      *
      * @param fill the fill definition
      * @return this
-     * @aggregation.expression $fill
+     * @aggregation.stage $fill
      * @mongodb.server.release 5.3
      * @since 2.3
      */
@@ -187,7 +187,7 @@ public interface Aggregation<T> {
      *
      * @param near the geo query definition
      * @return this
-     * @aggregation.expression $geoNear
+     * @aggregation.stage $geoNear
      */
     Aggregation<T> geoNear(GeoNear near);
 
@@ -196,7 +196,7 @@ public interface Aggregation<T> {
      *
      * @param lookup the lookup configuration
      * @return this
-     * @aggregation.expression $graphLookup
+     * @aggregation.stage $graphLookup
      */
     Aggregation<T> graphLookup(GraphLookup lookup);
 
@@ -207,7 +207,7 @@ public interface Aggregation<T> {
      *
      * @param group the group definition
      * @return this
-     * @aggregation.expression $group
+     * @aggregation.stage $group
      */
     Aggregation<T> group(Group group);
 
@@ -216,7 +216,7 @@ public interface Aggregation<T> {
      * privileges that include indexStats action.
      *
      * @return this
-     * @aggregation.expression $indexStats
+     * @aggregation.stage $indexStats
      * @mongodb.server.release 3.2
      */
     Aggregation<T> indexStats();
@@ -226,7 +226,7 @@ public interface Aggregation<T> {
      *
      * @param limit the maximum docs to pass along to the next stage
      * @return this
-     * @aggregation.expression $limit
+     * @aggregation.stage $limit
      */
     Aggregation<T> limit(long limit);
 
@@ -237,7 +237,7 @@ public interface Aggregation<T> {
      *
      * @param lookup the lookup definition
      * @return this
-     * @aggregation.expression $lookup
+     * @aggregation.stage $lookup
      * @mongodb.server.release 3.6
      */
     Aggregation<T> lookup(Lookup lookup);
@@ -248,7 +248,7 @@ public interface Aggregation<T> {
      *
      * @param filters the filters to use when matching
      * @return this
-     * @aggregation.expression $match
+     * @aggregation.stage $match
      */
     Aggregation<T> match(Filter... filters);
 
@@ -257,7 +257,7 @@ public interface Aggregation<T> {
      *
      * @param merge the merge definition
      * @param <M>   the output collection type
-     * @aggregation.expression $merge
+     * @aggregation.stage $merge
      * @mongodb.server.release 4.2
      */
     <M> void merge(Merge<M> merge);
@@ -268,7 +268,7 @@ public interface Aggregation<T> {
      * @param merge   the merge definition
      * @param options the options to apply
      * @param <M>     the output collection type
-     * @aggregation.expression $merge
+     * @aggregation.stage $merge
      * @mongodb.server.release 3.4
      */
     <M> void merge(Merge<M> merge, AggregationOptions options);
@@ -278,7 +278,7 @@ public interface Aggregation<T> {
      *
      * @param out the out definition
      * @param <O> the output collection type
-     * @aggregation.expression $out
+     * @aggregation.stage $out
      */
     <O> void out(Out<O> out);
 
@@ -288,7 +288,7 @@ public interface Aggregation<T> {
      * @param out     the out definition
      * @param options the options to apply
      * @param <O>     the output collection type
-     * @aggregation.expression $out
+     * @aggregation.stage $out
      */
     <O> void out(Out<O> out, AggregationOptions options);
 
@@ -296,7 +296,7 @@ public interface Aggregation<T> {
      * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.
      *
      * @return this
-     * @aggregation.expression $planCacheStats
+     * @aggregation.stage $planCacheStats
      * @mongodb.server.release 4.2
      */
     Aggregation<T> planCacheStats();
@@ -307,7 +307,7 @@ public interface Aggregation<T> {
      *
      * @param projection the project definition
      * @return this
-     * @aggregation.expression $project
+     * @aggregation.stage $project
      */
     Aggregation<T> project(Projection projection);
 
@@ -316,7 +316,7 @@ public interface Aggregation<T> {
      *
      * @param redact the redaction definition
      * @return this
-     * @aggregation.expression $redact
+     * @aggregation.stage $redact
      */
     Aggregation<T> redact(Redact redact);
 
@@ -326,7 +326,7 @@ public interface Aggregation<T> {
      *
      * @param root the new root definition
      * @return this
-     * @aggregation.expression $replaceRoot
+     * @aggregation.stage $replaceRoot
      * @mongodb.server.release 3.4
      */
     Aggregation<T> replaceRoot(ReplaceRoot root);
@@ -340,7 +340,7 @@ public interface Aggregation<T> {
      *
      * @param with the replacement definition
      * @return this
-     * @aggregation.expression $replaceWith
+     * @aggregation.stage $replaceWith
      * @mongodb.server.release 4.2
      */
     Aggregation<T> replaceWith(ReplaceWith with);
@@ -350,7 +350,7 @@ public interface Aggregation<T> {
      *
      * @param sample the sample definition
      * @return this
-     * @aggregation.expression $sample
+     * @aggregation.stage $sample
      * @mongodb.server.release 3.2
      */
     Aggregation<T> sample(long sample);
@@ -364,7 +364,7 @@ public interface Aggregation<T> {
      *
      * @param fields the stage definition
      * @return this
-     * @aggregation.expression $set
+     * @aggregation.stage $set
      * @deprecated use {@link #addFields(AddFields)}
      */
     default Aggregation<T> set(AddFields fields) {
@@ -380,7 +380,7 @@ public interface Aggregation<T> {
      *
      * @param fields the stage definition
      * @return this
-     * @aggregation.expression $addFields
+     * @aggregation.stage $addFields
      * @mongodb.server.release 3.4
      */
     Aggregation<T> addFields(AddFields fields);
@@ -396,7 +396,7 @@ public interface Aggregation<T> {
      *
      * @param set the stage to add
      * @return this
-     * @aggregation.expression $set
+     * @aggregation.stage $set
      * @mongodb.server.release 4.2
      * @since 2.3
      */
@@ -406,7 +406,7 @@ public interface Aggregation<T> {
      * @param fields the window fields
      * @return this
      * @mongodb.server.release 5.0
-     * @aggregation.expression $setWindowFields
+     * @aggregation.stage $setWindowFields
      * @since 2.3
      */
     Aggregation<T> setWindowFields(SetWindowFields fields);
@@ -417,7 +417,7 @@ public interface Aggregation<T> {
      *
      * @param skip the skip definition
      * @return this
-     * @aggregation.expression $skip
+     * @aggregation.stage $skip
      */
     Aggregation<T> skip(long skip);
 
@@ -426,7 +426,7 @@ public interface Aggregation<T> {
      *
      * @param sort the sort definition
      * @return this
-     * @aggregation.expression $sort
+     * @aggregation.stage $sort
      */
     Aggregation<T> sort(Sort sort);
 
@@ -440,7 +440,7 @@ public interface Aggregation<T> {
      *
      * @param sort the sort definition
      * @return this
-     * @aggregation.expression $sortByCount
+     * @aggregation.stage $sortByCount
      * @mongodb.server.release 3.4
      */
     Aggregation<T> sortByCount(Expression sort);
@@ -453,7 +453,7 @@ public interface Aggregation<T> {
      * @param first  the first pipeline stage
      * @param others the other pipeline stages
      * @return this
-     * @aggregation.expression $unionWith
+     * @aggregation.stage $unionWith
      * @mongodb.server.release 4.4
      * @since 2.1
      */
@@ -467,7 +467,7 @@ public interface Aggregation<T> {
      * @param first      the first pipeline stage
      * @param others     the other pipeline stages
      * @return this
-     * @aggregation.expression $unionWith
+     * @aggregation.stage $unionWith
      * @mongodb.server.release 4.4
      * @since 2.1
      */
@@ -478,7 +478,7 @@ public interface Aggregation<T> {
      *
      * @param unset the unset definition
      * @return this
-     * @aggregation.expression $unset
+     * @aggregation.stage $unset
      * @mongodb.server.release 4.2
      */
     Aggregation<T> unset(Unset unset);
@@ -489,7 +489,7 @@ public interface Aggregation<T> {
      *
      * @param unwind the unwind definition
      * @return this
-     * @aggregation.expression $unwind
+     * @aggregation.stage $unwind
      */
     Aggregation<T> unwind(Unwind unwind);
 
@@ -498,7 +498,7 @@ public interface Aggregation<T> {
      * aggregation pipeline.
      *
      * @return this
-     * @aggregation.expression $changeStream
+     * @aggregation.stage $changeStream
      * @since 2.3
      */
     Aggregation changeStream();
@@ -509,7 +509,7 @@ public interface Aggregation<T> {
      *
      * @param stream the options to apply to the stage
      * @return this
-     * @aggregation.expression $changeStream
+     * @aggregation.stage $changeStream
      * @since 2.3
      */
     Aggregation changeStream(ChangeStream stream);

@@ -22,7 +22,7 @@ import static java.util.Arrays.asList;
  * <li>With a fixed value.
  * </ul>
  *
- * @aggregation.expression $fill
+ * @aggregation.stage $fill
  * @mongodb.server.release 5.3
  * @since 2.3
  */

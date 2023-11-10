@@ -11,7 +11,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The
  * stage outputs the combined result set (including duplicates) to the next stage.
  *
- * @aggregation.expression $unionWith
+ * @aggregation.stage $unionWith
  * @since 2.1
  */
 public class UnionWith extends Stage {

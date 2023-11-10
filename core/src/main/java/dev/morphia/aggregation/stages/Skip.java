@@ -5,7 +5,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * Randomly selects the specified number of documents from its input.
  *
- * @aggregation.expression $skip
+ * @aggregation.stage $skip
  */
 public class Skip extends Stage {
     private final long size;

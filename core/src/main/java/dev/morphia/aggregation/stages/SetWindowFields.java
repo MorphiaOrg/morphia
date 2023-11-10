@@ -36,7 +36,7 @@ public class SetWindowFields extends Stage {
      *
      * @return the new stage
      * @mongodb.server.release 5.0
-     * @aggregation.expression $setWindowFields
+     * @aggregation.stage $setWindowFields
      * @since 2.3
      */
     public static SetWindowFields setWindowFields() {

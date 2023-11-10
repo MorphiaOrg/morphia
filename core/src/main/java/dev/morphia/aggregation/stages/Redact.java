@@ -6,7 +6,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * Restricts the contents of the documents based on information stored in the documents themselves.
  *
- * @aggregation.expression $redact
+ * @aggregation.stage $redact
  */
 public class Redact extends Stage {
     private Expression expression;

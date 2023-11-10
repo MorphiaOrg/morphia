@@ -12,7 +12,7 @@ import static dev.morphia.mapping.codec.CodecHelper.document;
 /**
  * Sorts all input documents and returns them to the pipeline in sorted order.
  *
- * @aggregation.expression $sort
+ * @aggregation.stage $sort
  */
 public class Sort extends Stage {
     private final List<SortType> sorts = new ArrayList<>();

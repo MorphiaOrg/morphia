@@ -9,7 +9,7 @@ import dev.morphia.query.filters.Filter;
 /**
  * Performs a recursive search on a collection, with options for restricting the search by recursion depth and query filter.
  *
- * @aggregation.expression $graphLookup
+ * @aggregation.stage $graphLookup
  */
 public class GraphLookup extends Stage {
     private String from;

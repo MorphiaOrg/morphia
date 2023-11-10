@@ -11,7 +11,7 @@ import org.bson.Document;
  * stage in the pipeline. The $out operator lets the aggregation framework return result sets of any size.
  *
  * @param <O> the output type used to lookup the collection name
- * @aggregation.expression $out
+ * @aggregation.stage $out
  */
 public class Out<O> extends Stage {
     private Class<?> type;

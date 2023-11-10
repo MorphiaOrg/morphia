@@ -13,7 +13,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * Both stages are equivalent to a $project stage that explicitly specifies all existing fields in the input documents and adds the new
  * fields.
  *
- * @aggregation.expression $set
+ * @aggregation.stage $set
  * @since 2.3
  */
 public class Set extends Stage {

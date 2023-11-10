@@ -6,7 +6,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * Returns a stream of documents containing information on active and/or dormant operations as well as inactive sessions that are
  * holding locks as part of a transaction.
  *
- * @aggregation.expression $currentOp
+ * @aggregation.stage $currentOp
  */
 public class CurrentOp extends Stage {
     private boolean allUsers;

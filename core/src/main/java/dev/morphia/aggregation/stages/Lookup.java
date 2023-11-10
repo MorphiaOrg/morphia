@@ -16,7 +16,7 @@ import static java.util.Arrays.asList;
  * processing. To each input document, the $lookup stage adds a new array field whose elements are the matching documents from the
  * “joined” collection. The $lookup stage passes these reshaped documents to the next stage.
  *
- * @aggregation.expression $lookup
+ * @aggregation.stage $lookup
  * @since 2.0
  */
 public class Lookup extends Stage {

@@ -19,7 +19,7 @@ import static java.util.Arrays.asList;
  * Input documents are passed to the $facet stage only once. $facet enables various aggregations on the same set of input documents,
  * without needing to retrieve the input documents multiple times.
  *
- * @aggregation.expression $facet
+ * @aggregation.stage $facet
  */
 public class Facet extends Stage {
     private final LinkedHashMap<String, List<Stage>> fields = new LinkedHashMap<>();

@@ -16,7 +16,7 @@ import dev.morphia.sofia.Sofia;
  * <p>
  * The $replaceWith is an alias for $replaceRoot.
  *
- * @aggregation.expression $replaceWith
+ * @aggregation.stage $replaceWith
  */
 public class ReplaceWith extends Stage {
     private Expression value;

@@ -6,7 +6,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.
  *
- * @aggregation.expression $sortByCount
+ * @aggregation.stage $sortByCount
  */
 public class SortByCount extends Stage {
     private final Expression expression;

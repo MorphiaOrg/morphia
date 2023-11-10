@@ -17,7 +17,7 @@ import static java.util.Arrays.asList;
  * <li>Populate your data with a specified range of values.
  * </ul>
  *
- * @aggregation.expression $densify
+ * @aggregation.stage $densify
  * @mongodb.server.release 5.1
  * @since 2.3
  */
@@ -45,7 +45,7 @@ public class Densify extends Stage {
      * @param field The field to densify. The values of the specified field must either be all numeric values or all dates.
      * @param range specifies how the data is densified.
      * @return the new stage
-     * @aggregation.expression $densify
+     * @aggregation.stage $densify
      * @mongodb.server.release 5.1
      * @since 2.3
      */

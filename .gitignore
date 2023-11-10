@@ -13,7 +13,7 @@ entityscanner-plug/dependency-reduced-pom.xml
 codereview.rc
 target
 .gradle
-out/
+/dout/
 docs/landing/public
 docs/reference/public
 docs/reference/server
@@ -51,9 +51,6 @@ mongodb-linux*
 # .idea/modules
 # *.iml
 # *.ipr
-
-# IntelliJ
-out/
 
 # Cursive Clojure plugin
 .idea/replstate.xml
