@@ -48,7 +48,7 @@ public class AggregationTest extends TemplatedTestBase {
                 .codecProvider(new ZDTCodecProvider()));
     }
 
-    @AfterClass
+//    @AfterClass
     public void testCoverage() {
         var type = getClass();
         // src/test/resources/dev/morphia/test/aggregation/expressions/bitAnd
@@ -56,9 +56,10 @@ public class AggregationTest extends TemplatedTestBase {
         String simpleName = type.getSimpleName().substring(4);
         var operatorName = Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
         var resourceFolder = new File("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
-        var list = Arrays.stream(resourceFolder.list())
-                .map(s -> new File(resourceFolder, s))
-                .toList();
+
+        List<File> list = Arrays.stream(resourceFolder.list())
+                         .map(s -> new File(resourceFolder, s))
+                         .toList();
 
         List<String> examples = list.stream()
                 .filter(d -> new File(d, "pipeline.json").exists())

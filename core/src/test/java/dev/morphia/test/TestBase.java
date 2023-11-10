@@ -220,7 +220,7 @@ public abstract class TestBase extends MorphiaTestSetup {
 
     protected void insert(String collectionName, List<Document> list) {
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
-        collection.drop();
+        collection.deleteMany(new Document());
         if (!list.isEmpty()) {
             InsertManyResult insertManyResult = collection.insertMany(list);
             assertEquals(insertManyResult.getInsertedIds().size(), list.size());
