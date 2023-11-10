@@ -24,10 +24,6 @@ import java.util.function.Function;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-
-
-
-
 import dev.morphia.test.aggregation.model.Martian;
 import dev.morphia.test.models.User;
 
@@ -71,8 +67,8 @@ public class AggregationTest extends TemplatedTestBase {
         var resourceFolder = new File("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
 
         List<File> list = Arrays.stream(resourceFolder.list())
-                                .map(s -> new File(resourceFolder, s))
-                                .toList();
+                .map(s -> new File(resourceFolder, s))
+                .toList();
 
         List<String> examples = list.stream()
                 .filter(d -> new File(d, "pipeline.json").exists())
