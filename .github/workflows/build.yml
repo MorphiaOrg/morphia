@@ -122,7 +122,7 @@ jobs:
       reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
-      optional: ${{ matrix.optional == 'true' }}
+      optional: ${{ matrix.optional == true }}
 
   Release:
     needs:
