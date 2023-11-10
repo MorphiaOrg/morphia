@@ -66,6 +66,7 @@ jobs:
     needs:
       - Build
       - Matrix
+      - CodeAudits
     strategy:
       fail-fast: false
       matrix:
