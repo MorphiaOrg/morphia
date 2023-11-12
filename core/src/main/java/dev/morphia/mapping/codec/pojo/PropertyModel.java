@@ -44,6 +44,7 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
+import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
@@ -114,19 +115,21 @@ public final class PropertyModel {
     /**
      * Gets the parameterized type of a TypeData
      *
-     * @param toNormalize the type to normalize
+     * @param typeData the type to normalize
      * @return the unwrapped type
      * @morphia.internal
      */
     @MorphiaInternal
-    public static Class<?> normalize(TypeData<?> toNormalize) {
-        Class<?> type;
-        TypeData<?> typeData = toNormalize;
-        while (!typeData.getTypeParameters().isEmpty()) {
+    public static Class<?> normalize(TypeData<?> typeData) {
+        while (!typeData.getTypeParameters().isEmpty()
+                && (Collection.class.isAssignableFrom(typeData.getType())
+                        || Map.class.isAssignableFrom(typeData.getType())
+                        || MorphiaReference.class.isAssignableFrom(typeData.getType()))) {
             List<TypeData<?>> typeParameters = typeData.getTypeParameters();
             typeData = typeParameters.get(typeParameters.size() - 1);
         }
-        type = typeData.getType();
+        Class<?> type = typeData.getType();
+
         while (type.isArray()) {
             type = type.getComponentType();
         }

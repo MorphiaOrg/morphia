@@ -33,7 +33,8 @@ public class ConstraintViolationException extends MappingException {
         final StringBuilder sb = new StringBuilder(128);
         sb.append("Number of violations: " + ve.length + " \n");
         for (ConstraintViolation validationError : ve) {
-            sb.append(validationError.render());
+            sb.append(validationError.render())
+                    .append("\n");
         }
         return sb.toString();
     }

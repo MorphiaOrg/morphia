@@ -60,14 +60,16 @@ public class ConstraintViolation {
      * @return the qualified name of the failing mapping
      */
     public String getPrefix() {
-        return type.getType().getName() + (property != null ? property.getName() + "." : "");
+        String name = type.getType().getName();
+        String property = this.property != null ? "#" + this.property.getName() : "";
+        return name + property;
     }
 
     /**
      * @return a human friendly version of the violation
      */
     public String render() {
-        return Sofia.constraintViolation(validator.getSimpleName(), getPrefix(), message);
+        return Sofia.constraintViolation(validator.getSimpleName(), message);
     }
 
     /**
