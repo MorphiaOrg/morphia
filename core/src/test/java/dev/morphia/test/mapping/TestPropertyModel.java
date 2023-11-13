@@ -8,6 +8,7 @@ import java.util.Map;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -23,6 +24,11 @@ import static dev.morphia.query.filters.Filters.eq;
 public class TestPropertyModel extends TestBase {
 
     private EntityModel entityModel;
+
+    @BeforeMethod
+    public void mapEntity() {
+        entityModel = getMapper().getEntityModel(TestEntity.class);
+    }
 
     @Test
     public void arrayFieldMapping() {
@@ -69,11 +75,6 @@ public class TestPropertyModel extends TestBase {
         Assert.assertEquals(property.getMappedName(), "_id");
     }
 
-    @BeforeMethod
-    public void mapping() {
-        entityModel = getMapper().getEntityModel(TestEntity.class);
-    }
-
     @Test
     public void nestedCollectionsMapping() {
         final PropertyModel property = getMappedField("listOfListOfString");
@@ -102,6 +103,17 @@ public class TestPropertyModel extends TestBase {
                 .first().listOfListOfString);
     }
 
+    @Test
+    public void nestedGenerics() {
+        final PropertyModel property = getMappedField("nestedList");
+
+        Assert.assertFalse(property.isScalarValue());
+        Assert.assertTrue(property.isMultipleValues());
+        Assert.assertFalse(property.isArray());
+        Assert.assertSame(property.getType(), List.class);
+        Assert.assertSame(property.getNormalizedType(), Nested.class);
+    }
+
     private PropertyModel getMappedField(String name) {
         return entityModel.getProperty(name);
     }
@@ -121,11 +133,20 @@ public class TestPropertyModel extends TestBase {
         private int[] arrayOfInt;
         private Map<String, Integer> mapOfInts;
         private List<Embed> listOfEmbeds;
+        @Reference
+        private List<Nested<String>> nestedList;
+        private Map<String, Nested<String>> nestedMap;
     }
 
     @Entity
     private static class Embed {
         private String embedName;
         private List<Embed> embeddeds;
+    }
+
+    @Entity
+    private static class Nested<K> {
+        @Id
+        private ObjectId id;
     }
 }
