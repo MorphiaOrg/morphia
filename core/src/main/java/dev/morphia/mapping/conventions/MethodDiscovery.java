@@ -11,32 +11,35 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.mongodb.lang.NonNull;
+import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MethodAccessor;
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.sofia.Sofia;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import static dev.morphia.mapping.conventions.FieldDiscovery.discoverMappedName;
+import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
 @MorphiaInternal
 public class MethodDiscovery implements MorphiaConvention {
-    private EntityModelBuilder entityModelBuilder;
 
     @Override
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public void apply(Mapper mapper, EntityModelBuilder builder) {
-        if (builder.propertyModels().isEmpty()) {
-            this.entityModelBuilder = builder;
+    public void apply(Mapper mapper, EntityModel model) {
+        if (model.getProperties().isEmpty()) {
 
-            Set<Class<?>> hierarchy = new LinkedHashSet<>(Set.of(builder.type()));
-            hierarchy.addAll(builder.classHierarchy());
+            Set<Class<?>> hierarchy = new LinkedHashSet<>(Set.of(model.getType()));
+            hierarchy.addAll(model.classHierarchy());
 
             Set<Methods> properties = new LinkedHashSet<>();
 
@@ -44,14 +47,15 @@ public class MethodDiscovery implements MorphiaConvention {
                 properties.addAll(processMethods(type));
             }
 
-            addProperties(builder, properties);
+            addProperties(mapper, model, properties);
         }
     }
 
     private List<Methods> processMethods(Class<?> type) {
         return stream(type.getDeclaredMethods())
-                .filter(MethodDiscovery::isGetterSetter)
+                .filter(method -> !isStatic(method.getModifiers()))
                 .filter(m -> !m.isSynthetic()) // overloaded parent methods are synthetic on the child types
+                .filter(MethodDiscovery::isGetterSetter)
                 .collect(Collectors.groupingBy(this::stripPrefix))
                 .entrySet().stream()
                 .filter(entry -> entry.getValue().size() == 2)
@@ -60,18 +64,23 @@ public class MethodDiscovery implements MorphiaConvention {
 
     }
 
-    private void addProperties(EntityModelBuilder builder, Set<Methods> properties) {
+    private void addProperties(Mapper mapper, EntityModel model, Set<Methods> properties) {
         for (Methods methods : properties) {
-            TypeData<?> typeData = entityModelBuilder.getTypeData(methods.type, TypeData.get(methods.getter),
+            TypeData<?> typeData = model.getTypeData(methods.type, TypeData.get(methods.getter),
                     methods.getter.getGenericReturnType());
 
-            entityModelBuilder.addProperty()
+            ExternalEntity externalEntity = model.getAnnotation(ExternalEntity.class);
+            Class<?> target = externalEntity != null ? externalEntity.target() : null;
+
+            PropertyModel propertyModel = new PropertyModel(model);
+
+            model.addProperty(propertyModel
                     .name(methods.property)
-                    .accessor(new MethodAccessor(getTargetMethod(builder, methods.getter),
-                            getTargetMethod(builder, methods.setter)))
-                    .annotations(discoverAnnotations(methods.getter, methods.setter))
                     .typeData(typeData)
-                    .discoverMappedName();
+                    .annotations(discoverAnnotations(methods.getter, methods.setter))
+                    .accessor(new MethodAccessor(getTargetMethod(model, target, methods.getter),
+                            getTargetMethod(model, target, methods.setter)))
+                    .mappedName(discoverMappedName(mapper, propertyModel)));
         }
     }
 
@@ -129,15 +138,14 @@ public class MethodDiscovery implements MorphiaConvention {
     }
 
     @NonNull
-    private Method getTargetMethod(EntityModelBuilder builder, @NonNull Method method) {
+    private Method getTargetMethod(EntityModel model, @Nullable Class<?> target, @NonNull Method method) {
         try {
-            if (builder.type().equals(builder.targetType())) {
-                return method;
-            }
-            return builder.targetType().getDeclaredMethod(method.getName(), method.getParameterTypes());
+            return target != null
+                    ? target.getDeclaredMethod(method.getName(), method.getParameterTypes())
+                    : method;
         } catch (ReflectiveOperationException e) {
             throw new MappingException(Sofia.mismatchedMethodOnExternalType(method.getName(),
-                    method.getParameterTypes(), builder.type().getName(), builder.targetType().getName()));
+                    method.getParameterTypes(), model.getType().getName(), target.getName()));
         }
     }
 

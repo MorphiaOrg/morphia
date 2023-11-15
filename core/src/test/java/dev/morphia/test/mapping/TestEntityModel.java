@@ -61,6 +61,7 @@ public class TestEntityModel extends TestBase {
 
     @Entity
     private static class ChildLevel1a extends RootParent {
+        String name;
     }
 
     private static class ChildLevel2a extends ChildLevel1a {

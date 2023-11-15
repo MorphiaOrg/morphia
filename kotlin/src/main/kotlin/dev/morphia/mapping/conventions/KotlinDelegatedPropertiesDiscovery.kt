@@ -1,24 +1,29 @@
 package dev.morphia.mapping.conventions
 
 import dev.morphia.mapping.Mapper
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder
+import dev.morphia.mapping.codec.pojo.EntityModel
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 
 class KotlinDelegatedPropertiesDiscovery : MorphiaConvention {
     @Suppress("UNCHECKED_CAST")
-    override fun apply(mapper: Mapper, builder: EntityModelBuilder) {
-        val field =
-            builder.type().declaredFields.firstOrNull { it.name == "\$\$delegatedProperties" }
-        if (field != null) {
-            field.trySetAccessible()
-            for (kProperty in field.get(builder.type()) as Array<KProperty<*>>) {
-                builder
-                    .propertyModelByName("${kProperty.name}\$delegate")
-                    .name(kProperty.name)
-                    .discoverMappedName()
-                    .accessor(ReadWritePropertyAccessor(kProperty as KMutableProperty<*>))
+    override fun apply(mapper: Mapper, model: EntityModel) {
+        model.type.declaredFields
+            .firstOrNull { it.name == "\$\$delegatedProperties" }
+            ?.let { field ->
+                field.trySetAccessible()
+                for (kProperty in field.get(model.type) as Array<KProperty<*>>) {
+                    model.addProperty(
+                        model.getProperty("${kProperty.name}\$delegate")?.let { property ->
+                            property
+                                .name(kProperty.name)
+                                .mappedName(FieldDiscovery.discoverMappedName(mapper, property))
+                                .accessor(
+                                    ReadWritePropertyAccessor(kProperty as KMutableProperty<*>)
+                                )
+                        }
+                    )
+                }
             }
-        }
     }
 }

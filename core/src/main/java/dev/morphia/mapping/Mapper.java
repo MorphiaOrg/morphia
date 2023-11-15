@@ -25,7 +25,6 @@ import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.validation.MappingValidator;
@@ -246,6 +245,7 @@ public class Mapper {
      * @hidden
      * @morphia.internal
      */
+    @Nullable
     @MorphiaInternal
     public EntityModel getEntityModel(Class type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
@@ -258,11 +258,19 @@ public class Mapper {
             if (!isMappable(actual)) {
                 throw new NotMappableException(type);
             }
-            model = register(new EntityModelBuilder(this, type)
-                    .build());
+            model = mapEntity(type);
         }
 
         return model;
+    }
+
+    @Nullable
+    public EntityModel mapEntity(@Nullable Class type) {
+        if (isMappable(type)) {
+            EntityModel model = mappedEntities.get(type.getName());
+            return model != null ? model : register(new EntityModel(this, type));
+        }
+        return null;
     }
 
     /**
@@ -359,9 +367,9 @@ public class Mapper {
      * @morphia.internal
      */
     @MorphiaInternal
-    public <T> boolean isMappable(Class<T> type) {
+    public <T> boolean isMappable(@Nullable Class<T> type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        return hasAnnotation(actual, MAPPING_ANNOTATIONS);
+        return actual != null && hasAnnotation(actual, MAPPING_ANNOTATIONS);
     }
 
     /**
@@ -423,12 +431,10 @@ public class Mapper {
     @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void map(String packageName) {
         try {
-            getClasses(contextClassLoader, packageName)
+            List<Class> classes = getClasses(contextClassLoader, packageName);
+            classes
                     .forEach(type -> {
-                        try {
-                            getEntityModel(type);
-                        } catch (NotMappableException ignored) {
-                        }
+                        mapEntity(type);
                     });
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
@@ -505,18 +511,8 @@ public class Mapper {
      */
     @MorphiaInternal
     public EntityModel register(EntityModel entityModel) {
-        return register(entityModel, true);
-    }
-
-    private EntityModel register(EntityModel entityModel, boolean validate) {
-
         documentNewModel(entityModel);
-        EntityModel superClass = entityModel.getSuperClass();
-        if (superClass != null) {
-            superClass.addSubtype(entityModel);
-        }
-
-        if (validate && !entityModel.isInterface()) {
+        if (!entityModel.isInterface()) {
             new MappingValidator()
                     .validate(this, entityModel);
 

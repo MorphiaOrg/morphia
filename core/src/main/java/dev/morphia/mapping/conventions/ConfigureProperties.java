@@ -1,24 +1,17 @@
 package dev.morphia.mapping.conventions;
 
-import java.lang.reflect.Modifier;
-import java.util.Iterator;
-
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdField;
 import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
-import dev.morphia.mapping.codec.pojo.PropertyModelBuilder;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
-
-import static java.lang.reflect.Modifier.isAbstract;
-import static java.lang.reflect.Modifier.isStatic;
 
 /**
  * A set of conventions to apply to Morphia entities
@@ -29,96 +22,43 @@ import static java.lang.reflect.Modifier.isStatic;
 @SuppressWarnings("unchecked")
 public class ConfigureProperties implements MorphiaConvention {
 
-    private static boolean isTransient(PropertyModelBuilder property) {
-        return property.hasAnnotation(Transient.class)
-                || property.hasAnnotation(java.beans.Transient.class)
-                || Modifier.isTransient(property.modifiers());
-    }
-
     @Override
-    public void apply(Mapper mapper, EntityModelBuilder modelBuilder) {
+    public void apply(Mapper mapper, EntityModel model) {
 
-        processProperties(modelBuilder, mapper.getConfig());
+        processProperties(model, mapper.getConfig());
 
-        if (modelBuilder.idPropertyName() == null) {
-            IdField idProperty = modelBuilder.getAnnotation(IdField.class);
+        if (model.getIdProperty() == null) {
+            IdField idProperty = model.getAnnotation(IdField.class);
             if (idProperty != null) {
-                modelBuilder.idPropertyName(idProperty.value());
-                PropertyModelBuilder propertyModelBuilder = modelBuilder.propertyModelByName(idProperty.value());
-                propertyModelBuilder.mappedName("_id");
+                PropertyModel propertyModel = model.getProperty(idProperty.value());
+                model.setIdProperty(propertyModel);
+                propertyModel.mappedName("_id");
             }
-        }
-
-    }
-
-    private void buildProperty(MorphiaConfig config, PropertyModelBuilder builder) {
-
-        builder.serialization(new MorphiaPropertySerialization(config, builder));
-        if (isNotConcrete(builder.typeData())) {
-            builder.discriminatorEnabled(true);
         }
     }
 
     @SuppressWarnings("rawtypes")
-    void processProperties(EntityModelBuilder modelBuilder, MorphiaConfig config) {
-        Iterator<PropertyModelBuilder> iterator = modelBuilder.propertyModels().iterator();
-        while (iterator.hasNext()) {
-            final PropertyModelBuilder builder = iterator.next();
-            final int modifiers = builder.modifiers();
-
-            if (isStatic(modifiers) || isTransient(builder)) {
-                iterator.remove();
-            } else {
-                Property property = builder.getAnnotation(Property.class);
-                if (property != null && !property.concreteClass().equals(Object.class)) {
-                    TypeData typeData = builder.typeData().withType(property.concreteClass());
-                    builder.typeData(typeData);
-                }
-
-                AlsoLoad alsoLoad = builder.getAnnotation(AlsoLoad.class);
-                if (alsoLoad != null) {
-                    for (String name : alsoLoad.value()) {
-                        builder.alternateName(name);
-                    }
-                }
-
-                if (builder.getAnnotation(Id.class) != null) {
-                    modelBuilder.idPropertyName(builder.name());
-                }
-                if (builder.getAnnotation(Version.class) != null) {
-                    modelBuilder.versionPropertyName(builder.name());
-                }
-
-                buildProperty(config, builder);
+    void processProperties(EntityModel model, MorphiaConfig config) {
+        for (PropertyModel propertyModel : model.getProperties()) {
+            Property property = propertyModel.getAnnotation(Property.class);
+            if (property != null && !property.concreteClass().equals(Object.class)) {
+                TypeData typeData = propertyModel.getTypeData().withType(property.concreteClass());
+                propertyModel.typeData(typeData);
             }
+
+            AlsoLoad alsoLoad = propertyModel.getAnnotation(AlsoLoad.class);
+            if (alsoLoad != null) {
+                propertyModel.alternateNames(alsoLoad.value());
+            }
+
+            if (propertyModel.getAnnotation(Id.class) != null) {
+                model.setIdProperty(propertyModel);
+            }
+            if (propertyModel.getAnnotation(Version.class) != null) {
+                model.setVersionProperty(propertyModel);
+            }
+
+            propertyModel.serialization(new MorphiaPropertySerialization(config, propertyModel));
         }
     }
-
-    private boolean isNotConcrete(TypeData<?> typeData) {
-        Class<?> type;
-        if (!typeData.getTypeParameters().isEmpty()) {
-            type = typeData.getTypeParameters().get(typeData.getTypeParameters().size() - 1).getType();
-        } else {
-            type = typeData.getType();
-        }
-
-        return isNotConcrete(type);
-    }
-
-    private boolean isNotConcrete(Class<?> type) {
-        Class<?> componentType = type;
-        if (type.isArray()) {
-            componentType = type.getComponentType();
-        }
-        return componentType.isInterface() || isAbstract(componentType.getModifiers());
-    }
-
-    String applyDefaults(String configured, String defaultValue) {
-        if (!configured.equals(Mapper.IGNORED_FIELDNAME)) {
-            return configured;
-        } else {
-            return defaultValue;
-        }
-    }
-
 }

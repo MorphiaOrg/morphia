@@ -20,7 +20,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,18 +34,15 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -64,37 +60,21 @@ import static java.util.Arrays.asList;
 @MorphiaInternal
 @SuppressWarnings("removal")
 public final class PropertyModel {
-    private final String name;
-    private final TypeData<?> typeData;
-    private final String mappedName;
-    private final PropertyAccessor<? super Object> accessor;
-    private final MorphiaPropertySerialization serialization;
+    private boolean isFinal;
+
+    private String name;
+    private TypeData<?> typeData;
+    private String mappedName;
+    private PropertyAccessor<? super Object> accessor;
+    private MorphiaPropertySerialization serialization;
     private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
-    private final List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
+    private final List<String> loadNames = new ArrayList<>();
     private final EntityModel entityModel;
     private Codec<? super Object> codec;
     private Class<?> normalizedType;
 
-    PropertyModel(PropertyModelBuilder builder) {
-        entityModel = builder.owner();
-        name = Objects.requireNonNull(builder.name(), Sofia.notNull("name"));
-        mappedName = Objects.requireNonNull(builder.mappedName(), Sofia.notNull("name"));
-        typeData = Objects.requireNonNull(builder.typeData(), Sofia.notNull("typeData"));
-        accessor = builder.accessor();
-        serialization = builder.serialization();
-        builder.annotations().forEach(ann -> annotationMap.put(ann.annotationType(), ann));
-
-        List<String> result;
-        final AlsoLoad al = getAnnotation(AlsoLoad.class);
-        if (al != null && al.value().length > 0) {
-            final List<String> names = new ArrayList<>();
-            names.add(getMappedName());
-            names.addAll(asList(al.value()));
-            result = names;
-        } else {
-            result = Collections.singletonList(getMappedName());
-        }
-        loadNames = result;
+    public PropertyModel(EntityModel entityModel) {
+        this.entityModel = entityModel;
     }
 
     public PropertyModel(EntityModel owner, PropertyModel other) {
@@ -105,13 +85,9 @@ public final class PropertyModel {
         mappedName = other.mappedName;
         accessor = other.accessor;
         annotationMap.putAll(other.annotationMap);
-        loadNames = other.loadNames;
+        loadNames.addAll(other.loadNames);
         serialization = other.serialization;
         normalizedType = other.normalizedType;
-    }
-
-    static PropertyModelBuilder builder(Mapper mapper) {
-        return new PropertyModelBuilder(mapper);
     }
 
     /**
@@ -139,11 +115,23 @@ public final class PropertyModel {
         return type;
     }
 
+    public void alternateNames(String... names) {
+        loadNames.addAll(asList(names));
+        for (String name : names) {
+            entityModel.propertyModelsByMappedName.put(name, this);
+        }
+    }
+
     /**
      * @return the accessor to use when accessing this field
      */
     public PropertyAccessor<? super Object> getAccessor() {
         return accessor;
+    }
+
+    public PropertyModel accessor(PropertyAccessor<? super Object> accessor) {
+        this.accessor = accessor;
+        return this;
     }
 
     /**
@@ -156,6 +144,24 @@ public final class PropertyModel {
     @Nullable
     public <A extends Annotation> A getAnnotation(Class<A> type) {
         return type.cast(annotationMap.get(type));
+    }
+
+    public List<Annotation> getAnnotations() {
+        return new ArrayList<>(annotationMap.values());
+    }
+
+    public PropertyModel annotations(List<Annotation> annotations) {
+        annotations.forEach(ann -> annotationMap.put(ann.annotationType(), ann));
+        return this;
+    }
+
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    public PropertyModel isFinal(boolean isFinal) {
+        this.isFinal = isFinal;
+        return this;
     }
 
     Codec<?> getCodec() {
@@ -206,11 +212,21 @@ public final class PropertyModel {
         return mappedName;
     }
 
+    public PropertyModel mappedName(String name) {
+        mappedName = name;
+        return this;
+    }
+
     /**
      * @return the field name for the model
      */
     public String getName() {
         return name;
+    }
+
+    public PropertyModel name(String name) {
+        this.name = name;
+        return this;
     }
 
     /**
@@ -238,6 +254,11 @@ public final class PropertyModel {
      */
     public TypeData<?> getTypeData() {
         return typeData;
+    }
+
+    public PropertyModel typeData(TypeData<?> data) {
+        typeData = data;
+        return this;
     }
 
     /**
@@ -270,10 +291,9 @@ public final class PropertyModel {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PropertyModel)) {
+        if (!(o instanceof PropertyModel that)) {
             return false;
         }
-        final PropertyModel that = (PropertyModel) o;
         return getName().equals(that.getName())
                 && getTypeData().equals(that.getTypeData())
                 && getMappedName().equals(that.getMappedName())
@@ -376,6 +396,11 @@ public final class PropertyModel {
      */
     public boolean shouldSerialize(@Nullable Object value) {
         return serialization.shouldSerialize(value);
+    }
+
+    public PropertyModel serialization(MorphiaPropertySerialization serialization) {
+        this.serialization = serialization;
+        return this;
     }
 
     private void configureCodec(Datastore datastore) {

@@ -1,4 +1,4 @@
-package dev.morphia.test.models
+package dev.morphia.test.kotlin.models
 
 import dev.morphia.annotations.Entity
 import dev.morphia.annotations.Id

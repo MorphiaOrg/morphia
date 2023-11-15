@@ -7,7 +7,6 @@ import java.util.UUID;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.test.TestBase;
 
@@ -21,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 public class EntityModelTest extends TestBase {
     @Test
     public void testFindParameterization() {
-        EntityModel model = new EntityModelBuilder(getMapper(), Child.class).build();
+        EntityModel model = getMapper().mapEntity(Child.class);
         assertEquals(model.getProperty("someField").getType(), LocalDate.class);
     }
 
