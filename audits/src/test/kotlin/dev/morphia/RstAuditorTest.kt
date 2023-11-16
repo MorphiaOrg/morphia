@@ -14,7 +14,7 @@ class RstAuditorTest {
 
     @Test
     fun testOperator() {
-        var operator = Operator("median")
+        var operator = Operator("count-accumulator")
     }
 
     @Test

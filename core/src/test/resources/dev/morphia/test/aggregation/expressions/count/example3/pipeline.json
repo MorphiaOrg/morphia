@@ -1,0 +1,16 @@
+ [
+   {
+      $setWindowFields: {
+         partitionBy: "$state",
+         sortBy: { orderDate: 1 },
+         output: {
+            countNumberOfDocumentsForState: {
+               $count: {},
+               window: {
+                  documents: [ "unbounded", "current" ]
+               }         
+            }
+         }
+      }
+   }
+] 

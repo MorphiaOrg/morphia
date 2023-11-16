@@ -5,6 +5,7 @@ import java.util.List;
 
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.AccumulatorExpression;
+import dev.morphia.aggregation.expressions.impls.CountExpression;
 import dev.morphia.aggregation.expressions.impls.EndResultsExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.FunctionExpression;
@@ -100,6 +101,18 @@ public final class AccumulatorExpressions {
      */
     public static Expression bottomN(Expression n, Expression output, Sort... sortBy) {
         return new NRankedResultsExpression("$bottomN", n, output, sortBy);
+    }
+
+    /**
+     * Returns the number of documents in a group.
+     *
+     * @return the expression
+     * @aggregation.expression $count
+     * @mongodb.server.release 5.0
+     * @since 3.0
+     */
+    public static Expression count() {
+        return new CountExpression();
     }
 
     /**
@@ -295,4 +308,5 @@ public final class AccumulatorExpressions {
     public static Expression topN(Expression n, Expression output, Sort... sortBy) {
         return new NRankedResultsExpression("$topN", n, output, sortBy);
     }
+
 }

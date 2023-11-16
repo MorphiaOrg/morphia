@@ -13,6 +13,7 @@ import dev.morphia.mapping.codec.expressions.ArrayLiteralCodec;
 import dev.morphia.mapping.codec.expressions.BaseExpressionCodec;
 import dev.morphia.mapping.codec.expressions.CalculusExpressionCodec;
 import dev.morphia.mapping.codec.expressions.ConvertExpressionCodec;
+import dev.morphia.mapping.codec.expressions.CountExpressionCodec;
 import dev.morphia.mapping.codec.expressions.DateDeltaExpressionCodec;
 import dev.morphia.mapping.codec.expressions.DateDiffExpressionCodec;
 import dev.morphia.mapping.codec.expressions.DateExpressionCodec;
@@ -77,6 +78,7 @@ public class MorphiaExpressionCodecProvider implements CodecProvider {
         addCodec(new ArrayIndexExpressionCodec(datastore));
         addCodec(new ArrayLiteralCodec(datastore));
         addCodec(new CalculusExpressionCodec(datastore));
+        addCodec(new CountExpressionCodec(datastore));
         addCodec(new ConvertExpressionCodec(datastore));
         addCodec(new DateDeltaExpressionCodec(datastore));
         addCodec(new DateDiffExpressionCodec(datastore));

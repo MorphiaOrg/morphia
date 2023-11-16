@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.test.ServerVersion;
@@ -78,9 +79,10 @@ public class AggregationTest extends TemplatedTestBase {
                 .filter(d -> new File(d, "pipeline.json").exists())
                 .map(File::getName)
                 .toList();
-        examples.forEach(example -> {
-            assertTrue(methods.contains(example), "Missing test case for $%s: %s".formatted(operatorName, example));
-        });
+        var missing = examples.stream()
+                .filter(example -> !methods.contains(example))
+                .collect(Collectors.joining(", "));
+        assertTrue(missing.isEmpty(), "Missing test cases for $%s: %s".formatted(operatorName, missing));
     }
 
     public void testPipeline(ServerVersion serverVersion,

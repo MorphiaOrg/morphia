@@ -4,6 +4,7 @@ import com.github.zafarkhaja.semver.Version;
 
 public enum ServerVersion {
     ANY(0, 0),
+    v50(5, 0),
     v51(5, 1),
     v52(5, 2),
     v53(5, 3),
