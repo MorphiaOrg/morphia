@@ -6,10 +6,11 @@ import java.util.Map.Entry;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
+import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.MapCodec;
 
 import static dev.morphia.mapping.codec.CodecHelper.document;
 
@@ -22,12 +23,18 @@ import static dev.morphia.mapping.codec.CodecHelper.document;
  * @since 2.1.7
  */
 @MorphiaInternal
-public class MorphiaMapCodec extends MapCodec {
+@SuppressWarnings("rawtypes")
+public class MorphiaMapCodec implements Codec<Map> {
 
     private MorphiaDatastore datastore;
 
     MorphiaMapCodec(MorphiaDatastore datastore) {
         this.datastore = datastore;
+    }
+
+    @Override
+    public Map decode(BsonReader bsonReader, DecoderContext decoderContext) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -44,5 +51,10 @@ public class MorphiaMapCodec extends MapCodec {
                 }
             }
         });
+    }
+
+    @Override
+    public Class<Map> getEncoderClass() {
+        return Map.class;
     }
 }

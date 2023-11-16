@@ -35,7 +35,19 @@ class RstAuditorTest {
 
     @Test
     fun aggregationPipelineStages() {
-        validate(RstAuditor("@aggregation.stage").aggregations(listOf("\$collStats")))
+        validate(
+            RstAuditor("@aggregation.stage")
+                .aggregations(
+                    listOf(
+                        "\$collStats",
+                        "\$listLocalSessions",
+                        "\$listSampledQueries",
+                        "\$listSearchIndexes",
+                        "\$listSessions",
+                        "\$toHashedIndexKey",
+                    )
+                )
+        )
     }
 
     private fun validate(results: Results) {

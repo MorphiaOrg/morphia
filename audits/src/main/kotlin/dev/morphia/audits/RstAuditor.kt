@@ -25,6 +25,10 @@ class RstAuditor(val taglet: String) {
                 .filter { !it.equals(aggRoot) }
                 .map { file -> Operator(file.nameWithoutExtension) }
                 .toList()
+
+        list
+            .filter { it.type == type && it.operator in exclusions }
+            .forEach { it.resourceFolder.deleteRecursively() }
         val operators = list.filter { it.type == type && it.operator !in exclusions }
 
         val keys = methods.keys
