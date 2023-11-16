@@ -8,6 +8,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.MathExpression;
 import dev.morphia.aggregation.expressions.impls.MedianExpression;
+import dev.morphia.aggregation.expressions.impls.PercentileExpression;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;
 import static java.util.Arrays.asList;
@@ -215,6 +216,36 @@ public final class MathExpressions {
         List<Expression> expressions = new ArrayList<>(List.of(first));
         expressions.addAll(asList(additional));
         return new MathExpression("$multiply", expressions);
+    }
+
+    /**
+     * Returns an array of scalar values that correspond to specified percentile values.
+     *
+     * @param input       the input field or expression
+     * @param percentiles the percentiles to compute
+     * @return the new expression
+     * @aggregation.expression $percentile
+     * @mongodb.server.release 7.0
+     * @since 3.0
+     *
+     */
+    public static Expression percentile(Expression input, List<Expression> percentiles) {
+        return new PercentileExpression(List.of(input), percentiles);
+    }
+
+    /**
+     * Returns an array of scalar values that correspond to specified percentile values.
+     *
+     * @param inputs      the input fields or expressions
+     * @param percentiles the percentiles to compute
+     * @return the new expression
+     * @aggregation.expression $percentile
+     * @mongodb.server.release 7.0
+     * @since 3.0
+     *
+     */
+    public static Expression percentile(List<Expression> inputs, List<Expression> percentiles) {
+        return new PercentileExpression(inputs, percentiles);
     }
 
     /**

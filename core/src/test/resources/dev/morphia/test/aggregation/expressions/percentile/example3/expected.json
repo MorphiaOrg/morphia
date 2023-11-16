@@ -1,0 +1,1 @@
+{    _id: null,   test01_percentiles: [ 62.0, 64.0, 67.0, 67.0 ],   test02_percentiles: [ 81.0, 82.0, 83.0, 83.0 ],   test03_percentiles: [ 78.0, 79.0, 80.0, 80.0 ],   test03_percent_alt: [ 80.0, 78.0, 79.0, 80.0 ]}

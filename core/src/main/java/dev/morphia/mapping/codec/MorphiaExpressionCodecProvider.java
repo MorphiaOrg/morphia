@@ -42,6 +42,7 @@ import dev.morphia.mapping.codec.expressions.MedianExpressionCodec;
 import dev.morphia.mapping.codec.expressions.MergeObjectsCodec;
 import dev.morphia.mapping.codec.expressions.MetaExpressionCodec;
 import dev.morphia.mapping.codec.expressions.NRankedResultsExpressionCodec;
+import dev.morphia.mapping.codec.expressions.PercentileExpressionCodec;
 import dev.morphia.mapping.codec.expressions.PushCodec;
 import dev.morphia.mapping.codec.expressions.RangeExpressionCodec;
 import dev.morphia.mapping.codec.expressions.RankExpressionCodec;
@@ -108,6 +109,7 @@ public class MorphiaExpressionCodecProvider implements CodecProvider {
         addCodec(new MergeObjectsCodec(datastore));
         addCodec(new MetaExpressionCodec(datastore));
         addCodec(new NRankedResultsExpressionCodec(datastore));
+        addCodec(new PercentileExpressionCodec(datastore));
         addCodec(new PushCodec(datastore));
         addCodec(new RangeExpressionCodec(datastore));
         addCodec(new RankExpressionCodec(datastore));

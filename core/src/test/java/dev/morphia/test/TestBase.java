@@ -136,6 +136,14 @@ public abstract class TestBase extends MorphiaTestSetup {
         assertDocumentEquals("", actual, expected);
     }
 
+    protected void assertDocumentEquals(Object actual, Object expected, String message) {
+        try {
+            assertDocumentEquals("", actual, expected);
+        } catch (AssertionError error) {
+            fail(message);
+        }
+    }
+
     protected void assertLazy(Supplier<String> messageSupplier, Runnable assertion) {
         try {
             assertion.run();

@@ -6,6 +6,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Holds a simple value
+ * 
+ * @hidden
  */
 public class ValueExpression extends Expression implements SingleValuedExpression {
     private final Object object;

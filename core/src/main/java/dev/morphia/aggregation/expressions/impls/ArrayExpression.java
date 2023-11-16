@@ -7,6 +7,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * Base class for the array expressions
  *
+ * @hidden
  * @mongodb.driver.manual reference/operator/aggregation/#array-expression-operators Array Expressions
  */
 @MorphiaInternal

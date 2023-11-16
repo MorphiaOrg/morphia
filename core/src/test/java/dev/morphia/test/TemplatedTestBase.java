@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.lang.NonNull;
@@ -23,6 +24,7 @@ import dev.morphia.query.MorphiaQuery;
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
 import org.bson.json.JsonParseException;
+import org.bson.json.JsonWriterSettings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ import org.testng.annotations.Test;
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
+import static org.bson.json.JsonWriterSettings.builder;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
@@ -153,15 +156,20 @@ public abstract class TemplatedTestBase extends TestBase {
         for (Document stage : pipeline) {
             Document document = Document.parse(stage.toJson());
             Document next = iterator.next();
-            assertDocumentEquals(document, next/*
-                                                * ,
-                                                * "Should generate the same pipeline" +
-                                                * pipeline.stream()
-                                                * .map(d -> d.toJson(builder()
-                                                * .indent(true)
-                                                * .build()))
-                                                * .collect(Collectors.joining("\n", "[\n", "\n]"))
-                                                */);
+            JsonWriterSettings settings = builder()
+                    .indent(true)
+                    .build();
+            assertEquals(
+                    pipeline.stream().map(d -> d.toJson(settings)).collect(Collectors.joining("\n, ", "[\n", "\n]")),
+                    target.stream().map(d -> d.toJson(settings)).collect(Collectors.joining("\n, ", "[\n", "\n]")),
+                    "Should generate the same pipeline");
+            /*
+             * assertDocumentEquals(document, next,
+             * "Should generate the same pipeline" +
+             * pipeline.stream()
+             * .map(d -> d.toJson(settings))
+             * .collect(Collectors.joining("\n, ", "[\n", "\n]")));
+             */
         }
 
         try (var cursor = aggregation.execute(Document.class)) {
