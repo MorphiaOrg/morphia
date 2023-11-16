@@ -56,6 +56,7 @@ public final class MathExpressions {
      * @param second the second expression to use
      * @return the new expression
      * @aggregation.expression $bitAnd
+     * @since 3.0
      */
     public static Expression bitAnd(Expression first, Expression second) {
         return new MathExpression("$bitAnd", List.of(first, second));
@@ -67,6 +68,7 @@ public final class MathExpressions {
      * @param expression the expression to use
      * @return the new expression
      * @aggregation.expression $bitNot
+     * @since 3.0
      */
     public static Expression bitNot(Expression expression) {
         return new MathExpression("$bitNot", expression);
@@ -79,6 +81,7 @@ public final class MathExpressions {
      * @param second the second expression to use
      * @return the new expression
      * @aggregation.expression $bitOr
+     * @since 3.0
      */
     public static Expression bitOr(Expression first, Expression second) {
         return new MathExpression("$bitOr", List.of(first, second));
@@ -91,6 +94,7 @@ public final class MathExpressions {
      * @param second the second expression to use
      * @return the new expression
      * @aggregation.expression $bitXor
+     * @since 3.0
      */
     public static Expression bitXor(Expression first, Expression second) {
         return new MathExpression("$bitXor", List.of(first, second));
@@ -181,6 +185,7 @@ public final class MathExpressions {
      * @param input the input
      * @return the new expression
      * @aggregation.expression $median
+     * @since 3.0
      */
     public static Expression median(Expression input) {
         return new MedianExpression(input);
