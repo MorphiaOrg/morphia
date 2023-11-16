@@ -27,19 +27,18 @@ object GithubProject {
     ): List<Operator> {
 
         if (dryRun) {
-            println("*************************************************************************")
-            println("* This is a dry run. Results are not indicative of the state on GitHub. *")
-            println("*************************************************************************")
+            println("*********************************************************")
+            println("* This is a dry run. No changes will be made on GitHub. *")
+            println("*********************************************************")
         }
         var created = listOf<Operator>()
         if (unimplemented.isNotEmpty()) {
-            val labels: List<GHLabel> = fetch { labelNames.map { github.getLabel(it) } }
+            val labels: List<GHLabel> = labelNames.map { github.getLabel(it) }
 
             unimplemented.forEach {
                 val title = "Implement $type ${it.operator}"
-                val existing = fetch {
+                val existing =
                     issues.filter { it.title == title }.filter { it.labels.containsAll(labels) }
-                }
 
                 if (existing.isEmpty()) {
                     created += it
@@ -56,7 +55,4 @@ object GithubProject {
         }
         return created
     }
-
-    private fun <T> fetch(operation: () -> List<T>): List<T> =
-        if (!dryRun) operation() else listOf()
 }

@@ -2,7 +2,7 @@
   { 
     $project: { 
       result: { 
-        $bitAnd: [ "$a", "$b" ]
+        $bitXor: ["$a", "$b"]
       }
     }
   }

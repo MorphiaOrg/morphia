@@ -35,8 +35,7 @@ class RstAuditorTest {
 
     @Test
     fun aggregationPipelineStages() {
-        val results = RstAuditor("@aggregation.stage").aggregations(listOf("\$collStats"))
-        validate(results)
+        validate(RstAuditor("@aggregation.stage").aggregations(listOf("\$collStats")))
     }
 
     private fun validate(results: Results) {

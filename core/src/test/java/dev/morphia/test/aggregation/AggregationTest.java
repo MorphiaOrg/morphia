@@ -66,6 +66,10 @@ public class AggregationTest extends TemplatedTestBase {
         var operatorName = Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
         var resourceFolder = new File("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
 
+        if (!resourceFolder.exists()) {
+            throw new IllegalStateException("%s does not exist inside %s".formatted(resourceFolder,
+                    new File(".").getAbsolutePath()));
+        }
         List<File> list = Arrays.stream(resourceFolder.list())
                 .map(s -> new File(resourceFolder, s))
                 .toList();

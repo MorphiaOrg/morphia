@@ -60,6 +60,41 @@ public final class MathExpressions {
     }
 
     /**
+     * Returns the result of a bitwise not operation on a single int or long value.
+     *
+     * @param expression the expression to use
+     * @return the new expression
+     * @aggregation.expression $bitNot
+     */
+    public static Expression bitNot(Expression expression) {
+        return new MathExpression("$bitNot", expression);
+    }
+
+    /**
+     * Returns the result of a bitwise or operation on an array of int or long values.
+     *
+     * @param first  the first expression to use
+     * @param second the second expression to use
+     * @return the new expression
+     * @aggregation.expression $bitOr
+     */
+    public static Expression bitOr(Expression first, Expression second) {
+        return new MathExpression("$bitOr", List.of(first, second));
+    }
+
+    /**
+     * Returns the result of a bitwise xor operation on an array of int xor long values.
+     *
+     * @param first  the first expression to use
+     * @param second the second expression to use
+     * @return the new expression
+     * @aggregation.expression $bitXor
+     */
+    public static Expression bitXor(Expression first, Expression second) {
+        return new MathExpression("$bitXor", List.of(first, second));
+    }
+
+    /**
      * Returns the smallest integer greater than or equal to the specified number.
      *
      * @param value the value

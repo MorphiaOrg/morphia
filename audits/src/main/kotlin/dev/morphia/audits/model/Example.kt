@@ -36,11 +36,14 @@ class Example(
 
     fun output(folder: File) {
         this.folder = folder
-        writeInputData(folder)
-        writePipeline(folder)
-        writeExpectedData(folder)
-        if (this.folder.exists()) {
-            File(folder, "name").writeText(name)
+        val lock = File(folder, "lock")
+        if (!lock.exists()) {
+            writeInputData(folder)
+            writePipeline(folder)
+            writeExpectedData(folder)
+            if (this.folder.exists()) {
+                File(folder, "name").writeText(name)
+            }
         }
     }
 
