@@ -49,6 +49,8 @@ object GithubProject {
                             .body(it.url)
                             .also { builder -> labels.forEach { builder.label(it.name) } }
                             .create()
+                    } else {
+                        println("Missing ${it.name} operator.")
                     }
                 }
             }
