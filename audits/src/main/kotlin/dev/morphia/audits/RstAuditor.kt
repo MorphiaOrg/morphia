@@ -12,16 +12,13 @@ class RstAuditor(val taglet: String) {
         val auditRoot = File("target/mongodb-docs")
         val coreTestRoot = File("../core/src/test/resources")
         val aggRoot = File(auditRoot, "source/reference/operator/aggregation")
+        val includesRoot = File(auditRoot, "source")
     }
 
     val methods = findMethods(taglet)
 
     fun aggregations(exclusions: List<String> = listOf()): Results {
-        val type =
-            when (taglet) {
-                "@aggregation.stage" -> STAGE
-                else -> EXPRESSION
-            }
+        val type = if (taglet == "@aggregation.stage") STAGE else EXPRESSION
         val list =
             aggRoot
                 .walk()

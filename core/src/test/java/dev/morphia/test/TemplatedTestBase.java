@@ -148,31 +148,36 @@ public abstract class TemplatedTestBase extends TestBase {
         String pipelineName = format("%s/%s/pipeline.json", prefix(), pipelineTemplate);
         List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
 
-        InputStream stream = getClass().getResourceAsStream(pipelineName);
-        if (stream == null) {
-            fail(format("missing data file: src/test/resources/%s/%s",
-                    getClass().getPackageName().replace('.', '/'),
-                    pipelineName));
-        }
-
-        List<Document> target = parsePipeline(stream);
+        List<Document> target = parsePipeline(loadPipeline(pipelineName));
         var iterator = target.iterator();
         for (Document stage : pipeline) {
-            assertDocumentEquals(Document.parse(stage.toJson()), iterator.next()/*
-                                                                                 * ,
-                                                                                 * "Should generate the same pipeline" +
-                                                                                 * pipeline.stream()
-                                                                                 * .map(d -> d.toJson(builder()
-                                                                                 * .indent(true)
-                                                                                 * .build()))
-                                                                                 * .collect(Collectors.joining("\n", "[\n", "\n]"))
-                                                                                 */);
+            Document document = Document.parse(stage.toJson());
+            Document next = iterator.next();
+            assertDocumentEquals(document, next/*
+                                                * ,
+                                                * "Should generate the same pipeline" +
+                                                * pipeline.stream()
+                                                * .map(d -> d.toJson(builder()
+                                                * .indent(true)
+                                                * .build()))
+                                                * .collect(Collectors.joining("\n", "[\n", "\n]"))
+                                                */);
         }
 
         try (var cursor = aggregation.execute(Document.class)) {
             return cursor.toList();
         }
 
+    }
+
+    @NotNull
+    private InputStream loadPipeline(String pipelineName) {
+        InputStream stream = getClass().getResourceAsStream(pipelineName);
+        if (stream == null) {
+            fail(format("missing data file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
+                    pipelineName));
+        }
+        return stream;
     }
 
     private List<Document> parsePipeline(InputStream stream) {

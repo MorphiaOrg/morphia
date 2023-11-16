@@ -7,7 +7,9 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.MathExpression;
+import dev.morphia.aggregation.expressions.impls.MedianExpression;
 
+import static dev.morphia.aggregation.expressions.Expressions.value;
 import static java.util.Arrays.asList;
 
 /**
@@ -171,6 +173,17 @@ public final class MathExpressions {
      */
     public static Expression log10(Expression value) {
         return new MathExpression("$log10", value);
+    }
+
+    /**
+     * Returns an approximation of the median, the 50th percentile, as a scalar value.
+     *
+     * @param input the input
+     * @return the new expression
+     * @aggregation.expression $median
+     */
+    public static Expression median(Expression input) {
+        return new MedianExpression(input);
     }
 
     /**

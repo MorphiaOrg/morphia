@@ -59,7 +59,12 @@ class Operator(var name: String) {
             var line = ""
             while (data.isNotEmpty()) {
                 line = data.removeFirst().trim()
-                if (line.trim().startsWith(".. code-block:: ")) {
+                if (line.trim().startsWith(".. include:: ")) {
+                    val include = File(RstAuditor.includesRoot, line.substringAfter(":: "))
+                    if (include.exists()) {
+                        data.addAll(0, include.readLines())
+                    }
+                } else if (line.trim().startsWith(".. code-block:: ")) {
                     current += readBlock(data)
                 }
             }
