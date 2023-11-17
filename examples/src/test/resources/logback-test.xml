@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <root level="warn"/>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{40} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="warn"/>
-
-    <logger name="ch.qos" level="error">
+    <logger name="ch.qos" level="error" additivity="true">
         <appender-ref ref="STDOUT" />
     </logger>
 
