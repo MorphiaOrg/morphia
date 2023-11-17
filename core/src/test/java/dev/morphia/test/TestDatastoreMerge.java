@@ -1,29 +1,22 @@
-/*
-  Copyright (C) 2010 Olafur Gauti Gudmundsson
-  <p/>
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may
-  obtain a copy of the License at
-  <p/>
-  http://www.apache.org/licenses/LICENSE-2.0
-  <p/>
-  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
-  and limitations under the License.
- */
-
 package dev.morphia.test;
 
 import dev.morphia.Datastore;
 import dev.morphia.InsertOneOptions;
+import dev.morphia.MorphiaDatastore;
+import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.Version;
+import dev.morphia.query.filters.Filters;
 
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.updates.UpdateOperators.set;
+import static org.testng.Assert.assertNotNull;
 
 public class TestDatastoreMerge extends TestBase {
 
@@ -36,7 +29,7 @@ public class TestDatastoreMerge extends TestBase {
         ds.save(test1);
 
         Test2 test2 = ds.find(Test2.class).first();
-        Assert.assertNotNull(test2.id);
+        assertNotNull(test2.id);
         test2.blarg = "barfoo";
         long version = test2.version;
         ds.merge(test2);
@@ -44,7 +37,7 @@ public class TestDatastoreMerge extends TestBase {
         Assert.assertEquals(version + 1, test2.version);
         test1 = ds.find(Test1.class).filter(eq("_id", test1.id)).first();
 
-        Assert.assertNotNull(test1.name);
+        assertNotNull(test1.name);
     }
 
     @Test
@@ -88,6 +81,43 @@ public class TestDatastoreMerge extends TestBase {
         Assert.assertNull(merge.foo);
         Assert.assertEquals(te2.id, merge.id);
         Assert.assertEquals(te2.position, merge.position);
+    }
+
+    @Test
+    public void testMergeWithUnsetAndLoadOnly() {
+        // Saves base entity with a name:
+        LoadOnlyEntity entity = new LoadOnlyEntity();
+        entity.name = "TestA";
+        MorphiaDatastore ds = getDs();
+        ds.save(entity);
+
+        // Updates the "load only" value through an update operation:
+        ds.find(LoadOnlyEntity.class)
+                .filter(Filters.eq("_id", entity.id))
+                .update(new UpdateOptions(),
+                        set("loadOnlyValue", "My Value"));
+        LoadOnlyEntity updatedEntity1 = ds.find(LoadOnlyEntity.class)
+                .filter(Filters.eq("_id", entity.id))
+                .first();
+        assertNotNull(updatedEntity1.loadOnlyValue); // PASSES
+
+        // Updates the name value using the datastore's "merge()" method:
+        entity.name = "TestB";
+        ds.merge(entity, new InsertOneOptions().unsetMissing(true));
+        LoadOnlyEntity updatedEntity2 = ds.find(LoadOnlyEntity.class)
+                .filter(Filters.eq("_id", entity.id))
+                .first();
+        assertNotNull(updatedEntity2.loadOnlyValue); // FAILS
+    }
+
+    @Entity
+    private static class LoadOnlyEntity {
+        @Id
+        private ObjectId id;
+
+        private String name;
+        @LoadOnly
+        private String loadOnlyValue;
     }
 
     @Entity
