@@ -2,6 +2,7 @@ package dev.morphia.mapping;
 
 import java.util.List;
 
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
@@ -24,10 +25,10 @@ public interface EntityModelImporter {
     /**
      * Returns the codec provider responsible for creating the codecs for the {@link EntityModel}s returned by this importer.
      *
-     * @param mapper The datastore to use
+     * @param datastore The datastore to use
      * @return the provider
      */
-    MorphiaCodecProvider getCodecProvider(Mapper mapper);
+    MorphiaCodecProvider getCodecProvider(MorphiaDatastore datastore);
 
     /**
      * Returns the models to be introduced by this importer.

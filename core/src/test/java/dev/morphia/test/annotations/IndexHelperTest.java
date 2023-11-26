@@ -54,6 +54,11 @@ import static org.testng.Assert.fail;
 public class IndexHelperTest extends TestBase {
     private IndexHelper indexHelper;
 
+    @BeforeMethod
+    public void clean() {
+        getDatabase().drop();
+    }
+
     @Test
     public void calculateBadKeys() {
         EntityModel model = getMapper().getEntityModel(IndexedClass.class);
@@ -138,37 +143,42 @@ public class IndexHelperTest extends TestBase {
 
     @Test
     public void createIndex() {
-        String collectionName = getDs().getCollection(IndexedClass.class).getNamespace().getCollectionName();
-        MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
-        Mapper mapper = getMapper();
+        List<String> packages = getMapper().getConfig().packages();
+        packages.add(IndexedClass.class.getPackageName());
+        withConfig(buildConfig().packages(packages), () -> {
+            String collectionName = getDs().getCollection(IndexedClass.class).getNamespace().getCollectionName();
+            MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
+            Mapper mapper = getMapper();
+            collection.drop();
 
-        getIndexHelper().createIndex(collection, mapper.getEntityModel(IndexedClass.class));
-        List<Document> indexInfo = getIndexInfo(IndexedClass.class);
-        List<String> names = new ArrayList<>(asList("latitude_1", "searchme", "indexName_1"));
-        for (Document document : indexInfo) {
-            String name = document.get("name").toString();
-            if (name.equals("latitude_1")) {
-                names.remove(name);
-                assertEquals(document.get("key"), parse("{ 'latitude' : 1 }"));
-            } else if (name.equals("searchme")) {
-                names.remove(name);
-                assertEquals(document.get("weights"), parse("{ 'text' : 10 }"));
-            } else if (name.equals("indexName_1")) {
-                names.remove(name);
-                assertEquals(document.get("key"), parse("{'indexName': 1 }"));
-            } else {
-                if (!"_id_".equals(document.get("name"))) {
-                    throw new MappingException("Found an index I wasn't expecting:  " + document);
+            getIndexHelper().createIndex(collection, mapper.getEntityModel(IndexedClass.class));
+            List<Document> indexInfo = getIndexInfo(IndexedClass.class);
+            List<String> names = new ArrayList<>(asList("latitude_1", "searchme", "indexName_1"));
+            for (Document document : indexInfo) {
+                String name = document.get("name").toString();
+                if (name.equals("latitude_1")) {
+                    names.remove(name);
+                    assertEquals(document.get("key"), parse("{ 'latitude' : 1 }"));
+                } else if (name.equals("searchme")) {
+                    names.remove(name);
+                    assertEquals(document.get("weights"), parse("{ 'text' : 10 }"));
+                } else if (name.equals("indexName_1")) {
+                    names.remove(name);
+                    assertEquals(document.get("key"), parse("{'indexName': 1 }"));
+                } else {
+                    if (!"_id_".equals(document.get("name"))) {
+                        throw new MappingException("Found an index I wasn't expecting:  " + document);
+                    }
                 }
             }
-        }
-        assertTrue(names.isEmpty(), "Should be empty: " + names);
+            assertTrue(names.isEmpty(), "Should be empty: " + names);
 
-        collection = getDatabase().getCollection(getDs().getCollection(AbstractParent.class).getNamespace().getCollectionName());
-        getIndexHelper().createIndex(collection, mapper.getEntityModel(AbstractParent.class));
-        indexInfo = getIndexInfo(AbstractParent.class);
-        assertTrue(indexInfo.isEmpty(), "Shouldn't find any indexes: " + indexInfo);
+            collection = getDatabase().getCollection(getDs().getCollection(AbstractParent.class).getNamespace().getCollectionName());
+            getIndexHelper().createIndex(collection, mapper.getEntityModel(AbstractParent.class));
+            indexInfo = getIndexInfo(AbstractParent.class);
+            assertTrue(indexInfo.isEmpty(), "Shouldn't find any indexes: " + indexInfo);
 
+        });
     }
 
     @Test

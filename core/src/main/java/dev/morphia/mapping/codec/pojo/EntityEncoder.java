@@ -95,7 +95,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     }
 
     protected void encodeDiscriminator(BsonWriter writer, EntityModel model) {
-        writer.writeString(model.getDiscriminatorKey(), model.getDiscriminator());
+        writer.writeString(model.discriminatorKey(), model.discriminator());
     }
 
     protected void encodeIdProperty(BsonWriter writer, Object instance, EncoderContext encoderContext, @Nullable PropertyModel idModel) {

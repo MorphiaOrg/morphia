@@ -315,6 +315,7 @@
         <module>util</module>
         <module>core</module>
         <module>kotlin</module>
+        <module>critter</module>
         <module>validation</module>
         <module>examples</module>
     </modules>

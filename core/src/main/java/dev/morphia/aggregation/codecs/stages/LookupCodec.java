@@ -31,7 +31,7 @@ public class LookupCodec extends StageCodec<Lookup> {
             if (value.getFrom() != null) {
                 writer.writeString("from", value.getFrom());
             } else if (value.getFromType() != null) {
-                writer.writeString("from", getDatastore().getMapper().getEntityModel(value.getFromType()).getCollectionName());
+                writer.writeString("from", getDatastore().getMapper().getEntityModel(value.getFromType()).collectionName());
             }
 
             if (value.getLocalField() != null) {

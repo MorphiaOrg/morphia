@@ -62,7 +62,7 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
             collectionName = dbRef.getCollectionName();
             id = dbRef.getId();
         } else {
-            collectionName = valueType.getCollectionName();
+            collectionName = valueType.collectionName();
             id = o;
         }
 

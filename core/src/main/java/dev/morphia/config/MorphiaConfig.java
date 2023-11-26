@@ -10,7 +10,6 @@ import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
-import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.query.QueryFactory;
@@ -62,7 +61,8 @@ public interface MorphiaConfig {
     static MorphiaConfig load(String location) {
         List<ConfigSource> configSources = classPathSources(location, currentThread().getContextClassLoader());
         if (configSources.isEmpty()) {
-            throw new MappingException(Sofia.missingConfigFile(location));
+            Sofia.logMissingConfigFile(location);
+            return new ManualMorphiaConfig();
         }
         return new SmallRyeConfigBuilder()
                 .addDefaultInterceptors()

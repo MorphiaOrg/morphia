@@ -352,7 +352,7 @@ public class MorphiaDatastore implements Datastore {
     @Override
     public <T> MongoCollection<T> getCollection(Class<T> type) {
         EntityModel entityModel = mapper.getEntityModel(type);
-        String collectionName = entityModel.getCollectionName();
+        String collectionName = entityModel.collectionName();
 
         MongoCollection<T> collection = getDatabase().getCollection(collectionName, type)
                 .withCodecRegistry(codecRegistry);
@@ -417,7 +417,7 @@ public class MorphiaDatastore implements Datastore {
                 CappedAt cappedAt = entityAnnotation.cap();
                 if (cappedAt.value() > 0 || cappedAt.count() > 0) {
                     final CappedAt cap = entityAnnotation.cap();
-                    final String collName = model.getCollectionName();
+                    final String collName = model.collectionName();
                     final CreateCollectionOptions dbCapOpts = new CreateCollectionOptions()
                             .capped(true);
                     if (cap.value() > 0) {
@@ -497,7 +497,7 @@ public class MorphiaDatastore implements Datastore {
 
         entities.forEach(e -> {
             if (!shardCollection(e).containsKey("collectionsharded")) {
-                throw new MappingException(Sofia.cannotShardCollection(getDatabase().getName(), e.getCollectionName()));
+                throw new MappingException(Sofia.cannotShardCollection(getDatabase().getName(), e.collectionName()));
             }
         });
     }
@@ -510,13 +510,13 @@ public class MorphiaDatastore implements Datastore {
     protected Document shardCollection(EntityModel model) {
         ShardKeys shardKeys = model.getAnnotation(ShardKeys.class);
         if (shardKeys != null) {
-            final Document collstats = database.runCommand(new Document("collstats", model.getCollectionName()));
+            final Document collstats = database.runCommand(new Document("collstats", model.collectionName()));
             if (collstats.getBoolean("sharded", false)) {
                 LOG.debug("MongoCollection already exists and is sharded already; doing nothing. " + collstats);
             } else {
                 ShardOptions options = shardKeys.options();
 
-                Document command = new Document("shardCollection", format("%s.%s", getDatabase().getName(), model.getCollectionName()))
+                Document command = new Document("shardCollection", format("%s.%s", getDatabase().getName(), model.collectionName()))
                         .append("unique", options.unique())
                         .append("presplitHashedZones", options.presplitHashedZones());
                 var hashed = stream(shardKeys.value()).anyMatch(k -> k.type() == ShardKeyType.HASHED);
@@ -681,7 +681,7 @@ public class MorphiaDatastore implements Datastore {
      */
     @MorphiaInternal
     public void enableValidation(EntityModel model, Validation validation) {
-        String collectionName = model.getCollectionName();
+        String collectionName = model.collectionName();
         try {
             getDatabase().runCommand(new Document("collMod", collectionName)
                     .append("validator", parse(validation.value()))
@@ -753,7 +753,7 @@ public class MorphiaDatastore implements Datastore {
      */
     private void enableDocumentValidation(EntityModel model) {
         Validation validation = model.getAnnotation(Validation.class);
-        String collectionName = model.getCollectionName();
+        String collectionName = model.collectionName();
         if (validation != null) {
             try {
                 getDatabase().runCommand(new Document("collMod", collectionName)
@@ -816,7 +816,7 @@ public class MorphiaDatastore implements Datastore {
                 mapper.register(model);
             }
 
-            morphiaCodecProviders.add(importer.getCodecProvider(mapper));
+            morphiaCodecProviders.add(importer.getCodecProvider(this));
         }
     }
 

@@ -235,7 +235,7 @@ public final class IndexHelper {
         }
     }
 
-    private List<Index> collectFieldIndexes(EntityModel entityModel) {
+    private List<Index> findFieldIndexes(EntityModel entityModel) {
         List<Index> list = entityModel.getProperties(Indexed.class).stream()
                 .map(field -> convert(field.getAnnotation(Indexed.class), field.getMappedName()))
                 .collect(Collectors.toList());
@@ -252,13 +252,13 @@ public final class IndexHelper {
             return emptyList();
         }
 
-        List<Index> indexes = collectTopLevelIndexes(entityModel);
-        indexes.addAll(collectFieldIndexes(entityModel));
+        List<Index> indexes = findClassIndexes(entityModel);
+        indexes.addAll(findFieldIndexes(entityModel));
 
         return indexes;
     }
 
-    private List<Index> collectTopLevelIndexes(EntityModel entityModel) {
+    private List<Index> findClassIndexes(EntityModel entityModel) {
         List<Index> list = new ArrayList<>();
         final Indexes indexes = entityModel.getAnnotation(Indexes.class);
         if (indexes != null) {
@@ -277,7 +277,7 @@ public final class IndexHelper {
         }
         EntityModel superClass = entityModel.getSuperClass();
         if (superClass != null) {
-            list.addAll(collectTopLevelIndexes(superClass));
+            list.addAll(findClassIndexes(superClass));
         }
 
         return list;

@@ -49,7 +49,7 @@ public class EntityDecoder<T> implements Decoder<T> {
             decodeProperties(reader, decoderContext, instanceCreator, classModel);
             return (T) instanceCreator.getInstance();
         } else {
-            entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.getDiscriminatorKey(),
+            entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.discriminatorKey(),
                     morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
                     .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
         }
@@ -84,7 +84,7 @@ public class EntityDecoder<T> implements Decoder<T> {
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String name = reader.readName();
-            if (classModel.useDiscriminator() && classModel.getDiscriminatorKey().equals(name)) {
+            if (classModel.useDiscriminator() && classModel.discriminatorKey().equals(name)) {
                 reader.readString();
             } else {
                 decodeModel(reader, decoderContext, instanceCreator, classModel.getProperty(name));

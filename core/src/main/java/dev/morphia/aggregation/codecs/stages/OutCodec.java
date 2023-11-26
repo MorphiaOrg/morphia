@@ -24,7 +24,7 @@ public class OutCodec extends StageCodec<Out> {
         Class<?> type = value.type();
         String collectionName;
         if (type != null) {
-            collectionName = getDatastore().getMapper().getEntityModel(type).getCollectionName();
+            collectionName = getDatastore().getMapper().getEntityModel(type).collectionName();
         } else {
             collectionName = value.collection();
         }

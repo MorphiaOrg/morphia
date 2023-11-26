@@ -206,7 +206,7 @@ public abstract class TestBase extends MorphiaTestSetup {
     }
 
     protected MongoCollection<Document> getDocumentCollection(Class<?> type) {
-        return getDatabase().getCollection(getMapper().getEntityModel(type).getCollectionName());
+        return getDatabase().getCollection(getMapper().getEntityModel(type).collectionName());
     }
 
     protected List<Document> getIndexInfo(Class<?> clazz) {
@@ -215,7 +215,7 @@ public abstract class TestBase extends MorphiaTestSetup {
 
     @NonNull
     protected Document getOptions(Class<?> type) {
-        String collection = getMapper().getEntityModel(type).getCollectionName();
+        String collection = getMapper().getEntityModel(type).collectionName();
         Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
                 .append("filter",
                         new Document("name", collection)));

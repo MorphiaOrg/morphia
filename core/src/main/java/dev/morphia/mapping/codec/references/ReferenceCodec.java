@@ -116,8 +116,8 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         }
         type = value.getClass();
 
-        String valueCollectionName = mapper.getEntityModel(type).getCollectionName();
-        String fieldCollectionName = model.getCollectionName();
+        String valueCollectionName = mapper.getEntityModel(type).collectionName();
+        String fieldCollectionName = model.collectionName();
 
         Reference annotation = model.getAnnotation(Reference.class);
         if (annotation != null && !annotation.idOnly()
@@ -291,7 +291,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             throw new QueryException("No ID value found on referenced entity.  Save referenced entities before defining references to"
                     + " them.");
         }
-        valueCollectionName = mapper.getEntityModel(value.getClass()).getCollectionName();
+        valueCollectionName = mapper.getEntityModel(value.getClass()).collectionName();
 
         if (!annotation.idOnly()) {
             idValue = new DBRef(valueCollectionName, idValue);

@@ -38,6 +38,8 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 
+import static java.util.Arrays.asList;
+
 /**
  * @morphia.internal
  * @hidden
@@ -55,7 +57,7 @@ public class Mapper {
     @MorphiaInternal
     public static final String IGNORED_FIELDNAME = ".";
     @MorphiaInternal
-    private static final List<Class<? extends Annotation>> MAPPING_ANNOTATIONS = List.of(Entity.class, ExternalEntity.class);
+    public static final List<Class<? extends Annotation>> MAPPING_ANNOTATIONS = List.of(Entity.class, ExternalEntity.class);
     @MorphiaInternal
     public static final List<Class<? extends Annotation>> LIFECYCLE_ANNOTATIONS = List.of(PrePersist.class,
             PreLoad.class,
@@ -106,22 +108,24 @@ public class Mapper {
     private EntityModel clone(@Nullable EntityModel original) {
         if (original == null) {
             return null;
-        } else if (isMapped(original.getType())) {
-            return getEntityModel(original.getType());
+            //        } else if (isMapped(original.getType())) {
+            //            return getEntityModel(original.getType());
         }
-        EntityModel superClone = clone(original.superClass);
-        if (superClone == null || superClone.getSubtype(original.getType()) == null) {
-            EntityModel copy = documentNewModel(new EntityModel(original));
+        //        EntityModel superClone = clone(original.superClass);
+        //        if (superClone == null || superClone.getSubtype(original.getType()) == null) {
+        EntityModel copy = register(new EntityModel(original), false);
 
-            Set<EntityModel> subtypes = original.subtypes.stream().map(subtype -> {
-                EntityModel clonedSubtype = clone(subtype);
-                clonedSubtype.superClass = copy;
-                return clonedSubtype;
-            }).collect(Collectors.toSet());
-            copy.subtypes.addAll(subtypes);
-        }
+        /*
+         * Set<EntityModel> subtypes = original.subtypes.stream().map(subtype -> {
+         * EntityModel clonedSubtype = clone(subtype);
+         * clonedSubtype.superClass = copy;
+         * return clonedSubtype;
+         * }).collect(Collectors.toSet());
+         * copy.subtypes.addAll(subtypes);
+         */
+        //        }
 
-        return getEntityModel(original.getType());
+        return copy;
     }
 
     /**
@@ -353,7 +357,7 @@ public class Mapper {
      * @morphia.internal
      */
     @MorphiaInternal
-    public boolean hasInterceptors() {
+    public boolean hasListeners() {
         return !listeners.isEmpty();
     }
 
@@ -489,15 +493,15 @@ public class Mapper {
         Entity annotation = model.getEntityAnnotation();
         if (annotation != null && annotation.useDiscriminator()
                 && !query.containsKey("_id")
-                && !query.containsKey(model.getDiscriminatorKey())) {
+                && !query.containsKey(model.discriminatorKey())) {
             List<String> values = new ArrayList<>();
-            values.add(model.getDiscriminator());
+            values.add(model.discriminator());
             if (config.enablePolymorphicQueries()) {
                 for (EntityModel subtype : model.getSubtypes()) {
-                    values.add(subtype.getDiscriminator());
+                    values.add(subtype.discriminator());
                 }
             }
-            query.put(model.getDiscriminatorKey(),
+            query.put(model.discriminatorKey(),
                     new Document("$in", values));
         }
     }
@@ -511,21 +515,40 @@ public class Mapper {
      */
     @MorphiaInternal
     public EntityModel register(EntityModel entityModel) {
-        documentNewModel(entityModel);
-        if (!entityModel.isInterface()) {
-            new MappingValidator()
-                    .validate(this, entityModel);
-
-        }
-        return entityModel;
+        return register(entityModel, true);
     }
 
-    private EntityModel documentNewModel(EntityModel entityModel) {
-        discriminatorLookup.addModel(entityModel);
-        mappedEntities.put(entityModel.getType().getName(), entityModel);
-        mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                .add(entityModel);
-        return entityModel;
+    @MorphiaInternal
+    private EntityModel register(EntityModel model, boolean validate) {
+        var existing = mappedEntities.get(model.getType().getName());
+        if (existing != null) {
+            return existing;
+        }
+        mappedEntities.put(model.getType().getName(), model);
+        if (validate && !model.isInterface()) {
+            new MappingValidator()
+                    .validate(this, model);
+        }
+
+        discriminatorLookup.addModel(model);
+        mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
+                .add(model);
+
+        mappedEntities.values().forEach(mapped -> {
+            if (isParent(mapped, model)) {
+                mapped.addSubtype(model);
+            } else if (isParent(model, mapped)) {
+                model.addSubtype(mapped);
+            }
+        });
+        return model;
+    }
+
+    private static boolean isParent(EntityModel parent, EntityModel child) {
+        Class<?> parentType = parent.getType();
+        return parentType.equals(child.getType().getSuperclass())
+                || parentType.isInterface()
+                        && asList(child.getType().getInterfaces()).contains(parentType);
     }
 
     private List<Class> getClasses(ClassLoader loader, String packageName)

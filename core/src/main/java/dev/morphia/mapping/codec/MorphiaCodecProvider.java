@@ -66,10 +66,10 @@ public class MorphiaCodecProvider implements CodecProvider {
         if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
             EntityModel model = mapper.getEntityModel(type);
             codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry);
-            if (model.hasLifecycle(PostPersist.class) || model.hasLifecycle(PrePersist.class) || mapper.hasInterceptors()) {
+            if (model.hasLifecycle(PostPersist.class) || model.hasLifecycle(PrePersist.class) || mapper.hasListeners()) {
                 codec.setEncoder(new LifecycleEncoder(codec));
             }
-            if (model.hasLifecycle(PreLoad.class) || model.hasLifecycle(PostLoad.class) || mapper.hasInterceptors()) {
+            if (model.hasLifecycle(PreLoad.class) || model.hasLifecycle(PostLoad.class) || mapper.hasListeners()) {
                 codec.setDecoder(new LifecycleDecoder(codec));
             }
             codecs.put(type, codec);
@@ -110,6 +110,18 @@ public class MorphiaCodecProvider implements CodecProvider {
                 };
             }
         };
+    }
+
+    public Map<Class<?>, Codec<?>> codecs() {
+        return codecs;
+    }
+
+    public MorphiaDatastore datastore() {
+        return datastore;
+    }
+
+    public List<PropertyCodecProvider> propertyCodecProviders() {
+        return propertyCodecProviders;
     }
 
     protected Mapper getMapper() {

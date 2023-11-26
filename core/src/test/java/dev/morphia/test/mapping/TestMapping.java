@@ -123,8 +123,8 @@ public class TestMapping extends TestBase {
 
     @Test
     public void childMapping() {
-        assertEquals(getMapper().getEntityModel(User.class).getCollectionName(), "users");
-        assertEquals(getMapper().getEntityModel(BannedUser.class).getCollectionName(), "banned");
+        assertEquals(getMapper().getEntityModel(User.class).collectionName(), "users");
+        assertEquals(getMapper().getEntityModel(BannedUser.class).collectionName(), "banned");
     }
 
     @Test
@@ -132,16 +132,16 @@ public class TestMapping extends TestBase {
         withConfig(buildConfig()
                 .packages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
                 .collectionNaming(NamingStrategy.lowerCase()), () -> {
-                    assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).getCollectionName(),
+                    assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).collectionName(),
                             "containsmapwithembeddedinterface");
-                    assertEquals(getMapper().getEntityModel(ContainsIntegerList.class).getCollectionName(), "cil");
+                    assertEquals(getMapper().getEntityModel(ContainsIntegerList.class).collectionName(), "cil");
                 });
         withConfig(buildConfig()
                 .packages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
                 .collectionNaming(NamingStrategy.kebabCase()), () -> {
-                    assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).getCollectionName(),
+                    assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).collectionName(),
                             "contains-map-with-embedded-interface");
-                    assertEquals(getMapper().getEntityModel(ContainsIntegerList.class).getCollectionName(), "cil");
+                    assertEquals(getMapper().getEntityModel(ContainsIntegerList.class).collectionName(), "cil");
                 });
     }
 
@@ -395,9 +395,9 @@ public class TestMapping extends TestBase {
 
         withTestConfig(List.of(ThirdPartyEntityProxy.class, ThirdPartyEmbeddedProxy.class), () -> {
             EntityModel model = getDs().getMapper().getEntityModel(ThirdPartyEntity.class);
-            assertEquals(model.getCollectionName(), "extEnt");
-            assertEquals(model.getDiscriminator(), "ext");
-            assertEquals(model.getDiscriminatorKey(), "_xt");
+            assertEquals(model.collectionName(), "extEnt");
+            assertEquals(model.discriminator(), "ext");
+            assertEquals(model.discriminatorKey(), "_xt");
             Entity annotation = model.getAnnotation(Entity.class);
             assertEquals(annotation.concern(), "JOURNALED");
             assertEquals(annotation.cap().count(), 123);
@@ -426,9 +426,9 @@ public class TestMapping extends TestBase {
                             .findFirst()
                             .orElseThrow(
                                     () -> new MappingException(ThirdPartyEntity.class.getName() + " was not found"));
-                    assertEquals(model.getCollectionName(), "extEnt");
-                    assertEquals(model.getDiscriminator(), "ext");
-                    assertEquals(model.getDiscriminatorKey(), "_xt");
+                    assertEquals(model.collectionName(), "extEnt");
+                    assertEquals(model.discriminator(), "ext");
+                    assertEquals(model.discriminatorKey(), "_xt");
                     Entity annotation = model.getAnnotation(Entity.class);
                     assertEquals(annotation.concern(), "JOURNALED");
                     assertEquals(annotation.cap().count(), 123);

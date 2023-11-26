@@ -40,13 +40,13 @@ import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
-import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.experimental.MorphiaReference;
 
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyAccessor;
+import org.bson.codecs.pojo.PropertySerialization;
 
 import static java.util.Arrays.asList;
 
@@ -66,7 +66,7 @@ public final class PropertyModel {
     private TypeData<?> typeData;
     private String mappedName;
     private PropertyAccessor<? super Object> accessor;
-    private MorphiaPropertySerialization serialization;
+    private PropertySerialization serialization;
     private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
     private final List<String> loadNames = new ArrayList<>();
     private final EntityModel entityModel;
@@ -148,6 +148,11 @@ public final class PropertyModel {
 
     public List<Annotation> getAnnotations() {
         return new ArrayList<>(annotationMap.values());
+    }
+
+    public PropertyModel annotation(Annotation annotation) {
+        annotationMap.put(annotation.annotationType(), annotation);
+        return this;
     }
 
     public PropertyModel annotations(List<Annotation> annotations) {
@@ -398,7 +403,7 @@ public final class PropertyModel {
         return serialization.shouldSerialize(value);
     }
 
-    public PropertyModel serialization(MorphiaPropertySerialization serialization) {
+    public PropertyModel serialization(PropertySerialization serialization) {
         this.serialization = serialization;
         return this;
     }

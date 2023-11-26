@@ -31,7 +31,7 @@ public class GraphLookupCodec extends StageCodec<GraphLookup> {
             if (value.getFrom() != null) {
                 value(writer, "from", value.getFrom());
             } else {
-                writer.writeString("from", getDatastore().getMapper().getEntityModel(value.getFromType()).getCollectionName());
+                writer.writeString("from", getDatastore().getMapper().getEntityModel(value.getFromType()).collectionName());
             }
             encodeIfNotNull(registry, writer, "startWith", value.getStartWith(), encoderContext);
             value(writer, "connectFromField", value.getConnectFromField());

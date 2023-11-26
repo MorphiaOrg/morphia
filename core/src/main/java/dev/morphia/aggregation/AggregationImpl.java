@@ -160,7 +160,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
             MongoCursor<Document> results = collection.aggregate(pipeline).iterator();
             EntityModel entityModel = datastore.getMapper().getEntityModel(this.collection.getDocumentClass());
             cursor = new MappingCursor<>(results, datastore.getCodecRegistry().get(resultType),
-                    entityModel.getDiscriminatorKey());
+                    entityModel.discriminatorKey());
         } else {
             cursor = collection.aggregate(pipeline, resultType).iterator();
         }

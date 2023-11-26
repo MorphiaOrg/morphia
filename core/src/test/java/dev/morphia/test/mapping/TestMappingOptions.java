@@ -202,29 +202,29 @@ public class TestMappingOptions extends TestBase {
         datastore.getMapper().map(EntityDiscriminator.class, EmbeddedDiscriminator.class, HasMap.class);
 
         EntityModel entityModel = datastore.getMapper().getEntityModel(EntityDiscriminator.class);
-        assertEquals(entityModel.getDiscriminatorKey(), "_t");
-        assertEquals(entityModel.getDiscriminator(), "h");
+        assertEquals(entityModel.discriminatorKey(), "_t");
+        assertEquals(entityModel.discriminator(), "h");
 
         entityModel = datastore.getMapper().getEntityModel(EmbeddedDiscriminator.class);
-        assertEquals(entityModel.getDiscriminatorKey(), "_e");
-        assertEquals(entityModel.getDiscriminator(), "b");
+        assertEquals(entityModel.discriminatorKey(), "_e");
+        assertEquals(entityModel.discriminator(), "b");
 
         entityModel = datastore.getMapper().getEntityModel(HasMap.class);
-        assertEquals(entityModel.getDiscriminatorKey(), "_t");
-        assertEquals(entityModel.getDiscriminator(), HasMap.class.getSimpleName().toLowerCase());
+        assertEquals(entityModel.discriminatorKey(), "_t");
+        assertEquals(entityModel.discriminator(), HasMap.class.getSimpleName().toLowerCase());
     }
 
     @Test
     public void lowercaseDefaultCollection() {
         DummyEntity entity = new DummyEntity();
 
-        String collectionName = getMapper().getEntityModel(entity.getClass()).getCollectionName();
+        String collectionName = getMapper().getEntityModel(entity.getClass()).collectionName();
         assertEquals(collectionName, "dummyEntity", "camelCase");
 
         withConfig(buildConfig()
                 .collectionNaming(lowerCase()), () -> {
 
-                    String name = getMapper().getEntityModel(entity.getClass()).getCollectionName();
+                    String name = getMapper().getEntityModel(entity.getClass()).collectionName();
                     assertEquals(name, "dummyentity", "lowercase");
                 });
     }

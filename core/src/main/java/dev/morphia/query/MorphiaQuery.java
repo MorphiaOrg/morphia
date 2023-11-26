@@ -234,7 +234,7 @@ public class MorphiaQuery<T> implements Query<T> {
         final Document queryObject = toDocument();
         if (options.isUpsert()) {
             if (entityModel.useDiscriminator()) {
-                queryObject.put(entityModel.getDiscriminatorKey(), entityModel.getDiscriminator());
+                queryObject.put(entityModel.discriminatorKey(), entityModel.discriminator());
             }
         }
 

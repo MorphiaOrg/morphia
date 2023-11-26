@@ -37,7 +37,7 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         Document document = getMorphiaCodec().getRegistry().get(Document.class).decode(reader, decoderContext);
         EntityModel model = getMorphiaCodec().getEntityModel();
         if (model.useDiscriminator()) {
-            String discriminator = document.getString(model.getDiscriminatorKey());
+            String discriminator = document.getString(model.discriminatorKey());
             if (discriminator != null) {
                 Class<?> discriminatorClass = getMorphiaCodec().getDiscriminatorLookup().lookup(discriminator);
                 // need to load the codec to initialize cachedCodecs in field models

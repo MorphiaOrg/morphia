@@ -8,6 +8,7 @@ import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -79,7 +80,7 @@ public class EntityModel {
 
     private List<PropertyModel> shardKeys;
 
-    private final InstanceCreatorFactory creatorFactory;
+    private InstanceCreatorFactory creatorFactory;
     private boolean discriminatorEnabled;
     private String discriminatorKey;
     private String discriminator;
@@ -92,20 +93,26 @@ public class EntityModel {
     private final List<EntityListener<?>> listeners = new ArrayList<>();
     private final Set<Class<?>> classes = new LinkedHashSet<>();
 
-    public EntityModel(Mapper mapper, Class<?> type) {
+    public EntityModel(Class<?> type) {
         if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
             throw new MappingException(Sofia.noInnerClasses(type.getName()));
         }
         this.type = type;
+    }
+
+    public EntityModel(Mapper mapper, Class<?> type) {
+        this(type);
         creatorFactory = new InstanceCreatorFactoryImpl(this);
         //        this.targetType = type;
 
-        if (type.getSuperclass() != null) {
-            this.superClass = mapper.mapEntity(type.getSuperclass());
-            if (superClass != null) {
-                superClass.addSubtype(this);
-            }
-        }
+        /*
+         * if (type.getSuperclass() != null) {
+         * this.superClass = mapper.mapEntity(type.getSuperclass());
+         * if (superClass != null) {
+         * superClass.addSubtype(this);
+         * }
+         * }
+         */
 
         new MappingUtil(mapper);
 
@@ -229,31 +236,47 @@ public class EntityModel {
      * @return the mapped collection name for the type
      */
     @NonNull
-    public String getCollectionName() {
+    public String collectionName() {
         if (collectionName == null) {
             throw new MappingException(Sofia.noMappedCollection(getType().getName()));
         }
         return collectionName;
     }
 
+    public EntityModel collectionName(String collectionName) {
+        this.collectionName = collectionName;
+        return this;
+    }
+
     /**
      * @return the shard keys
      */
     public List<PropertyModel> getShardKeys() {
+        if (shardKeys == null) {
+            ShardKeys ann = getAnnotation(ShardKeys.class);
+            if (ann != null) {
+                shardKeys = stream(ann.value())
+                        .map(k -> getProperty(k.value()))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            } else {
+                shardKeys = emptyList();
+            }
+        }
         return shardKeys;
     }
 
     /**
      * @return the discriminator
      */
-    public String getDiscriminator() {
+    public String discriminator() {
         return discriminator;
     }
 
     /**
      * @return the discriminator key
      */
-    public String getDiscriminatorKey() {
+    public String discriminatorKey() {
         return discriminatorKey;
     }
 
@@ -335,7 +358,11 @@ public class EntityModel {
      * @return the subtypes
      */
     public Set<EntityModel> getSubtypes() {
-        return subtypes;
+        Set<EntityModel> set = new HashSet<>(subtypes);
+        set.addAll(subtypes.stream()
+                .flatMap(type -> type.getSubtypes().stream())
+                .collect(Collectors.toSet()));
+        return set;
     }
 
     /**
@@ -344,10 +371,6 @@ public class EntityModel {
     @Nullable
     public EntityModel getSuperClass() {
         return superClass;
-    }
-
-    public void setSuperClass(@Nullable EntityModel model) {
-        superClass = model;
     }
 
     /**
@@ -399,7 +422,7 @@ public class EntityModel {
     @Override
     public int hashCode() {
         return Objects.hash(annotations, propertyModelsByName, propertyModelsByMappedName, creatorFactory,
-                discriminatorEnabled, getDiscriminatorKey(), getDiscriminator(), getType(), getCollectionName(), listeners);
+                discriminatorEnabled, discriminatorKey(), discriminator(), getType(), collectionName(), listeners);
     }
 
     @Override
@@ -416,10 +439,10 @@ public class EntityModel {
                 && Objects.equals(propertyModelsByName, that.propertyModelsByName)
                 && Objects.equals(propertyModelsByMappedName, that.propertyModelsByMappedName)
                 && Objects.equals(creatorFactory, that.creatorFactory)
-                && Objects.equals(getDiscriminatorKey(), that.getDiscriminatorKey())
-                && Objects.equals(getDiscriminator(), that.getDiscriminator())
+                && Objects.equals(discriminatorKey(), that.discriminatorKey())
+                && Objects.equals(discriminator(), that.discriminator())
                 && Objects.equals(getType(), that.getType())
-                && Objects.equals(getCollectionName(), that.getCollectionName())
+                && Objects.equals(collectionName(), that.collectionName())
                 && Objects.equals(listeners, that.listeners);
     }
 
@@ -455,11 +478,9 @@ public class EntityModel {
         return discriminatorEnabled;
     }
 
-    public void addSubtype(EntityModel entityModel) {
-        subtypes.add(entityModel);
-        if (superClass != null) {
-            superClass.addSubtype(entityModel);
-        }
+    public void addSubtype(EntityModel subtype) {
+        subtypes.add(subtype);
+        subtype.superClass = this;
     }
 
     @SuppressWarnings("rawtypes")
@@ -520,21 +541,12 @@ public class EntityModel {
         }
 
         private void build() {
-            ShardKeys ann = getAnnotation(ShardKeys.class);
-            if (ann != null) {
-                shardKeys = stream(ann.value())
-                        .map(k -> getProperty(k.value()))
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
-            } else {
-                shardKeys = emptyList();
-            }
 
-            collectionName = getCollectionName();
+            collectionName(getCollectionName());
 
-            if (superClass != null) {
-                superClass.addSubtype(EntityModel.this);
-            }
+            //            if (superClass != null) {
+            //                superClass.addSubtype(EntityModel.this);
+            //            }
 
             final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
             if (entityLisAnn != null) {

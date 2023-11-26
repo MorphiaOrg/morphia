@@ -216,7 +216,7 @@ public class TestDatastore extends TestBase {
 
     @Test
     public void testCollectionNames() {
-        assertEquals(getMapper().getEntityModel(FacebookUser.class).getCollectionName(), "facebook_users");
+        assertEquals(getMapper().getEntityModel(FacebookUser.class).collectionName(), "facebook_users");
     }
 
     @Test

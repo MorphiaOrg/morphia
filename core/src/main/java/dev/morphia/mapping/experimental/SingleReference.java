@@ -110,7 +110,7 @@ public class SingleReference<T> extends MorphiaReference<T> {
             if (entityModel != null && entityModel.getIdProperty() != null) {
                 id = entityModel.getIdProperty().getValue(get());
                 if (!entityModel.equals(fieldClass)) {
-                    id = new DBRef(entityModel.getCollectionName(), id);
+                    id = new DBRef(entityModel.collectionName(), id);
                 }
             }
         }
