@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-tree</artifactId>
-            <version>9.5</version>
+            <version>9.6</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
