@@ -13,8 +13,8 @@
     <packaging>pom</packaging>
 
     <name>morphia</name>
-    <url>https://github.com/morphiaorg/morphia</url>
-    <description>mongodb object-document mapper in Java based on https://github.com/mongodb/mongo-java-driver</description>
+    <url>https://github.com/MorphiaOrg/morphia</url>
+    <description>MongoDB object-document mapper in Java based on https://github.com/mongodb/mongo-java-driver</description>
 
     <scm>
         <connection>scm:git:git@github.com:MorphiaOrg/morphia.git</connection>

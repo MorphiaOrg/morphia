@@ -2,6 +2,7 @@ package dev.morphia.test;
 
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
@@ -11,6 +12,7 @@ import java.util.Properties;
 import java.util.TreeMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SequenceWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.github.zafarkhaja.semver.Version;
 
@@ -22,48 +24,64 @@ import org.testng.annotations.Test;
 
 import static java.lang.String.format;
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BuildConfigTest {
-    final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+
+    private static final String DOCS_ANTORA_YML = "../docs/antora.yml";
+
+    private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+
+    private final Map antora;
+    private final Map gitInfo;
+    private final Model model;
+
+    public BuildConfigTest() throws IOException, XmlPullParserException {
+        antora = antora();
+        gitInfo = gitProperties();
+        model = pom();
+    }
 
     @Test
-    public void testDocsConfig() throws IOException, XmlPullParserException {
-        Version pomVersion = pomVersion();
+    public void testDocsConfig() throws IOException {
+        Version pomVersion = Version.valueOf(model.getVersion());
+        String url = model.getUrl();
 
-        Map map = antora();
-        Map gitInfo = gitProperties();
-
-        String version = map.get("version").toString();
         boolean master = "master".equals(gitInfo.get("git.branch"));
+        var updated = new LinkedHashMap<String, Object>();
+        copy(updated, antora, "name");
+        copy(updated, antora, "title");
+        updated.put("version", format("%s.%s", pomVersion.getMajorVersion(), pomVersion.getMinorVersion()));
         if (master) {
-            assertEquals(map.get("prerelease"), "-SNAPSHOT");
-        } else {
-            assertNull(map.get("prerelease"));
+            updated.put("prerelease", "-SNAPSHOT");
         }
+        copy(updated, antora, "nav");
+        copy(updated, antora, "asciidoc");
+        Map<String, Object> attributes = walk(antora, of("asciidoc", "attributes"));
+        attributes.put("version", previous(pomVersion).toString());
 
-        assertEquals(version, format("%s.%s", pomVersion.getMajorVersion(), pomVersion.getMinorVersion()));
-        map = walk(map, of("asciidoc", "attributes"));
-        version = (String) map.get("version");
-        var srcRef = (String) map.get("srcRef");
+        String path;
         if (master) {
-            assertEquals(version, pomVersion.toString());
-            assertTrue(srcRef.endsWith("/blob/master"));
+            path = "/blob/master";
         } else {
-            var branch = format("%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
-            Version released = Version.forIntegers(pomVersion.getMajorVersion(), pomVersion.getMinorVersion(),
-                    pomVersion.getPatchVersion() - 1);
-            String format = format("/tree/%s", branch);
-            assertTrue(srcRef.endsWith(format), String.format("Should end with %s but found %s", format, srcRef));
-            assertEquals(version, released.toString());
+            path = format("/tree/%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
         }
+        attributes.put("srcRef", String.format("%s%s", url, path));
+
+        SequenceWriter sw = objectMapper.writer().writeValues(new FileWriter(DOCS_ANTORA_YML));
+        sw.write(updated);
+    }
+
+    private Object previous(Version version) {
+        return Version.forIntegers(version.getMajorVersion(), version.getMinorVersion(), Math.max(version.getPatchVersion() - 1, 0));
+    }
+
+    private void copy(LinkedHashMap<String, Object> updated, Map antora, String key) {
+        updated.put(key, antora.get(key));
     }
 
     @NotNull
-    private static Map gitProperties() throws IOException {
+    private Map gitProperties() throws IOException {
         Map gitInfo;
         try (InputStream inputStream = new FileInputStream("target/git.properties")) {
             var props = new Properties();
@@ -75,7 +93,7 @@ public class BuildConfigTest {
 
     private Map antora() throws IOException {
         Map map;
-        try (InputStream inputStream = new FileInputStream("../docs/antora.yml")) {
+        try (InputStream inputStream = new FileInputStream(DOCS_ANTORA_YML)) {
             map = objectMapper.readValue(inputStream, LinkedHashMap.class);
         }
         return map;
@@ -91,11 +109,7 @@ public class BuildConfigTest {
         return (T) value;
     }
 
-    @NotNull
-    private Version pomVersion() throws IOException, XmlPullParserException {
-        MavenXpp3Reader reader = new MavenXpp3Reader();
-        Model model = reader.read(new FileReader("../pom.xml"));
-
-        return Version.valueOf(model.getVersion());
+    private Model pom() throws IOException, XmlPullParserException {
+        return new MavenXpp3Reader().read(new FileReader("../pom.xml"));
     }
 }
