@@ -1,12 +1,11 @@
-name: morphia
-title: Morphia
-version: '3.0'
-prerelease: -SNAPSHOT
-
+---
+name: "morphia"
+title: "Morphia"
+version: "3.0"
+prerelease: "-SNAPSHOT"
 nav:
-  - modules/ROOT/nav.adoc
-
+- "modules/ROOT/nav.adoc"
 asciidoc:
   attributes:
-    version: 3.0.0-SNAPSHOT
-    srcRef: https://github.com/MorphiaOrg/morphia/blob/master
+    version: "3.0.0-SNAPSHOT"
+    srcRef: "https://github.com/MorphiaOrg/morphia/blob/master"
