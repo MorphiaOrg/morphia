@@ -11,7 +11,7 @@ updates:
       interval: daily
     ignore:
       - dependency-name: "*"
-        update-types: [ "version-update:semver-major" ]
+        update-types: [ "version-update:semver-patch" ]
   - package-ecosystem: maven
     target-branch: 2.3.x
     directory: "/"
@@ -19,7 +19,7 @@ updates:
       interval: daily
     ignore:
       - dependency-name: "*"
-        update-types: [ "version-update:semver-minor" ]
+        update-types: [ "version-update:semver-patch" ]
   - package-ecosystem: maven
     directory: "/audits"
     schedule:
