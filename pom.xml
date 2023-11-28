@@ -241,7 +241,7 @@
             <dependency>
                 <groupId>org.kohsuke</groupId>
                 <artifactId>github-api</artifactId>
-                <version>1.317</version>
+                <version>1.318</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
