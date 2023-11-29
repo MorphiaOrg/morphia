@@ -69,15 +69,16 @@ jobs:
       releasable: ${{ steps.releasable.outputs.releasable }}
 
   ServerTests:
+    name: Server
     needs:
       - Build
       - Matrix
     strategy:
       fail-fast: false
       matrix:
-        java: [ 11 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
-        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix)[0] }}
+        driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
+        java: [ 11 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: ${{ matrix.java }}
@@ -86,15 +87,16 @@ jobs:
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
   DriversTests:
+    name: Driver
     needs:
       - Build
       - Matrix
     strategy:
       fail-fast: false
       matrix:
+        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         java: [ 11 ]
         mongo: [ 7 ]
-        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         include:
           - java: 21
             mongo: 7
