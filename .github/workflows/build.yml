@@ -74,10 +74,13 @@ jobs:
       - Matrix
     strategy:
       matrix:
-        java: [ 21, 11 ]
+        java: [ 11 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
-        driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
-        include: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
+        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
+        include:
+          - java: 21
+            mongo: 7
+            driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:

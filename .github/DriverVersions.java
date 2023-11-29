@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.github.zafarkhaja.semver.Version;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,18 +54,16 @@ public class DriverVersions {
                                   .collect(Collectors.toList());
 
         Collections.reverse(result);
-        var all = result.stream().map(v -> Map.of("java", 11, "mongo", 7, "driver", v))
-                        .collect(Collectors.toList());
         var map = Map.of("latest", List.of(latest), "versions", result);
         if (args.length != 0) {
             if (args[0].equals("all")) {
-                System.out.println(all);
+                System.out.println(map.get("versions"));
             } else {
                 System.out.println(map.get("latest"));
             }
         } else {
             System.out.println(map.get("latest"));
-            System.out.println(all);
+            System.out.println(map.get("versions"));
             System.out.println(map);
         }
     }
