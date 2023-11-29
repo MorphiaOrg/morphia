@@ -37,11 +37,17 @@ jobs:
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
 
+      - name: Find Latest Driver version
+        id: latest-driver-versions
+        run: |
+          curl -Ls https://sh.jbang.dev | bash -s - app setup
+          echo "latest_driver_version=$( ~/.jbang/bin/jbang --verbose .github/DriverVersions.java latest)" >> $GITHUB_OUTPUT
+
       - name: Find Driver versions
         id: driver-versions
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
-          echo "driver_versions=$( ~/.jbang/bin/jbang --verbose .github/DriverVersions.java )" >> $GITHUB_OUTPUT
+          echo "driver_versions=$( ~/.jbang/bin/jbang --verbose .github/DriverVersions.java all)" >> $GITHUB_OUTPUT
 
       - name: Is releasable branch
         id: releasable
@@ -57,6 +63,7 @@ jobs:
           fi          
 
     outputs:
+      driver_latest: ${{ steps.driver-versions.outputs.latest_driver_version }}
       driver_matrix: ${{ steps.driver-versions.outputs.driver_versions }}
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
       releasable: ${{ steps.releasable.outputs.releasable }}
@@ -70,7 +77,7 @@ jobs:
       matrix:
         java: [ 20, 11 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
-        driver: [ ${{ fromJson(needs.matrix.outputs.driver_matrix)["latest"] }} ]
+        driver: [ ${{ fromJson(needs.matrix.outputs.latest_driver_version) }} ]
         include:
           - java: 11
             mongo: 7

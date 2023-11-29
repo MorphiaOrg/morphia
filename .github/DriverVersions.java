@@ -54,6 +54,10 @@ public class DriverVersions {
 
         Collections.reverse(result);
         var map = Map.of("latest", latest, "versions", result);
-        System.out.println(map);
+        if (args.length != 0 && args[0].equals("all")) {
+            System.out.println(result);
+        } else {
+            System.out.println(latest);
+        }
     }
 }
