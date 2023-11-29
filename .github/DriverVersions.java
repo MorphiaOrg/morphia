@@ -12,6 +12,7 @@ import com.github.zafarkhaja.semver.Version;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.Spliterators;
@@ -53,11 +54,15 @@ public class DriverVersions {
                                   .collect(Collectors.toList());
 
         Collections.reverse(result);
-        var map = Map.of("latest", latest, "versions", result);
-        if (args.length != 0 && args[0].equals("all")) {
-            System.out.println(result);
+        var map = Map.of("latest", List.of(latest), "versions", result);
+        if (args.length != 0) {
+            if (args[0].equals("all")) {
+                System.out.println(map.get("versions"));
+            } else {
+                System.out.println(map.get("latest"));
+            }
         } else {
-            System.out.println(latest);
+            System.out.println(map);
         }
     }
 }
