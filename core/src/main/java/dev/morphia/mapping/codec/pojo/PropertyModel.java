@@ -65,7 +65,7 @@ public final class PropertyModel {
     private String name;
     private TypeData<?> typeData;
     private String mappedName;
-    private PropertyAccessor<? super Object> accessor;
+    private PropertyAccessor<Object> accessor;
     private PropertySerialization serialization;
     private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
     private final List<String> loadNames = new ArrayList<>();
@@ -125,7 +125,7 @@ public final class PropertyModel {
     /**
      * @return the accessor to use when accessing this field
      */
-    public PropertyAccessor<? super Object> getAccessor() {
+    public PropertyAccessor<Object> getAccessor() {
         return accessor;
     }
 
