@@ -47,7 +47,7 @@ jobs:
         id: driver-versions
         run: |
           curl -Ls https://sh.jbang.dev | bash -s - app setup
-          echo "driver_versions=$( ~/.jbang/bin/jbang --verbose .github/DriverVersions.java)" >> $GITHUB_OUTPUT
+          echo "driver_versions=$( ~/.jbang/bin/jbang --verbose .github/DriverVersions.java all)" >> $GITHUB_OUTPUT
 
       - name: Is releasable branch
         id: releasable
@@ -70,14 +70,13 @@ jobs:
 
   Test:
     needs:
-      - CodeAudits
       - Build
       - Matrix
     strategy:
       matrix:
         java: [ 20, 11 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
-        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
+        driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
         include:
           - java: 11
             mongo: 7
@@ -125,6 +124,7 @@ jobs:
   Release:
     needs:
       - Matrix
+      - CodeAudits
       - Test
     if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
