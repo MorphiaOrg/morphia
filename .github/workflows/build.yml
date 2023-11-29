@@ -31,23 +31,24 @@ jobs:
           server-id: central
           cache: maven
 
+      - name: Setup JBang
+        uses: jbangdev/setup-jbang@main
+        
       - name: Find MongoDB versions
         id: mongo-versions
         run: |
-          curl -Ls https://sh.jbang.dev | bash -s - app setup
-          echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
+          echo "mongo_versions=$( jbang .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
 
       - name: Find Latest Driver version
+        uses:
         id: latest-driver-version
         run: |
-          curl -Ls https://sh.jbang.dev | bash -s - app setup
-          echo "latest_driver_version=$( ~/.jbang/bin/jbang --verbose .github/DriverVersions.java latest)" >> $GITHUB_OUTPUT
+          echo "latest_driver_version=$( jbang .github/DriverVersions.java latest)" >> $GITHUB_OUTPUT
 
       - name: Find Driver versions
         id: driver-versions
         run: |
-          curl -Ls https://sh.jbang.dev | bash -s - app setup
-          echo "driver_versions=$( ~/.jbang/bin/jbang --verbose .github/DriverVersions.java all)" >> $GITHUB_OUTPUT
+          echo "driver_versions=$( jbang .github/DriverVersions.java all)" >> $GITHUB_OUTPUT
 
       - name: Is releasable branch
         id: releasable
@@ -74,45 +75,10 @@ jobs:
       - Matrix
     strategy:
       matrix:
-        java: [ 20, 11 ]
+        java: [ 21, 11 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
-        include:
-          - java: 11
-            mongo: 7
-            driver: 4.9.1
-          - java: 11
-            mongo: 7
-            driver: 4.8.1
-          - java: 11
-            mongo: 7
-            driver: 4.7.2
-          - java: 11
-            mongo: 7
-            driver: 4.6.1
-          - java: 11
-            mongo: 7
-            driver: 4.5.1
-          - java: 11
-            mongo: 7
-            driver: 4.4.2
-            optional: true
-          - java: 11
-            mongo: 7
-            driver: 4.3.4
-            optional: true
-          - java: 11
-            mongo: 7
-            driver: 4.2.3
-            optional: true
-          - java: 11
-            mongo: 7
-            driver: 4.1.2
-            optional: true
-          - java: 11
-            mongo: 7
-            driver: 4.0.6
-            optional: true
+        include: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
 
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:

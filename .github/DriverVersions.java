@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -54,16 +53,18 @@ public class DriverVersions {
                                   .collect(Collectors.toList());
 
         Collections.reverse(result);
+        var all = result.stream().map(v -> Map.of("java", 11, "mongo", 7, "driver", v))
+                        .collect(Collectors.toList());
         var map = Map.of("latest", List.of(latest), "versions", result);
         if (args.length != 0) {
             if (args[0].equals("all")) {
-                System.out.println(map.get("versions"));
+                System.out.println(all);
             } else {
                 System.out.println(map.get("latest"));
             }
         } else {
             System.out.println(map.get("latest"));
-            System.out.println(map.get("versions"));
+            System.out.println(all);
             System.out.println(map);
         }
     }
