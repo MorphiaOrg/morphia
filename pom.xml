@@ -39,6 +39,10 @@
         <surefire.version>3.1.0</surefire.version>
         <testng.version>7.8.0</testng.version>
         <zt.exec.version>1.12</zt.exec.version>
+
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
     </properties>
 
     <build>
