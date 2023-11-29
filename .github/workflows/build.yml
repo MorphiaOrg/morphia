@@ -92,7 +92,7 @@ jobs:
       matrix:
         java: [ 11 ]
         mongo: [ 7 ]
-        driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
+        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         include:
           - java: 21
             mongo: 7
