@@ -76,12 +76,27 @@ jobs:
       matrix:
         java: [ 11 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
-        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
+        driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    with:
+      java: ${{ matrix.java }}
+      reuseBuild: true
+      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
+      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
+
+  RegressionTest:
+    needs:
+      - Build
+      - Matrix
+    strategy:
+      matrix:
+        java: [ 11 ]
+        mongo: [ 7 ]
+        driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
         include:
           - java: 21
             mongo: 7
             driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
-
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: ${{ matrix.java }}
@@ -94,6 +109,7 @@ jobs:
       - Matrix
       - CodeAudits
       - Test
+      - RegressionTest
     if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     secrets:
