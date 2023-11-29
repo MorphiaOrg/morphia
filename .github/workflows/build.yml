@@ -77,7 +77,7 @@ jobs:
       matrix:
         java: [ 20, 11 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
-        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix)["latest"] }}
+        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         include:
           - java: 11
             mongo: 7
