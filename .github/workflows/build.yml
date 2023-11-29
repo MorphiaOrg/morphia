@@ -94,7 +94,7 @@ jobs:
         mongo: [ 7 ]
         driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         include:
-          - java: 21
+          - java: 20
             mongo: 7
             driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
     uses: evanchooly/workflows/.github/workflows/build.yml@master
