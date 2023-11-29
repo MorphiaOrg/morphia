@@ -40,7 +40,6 @@ jobs:
           echo "mongo_versions=$( jbang .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
 
       - name: Find Latest Driver version
-        uses:
         id: latest-driver-version
         run: |
           echo "latest_driver_version=$( jbang .github/DriverVersions.java latest)" >> $GITHUB_OUTPUT
