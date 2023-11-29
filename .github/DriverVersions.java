@@ -10,18 +10,18 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.github.zafarkhaja.semver.Version;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static java.lang.String.format;
+import static java.util.Comparator.comparingInt;
 import static java.util.Spliterators.spliteratorUnknownSize;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.StreamSupport.stream;
 
 public class DriverVersions {
 
@@ -36,23 +36,22 @@ public class DriverVersions {
         var latest = format("'%s'", list.get("latest").asText());
         var versions = list.get("versions").get("version");
 
-        var result = StreamSupport.stream(
-                                      spliteratorUnknownSize(versions.elements(), Spliterator.ORDERED), false)
-                                  .map(JsonNode::asText)
-                                  .map(Version::valueOf)
-                                  .filter(it -> it.lessThan(Version.valueOf("5.0.0")))
-                                  .filter(it -> it.greaterThan(Version.valueOf("4.0.0")))
-                                  .filter(it -> it.getBuildMetadata().isEmpty())
-                                  .filter(it -> it.getPreReleaseVersion().isEmpty())
-                                  .collect(Collectors.groupingBy(
-                                      version -> format("%s.%s", version.getMajorVersion(), version.getMinorVersion())))
-                                  .values().stream()
-                                  .map(it -> it.get(0))
-                                  .sorted(Comparator.comparingInt(Version::getMajorVersion)
-                                                    .thenComparingInt(Version::getMinorVersion)
-                                                    .thenComparingInt(Version::getPatchVersion))
-                                  .map(it -> format("'%s'", it))
-                                  .collect(Collectors.toList());
+        var result = stream(spliteratorUnknownSize(versions.elements(), Spliterator.ORDERED), false)
+                         .map(JsonNode::asText)
+                         .map(Version::valueOf)
+                         .filter(it1 -> it1.lessThan(Version.valueOf("5.0.0")))
+                         .filter(it1 -> it1.greaterThan(Version.valueOf("4.0.0")))
+                         .filter(it1 -> it1.getBuildMetadata().isEmpty())
+                         .filter(it1 -> it1.getPreReleaseVersion().isEmpty())
+                         .sorted(comparingInt(Version::getMajorVersion)
+                                     .thenComparingInt(Version::getMinorVersion)
+                                     .thenComparingInt(Version::getPatchVersion)
+                                     .reversed())
+                         .collect(groupingBy(version -> format("%s.%s", version.getMajorVersion(), version.getMinorVersion())))
+                         .values().stream()
+                         .map(it -> it.get(0))
+                         .map(it -> format("'%s'", it))
+                         .collect(Collectors.toList());
 
         Collections.reverse(result);
         var map = Map.of("latest", List.of(latest), "versions", result);
