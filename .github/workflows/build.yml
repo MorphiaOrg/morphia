@@ -111,6 +111,10 @@ jobs:
           - java: 21
             mongo: 7
             driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
+          - java: 21
+            mongo: 7
+            driver: ${{ needs.matrix.outputs.driver_snapshot }}
+            optional: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: ${{ matrix.java }}
