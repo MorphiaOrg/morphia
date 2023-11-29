@@ -4,6 +4,8 @@ on:
   push:
     branches-ignore:
       - 'dependabot/**'
+    tags:
+      - '*'
   workflow_dispatch:
 
 jobs:
@@ -32,11 +34,23 @@ jobs:
           server-id: central
           cache: maven
 
+      - name: Setup JBang
+        uses: jbangdev/setup-jbang@main
+
       - name: Find MongoDB versions
         id: mongo-versions
         run: |
-          curl -Ls https://sh.jbang.dev | bash -s - app setup
-          echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
+          echo "mongo_versions=$( jbang .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
+
+      - name: Find Latest Driver version
+        id: latest-driver-version
+        run: |
+          echo "latest_driver_version=$( jbang .github/DriverVersions.java latest)" >> $GITHUB_OUTPUT
+
+      - name: Find Driver versions
+        id: driver-versions
+        run: |
+          echo "driver_versions=$( jbang .github/DriverVersions.java all)" >> $GITHUB_OUTPUT
 
       - name: Is releasable branch
         id: releasable
@@ -58,11 +72,14 @@ jobs:
           echo "driver_snapshot=$( ~/.jbang/bin/jbang --verbose .github/DriverSnapshot.java )" >> $GITHUB_OUTPUT
 
     outputs:
+      driver_latest: ${{ steps.latest-driver-version.outputs.latest_driver_version }}
+      driver_matrix: ${{ steps.driver-versions.outputs.driver_versions }}
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
       releasable: ${{ steps.releasable.outputs.releasable }}
       driver_snapshot: ${{ steps.driver-snapshot.outputs.driver_snapshot }}
 
-  Test:
+  ServerTests:
+    name: Server
     needs:
       - Build
       - Matrix
@@ -71,51 +88,29 @@ jobs:
       matrix:
         java: [ 17 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
-        driver: [ 4.10.2 ]
+        driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    with:
+      java: ${{ matrix.java }}
+      reuseBuild: true
+      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
+      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
+
+  DriversTests:
+    name: Driver
+    needs:
+      - Build
+      - Matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ 17 ]
+        mongo: [ 7 ]
+        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         include:
           - java: 21
             mongo: 7
-            driver: ${{ needs.matrix.outputs.driver_snapshot }}
-            optional: true
-          - java: 21
-            mongo: 7
-            driver: 4.10.2
-          - java: 17
-            mongo: 7
-            driver: 4.9.1
-          - java: 17
-            mongo: 7
-            driver: 4.8.2
-          - java: 17
-            mongo: 7
-            driver: 4.7.2
-          - java: 17
-            mongo: 7
-            driver: 4.6.1
-          - java: 17
-            mongo: 7
-            driver: 4.5.1
-          - java: 17
-            mongo: 7
-            driver: 4.4.2
-            optional: true
-          - java: 17
-            mongo: 7
-            driver: 4.3.4
-            optional: true
-          - java: 17
-            mongo: 7
-            driver: 4.2.3
-            optional: true
-          - java: 17
-            mongo: 7
-            driver: 4.1.2
-            optional: true
-          - java: 17
-            mongo: 7
-            driver: 4.0.6
-            optional: true
-
+            driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: ${{ matrix.java }}
@@ -127,8 +122,9 @@ jobs:
   Release:
     needs:
       - Matrix
-      - Test
       - CodeAudits
+      - ServerTests
+      - DriversTests
     if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     with:
