@@ -37,6 +37,12 @@ jobs:
           curl -Ls https://sh.jbang.dev | bash -s - app setup
           echo "mongo_versions=$( ~/.jbang/bin/jbang --verbose .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
 
+      - name: Find Driver versions
+        id: driver-versions
+        run: |
+          curl -Ls https://sh.jbang.dev | bash -s - app setup
+          echo "driver_versions=$( ~/.jbang/bin/jbang --verbose .github/DriverVersions.java )" >> $GITHUB_OUTPUT
+
       - name: Is releasable branch
         id: releasable
         run: |
@@ -51,6 +57,7 @@ jobs:
           fi          
 
     outputs:
+      driver_matrix: ${{ steps.driver-versions.outputs.driver_versions }}
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
       releasable: ${{ steps.releasable.outputs.releasable }}
 
@@ -63,7 +70,7 @@ jobs:
       matrix:
         java: [ 20, 11 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
-        driver: [ 4.10.2 ]
+        driver: [ ${{ fromJson(needs.matrix.outputs.version_matrix) }}.latest ]
         include:
           - java: 11
             mongo: 7
