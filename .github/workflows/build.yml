@@ -68,7 +68,8 @@ jobs:
       version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
       releasable: ${{ steps.releasable.outputs.releasable }}
 
-  Test:
+  ServerTests:
+    name: Test across server versions
     needs:
       - Build
       - Matrix
@@ -85,7 +86,8 @@ jobs:
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
-  RegressionTest:
+  DriversTests:
+    name: Test across driver versions
     needs:
       - Build
       - Matrix
@@ -110,8 +112,8 @@ jobs:
     needs:
       - Matrix
       - CodeAudits
-      - Test
-      - RegressionTest
+      - ServerTests
+      - DriversTests
     if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     secrets:
