@@ -33,7 +33,7 @@ jobs:
 
       - name: Setup JBang
         uses: jbangdev/setup-jbang@main
-        
+
       - name: Find MongoDB versions
         id: mongo-versions
         run: |
