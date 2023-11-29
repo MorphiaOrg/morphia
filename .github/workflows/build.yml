@@ -69,7 +69,6 @@ jobs:
       releasable: ${{ steps.releasable.outputs.releasable }}
 
   ServerTests:
-    name: Test across server versions
     needs:
       - Build
       - Matrix
@@ -87,7 +86,6 @@ jobs:
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
 
   DriversTests:
-    name: Test across driver versions
     needs:
       - Build
       - Matrix
