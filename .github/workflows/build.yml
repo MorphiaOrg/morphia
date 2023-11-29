@@ -86,9 +86,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ 17 ]
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
+        java: [ 17 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: ${{ matrix.java }}
@@ -104,16 +104,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         java: [ 17 ]
         mongo: [ 7 ]
-        driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         include:
-          - java: 21
+          - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
+            java: 21
             mongo: 7
-            driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
-          - java: 21
+          - driver: ${{ needs.matrix.outputs.driver_snapshot }}
+            java: 17
             mongo: 7
-            driver: ${{ needs.matrix.outputs.driver_snapshot }}
             optional: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
