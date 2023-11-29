@@ -32,7 +32,7 @@ public class DriverVersions {
         var document = mapper.readTree(new URL(url));
 
         var list = (ObjectNode) document.get("versioning");
-        var latest = Version.valueOf(list.get("latest").asText());
+        var latest = format("'%s'", list.get("latest").asText());
         var versions = list.get("versions").get("version");
 
         var result = StreamSupport.stream(
@@ -50,7 +50,7 @@ public class DriverVersions {
                                   .sorted(Comparator.comparingInt(Version::getMajorVersion)
                                                     .thenComparingInt(Version::getMinorVersion)
                                                     .thenComparingInt(Version::getPatchVersion))
-                                  .map(Version::toString)
+                                  .map(it -> format("'%s'", it))
                                   .collect(Collectors.toList());
 
         Collections.reverse(result);
@@ -62,6 +62,8 @@ public class DriverVersions {
                 System.out.println(map.get("latest"));
             }
         } else {
+            System.out.println(map.get("latest"));
+            System.out.println(map.get("versions"));
             System.out.println(map);
         }
     }
