@@ -70,7 +70,7 @@ public class MorphiaTestSetup {
                 imageName = match.dockerImage();
             } catch (IllegalArgumentException e) {
                 imageName = Versions.latest().dockerImage();
-                LOG.error(format("Could not parse mongo docker image name.  using docker image %s.", imageName));
+                LOG.error(format("Could not parse mongo docker image name:  %s.  using docker image %s.", mongodb, imageName));
             }
 
             LOG.info("Running tests using " + imageName);
