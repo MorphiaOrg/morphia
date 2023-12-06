@@ -86,7 +86,7 @@ public class EntityModel {
     private String discriminator;
     private Class<?> type;
     private String collectionName;
-    public final Set<EntityModel> subtypes = new CopyOnWriteArraySet<>();
+    private final Set<EntityModel> subtypes = new CopyOnWriteArraySet<>();
     public EntityModel superClass;
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
@@ -103,16 +103,6 @@ public class EntityModel {
     public EntityModel(Mapper mapper, Class<?> type) {
         this(type);
         creatorFactory = new InstanceCreatorFactoryImpl(this);
-        //        this.targetType = type;
-
-        /*
-         * if (type.getSuperclass() != null) {
-         * this.superClass = mapper.mapEntity(type.getSuperclass());
-         * if (superClass != null) {
-         * superClass.addSubtype(this);
-         * }
-         * }
-         */
 
         new MappingUtil(mapper);
 
@@ -365,6 +355,11 @@ public class EntityModel {
         return set;
     }
 
+    public void addSubtype(EntityModel subtype) {
+        subtypes.add(subtype);
+        subtype.superClass = this;
+    }
+
     /**
      * @return the model of the superclass of this type or null
      */
@@ -476,11 +471,6 @@ public class EntityModel {
      */
     public boolean useDiscriminator() {
         return discriminatorEnabled;
-    }
-
-    public void addSubtype(EntityModel subtype) {
-        subtypes.add(subtype);
-        subtype.superClass = this;
     }
 
     @SuppressWarnings("rawtypes")

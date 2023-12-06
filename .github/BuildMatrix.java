@@ -1,12 +1,12 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
+//JAVA 17
 //DEPS com.github.zafarkhaja:java-semver:0.9.0
 //DEPS com.fasterxml.jackson.core:jackson-databind:2.15.2
 
 import java.net.URL;
 import java.util.stream.Collectors;
 import java.util.Spliterators;
-import java.util.List;
 import java.util.Spliterator;
 import java.util.stream.StreamSupport;
 import com.github.zafarkhaja.semver.Version;

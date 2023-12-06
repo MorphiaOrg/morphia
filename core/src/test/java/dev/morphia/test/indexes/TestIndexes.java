@@ -2,7 +2,7 @@ package dev.morphia.test.indexes;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.mongodb.MongoCommandException;
 import com.mongodb.client.model.CollationCaseFirst;
@@ -38,7 +38,6 @@ import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static dev.morphia.mapping.IndexType.DESC;
 import static dev.morphia.mapping.IndexType.TEXT;
 import static dev.morphia.test.util.IndexMatcher.hasIndexNamed;
-import static java.util.stream.Collectors.toSet;
 import static org.bson.Document.parse;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -140,8 +139,9 @@ public class TestIndexes extends TestBase {
         assertEquals(getIndexInfo(Circle.class)
                 .stream()
                 .map(i -> (String) i.get("name"))
-                .collect(toSet()),
-                Set.of("_id_", "radius_1", "description_1", "foo_1"));
+                .sorted()
+                .collect(Collectors.toList()),
+                List.of("_id_", "description_1", "foo_1", "radius_1"));
     }
 
     @Test
