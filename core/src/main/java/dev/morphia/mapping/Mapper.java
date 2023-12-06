@@ -568,23 +568,26 @@ public class Mapper {
         return register(entityModel, true);
     }
 
-    private EntityModel register(EntityModel entityModel, boolean validate) {
-
-        discriminatorLookup.addModel(entityModel);
-        mappedEntities.put(entityModel.getType().getName(), entityModel);
-        mappedEntitiesByCollection.computeIfAbsent(entityModel.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                .add(entityModel);
-        EntityModel superClass = entityModel.getSuperClass();
-        if (superClass != null) {
-            superClass.addSubtype(entityModel);
+    private EntityModel register(EntityModel model, boolean validate) {
+        var existing = mappedEntities.get(model.getType().getName());
+        if (existing != null) {
+            return existing;
         }
+        mappedEntities.put(model.getType().getName(), model);
 
-        if (validate && !entityModel.isInterface()) {
+        if (validate && !model.isInterface()) {
             new MappingValidator()
-                    .validate(this, entityModel);
-
+                    .validate(this, model);
         }
-        return entityModel;
+        discriminatorLookup.addModel(model);
+        mappedEntitiesByCollection.computeIfAbsent(model.getCollectionName(), s -> new CopyOnWriteArraySet<>())
+                .add(model);
+        EntityModel superClass = model.getSuperClass();
+        if (superClass != null) {
+            superClass.addSubtype(model);
+        }
+
+        return model;
     }
 
     private List<Class> getClasses(ClassLoader loader, String packageName)
