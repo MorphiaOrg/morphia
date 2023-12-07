@@ -5,6 +5,7 @@ import dev.morphia.mapping.strategy.Identity;
 import dev.morphia.mapping.strategy.KebabCase;
 import dev.morphia.mapping.strategy.LowerCase;
 import dev.morphia.mapping.strategy.SnakeCase;
+import dev.morphia.mapping.strategy.Title;
 
 /**
  * Defines a naming strategy for use, e.g., in naming collections and fields
@@ -58,6 +59,14 @@ public abstract class NamingStrategy {
      */
     public static NamingStrategy kebabCase() {
         return new KebabCase();
+    }
+
+    /**
+     * @hidden
+     * @return
+     */
+    public static NamingStrategy title() {
+        return new Title();
     }
 
     /**

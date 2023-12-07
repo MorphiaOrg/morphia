@@ -12,13 +12,6 @@ import static dev.morphia.aggregation.expressions.MathExpressions.trunc;
 public class MathExpressionTest extends ExpressionsTestBase {
 
     @Test
-    public void testAbs() {
-        assertAndCheckDocShape("{ $abs: -1 }", MathExpressions.abs(value(-1)), 1);
-        assertAndCheckDocShape("{ $abs: 1 }", MathExpressions.abs(value(1)), 1);
-        assertAndCheckDocShape("{ $abs: null }", MathExpressions.abs(null), null);
-    }
-
-    @Test
     public void testAdd() {
         assertAndCheckDocShape("{ $add: [ 4, 5 ] } ", MathExpressions.add(value(4), value(5)), 9);
     }

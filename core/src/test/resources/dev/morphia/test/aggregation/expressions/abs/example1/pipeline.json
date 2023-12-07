@@ -1,0 +1,5 @@
+[
+   {
+      $project: { delta: { $abs: { $subtract: [ "$startTemp", "$endTemp" ] } } }
+   }
+]

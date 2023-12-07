@@ -31,13 +31,13 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
+import org.testng.annotations.Test;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
 public class AggregationTest extends TemplatedTestBase {
@@ -48,7 +48,7 @@ public class AggregationTest extends TemplatedTestBase {
                 .codecProvider(new ZDTCodecProvider()));
     }
 
-    @AfterClass
+    @Test
     public void testCoverage() {
         var type = getClass();
         var methods = stream(type.getDeclaredMethods())
@@ -59,9 +59,6 @@ public class AggregationTest extends TemplatedTestBase {
                 })
                 .toList();
 
-        if (methods.isEmpty()) {
-            return;
-        }
         String path = type.getPackageName();
         String simpleName = type.getSimpleName().substring(4);
         var operatorName = Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
@@ -82,7 +79,9 @@ public class AggregationTest extends TemplatedTestBase {
         var missing = examples.stream()
                 .filter(example -> !methods.contains(example))
                 .collect(Collectors.joining(", "));
-        assertTrue(missing.isEmpty(), "Missing test cases for $%s: %s".formatted(operatorName, missing));
+        if (!missing.isEmpty()) {
+            fail("Missing test cases for $%s: %s".formatted(operatorName, missing));
+        }
     }
 
     public void testPipeline(ServerVersion serverVersion,
