@@ -31,7 +31,7 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.testng.annotations.AfterClass;
 
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
@@ -48,7 +48,7 @@ public class AggregationTest extends TemplatedTestBase {
                 .codecProvider(new ZDTCodecProvider()));
     }
 
-    @Test
+    @AfterClass
     public void testCoverage() {
         var type = getClass();
         var methods = stream(type.getDeclaredMethods())

@@ -16,7 +16,9 @@ public class TestCoverage {
         var type = getClass();
         var path = type.getPackageName();
         var message = new StringJoiner("\n");
-        stream(new File("src/test/resources/%s/expressions".formatted(path.replace('.', '/'))).listFiles())
+        File file1 = new File("src/test/resources/%s/expressions".formatted(path.replace('.', '/')));
+        System.out.println("file1 = " + file1.getAbsolutePath());
+        stream(file1.listFiles())
                 .map(file -> {
                     var parent = new File(file.getPath().replace("resources", "java")).getParentFile();
                     return new File(parent, "Test%s.java".formatted(NamingStrategy.title().apply(file.getName())));

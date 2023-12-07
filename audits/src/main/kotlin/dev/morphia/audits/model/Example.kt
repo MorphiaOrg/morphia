@@ -10,8 +10,8 @@ class Example(
 ) {
     var folder: File = File("/bad%path!!")
     var feeder = false
-    val expectedResults: CodeBlock
-    val pipeline: CodeBlock
+    var expectedResults: CodeBlock
+    var pipeline: CodeBlock
     var inputData: CodeBlock
 
     init {
@@ -25,6 +25,10 @@ class Example(
         pipeline = codeBlocks.firstOrNull { it.contains(".aggregate(") } ?: CodeBlock()
         expectedResults =
             codeBlocks.firstOrNull { it.startsWith("{") || it.startsWith("[") } ?: CodeBlock()
+        if (!inputData.hasData() && !pipeline.hasData() && expectedResults.hasData()) {
+            inputData = expectedResults
+            expectedResults = CodeBlock()
+        }
     }
 
     fun isEmpty(): Boolean {
