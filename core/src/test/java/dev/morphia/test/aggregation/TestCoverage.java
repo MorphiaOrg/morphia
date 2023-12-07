@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 import static java.util.Arrays.stream;
 import static org.testng.Assert.fail;
 
-public class TestCoverage {
+public class TestCoverage extends AggregationTest {
     @Test
     public void noMissingTestCases() {
         var message = new StringJoiner("\n");
@@ -24,7 +24,7 @@ public class TestCoverage {
 
     private void findMissing(String root, StringJoiner message) {
         var type = getClass();
-        File path = new File(root.formatted(type.getPackageName().replace('.', '/')));
+        File path = rootToCore(root.formatted(type.getPackageName().replace('.', '/')));
         try {
             stream(path.listFiles())
                     .map(file -> {

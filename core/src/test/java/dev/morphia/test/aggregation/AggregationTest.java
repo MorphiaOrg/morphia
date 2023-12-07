@@ -41,11 +41,18 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
 public class AggregationTest extends TemplatedTestBase {
+    private File CORE_ROOT = new File(".").getAbsoluteFile();
 
     public AggregationTest() {
         super(buildConfig(Martian.class, User.class)
                 .applyIndexes(true)
                 .codecProvider(new ZDTCodecProvider()));
+
+        while (!new File(CORE_ROOT, ".git").exists()) {
+            CORE_ROOT = CORE_ROOT.getParentFile();
+        }
+
+        CORE_ROOT = new File(CORE_ROOT, "core");
     }
 
     @AfterClass
@@ -59,10 +66,13 @@ public class AggregationTest extends TemplatedTestBase {
                 })
                 .toList();
 
+        if (methods.isEmpty()) {
+            return;
+        }
         String path = type.getPackageName();
         String simpleName = type.getSimpleName().substring(4);
         var operatorName = Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
-        var resourceFolder = new File("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
+        var resourceFolder = rootToCore("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
 
         if (!resourceFolder.exists()) {
             throw new IllegalStateException("%s does not exist inside %s".formatted(resourceFolder,
@@ -82,6 +92,11 @@ public class AggregationTest extends TemplatedTestBase {
         if (!missing.isEmpty()) {
             fail("Missing test cases for $%s: %s".formatted(operatorName, missing));
         }
+    }
+
+    @NotNull
+    public File rootToCore(String path) {
+        return new File(CORE_ROOT, path);
     }
 
     public void testPipeline(ServerVersion serverVersion,
