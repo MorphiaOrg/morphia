@@ -27,14 +27,14 @@ public class TestCoverage {
         File path = new File(root.formatted(type.getPackageName().replace('.', '/')));
         try {
             stream(path.listFiles())
-                .map(file -> {
-                    var parent = new File(file.getPath().replace("resources", "java")).getParentFile();
-                    return new File(parent, "Test%s.java".formatted(NamingStrategy.title().apply(file.getName())));
-                })
-                .filter(file -> !file.exists())
-                .forEach(file -> {
-                    message.add("Missing a test case: " + file);
-                });
+                    .map(file -> {
+                        var parent = new File(file.getPath().replace("resources", "java")).getParentFile();
+                        return new File(parent, "Test%s.java".formatted(NamingStrategy.title().apply(file.getName())));
+                    })
+                    .filter(file -> !file.exists())
+                    .forEach(file -> {
+                        message.add("Missing a test case: " + file);
+                    });
         } catch (Exception e) {
             throw new RuntimeException("failure on path: " + path, e);
         }
