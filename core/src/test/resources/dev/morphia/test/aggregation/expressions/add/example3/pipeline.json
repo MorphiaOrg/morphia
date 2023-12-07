@@ -1,0 +1,3 @@
+   [
+     { $project: { item: 1, billing_date: { $add: [ "$date", NumberLong(259200000) ] } } }
+   ]
