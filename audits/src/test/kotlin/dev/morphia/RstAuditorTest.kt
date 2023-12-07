@@ -2,8 +2,10 @@ package dev.morphia
 
 import dev.morphia.audits.GithubProject
 import dev.morphia.audits.RstAuditor
+import dev.morphia.audits.RstAuditor.Companion.aggRoot
 import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.Results
+import java.io.File
 import org.testng.Assert.assertEquals
 import org.testng.annotations.Test
 
@@ -14,7 +16,7 @@ class RstAuditorTest {
 
     @Test
     fun testOperator() {
-        var operator = Operator("percentile")
+        var operator = Operator(File("${aggRoot}/percentile.txt"))
     }
 
     @Test

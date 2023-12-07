@@ -8,10 +8,11 @@ import dev.morphia.audits.notControl
 import dev.morphia.audits.removeWhile
 import dev.morphia.audits.sections
 import java.io.File
+import java.io.FileNotFoundException
 
-class Operator(var name: String) {
+class Operator(var source: File) {
+    var name = source.nameWithoutExtension
     var resourceFolder: File
-    var source = File(RstAuditor.aggRoot, "$name.txt")
     val created: Boolean
     val operator = "\$${name.substringBefore("-")}"
     val type: OperatorType
@@ -19,8 +20,11 @@ class Operator(var name: String) {
     val examples: List<Example>
 
     init {
-        val rstSource = File(RstAuditor.aggRoot, "$name.txt")
-        type = if (rstSource.readText().contains(".. pipeline:: \$")) STAGE else EXPRESSION
+        try {
+            type = if (source.readText().contains(".. pipeline:: \$")) STAGE else EXPRESSION
+        } catch (e: FileNotFoundException) {
+            TODO("Not yet implemented")
+        }
         resourceFolder =
             File(
                     RstAuditor.coreTestRoot,
@@ -30,7 +34,7 @@ class Operator(var name: String) {
         created = resourceFolder.exists()
         var prior: Example? = null
         examples =
-            extractCodeBlocks(rstSource).map {
+            extractCodeBlocks(source).map {
                 val example = Example(this, it.key, it.value, prior)
                 prior = example
                 example

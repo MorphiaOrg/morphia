@@ -22,8 +22,9 @@ class RstAuditor(val taglet: String) {
         val list =
             aggRoot
                 .walk()
+                .filter { it.isFile }
                 .filter { !it.equals(aggRoot) }
-                .map { file -> Operator(file.nameWithoutExtension) }
+                .map { file -> Operator(file) }
                 .toList()
 
         list
