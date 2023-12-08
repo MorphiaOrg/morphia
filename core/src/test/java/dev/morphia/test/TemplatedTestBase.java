@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.lang.NonNull;
@@ -28,10 +27,12 @@ import org.bson.json.JsonWriterSettings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.bson.json.JsonWriterSettings.builder;
 import static org.testng.Assert.assertEquals;
@@ -41,13 +42,23 @@ import static org.testng.Assert.fail;
 public abstract class TemplatedTestBase extends TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(TemplatedTestBase.class);
 
+    private static final JsonWriterSettings JSON_WRITER_SETTINGS = builder()
+            .indent(true)
+            .build();
+
     protected final ObjectMapper mapper = new ObjectMapper();
+    protected boolean skipPipelineCheck = false;
 
     public TemplatedTestBase() {
     }
 
     public TemplatedTestBase(MorphiaConfig config) {
         super(config);
+    }
+
+    @BeforeMethod
+    public void resetSkip() {
+        skipPipelineCheck = false;
     }
 
     public final String prefix() {
@@ -151,25 +162,12 @@ public abstract class TemplatedTestBase extends TestBase {
         String pipelineName = format("%s/%s/pipeline.json", prefix(), pipelineTemplate);
         List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
 
-        List<Document> target = parsePipeline(loadPipeline(pipelineName));
-        var iterator = target.iterator();
-        for (Document stage : pipeline) {
-            Document document = Document.parse(stage.toJson());
-            Document next = iterator.next();
-            JsonWriterSettings settings = builder()
-                    .indent(true)
-                    .build();
+        if (!skipPipelineCheck) {
+            List<Document> target = loadPipeline(pipelineName);
             assertEquals(
-                    pipeline.stream().map(d -> d.toJson(settings)).collect(Collectors.joining("\n, ", "[\n", "\n]")),
-                    target.stream().map(d -> d.toJson(settings)).collect(Collectors.joining("\n, ", "[\n", "\n]")),
+                    pipeline.stream().map(d -> d.toJson(JSON_WRITER_SETTINGS)).collect(joining("\n, ", "[\n", "\n]")),
+                    target.stream().map(d -> d.toJson(JSON_WRITER_SETTINGS)).collect(joining("\n, ", "[\n", "\n]")),
                     "Should generate the same pipeline");
-            /*
-             * assertDocumentEquals(document, next,
-             * "Should generate the same pipeline" +
-             * pipeline.stream()
-             * .map(d -> d.toJson(settings))
-             * .collect(Collectors.joining("\n, ", "[\n", "\n]")));
-             */
         }
 
         try (var cursor = aggregation.execute(Document.class)) {
@@ -178,14 +176,14 @@ public abstract class TemplatedTestBase extends TestBase {
 
     }
 
-    @NotNull
-    private InputStream loadPipeline(String pipelineName) {
+    private List<Document> loadPipeline(String pipelineName) {
         InputStream stream = getClass().getResourceAsStream(pipelineName);
         if (stream == null) {
             fail(format("missing data file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
                     pipelineName));
         }
-        return stream;
+
+        return parsePipeline(stream);
     }
 
     private List<Document> parsePipeline(InputStream stream) {

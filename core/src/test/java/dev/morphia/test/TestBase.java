@@ -39,7 +39,9 @@ import org.testng.annotations.BeforeMethod;
 
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
+import static java.lang.String.join;
 import static java.nio.file.Files.lines;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -155,8 +157,15 @@ public abstract class TestBase extends MorphiaTestSetup {
     protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
         assertEquals(actual.size(), expected.size());
         expected.forEach(
-                d -> assertTrueLazy(actual.contains(coerceToLong(d)), () -> format("Should have found <<%s>> in the actual list:%n%s", d,
-                        actual)));
+                d -> assertTrueLazy(actual.contains(coerceToLong(d)), () -> {
+                    String actualString = actual.stream()
+                                           .map(c -> c.toString())
+                                           .collect(joining("\n\t", "actual list:\n", ""));
+                    String expectedString = expected.stream()
+                                           .map(c -> c.toString())
+                                           .collect(joining("\n\t", "expected list:\n", ""));
+                    return format("Lists do not match:\n%s \n%s", actualString, expectedString);
+                }));
     }
 
     public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {

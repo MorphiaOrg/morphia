@@ -11,7 +11,6 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.accumulator;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.addToSet;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
@@ -32,44 +31,6 @@ import static java.util.List.of;
 import static org.bson.Document.parse;
 
 public class AccumulatorExpressionsTest extends ExpressionsTestBase {
-    @Test
-    public void testAccumulator() {
-        insert("books", of(
-                parse("{ '_id' : 8751, 'title' : 'The Banquet', 'author' : 'Dante', 'copies' : 2 }"),
-                parse("{ '_id' : 8752, 'title' : 'Divine Comedy', 'author' : 'Dante', 'copies' : 1 }"),
-                parse("{ '_id' : 8645, 'title' : 'Eclogues', 'author' : 'Dante', 'copies' : 2 }"),
-                parse("{ '_id' : 7000, 'title' : 'The Odyssey', 'author' : 'Homer', 'copies' : 10 }"),
-                parse("{ '_id' : 7020, 'title' : 'Iliad', 'author' : 'Homer', 'copies' : 10 }")));
-        List<Document> group = getDs().aggregate("books")
-                .group(Group.group(id(field("author")))
-                        .field("avgCopies",
-                                accumulator(
-                                        "function() {\n"
-                                                + "   return { count: 0, sum: 0 }\n"
-                                                + "}",
-                                        "function(state, numCopies) {\n"
-                                                + "   return {\n"
-                                                + "       count: state.count + 1,\n"
-                                                + "       sum: state.sum + numCopies\n"
-                                                + "   }\n"
-                                                + "}",
-                                        of(field("copies")),
-                                        "function(state1, state2) {\n"
-                                                + "   return {\n"
-                                                + "      count: state1.count + state2.count,\n"
-                                                + "      sum: state1.sum + state2.sum\n"
-                                                + "   }\n"
-                                                + "}")
-                                        .finalizeFunction("function(state) {\n" +
-                                                "   return (state.sum / state.count)\n" +
-                                                "}")))
-                .execute(Document.class)
-                .toList();
-
-        assertListEquals(group, of(
-                parse("{ '_id' : 'Homer', 'avgCopies' : 10.0 }"),
-                parse("{ '_id' : 'Dante', 'avgCopies' : 1.6666666666666667 }")));
-    }
 
     @Test
     public void testAddToSet() {

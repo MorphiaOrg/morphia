@@ -1,0 +1,8 @@
+{ "_id" : 1, "name" : "Food Fury", "city" : "Bettles", "cuisine" : "American" },
+{ "_id" : 2, "name" : "Meal Macro", "city" : "Bettles", "cuisine" : "Chinese" },
+{ "_id" : 3, "name" : "Big Crisp", "city" : "Bettles", "cuisine" : "Latin" },
+{ "_id" : 4, "name" : "The Wrap", "city" : "Onida", "cuisine" : "American" },
+{ "_id" : 5, "name" : "Spice Attack", "city" : "Onida", "cuisine" : "Latin" },
+{ "_id" : 6, "name" : "Soup City", "city" : "Onida", "cuisine" : "Chinese" },
+{ "_id" : 7, "name" : "Crave", "city" : "Pyote", "cuisine" : "American" },
+{ "_id" : 8, "name" : "The Gala", "city" : "Pyote", "cuisine" : "Chinese" }
