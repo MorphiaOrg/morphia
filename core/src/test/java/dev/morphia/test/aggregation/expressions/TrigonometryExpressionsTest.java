@@ -3,7 +3,6 @@ package dev.morphia.test.aggregation.expressions;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.TrigonometryExpressions.acosh;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.asin;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.asinh;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.atan;
