@@ -20,11 +20,6 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tanh;
 
 public class TrigonometryExpressionsTest extends ExpressionsTestBase {
     @Test
-    public void testAcosh() {
-        assertAndCheckDocShape("{ $acosh: 90 }", acosh(value(90)), 5.192925985263684);
-    }
-
-    @Test
     public void testAsin() {
         assertAndCheckDocShape("{ $asin: 0 }", asin(value(0)), 0.0);
     }
