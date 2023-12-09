@@ -1,0 +1,13 @@
+[
+  { 
+    $addFields : {
+      "angle_a" : {
+        $radiansToDegrees : {
+          $acos : {
+            $divide : [ "$side_b", "$hypotenuse" ]
+          }
+        }
+      }
+    }
+  }
+]

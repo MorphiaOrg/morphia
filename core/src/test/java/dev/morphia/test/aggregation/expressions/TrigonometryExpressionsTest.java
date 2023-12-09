@@ -3,7 +3,6 @@ package dev.morphia.test.aggregation.expressions;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.TrigonometryExpressions.acos;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.acosh;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.asin;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.asinh;
@@ -20,12 +19,6 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tan;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tanh;
 
 public class TrigonometryExpressionsTest extends ExpressionsTestBase {
-
-    @Test
-    public void testAcos() {
-        assertAndCheckDocShape("{ $acos: 1 }", acos(value(1)), 0.0);
-    }
-
     @Test
     public void testAcosh() {
         assertAndCheckDocShape("{ $acosh: 90 }", acosh(value(90)), 5.192925985263684);
