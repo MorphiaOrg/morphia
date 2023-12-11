@@ -27,7 +27,6 @@ import dev.morphia.aggregation.stages.Sort;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.aggregation.stages.Unwind;
-import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.filters.Filter;
 
@@ -36,6 +35,24 @@ import dev.morphia.query.filters.Filter;
  * @since 2.0
  */
 public interface Aggregation<T> {
+    /**
+     * Appends the stages to this aggregation's pipeline.
+     * 
+     * @param stages the stages to add
+     * @return this
+     * @since 3.0
+     */
+    Aggregation<T> pipeline(Stage... stages);
+
+    /**
+     * Sets the options to apply to this aggregation
+     *
+     * @param options the options to apply
+     * @return this
+     * @since 3.0
+     */
+    Aggregation<T> options(AggregationOptions options);
+
     /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket
      * boundaries are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
@@ -48,6 +65,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $bucketAuto
      * @mongodb.server.release 3.4
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> autoBucket(AutoBucket bucket);
 
@@ -64,6 +82,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $bucket
      * @mongodb.server.release 3.4
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> bucket(Bucket bucket);
 
@@ -73,6 +92,7 @@ public interface Aggregation<T> {
      * @param stats the stats configuration
      * @return this
      * @aggregation.stage $collStats
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> collStats(CollectionStats stats);
 
@@ -83,6 +103,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $count
      * @mongodb.server.release 3.4
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> count(String name);
 
@@ -103,6 +124,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $currentOp
      * @mongodb.server.release 3.6
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> currentOp(CurrentOp currentOp);
 
@@ -114,6 +136,7 @@ public interface Aggregation<T> {
      * @mongodb.server.release 5.1
      * @aggregation.stage $densify
      * @since 2.3
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> densify(Densify densify);
 
@@ -125,6 +148,7 @@ public interface Aggregation<T> {
      * @mongodb.server.release 5.1
      * @aggregation.stage $documents
      * @since 2.3
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> documents(DocumentExpression... documents);
 
@@ -162,6 +186,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $facet
      * @mongodb.server.release 3.4
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> facet(Facet facet);
 
@@ -179,6 +204,7 @@ public interface Aggregation<T> {
      * @aggregation.stage $fill
      * @mongodb.server.release 5.3
      * @since 2.3
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> fill(Fill fill);
 
@@ -188,6 +214,7 @@ public interface Aggregation<T> {
      * @param near the geo query definition
      * @return this
      * @aggregation.stage $geoNear
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> geoNear(GeoNear near);
 
@@ -197,6 +224,7 @@ public interface Aggregation<T> {
      * @param lookup the lookup configuration
      * @return this
      * @aggregation.stage $graphLookup
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> graphLookup(GraphLookup lookup);
 
@@ -208,6 +236,7 @@ public interface Aggregation<T> {
      * @param group the group definition
      * @return this
      * @aggregation.stage $group
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> group(Group group);
 
@@ -218,6 +247,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $indexStats
      * @mongodb.server.release 3.2
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> indexStats();
 
@@ -227,6 +257,7 @@ public interface Aggregation<T> {
      * @param limit the maximum docs to pass along to the next stage
      * @return this
      * @aggregation.stage $limit
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> limit(long limit);
 
@@ -239,6 +270,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $lookup
      * @mongodb.server.release 3.6
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> lookup(Lookup lookup);
 
@@ -249,6 +281,7 @@ public interface Aggregation<T> {
      * @param filters the filters to use when matching
      * @return this
      * @aggregation.stage $match
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> match(Filter... filters);
 
@@ -259,6 +292,7 @@ public interface Aggregation<T> {
      * @param <M>   the output collection type
      * @aggregation.stage $merge
      * @mongodb.server.release 4.2
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     <M> void merge(Merge<M> merge);
 
@@ -270,6 +304,7 @@ public interface Aggregation<T> {
      * @param <M>     the output collection type
      * @aggregation.stage $merge
      * @mongodb.server.release 3.4
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     <M> void merge(Merge<M> merge, AggregationOptions options);
 
@@ -279,6 +314,7 @@ public interface Aggregation<T> {
      * @param out the out definition
      * @param <O> the output collection type
      * @aggregation.stage $out
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     <O> void out(Out<O> out);
 
@@ -289,6 +325,7 @@ public interface Aggregation<T> {
      * @param options the options to apply
      * @param <O>     the output collection type
      * @aggregation.stage $out
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     <O> void out(Out<O> out, AggregationOptions options);
 
@@ -298,6 +335,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $planCacheStats
      * @mongodb.server.release 4.2
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> planCacheStats();
 
@@ -308,6 +346,7 @@ public interface Aggregation<T> {
      * @param projection the project definition
      * @return this
      * @aggregation.stage $project
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> project(Projection projection);
 
@@ -317,6 +356,7 @@ public interface Aggregation<T> {
      * @param redact the redaction definition
      * @return this
      * @aggregation.stage $redact
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> redact(Redact redact);
 
@@ -328,6 +368,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $replaceRoot
      * @mongodb.server.release 3.4
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> replaceRoot(ReplaceRoot root);
 
@@ -342,6 +383,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $replaceWith
      * @mongodb.server.release 4.2
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> replaceWith(ReplaceWith with);
 
@@ -352,6 +394,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $sample
      * @mongodb.server.release 3.2
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> sample(long sample);
 
@@ -382,6 +425,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $addFields
      * @mongodb.server.release 3.4
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> addFields(AddFields fields);
 
@@ -399,6 +443,7 @@ public interface Aggregation<T> {
      * @aggregation.stage $set
      * @mongodb.server.release 4.2
      * @since 2.3
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> set(Set set);
 
@@ -408,6 +453,7 @@ public interface Aggregation<T> {
      * @mongodb.server.release 5.0
      * @aggregation.stage $setWindowFields
      * @since 2.3
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> setWindowFields(SetWindowFields fields);
 
@@ -418,6 +464,7 @@ public interface Aggregation<T> {
      * @param skip the skip definition
      * @return this
      * @aggregation.stage $skip
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> skip(long skip);
 
@@ -427,6 +474,7 @@ public interface Aggregation<T> {
      * @param sort the sort definition
      * @return this
      * @aggregation.stage $sort
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> sort(Sort sort);
 
@@ -442,6 +490,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $sortByCount
      * @mongodb.server.release 3.4
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> sortByCount(Expression sort);
 
@@ -456,6 +505,7 @@ public interface Aggregation<T> {
      * @aggregation.stage $unionWith
      * @mongodb.server.release 4.4
      * @since 2.1
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> unionWith(Class<?> type, Stage first, Stage... others);
 
@@ -470,6 +520,7 @@ public interface Aggregation<T> {
      * @aggregation.stage $unionWith
      * @mongodb.server.release 4.4
      * @since 2.1
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> unionWith(String collection, Stage first, Stage... others);
 
@@ -480,6 +531,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $unset
      * @mongodb.server.release 4.2
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> unset(Unset unset);
 
@@ -490,6 +542,8 @@ public interface Aggregation<T> {
      * @param unwind the unwind definition
      * @return this
      * @aggregation.stage $unwind
+     * @deprecated use {@link #pipeline(Stage...)} instead
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> unwind(Unwind unwind);
 
@@ -500,6 +554,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $changeStream
      * @since 2.3
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation changeStream();
 
@@ -511,20 +566,7 @@ public interface Aggregation<T> {
      * @return this
      * @aggregation.stage $changeStream
      * @since 2.3
+     * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation changeStream(ChangeStream stream);
-
-    /**
-     * Adds a custom stage to this pipeline. Sometimes a new server release comes out with new stages and Morphia can lag sometimes.
-     * Using this method, custom stages can be added to fill that gap until Morphia can catch up. This method is marked as internal
-     * because while it should remain relatively stable, it may shift as needs evolve and isn't intended for general use.
-     *
-     * @param stage the new Stage
-     * @return this
-     * @hidden
-     * @morphia.internal
-     * @since 2.3
-     */
-    @MorphiaInternal
-    Aggregation<T> addStage(Stage stage);
 }

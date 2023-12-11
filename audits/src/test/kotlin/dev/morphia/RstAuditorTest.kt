@@ -16,7 +16,7 @@ class RstAuditorTest {
 
     @Test
     fun testOperator() {
-        var operator = Operator(File("${aggRoot}/add.txt"))
+        var operator = Operator(File("${aggRoot}/count-accumulator.txt"))
     }
 
     @Test

@@ -17,6 +17,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * bucket. The count field is included by default when the output is not specified.
  *
  * @aggregation.stage $bucketAuto
+ * @mongodb.server.release 3.4
  */
 public class AutoBucket extends Stage {
     private Expression groupBy;

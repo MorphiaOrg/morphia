@@ -114,6 +114,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public Aggregation<T> pipeline(Stage... stages) {
+        for (Stage stage : stages) {
+            addStage(stage);
+        }
+        return this;
+    }
+
+    @Override
     public Aggregation<T> autoBucket(AutoBucket bucket) {
         return addStage(bucket);
     }

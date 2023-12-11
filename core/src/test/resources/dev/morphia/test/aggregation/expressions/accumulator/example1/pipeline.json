@@ -1,32 +1,32 @@
 [
-{
-  "$group": {
-    "_id": "$author",
-    "avgCopies": {
-      "$accumulator": {
-        "init": "function() {
-  return { count: 0, sum: 0 }
-}
-",
-        "accumulate": "function(state, numCopies) {
-  return {
-    count: state.count + 1,
-    sum: state.sum + numCopies
-  }
-}",
-        "accumulateArgs": [
-          "$copies"
-        ],
-        "merge": "function(state1, state2) {
-  return {
-    count: state1.count + state2.count,
-    sum: state1.sum + state2.sum
-  }
-}",
-        "finalize": "function(state) {
-  return (state.sum / state.count)
-}",
-        "lang": "js"
+{ 
+  $group : 
+  { 
+    _id : "$author", 
+    avgCopies: 
+    { 
+      $accumulator: 
+      {
+        init: function() {                        
+          return { count: 0, sum: 0 } 
+        },
+        accumulate: function(state, numCopies) {  
+          return {
+            count: state.count + 1,
+            sum: state.sum + numCopies
+          } 
+        },
+        accumulateArgs: ["$copies"],              
+        merge: function(state1, state2) {         
+          return {                                
+            count: state1.count + state2.count,
+            sum: state1.sum + state2.sum
+          } 
+        },
+        finalize: function(state) {               
+          return (state.sum / state.count)        
+        },
+        lang: "js"
       }
     }
   }

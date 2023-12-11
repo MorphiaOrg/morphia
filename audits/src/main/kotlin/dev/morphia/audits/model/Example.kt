@@ -6,10 +6,9 @@ class Example(
     val operator: Operator,
     val name: String,
     codeBlocks: List<CodeBlock>,
-    val prior: Example? = null
+    prior: Example? = null
 ) {
     var folder: File = File("/bad%path!!")
-    var feeder = false
     var expectedResults: CodeBlock
     var pipeline: CodeBlock
     var inputData: CodeBlock
@@ -23,18 +22,21 @@ class Example(
                     it.startsWith("[")
             }
         pipeline = pipe.firstOrNull { it.contains(".aggregate(") } ?: CodeBlock()
-        expectedResults = codeBlocks.lastOrNull() ?: CodeBlock()
-        inputData =
-            if (documents.size > 1) {
-                documents.firstOrNull() ?: CodeBlock()
-            } else CodeBlock()
-        if (!inputData.hasData() && prior != null) {
-            prior.feeder = true
-            inputData = prior.inputData
-        }
-        if (!inputData.hasData() && expectedResults.hasData()) {
-            inputData = expectedResults
-            expectedResults = CodeBlock()
+        if (documents.size == 1) {
+            if (prior == null) {
+                inputData = documents.first()
+                expectedResults = CodeBlock()
+            } else {
+                inputData = prior.inputData
+                expectedResults = documents.first()
+            }
+        } else {
+            try {
+                inputData = documents.firstOrNull() ?: CodeBlock()
+                expectedResults = documents.lastOrNull() ?: CodeBlock()
+            } catch (e: NoSuchElementException) {
+                throw IllegalStateException("$name has no documents")
+            }
         }
     }
 
@@ -54,6 +56,10 @@ class Example(
             writeExpectedData(folder)
             if (this.folder.exists()) {
                 File(folder, "name").writeText(name)
+            }
+        } else {
+            if (lock.readText().isBlank()) {
+                throw RuntimeException("${lock} has no message explaining the need for a lock")
             }
         }
     }

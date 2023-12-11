@@ -3,10 +3,11 @@ package dev.morphia.aggregation.stages;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
- * @hidden
- * @morphia.internal
+ * Passes a document to the next stage that contains a count of the number of documents input to the stage.
+ *
+ * @aggregation.stage $count
+ * @mongodb.server.release 3.4
  */
-@MorphiaInternal
 public class Count extends Stage {
     private final String name;
 
@@ -19,6 +20,17 @@ public class Count extends Stage {
     public Count(String name) {
         super("$count");
         this.name = name;
+    }
+
+    /**
+     * Creates a new Count stage
+     *
+     * @param name the field name
+     * @return the new stage
+     * @since 3.0
+     */
+    public static Count count(String name) {
+        return new Count(name);
     }
 
     /**

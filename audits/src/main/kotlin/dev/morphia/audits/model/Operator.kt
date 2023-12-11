@@ -47,14 +47,26 @@ class Operator(var source: File) {
     private fun subpath() = if (type == EXPRESSION) "expressions" else "stages"
 
     private fun extractCodeBlocks(file: File): Map<String, List<CodeBlock>> {
-        var lines = file.readLines()
-        lines = lines.dropWhile { line -> line.trim() !in listOf("Example", "Examples") }.drop(3)
+        val lines =
+            file
+                .readLines()
+                .dropWhile { line -> line.trim() !in listOf("Example", "Examples") }
+                .drop(3)
+                .flatMap { line ->
+                    if (line.trim().startsWith(".. include:: ")) {
+                        val include = File(RstAuditor.includesRoot, line.substringAfter(":: "))
+                        if (include.exists()) {
+                            include.readLines()
+                        } else listOf(line)
+                    } else listOf(line)
+                }
+                .toMutableList()
 
-        return extractCodeBlocks(lines.toMutableList())
+        return extractCodeBlocks(lines)
     }
 
-    private fun extractCodeBlocks(data: MutableList<String>): Map<String, List<CodeBlock>> {
-        val sections = data.sections()
+    private fun extractCodeBlocks(lines: MutableList<String>): Map<String, List<CodeBlock>> {
+        val sections = lines.sections()
         var blocks = mutableMapOf<String, MutableList<CodeBlock>>()
 
         sections.forEach { name, data ->
@@ -63,12 +75,7 @@ class Operator(var source: File) {
             var line = ""
             while (data.isNotEmpty()) {
                 line = data.removeFirst().trim()
-                if (line.trim().startsWith(".. include:: ")) {
-                    val include = File(RstAuditor.includesRoot, line.substringAfter(":: "))
-                    if (include.exists()) {
-                        data.addAll(0, include.readLines())
-                    }
-                } else if (line.trim().startsWith(".. code-block:: ")) {
+                if (line.trim().startsWith(".. code-block:: ")) {
                     current += readBlock(data)
                 }
             }

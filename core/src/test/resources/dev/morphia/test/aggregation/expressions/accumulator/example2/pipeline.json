@@ -7,7 +7,7 @@
     { 
       $accumulator: 
       {
-        init: function(city, userProfileCity) {
+        init: function(city, userProfileCity) {        
           return {
             max: city === userProfileCity ? 3 : 1,     
             restaurants: []                            
