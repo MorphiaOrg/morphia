@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.query.Sort;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
@@ -13,18 +12,19 @@ import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
+import static dev.morphia.test.ServerVersion.v50;
 
 public class TestMin extends AggregationTest {
     @Test
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
+        testPipeline(v50, false, false, (aggregation) -> aggregation.pipeline(
                 group(id(field("item")))
                         .field("minQuantity", min(field("quantity")))));
     }
 
     @Test
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(v50, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("quizMin", min(field("quizzes")))
                         .include("labMin", min(field("labs")))
@@ -33,7 +33,7 @@ public class TestMin extends AggregationTest {
 
     @Test
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(v50, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy(field("state"))
                         .sortBy(Sort.ascending("orderDate"))
