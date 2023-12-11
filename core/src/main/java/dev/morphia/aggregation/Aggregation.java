@@ -45,13 +45,63 @@ public interface Aggregation<T> {
     Aggregation<T> pipeline(Stage... stages);
 
     /**
-     * Sets the options to apply to this aggregation
+     * Execute the aggregation and get the results.
      *
-     * @param options the options to apply
-     * @return this
-     * @since 3.0
+     * @param resultType the type of the result
+     * @param <S>        the output type
+     * @return a MorphiaCursor
      */
-    Aggregation<T> options(AggregationOptions options);
+    <S> MorphiaCursor<S> execute(Class<S> resultType);
+
+    /**
+     * Execute the aggregation and get the results.
+     *
+     * @param resultType the type of the result
+     * @param options    the options to apply
+     * @param <S>        the output type
+     * @return a MorphiaCursor
+     */
+    <S> MorphiaCursor<S> execute(Class<S> resultType, AggregationOptions options);
+
+    /**
+     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
+     *
+     * @param merge the merge definition
+     * @param <M>   the output collection type
+     * @aggregation.stage $merge
+     * @mongodb.server.release 4.2
+     */
+    <M> void merge(Merge<M> merge);
+
+    /**
+     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
+     *
+     * @param merge   the merge definition
+     * @param options the options to apply
+     * @param <M>     the output collection type
+     * @aggregation.stage $merge
+     * @mongodb.server.release 3.4
+     */
+    <M> void merge(Merge<M> merge, AggregationOptions options);
+
+    /**
+     * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
+     *
+     * @param out the out definition
+     * @param <O> the output collection type
+     * @aggregation.stage $out
+     */
+    <O> void out(Out<O> out);
+
+    /**
+     * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
+     *
+     * @param out     the out definition
+     * @param options the options to apply
+     * @param <O>     the output collection type
+     * @aggregation.stage $out
+     */
+    <O> void out(Out<O> out, AggregationOptions options);
 
     /**
      * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket
@@ -151,25 +201,6 @@ public interface Aggregation<T> {
      * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> documents(DocumentExpression... documents);
-
-    /**
-     * Execute the aggregation and get the results.
-     *
-     * @param resultType the type of the result
-     * @param <S>        the output type
-     * @return a MorphiaCursor
-     */
-    <S> MorphiaCursor<S> execute(Class<S> resultType);
-
-    /**
-     * Execute the aggregation and get the results.
-     *
-     * @param resultType the type of the result
-     * @param options    the options to apply
-     * @param <S>        the output type
-     * @return a MorphiaCursor
-     */
-    <S> MorphiaCursor<S> execute(Class<S> resultType, AggregationOptions options);
 
     /**
      * Processes multiple aggregation pipelines within a single stage on the same set of input documents. Each sub-pipeline has its own
@@ -284,50 +315,6 @@ public interface Aggregation<T> {
      * @deprecated use {@link #pipeline(Stage...)} instead
      */
     Aggregation<T> match(Filter... filters);
-
-    /**
-     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
-     *
-     * @param merge the merge definition
-     * @param <M>   the output collection type
-     * @aggregation.stage $merge
-     * @mongodb.server.release 4.2
-     * @deprecated use {@link #pipeline(Stage...)} instead
-     */
-    <M> void merge(Merge<M> merge);
-
-    /**
-     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
-     *
-     * @param merge   the merge definition
-     * @param options the options to apply
-     * @param <M>     the output collection type
-     * @aggregation.stage $merge
-     * @mongodb.server.release 3.4
-     * @deprecated use {@link #pipeline(Stage...)} instead
-     */
-    <M> void merge(Merge<M> merge, AggregationOptions options);
-
-    /**
-     * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
-     *
-     * @param out the out definition
-     * @param <O> the output collection type
-     * @aggregation.stage $out
-     * @deprecated use {@link #pipeline(Stage...)} instead
-     */
-    <O> void out(Out<O> out);
-
-    /**
-     * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
-     *
-     * @param out     the out definition
-     * @param options the options to apply
-     * @param <O>     the output collection type
-     * @aggregation.stage $out
-     * @deprecated use {@link #pipeline(Stage...)} instead
-     */
-    <O> void out(Out<O> out, AggregationOptions options);
 
     /**
      * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.

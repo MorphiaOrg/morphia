@@ -122,6 +122,62 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public <R> MorphiaCursor<R> execute(Class<R> resultType) {
+        MongoCursor<R> cursor;
+        List<Document> pipeline = pipeline();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("pipeline = " + pipeline);
+        }
+        if (datastore.getMapper().isMappable(resultType) && !resultType.equals(this.collection.getDocumentClass())) {
+            MongoCollection<Document> collection = this.collection.withDocumentClass(Document.class);
+            MongoCursor<Document> results = collection.aggregate(pipeline).iterator();
+            EntityModel entityModel = datastore.getMapper().getEntityModel(this.collection.getDocumentClass());
+            cursor = new MappingCursor<>(results, datastore.getCodecRegistry().get(resultType),
+                    entityModel.discriminatorKey());
+        } else {
+            cursor = collection.aggregate(pipeline, resultType).iterator();
+        }
+        return new MorphiaCursor<>(cursor);
+    }
+
+    @Override
+    public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
+        return new MorphiaCursor<>(options.apply(pipeline(), datastore.getDatabase(), collection, resultType)
+                .iterator());
+    }
+
+    @Override
+    public <M> void merge(Merge<M> merge) {
+        addStage(merge);
+        collection.aggregate(pipeline())
+                .toCollection();
+    }
+
+    @Override
+    public <M> void merge(Merge<M> merge, AggregationOptions options) {
+        addStage(merge);
+        Class<?> type = merge.getType();
+        type = type != null ? type : Document.class;
+        options.apply(pipeline(), datastore.getDatabase(), collection, type)
+                .toCollection();
+    }
+
+    @Override
+    public <O> void out(Out<O> out) {
+        addStage(out);
+        collection.aggregate(pipeline())
+                .toCollection();
+    }
+
+    @Override
+    public <O> void out(Out<O> out, AggregationOptions options) {
+        addStage(out);
+        Class<?> type = out.type();
+        type = type != null ? type : Document.class;
+        options.apply(pipeline(), datastore.getDatabase(), collection, type).toCollection();
+    }
+
+    @Override
     public Aggregation<T> autoBucket(AutoBucket bucket) {
         return addStage(bucket);
     }
@@ -154,31 +210,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> documents(DocumentExpression... documents) {
         return addStage(Documents.documents(documents));
-    }
-
-    @Override
-    public <R> MorphiaCursor<R> execute(Class<R> resultType) {
-        MongoCursor<R> cursor;
-        List<Document> pipeline = pipeline();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("pipeline = " + pipeline);
-        }
-        if (datastore.getMapper().isMappable(resultType) && !resultType.equals(this.collection.getDocumentClass())) {
-            MongoCollection<Document> collection = this.collection.withDocumentClass(Document.class);
-            MongoCursor<Document> results = collection.aggregate(pipeline).iterator();
-            EntityModel entityModel = datastore.getMapper().getEntityModel(this.collection.getDocumentClass());
-            cursor = new MappingCursor<>(results, datastore.getCodecRegistry().get(resultType),
-                    entityModel.discriminatorKey());
-        } else {
-            cursor = collection.aggregate(pipeline, resultType).iterator();
-        }
-        return new MorphiaCursor<>(cursor);
-    }
-
-    @Override
-    public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
-        return new MorphiaCursor<>(options.apply(pipeline(), datastore.getDatabase(), collection, resultType)
-                .iterator());
     }
 
     @Override
@@ -229,37 +260,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
                     .forEach(f -> f.entityType(source));
         }
         return addStage(Match.match(filters));
-    }
-
-    @Override
-    public <M> void merge(Merge<M> merge) {
-        addStage(merge);
-        collection.aggregate(pipeline())
-                .toCollection();
-    }
-
-    @Override
-    public <M> void merge(Merge<M> merge, AggregationOptions options) {
-        addStage(merge);
-        Class<?> type = merge.getType();
-        type = type != null ? type : Document.class;
-        options.apply(pipeline(), datastore.getDatabase(), collection, type)
-                .toCollection();
-    }
-
-    @Override
-    public <O> void out(Out<O> out) {
-        addStage(out);
-        collection.aggregate(pipeline())
-                .toCollection();
-    }
-
-    @Override
-    public <O> void out(Out<O> out, AggregationOptions options) {
-        addStage(out);
-        Class<?> type = out.type();
-        type = type != null ? type : Document.class;
-        options.apply(pipeline(), datastore.getDatabase(), collection, type).toCollection();
     }
 
     @Override
@@ -372,7 +372,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public Aggregation<T> addStage(Stage stage) {
         stage.aggregation(this);
         stages.add(stage);

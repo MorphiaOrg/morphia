@@ -23,7 +23,7 @@ public class Out<O> extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    protected Out() {
+    private Out() {
         super("$out");
     }
 
