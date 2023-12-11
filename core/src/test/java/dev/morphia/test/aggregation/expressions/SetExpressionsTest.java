@@ -5,7 +5,6 @@ import java.util.List;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.SetExpressions.allElementsTrue;
 import static dev.morphia.aggregation.expressions.SetExpressions.anyElementTrue;
 import static dev.morphia.aggregation.expressions.SetExpressions.setDifference;
 import static dev.morphia.aggregation.expressions.SetExpressions.setEquals;
@@ -15,19 +14,6 @@ import static dev.morphia.aggregation.expressions.SetExpressions.setUnion;
 import static java.util.Arrays.asList;
 
 public class SetExpressionsTest extends ExpressionsTestBase {
-
-    @Test
-    public void testAllElementsTrue() {
-        assertAndCheckDocShape("{ $allElementsTrue: [ [ true, 1, 'someString' ] ] }",
-                allElementsTrue(value(List.of(value(true), value(1), value("someString")))), true);
-        assertAndCheckDocShape("{ $allElementsTrue: [ [ [ false ] ] ] }",
-                allElementsTrue(value(List.of(List.of(false)))), true);
-        assertAndCheckDocShape("{ $allElementsTrue: [ [ ] ] }",
-                allElementsTrue(value(List.of())), true);
-        assertAndCheckDocShape("{ $allElementsTrue: [ [ null, false, 0 ] ] }",
-                allElementsTrue(value(asList(null, false, 0))), false);
-    }
-
     @Test
     public void testAnyElementTrue() {
         assertAndCheckDocShape("{ $anyElementTrue: [ [ true, false ] ] }", anyElementTrue(value(asList(true, false))), true);
