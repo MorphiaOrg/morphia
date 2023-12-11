@@ -19,6 +19,7 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
+import dev.morphia.test.util.Comparanator;
 
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
@@ -80,11 +81,13 @@ public abstract class TemplatedTestBase extends TestBase {
         List<Document> actual = removeIds ? removeIds(documents) : documents;
         List<Document> expected = loadExpected(resourceName);
 
-        if (orderMatters) {
-            assertEquals(actual, expected);
-        } else {
-            assertListEquals(actual, expected);
-        }
+        Comparanator.of(null, actual, expected, orderMatters).compare();
+    }
+
+    private static String toString(List<Document> actual, String prefix) {
+        return actual.stream()
+                .map(c -> c.toString())
+                .collect(joining("\n\t", prefix, ""));
     }
 
     public <D> void testQuery(MorphiaQuery<D> query, FindOptions options, boolean orderMatters) {
@@ -204,11 +207,8 @@ public abstract class TemplatedTestBase extends TestBase {
         while (json.hasNext()) {
             while (!balanced(current += json.next())) {
             }
-            //            current += json.next();
-            //            if (balanced(current)) {
             stages.add(Document.parse(current));
             current = "";
-            //            }
         }
 
         return stages;

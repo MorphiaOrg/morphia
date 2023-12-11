@@ -159,10 +159,10 @@ public abstract class TestBase extends MorphiaTestSetup {
                 d -> assertTrueLazy(actual.contains(coerceToLong(d)), () -> {
                     String actualString = actual.stream()
                             .map(c -> c.toString())
-                            .collect(joining("\n\t", "actual list:\n", ""));
+                            .collect(joining("\n\t", "actual list:\n\t", ""));
                     String expectedString = expected.stream()
                             .map(c -> c.toString())
-                            .collect(joining("\n\t", "expected list:\n", ""));
+                            .collect(joining("\n\t", "expected list:\n\t", ""));
                     return format("Lists do not match:\n%s \n%s", actualString, expectedString);
                 }));
     }
@@ -310,7 +310,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         return path.isEmpty() ? key : path + "." + key;
     }
 
-    private static Object coerceToLong(Object object) {
+    public static Object coerceToLong(Object object) {
         return object instanceof Integer ? ((Integer) object).longValue() : object;
     }
 

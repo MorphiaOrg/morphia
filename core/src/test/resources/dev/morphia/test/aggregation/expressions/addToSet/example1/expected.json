@@ -1,0 +1,3 @@
+{ "_id" : { "day" : 46, "year" : 2014 }, "itemsSold" : [ "xyz", "abc" ] }
+{ "_id" : { "day" : 34, "year" : 2014 }, "itemsSold" : [ "xyz", "jkl" ] }
+{ "_id" : { "day" : 1, "year" : 2014 }, "itemsSold" : [ "abc" ] }
