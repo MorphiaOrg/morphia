@@ -1,0 +1,4 @@
+{    "_id": 1,    "name": "Alice", "email": "alice@company.com", "position": "Software Developer",    "current_task": {      "project_id": 1,      "project_name": "Aggregation Improvements",      "project_duration": 5,      "hours": 20    }  },
+{    "_id": 2,    "name": "Bob", "email": "bob@company.com", "position": "Sales",    "current_task": {      "project_id": 2,      "project_name": "Write Blog Posts",      "project_duration": 2,      "hours": 10,      "notes": "Progress is slow. Waiting for feedback."    }  },
+{    "_id": 3,    "name": "Charlie", "email": "charlie@company.com", "position": "HR (On Leave)",    "current_task": null  },
+{    "_id": 4,    "name": "Dianne", "email": "diane@company.com", "position": "Web Designer",    "current_task": {      "project_id": 3,      "project_name": "Update Home Page",      "notes": "Need to scope this project."    }  }

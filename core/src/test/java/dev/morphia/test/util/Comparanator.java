@@ -15,7 +15,7 @@ public interface Comparanator {
             //        } else if (actual instanceof Double && expected instanceof Double) {
             //            return new ObjectComparator(parent, actual.toString(), expected.toString(), "values should match");
         } else {
-            var message = "values should match:  '%s'  ---  '%s'".formatted(actual, expected);
+            var message = "values should match.\n\tactual: %s\n\texpected: %s".formatted(actual, expected);
             if (actual instanceof Integer && expected instanceof Integer) {
                 return new ObjectComparanator(parent, coerceToLong(actual), coerceToLong(expected), message);
             } else {

@@ -2,14 +2,12 @@ package dev.morphia.test.aggregation.expressions;
 
 import java.util.List;
 
-import dev.morphia.aggregation.expressions.SystemVariables;
 import dev.morphia.aggregation.stages.Projection;
 
 import org.bson.Document;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DataSizeExpressions.binarySize;
-import static dev.morphia.aggregation.expressions.DataSizeExpressions.bsonSize;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static java.util.List.of;
 import static org.bson.Document.parse;
@@ -42,31 +40,4 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
         assertListEquals(documents, expected);
     }
 
-    @Test
-    public void testBsonSize() {
-        insert("employees", of(
-                parse("{ '_id': 1, 'name': 'Alice', 'email': 'alice@company.com', 'position': 'Software Developer', 'current_task': "
-                        + "{ 'project_id': 1, 'project_name': 'Aggregation Improvements', 'project_duration': 5, 'hours': 20 } }"),
-                parse("{ '_id': 2, 'name': 'Bob', 'email': 'bob@company.com', 'position': 'Sales', 'current_task': { 'project_id': 2, "
-                        + "'project_name': 'Write Blog Posts', 'project_duration': 2, 'hours': 10, 'notes': 'Progress is slow. "
-                        + "Waiting for feedback.' } }"),
-                parse("{ '_id': 3, 'name': 'Charlie', 'email': 'charlie@company.com', 'position': 'HR (On Leave)', 'current_task': null }"),
-                parse("{ '_id': 4, 'name': 'Dianne', 'email': 'diane@company.com', 'position': 'Web Designer', 'current_task': { "
-                        + "'project_id': 3, 'project_name': 'Update Home Page', 'notes': 'Need to scope this project.' } }")));
-
-        List<Document> list = getDs().aggregate("employees")
-                .project(Projection.project()
-                        .include("name")
-                        .include("object_size", bsonSize(SystemVariables.ROOT)))
-                .execute(Document.class)
-                .toList();
-
-        List<Document> expected = of(
-                parse("{ '_id' : 1, 'name' : 'Alice', 'object_size' : 203 }"),
-                parse("{ '_id' : 2, 'name' : 'Bob', 'object_size' : 229 }"),
-                parse("{ '_id' : 3, 'name' : 'Charlie', 'object_size' : 105 }"),
-                parse("{ '_id' : 4, 'name' : 'Dianne', 'object_size' : 196   }"));
-
-        assertListEquals(list, expected);
-    }
 }

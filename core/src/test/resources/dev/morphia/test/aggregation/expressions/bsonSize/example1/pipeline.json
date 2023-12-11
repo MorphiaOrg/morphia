@@ -1,0 +1,8 @@
+[
+  {
+    "$project": {
+      "name": 1,
+      "object_size": { $bsonSize: "$$ROOT" } 
+    } 
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "$group": {
+      "_id": null,
+      "combined_object_size": { $sum: { $bsonSize: "$$ROOT" } } 
+    } 
+  }
+]

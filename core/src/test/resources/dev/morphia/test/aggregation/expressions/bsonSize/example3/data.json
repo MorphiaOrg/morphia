@@ -1,0 +1,4 @@
+{ "_id" : 1, "name" : "Alice", "task_object_size" : 109 }
+{ "_id" : 2, "name" : "Bob", "task_object_size" : 152 }
+{ "_id" : 3, "name" : "Charlie", "task_object_size" : null }
+{ "_id" : 4, "name" : "Dianne", "task_object_size" : 99 }

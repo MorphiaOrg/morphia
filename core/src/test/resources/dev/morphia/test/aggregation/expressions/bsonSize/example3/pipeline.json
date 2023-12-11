@@ -1,0 +1,5 @@
+[
+   { $project: { name: "$name", task_object_size: { $bsonSize: "$$CURRENT" } }  },
+   { $sort: { "task_object_size" : -1 } },
+   { $limit: 1 }
+]
