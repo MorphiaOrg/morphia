@@ -14,37 +14,37 @@ import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
-import static dev.morphia.test.ServerVersion.v52;
+import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestMinN extends AggregationTest {
-    @Test
-    public void testComputedN() {
-        testPipeline(v52, false, false, (aggregation) -> aggregation
-                .pipeline(group(id().field("gameId", field("gameId")))
-                        .field("gamescores", minN(
-                                condition(eq(field("gameId"), value("G2")), value(1), value(3)),
-                                array(field("score"), field("playerId"))))));
-    }
 
     @Test
-    public void testSingleGame() {
-        testPipeline(v52, false, false, (aggregation) -> aggregation
-                .pipeline(
-                        match(eq("gameId", "G1")),
-                        group(id(field("gameId")))
-                                .field("minScores", minN(
-                                        value(3),
-                                        array(field("score"), field("playerId"))))));
-
-    }
-
-    @Test
-    public void testAcrossGames() {
-        testPipeline(v52, false, false, (aggregation) -> aggregation
-                .pipeline(group(id("$gameId"))
+    public void testExample2() {
+        testPipeline(ANY, false, false, (aggregation) -> aggregation.pipeline(
+                match(eq("gameId", "G1")),
+                group(id(field("gameId")))
                         .field("minScores", minN(
                                 value(3),
                                 array(field("score"), field("playerId"))))));
 
+    }
+
+    @Test
+    public void testExample3() {
+        testPipeline(ANY, false, false, (aggregation) -> aggregation.pipeline(
+                group(id("$gameId"))
+                        .field("minScores", minN(
+                                value(3),
+                                array(field("score"), field("playerId"))))));
+
+    }
+
+    @Test
+    public void testExample4() {
+        testPipeline(ANY, false, false, (aggregation) -> aggregation.pipeline(
+                group(id().field("gameId", field("gameId")))
+                        .field("gamescores", minN(
+                                condition(eq(field("gameId"), value("G2")), value(1), value(3)),
+                                array(field("score"), field("playerId"))))));
     }
 }
