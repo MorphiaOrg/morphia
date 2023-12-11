@@ -1,0 +1,12 @@
+   [
+      {
+         $project:
+           {
+             item: 1,
+             discount:
+               {
+                 $cond: [ { $gte: [ "$qty", 250 ] }, 30, 20 ]
+               }
+           }
+      }
+   ]

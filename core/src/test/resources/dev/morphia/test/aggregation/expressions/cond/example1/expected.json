@@ -1,0 +1,3 @@
+{ "_id" : 1, "item" : "abc1", "discount" : 30 }
+{ "_id" : 2, "item" : "abc2", "discount" : 20 }
+{ "_id" : 3, "item" : "xyz1", "discount" : 30 }
