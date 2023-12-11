@@ -1,6 +1,6 @@
 package dev.morphia.test.util;
 
-import static org.bson.assertions.Assertions.fail;
+import java.util.LinkedHashSet;
 
 class FailureComparanator extends BaseComparanator {
     public FailureComparanator(Comparanator parent, String message) {
@@ -9,7 +9,9 @@ class FailureComparanator extends BaseComparanator {
 
     @Override
     public boolean compare() {
-        fail(message);
+        var messages = new LinkedHashSet<String>();
+        messages.add(message);
+        error(messages);
         return false;
     }
 }

@@ -17,9 +17,9 @@ public interface Comparanator {
         } else {
             var message = "values should match:  '%s'  ---  '%s'".formatted(actual, expected);
             if (actual instanceof Integer && expected instanceof Integer) {
-                return new ObjectComparator(parent, coerceToLong(actual), coerceToLong(expected), message);
+                return new ObjectComparanator(parent, coerceToLong(actual), coerceToLong(expected), message);
             } else {
-                return new ObjectComparator(parent, actual, expected, message);
+                return new ObjectComparanator(parent, actual, expected, message);
             }
         }
     }

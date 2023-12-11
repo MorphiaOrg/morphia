@@ -2,9 +2,10 @@
 name: "morphia"
 title: "Morphia"
 version: "3.0"
+prerelease: "-SNAPSHOT"
 nav:
 - "modules/ROOT/nav.adoc"
 asciidoc:
   attributes:
-    version: "3.0.0"
-    srcRef: "https://github.com/MorphiaOrg/morphia/tree/3.0.x"
+    version: "3.0.0-SNAPSHOT"
+    srcRef: "https://github.com/MorphiaOrg/morphia/blob/master"

@@ -9,7 +9,7 @@ class ListComparanator extends BaseComparanator {
 
     public ListComparanator(Comparanator parent, List<?> actual, List<?> expected, boolean orderMatters) {
         super(parent, "Lists should match:\n\tactual: %s\n\texpected: %s".formatted(actual, expected));
-        comparanators.add(new ObjectComparator(this, actual.size(), expected.size(),
+        comparanators.add(new ObjectComparanator(this, actual.size(), expected.size(),
                 "List sizes should match:\n\tactual: %s\n\texpected: %s".formatted(actual, expected)));
         if (orderMatters) {
             orderedComparison(actual, expected);

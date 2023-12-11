@@ -23,12 +23,15 @@ class Example(
                     it.startsWith("[")
             }
         pipeline = pipe.firstOrNull { it.contains(".aggregate(") } ?: CodeBlock()
-        inputData = documents.firstOrNull() ?: CodeBlock()
+        expectedResults = codeBlocks.lastOrNull() ?: CodeBlock()
+        inputData =
+            if (documents.size > 1) {
+                documents.firstOrNull() ?: CodeBlock()
+            } else CodeBlock()
         if (!inputData.hasData() && prior != null) {
             prior.feeder = true
             inputData = prior.inputData
         }
-        expectedResults = codeBlocks.lastOrNull() ?: CodeBlock()
         if (!inputData.hasData() && expectedResults.hasData()) {
             inputData = expectedResults
             expectedResults = CodeBlock()
