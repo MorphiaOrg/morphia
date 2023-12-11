@@ -15,7 +15,6 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.function;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.last;
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.min;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.DateExpressions.dayOfYear;
@@ -113,23 +112,6 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                 parse("{'_id' : 'jkl', 'avgAmount' : 20.0, 'avgQuantity' : 1.0 }"),
                 parse("{'_id' : 'abc', 'avgAmount' : 60.0, 'avgQuantity' : 6.0 }"),
                 parse("{'_id' : 'xyz', 'avgAmount' : 37.5, 'avgQuantity' : 7.5 }")));
-    }
-
-    @Test
-    public void testMin() {
-        regularDataSet();
-
-        List<Document> actual = getDs().aggregate("sales")
-                .group(Group.group(id("item"))
-                        .field("minQuantity", min(field("quantity")))
-                        .field("avgQuantity", avg(field("quantity"))))
-                .execute(Document.class)
-                .toList();
-
-        assertDocumentEquals(actual, of(
-                parse("{ '_id' : 'xyz', 'minQuantity' : 5 }"),
-                parse("{ '_id' : 'jkl', 'minQuantity' : 1 }"),
-                parse("{ '_id' : 'abc', 'minQuantity' : 2 }")));
     }
 
     @Test

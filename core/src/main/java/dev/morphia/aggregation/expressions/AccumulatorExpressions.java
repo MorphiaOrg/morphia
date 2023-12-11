@@ -8,6 +8,7 @@ import dev.morphia.aggregation.expressions.impls.AccumulatorExpression;
 import dev.morphia.aggregation.expressions.impls.CountExpression;
 import dev.morphia.aggregation.expressions.impls.EndResultsExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.aggregation.expressions.impls.ExpressionList;
 import dev.morphia.aggregation.expressions.impls.FunctionExpression;
 import dev.morphia.aggregation.expressions.impls.NRankedResultsExpression;
 import dev.morphia.aggregation.expressions.impls.Push;
@@ -217,8 +218,15 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $min
      */
-    public static Expression min(Expression value) {
-        return new Expression("$min", value);
+    public static Expression min(Expression value, Expression... others) {
+        var minValue = value;
+        if (others.length != 0) {
+            var list = new ArrayList<Expression>();
+            list.add(value);
+            list.addAll(asList(others));
+            minValue = new ExpressionList(list);
+        }
+        return new Expression("$min", minValue);
     }
 
     /**

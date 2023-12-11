@@ -1,0 +1,9 @@
+   [
+     {
+       $group:
+         {
+           _id: "$item",
+           minQuantity: { $min: "$quantity" }
+         }
+     }
+   ]

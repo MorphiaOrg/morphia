@@ -1,0 +1,3 @@
+{ "_id" : 1, "quizMin" : 6, "labMin" : 5, "examMin" : 75 }
+{ "_id" : 2, "quizMin" : 9, "labMin" : 8, "examMin" : 80 }
+{ "_id" : 3, "quizMin" : 4, "labMin" : 5, "examMin" : 70 }
