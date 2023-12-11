@@ -12,11 +12,10 @@ import static dev.morphia.test.ServerVersion.v51;
 public class TestTsSecond extends AggregationTest {
     @Test
     public void testSeconds() {
-        testPipeline(v51, (aggregation) -> {
-            return aggregation.project(project()
-                    .suppressId()
-                    .include("saleTimestamp")
-                    .include("saleSeconds", tsSecond(field("saleTimestamp"))));
-        });
+        testPipeline(v51, (aggregation) -> aggregation.pipeline(
+                project()
+                        .suppressId()
+                        .include("saleTimestamp")
+                        .include("saleSeconds", tsSecond(field("saleTimestamp")))));
     }
 }

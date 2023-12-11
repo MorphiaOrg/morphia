@@ -14,7 +14,7 @@ public class TestAcosh extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ANY, false, true, aggregation -> aggregation
-                .addFields(addFields()
+                .pipeline(addFields()
                         .field("y-coordinate",
                                 radiansToDegrees(acosh(field("x-coordinate"))))));
 

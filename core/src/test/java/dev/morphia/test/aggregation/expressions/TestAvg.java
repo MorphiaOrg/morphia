@@ -19,7 +19,7 @@ public class TestAvg extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ANY, false, false, aggregation -> aggregation
-                .group(group(id(field("item")))
+                .pipeline(group(id(field("item")))
                         .field("avgAmount", avg(multiply(field("price"), field("quantity"))))
                         .field("avgQuantity", avg(field("quantity")))));
 

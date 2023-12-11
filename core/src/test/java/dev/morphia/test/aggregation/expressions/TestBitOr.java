@@ -15,7 +15,7 @@ public class TestBitOr extends AggregationTest {
     @Test
     public void testExample2() {
         testPipeline(v63, false, true, aggregation -> aggregation
-                .project(project()
+                .pipeline(project()
                         .include("result",
                                 bitOr(field("a"), field("b")))));
     }

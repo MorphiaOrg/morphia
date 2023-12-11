@@ -13,6 +13,7 @@ import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.test.ServerVersion.v52;
@@ -20,43 +21,38 @@ import static dev.morphia.test.ServerVersion.v52;
 public class TestBottomN extends AggregationTest {
     @Test
     public void testAcrossGames() {
-        testPipeline(v52, false, false, (aggregation) -> {
-            return aggregation
-                    .group(group(id(field("gameId")))
-                            .field("playerId", bottomN(
-                                    value(3),
-                                    array(field("playerId"), field("score")),
-                                    descending("score"))));
-        });
+        testPipeline(v52, false, false, (aggregation) -> aggregation
+                .pipeline(group(id(field("gameId")))
+                        .field("playerId", bottomN(
+                                value(3),
+                                array(field("playerId"), field("score")),
+                                descending("score")))));
     }
 
     @Test
     public void testComputedN() {
-        testPipeline(v52, false, false, (aggregation) -> {
-            return aggregation
-                    .group(group(id(document("gameId", field("gameId"))))
-                            .field("gamescores", bottomN(
-                                    condition(
-                                            eq(field("gameId"), value("G2")),
-                                            value(1),
-                                            value(3)),
-                                    field("score"),
-                                    descending("score"))));
-        });
+        testPipeline(v52, false, false, (aggregation) -> aggregation
+                .pipeline(group(id(document("gameId", field("gameId"))))
+                        .field("gamescores", bottomN(
+                                condition(
+                                        eq(field("gameId"), value("G2")),
+                                        value(1),
+                                        value(3)),
+                                field("score"),
+                                descending("score")))));
 
     }
 
     @Test
     public void testSingleGame() {
-        testPipeline(v52, false, false, (aggregation) -> {
-            return aggregation
-                    .match(eq("gameId", "G1"))
-                    .group(group(id(field("gameId")))
-                            .field("playerId", bottomN(
-                                    value(3),
-                                    array(field("playerId"), field("score")),
-                                    descending("score"))));
-        });
+        testPipeline(v52, false, false, (aggregation) -> aggregation
+                .pipeline(
+                        match(eq("gameId", "G1")),
+                        group(id(field("gameId")))
+                                .field("playerId", bottomN(
+                                        value(3),
+                                        array(field("playerId"), field("score")),
+                                        descending("score")))));
     }
 
 }

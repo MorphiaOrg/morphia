@@ -15,27 +15,23 @@ import static dev.morphia.test.ServerVersion.v53;
 public class TestLinearFill extends AggregationTest {
     @Test
     public void missingValues() {
-        testPipeline(v53, true, false, (aggregation) -> {
-            return aggregation
-                    .setWindowFields(setWindowFields()
-                            .sortBy(Sort.ascending("time"))
-                            .output(output("price")
-                                    .operator(linearFill(field("price")))));
-        });
+        testPipeline(v53, true, false, (aggregation) -> aggregation
+                .pipeline(setWindowFields()
+                        .sortBy(Sort.ascending("time"))
+                        .output(output("price")
+                                .operator(linearFill(field("price"))))));
 
     }
 
     @Test
     public void testMultipleFills() {
-        testPipeline(v53, true, false, (aggregation) -> {
-            return aggregation
-                    .setWindowFields(setWindowFields()
-                            .sortBy(Sort.ascending("time"))
-                            .output(output("linearFillPrice")
-                                    .operator(linearFill(field("price"))),
-                                    output("locfPrice")
-                                            .operator(locf(field("price")))));
-        });
+        testPipeline(v53, true, false, (aggregation) -> aggregation
+                .pipeline(setWindowFields()
+                        .sortBy(Sort.ascending("time"))
+                        .output(output("linearFillPrice")
+                                .operator(linearFill(field("price"))),
+                                output("locfPrice")
+                                        .operator(locf(field("price"))))));
 
     }
 

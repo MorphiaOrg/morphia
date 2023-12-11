@@ -9,6 +9,7 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.addToSe
 import static dev.morphia.aggregation.expressions.DateExpressions.dayOfYear;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.expressions.Expressions.field;
+import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
@@ -18,7 +19,7 @@ public class TestAddToSet extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ANY, false, false, aggregation -> aggregation
-                .group(Group.group(Group.id()
+                .pipeline(group(Group.id()
                         .field("day", dayOfYear(field("date")))
                         .field("year", year(field("date"))))
                         .field("itemsSold", addToSet(field("item"))))

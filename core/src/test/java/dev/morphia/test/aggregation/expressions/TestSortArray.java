@@ -18,12 +18,10 @@ import static dev.morphia.test.ServerVersion.v52;
 public class TestSortArray extends AggregationTest {
     @Test
     public void testField() {
-        testPipeline(v52, (aggregation) -> {
-            return aggregation
-                    .project(project()
-                            .suppressId()
-                            .include("result", sortArray(field("team"), ascending("name"))));
-        });
+        testPipeline(v52, (aggregation) -> aggregation
+                .pipeline(project()
+                        .suppressId()
+                        .include("result", sortArray(field("team"), ascending("name")))));
 
     }
 

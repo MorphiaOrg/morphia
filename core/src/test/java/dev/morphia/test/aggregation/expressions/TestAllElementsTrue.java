@@ -13,7 +13,7 @@ public class TestAllElementsTrue extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ANY, false, false, aggregation -> aggregation
-                .project(Projection.project()
+                .pipeline(Projection.project()
                         .suppressId()
                         .include("responses")
                         .include("isAllTrue", allElementsTrue(field("responses")))));

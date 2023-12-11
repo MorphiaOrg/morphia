@@ -14,12 +14,10 @@ import static dev.morphia.test.ServerVersion.v52;
 public class TestLocf extends AggregationTest {
     @Test
     public void testMissingValues() {
-        testPipeline(v52, true, false, (aggregation) -> {
-            return aggregation
-                    .setWindowFields(setWindowFields()
-                            .sortBy(Sort.ascending("time"))
-                            .output(output("price")
-                                    .operator(locf(field("price")))));
-        });
+        testPipeline(v52, true, false, (aggregation) -> aggregation
+                .pipeline(setWindowFields()
+                        .sortBy(Sort.ascending("time"))
+                        .output(output("price")
+                                .operator(locf(field("price"))))));
     }
 }

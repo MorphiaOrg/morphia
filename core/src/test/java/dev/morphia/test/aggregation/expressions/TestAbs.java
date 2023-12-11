@@ -14,7 +14,7 @@ public class TestAbs extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ANY, false, true, aggregation -> aggregation
-                .project(project()
+                .pipeline(project()
                         .include("delta",
                                 abs(subtract(field("startTemp"), field("endTemp"))))));
 

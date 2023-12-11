@@ -17,7 +17,7 @@ public class TestBitAnd extends AggregationTest {
     @Test
     public void testExample2() throws FileNotFoundException {
         testPipeline(v63, false, true, aggregation -> aggregation
-                .project(project()
+                .pipeline(project()
                         .include("result",
                                 bitAnd(field("a"), field("b")))));
     }

@@ -15,7 +15,7 @@ public class TestAcos extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ANY, false, true, aggregation -> aggregation
-                .addFields(addFields()
+                .pipeline(addFields()
                         .field("angle_a",
                                 radiansToDegrees(
                                         acos(

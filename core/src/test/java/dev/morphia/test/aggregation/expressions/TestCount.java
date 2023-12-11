@@ -16,10 +16,9 @@ import static dev.morphia.test.ServerVersion.v50;
 public class TestCount extends AggregationTest {
     @Test
     public void testExample2() {
-        testPipeline(v50, false, false,
-                aggregation -> aggregation
-                        .group(group(Group.id(field("state")))
-                                .field("countNumberOfDocumentsForState", AccumulatorExpressions.count())));
+        testPipeline(v50, false, false, aggregation -> aggregation
+                .pipeline(group(Group.id(field("state")))
+                        .field("countNumberOfDocumentsForState", AccumulatorExpressions.count())));
 
     }
 

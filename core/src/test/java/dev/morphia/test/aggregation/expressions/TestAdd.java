@@ -14,7 +14,7 @@ public class TestAdd extends AggregationTest {
     @Test
     public void testExample2() {
         testPipeline(ANY, false, true, aggregation -> aggregation
-                .project(project()
+                .pipeline(project()
                         .include("item", value(1))
                         .include("total",
                                 add(field("price"), field("fee")))));
@@ -24,9 +24,7 @@ public class TestAdd extends AggregationTest {
     @Test
     public void testExample3() {
         testPipeline(ANY, false, true, aggregation -> aggregation
-                .project(project()
-                        //        { $project: { item: 1, billing_date: { $add: [ "$date", 3*24*60*60000 ] } } }
-
+                .pipeline(project()
                         .include("item", value(1))
                         .include("billing_date",
                                 add(field("date"), value(259200000)))));

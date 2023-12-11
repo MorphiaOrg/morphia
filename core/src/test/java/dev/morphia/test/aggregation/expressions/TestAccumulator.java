@@ -17,7 +17,7 @@ public class TestAccumulator extends AggregationTest {
     public void testExample1() {
         skipPipelineCheck = true;
         testPipeline(ANY, false, false, aggregation -> aggregation
-                .group(Group.group(Group.id(field("author")))
+                .pipeline(Group.group(Group.id(field("author")))
                         .field("avgCopies", accumulator(
                                 """
                                         function() {
@@ -48,7 +48,7 @@ public class TestAccumulator extends AggregationTest {
     public void testExample2() {
         skipPipelineCheck = true;
         testPipeline(ANY, false, false, aggregation -> aggregation
-                .group(Group.group(Group.id().field("city", field("city")))
+                .pipeline(Group.group(Group.id().field("city", field("city")))
                         .field("restaurants", accumulator(
                                 """
                                         function(city, userProfileCity) {       \s
