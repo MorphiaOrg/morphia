@@ -1,0 +1,10 @@
+{ "_id" : 1, "responses" : [ true ] },
+{ "_id" : 2, "responses" : [ true, false ] },
+{ "_id" : 3, "responses" : [ ] },
+{ "_id" : 4, "responses" : [ 1, true, "seven" ] },
+{ "_id" : 5, "responses" : [ 0 ] },
+{ "_id" : 6, "responses" : [ [ ] ] },
+{ "_id" : 7, "responses" : [ [ 0 ] ] },
+{ "_id" : 8, "responses" : [ [ false ] ] },
+{ "_id" : 9, "responses" : [ null ] },
+{ "_id" : 10, "responses" : [ undefined ] }

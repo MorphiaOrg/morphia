@@ -1,0 +1,10 @@
+{ "responses" : [ true ], "isAnyTrue" : true }
+{ "responses" : [ true, false ], "isAnyTrue" : true }
+{ "responses" : [ ], "isAnyTrue" : false }
+{ "responses" : [ 1, true, "seven" ], "isAnyTrue" : true }
+{ "responses" : [ 0 ], "isAnyTrue" : false }
+{ "responses" : [ [ ] ], "isAnyTrue" : true }
+{ "responses" : [ [ 0 ] ], "isAnyTrue" : true }
+{ "responses" : [ [ false ] ], "isAnyTrue" : true }
+{ "responses" : [ null ], "isAnyTrue" : false }
+{ "responses" : [ undefined ], "isAnyTrue" : false }

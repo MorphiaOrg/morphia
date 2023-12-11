@@ -1,11 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
-import java.util.List;
-
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.SetExpressions.anyElementTrue;
 import static dev.morphia.aggregation.expressions.SetExpressions.setDifference;
 import static dev.morphia.aggregation.expressions.SetExpressions.setEquals;
 import static dev.morphia.aggregation.expressions.SetExpressions.setIntersection;
@@ -14,16 +11,6 @@ import static dev.morphia.aggregation.expressions.SetExpressions.setUnion;
 import static java.util.Arrays.asList;
 
 public class SetExpressionsTest extends ExpressionsTestBase {
-    @Test
-    public void testAnyElementTrue() {
-        assertAndCheckDocShape("{ $anyElementTrue: [ [ true, false ] ] }", anyElementTrue(value(asList(true, false))), true);
-        assertAndCheckDocShape("{ $anyElementTrue: [ [ [ false ] ] ] }", anyElementTrue(value(asList(asList(false)))), true);
-        assertAndCheckDocShape("{ $anyElementTrue: [ [ null, false, 0 ] ] }",
-                anyElementTrue(value(asList(null, false, 0))), false);
-        assertAndCheckDocShape("{ $anyElementTrue: [ [ ] ] }",
-                anyElementTrue(value(List.of())), false);
-    }
-
     @Test
     public void testSetDifference() {
         assertAndCheckDocShape("{ $setDifference: [ [ 'a', 'b', 'a' ], [ 'b', 'a' ] ] }",
