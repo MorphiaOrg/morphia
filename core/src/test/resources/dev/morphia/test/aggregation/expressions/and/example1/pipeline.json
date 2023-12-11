@@ -1,0 +1,10 @@
+   [
+     {
+       $project:
+          {
+            item: 1,
+            qty: 1,
+            result: { $and: [ { $gt: [ "$qty", 100 ] }, { $lt: [ "$qty", 250 ] } ] }
+          }
+     }
+   ]
