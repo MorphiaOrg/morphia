@@ -16,7 +16,7 @@ import static dev.morphia.test.ServerVersion.v52;
 
 public class TestBottom extends AggregationTest {
     @Test
-    public void testSingleGame() {
+    public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(
                         match(eq("gameId", "G1")),
@@ -27,7 +27,7 @@ public class TestBottom extends AggregationTest {
     }
 
     @Test
-    public void testAcrossGames() {
+    public void testExample3() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(group(id(field("gameId")))
                         .field("playerId", bottom(
