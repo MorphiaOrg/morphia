@@ -30,25 +30,6 @@ import static java.util.List.of;
 import static org.bson.Document.parse;
 
 public class AccumulatorExpressionsTest extends ExpressionsTestBase {
-
-    @Test
-    public void testAvg() {
-        regularDataSet();
-
-        List<Document> actual = getDs().aggregate("sales")
-                .group(Group.group(id("item"))
-                        .field("avgAmount", avg(multiply(
-                                field("price"), field("quantity"))))
-                        .field("avgQuantity", avg(field("quantity"))))
-                .execute(Document.class)
-                .toList();
-
-        assertDocumentEquals(actual, of(
-                parse("{'_id' : 'jkl', 'avgAmount' : 20.0, 'avgQuantity' : 1.0 }"),
-                parse("{'_id' : 'abc', 'avgAmount' : 60.0, 'avgQuantity' : 6.0 }"),
-                parse("{'_id' : 'xyz', 'avgAmount' : 37.5, 'avgQuantity' : 7.5 }")));
-    }
-
     @Test
     public void testFirst() {
         largerDataSet();

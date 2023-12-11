@@ -15,17 +15,21 @@ class Example(
     var inputData: CodeBlock
 
     init {
-        inputData =
-            codeBlocks.firstOrNull { it.contains("insertMany") || it.contains("insertOne") }
-                ?: CodeBlock()
+        var (documents, pipe) =
+            codeBlocks.partition {
+                it.contains("insertMany") ||
+                    it.contains("insertOne") ||
+                    it.startsWith("{") ||
+                    it.startsWith("[")
+            }
+        pipeline = pipe.firstOrNull { it.contains(".aggregate(") } ?: CodeBlock()
+        inputData = documents.firstOrNull() ?: CodeBlock()
         if (!inputData.hasData() && prior != null) {
             prior.feeder = true
             inputData = prior.inputData
         }
-        pipeline = codeBlocks.firstOrNull { it.contains(".aggregate(") } ?: CodeBlock()
-        expectedResults =
-            codeBlocks.firstOrNull { it.startsWith("{") || it.startsWith("[") } ?: CodeBlock()
-        if (!inputData.hasData() && !pipeline.hasData() && expectedResults.hasData()) {
+        expectedResults = codeBlocks.lastOrNull() ?: CodeBlock()
+        if (!inputData.hasData() && expectedResults.hasData()) {
             inputData = expectedResults
             expectedResults = CodeBlock()
         }
