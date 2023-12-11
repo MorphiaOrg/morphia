@@ -1,0 +1,2 @@
+{ location: "America/New_York", login: ISODate("2021-03-13T15:00:00.000Z"), logout: ISODate("2021-03-14T23:00:00.000Z") },
+{ location: "America/Mexico_City", login: ISODate("2021-03-13T10:00:00.000Z"), logout: ISODate("2021-03-14T13:00:00.000Z") }

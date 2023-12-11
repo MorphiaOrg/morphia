@@ -1,0 +1,3 @@
+{ custId: 456, purchaseDate: ISODate("2020-12-31") },
+{ custId: 457, purchaseDate: ISODate("2021-02-28") },
+{ custId: 458, purchaseDate: ISODate("2021-02-26") }

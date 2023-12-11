@@ -1,0 +1,44 @@
+   [
+      {
+         $match:
+            {
+               $expr:
+                  {
+                     $gt:
+                        [ "$deliveryDate",
+                          {
+                             $dateAdd:
+                                {
+                                   startDate: "$purchaseDate",
+                                   unit: "day",
+                                   amount: 5
+                                }
+                           }
+                        ]
+                  }
+            }
+       },
+       {
+          $project: 
+             {
+                _id: 0,
+                custId: 1,
+                purchased:
+                   {
+                       $dateToString: 
+                          {
+                             date: "$purchaseDate",
+                             format: "%Y-%m-%d"
+                          }
+                   },
+                delivery:
+                   {
+                      $dateToString:
+                         {
+                            date: "$deliveryDate",
+                            format: "%Y-%m-%d"
+                         }
+                   }
+             }
+       } 
+   ]

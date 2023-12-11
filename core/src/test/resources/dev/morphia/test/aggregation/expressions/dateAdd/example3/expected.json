@@ -1,0 +1,2 @@
+{ location: "America/New_York", start: "2021-03-13 15:00", days: "2021-03-14 14:00", "hours": "2021-03-14 15:00", "startTZInfo": "2021-03-13 10:00", "daysTZInfo": "2021-03-14 10:00", "hoursTZInfo": "2021-03-14 11:00"}
+{ location: "America/Mexico_City", start: "2021-03-13 10:00", days: "2021-03-14 10:00", "hours": "2021-03-14 10:00", "startTZInfo": "2021-03-13 04:00", "daysTZInfo": "2021-03-14 04:00", "hoursTZInfo": "2021-03-14 04:00"} }

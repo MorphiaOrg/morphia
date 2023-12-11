@@ -1,0 +1,16 @@
+   [
+      {
+         $project:
+            {
+               expectedDeliveryDate:
+                  {
+                     $dateAdd:
+                        {
+                           startDate: "$purchaseDate",
+                           unit: "day",
+                           amount: 3
+                        }
+                  }
+            }
+       }
+    ]
