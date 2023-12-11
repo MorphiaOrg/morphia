@@ -1,0 +1,14 @@
+ [
+      {
+         $group:
+         { _id: "$gameId", playerId:
+            {
+               $top:
+                  {
+                     output: [ "$playerId", "$score" ],
+                     sortBy: { "score": -1 }
+                  }
+            }
+         }
+      }
+] 
