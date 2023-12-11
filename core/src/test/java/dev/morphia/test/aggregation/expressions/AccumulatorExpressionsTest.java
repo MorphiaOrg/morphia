@@ -11,7 +11,6 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.addToSet;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.function;
@@ -31,24 +30,6 @@ import static java.util.List.of;
 import static org.bson.Document.parse;
 
 public class AccumulatorExpressionsTest extends ExpressionsTestBase {
-
-    @Test
-    public void testAddToSet() {
-        regularDataSet();
-
-        List<Document> actual = getDs().aggregate("sales")
-                .group(Group.group(id()
-                        .field("day", dayOfYear(field("date")))
-                        .field("year", year(field("date"))))
-                        .field("itemsSold", addToSet(field("item"))))
-                .execute(Document.class)
-                .toList();
-
-        assertDocumentEquals(actual, of(
-                parse("{ '_id' : { 'day' : 46, 'year' : 2014 }, 'itemsSold' : [ 'xyz', 'abc' ] }"),
-                parse("{ '_id' : { 'day' : 34, 'year' : 2014 }, 'itemsSold' : [ 'xyz', 'jkl' ] }"),
-                parse("{ '_id' : { 'day' : 1, 'year' : 2014 }, 'itemsSold' : [ 'abc' ] }")));
-    }
 
     @Test
     public void testAvg() {
