@@ -1,0 +1,10 @@
+   [
+     {
+       $group:
+         {
+           _id: { day: { $dayOfYear: "$date"}, year: { $year: "$date" } },
+           totalAmount: { $sum: { $multiply: [ "$price", "$quantity" ] } },
+           count: { $sum: 1 }
+         }
+     }
+   ]

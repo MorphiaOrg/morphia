@@ -15,11 +15,9 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.function;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.last;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.DateExpressions.dayOfYear;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.expressions.WindowExpressions.stdDevPop;
 import static dev.morphia.aggregation.expressions.WindowExpressions.stdDevSamp;
@@ -149,24 +147,6 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                         .field("ageStdDev", stdDevSamp(field("age"))))
                 .execute(Document.class)
                 .toList();
-    }
-
-    @Test
-    public void testSum() {
-        regularDataSet();
-        List<Document> actual = getDs().aggregate("sales")
-                .group(Group.group(id()
-                        .field("day", dayOfYear(field("date")))
-                        .field("year", year(field("date"))))
-                        .field("totalAmount", sum(multiply(field("quantity"), field("price"))))
-                        .field("count", sum(value(1))))
-                .execute(Document.class)
-                .toList();
-
-        assertDocumentEquals(actual, of(
-                parse("{ '_id' : { 'day' : 46, 'year' : 2014 }, 'totalAmount' : 150, 'count' : 2 }"),
-                parse("{ '_id' : { 'day' : 34, 'year' : 2014 }, 'totalAmount' : 45, 'count' : 2 }"),
-                parse("{ '_id' : { 'day' : 1, 'year' : 2014 }, 'totalAmount' : 20, 'count' : 1 }")));
     }
 
     private void largerDataSet() {

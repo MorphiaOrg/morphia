@@ -1,0 +1,3 @@
+{ "_id" : { "day" : 1, "year" : 2014 }, "totalAmount" : 20, "count" : 1 },
+{ "_id" : { "day" : 34, "year" : 2014 }, "totalAmount" : 45, "count" : 2 }
+{ "_id" : { "day" : 46, "year" : 2014 }, "totalAmount" : 150, "count" : 2 }
