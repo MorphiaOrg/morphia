@@ -1,0 +1,19 @@
+ [
+   {
+      $match : { gameId : "G1" }
+   },
+   {
+      $group:
+         {
+            _id: "$gameId",
+            maxThreeScores:
+               {
+                  $maxN:
+                  {
+                     input: ["$score","$playerId"],
+                     n:3
+                  }
+               }
+         }
+   }
+] 

@@ -186,12 +186,20 @@ public final class AccumulatorExpressions {
     /**
      * Returns the highest expression value for each group.
      *
-     * @param value the value
+     * @param value  the value
+     * @param others optional other fields to consider
      * @return the new expression
      * @aggregation.expression $max
      */
-    public static Expression max(Expression value) {
-        return new Expression("$max", value);
+    public static Expression max(Expression value, Expression... others) {
+        var maxValue = value;
+        if (others.length != 0) {
+            var list = new ArrayList<Expression>();
+            list.add(value);
+            list.addAll(asList(others));
+            maxValue = new ExpressionList(list);
+        }
+        return new Expression("$max", maxValue);
     }
 
     /**

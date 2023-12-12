@@ -1,0 +1,3 @@
+{ "_id" : "xyz", "maxTotalAmount" : 50, "maxQuantity" : 10 }
+{ "_id" : "jkl", "maxTotalAmount" : 20, "maxQuantity" : 1 }
+{ "_id" : "abc", "maxTotalAmount" : 100, "maxQuantity" : 10 }
