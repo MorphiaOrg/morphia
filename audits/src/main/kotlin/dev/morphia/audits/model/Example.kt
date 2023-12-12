@@ -50,7 +50,7 @@ class Example(
     fun output(folder: File) {
         this.folder = folder
         val lock = File(folder, "lock")
-        if (!lock.exists()) {
+        if (!lock.exists() || System.getProperty("IGNORE_LOCKS") != null) {
             writeInputData(folder)
             writePipeline(folder)
             writeExpectedData(folder)
