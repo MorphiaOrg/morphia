@@ -42,7 +42,7 @@ public class TestFilter extends AggregationTest {
 
     @Test
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(ServerVersion.v52, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("items", filter(field("items"),
                                 gte(value("$$item.price"), value(100)))
