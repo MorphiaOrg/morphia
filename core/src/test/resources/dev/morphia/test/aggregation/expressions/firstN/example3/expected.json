@@ -1,0 +1,2 @@
+{      _id: 'G1',      playerId: [ [ 'PlayerA', 31 ], [ 'PlayerB', 33 ], [ 'PlayerC', 99 ] ]   },
+{      _id: 'G2',      playerId: [ [ 'PlayerA', 10 ], [ 'PlayerB', 14 ], [ 'PlayerC', 66 ] ]   }

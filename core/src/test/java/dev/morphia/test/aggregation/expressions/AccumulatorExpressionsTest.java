@@ -12,7 +12,6 @@ import org.bson.Document;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.function;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.last;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
@@ -29,23 +28,6 @@ import static java.util.List.of;
 import static org.bson.Document.parse;
 
 public class AccumulatorExpressionsTest extends ExpressionsTestBase {
-    @Test
-    public void testFirst() {
-        largerDataSet();
-
-        List<Document> actual = getDs().aggregate("sales")
-                .sort(Sort.sort()
-                        .ascending("item", "date"))
-                .group(Group.group(id("item"))
-                        .field("firstSalesDate", first(field("date"))))
-                .execute(Document.class)
-                .toList();
-
-        assertDocumentEquals(actual, of(
-                parse("{ '_id' : 'xyz', 'firstSalesDate' : ISODate('2014-02-03T09:05:00Z') }"),
-                parse("{ '_id' : 'jkl', 'firstSalesDate' : ISODate('2014-02-03T09:00:00Z') }"),
-                parse("{ '_id' : 'abc', 'firstSalesDate' : ISODate('2014-01-01T08:00:00Z') }")));
-    }
 
     @Test
     public void testFunction() {

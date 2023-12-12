@@ -1,15 +1,15 @@
  [
+      { $sort : { score : -1 } },
       {
          $group:
          { _id: "$gameId", playerId:
             {
-               $bottomN:
+               $firstN:
                   {
-                     output: [ "$playerId","$score" ],
-                     sortBy: { "score": -1 },
+                     input: [ "$playerId","$score" ],
                      n: 3
                   }
             }
          }
       }
-] 
+   ] 

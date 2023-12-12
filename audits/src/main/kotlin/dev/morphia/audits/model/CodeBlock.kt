@@ -41,7 +41,7 @@ class CodeBlock {
             while (line.trim() in listOf("[", "]", "(", ")", "])", "] )")) {
                 line = if (iterator.hasNext()) iterator.next() else ""
             }
-            line = line.replace("new Date(", "Date(")
+            line = line.replace("new Date(", "ISODate(")
             if (line.isNotBlank()) {
                 sanitized += collect(line, iterator).trim()
             }

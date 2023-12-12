@@ -1,0 +1,15 @@
+ [
+   {
+      $group:
+      { 
+      _id: "$gameId", playerId:
+         {
+            $firstN:
+               {
+                  input: [ "$playerId","$score" ],
+                  n: 3
+               }
+         }
+      }
+   }
+] 

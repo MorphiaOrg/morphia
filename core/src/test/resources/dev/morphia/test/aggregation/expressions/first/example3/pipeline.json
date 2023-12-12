@@ -1,0 +1,16 @@
+ [
+   {
+      $setWindowFields: {
+         partitionBy: "$state",
+         sortBy: { orderDate: 1 },
+         output: {
+            firstOrderTypeForState: {
+               $first: "$type",
+               window: {
+                  documents: [ "unbounded", "current" ]
+               }         
+            }
+         }
+      }
+   }
+] 

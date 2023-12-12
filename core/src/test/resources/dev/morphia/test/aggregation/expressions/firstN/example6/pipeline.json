@@ -1,0 +1,16 @@
+ [ 
+   {
+      $documents: [
+         { array: [10, 20, 30, 40] } ] 
+   },
+   { $project: { 
+      firstThreeElements:{
+                           $firstN: 
+                           { 
+                              input: "$array", 
+                              n: 3 
+                           }
+                        }
+               } 
+   }
+] 

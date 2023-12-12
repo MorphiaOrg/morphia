@@ -1,0 +1,10 @@
+   [
+     { $sort: { item: 1, date: 1 } },
+     {
+       $group:
+         {
+           _id: "$item",
+           firstSale: { $first: "$date" }
+         }
+     }
+   ]

@@ -1,0 +1,3 @@
+{ _id: 'jkl', firstSale: ISODate("2014-02-03T09:00:00.000Z") },
+{ _id: 'xyz', firstSale: ISODate("2014-02-03T09:05:00.000Z") },
+{ _id: 'abc', firstSale: ISODate("2014-01-01T08:00:00.000Z") }
