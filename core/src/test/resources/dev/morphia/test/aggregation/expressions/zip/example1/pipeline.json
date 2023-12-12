@@ -1,0 +1,14 @@
+[{
+  $project: {
+    _id: false,
+    transposed: {
+      $zip: {
+        inputs: [
+          { $arrayElemAt: [ "$matrix", 0 ] },
+          { $arrayElemAt: [ "$matrix", 1 ] },
+          { $arrayElemAt: [ "$matrix", 2 ] },
+        ]
+      }
+    }
+  }
+}]

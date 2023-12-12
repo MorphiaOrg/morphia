@@ -15,6 +15,7 @@ import dev.morphia.aggregation.expressions.impls.ZipExpression;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.query.Sort;
 
+import static dev.morphia.aggregation.expressions.Expressions.value;
 import static java.util.Arrays.asList;
 
 /**
@@ -168,6 +169,18 @@ public final class ArrayExpressions {
      * @aggregation.expression $range
      */
     public static RangeExpression range(int start, int end) {
+        return new RangeExpression(value(start), value(end));
+    }
+
+    /**
+     * Outputs an array containing a sequence of integers according to user-defined inputs.
+     *
+     * @param start the starting value
+     * @param end   the ending value
+     * @return the new expression
+     * @aggregation.expression $range
+     */
+    public static RangeExpression range(Expression start, Expression end) {
         return new RangeExpression(start, end);
     }
 

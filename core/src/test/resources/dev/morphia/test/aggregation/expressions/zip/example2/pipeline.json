@@ -1,0 +1,23 @@
+[{
+  $project: {
+    _id: false,
+    pages: {
+      $filter: {
+        input: {
+          $zip: {
+            inputs: [ "$pages", { $range: [0, { $size: "$pages" }] } ]
+          }
+        },
+        as: "pageWithIndex",
+        cond: {
+          $let: {
+            vars: {
+              page: { $arrayElemAt: [ "$$pageWithIndex", 0 ] }
+            },
+            in: { $gte: [ "$$page.reviews", 1 ] }
+          }
+        }
+      }
+    }
+  }
+}]

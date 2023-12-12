@@ -8,8 +8,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * Outputs an array containing a sequence of integers according to user-defined inputs.
  */
 public class RangeExpression extends Expression {
-    private final int start;
-    private final int end;
+    private final Expression start;
+    private final Expression end;
     private Integer step;
 
     /**
@@ -19,7 +19,7 @@ public class RangeExpression extends Expression {
      * @morphia.internal
      */
     @MorphiaInternal
-    public RangeExpression(int start, int end) {
+    public RangeExpression(Expression start, Expression end) {
         super("$range");
         this.start = start;
         this.end = end;
@@ -31,7 +31,7 @@ public class RangeExpression extends Expression {
      * @return the start
      */
     @MorphiaInternal
-    public int start() {
+    public Expression start() {
         return start;
     }
 
@@ -41,7 +41,7 @@ public class RangeExpression extends Expression {
      * @return the end
      */
     @MorphiaInternal
-    public int end() {
+    public Expression end() {
         return end;
     }
 

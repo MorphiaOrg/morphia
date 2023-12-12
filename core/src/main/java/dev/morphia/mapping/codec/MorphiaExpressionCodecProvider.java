@@ -29,6 +29,7 @@ import dev.morphia.mapping.codec.expressions.EndResultsExpressionCodec;
 import dev.morphia.mapping.codec.expressions.ExpMovingAvgCodec;
 import dev.morphia.mapping.codec.expressions.ExpressionCodec;
 import dev.morphia.mapping.codec.expressions.ExpressionListCodec;
+import dev.morphia.mapping.codec.expressions.FilterExpressionCodec;
 import dev.morphia.mapping.codec.expressions.FunctionExpressionCodec;
 import dev.morphia.mapping.codec.expressions.IfNullCodec;
 import dev.morphia.mapping.codec.expressions.IndexExpressionCodec;
@@ -96,6 +97,7 @@ public class MorphiaExpressionCodecProvider implements CodecProvider {
         addCodec(new ExpMovingAvgCodec(datastore));
         addCodec(new ExpressionCodec(datastore));
         addCodec(new ExpressionListCodec(datastore));
+        addCodec(new FilterExpressionCodec(datastore));
         addCodec(new FunctionExpressionCodec(datastore));
         addCodec(new IfNullCodec(datastore));
         addCodec(new IndexExpressionCodec(datastore));

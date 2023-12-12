@@ -7,6 +7,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.aggregation.expressions.impls.FilterExpression;
 import dev.morphia.aggregation.expressions.impls.LiteralExpression;
 import dev.morphia.aggregation.expressions.impls.MetaExpression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
@@ -55,6 +56,17 @@ public final class Expressions {
      */
     public static Expression field(String name) {
         return new ValueExpression(name.startsWith("$") ? name : "$" + name);
+    }
+
+    /**
+     * @param input An expression that resolves to an array.
+     * @param cond  An expression that resolves to a boolean value used to determine if an element should be included in the output array.
+     *              The expression references each element of the input array individually with the variable name specified in as.
+     *
+     * @return
+     */
+    public static FilterExpression filter(Expression input, Expression cond) {
+        return new FilterExpression(input, cond);
     }
 
     /**
