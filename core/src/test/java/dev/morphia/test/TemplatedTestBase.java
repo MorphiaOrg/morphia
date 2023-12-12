@@ -196,11 +196,21 @@ public abstract class TemplatedTestBase extends TestBase {
                 .toList());
         String line = list.get(0);
         if (line.startsWith("[")) {
-            list.set(0, line.substring(1));
+            line = line.substring(1);
+            if (!line.isBlank()) {
+                list.set(0, line);
+            } else {
+                list.remove(0);
+            }
         }
         line = list.get(list.size() - 1);
         if (line.endsWith("]")) {
-            list.set(list.size() - 1, line.substring(0, line.length() - 1));
+            line = line.substring(0, line.length() - 1);
+            if (!line.isBlank()) {
+                list.set(list.size() - 1, line);
+            } else {
+                list.remove(list.size() - 1);
+            }
         }
 
         var json = list.iterator();
