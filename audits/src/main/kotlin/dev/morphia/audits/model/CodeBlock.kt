@@ -41,13 +41,20 @@ class CodeBlock {
             while (line.trim() in listOf("[", "]", "(", ")", "])", "] )")) {
                 line = if (iterator.hasNext()) iterator.next() else ""
             }
-            line = line.replace("new Date(", "ISODate(")
+            line = applyReplacements(line)
             if (line.isNotBlank()) {
                 sanitized += collect(line, iterator).trim()
             }
         }
 
         return sanitized
+    }
+
+    private fun applyReplacements(line: String): String {
+        var final = line
+        val replacements = listOf("new Date(" to "ISODate(", " Long(" to " NumberLong(")
+        replacements.forEach { r -> final = final.replace(r.first, r.second) }
+        return final
     }
 
     private fun collect(line: String, iterator: MutableIterator<String>): String {
