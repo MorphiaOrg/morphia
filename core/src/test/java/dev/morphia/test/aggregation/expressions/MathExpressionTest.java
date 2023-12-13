@@ -77,12 +77,6 @@ public class MathExpressionTest extends ExpressionsTestBase {
     }
 
     @Test
-    public void testSubtract() {
-        assertAndCheckDocShape("{ $subtract: [ { $add: [ 4 , 5 ] }, 6 ] }",
-                MathExpressions.subtract(MathExpressions.add(value(4), value(5)), value(6)), 3);
-    }
-
-    @Test
     public void testTrunc() {
         if (serverIsAtLeastVersion(Version.forIntegers(4, 2))) {
             assertAndCheckDocShape("{ $trunc: [ 7.85, 1 ] }", trunc(value(7.85), value(1)), 7.8);
