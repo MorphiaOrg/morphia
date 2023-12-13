@@ -1,0 +1,2 @@
+removed the $merge
+massage the data to sidestep a shortcoming in the parser tramples on the double $expr in the match

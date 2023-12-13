@@ -1,0 +1,94 @@
+   [ 
+      {
+         $project:
+            {
+               _id: 0,
+               location: 1,
+               start:
+                  {
+                     $dateToString:
+                        {
+                           date: "$login",
+                           format: "%Y-%m-%d %H:%M"
+                        }
+                  },
+               days:
+                  {
+                     $dateToString: 
+                        {
+                           date: {
+                                 $dateSubtract:
+                                    {
+                                       startDate: "$login",
+                                       unit: "day",
+                                       amount: 1,
+                                       timezone: "$location"
+                                    }
+                              },
+                           format: "%Y-%m-%d %H:%M"
+                        }
+                  },
+               hours:
+                  {
+                     $dateToString:
+                        {
+                           date:
+                              {
+                                 $dateSubtract:
+                                 {
+                                    startDate: "$login",
+                                    unit: "hour",
+                                    amount: 24,
+                                    timezone: "$location"
+                                 }
+                              },
+                           format: "%Y-%m-%d %H:%M"
+                        }
+                  },
+               startTZInfo:
+                  {
+                     $dateToString:
+                        {
+                           date: "$login",
+                           format: "%Y-%m-%d %H:%M",
+                           timezone: "$location"
+                        }
+                  },
+               daysTZInfo:
+                  {
+                     $dateToString:
+                        {
+                           date:
+                              {
+                                 $dateSubtract:
+                                    {
+                                       startDate: "$login",
+                                       unit: "day",
+                                       amount: 1,
+                                       timezone: "$location"
+                                    }
+                              },
+                           format: "%Y-%m-%d %H:%M",
+                           timezone: "$location"
+                        }
+                  },
+               hoursTZInfo:
+                  {
+                     $dateToString:
+                        {
+                           date: {
+                                 $dateSubtract:
+                                    {
+                                       startDate: "$login",
+                                       unit: "hour",
+                                       amount: 24,
+                                       timezone: "$location"
+                                    }
+                              },
+                           format: "%Y-%m-%d %H:%M",
+                           timezone: "$location"
+                        }
+                  },
+            }
+      }
+   ]

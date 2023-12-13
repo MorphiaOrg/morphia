@@ -193,6 +193,7 @@ public abstract class TemplatedTestBase extends TestBase {
         List<String> list = new ArrayList<>(new BufferedReader(new InputStreamReader(stream))
                 .lines()
                 .map(String::trim)
+                //                .map(line -> line.replaceAll("(\\$*\\w+?):", "\"$1\":"))
                 .toList());
         String line = list.get(0);
         if (line.startsWith("[")) {

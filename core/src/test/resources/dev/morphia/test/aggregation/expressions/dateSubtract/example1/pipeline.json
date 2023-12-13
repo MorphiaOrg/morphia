@@ -1,0 +1,13 @@
+[
+  {
+    $project: {
+      logoutTime: {
+        $dateSubtract: {
+          startDate: "$logout",
+          unit: "hour",
+          amount: 3
+        }
+      }
+    }
+  }
+]

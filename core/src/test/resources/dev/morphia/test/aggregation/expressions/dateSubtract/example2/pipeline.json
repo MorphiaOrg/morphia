@@ -1,0 +1,37 @@
+   [
+      {
+         $match: 
+            {
+               $expr:
+                  { 
+                     $gt:
+                        [
+                           "$logoutTime", 
+                            {
+                               $dateSubtract: 
+                                  {
+                                     startDate: "$$NOW",
+                                     unit: "week",
+                                     amount: 1
+                                  } 
+                            }
+                        ] 
+                  } 
+             }
+      },
+      {
+         $project: 
+            {
+               _id: 0,
+               custId: 1, 
+               loggedOut: 
+                  {
+                     $dateToString:
+                        {
+                           date: "$logoutTime",
+                           format: "%Y-%m-%d"
+                        }
+                  }
+            }
+      } 
+   ]
