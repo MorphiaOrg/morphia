@@ -1,0 +1,13 @@
+ [
+   {
+      $setWindowFields: {
+         partitionBy: "$state",
+         sortBy: { quantity: -1 },
+         output: {
+            denseRankQuantityForState: {
+               $denseRank: {}  
+            }
+         }
+      }
+   }
+] 
