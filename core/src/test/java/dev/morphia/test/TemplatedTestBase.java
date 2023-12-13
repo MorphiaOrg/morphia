@@ -81,7 +81,12 @@ public abstract class TemplatedTestBase extends TestBase {
         List<Document> actual = removeIds ? removeIds(documents) : documents;
         List<Document> expected = loadExpected(resourceName);
 
-        Comparanator.of(null, actual, expected, orderMatters).compare();
+        try {
+            Comparanator.of(null, actual, expected, orderMatters).compare();
+        } catch (AssertionError e) {
+            throw new AssertionError("%s\n\n actual: %s".formatted(e.getMessage(), toString(actual, "\n\t")),
+                    e);
+        }
     }
 
     private static String toString(List<Document> actual, String prefix) {

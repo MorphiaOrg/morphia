@@ -22,7 +22,6 @@ import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.dateFromParts;
-import static dev.morphia.aggregation.expressions.DateExpressions.dateFromString;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateToParts;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
 import static dev.morphia.aggregation.expressions.DateExpressions.dayOfMonth;
@@ -106,45 +105,6 @@ public class TestDateExpression extends ExpressionsTestBase {
         result.remove("_id");
         assertEquals(result, parse("{'date': ISODate('2017-02-08T12:00:00Z'), 'date_iso': ISODate('2017-02-08T12:00:00Z'),"
                 + "'date_timezone': ISODate('2017-01-01T04:46:12Z')}"));
-    }
-
-    @Test
-    public void testDateFromString() {
-        List<Document> list = List.of(
-                parse("{ _id: 1, date: '2017-02-08T12:10:40.787', timezone: 'America/New_York', message:  'Step 1: Started' }"),
-                parse("{ _id: 2, date: '2017-02-08', timezone: '-05:00', message:  'Step 1: Ended' }"),
-                parse("{ _id: 3, message:  ' Step 1: Ended ' }"),
-                parse("{ _id: 4, date: '2017-02-09', timezone: 'Europe/London', message: 'Step 2: Started'}"),
-                parse("{ _id: 5, date: '2017-02-09T03:35:02.055', timezone: '+0530', message: 'Step 2: In Progress'}"));
-
-        insert("logmessages", list);
-
-        List<Document> result = getDs().aggregate(LogMessage.class)
-                .project(project().include("date", dateFromString()
-                        .dateString(field("date"))
-                        .timeZone("America/New_York")))
-                .execute(Document.class)
-                .toList();
-        assertEquals(result, List.of(
-                parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
-                parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
-                parse("{ '_id' : 3, 'date' : null }"),
-                parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T05:00:00Z') }"),
-                parse("{ '_id' : 5, 'date' : ISODate('2017-02-09T08:35:02.055Z') }")));
-
-        result = getDs().aggregate(LogMessage.class)
-                .project(project().include("date", dateFromString()
-                        .dateString(field("date"))
-                        .timeZone(field("timezone"))))
-                .execute(Document.class)
-                .toList();
-
-        assertEquals(result, List.of(
-                parse("{ '_id' : 1, 'date' : ISODate('2017-02-08T17:10:40.787Z') }"),
-                parse("{ '_id' : 2, 'date' : ISODate('2017-02-08T05:00:00Z') }"),
-                parse("{ '_id' : 3, 'date' : null }"),
-                parse("{ '_id' : 4, 'date' : ISODate('2017-02-09T00:00:00Z') }"),
-                parse("{ '_id' : 5, 'date' : ISODate('2017-02-08T22:05:02.055Z') }")));
     }
 
     @Test

@@ -28,8 +28,8 @@
                   {
                      $dateToString:
                         {
-                           date: "$logoutTime",
-                           format: "%Y-%m-%d"
+                           format: "%Y-%m-%d",
+                           date: "$logoutTime"
                         }
                   }
             }

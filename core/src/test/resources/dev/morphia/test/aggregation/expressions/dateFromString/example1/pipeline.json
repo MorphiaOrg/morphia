@@ -3,7 +3,7 @@
       date: {
          $dateFromString: {
             dateString: '$date',
-            timezone: 'America/New_York'
+            timezone: '$timezone'
          }
       }
    }
