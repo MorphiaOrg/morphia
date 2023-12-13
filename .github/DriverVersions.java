@@ -45,7 +45,7 @@ public class DriverVersions {
                           .map(JsonNode::asText)
                           .map(Version::valueOf)
                           .filter(it -> it.lessThan(Version.valueOf("5.0.0")))
-                          .filter(it -> it.greaterThan(Version.valueOf("4.0.0")))
+                          .filter(it -> it.greaterThan(Version.valueOf("4.2.0")))
                           .filter(it1 -> it1.getBuildMetadata().isEmpty())
                           .filter(it1 -> it1.getPreReleaseVersion().isEmpty())
                           .collect(groupingBy(v -> forIntegers(v.getMajorVersion(), v.getMinorVersion()), LinkedHashMap::new, toList()));
