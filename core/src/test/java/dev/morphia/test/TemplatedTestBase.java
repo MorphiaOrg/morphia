@@ -132,7 +132,7 @@ public abstract class TemplatedTestBase extends TestBase {
                 try {
                     data.add(Document.parse(json));
                 } catch (JsonParseException e) {
-                    throw new JsonParseException(e.getMessage() + "\n" + json);
+                    throw new JsonParseException(e.getMessage() + "\n" + json, e);
                 }
             }
         } catch (IOException e) {

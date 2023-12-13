@@ -1,0 +1,10 @@
+ [ {
+   $project: {
+      date: {
+         $dateFromString: {
+            dateString: '$date',
+            timezone: 'America/New_York'
+         }
+      }
+   }
+} ] 

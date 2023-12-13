@@ -12,11 +12,9 @@ public interface Comparanator {
             return new ListComparanator(null, (List<?>) actual, (List<?>) expected, orderMatters);
         } else if (actual instanceof Map && expected instanceof Map) {
             return new MapComparanator(parent, (Map<?, ?>) actual, (Map<?, ?>) expected, orderMatters);
-            //        } else if (actual instanceof Double && expected instanceof Double) {
-            //            return new ObjectComparator(parent, actual.toString(), expected.toString(), "values should match");
         } else {
             var message = "values should match.\n\tactual: %s\n\texpected: %s".formatted(actual, expected);
-            if (actual instanceof Integer && expected instanceof Integer) {
+            if (actual instanceof Long || expected instanceof Long) {
                 return new ObjectComparanator(parent, coerceToLong(actual), coerceToLong(expected), message);
             } else {
                 return new ObjectComparanator(parent, actual, expected, message);

@@ -1,0 +1,3 @@
+{start: ISODate( "2010-01-01T00:00:00Z" ), end: ISODate( "2011-01-01T00:00:00Z" ), years: 1, months: 12, days: 365}
+{start: ISODate( "2010-01-01T00:00:00Z" ), end: ISODate( "2011-06-30T00:00:00Z" ), years: 1, months: 17, days: 545}
+{start: ISODate( "2010-03-01T00:00:00Z" ), end: ISODate( "2010-04-30T00:00:00Z" ), years: 0, months: 1, days: 60}

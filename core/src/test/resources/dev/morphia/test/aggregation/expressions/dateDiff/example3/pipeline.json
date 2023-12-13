@@ -1,0 +1,37 @@
+   [
+      {
+         $project:
+            {
+               _id: 0,
+               wks_default:
+                  {
+                     $dateDiff:
+                        { 
+                           startDate: "$start",  
+                           endDate: "$end", 
+                           unit: "week"
+                        }
+                  }, 
+               wks_monday:
+                  {
+                     $dateDiff:
+                        { 
+                           startDate: "$start",
+                           endDate: "$end", 
+                           unit: "week", 
+                           startOfWeek: "monday"
+                        }
+                  },
+               wks_friday:
+                  {
+                     $dateDiff:
+                        { 
+                           startDate: "$start",
+                           endDate: "$end",
+                           unit: "week",
+                           startOfWeek: "friday"
+                        }
+                  },
+            }
+       }
+   ]

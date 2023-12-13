@@ -1,0 +1,11 @@
+ [ {
+   $project: {
+      date: {
+         $dateFromString: {
+            dateString: '$date',
+            timezone: '$timezone',
+            onNull: new Date(0)
+         }
+      }
+   }
+} ] 

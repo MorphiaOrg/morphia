@@ -28,7 +28,8 @@ class RstAuditorTest {
                         "\$interface",
                         "\$search", // a complicated animal.  we'll get there.
                         "\$searchMeta", // a complicated animal.  we'll get there.
-                        "\$substr" // deprecated/aliased away
+                        "\$substr", // deprecated/aliased away
+                        "\$vectorSearch"
                     )
                 )
 

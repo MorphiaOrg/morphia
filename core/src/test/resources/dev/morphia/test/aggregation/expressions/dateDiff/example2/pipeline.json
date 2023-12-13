@@ -1,0 +1,37 @@
+   [
+      {
+         $project:
+            {
+               _id: 0,
+               start: "$start",
+               end: "$end",
+               years:
+                  {
+                     $dateDiff:
+                        {
+                           startDate: "$start",
+                           endDate: "$end",
+                           unit: "year"
+                        }
+                  }, 
+               months:
+                  {
+                     $dateDiff:
+                        {
+                           startDate: "$start",
+                           endDate: "$end",
+                           unit: "month"
+                        }
+                  },
+               days:
+                  {
+                     $dateDiff:
+                        {
+                           startDate: "$start",
+                           endDate: "$end",
+                           unit: "day"
+                        }
+                  },
+            }
+       }
+   ]

@@ -1,0 +1,2 @@
+{ "_id" : 1, "date" : "2017-02-08T12:10:40.787", timezone: "America/New_York" },
+{ "_id" : 2, "date" : null, timezone: "America/New_York" }
