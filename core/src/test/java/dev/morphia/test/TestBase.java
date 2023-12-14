@@ -49,6 +49,8 @@ public abstract class TestBase extends MorphiaTestSetup {
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
     protected static final String TEST_DB_NAME = "morphia_test";
 
+    protected DriverVersion minDriver = DriverVersion.v41;
+
     public TestBase() {
     }
 
@@ -328,6 +330,11 @@ public abstract class TestBase extends MorphiaTestSetup {
         if (!expected.getClass().equals(actual.getClass())) {
             assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
+    }
+
+    @BeforeMethod
+    private void setDriverMinimum() {
+        minDriver = DriverVersion.v43;
     }
 
     public static class ZDTCodecProvider implements CodecProvider {

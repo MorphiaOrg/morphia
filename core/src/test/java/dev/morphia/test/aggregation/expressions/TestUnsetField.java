@@ -23,6 +23,7 @@ public class TestUnsetField extends AggregationTest {
 
     @Test
     public void testExample2() {
+        minDriver = DriverVersion.v43;
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 replaceWith(unsetField(literal("$price"), ROOT))));
     }

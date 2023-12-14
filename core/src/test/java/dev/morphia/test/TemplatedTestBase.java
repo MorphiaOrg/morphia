@@ -73,6 +73,7 @@ public abstract class TemplatedTestBase extends TestBase {
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         String collection = "aggtest";
         checkMinServerVersion(serverVersion);
+        checkMinDriverVersion(minDriver);
         var resourceName = discoverResourceName(new Exception().getStackTrace());
         loadData(collection, "data.json");
 

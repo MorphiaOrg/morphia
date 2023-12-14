@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
+import dev.morphia.test.DriverVersion;
 import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
@@ -17,6 +18,7 @@ import static dev.morphia.query.filters.Filters.expr;
 public class TestGetField extends AggregationTest {
     @Test
     public void testExample1() {
+        minDriver = DriverVersion.v43;
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 match(expr(gt(getField("price.usd"), value(200))))));
     }

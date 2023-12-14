@@ -1,27 +1,33 @@
-#! /bin/sh
+#! /bin/bash
 
+
+function sanitize() {
+  echo $* | sed -e "s|[',]||g"| sed -e "s|\[||g"| sed -e "s|\]||g"
+}
 
 BUILD=.github/workflows/build.yml
-MATDRIVER=$( yq '.jobs.Test.strategy.matrix.driver[]' $BUILD )
-INCDRIVER=$( yq '.jobs.Test.strategy.matrix.include.[].driver' $BUILD )
-DRIVERS=$( echo $MATDRIVER $INCDRIVER | sort -r | uniq )
-MONGOS=$( yq '.jobs.Test.strategy.matrix.mongo[]' $BUILD  | sort | uniq )
+[ -z "$DRIVERS" ] && MATDRIVER=`sanitize $( ./.github/DriverVersions.java  all )`
+[ -z "$DRIVERS" ] && SNAPSHOT=`sanitize $( ./.github/DriverSnapshot.java )`
+[ -z "$MONGOS" ] && MONGOS=`sanitize $( ./.github/BuildMatrix.java )`
 
-#echo DRIVERS=$DRIVERS
+[ -z "$DRIVERS" ] && DRIVERS=$( echo $MATDRIVER $SNAPSHOT | sort -r | uniq )
+
+echo DRIVERS=$DRIVERS
 echo MONGOS=$MONGOS
-#exit
 
-echo $'\033]30;'Primary First Build'\007'
-mvn install -DskipTests
+# exit
+
+./mvnw install -DskipTests
 
 mkdir -p target
+rm -f target/mongo-*
 
 for MONGO in $MONGOS
 do
-   for DRIVER in $MATDRIVER
+   for DRIVER in $DRIVERS
    do
-      echo $'\033]30;'Driver: $DRIVER -- Mongo: $MONGO'\007'
+      echo testing with mongo $MONGO and driver $DRIVER
       OUTFILE="target/mongo-$MONGO-driver-$DRIVER.txt"
-      mvn surefire:test -Dmongodb=$MONGO -Ddriver.version=$DRIVER | tee "$OUTFILE"
+      ./mvnw surefire:test -Dmongodb=$MONGO -Ddriver.version=$DRIVER | tee "$OUTFILE" && rm "$OUTFILE"
    done
 done
