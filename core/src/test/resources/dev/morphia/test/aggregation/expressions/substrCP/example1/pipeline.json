@@ -1,0 +1,13 @@
+  [
+    {
+      $project: {
+        item: 1,
+        yearSubstring: { $substrCP: [ "$quarter", 0, 2 ] },
+        quarterSubtring: { 
+          $substrCP: [ 
+            "$quarter", 2, { $subtract: [ { $strLenCP: "$quarter" }, 2 ] } 
+          ]
+        }
+      }
+    }
+  ]

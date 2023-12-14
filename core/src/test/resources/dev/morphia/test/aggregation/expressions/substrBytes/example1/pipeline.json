@@ -1,0 +1,13 @@
+  [
+    {
+      $project: {
+        item: 1,
+        yearSubstring: { $substrBytes: [ "$quarter", 0, 2 ] },
+        quarterSubtring: { 
+          $substrBytes: [ 
+            "$quarter", 2, { $subtract: [ { $strLenBytes: "$quarter" }, 2 ] }
+          ]
+        }
+      }
+    }
+  ]

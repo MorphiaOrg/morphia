@@ -206,7 +206,21 @@ public final class StringExpressions {
      * @aggregation.expression $substrBytes
      */
     public static Expression substrBytes(Expression input, int start, int length) {
-        return new Expression("$substrBytes", asList(input, new ValueExpression(start), new ValueExpression(length)));
+        return substrBytes(input, new ValueExpression(start), new ValueExpression(length));
+    }
+
+    /**
+     * Returns the substring of a string. Starts with the character at the specified UTF-8 byte index (zero-based) in the string and
+     * continues for the specified number of bytes.
+     *
+     * @param input  the string to process
+     * @param start  Indicates the starting point of the substring
+     * @param length the byte count to include. Can not result in an ending index that is in the middle of a UTF-8 character.
+     * @return the new expression
+     * @aggregation.expression $substrBytes
+     */
+    public static Expression substrBytes(Expression input, Expression start, Expression length) {
+        return new Expression("$substrBytes", asList(input, start, length));
     }
 
     /**
@@ -220,7 +234,21 @@ public final class StringExpressions {
      * @aggregation.expression $substrCP
      */
     public static Expression substrCP(Expression input, int start, int length) {
-        return new Expression("$substrCP", asList(input, new ValueExpression(start), new ValueExpression(length)));
+        return substrCP(input, new ValueExpression(start), new ValueExpression(length));
+    }
+
+    /**
+     * Returns the substring of a string. Starts with the character at the specified UTF-8 code point (CP) index (zero-based) in the string
+     * and continues for the number of code points specified.
+     *
+     * @param input  the string to process
+     * @param start  Indicates the starting point of the substring
+     * @param length the code points to include.
+     * @return the new expression
+     * @aggregation.expression $substrCP
+     */
+    public static Expression substrCP(Expression input, Expression start, Expression length) {
+        return new Expression("$substrCP", asList(input, start, length));
     }
 
     /**

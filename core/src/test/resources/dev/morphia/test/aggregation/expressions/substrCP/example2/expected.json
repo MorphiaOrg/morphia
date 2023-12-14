@@ -1,0 +1,8 @@
+{ "_id" : 1, "name" : "apple", "menuCode" : "app" }
+{ "_id" : 2, "name" : "banana", "menuCode" : "ban" }
+{ "_id" : 3, "name" : "éclair", "menuCode" : "écl" }
+{ "_id" : 4, "name" : "hamburger", "menuCode" : "ham" }
+{ "_id" : 5, "name" : "jalapeño", "menuCode" : "jal" }
+{ "_id" : 6, "name" : "pizza", "menuCode" : "piz" }
+{ "_id" : 7, "name" : "tacos", "menuCode" : "tac" }
+{ "_id" : 8, "name" : "寿司sushi", "menuCode" : "寿司s" }

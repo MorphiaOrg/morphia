@@ -1,0 +1,8 @@
+{ "_id" : 1, "name" : "apple" },
+{ "_id" : 2, "name" : "banana" },
+{ "_id" : 3, "name" : "éclair" },
+{ "_id" : 4, "name" : "hamburger" },
+{ "_id" : 5, "name" : "jalapeño" },
+{ "_id" : 6, "name" : "pizza" },
+{ "_id" : 7, "name" : "tacos" },
+{ "_id" : 8, "name" : "寿司sushi" }
