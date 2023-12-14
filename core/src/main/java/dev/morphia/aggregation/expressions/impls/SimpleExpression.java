@@ -8,6 +8,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * @since 2.3
  */
 @MorphiaInternal
-public interface SingleValuedExpression {
+public interface SimpleExpression {
 
 }

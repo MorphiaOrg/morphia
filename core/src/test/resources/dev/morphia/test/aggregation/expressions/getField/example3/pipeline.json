@@ -1,0 +1,16 @@
+ [
+   { $match: 
+      { $expr:
+         { $lte:
+            [
+               { $getField: 
+                  { field: { $literal: "$small" },
+                    input: "$quantity"
+                  }
+               },
+               20
+            ]
+         }
+      }
+   }
+] 

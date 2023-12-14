@@ -1,0 +1,1 @@
+{    _id: 3,    item: 'sun dress',    'price.usd': 199.99,    quantity: { '$large': 45, '$medium': 40, '$small': 5 }  }

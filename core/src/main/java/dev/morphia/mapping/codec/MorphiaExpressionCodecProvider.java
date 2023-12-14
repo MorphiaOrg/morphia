@@ -31,6 +31,7 @@ import dev.morphia.mapping.codec.expressions.ExpressionCodec;
 import dev.morphia.mapping.codec.expressions.ExpressionListCodec;
 import dev.morphia.mapping.codec.expressions.FilterExpressionCodec;
 import dev.morphia.mapping.codec.expressions.FunctionExpressionCodec;
+import dev.morphia.mapping.codec.expressions.GetFieldExpressionCodec;
 import dev.morphia.mapping.codec.expressions.IfNullCodec;
 import dev.morphia.mapping.codec.expressions.IndexExpressionCodec;
 import dev.morphia.mapping.codec.expressions.IsoDatesCodec;
@@ -98,6 +99,7 @@ public class MorphiaExpressionCodecProvider implements CodecProvider {
         addCodec(new ExpressionCodec(datastore));
         addCodec(new ExpressionListCodec(datastore));
         addCodec(new FilterExpressionCodec(datastore));
+        addCodec(new GetFieldExpressionCodec(datastore));
         addCodec(new FunctionExpressionCodec(datastore));
         addCodec(new IfNullCodec(datastore));
         addCodec(new IndexExpressionCodec(datastore));

@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.aggregation.expressions.impls.GetFieldExpression;
 import dev.morphia.aggregation.expressions.impls.SetFieldExpression;
 import dev.morphia.aggregation.expressions.impls.UnsetFieldExpression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
@@ -26,7 +27,7 @@ public final class Miscellaneous {
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static Expression getField(String field) {
+    public static GetFieldExpression getField(String field) {
         return getField(new ValueExpression(field));
     }
 
@@ -40,8 +41,8 @@ public final class Miscellaneous {
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static Expression getField(Expression field) {
-        return new Expression("$getField", field);
+    public static GetFieldExpression getField(Expression field) {
+        return new GetFieldExpression(field);
     }
 
     /**
@@ -115,7 +116,7 @@ public final class Miscellaneous {
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static Expression unsetField(String field, Object input) {
+    public static Expression unsetField(String field, Expression input) {
         return unsetField(new ValueExpression(field), input);
     }
 
@@ -130,7 +131,7 @@ public final class Miscellaneous {
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static Expression unsetField(Expression field, Object input) {
+    public static Expression unsetField(Expression field, Expression input) {
         return new UnsetFieldExpression(field, input);
     }
 

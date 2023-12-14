@@ -17,7 +17,7 @@ import static java.util.Arrays.asList;
  * @since 2.3
  */
 @MorphiaInternal
-public class ExpressionList extends Expression implements SingleValuedExpression {
+public class ExpressionList extends Expression implements SimpleExpression {
     private final List<Expression> values;
 
     /**

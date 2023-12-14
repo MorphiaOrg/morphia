@@ -9,13 +9,13 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 @MorphiaInternal
 public class UnsetFieldExpression extends Expression {
     private final Expression field;
-    private final Object input;
+    private final Expression input;
 
     /**
      * @param field the field
      * @param input the input
      */
-    public UnsetFieldExpression(Expression field, Object input) {
+    public UnsetFieldExpression(Expression field, Expression input) {
         super("$unsetField");
         this.field = field;
         this.input = input;
@@ -37,7 +37,7 @@ public class UnsetFieldExpression extends Expression {
      * @return the input
      */
     @MorphiaInternal
-    public Object input() {
+    public Expression input() {
         return input;
     }
 }

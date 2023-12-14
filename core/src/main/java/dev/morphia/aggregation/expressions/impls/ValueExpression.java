@@ -9,7 +9,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * 
  * @hidden
  */
-public class ValueExpression extends Expression implements SingleValuedExpression {
+public class ValueExpression extends Expression implements SimpleExpression {
     private final Object object;
 
     /**

@@ -1,0 +1,7 @@
+ [
+   { $replaceWith: {
+        $unsetField: { 
+           field: "price.usd",
+           input: "$$ROOT"
+   } } }
+ ] 

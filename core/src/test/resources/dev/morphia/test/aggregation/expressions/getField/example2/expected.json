@@ -1,0 +1,2 @@
+{ _id: 2, item: 'winter coat', qty: 200, '$price': 499.99 },
+{ _id: 4, item: 'leather boots', qty: 300, '$price': 249.99 }

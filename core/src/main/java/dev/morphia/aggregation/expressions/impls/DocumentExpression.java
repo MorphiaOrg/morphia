@@ -7,7 +7,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * Defines a document expression
  */
-public class DocumentExpression extends Expression implements SingleValuedExpression, FieldHolder<DocumentExpression> {
+public class DocumentExpression extends Expression implements SimpleExpression, FieldHolder<DocumentExpression> {
     private final Fields fields = Fields.on(this);
 
     /**

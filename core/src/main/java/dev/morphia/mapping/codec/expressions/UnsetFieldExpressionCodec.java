@@ -9,7 +9,6 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import static dev.morphia.mapping.codec.CodecHelper.document;
 import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
-import static dev.morphia.mapping.codec.CodecHelper.value;
 
 public class UnsetFieldExpressionCodec extends BaseExpressionCodec<UnsetFieldExpression> {
     public UnsetFieldExpressionCodec(MorphiaDatastore datastore) {
@@ -21,7 +20,7 @@ public class UnsetFieldExpressionCodec extends BaseExpressionCodec<UnsetFieldExp
         document(writer, unset.operation(), () -> {
             CodecRegistry registry = datastore.getCodecRegistry();
             encodeIfNotNull(registry, writer, "field", unset.field(), encoderContext);
-            value(registry, writer, "input", unset.input(), encoderContext);
+            encodeIfNotNull(registry, writer, "input", unset.input(), encoderContext);
         });
 
     }

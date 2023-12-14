@@ -1,0 +1,11 @@
+ [
+   { $replaceWith: {
+        $setField: {
+           field: "price",
+           input: "$$ROOT",
+           value: {
+              $unsetField: {
+                 field: "euro",
+                 input: { $getField: "price" }
+   } } } } }
+] 

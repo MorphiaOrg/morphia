@@ -11,7 +11,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * @mongodb.driver.manual reference/operator/aggregation/#array-expression-operators Array Expressions
  */
 @MorphiaInternal
-public class ArrayExpression extends Expression implements SingleValuedExpression {
+public class ArrayExpression extends Expression implements SimpleExpression {
     /**
      * @param operation the operation name
      * @param value     the array contents

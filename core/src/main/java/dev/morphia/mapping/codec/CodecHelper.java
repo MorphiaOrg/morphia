@@ -9,7 +9,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.expressions.impls.SingleValuedExpression;
+import dev.morphia.aggregation.expressions.impls.SimpleExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
@@ -71,7 +71,7 @@ public class CodecHelper {
             EncoderContext encoderContext) {
         if (expression != null) {
             Codec codec = registry.get(expression.getClass());
-            if (expression instanceof SingleValuedExpression) {
+            if (expression instanceof SimpleExpression) {
                 codec.encode(writer, expression, encoderContext);
             } else {
                 document(writer, () -> {
