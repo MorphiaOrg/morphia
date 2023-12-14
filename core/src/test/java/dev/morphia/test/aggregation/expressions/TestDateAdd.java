@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.TimeUnit;
+import dev.morphia.test.DriverVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
@@ -17,6 +18,7 @@ import static dev.morphia.test.ServerVersion.ANY;
 public class TestDateAdd extends AggregationTest {
     @Test
     public void testExample1() {
+        minDriver = DriverVersion.v42;
         testPipeline(ANY, true, true, aggregation -> aggregation.pipeline(
                 project()
                         .include("expectedDeliveryDate",

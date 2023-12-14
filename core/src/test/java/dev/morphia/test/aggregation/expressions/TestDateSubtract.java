@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
+import dev.morphia.test.DriverVersion;
 import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
@@ -16,6 +17,7 @@ import static dev.morphia.test.ServerVersion.v50;
 public class TestDateSubtract extends AggregationTest {
     @Test
     public void testExample1() {
+        minDriver = DriverVersion.v42;
         testPipeline(v50, true, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("logoutTime",

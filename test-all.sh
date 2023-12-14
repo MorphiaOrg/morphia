@@ -28,6 +28,6 @@ do
    do
       echo testing with mongo $MONGO and driver $DRIVER
       OUTFILE="target/mongo-$MONGO-driver-$DRIVER.txt"
-      ./mvnw surefire:test -Dmongodb=$MONGO -Ddriver.version=$DRIVER | tee "$OUTFILE" && rm "$OUTFILE"
+      ./mvnw surefire:test -Dmongodb=$MONGO -Ddriver.version=$DRIVER | tee "$OUTFILE"
    done
 done
