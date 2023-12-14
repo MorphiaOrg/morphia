@@ -9,11 +9,6 @@ import dev.morphia.test.aggregation.model.Book;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Miscellaneous.unsetField;
-import static dev.morphia.aggregation.expressions.SystemVariables.ROOT;
-import static dev.morphia.aggregation.stages.ReplaceWith.replaceWith;
-import static dev.morphia.aggregation.stages.Unset.unset;
-import static dev.morphia.test.DriverVersion.v45;
 import static org.testng.Assert.assertEquals;
 
 public class TestUnset extends AggregationTest {
@@ -37,30 +32,5 @@ public class TestUnset extends AggregationTest {
 
         assertEquals(documents, copies);
 
-    }
-
-    @Test
-    public void testUnsetField() {
-        checkMinDriverVersion(v45);
-        insert("inventory", parseDocs(
-                "{ '_id' : 1, 'item' : 'sweatshirt', 'price.usd': 45.99, qty: 300 }",
-                "{ '_id' : 2, 'item' : 'winter coat', 'price.usd': 499.99, qty: 200 }",
-                "{ '_id' : 3, 'item' : 'sun dress', 'price.usd': 199.99, qty: 250 }",
-                "{ '_id' : 4, 'item' : 'leather boots', 'price.usd': 249.99, qty: 300 }",
-                "{ '_id' : 5, 'item' : 'bow tie', 'price.usd': 9.99, qty: 180 }"));
-
-        List<Document> actual = getDs().aggregate("inventory")
-                .replaceWith(replaceWith(unsetField("price.usd", ROOT)))
-                .unset(unset("price"))
-                .execute(Document.class)
-                .toList();
-
-        List<Document> expected = parseDocs(
-                "{ _id: 1, item: 'sweatshirt', qty: 300 }",
-                "{ _id: 2, item: 'winter coat', qty: 200 }",
-                "{ _id: 3, item: 'sun dress', qty: 250, }",
-                "{ _id: 4, item: 'leather boots', qty: 300 }",
-                "{ _id: 5, item: 'bow tie', qty: 180 }");
-        assertListEquals(actual, expected);
     }
 }

@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
+import dev.morphia.test.DriverVersion;
 import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
@@ -15,6 +16,7 @@ import static dev.morphia.aggregation.stages.ReplaceWith.replaceWith;
 public class TestUnsetField extends AggregationTest {
     @Test
     public void testExample1() {
+        checkMinDriverVersion(DriverVersion.v43);
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 replaceWith(unsetField("price.usd", ROOT))));
     }
