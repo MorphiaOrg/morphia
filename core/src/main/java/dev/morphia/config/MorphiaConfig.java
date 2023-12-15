@@ -176,7 +176,7 @@ public interface MorphiaConfig {
      * @deprecated this configuration entry will be updated to use SPI as with other customizations
      */
     @Deprecated(since = "2.4.0", forRemoval = true)
-    @WithConverter(CodecConverter.class)
+    @WithConverter(CodecProviderConverter.class)
     Optional<CodecProvider> codecProvider();
 
     /**
