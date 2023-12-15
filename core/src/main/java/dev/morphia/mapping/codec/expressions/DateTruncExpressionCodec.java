@@ -26,7 +26,9 @@ public class DateTruncExpressionCodec extends BaseExpressionCodec<DateTruncExpre
             writer.writeString("unit", trunc.unit().name().toLowerCase(Locale.ROOT));
             value(writer, "binSize", trunc.binSize());
             encodeIfNotNull(registry, writer, "timezone", trunc.timezone(), encoderContext);
-            value(writer, "startOfWeek", trunc.startOfWeek().name().toLowerCase(Locale.ROOT));
+            if (trunc.startOfWeek() != null) {
+                value(writer, "startOfWeek", trunc.startOfWeek().name().toLowerCase(Locale.ROOT));
+            }
         });
 
     }

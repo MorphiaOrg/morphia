@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import java.time.DayOfWeek;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
@@ -105,6 +106,18 @@ public class DateTruncExpression extends Expression {
     public DateTruncExpression startOfWeek(DayOfWeek startOfWeek) {
         this.startOfWeek = startOfWeek;
         return this;
+    }
+
+    /**
+     * The timezone to carry out the operation. {@code timezone} must be a valid expression that resolves to a string formatted as either
+     * an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
+     *
+     * @param timezone the timezone expression
+     * @return this
+     * @since 2.3
+     */
+    public DateTruncExpression timezone(String timezone) {
+        return timezone(Expressions.value(timezone));
     }
 
     /**

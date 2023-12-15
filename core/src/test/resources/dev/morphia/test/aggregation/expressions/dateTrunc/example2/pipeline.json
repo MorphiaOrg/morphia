@@ -1,0 +1,13 @@
+ [
+   {
+      $project: {
+         orderDate: 1,
+         truncatedOrderDate: {
+            $dateTrunc: {
+               date: "$orderDate", unit: "week", binSize: 2,
+               timezone: "America/Los_Angeles", startOfWeek: "monday"
+            }
+         }
+      }
+   }
+] 

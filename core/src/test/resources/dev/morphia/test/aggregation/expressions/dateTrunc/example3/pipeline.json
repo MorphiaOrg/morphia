@@ -1,0 +1,14 @@
+ [
+   {
+      $group: {
+         _id: {
+            truncatedOrderDate: {
+               $dateTrunc: {
+                  date: "$orderDate", unit: "month", binSize: 6
+               }
+            }
+         },
+         sumQuantity: { $sum: "$quantity" }
+      }
+   }
+] 
