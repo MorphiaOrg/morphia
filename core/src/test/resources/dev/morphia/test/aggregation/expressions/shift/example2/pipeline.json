@@ -1,0 +1,17 @@
+ [
+   {
+      $setWindowFields: {
+         partitionBy: "$state",
+         sortBy: { quantity: -1 },
+         output: {
+            shiftQuantityForState: {
+               $shift: {
+                  output: "$quantity",
+                  by: 1,
+                  default: "Not available"
+               }
+            }
+         }
+      }
+   }
+] 
