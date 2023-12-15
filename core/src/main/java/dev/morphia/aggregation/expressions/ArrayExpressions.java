@@ -16,6 +16,7 @@ import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.query.Sort;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;
+import static dev.morphia.mapping.codec.CodecHelper.coalesce;
 import static java.util.Arrays.asList;
 
 /**
@@ -73,8 +74,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $concatArrays
      */
-    public static Expression concatArrays(Expression array, Expression additional) {
-        return new Expression("$concatArrays", asList(array, additional));
+    public static Expression concatArrays(Expression array, Expression... additional) {
+        return new Expression("$concatArrays", coalesce(array, additional));
     }
 
     /**

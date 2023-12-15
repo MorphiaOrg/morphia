@@ -12,7 +12,6 @@ import org.bson.Document;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
-import static dev.morphia.aggregation.expressions.ArrayExpressions.arrayToObject;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.filter;
@@ -37,27 +36,6 @@ import static dev.morphia.aggregation.expressions.StringExpressions.concat;
 import static org.bson.Document.parse;
 
 public class ArrayExpressionsTest extends ExpressionsTestBase {
-
-    @Test
-    public void testArrayToObject() {
-        insert("inventory", List.of(
-                parse("{'_id' : 1, 'item' : 'ABC1', dimensions: [{'k': 'l', 'v': 25} , {'k': 'w', 'v': 10}, {'k': 'uom', 'v': 'cm'}]}"),
-                parse("{'_id' : 2, 'item' : 'ABC2', dimensions: [['l', 50], ['w', 25], ['uom', 'cm']]}"),
-                parse("{'_id' : 3, 'item' : 'ABC3', dimensions: [['l', 25], ['l', 'cm'], ['l', 50]]}")));
-
-        List<Document> actual = getDs().aggregate("inventory")
-                .project(Projection.project()
-                        .include("item")
-                        .include("dimensions", arrayToObject(field("dimensions"))))
-                .execute(Document.class)
-                .toList();
-
-        List<Document> expected = List.of(parse("{ '_id' : 1, 'item' : 'ABC1', 'dimensions' : { 'l' : 25, 'w' : 10, 'uom' : 'cm' } }"),
-                parse("{ '_id' : 2, 'item' : 'ABC2', 'dimensions' : { 'l' : 50, 'w' : 25, 'uom' : 'cm' } }"),
-                parse("{ '_id' : 3, 'item' : 'ABC3', 'dimensions' : { 'l' : 50 } }"));
-
-        assertDocumentEquals(actual, expected);
-    }
 
     @Test
     public void testConcatArrays() {
