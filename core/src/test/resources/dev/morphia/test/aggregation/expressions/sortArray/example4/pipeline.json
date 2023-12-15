@@ -1,0 +1,16 @@
+ [
+   {
+      $project:
+         {
+            _id: 0,
+            result:
+               {
+                  $sortArray:
+                     {
+                        input: "$team",
+                        sortBy: { age: -1, name: 1 }
+                     }
+               }
+         }
+    }
+ ] 

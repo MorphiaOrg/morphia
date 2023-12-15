@@ -1,0 +1,16 @@
+ [
+   { 
+      $project: 
+         {
+        	   _id: 0,
+        	   result: 
+               {
+                  $sortArray:
+                     {
+                        input: "$team",
+                        sortBy: { "address.city": -1 }
+                     }
+               }
+        	}
+   }
+] 

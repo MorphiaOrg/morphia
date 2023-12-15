@@ -17,7 +17,7 @@ import static dev.morphia.test.ServerVersion.v52;
 
 public class TestSortArray extends AggregationTest {
     @Test
-    public void testField() {
+    public void testExample2() {
         testPipeline(v52, (aggregation) -> aggregation
                 .pipeline(project()
                         .suppressId()
@@ -26,7 +26,7 @@ public class TestSortArray extends AggregationTest {
     }
 
     @Test
-    public void testSubfield() {
+    public void testExample3() {
         testPipeline(v52, (aggregation) -> {
             return aggregation
                     .project(project()
@@ -37,19 +37,18 @@ public class TestSortArray extends AggregationTest {
     }
 
     @Test
-    public void testMultipleFields() {
-        testPipeline(v52, (aggregation) -> {
-            return aggregation
-                    .project(project()
-                            .suppressId()
-                            .include("result", sortArray(field("team"),
-                                    descending("age"), ascending("name"))));
-        });
-
+    public void testExample4() {
+        testPipeline(v52, (aggregation) -> aggregation.pipeline(
+                project()
+                        .suppressId()
+                        .include("result",
+                                sortArray(field("team"),
+                                        descending("age"),
+                                        ascending("name")))));
     }
 
     @Test
-    public void testArrayOfIntegers() {
+    public void testExample5() {
         testPipeline(v52, (aggregation) -> {
             return aggregation
                     .project(project()
@@ -61,26 +60,19 @@ public class TestSortArray extends AggregationTest {
     }
 
     @Test
-    public void testMixedTypes() {
-        testPipeline(v52, (aggregation) -> {
-            return aggregation
-                    .project(project()
-                            .suppressId()
-                            .include("result", sortArray(array(
-                                    20,
-                                    4,
-                                    document("a", value("Free")),
-                                    6,
-                                    21,
-                                    5,
-                                    "Gratis",
-                                    document("a", value(null)),
-                                    document("a", document("sale", value(true))
-                                            .field("price", value(19))),
-                                    10.23,
-                                    document("a", value("On sale"))),
-                                    naturalAscending())));
-        });
+    public void testExample6() {
+        testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
+                project()
+                        .suppressId()
+                        .include("result", sortArray(
+                                array(20, 4,
+                                        document("a", value("Free")),
+                                        6, 21, 5, "Gratis",
+                                        document("a", value(null)),
+                                        document("a", document("sale", value(true)).field("price", value(19))),
+                                        10.23,
+                                        document("a", value("On sale"))),
+                                naturalAscending()))));
 
     }
 

@@ -7,7 +7,7 @@ function sanitize() {
 
 BUILD=.github/workflows/build.yml
 [ -z "$DRIVERS" ] && MATDRIVER=`sanitize $( ./.github/DriverVersions.java  all )`
-[ -z "$DRIVERS" ] && SNAPSHOT=`sanitize $( ./.github/DriverSnapshot.java )`
+#[ -z "$DRIVERS" ] && SNAPSHOT=`sanitize $( ./.github/DriverSnapshot.java )`
 [ -z "$MONGOS" ] && MONGOS=`sanitize $( ./.github/BuildMatrix.java )`
 
 [ -z "$DRIVERS" ] && DRIVERS=$( echo $MATDRIVER $SNAPSHOT | sort -r | uniq )
