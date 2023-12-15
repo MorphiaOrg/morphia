@@ -19,7 +19,6 @@ import static dev.morphia.aggregation.expressions.DateExpressions.dayOfYear;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
-import static dev.morphia.aggregation.expressions.WindowExpressions.stdDevPop;
 import static dev.morphia.aggregation.expressions.WindowExpressions.stdDevSamp;
 import static dev.morphia.aggregation.stages.Group.id;
 import static java.util.List.of;
@@ -114,27 +113,6 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
                 parse("{ '_id' : { 'day' : 34, 'year' : 2014 },'itemsSold' : [{ 'item' : 'jkl', 'quantity' : 1 },{ 'item' : 'xyz', "
                         + "'quantity' : 5 }]}"),
                 parse("{ '_id' : { 'day' : 1, 'year' : 2014 },'itemsSold' : [ { 'item' : 'abc', 'quantity' : 2 } ]}")));
-    }
-
-    @Test
-    public void testStdDevPop() {
-        insert("users", of(
-                parse(" { '_id' : 1, 'name' : 'dave123', 'quiz' : 1, 'score' : 85 }"),
-                parse("{ '_id' : 2, 'name' : 'dave2', 'quiz' : 1, 'score' : 90 }"),
-                parse("{ '_id' : 3, 'name' : 'ahn', 'quiz' : 1, 'score' : 71 }"),
-                parse("{ '_id' : 4, 'name' : 'li', 'quiz' : 2, 'score' : 96 }"),
-                parse("{ '_id' : 5, 'name' : 'annT', 'quiz' : 2, 'score' : 77 }"),
-                parse("{ '_id' : 6, 'name' : 'ty', 'quiz' : 2, 'score' : 82 }  }")));
-
-        List<Document> actual = getDs().aggregate("users")
-                .group(Group.group(id("quiz"))
-                        .field("stdDev", stdDevPop(field("score"))))
-                .execute(Document.class)
-                .toList();
-
-        assertDocumentEquals(actual, of(
-                parse("{ '_id' : 2, 'stdDev' : 8.04155872120988 }"),
-                parse("{ '_id' : 1, 'stdDev' : 8.04155872120988 }")));
     }
 
     @Test

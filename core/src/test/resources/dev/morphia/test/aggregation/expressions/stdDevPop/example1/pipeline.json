@@ -1,0 +1,10 @@
+[
+  {
+    $group: {
+      _id: "$quiz",
+      stdDev: {
+        $stdDevPop: "$score"
+      }
+    }
+  }
+]

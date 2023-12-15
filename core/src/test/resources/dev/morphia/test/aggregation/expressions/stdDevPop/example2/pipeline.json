@@ -1,0 +1,3 @@
+[
+   { $project: { stdDev: { $stdDevPop: "$scores.score" } } }
+]
