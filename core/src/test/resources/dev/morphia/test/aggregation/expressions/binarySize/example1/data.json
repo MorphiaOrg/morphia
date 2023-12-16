@@ -1,0 +1,5 @@
+{ _id: 1, name: "cat.jpg", binary: new BinData(0, "OEJTfmD8twzaj/LPKLIVkA==")},
+{ _id: 2, name: "big_ben.jpg", binary: new BinData(0, "aGVsZmRqYWZqYmxhaGJsYXJnYWZkYXJlcTU1NDE1Z2FmZCBmZGFmZGE=")},
+{ _id: 3, name: "tea_set.jpg", binary: new BinData(0, "MyIRAFVEd2aImaq7zN3u/w==")},
+{ _id: 4, name: "concert.jpg", binary: new BinData(0, "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=")},
+{ _id: 5, name: "empty.jpg", binary: new BinData(0, "") }

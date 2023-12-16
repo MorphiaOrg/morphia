@@ -1,0 +1,8 @@
+[
+  {
+    $project: {
+      "name": "$name",
+      "imageSize": { $binarySize: "$binary" }
+    }
+  }
+]
