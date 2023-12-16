@@ -1,0 +1,7 @@
+ [
+   {
+      $addFields : {
+         "tanh_output" : { $tanh : { $degreesToRadians : "$angle" } }
+      }
+   }
+] 

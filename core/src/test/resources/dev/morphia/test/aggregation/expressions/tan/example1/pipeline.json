@@ -1,0 +1,12 @@
+[
+  {
+    $addFields : {
+      "side_b" : {
+        $multiply : [
+          { $tan : {$degreesToRadians : "$angle_a"} },
+          "$side_a"
+        ]
+      }
+    }
+  }
+]

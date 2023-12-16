@@ -1,0 +1,12 @@
+[
+  {
+    $addFields : {
+      "side_b" : {
+        $multiply : [
+          { $sin : {$degreesToRadians : "$angle_a"} },
+          "$hypotenuse"
+        ]
+      }
+    }
+  }
+]

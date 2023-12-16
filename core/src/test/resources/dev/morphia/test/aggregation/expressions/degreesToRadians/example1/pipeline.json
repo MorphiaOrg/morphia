@@ -1,0 +1,9 @@
+[
+  {
+    $addFields: {
+      "angle_a_rad" : { $degreesToRadians : "$angle_a"},
+      "angle_b_rad" : { $degreesToRadians : "$angle_b"},
+      "angle_c_rad" : { $degreesToRadians : "$angle_c"}
+    }
+  }
+]
