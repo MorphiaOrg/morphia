@@ -1,0 +1,4 @@
+{ "_id" : 1, "name" : "dave123", "first" : "chocolate", "last" : "apples" }
+{ "_id" : 2, "name" : "li", "first" : "apples", "last" : "pie" }
+{ "_id" : 3, "name" : "ahn", "first" : "pears", "last" : "cherries" }
+{ "_id" : 4, "name" : "ty", "first" : "ice cream", "last" : "ice cream" }

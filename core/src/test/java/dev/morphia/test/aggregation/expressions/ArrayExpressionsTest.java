@@ -13,7 +13,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
-import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.filter;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.indexOfArray;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.isArray;
@@ -23,7 +22,6 @@ import static dev.morphia.aggregation.expressions.ArrayExpressions.reduce;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.reverseArray;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.size;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.slice;
-import static dev.morphia.aggregation.expressions.ArrayExpressions.zip;
 import static dev.morphia.aggregation.expressions.BooleanExpressions.and;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.lte;
@@ -42,13 +40,7 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
     }
 
     @Test
-    public void testElementAt() {
-        assertAndCheckDocShape("{ $arrayElemAt: [ [ 1, 2, 3 ], 0 ] }", elementAt(array(value(1), value(2), value(3)), value(0)), 1);
-    }
-
-    @Test
     public void testFilter() {
-
         assertAndCheckDocShape("{$filter: {input: [1, 'a', 2, null, 3.1, NumberLong(4), '5' ], as: 'num', cond: {$and: ["
                 + "{$gte: ['$$num', NumberLong('-9223372036854775807') ] },{ $lte: [ '$$num', NumberLong('9223372036854775807')]}]}}}",
                 filter(array(value(1), value('a'), value(2), value(null), value(3.1), value(4L), value('5')),
@@ -167,29 +159,6 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
                 parse("{ '_id' : 2, 'name' : 'li', 'threeFavorites' : [ 'apples', 'pudding', 'pie' ] }"),
                 parse("{ '_id' : 3, 'name' : 'ahn', 'threeFavorites' : [ 'pears', 'pecans', 'chocolate' ] }"),
                 parse("{ '_id' : 4, 'name' : 'ty', 'threeFavorites' : [ 'ice cream' ] }"));
-
-        assertDocumentEquals(actual, expected);
-    }
-
-    @Test
-    public void testZip() {
-        insert("matrices", List.of(
-                parse("{ matrix: [[1, 2], [2, 3], [3, 4]] }"),
-                parse("{ matrix: [[8, 7], [7, 6], [5, 4]] }")));
-
-        List<Document> actual = getDs().aggregate("matrices")
-                .project(Projection.project()
-                        .suppressId()
-                        .include("transposed", zip(
-                                elementAt(field("matrix"), value(0)),
-                                elementAt(field("matrix"), value(1)),
-                                elementAt(field("matrix"), value(2)))))
-                .execute(Document.class)
-                .toList();
-
-        List<Document> expected = List.of(
-                parse("{ 'transposed' : [ [ 1, 2, 3 ], [ 2, 3, 4 ] ] }"),
-                parse("{ 'transposed' : [ [ 8, 7, 5 ], [ 7, 6, 4 ] ] }"));
 
         assertDocumentEquals(actual, expected);
     }

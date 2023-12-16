@@ -1,0 +1,10 @@
+[
+   {
+     $project:
+      {
+         name: 1,
+         first: { $arrayElemAt: [ "$favorites", 0 ] },
+         last: { $arrayElemAt: [ "$favorites", -1 ] }
+      }
+   }
+]
