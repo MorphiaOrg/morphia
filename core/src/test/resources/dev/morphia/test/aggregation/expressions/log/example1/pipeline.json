@@ -1,19 +1,6 @@
 [
-  {
-    $project: {
-      bitsNeeded: {
-        $floor: {
-          $add: [
-            1,
-            {
-              $log: [
-                "$int",
-                2
-              ]
-            }
-          ]
-        }
+   { $project: { bitsNeeded:
+      {
+         $floor: { $add: [ 1, { $log: [ "$int", 2 ] } ] } } }
       }
-    }
-  }
 ]

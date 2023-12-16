@@ -1,34 +1,14 @@
 [
-  {
-    $project: {
-      distance: {
-        $sqrt: {
-          $add: [
-            {
-              $pow: [
-                {
-                  $subtract: [
-                    "$p2.y",
-                    "$p1.y"
-                  ]
-                },
-                2
-              ]
-            },
-            {
-              $pow: [
-                {
-                  $subtract: [
-                    "$p2.x",
-                    "$p1.x"
-                  ]
-                },
-                2
-              ]
-            }
-          ]
+   {
+     $project: {
+        distance: {
+           $sqrt: { 
+               $add: [
+                  { $pow: [ { $subtract: [ "$p2.y", "$p1.y" ] }, 2 ] },
+                  { $pow: [ { $subtract: [ "$p2.x", "$p1.x" ] }, 2 ] }
+               ]
+           }
         }
-      }
-    }
-  }
+     }
+   }
 ]
