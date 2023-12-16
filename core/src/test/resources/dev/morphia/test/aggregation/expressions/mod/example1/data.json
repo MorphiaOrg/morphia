@@ -1,0 +1,2 @@
+{ "_id" : 1, "city" : "New York", "hours" : 80, "tasks" : 7 },
+{ "_id" : 2, "city" : "Singapore", "hours" : 40, "tasks" : 4 }

@@ -1,0 +1,12 @@
+[
+  {
+    $project: {
+      remainder: {
+        $mod: [
+          "$hours",
+          "$tasks"
+        ]
+      }
+    }
+  }
+]

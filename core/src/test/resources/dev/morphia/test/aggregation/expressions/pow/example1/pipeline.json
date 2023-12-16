@@ -1,0 +1,14 @@
+[
+  {
+    $project: {
+      variance: {
+        $pow: [
+          {
+            $stdDevPop: "$scores.score"
+          },
+          2
+        ]
+      }
+    }
+  }
+]

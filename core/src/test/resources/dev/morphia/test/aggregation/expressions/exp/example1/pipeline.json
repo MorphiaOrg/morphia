@@ -1,0 +1,14 @@
+[
+  {
+    $project: {
+      effectiveRate: {
+        $subtract: [
+          {
+            $exp: "$interestRate"
+          },
+          1
+        ]
+      }
+    }
+  }
+]

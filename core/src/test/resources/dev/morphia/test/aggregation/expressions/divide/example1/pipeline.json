@@ -1,0 +1,3 @@
+   [
+     { $project: { city: 1, workdays: { $divide: [ "$hours", 8 ] } } }
+   ]

@@ -1,0 +1,3 @@
+[
+   { $project: { value: 1, floorValue: { $floor: "$value" } } }
+]

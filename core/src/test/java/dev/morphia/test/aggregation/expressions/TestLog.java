@@ -1,0 +1,28 @@
+package dev.morphia.test.aggregation.expressions;
+
+import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.test.ServerVersion;
+import dev.morphia.test.aggregation.AggregationTest;
+
+import org.testng.annotations.Test;
+
+import static dev.morphia.aggregation.expressions.Expressions.field;
+import static dev.morphia.aggregation.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.MathExpressions.add;
+import static dev.morphia.aggregation.expressions.MathExpressions.floor;
+import static dev.morphia.aggregation.expressions.MathExpressions.log;
+import static dev.morphia.aggregation.stages.Projection.project;
+
+public class TestLog extends AggregationTest {
+    @Test
+    public void testExample1() {
+        Expression value;
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                project()
+                        .include("bitsNeeded", floor(
+                                add(
+                                        value(1),
+                                        log(field("int"), value(2)))))));
+    }
+
+}
