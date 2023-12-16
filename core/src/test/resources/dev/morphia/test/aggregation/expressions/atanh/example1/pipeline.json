@@ -1,0 +1,9 @@
+[
+  { 
+    $addFields : {
+      "y-coordinate" : {
+        $radiansToDegrees : { $atanh : "$x-coordinate" }
+      }
+    }
+  }
+]

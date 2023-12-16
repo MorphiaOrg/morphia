@@ -3,11 +3,6 @@ package dev.morphia.test.aggregation.expressions;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.TrigonometryExpressions.asin;
-import static dev.morphia.aggregation.expressions.TrigonometryExpressions.asinh;
-import static dev.morphia.aggregation.expressions.TrigonometryExpressions.atan;
-import static dev.morphia.aggregation.expressions.TrigonometryExpressions.atan2;
-import static dev.morphia.aggregation.expressions.TrigonometryExpressions.atanh;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.cos;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.cosh;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.degreesToRadians;
@@ -18,30 +13,6 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tan;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tanh;
 
 public class TrigonometryExpressionsTest extends ExpressionsTestBase {
-    @Test
-    public void testAsin() {
-        assertAndCheckDocShape("{ $asin: 0 }", asin(value(0)), 0.0);
-    }
-
-    @Test
-    public void testAsinh() {
-        assertAndCheckDocShape("{ $asinh: 90 }", asinh(value(90)), 5.192987713658941);
-    }
-
-    @Test
-    public void testAtan() {
-        assertAndCheckDocShape("{ $atan: 0 }", atan(value(0)), 0.0);
-    }
-
-    @Test
-    public void testAtan2() {
-        assertAndCheckDocShape("{ $atan2: [ 4, 3 ] }", atan2(value(4), value(3)), 0.9272952180016122);
-    }
-
-    @Test
-    public void testAtanh() {
-        assertAndCheckDocShape("{ $atanh: 0 }", atanh(value(0)), 0.0);
-    }
 
     @Test
     public void testCos() {

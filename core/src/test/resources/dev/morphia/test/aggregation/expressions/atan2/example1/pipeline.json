@@ -1,0 +1,11 @@
+[
+  { 
+    $addFields : {
+      "angle_a" : {
+        $radiansToDegrees : {
+          $atan2 : [ "$side_b", "$side_a" ]
+        }
+      }
+    }
+  }
+]
