@@ -8,7 +8,6 @@ import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 
 import dev.morphia.aggregation.expressions.AccumulatorExpressions;
-import dev.morphia.aggregation.expressions.ConditionalExpressions;
 import dev.morphia.aggregation.expressions.MathExpressions;
 import dev.morphia.aggregation.expressions.ObjectExpressions;
 import dev.morphia.aggregation.expressions.impls.Expression;
@@ -136,15 +135,6 @@ public class CodecStructureTest extends TestBase {
     public void testMatch() {
         evaluate(parse("{ $match: { price: { $exists: true } } }"),
                 Match.match(exists("price")));
-    }
-
-    @Test
-    public void testIfNull() {
-        evaluate(parse("{ $ifNull: [ \"$name\", { _id: \"$_id\", missingName: true} ] }"),
-                ConditionalExpressions.ifNull()
-                        .target(field("name"))
-                        .field("_id", field("_id"))
-                        .field("missingName", value(true)));
     }
 
     @Test

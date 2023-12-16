@@ -22,7 +22,9 @@ public class IfNullCodec extends BaseExpressionCodec<IfNull> {
     public void encode(BsonWriter writer, IfNull value, EncoderContext encoderContext) {
         array(writer, value.operation(), () -> {
             CodecRegistry codecRegistry = datastore.getCodecRegistry();
-            encodeIfNotNull(codecRegistry, writer, value.target(), encoderContext);
+            value.input().forEach(i -> {
+                encodeIfNotNull(codecRegistry, writer, i, encoderContext);
+            });
             encodeIfNotNull(codecRegistry, writer, value.replacement(), encoderContext);
             encodeIfNotNull(codecRegistry, writer, value.document(), encoderContext);
         });

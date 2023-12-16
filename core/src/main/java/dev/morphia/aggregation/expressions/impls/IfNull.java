@@ -1,9 +1,13 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import java.util.List;
+
 import dev.morphia.aggregation.AggregationException;
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
+
+import static dev.morphia.mapping.codec.CodecHelper.coalesce;
 
 /**
  * Evaluates an expression and returns the value of the expression if the expression evaluates to a non-null value. If the
@@ -11,7 +15,7 @@ import dev.morphia.sofia.Sofia;
  * replacement expression.
  */
 public class IfNull extends Expression implements FieldHolder<IfNull> {
-    private Expression target;
+    private List<Expression> input;
     private Expression replacement;
     private DocumentExpression document;
 
@@ -37,6 +41,15 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
         return this;
     }
 
+    public List<Expression> input() {
+        return input;
+    }
+
+    public IfNull input(Expression input, Expression... inputs) {
+        this.input = coalesce(input, inputs);
+        return this;
+    }
+
     /**
      * @param replacement the replacement
      * @return this
@@ -51,18 +64,8 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
      * @return this
      */
     public IfNull target(Expression target) {
-        this.target = target;
+        this.input = List.of(target);
         return this;
-    }
-
-    /**
-     * @hidden
-     * @morphia.internal
-     * @return the target
-     */
-    @MorphiaInternal
-    public Expression target() {
-        return target;
     }
 
     /**
