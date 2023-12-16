@@ -1,0 +1,3 @@
+{    _id: ObjectId("6390b9b1237da390c6869a65"),    city: 'Bakersfield',    integerValues: [ 34, 81, 44 ]  },
+{    _id: ObjectId("6390b9b1237da390c6869a66"),    city: 'Barstow',    integerValues: [ 73, 9, 124 ]  },
+{    _id: ObjectId("6390b9b1237da390c6869a67"),    city: 'San Bernadino',    integerValues: [ 16, 3, 6 ]  }

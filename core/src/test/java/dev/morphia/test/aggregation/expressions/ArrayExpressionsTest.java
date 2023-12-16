@@ -17,7 +17,6 @@ import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.filter;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.indexOfArray;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.isArray;
-import static dev.morphia.aggregation.expressions.ArrayExpressions.map;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.objectToArray;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.range;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.reduce;
@@ -31,7 +30,6 @@ import static dev.morphia.aggregation.expressions.ComparisonExpressions.lte;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.expressions.StringExpressions.concat;
 import static org.bson.Document.parse;
 
@@ -75,30 +73,6 @@ public class ArrayExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testIsArray() {
         assertAndCheckDocShape("{ $isArray: [ 'hello' ] }", isArray(value("hello")), false);
-    }
-
-    @Test
-    public void testMap() {
-        insert("grades",
-                List.of(
-                        parse("{ _id: 1, quizzes: [ 5, 6, 7 ] }"),
-                        parse("{ _id: 2, quizzes: [ ] }"),
-                        parse("{ _id: 3, quizzes: [ 3, 8, 9 ] }")));
-
-        List<Document> actual = getDs().aggregate("grades")
-                .project(Projection.project()
-                        .include("adjustedGrades",
-                                map(field("quizzes"), add(value("$$grade"), value(2)))
-                                        .as("grade")))
-                .execute(Document.class)
-                .toList();
-
-        List<Document> expected = List.of(
-                parse("{ '_id' : 1, 'adjustedGrades' : [ 7, 8, 9 ] }"),
-                parse("{ '_id' : 2, 'adjustedGrades' : [ ] }"),
-                parse("{ '_id' : 3, 'adjustedGrades' : [ 5, 10, 11 ] }"));
-
-        assertDocumentEquals(actual, expected);
     }
 
     @Test

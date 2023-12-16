@@ -1,0 +1,3 @@
+{    _id: ObjectId("6390b8f7237da390c6869a62"),    adjustedGrades: [ 7, 8, 9 ]  },
+{     _id: ObjectId("6390b8f7237da390c6869a63"),    adjustedGrades: []  },
+{    _id: ObjectId("6390b8f7237da390c6869a64"),    adjustedGrades: [ 5, 10, 11 ]  }

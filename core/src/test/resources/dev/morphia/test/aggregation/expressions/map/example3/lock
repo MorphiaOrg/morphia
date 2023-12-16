@@ -1,0 +1,2 @@
+reorder pipeline to match morphia's order
+pipeline in docs has 'as' in the wrong place

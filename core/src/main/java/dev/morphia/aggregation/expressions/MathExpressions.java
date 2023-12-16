@@ -304,6 +304,19 @@ public final class MathExpressions {
      * NOTE: Prior to 4.2, the place value wasn't available. Pass null if your server is older than 4.2.
      *
      * @param number the value
+     * @return the new expression
+     * @aggregation.expression $trunc
+     */
+    public static Expression trunc(Expression number) {
+        return new MathExpression("$trunc", number);
+    }
+
+    /**
+     * Truncates a number to a whole integer or to a specified decimal place.
+     * <p>
+     * NOTE: Prior to 4.2, the place value wasn't available. Pass null if your server is older than 4.2.
+     *
+     * @param number the value
      * @param place  the place to trunc to. may be null.
      * @return the new expression
      * @aggregation.expression $trunc

@@ -1,0 +1,14 @@
+ [
+   {
+      $project: {
+         city: "$city",
+         integerValues: {
+            $map: {
+               input: "$distances",
+               in: { $trunc: "$$decimalValue" },
+               as: "decimalValue"
+            }
+         }
+      }
+   }
+ ] 

@@ -1,0 +1,13 @@
+ [
+   {
+      $project: {
+         adjustedGrades: {
+           $map: {
+             input: "$quizzes",
+             in: { $add: [ "$$grade", 2 ] },
+             as: "grade"
+           }
+         }
+      }
+   }
+ ] 
