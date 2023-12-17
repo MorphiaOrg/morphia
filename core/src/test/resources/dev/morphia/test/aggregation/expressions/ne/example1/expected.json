@@ -1,0 +1,5 @@
+{ "item" : "abc1", "qty" : 300, "qtyNe250" : true }
+{ "item" : "abc2", "qty" : 200, "qtyNe250" : true }
+{ "item" : "xyz1", "qty" : 250, "qtyNe250" : false }
+{ "item" : "VWZ1", "qty" : 300, "qtyNe250" : true }
+{ "item" : "VWZ2", "qty" : 180, "qtyNe250" : true }

@@ -1,0 +1,5 @@
+{ "item" : "abc1", "qty" : 300, "cmpTo250" : 1 }
+{ "item" : "abc2", "qty" : 200, "cmpTo250" : -1 }
+{ "item" : "xyz1", "qty" : 250, "cmpTo250" : 0 }
+{ "item" : "VWZ1", "qty" : 300, "cmpTo250" : 1 }
+{ "item" : "VWZ2", "qty" : 180, "cmpTo250" : -1 }

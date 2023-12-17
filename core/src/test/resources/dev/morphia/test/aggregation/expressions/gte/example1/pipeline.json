@@ -1,0 +1,11 @@
+   [
+     {
+       $project:
+          {
+            _id: 0,
+            item: 1,
+            qty: 1,
+            qtyGte250: { $gte: [ "$qty", 250 ] }
+          }
+     }
+   ]
