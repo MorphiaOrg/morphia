@@ -1,8 +1,0 @@
-{playerId: "PlayerA", gameId: "G1", score: 31},
-{playerId: "PlayerB", gameId: "G1", score: 33},
-{playerId: "PlayerC", gameId: "G1", score: 99},
-{playerId: "PlayerD", gameId: "G1", score: 1 },
-{playerId: "PlayerA", gameId: "G2", score: 10},
-{playerId: "PlayerB", gameId: "G2", score: 14},
-{playerId: "PlayerC", gameId: "G2", score: 66},
-{playerId: "PlayerD", gameId: "G2", score: 80}

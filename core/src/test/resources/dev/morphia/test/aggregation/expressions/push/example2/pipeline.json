@@ -1,0 +1,16 @@
+ [
+   {
+      $setWindowFields: {
+         partitionBy: "$state",
+         sortBy: { orderDate: 1 },
+         output: {
+            quantitiesForState: {
+               $push: "$quantity",
+               window: {
+                  documents: [ "unbounded", "current" ]
+               }         
+            }
+         }
+      }
+   }
+] 

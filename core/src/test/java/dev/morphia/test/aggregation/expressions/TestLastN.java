@@ -18,17 +18,9 @@ import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.test.ServerVersion.v52;
 
 public class TestLastN extends AggregationTest {
-    @Test
-    public void testComputedN() {
-        testPipeline(v52, false, false, (aggregation) -> aggregation
-                .pipeline(group(id().field("gameId", field("gameId")))
-                        .field("gamescores", lastN(
-                                condition(eq(field("gameId"), value("G2")), value(1), value(3)),
-                                field("score")))));
-    }
 
     @Test
-    public void testSingleGame() {
+    public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(
                         match(eq("gameId", "G1")),
@@ -40,7 +32,7 @@ public class TestLastN extends AggregationTest {
     }
 
     @Test
-    public void testAcrossGames() {
+    public void testExample3() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(group(id("$gameId"))
                         .field("playerId", lastN(
@@ -50,7 +42,7 @@ public class TestLastN extends AggregationTest {
     }
 
     @Test
-    public void testSortedScores() {
+    public void testExample4() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(
                         sort().descending("score"),
@@ -60,4 +52,19 @@ public class TestLastN extends AggregationTest {
                                         array(field("playerId"), field("score"))))));
 
     }
+
+    @Test
+    public void testExample5() {
+        testPipeline(v52, false, false, (aggregation) -> aggregation
+                .pipeline(group(id().field("gameId", field("gameId")))
+                        .field("gamescores", lastN(
+                                condition(eq(field("gameId"), value("G2")), value(1), value(3)),
+                                field("score")))));
+    }
+
+    @Test
+    public void testExample6() {
+        //  needs db.aggregate() support
+    }
+
 }

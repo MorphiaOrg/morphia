@@ -1,0 +1,3 @@
+{   "_id" : { "day" : 46, "year" : 2014 },   "itemsSold" : [      { "item" : "abc", "quantity" : 10 },      { "item" : "xyz", "quantity" : 10 },      { "item" : "xyz", "quantity" : 5 },      { "item" : "xyz", "quantity" : 10 }   ]}
+{   "_id" : { "day" : 34, "year" : 2014 },   "itemsSold" : [      { "item" : "jkl", "quantity" : 1 },      { "item" : "xyz", "quantity" : 5 }   ]}
+{   "_id" : { "day" : 1, "year" : 2014 },   "itemsSold" : [ { "item" : "abc", "quantity" : 2 } ]}
