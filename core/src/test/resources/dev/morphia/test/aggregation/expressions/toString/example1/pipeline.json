@@ -1,0 +1,14 @@
+[
+  {
+    $addFields: {
+      convertedZipCode: {
+        $toString: "$zipcode"
+      }
+    }
+  },
+  {
+    $sort: {
+      "convertedZipCode": 1
+    }
+  }
+]

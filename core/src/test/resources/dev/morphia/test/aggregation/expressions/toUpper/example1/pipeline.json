@@ -1,0 +1,9 @@
+   [
+     {
+       $project:
+         {
+           item: { $toUpper: "$item" },
+           description: { $toUpper: "$description" }
+         }
+     }
+   ]

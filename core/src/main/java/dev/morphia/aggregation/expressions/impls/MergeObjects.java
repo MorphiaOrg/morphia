@@ -24,10 +24,15 @@ public class MergeObjects extends Expression {
      */
     @SuppressWarnings("unchecked")
     public MergeObjects add(Expression expression) {
-        ExpressionList value = (ExpressionList) value();
+        ExpressionList value = value();
         if (value != null) {
             value.add(expression);
         }
         return this;
+    }
+
+    @Override
+    public ExpressionList value() {
+        return (ExpressionList) super.value();
     }
 }

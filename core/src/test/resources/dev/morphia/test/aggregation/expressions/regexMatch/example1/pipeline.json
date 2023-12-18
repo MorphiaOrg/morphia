@@ -1,0 +1,12 @@
+[
+  {
+    $addFields: {
+      result: {
+        $regexMatch: {
+          input: "$description",
+          regex: /line/
+        }
+      }
+    }
+  }
+]

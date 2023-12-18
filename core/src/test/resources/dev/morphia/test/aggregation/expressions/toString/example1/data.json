@@ -1,0 +1,3 @@
+{ _id: 1, item: "apple",  qty: 5, zipcode: 93445 },
+{ _id: 2, item: "almonds", qty: 2, zipcode: "12345-0030" },
+{ _id: 3, item: "peaches",  qty: 5, zipcode: 12345 },

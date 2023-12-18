@@ -1,0 +1,8 @@
+{ _id: 1, name: 'apple', length: 5 },
+{ _id: 2, name: 'banana', length: 6 },
+{ _id: 3, name: 'éclair', length: 6 },
+{ _id: 4, name: 'hamburger', length: 9 },
+{ _id: 5, name: 'jalapeño', length: 8 },
+{ _id: 6, name: 'pizza', length: 5 },
+{ _id: 7, name: 'tacos', length: 5 },
+{ _id: 8, name: '寿司', length: 2 }

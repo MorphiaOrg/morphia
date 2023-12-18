@@ -3,7 +3,6 @@ package dev.morphia.mapping.codec.filters;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.query.filters.RegexFilter;
 
-import org.bson.BsonRegularExpression;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
@@ -30,9 +29,7 @@ public class RegexFilterCodec extends BaseFilterCodec<RegexFilter> {
     }
 
     private void encodeFilter(BsonWriter writer, RegexFilter filter, EncoderContext context) {
-        writer.writeName("$regex");
-        datastore.getCodecRegistry().get(BsonRegularExpression.class)
-                .encode(writer, new BsonRegularExpression((String) filter.getValue()), context);
+        value(writer, "$regex", filter.getValue().toString());
         value(writer, "$options", filter.options());
     }
 

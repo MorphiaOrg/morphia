@@ -1,6 +1,9 @@
 package dev.morphia.mapping.codec.expressions;
 
+import java.util.List;
+
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.MergeObjects;
 
 import org.bson.BsonWriter;
@@ -15,8 +18,10 @@ public class MergeObjectsCodec extends BaseExpressionCodec<MergeObjects> {
 
     @Override
     public void encode(BsonWriter writer, MergeObjects value, EncoderContext encoderContext) {
-        encodeIfNotNull(datastore.getCodecRegistry(), writer, value.operation(), value.value(), encoderContext);
+        List<Expression> list = value.value().values();
+        Expression merging = (list.size() == 1) ? list.get(0) : value.value();
 
+        encodeIfNotNull(datastore.getCodecRegistry(), writer, value.operation(), merging, encoderContext);
     }
 
     @Override

@@ -1,0 +1,12 @@
+[
+  {
+    $addFields: {
+      returnObject: {
+        $regexFindAll: {
+          input: "$description",
+          regex: /line/
+        }
+      }
+    }
+  }
+]

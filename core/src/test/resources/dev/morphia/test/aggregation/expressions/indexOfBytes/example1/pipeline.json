@@ -1,0 +1,8 @@
+   [
+     {
+       $project:
+          {
+            byteLocation: { $indexOfBytes: [ "$item", "foo" ] },
+          }
+      }
+   ]

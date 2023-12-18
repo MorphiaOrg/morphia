@@ -1,0 +1,9 @@
+   [
+     {
+       $project:
+          {
+            item: 1,
+            comparisonResult: { $strcasecmp: [ "$quarter", "13q4" ] }
+          }
+      }
+   ]

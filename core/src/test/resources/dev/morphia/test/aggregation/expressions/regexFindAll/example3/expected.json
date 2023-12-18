@@ -1,0 +1,4 @@
+{   "_id" : 1,   "comment" : "Hi, I'm just reading about MongoDB -- aunt.arc.tica@example.com",   "names" : [ "aunt.arc.tica" ]}
+{ "_id" : 2, "comment" : "I wanted to concatenate a string", "names" : [ ] }
+{   "_id" : 3,   "comment" : "How do I convert a date to string? Contact me at either cam@mongodb.com or c.dia@mongodb.com",   "names" : [ "cam", "c.dia" ]}
+{   "_id" : 4,   "comment" : "It's just me. I'm testing.  fred@MongoDB.com",   "names" : [ "fred" ]}

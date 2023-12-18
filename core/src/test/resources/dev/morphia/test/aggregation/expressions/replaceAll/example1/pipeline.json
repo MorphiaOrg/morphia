@@ -1,0 +1,8 @@
+[
+   {
+     $project:
+      {
+         item: { $replaceAll: { input: "$item", find: "blue paint", replacement: "red paint" } }
+      }
+   }
+]
