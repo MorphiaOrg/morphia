@@ -1,0 +1,14 @@
+[
+  {
+    $addFields: {
+      convertedQty: {
+        $toLong: "$qty"
+      }
+    }
+  },
+  {
+    $sort: {
+      "convertedQty": -1
+    }
+  }
+]

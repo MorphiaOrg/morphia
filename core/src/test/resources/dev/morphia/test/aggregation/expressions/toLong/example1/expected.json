@@ -1,0 +1,4 @@
+{ _id: 3, item: 'ice cream', qty: NumberLong("500"), convertedQty: NumberLong("500") },
+{ _id: 2, item: 'pie', qty: '100', convertedQty: NumberLong("100") },
+{ _id: 4, item: 'almonds', qty: '50', convertedQty: NumberLong("50") },
+{ _id: 1, item: 'apple', qty: 5, convertedQty: NumberLong("5") }

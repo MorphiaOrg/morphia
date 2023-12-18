@@ -1,0 +1,3 @@
+value for _id 2 was a floating point trying to create a NumberLong
+mismatch between declared pipeline field and expected field names
+precision variances between data and expected

@@ -1,0 +1,6 @@
+{ "_id" : 1, "reading" : NumberDecimal(26.0), "isNumber" : true, "type" : "decimal" }
+{ "_id" : 2, "reading" : NumberLong(25), "isNumber" : true, "type" : "long" }
+{ "_id" : 3, "reading" : 24, "isNumber" : true, "type" : "int" }
+{ "_id" : 4, "reading" : 24, "isNumber" : true, "type" : "double" }
+{ "_id" : 5, "reading" : "24", "isNumber" : false, "type" : "string" }
+{ "_id" : 6, "reading" : [ NumberDecimal("26") ], "isNumber" : false, "type" : "array" }

@@ -1,0 +1,14 @@
+[
+  {
+    $addFields: {
+      convertedDate: {
+        $toDate: "$order_date"
+      }
+    }
+  },
+  {
+    $sort: {
+      "convertedDate": 1
+    }
+  }
+] 

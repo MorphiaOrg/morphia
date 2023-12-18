@@ -1,0 +1,20 @@
+[
+  {
+    $addFields: {
+      convertedShippedFlag: {
+        $switch: {
+          branches: [
+            { case: { $eq: [ "$shipped", "false" ] }, then: false },
+            { case: { $eq: [ "$shipped", "" ] }, then: false }
+          ],
+          default: { $toBool: "$shipped" }
+        }
+      }
+    }
+  },
+  {
+    $match: {
+      "convertedShippedFlag": false
+    }
+  }
+] 

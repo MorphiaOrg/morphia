@@ -1,0 +1,23 @@
+[
+  {
+    $addFields: {
+      convertedPrice: {
+        $toDecimal: "$price"
+      },
+      convertedQty: {
+        $toInt: "$qty"
+      }
+    }
+  },
+  {
+    $project: {
+      item: 1,
+      totalPrice: {
+        $multiply: [
+          "$convertedPrice",
+          "$convertedQty"
+        ]
+      }
+    }
+  }
+] 

@@ -1,0 +1,4 @@
+{  _id: '5ab9e16431c2ab715d4212b4',  item: 'almonds',  qty: 50,  convertedId: ObjectId("5ab9e16431c2ab715d4212b4")},
+{  _id: ObjectId("5ab9d2d331c2ab715d4212b3"),  item: 'ice cream',  qty: 20,  convertedId: ObjectId("5ab9d2d331c2ab715d4212b3")},
+{  _id: ObjectId("5ab9d0b831c2ab715d4212a8"),  item: 'pie',  qty: 5,  convertedId: ObjectId("5ab9d0b831c2ab715d4212a8")},
+{  _id: '5ab9cbe531c2ab715d42129a',  item: 'apple',  qty: 10,  convertedId: ObjectId("5ab9cbe531c2ab715d42129a")}

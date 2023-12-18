@@ -1,0 +1,3 @@
+{ "_id" : 1, "date" : ISODate("2018-06-01T00:00:00Z"), "temp" : "26.1C", "degrees" : 26.1 }
+{ "_id" : 2, "date" : ISODate("2018-06-02T00:00:00Z"), "temp" : "25.1C", "degrees" : 25.1 }
+{ "_id" : 3, "date" : ISODate("2018-06-03T00:00:00Z"), "temp" : "25.4C", "degrees" : 25.4 }

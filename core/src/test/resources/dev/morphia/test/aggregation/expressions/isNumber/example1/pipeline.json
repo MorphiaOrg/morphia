@@ -1,0 +1,6 @@
+[{ 
+  $addFields : {   
+    "isNumber" : { $isNumber : "$reading" },
+    "type" : {$type : "$reading"}
+  } 
+}]

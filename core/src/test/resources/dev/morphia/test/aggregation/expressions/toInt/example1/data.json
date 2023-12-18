@@ -1,0 +1,4 @@
+{ _id: 1, item: "apple", qty: "5", price: 10 },
+{ _id: 2, item: "pie", qty: "10", price: NumberDecimal("20.0") },
+{ _id: 3, item: "ice cream", qty: "2", price: "4.99" },
+{ _id: 4, item: "almonds" ,  qty: "5", price: 5 }

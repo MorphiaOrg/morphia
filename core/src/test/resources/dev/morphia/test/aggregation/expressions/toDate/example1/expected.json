@@ -1,0 +1,4 @@
+{   _id: 4,   item: 'almonds',   qty: 5,   price: 7,   order_date: '2018-03-15 +10:00',   convertedDate: ISODate("2018-03-14T14:00:00.000Z")},
+{   _id: 3,   item: 'ice cream',   qty: 2,   price: 4,   order_date: '2018-03-15',   convertedDate: ISODate("2018-03-15T00:00:00.000Z")},
+{   _id: 1,   item: 'apple',   qty: 5,   price: 2,   order_date: ISODate("2018-03-20T00:00:00.000Z"),   convertedDate: ISODate("2018-03-20T00:00:00.000Z")},
+{   _id: 2,   item: 'pie',   qty: 10,   price: 3,   order_date: ISODate("2018-03-22T00:00:00.000Z"),   convertedDate: ISODate("2018-03-22T00:00:00.000Z")}

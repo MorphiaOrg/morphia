@@ -1,0 +1,2 @@
+inlined js variables to pipeline
+the driver apparently can't parse Decimal128(...)

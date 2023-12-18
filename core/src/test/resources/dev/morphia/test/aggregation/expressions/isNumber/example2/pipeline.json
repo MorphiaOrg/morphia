@@ -1,0 +1,31 @@
+[
+  {
+    $addFields: {
+      "points" : {
+        $cond : [
+          { $isNumber : "$grade" },
+          "$grade" ,
+          {
+            $switch : {
+              branches: [
+                { case: {$eq : ["$grade" , "A"]}, then : 4.0 },
+                { case: {$eq : ["$grade" , "B"]}, then : 3.0 },
+                { case: {$eq : ["$grade" , "C"]}, then : 2.0 },
+                { case: {$eq : ["$grade" , "D"]}, then : 1.0 },
+                { case: {$eq : ["$grade" , "F"]}, then : 0.0 }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    $group: {
+      _id: "$student_id",
+      GPA: {
+        $avg: "$points"
+      }
+    }
+  }
+]

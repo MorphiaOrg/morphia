@@ -7,10 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import dev.morphia.aggregation.Aggregation;
-import dev.morphia.aggregation.stages.AddFields;
-import dev.morphia.aggregation.stages.Sort;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.aggregation.expressions.ExpressionsTestBase;
 import dev.morphia.test.aggregation.model.Sales;
@@ -18,7 +14,6 @@ import dev.morphia.test.aggregation.model.StringDates;
 import dev.morphia.test.models.User;
 
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.dateFromParts;
@@ -35,7 +30,6 @@ import static dev.morphia.aggregation.expressions.DateExpressions.milliseconds;
 import static dev.morphia.aggregation.expressions.DateExpressions.minute;
 import static dev.morphia.aggregation.expressions.DateExpressions.month;
 import static dev.morphia.aggregation.expressions.DateExpressions.second;
-import static dev.morphia.aggregation.expressions.DateExpressions.toDate;
 import static dev.morphia.aggregation.expressions.DateExpressions.week;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.expressions.Expressions.field;
@@ -166,44 +160,4 @@ public class TestDateExpression extends ExpressionsTestBase {
                 2015L);
     }
 
-    @Test
-    public void testToDate() {
-        insert("orders", List.of(
-                parse(" { _id: 1, item: 'apple', qty: 5, order_date: '2018-03-10'}"),
-                parse("{ _id: 2, item: 'pie', qty: 10,  order_date: '2018-03-12'}"),
-                parse("{ _id: 3, item: 'ice cream', qty: 2, price: '4.99', order_date: '2018-03-05' }"),
-                parse("{ _id: 4, item: 'almonds' ,  qty: 5, price: 5,  order_date: '2018-03-05 +10:00'}")));
-
-        List<Document> result = getDs().aggregate(Order.class)
-                .addFields(AddFields.addFields()
-                        .field("convertedDate", toDate(field("order_date"))))
-                .sort(Sort.sort()
-                        .ascending("convertedDate"))
-                .execute(Document.class)
-                .toList();
-
-        List<Document> documents = List.of(
-                parse(
-                        "{'_id': 4, 'item': 'almonds', 'qty': 5, 'price': 5, 'order_date': '2018-03-05 +10:00', 'convertedDate': ISODate" +
-                                "('2018-03-04T14:00:00Z')}"),
-                parse(
-                        "{'_id': 3, 'item': 'ice cream', 'qty': 2, 'price': '4.99', 'order_date': '2018-03-05', 'convertedDate': ISODate" +
-                                "('2018-03-05T00:00:00Z')}"),
-                parse("{'_id': 1, 'item': 'apple', 'qty': 5, 'order_date': '2018-03-10', 'convertedDate': ISODate('2018-03-10T00:00:00Z')}"),
-                parse("{'_id': 2, 'item': 'pie', 'qty': 10, 'order_date': '2018-03-12', 'convertedDate': ISODate('2018-03-12T00:00:00Z')}"));
-
-        assertEquals(result, documents);
-    }
-
-    @Entity("logmessages")
-    private static class LogMessage {
-        @Id
-        private ObjectId id;
-    }
-
-    @Entity("orders")
-    private static class Order {
-        @Id
-        private ObjectId id;
-    }
 }

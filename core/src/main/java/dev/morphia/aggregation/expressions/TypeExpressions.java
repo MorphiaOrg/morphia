@@ -56,9 +56,10 @@ public final class TypeExpressions {
      * @param input the value to process
      * @return the new expression
      * @aggregation.expression $toDate
+     * @see DateExpressions#toDate(Expression)
      */
     public static Expression toDate(Expression input) {
-        return new Expression("$toDate", input);
+        return DateExpressions.toDate(input);
     }
 
     /**

@@ -1,0 +1,14 @@
+[
+  {
+    $addFields: {
+      convertedId: {
+        $toObjectId: "$_id"
+      }
+    }
+  },
+  {
+    $sort: {
+      "convertedId": -1
+    }
+  }
+] 

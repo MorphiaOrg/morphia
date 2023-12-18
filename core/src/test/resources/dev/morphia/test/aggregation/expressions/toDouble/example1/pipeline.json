@@ -1,0 +1,11 @@
+[
+  {
+    $addFields: {
+      degrees: {
+        $toDouble: {
+          $substrBytes: ["$temp", 0, 4]
+        }
+      }
+    }
+  }
+] 
