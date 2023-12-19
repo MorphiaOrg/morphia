@@ -49,6 +49,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
     protected final ObjectMapper mapper = new ObjectMapper();
     protected boolean skipPipelineCheck = false;
+    protected boolean skipDataCheck = false;
 
     public TemplatedTestBase() {
     }
@@ -79,14 +80,16 @@ public abstract class TemplatedTestBase extends TestBase {
 
         List<Document> documents = runPipeline(resourceName, pipeline.apply(getDs().aggregate(collection)));
 
-        List<Document> actual = removeIds ? removeIds(documents) : documents;
-        List<Document> expected = loadExpected(resourceName);
+        if (!skipDataCheck) {
+            List<Document> actual = removeIds ? removeIds(documents) : documents;
+            List<Document> expected = loadExpected(resourceName);
 
-        try {
-            Comparanator.of(null, actual, expected, orderMatters).compare();
-        } catch (AssertionError e) {
-            throw new AssertionError("%s\n\n actual: %s".formatted(e.getMessage(), toString(actual, "\n\t")),
-                    e);
+            try {
+                Comparanator.of(null, actual, expected, orderMatters).compare();
+            } catch (AssertionError e) {
+                throw new AssertionError("%s\n\n actual: %s".formatted(e.getMessage(), toString(actual, "\n\t")),
+                        e);
+            }
         }
     }
 

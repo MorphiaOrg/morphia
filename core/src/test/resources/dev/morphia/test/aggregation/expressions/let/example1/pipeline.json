@@ -1,0 +1,15 @@
+ [
+   {
+      $project: {
+         finalTotal: {
+            $let: {
+               vars: {
+                  total: { $add: [ '$price', '$tax' ] },
+                  discounted: { $cond: [ '$applyDiscount', 0.9, 1 ] }
+               },
+               in: { $multiply: [ "$$total", "$$discounted" ] }
+            }
+         }
+      }
+   }
+] 

@@ -1,0 +1,5 @@
+{ "_id" : 1, "item" : "abc1", "result" : false }
+{ "_id" : 2, "item" : "abc2", "result" : true }
+{ "_id" : 3, "item" : "xyz1", "result" : true }
+{ "_id" : 4, "item" : "VWZ1", "result" : false }
+{ "_id" : 5, "item" : "VWZ2", "result" : true }

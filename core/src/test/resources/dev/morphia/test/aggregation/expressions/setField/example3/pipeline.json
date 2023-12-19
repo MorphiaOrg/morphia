@@ -1,0 +1,9 @@
+ [ 
+   { $match: { _id: 1 } }, 
+   { $replaceWith: { 
+        $setField: { 
+           field: "price.usd", 
+           input: "$$ROOT", 
+           value: 49.99 
+    } } }
+] 

@@ -1,0 +1,9 @@
+   [
+     {
+       $project:
+          {
+            item: 1,
+            result: { $not: [ { $gt: [ "$qty", 250 ] } ] }
+          }
+     }
+   ]

@@ -1,0 +1,5 @@
+{ _id: 0, cakes: ["chocolate", "vanilla"], cupcakes: ["chocolate", "vanilla"] },
+{ _id: 1, cakes: ["chocolate", "vanilla"], cupcakes: ["vanilla", "chocolate"] },
+{ _id: 2, cakes: ["chocolate", "chocolate"], cupcakes: ["chocolate"] },
+{ _id: 3, cakes: ["vanilla"], cupcakes: ["chocolate"] },
+{ _id: 4, cakes: ["vanilla"], cupcakes: [] }

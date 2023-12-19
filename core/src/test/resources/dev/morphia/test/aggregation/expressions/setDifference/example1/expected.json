@@ -1,0 +1,9 @@
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid" ], "inBOnly" : [ ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "orchid", "rose", "orchid" ], "inBOnly" : [ ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid", "jasmine" ], "inBOnly" : [ "jasmine" ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "jasmine", "rose" ], "inBOnly" : [ "jasmine" ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ ], "inBOnly" : [ ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ [ "rose" ], [ "orchid" ] ], "inBOnly" : [ [ "rose" ], [ "orchid" ] ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ [ "rose", "orchid" ] ], "inBOnly" : [ [ "rose", "orchid" ] ] }
+{ "flowerFieldA" : [ ], "flowerFieldB" : [ ], "inBOnly" : [ ] }
+{ "flowerFieldA" : [ ], "flowerFieldB" : [ "rose" ], "inBOnly" : [ "rose" ] }
