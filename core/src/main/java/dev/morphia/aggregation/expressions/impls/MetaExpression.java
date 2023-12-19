@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.MetadataKeyword;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -9,7 +10,20 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 @MorphiaInternal
 public class MetaExpression extends Expression {
 
-    public MetaExpression() {
+    private final MetadataKeyword metadataKeyword;
+
+    public MetaExpression(MetadataKeyword metadataKeyword) {
         super("$meta");
+        this.metadataKeyword = metadataKeyword;
+    }
+
+    /**
+     * @hidden
+     * @return
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public MetadataKeyword metadataKeyword() {
+        return metadataKeyword;
     }
 }

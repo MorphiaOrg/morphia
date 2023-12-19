@@ -1,0 +1,16 @@
+ [
+   {
+      $setWindowFields: {
+         partitionBy: "$state",
+         sortBy: { orderDate: 1 },
+         output: {
+            covariancePopForState: {
+               $covariancePop: [ { $year: "$orderDate" }, "$quantity" ],
+               window: {
+                  documents: [ "unbounded", "current" ]
+               }
+            }
+         }
+      }
+   }
+] 

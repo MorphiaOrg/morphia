@@ -1,0 +1,4 @@
+   [
+     { $match: { type: "apparel" } },
+     { $addFields: { idxKey: { $meta: "indexKey" } } }
+   ]

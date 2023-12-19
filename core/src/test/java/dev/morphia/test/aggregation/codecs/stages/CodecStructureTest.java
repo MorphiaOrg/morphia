@@ -9,7 +9,6 @@ import com.mongodb.client.model.geojson.Position;
 
 import dev.morphia.aggregation.expressions.AccumulatorExpressions;
 import dev.morphia.aggregation.expressions.MathExpressions;
-import dev.morphia.aggregation.expressions.ObjectExpressions;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.AddFields;
 import dev.morphia.aggregation.stages.Bucket;
@@ -37,7 +36,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
-import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.size;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
@@ -48,7 +46,6 @@ import static dev.morphia.aggregation.expressions.SetExpressions.setIntersection
 import static dev.morphia.aggregation.expressions.SystemVariables.DESCEND;
 import static dev.morphia.aggregation.expressions.SystemVariables.NOW;
 import static dev.morphia.aggregation.expressions.SystemVariables.PRUNE;
-import static dev.morphia.aggregation.expressions.SystemVariables.ROOT;
 import static dev.morphia.mapping.codec.CodecHelper.document;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
@@ -165,14 +162,6 @@ public class CodecStructureTest extends TestBase {
                 Redact.redact(condition(
                         gt(size(setIntersection(field("tags"), array(value("STLW"), value("G")))), value(0)),
                         DESCEND, PRUNE)));
-    }
-
-    @Test
-    public void testMergeObjects() {
-        evaluate(parse("{ $mergeObjects: [ { $arrayElemAt: [ \"$fromItems\", 0 ] }, \"$$ROOT\" ] } "),
-                ObjectExpressions.mergeObjects()
-                        .add(elementAt(field("fromItems"), value(0)))
-                        .add(ROOT));
     }
 
     @Test

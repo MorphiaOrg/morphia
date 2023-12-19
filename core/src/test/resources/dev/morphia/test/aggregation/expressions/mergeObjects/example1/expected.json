@@ -1,0 +1,2 @@
+{  _id: 1,  item: 'abc',  description: 'product 1',  instock: 120,  price: 12,  ordered: 2},
+{  _id: 2,  item: 'jkl',  description: 'product 3',  instock: 60,  price: 20,  ordered: 1}

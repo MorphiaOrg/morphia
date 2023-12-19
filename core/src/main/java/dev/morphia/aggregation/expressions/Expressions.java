@@ -13,6 +13,7 @@ import dev.morphia.aggregation.expressions.impls.MetaExpression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import static dev.morphia.aggregation.expressions.MetadataKeyword.*;
 import static java.util.Arrays.asList;
 
 /**
@@ -87,7 +88,20 @@ public final class Expressions {
      * @aggregation.expression $meta
      */
     public static Expression meta() {
-        return new MetaExpression();
+        return meta(TEXTSCORE);
+    }
+
+    /**
+     * Returns the metadata associated with a document in a pipeline operations, e.g. "textScore" when performing text search.
+     *
+     * @param metadataKeyword the keyword to use
+     * @return the new expression
+     * @aggregation.expression $meta
+     * @since 3.0
+     * @mongodb.server.release 4.4
+     */
+    public static MetaExpression meta(MetadataKeyword metadataKeyword) {
+        return new MetaExpression(metadataKeyword);
     }
 
     /**

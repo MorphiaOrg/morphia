@@ -22,7 +22,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $convert
      */
-    public static Expression convert(Expression input, ConvertType to) {
+    public static ConvertExpression convert(Expression input, ConvertType to) {
         return new ConvertExpression(input, to);
     }
 

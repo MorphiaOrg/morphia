@@ -14,7 +14,7 @@ public class MetaExpressionCodec extends BaseExpressionCodec<MetaExpression> {
     @Override
     public void encode(BsonWriter writer, MetaExpression value, EncoderContext encoderContext) {
         writer.writeName(value.operation());
-        writer.writeString("textScore");
+        writer.writeString(value.metadataKeyword().keyword());
     }
 
     @Override

@@ -1,0 +1,3 @@
+ [
+   { $project: { "title": 1, "editionNumber": { $literal: 1 } } }
+] 

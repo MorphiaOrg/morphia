@@ -1,0 +1,2 @@
+{"_id" : ObjectId("5e98a33ceaf5e9dcf2b8dcde"), "item" : "abc", "price" : NumberDecimal("12"), "quantity" : 2, "type" : "apparel", "idxKey" : { "type" : "apparel", "item" : "abc" }}
+{"_id" : ObjectId("5e98a33ceaf5e9dcf2b8dce0"), "item" : "abc", "price" : NumberDecimal("10"), "quantity" : 5, "type" : "apparel", "idxKey" : { "type" : "apparel", "item" : "abc" }}

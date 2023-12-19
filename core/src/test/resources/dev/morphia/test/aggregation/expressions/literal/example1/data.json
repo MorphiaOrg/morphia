@@ -1,0 +1,3 @@
+{ "_id" : 1, "item" : "napkins", price: "$2.50" },
+{ "_id" : 2, "item" : "coffee", price: "1" },
+{ "_id" : 3, "item" : "soap", price: "$1" }

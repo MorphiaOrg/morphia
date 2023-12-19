@@ -1,0 +1,8 @@
+{ "_id" : ObjectId("60cbdc3f833dfeadc8e62863"), "powerMeterID" : "1",  "timeStamp" : ISODate("2020-05-18T14:10:30Z"), "kilowatts" : 2.95,  "powerMeterKilowattHours" : 0 }
+{ "_id" : ObjectId("60cbdc3f833dfeadc8e62864"), "powerMeterID" : "1",  "timeStamp" : ISODate("2020-05-18T14:11:00Z"), "kilowatts" : 2.7,  "powerMeterKilowattHours" : 0.023541666666666666 }
+{ "_id" : ObjectId("60cbdc3f833dfeadc8e62865"), "powerMeterID" : "1",  "timeStamp" : ISODate("2020-05-18T14:11:30Z"), "kilowatts" : 2.6,  "powerMeterKilowattHours" : 0.045625 }
+{ "_id" : ObjectId("60cbdc3f833dfeadc8e62866"), "powerMeterID" : "1",  "timeStamp" : ISODate("2020-05-18T14:12:00Z"), "kilowatts" : 2.98,  "powerMeterKilowattHours" : 0.068875 }
+{ "_id" : ObjectId("60cbdc3f833dfeadc8e62867"), "powerMeterID" : "2",  "timeStamp" : ISODate("2020-05-18T14:10:30Z"), "kilowatts" : 2.5,  "powerMeterKilowattHours" : 0 }
+{ "_id" : ObjectId("60cbdc3f833dfeadc8e62868"), "powerMeterID" : "2",  "timeStamp" : ISODate("2020-05-18T14:11:00Z"), "kilowatts" : 2.25,  "powerMeterKilowattHours" : 0.019791666666666666 }
+{ "_id" : ObjectId("60cbdc3f833dfeadc8e62869"), "powerMeterID" : "2",  "timeStamp" : ISODate("2020-05-18T14:11:30Z"), "kilowatts" : 2.75,  "powerMeterKilowattHours" : 0.040625 }
+{ "_id" : ObjectId("60cbdc3f833dfeadc8e6286a"), "powerMeterID" : "2",  "timeStamp" : ISODate("2020-05-18T14:12:00Z"), "kilowatts" : 2.82,  "powerMeterKilowattHours" : 0.06383333333333334 }

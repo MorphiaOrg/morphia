@@ -1,0 +1,5 @@
+   [
+      { $set: { amount: { $multiply: [ { $rand: {} }, 100 ] } } },
+      { $set: { amount: { $floor: "$amount" } } },
+      { $merge: "donors" }
+   ]

@@ -30,42 +30,46 @@ public class MergeCodec extends StageCodec<Merge> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Merge merge, EncoderContext encoderContext) {
-        document(writer, () -> {
-            String collection = merge.getType() != null
-                    ? getDatastore().getMapper().getEntityModel(merge.getType()).collectionName()
-                    : merge.getCollection();
-            String database = merge.getDatabase();
+        String collection = merge.getType() != null
+                ? getDatastore().getMapper().getEntityModel(merge.getType()).collectionName()
+                : merge.getCollection();
+        if (merge.allDefaults()) {
+            writer.writeString(collection);
+        } else {
+            document(writer, () -> {
+                String database = merge.getDatabase();
 
-            if (database == null) {
-                writer.writeString("into", collection);
-            } else {
-                document(writer, "into", () -> {
-                    writer.writeString("db", database);
-                    writer.writeString("coll", collection);
-                });
-            }
-
-            List<String> on = merge.getOn();
-            if (on != null) {
-                if (on.size() == 1) {
-                    writer.writeString("on", on.get(0));
+                if (database == null) {
+                    writer.writeString("into", collection);
                 } else {
-                    array(writer, "on", () -> on.forEach(writer::writeString));
+                    document(writer, "into", () -> {
+                        writer.writeString("db", database);
+                        writer.writeString("coll", collection);
+                    });
                 }
-            }
-            Map<String, Expression> variables = merge.getVariables();
-            if (variables != null) {
-                document(writer, "let", () -> {
-                    CodecRegistry registry = getDatastore().getCodecRegistry();
-                    for (Entry<String, Expression> entry : variables.entrySet()) {
-                        encodeIfNotNull(registry, writer, entry.getKey(), entry.getValue(), encoderContext);
+
+                List<String> on = merge.getOn();
+                if (on != null) {
+                    if (on.size() == 1) {
+                        writer.writeString("on", on.get(0));
+                    } else {
+                        array(writer, "on", () -> on.forEach(writer::writeString));
                     }
-                });
-            }
-            writeEnum(writer, "whenMatched", merge.getWhenMatched());
-            value(getCodecRegistry(), writer, "whenMatched", merge.getWhenMatchedPipeline(), encoderContext);
-            writeEnum(writer, "whenNotMatched", merge.getWhenNotMatched());
-        });
+                }
+                Map<String, Expression> variables = merge.getVariables();
+                if (variables != null) {
+                    document(writer, "let", () -> {
+                        CodecRegistry registry = getDatastore().getCodecRegistry();
+                        for (Entry<String, Expression> entry : variables.entrySet()) {
+                            encodeIfNotNull(registry, writer, entry.getKey(), entry.getValue(), encoderContext);
+                        }
+                    });
+                }
+                writeEnum(writer, "whenMatched", merge.getWhenMatched());
+                value(getCodecRegistry(), writer, "whenMatched", merge.getWhenMatchedPipeline(), encoderContext);
+                writeEnum(writer, "whenNotMatched", merge.getWhenNotMatched());
+            });
+        }
     }
 
     private void writeEnum(BsonWriter writer, String name, Enum<?> value) {

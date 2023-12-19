@@ -1,0 +1,4 @@
+   [
+     { $match: { $sampleRate: 0.33 } },
+     { $count: "numMatches" }
+   ]

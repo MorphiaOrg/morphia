@@ -23,12 +23,19 @@ import static java.util.Arrays.asList;
  */
 public class Merge<M> extends Stage {
     private Class<M> type;
+
     private String database;
+
     private String collection;
+
     private List<String> on;
+
     private Map<String, Expression> variables;
+
     private WhenMatched whenMatched;
+
     private List<Stage> whenMatchedPipeline;
+
     private WhenNotMatched whenNotMatched;
 
     /**
@@ -82,6 +89,17 @@ public class Merge<M> extends Stage {
      * @param <M>  the entity type
      * @return the new stage
      */
+    public static <M> Merge<M> merge(Class<M> type) {
+        return new Merge<>(type);
+    }
+
+    /**
+     * Creates a new stage targeting the collection mapped for the given type
+     *
+     * @param type the target type
+     * @param <M>  the entity type
+     * @return the new stage
+     */
     public static <M> Merge<M> into(Class<M> type) {
         return new Merge<>(type);
     }
@@ -97,6 +115,16 @@ public class Merge<M> extends Stage {
     }
 
     /**
+     * Creates a new stage targeting the collection
+     *
+     * @param collection the target collection
+     * @return the new stage
+     */
+    public static Merge<?> merge(String collection) {
+        return new Merge<>(collection);
+    }
+
+    /**
      * Creates a new stage targeting the database and collection
      *
      * @param database   the target database
@@ -105,6 +133,32 @@ public class Merge<M> extends Stage {
      */
     public static Merge<?> into(String database, String collection) {
         return new Merge<>(database, collection);
+    }
+
+    /**
+     * Creates a new stage targeting the database and collection
+     *
+     * @param database   the target database
+     * @param collection the target collection
+     * @return the new stage
+     */
+    public static Merge<?> merge(String database, String collection) {
+        return new Merge<>(database, collection);
+    }
+
+    /**
+     * @hidden
+     * @return
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public boolean allDefaults() {
+        return (type != null || collection != null)
+                && on == null
+                && variables == null
+                && whenMatched == null
+                && whenMatchedPipeline == null
+                && whenNotMatched == null;
     }
 
     /**

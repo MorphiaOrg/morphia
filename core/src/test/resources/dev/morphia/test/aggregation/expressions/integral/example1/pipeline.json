@@ -1,0 +1,20 @@
+ [
+   {
+      $setWindowFields: {
+         partitionBy: "$powerMeterID",
+         sortBy: { timeStamp: 1 },
+         output: {
+            powerMeterKilowattHours: {
+               $integral: {
+                  input: "$kilowatts",
+                  unit: "hour"
+               },
+               window: {
+                  range: [ "unbounded", "current" ],
+                  unit: "hour"
+               }
+            }
+         }
+      }
+   }
+] 

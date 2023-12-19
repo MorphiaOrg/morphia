@@ -1,0 +1,4 @@
+   [
+     { $match: { $text: { $search: "cake" } } },
+     { $group: { _id: { $meta: "textScore" }, count: { $sum: 1 } } }
+   ]

@@ -1,0 +1,3 @@
+ [
+   { $group: { _id: "$item", mergedSales: { $mergeObjects: "$quantity" } } }
+] 

@@ -1,6 +1,0 @@
-{ time: ISODate("2021-03-08T09:00:00.000Z"), price: 500.0 },
-{ time: ISODate("2021-03-08T10:00:00.000Z"), price: 507.5 },
-{ time: ISODate("2021-03-08T11:00:00.000Z"), price: 515.0 },
-{ time: ISODate("2021-03-08T12:00:00.000Z"), price: 505.0 },
-{ time: ISODate("2021-03-08T13:00:00.000Z"), price: 495.0 },
-{ time: ISODate("2021-03-08T14:00:00.000Z"), price: 485.0 }

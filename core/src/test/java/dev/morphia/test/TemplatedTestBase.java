@@ -47,6 +47,8 @@ public abstract class TemplatedTestBase extends TestBase {
             .indent(true)
             .build();
 
+    protected static final String AGG_TEST_COLLECTION = "aggtest";
+
     protected final ObjectMapper mapper = new ObjectMapper();
     protected boolean skipPipelineCheck = false;
     protected boolean skipDataCheck = false;
@@ -72,13 +74,12 @@ public abstract class TemplatedTestBase extends TestBase {
             boolean removeIds,
             boolean orderMatters,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        String collection = "aggtest";
         checkMinServerVersion(serverVersion);
         checkMinDriverVersion(minDriver);
         var resourceName = discoverResourceName(new Exception().getStackTrace());
-        loadData(collection, "data.json");
+        loadData(AGG_TEST_COLLECTION, "data.json");
 
-        List<Document> documents = runPipeline(resourceName, pipeline.apply(getDs().aggregate(collection)));
+        List<Document> documents = runPipeline(resourceName, pipeline.apply(getDs().aggregate(AGG_TEST_COLLECTION)));
 
         if (!skipDataCheck) {
             List<Document> actual = removeIds ? removeIds(documents) : documents;
