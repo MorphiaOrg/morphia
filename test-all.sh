@@ -17,7 +17,7 @@ echo MONGOS=$MONGOS
 
 # exit
 
-./mvnw install -DskipTests
+./mvnw clean install -DskipTests
 
 mkdir -p target
 rm -f target/mongo-*

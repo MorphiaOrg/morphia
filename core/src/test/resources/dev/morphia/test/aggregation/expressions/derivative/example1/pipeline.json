@@ -1,0 +1,27 @@
+ [
+   {
+      $setWindowFields: {
+         partitionBy: "$truckID",
+         sortBy: { timeStamp: 1 },
+         output: {
+            truckAverageSpeed: {
+               $derivative: {
+                  input: "$miles",
+                  unit: "hour"
+               },
+               window: {
+                  range: [ -30, 0 ],
+                  unit: "second"
+               }
+            }
+         }
+      }
+   },
+   {
+      $match: {
+         truckAverageSpeed: {
+            $gt: 50
+         }
+      }
+   }
+] 

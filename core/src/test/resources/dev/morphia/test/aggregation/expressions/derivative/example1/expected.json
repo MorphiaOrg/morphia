@@ -1,0 +1,3 @@
+{ "_id" : ObjectId("60cb8a7e833dfeadc8e6285c"), "truckID" : "1",  "timeStamp" : ISODate("2020-05-18T14:11:00Z"), "miles" : 1295.63,  "truckAverageSpeed" : 63.60000000002401 }
+{ "_id" : ObjectId("60cb8a7e833dfeadc8e6285d"), "truckID" : "1",  "timeStamp" : ISODate("2020-05-18T14:11:30Z"), "miles" : 1296.25,  "truckAverageSpeed" : 74.3999999999869 }
+{ "_id" : ObjectId("60cb8a7e833dfeadc8e6285e"), "truckID" : "1",  "timeStamp" : ISODate("2020-05-18T14:12:00Z"), "miles" : 1296.76,  "truckAverageSpeed" : 61.199999999998916 }

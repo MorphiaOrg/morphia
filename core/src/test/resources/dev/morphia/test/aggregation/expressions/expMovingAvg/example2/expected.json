@@ -1,0 +1,8 @@
+{ "_id" : ObjectId("60d11fef833dfeadc8e6286b"), "stock" : "MDB",  "date" : ISODate("2020-05-18T20:00:00Z"), "price" : 13,  "expMovingAvgForStock" : 13 }
+{ "_id" : ObjectId("60d11fef833dfeadc8e6286c"), "stock" : "MDB",  "date" : ISODate("2020-05-19T20:00:00Z"), "price" : 15.4,  "expMovingAvgForStock" : 14.6 }
+{ "_id" : ObjectId("60d11fef833dfeadc8e6286d"), "stock" : "MDB",  "date" : ISODate("2020-05-20T20:00:00Z"), "price" : 12,  "expMovingAvgForStock" : 12.866666666666667 }
+{ "_id" : ObjectId("60d11fef833dfeadc8e6286e"), "stock" : "MDB",  "date" : ISODate("2020-05-21T20:00:00Z"), "price" : 11.7,  "expMovingAvgForStock" : 12.088888888888889 }
+{ "_id" : ObjectId("60d11fef833dfeadc8e6286f"), "stock" : "MSFT",  "date" : ISODate("2020-05-18T20:00:00Z"), "price" : 82,  "expMovingAvgForStock" : 82 }
+{ "_id" : ObjectId("60d11fef833dfeadc8e62870"), "stock" : "MSFT",  "date" : ISODate("2020-05-19T20:00:00Z"), "price" : 94,  "expMovingAvgForStock" : 90 }
+{ "_id" : ObjectId("60d11fef833dfeadc8e62871"), "stock" : "MSFT",  "date" : ISODate("2020-05-20T20:00:00Z"), "price" : 112,  "expMovingAvgForStock" : 104.66666666666667 }
+{ "_id" : ObjectId("60d11fef833dfeadc8e62872"), "stock" : "MSFT",  "date" : ISODate("2020-05-21T20:00:00Z"), "price" : 97.3,  "expMovingAvgForStock" : 99.75555555555556 }
