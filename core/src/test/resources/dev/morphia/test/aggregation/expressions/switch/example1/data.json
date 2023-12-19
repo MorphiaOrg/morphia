@@ -1,0 +1,3 @@
+{ "_id" : 1, "name" : "Susan Wilkes", "scores" : [ 87, 86, 78 ] }
+{ "_id" : 2, "name" : "Bob Hanna", "scores" : [ 71, 64, 81 ] }
+{ "_id" : 3, "name" : "James Torrelio", "scores" : [ 91, 84, 97 ] }

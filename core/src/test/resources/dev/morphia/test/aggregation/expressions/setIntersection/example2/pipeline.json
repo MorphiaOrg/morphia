@@ -1,9 +1,9 @@
  [ {
    $match: {
       $expr: {
-         $not: [{
+         $not: {
             $eq: [ { $setIntersection: [ "$allowedRoles", "$$USER_ROLES.role" ] }, [] ]
          }
-]      }
+      }
    }
-} ]
+} ] 

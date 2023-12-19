@@ -1,0 +1,30 @@
+ [
+  {
+    $project: 
+      {
+        "name" : 1,
+        "summary" : 
+        {
+          $switch:
+            {
+              branches: [
+                {
+                  case: { $gte : [ { $avg : "$scores" }, 90 ] },
+                  then: "Doing great!"
+                },
+                {
+                  case: { $and : [ { $gte : [ { $avg : "$scores" }, 80 ] }, 
+                                   { $lt : [ { $avg : "$scores" }, 90 ] } ] },
+                  then: "Doing pretty well."
+                },
+                {
+                  case: { $lt : [ { $avg : "$scores" }, 80 ] },
+                  then: "Needs improvement."
+                }
+              ],
+              default: "No scores found."
+            }
+         }
+      }
+   }
+] 
