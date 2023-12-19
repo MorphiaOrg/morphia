@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
+import dev.morphia.test.DriverVersion;
 import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
@@ -21,6 +22,7 @@ import static dev.morphia.query.filters.Filters.expr;
 public class TestRand extends AggregationTest {
     public TestRand() {
         skipDataCheck = true;
+        minDriver = DriverVersion.v43;
     }
 
     @Test
