@@ -1,0 +1,5 @@
+{ "_id" : 1, "item" : "ABC1", "numberOfColors" : 3 }
+{ "_id" : 2, "item" : "ABC2", "numberOfColors" : 1 }
+{ "_id" : 3, "item" : "XYZ1", "numberOfColors" : 0 }
+{ "_id" : 4, "item" : "ZZZ1", "numberOfColors" : "NA" }
+{ "_id" : 5, "item" : "ZZZ2", "numberOfColors" : "NA" }

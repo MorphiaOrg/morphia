@@ -3,11 +3,10 @@ package dev.morphia.audits
 import dev.morphia.audits.OperationAudit.Companion.findMethods
 import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType.EXPRESSION
-import dev.morphia.audits.model.OperatorType.STAGE
 import dev.morphia.audits.model.Results
 import java.io.File
 
-class RstAuditor(val taglet: String) {
+class RstAuditor() {
     companion object {
         val auditRoot = File("target/mongodb-docs")
         val coreTestRoot = File("../core/src/test/resources")
@@ -15,33 +14,26 @@ class RstAuditor(val taglet: String) {
         val includesRoot = File(auditRoot, "source")
     }
 
-    val methods = findMethods(taglet)
+    val methods = findMethods("@aggregation.expression") + findMethods("@aggregation.stage")
 
     fun aggregations(exclusions: List<String> = listOf()): Results {
-        val type = if (taglet == "@aggregation.stage") STAGE else EXPRESSION
-        val list =
+        val operators =
             aggRoot
                 .walk()
                 .filter { it.isFile }
                 .filter { !it.equals(aggRoot) }
-                .map { file -> Operator(file) }
+                .filter { it.nameWithoutExtension !in exclusions }
+                .map { Operator(it) }
                 .toList()
-
-        list
-            .filter { it.type == type && it.operator in exclusions }
-            .forEach { it.resourceFolder.deleteRecursively() }
-        val operators = list.filter { it.type == type && it.operator !in exclusions }
 
         val keys = methods.keys
         val notImplemented = operators.filter { it.type == EXPRESSION && it.operator !in keys }
-        val newOperators = operators.filter { it.created }
         val created =
             GithubProject.updateGH(
-                if (type == EXPRESSION) "aggregation expression" else "aggregation stage",
+                "aggregation operator",
                 notImplemented,
                 listOf("enhancement", "aggregation")
             )
-        //            0
         val empty =
             operators
                 .filter { it.examples.size == 1 }

@@ -1,0 +1,10 @@
+[
+  {
+    $project: {
+      "store location" : "$location",
+      "has bananas" : {
+        $in: [ "bananas", "$in_stock" ]
+      }
+    }
+  }
+]

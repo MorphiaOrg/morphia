@@ -1,0 +1,7 @@
+{ _id: 0, items: [ "one", "two", "three" ] },
+{ _id: 1, items: [ 1, 2, 3 ] },
+{ _id: 2, items: [ 1, 2, 3, 2 ] },
+{ _id: 3, items: [ null, null, 2 ] },
+{ _id: 4, items: [ 2, null, null, 2 ] },
+{ _id: 5, items: null },
+{ _id: 6, amount: 3 }

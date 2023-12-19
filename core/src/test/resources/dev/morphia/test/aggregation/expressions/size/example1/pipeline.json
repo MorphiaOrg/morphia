@@ -1,0 +1,14 @@
+[
+   {
+      $project: {
+         item: 1,
+         numberOfColors: {
+            $cond: [
+               { $isArray: [ "$colors" ] },
+               { $size: "$colors" },
+               "NA"
+            ]
+         }
+      } 
+   }
+] 

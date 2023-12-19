@@ -1,0 +1,3 @@
+[
+   { $project: { name: 1, threeFavorites: { $slice: [ "$favorites", 3 ] } } }
+]

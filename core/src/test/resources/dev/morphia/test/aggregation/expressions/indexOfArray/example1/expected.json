@@ -1,0 +1,7 @@
+{ _id: 0, index: -1 },
+{ _id: 1, index: 1 },
+{ _id: 2, index: 1 },
+{ _id: 3, index: 2 },
+{ _id: 4, index: 0 },
+{ _id: 5, index: null },
+{ _id: 6, index: null }

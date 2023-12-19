@@ -1,0 +1,4 @@
+{ "_id" : 1, "name" : "dave123", "threeFavorites" : [ "chocolate", "cake", "butter" ] }
+{ "_id" : 2, "name" : "li", "threeFavorites" : [ "apples", "pudding", "pie" ] }
+{ "_id" : 3, "name" : "ahn", "threeFavorites" : [ "pears", "pecans", "chocolate" ] }
+{ "_id" : 4, "name" : "ty", "threeFavorites" : [ "ice cream" ] }

@@ -1,0 +1,4 @@
+{ "_id" : 1, "items" : [ "chocolate", "butter", "apples" ] }
+{ "_id" : 2, "items" : "One or more fields is not an array." }
+{ "_id" : 3, "items" : [ "pears", "pecans", "cherries" ] }
+{ "_id" : 4, "items" : [ "ice cream" ] }

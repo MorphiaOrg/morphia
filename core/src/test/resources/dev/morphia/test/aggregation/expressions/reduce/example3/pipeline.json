@@ -1,0 +1,13 @@
+  [
+    {
+      $project: {
+        "collapsed": {
+          $reduce: {
+            input: "$arr",
+            initialValue: [ ],
+            in: { $concatArrays: [ "$$value", "$$this" ] }
+          }
+        }
+      }
+    }
+  ]

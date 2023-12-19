@@ -1,0 +1,9 @@
+[
+   {
+     $project:
+      {
+         name: 1,
+         reverseFavorites: { $reverseArray: "$favorites" }
+      }
+   }
+]

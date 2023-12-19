@@ -1,0 +1,3 @@
+{ "_id" : 1, "store location" : "24th Street", "has bananas" : true }
+{ "_id" : 2, "store location" : "36th Street", "has bananas" : true }
+{ "_id" : 3, "store location" : "82nd Street", "has bananas" : false }

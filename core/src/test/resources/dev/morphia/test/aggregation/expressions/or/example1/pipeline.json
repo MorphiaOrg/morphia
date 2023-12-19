@@ -3,10 +3,7 @@
        $project:
           {
             item: 1,
-            result: { $or: [
-              { $gt: [ "$qty", 250 ] },
-              { $lt: [ "$qty", 200 ]
-              } ] }
+            result: { $or: [ { $gt: [ "$qty", 250 ] }, { $lt: [ "$qty", 200 ] } ] }
           }
      }
    ]

@@ -1,0 +1,1 @@
+use a different form of $isArray to match morphia's rendering

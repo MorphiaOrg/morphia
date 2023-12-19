@@ -1,0 +1,7 @@
+[{
+    $project: {
+        _id: 0,
+        city: 1,
+        "Rest stops": { $range: [ 0, "$distance", 25 ] }
+    }
+}]

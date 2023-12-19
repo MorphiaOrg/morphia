@@ -1,0 +1,20 @@
+  [
+    {
+      $group: {
+        _id: "$experimentId",
+        "probabilityArr": { $push: "$probability" }
+      }
+    },
+    {
+      $project: {
+        "description": 1,
+        "results": {
+          $reduce: {
+            input: "$probabilityArr",
+            initialValue: 1,
+            in: { $multiply: [ "$$value", "$$this" ] }
+          }
+        }
+      }
+    }
+  ]

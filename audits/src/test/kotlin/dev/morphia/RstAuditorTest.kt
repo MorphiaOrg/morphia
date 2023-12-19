@@ -20,34 +20,43 @@ class RstAuditorTest {
     }
 
     @Test
-    fun aggregationExpressions() {
+    fun aggregationOperators() {
         val results =
-            RstAuditor("@aggregation.expression")
+            RstAuditor()
                 .aggregations(
                     listOf(
-                        "\$interface",
-                        "\$search", // a complicated animal.  we'll get there.
-                        "\$searchMeta", // a complicated animal.  we'll get there.
-                        "\$substr", // deprecated/aliased away
-                        "\$vectorSearch"
+                        // stages
+                        "collStats",
+                        "listLocalSessions",
+                        "listSampledQueries",
+                        "listSearchIndexes",
+                        "listSessions",
+                        "toHashedIndexKey",
+
+                        // expressions
+                        "interface",
+                        "search", // a complicated animal.  we'll get there.
+                        "searchMeta", // a complicated animal.  we'll get there.
+                        "substr", // deprecated/aliased away
+                        "toggle-logging",
+                        "vectorSearch"
                     )
                 )
 
         validate(results)
     }
 
-    @Test
     fun aggregationPipelineStages() {
         validate(
-            RstAuditor("@aggregation.stage")
+            RstAuditor()
                 .aggregations(
                     listOf(
-                        "\$collStats",
-                        "\$listLocalSessions",
-                        "\$listSampledQueries",
-                        "\$listSearchIndexes",
-                        "\$listSessions",
-                        "\$toHashedIndexKey",
+                        "collStats",
+                        "listLocalSessions",
+                        "listSampledQueries",
+                        "listSearchIndexes",
+                        "listSessions",
+                        "toHashedIndexKey",
                     )
                 )
         )
