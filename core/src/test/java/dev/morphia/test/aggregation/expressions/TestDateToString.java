@@ -12,7 +12,7 @@ import static dev.morphia.aggregation.stages.Projection.project;
 public class TestDateToString extends AggregationTest {
     @Test
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(ServerVersion.v70, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("yearMonthDayUTC", dateToString().date(field("date")).format("%Y-%m-%d"))
                         .include("timewithOffsetNY",
