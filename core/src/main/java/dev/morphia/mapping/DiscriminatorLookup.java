@@ -38,18 +38,8 @@ import static java.lang.String.format;
  */
 @MorphiaInternal
 public final class DiscriminatorLookup {
-    private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<>();
+    private final Map<String, String> discriminatorClassMap = new ConcurrentHashMap<>();
     private final Set<String> packages = new ConcurrentSkipListSet<>();
-    private final ClassLoader classLoader;
-
-    /**
-     * Creates a new lookup
-     *
-     */
-    public DiscriminatorLookup() {
-        this.classLoader = Thread.currentThread().getContextClassLoader();
-
-    }
 
     /**
      * Adds a model to the map
@@ -57,9 +47,10 @@ public final class DiscriminatorLookup {
      * @param entityModel the model
      */
     public void addModel(EntityModel entityModel) {
-        Class<?> extant = discriminatorClassMap.put(entityModel.getDiscriminator(), entityModel.getType());
-        if (extant != null) {
-            throw new MappingException(Sofia.duplicateDiscriminators(entityModel.getDiscriminator(), extant.getName(),
+        String discriminator = entityModel.getDiscriminator();
+        String current = discriminatorClassMap.put(discriminator, entityModel.getType().getName());
+        if (current != null) {
+            throw new MappingException(Sofia.duplicateDiscriminators(discriminator, current,
                     entityModel.getType().getName()));
         }
     }
@@ -72,7 +63,11 @@ public final class DiscriminatorLookup {
      */
     public Class<?> lookup(String discriminator) {
         if (discriminatorClassMap.containsKey(discriminator)) {
-            return discriminatorClassMap.get(discriminator);
+            try {
+                return Class.forName(discriminatorClassMap.get(discriminator));
+            } catch (ClassNotFoundException e) {
+                throw new MappingException(e.getMessage(), e);
+            }
         }
 
         Class<?> clazz = getClassForName(discriminator);
@@ -90,7 +85,7 @@ public final class DiscriminatorLookup {
     private Class<?> getClassForName(String discriminator) {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName(discriminator, true, classLoader);
+            clazz = Class.forName(discriminator);
         } catch (ClassNotFoundException e) {
             // Ignore
         }

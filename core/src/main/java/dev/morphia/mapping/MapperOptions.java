@@ -49,17 +49,11 @@ public class MapperOptions {
     private final UuidRepresentation uuidRepresentation;
     private final QueryFactory queryFactory;
     private final boolean enablePolymorphicQueries;
-    private final ClassLoader classLoader;
     private final CodecProvider codecProvider;
 
     private MapperOptions(Builder builder) {
         autoImportModels = builder.autoImportModels;
         cacheClassLookups = builder.cacheClassLookups;
-        if (builder.classLoader != null) {
-            classLoader = builder.classLoader;
-        } else {
-            classLoader = Thread.currentThread().getContextClassLoader();
-        }
 
         codecProvider = builder.codecProvider;
         collectionNaming = builder.collectionNaming;
@@ -128,17 +122,6 @@ public class MapperOptions {
     @MorphiaInternal
     public CodecProvider codecProvider() {
         return codecProvider;
-    }
-
-    /**
-     * Returns the classloader used, in theory, when loading the entity types.
-     *
-     * @return the classloader
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public ClassLoader getClassLoader() {
-        return classLoader;
     }
 
     /**
@@ -303,7 +286,6 @@ public class MapperOptions {
         private boolean cacheClassLookups;
         private boolean mapSubPackages;
         private boolean enablePolymorphicQueries;
-        private ClassLoader classLoader;
         private CodecProvider codecProvider;
         private DateStorage dateStorage = DateStorage.UTC;
         private String discriminatorKey = "_t";
@@ -321,7 +303,6 @@ public class MapperOptions {
         private Builder(MapperOptions original) {
             autoImportModels = original.autoImportModels;
             cacheClassLookups = original.cacheClassLookups;
-            classLoader = original.getClassLoader();
             codecProvider = original.codecProvider;
             dateStorage = original.dateStorage;
             ignoreFinals = original.ignoreFinals;
@@ -393,8 +374,6 @@ public class MapperOptions {
          */
         @SuppressFBWarnings("EI_EXPOSE_REP2")
         public Builder classLoader(ClassLoader classLoader) {
-            assertNotLocked();
-            this.classLoader = classLoader;
             return this;
         }
 

@@ -77,7 +77,6 @@ public class Mapper {
     private final List<EntityListener<?>> listeners = new ArrayList<>();
     private final MorphiaConfig config;
     private final DiscriminatorLookup discriminatorLookup;
-    private final ClassLoader contextClassLoader;
 
     /**
      * Creates a Mapper with the given options.
@@ -89,7 +88,6 @@ public class Mapper {
     @MorphiaInternal
     public Mapper(MorphiaConfig config) {
         this.config = config;
-        contextClassLoader = Thread.currentThread().getContextClassLoader();
         discriminatorLookup = new DiscriminatorLookup();
     }
 
@@ -100,11 +98,8 @@ public class Mapper {
      */
     public Mapper(Mapper other) {
         config = other.config;
-        contextClassLoader = other.contextClassLoader;
         discriminatorLookup = new DiscriminatorLookup();
-        other.mappedEntities.values().forEach(entity -> {
-            clone(entity);
-        });
+        other.mappedEntities.values().forEach(entity -> clone(entity));
         listeners.addAll(other.listeners);
     }
 
@@ -467,7 +462,7 @@ public class Mapper {
     @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void map(String packageName) {
         try {
-            getClasses(contextClassLoader, packageName)
+            getClasses(packageName)
                     .forEach(type -> {
                         try {
                             getEntityModel(type);
@@ -490,7 +485,7 @@ public class Mapper {
     public synchronized void mapPackage(String packageName) {
         Sofia.logConfiguredOperation("Mapper#mapPackage");
         try {
-            getClasses(contextClassLoader, packageName)
+            getClasses(packageName)
                     .forEach(type -> {
                         try {
                             getEntityModel(type);
@@ -590,12 +585,11 @@ public class Mapper {
         return model;
     }
 
-    private List<Class> getClasses(ClassLoader loader, String packageName)
+    private List<Class> getClasses(String packageName)
             throws ClassNotFoundException {
         final Set<Class> classes = new HashSet<>();
 
         ClassGraph classGraph = new ClassGraph()
-                .addClassLoader(loader)
                 .enableAllInfo();
         if (packageName.endsWith(".*")) {
             String base = packageName.substring(0, packageName.length() - 2);
@@ -610,7 +604,7 @@ public class Mapper {
         try (ScanResult scanResult = classGraph.scan()) {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
                 try {
-                    classes.add(Class.forName(classInfo.getName(), true, loader));
+                    classes.add(Class.forName(classInfo.getName()));
                 } catch (Throwable ignored) {
                 }
             }
