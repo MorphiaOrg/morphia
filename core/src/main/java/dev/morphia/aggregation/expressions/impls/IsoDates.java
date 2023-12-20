@@ -1,5 +1,7 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.aggregation.expressions.DateExpressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
@@ -41,6 +43,7 @@ public class IsoDates extends Expression {
      * @morphia.internal
      * @return the timezone
      */
+    @Nullable
     @MorphiaInternal
     public Expression timezone() {
         return timezone;

@@ -11,7 +11,7 @@ import static dev.morphia.test.ServerVersion.v51;
 
 public class TestTsIncrement extends AggregationTest {
     @Test
-    public void testTimestampOrdinal() {
+    public void testExample1() {
         testPipeline(v51, (aggregation) -> aggregation.pipeline(
                 project()
                         .suppressId()

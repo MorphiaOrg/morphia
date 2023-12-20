@@ -1,0 +1,5 @@
+{  saleTimestamp: Timestamp( 1622731060, 1 ),  saleSeconds: NumberLong("1622731060")},
+{  saleTimestamp: Timestamp( 1622731060, 2 ),  saleSeconds: NumberLong("1622731060")},
+{  saleTimestamp: Timestamp( 1714124193, 1 ),  saleSeconds: NumberLong("1714124193")},
+{  saleTimestamp: Timestamp( 1714124193, 2 ),  saleSeconds: NumberLong("1714124193")},
+{  saleTimestamp: Timestamp( 1714124193, 3 ),  saleSeconds: NumberLong("1714124193")}

@@ -1,0 +1,16 @@
+   [
+     {
+       $project:
+         {
+           year: { $year: "$date" },
+           month: { $month: "$date" },
+           day: { $dayOfMonth: "$date" },
+           hour: { $hour: "$date" },
+           minutes: { $minute: "$date" },
+           seconds: { $second: "$date" },
+           milliseconds: { $millisecond: "$date" },
+           dayOfYear: { $dayOfYear: "$date" },
+           dayOfWeek: { $dayOfWeek: "$date" }
+         }
+     }
+   ]

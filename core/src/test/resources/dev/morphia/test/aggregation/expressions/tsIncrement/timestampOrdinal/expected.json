@@ -1,5 +1,0 @@
-{ saleTimestamp: Timestamp(1622731060, 1), saleIncrement: NumberLong(1) },
-{ saleTimestamp: Timestamp(1622731060, 2), saleIncrement: NumberLong(2) },
-{ saleTimestamp: Timestamp(1714124193, 1), saleIncrement: NumberLong(1) },
-{ saleTimestamp: Timestamp(1714124193, 2), saleIncrement: NumberLong(2) },
-{ saleTimestamp: Timestamp(1714124193, 3), saleIncrement: NumberLong(3) }

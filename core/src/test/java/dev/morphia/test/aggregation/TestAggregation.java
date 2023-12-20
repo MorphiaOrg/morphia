@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,6 @@ import dev.morphia.test.aggregation.model.Book;
 import dev.morphia.test.aggregation.model.CountResult;
 import dev.morphia.test.aggregation.model.Human;
 import dev.morphia.test.aggregation.model.Martian;
-import dev.morphia.test.aggregation.model.StringDates;
 import dev.morphia.test.models.User;
 import dev.morphia.test.models.geo.GeoCity;
 
@@ -27,14 +25,10 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
-import static dev.morphia.aggregation.expressions.DateExpressions.month;
-import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
-import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.query.filters.Filters.gte;
 import static java.lang.Integer.valueOf;
@@ -69,38 +63,6 @@ public class TestAggregation extends TestBase {
         Assert.assertEquals(authors.size(), 2, "Expecting two results");
         Assert.assertEquals(authors.get("Dante").get(0).getBooks(), of("The Banquet", "Divine Comedy", "Eclogues"), authors.toString());
         Assert.assertEquals(authors.get("Homer").get(0).getBooks(), of("The Odyssey", "Iliad"), authors.toString());
-    }
-
-    @Test
-    public void testDateAggregation() {
-        Aggregation<User> pipeline = getDs()
-                .aggregate(User.class)
-                .group(group(
-                        id()
-                                .field("month", month(field("date")))
-                                .field("year", year(field("date"))))
-                        .field("count", sum(value(1))));
-
-        MorphiaCursor<User> cursor = pipeline.execute(User.class);
-        while (cursor.hasNext()) {
-            cursor.next();
-        }
-    }
-
-    @Test
-    public void testDateToString() {
-        LocalDate joined = LocalDate.parse("2016-05-01 UTC", DateTimeFormatter.ofPattern("yyyy-MM-dd z"));
-        getDs().save(new User("John Doe", joined));
-        Aggregation<User> pipeline = getDs()
-                .aggregate(User.class)
-                .project(project()
-                        .include("string", dateToString()
-                                .format("%Y-%m-%d")
-                                .date(field("joined"))));
-
-        for (Iterator<StringDates> it = pipeline.execute(StringDates.class); it.hasNext();) {
-            Assert.assertEquals(it.next().getString(), "2016-05-01");
-        }
     }
 
     @Test

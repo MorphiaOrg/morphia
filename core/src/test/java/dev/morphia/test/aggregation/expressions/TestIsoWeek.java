@@ -1,21 +1,22 @@
 package dev.morphia.test.aggregation.expressions;
 
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.DateExpressions.tsSecond;
+import static dev.morphia.aggregation.expressions.DateExpressions.isoWeek;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.test.ServerVersion.v51;
 
-public class TestTsSecond extends AggregationTest {
+public class TestIsoWeek extends AggregationTest {
     @Test
     public void testExample1() {
-        testPipeline(v51, (aggregation) -> aggregation.pipeline(
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .suppressId()
-                        .include("saleTimestamp")
-                        .include("saleSeconds", tsSecond(field("saleTimestamp")))));
+                        .include("city", field("city"))
+                        .include("weekNumber", isoWeek(field("date")))));
     }
+
 }

@@ -17,11 +17,15 @@ public class IsoDatesCodec extends BaseExpressionCodec<IsoDates> {
 
     @Override
     public void encode(BsonWriter writer, IsoDates dates, EncoderContext encoderContext) {
-        document(writer, dates.operation(), () -> {
-            CodecRegistry registry = datastore.getCodecRegistry();
-            encodeIfNotNull(registry, writer, "date", dates.date(), encoderContext);
-            encodeIfNotNull(registry, writer, "timezone", dates.timezone(), encoderContext);
-        });
+        CodecRegistry registry = datastore.getCodecRegistry();
+        if (dates.timezone() == null) {
+            encodeIfNotNull(registry, writer, dates.operation(), dates.date(), encoderContext);
+        } else {
+            document(writer, dates.operation(), () -> {
+                encodeIfNotNull(registry, writer, "date", dates.date(), encoderContext);
+                encodeIfNotNull(registry, writer, "timezone", dates.timezone(), encoderContext);
+            });
+        }
 
     }
 

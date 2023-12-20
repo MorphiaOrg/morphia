@@ -1,0 +1,13 @@
+   [
+     {
+       $project: {
+          yearMonthDayUTC: { $dateToString: { date: "$date", format: "%Y-%m-%d" } },
+          timewithOffsetNY: { $dateToString: { date: "$date", format: "%H:%M:%S:%L%z", timezone: "America/New_York"} },
+          timewithOffset430: { $dateToString: { date: "$date", format: "%H:%M:%S:%L%z", timezone: "+04:30" } },
+          minutesOffsetNY: { $dateToString: { date: "$date", format: "%Z", timezone: "America/New_York" } },
+          minutesOffset430: { $dateToString: { date: "$date", format: "%Z", timezone: "+04:30" } },
+          abbreviated_month: { $dateToString: {date: "$date", format: "%b", timezone: "+04:30" } },
+          full_month: { $dateToString: { date: "$date", format: "%B", timezone: "+04:30" } }
+       }
+     }
+   ]

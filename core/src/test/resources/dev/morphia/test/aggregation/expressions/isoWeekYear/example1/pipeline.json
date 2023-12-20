@@ -1,0 +1,7 @@
+ [
+  {
+    $project: {
+      yearNumber: { $isoWeekYear: "$date" }
+    }
+  }
+] 
