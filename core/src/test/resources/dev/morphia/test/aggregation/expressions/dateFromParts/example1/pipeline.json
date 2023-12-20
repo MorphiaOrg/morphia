@@ -1,0 +1,21 @@
+[
+{
+   $project: {
+      date: {
+         $dateFromParts: {
+            'year' : 2017, 'month' : 2, 'day': 8, 'hour' : 12
+         }
+      },
+      date_iso: {
+         $dateFromParts: {
+            'hour' : 12, 'isoWeekYear' : 2017, 'isoWeek' : 6, 'isoDayOfWeek' : 3
+         }
+      },
+      date_timezone: {
+         $dateFromParts: {
+            'year' : 2016, 'month' : 12, 'day' : 31, 'hour' : 23,
+            'minute' : 46, 'second' : 12, 'timezone' : 'America/New_York'
+         }
+      }
+   }
+}]
