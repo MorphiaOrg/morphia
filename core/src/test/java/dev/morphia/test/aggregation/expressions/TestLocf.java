@@ -25,7 +25,7 @@ public class TestLocf extends AggregationTest {
 
     @Test
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(ServerVersion.v52, true, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .sortBy(ascending("time"))
                         .output(
