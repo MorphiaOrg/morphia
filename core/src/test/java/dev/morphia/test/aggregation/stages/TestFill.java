@@ -2,7 +2,6 @@ package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.aggregation.expressions.StringExpressions;
 import dev.morphia.aggregation.stages.Fill.Method;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
@@ -59,7 +58,7 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testExample5() {
-        testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(v53, true, true, (aggregation) -> aggregation.pipeline(
                 set()
                         .field("valueExisted", ifNull()
                                 .target(toBool(StringExpressions.toString(field("score"))))

@@ -23,7 +23,7 @@ public class TestDensify extends AggregationTest {
 
     @Test
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, true, false, (aggregation) -> aggregation.pipeline(
+        testPipeline(ServerVersion.v51, true, false, (aggregation) -> aggregation.pipeline(
                 densify("altitude", Range.full(200))
                         .partitionByFields("variety")));
     }
