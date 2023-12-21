@@ -1,0 +1,5 @@
+ [
+   { $match : { fiscal_year:  { $gte : 2019 } } },
+   { $group: { _id: { fiscal_year: "$fiscal_year", dept: "$dept" }, salaries: { $sum: "$salary" } } },
+   { $merge : { into: { db: "reporting", coll: "budgets" }, on: "_id",  whenMatched: "replace", whenNotMatched: "insert" } }
+] 

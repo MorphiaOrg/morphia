@@ -1,0 +1,11 @@
+ [
+   {
+      $lookup:
+         {
+            from: "members",
+            localField: "enrollmentlist",
+            foreignField: "name",
+            as: "enrollee_info"
+        }
+   }
+] 

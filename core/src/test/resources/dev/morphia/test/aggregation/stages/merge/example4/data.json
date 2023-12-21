@@ -1,0 +1,6 @@
+{ _id: 1, quarter: "2019Q1", region: "A", qty: 200, reportDate: ISODate("2019-04-01") },
+{ _id: 2, quarter: "2019Q1", region: "B", qty: 300, reportDate: ISODate("2019-04-01") },
+{ _id: 3, quarter: "2019Q1", region: "C", qty: 700, reportDate: ISODate("2019-04-01") },
+{ _id: 4, quarter: "2019Q2", region: "B", qty: 300, reportDate: ISODate("2019-07-01") },
+{ _id: 5, quarter: "2019Q2", region: "C", qty: 1000, reportDate: ISODate("2019-07-01") },
+{ _id: 6, quarter: "2019Q2", region: "A", qty: 400, reportDate: ISODate("2019-07-01") },

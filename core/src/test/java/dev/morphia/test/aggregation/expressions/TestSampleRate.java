@@ -13,7 +13,7 @@ import static dev.morphia.aggregation.stages.Match.match;
 public class TestSampleRate extends AggregationTest {
     @Test
     public void testExample1() {
-        skipDataCheck = true;
+        skipDataCheck();
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 match(sampleRate(0.33)),
                 Count.count("numMatches")));

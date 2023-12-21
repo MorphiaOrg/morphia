@@ -15,7 +15,9 @@ import org.bson.Document;
  */
 public class Out<O> extends Stage {
     private Class<?> type;
+
     private String collection;
+
     private String database;
 
     /**
@@ -34,6 +36,19 @@ public class Out<O> extends Stage {
      * @param <O>  the output type used to lookup the collection name
      * @return the new stage
      */
+    public static <O> Out<O> out(Class<O> type) {
+        return new Out<O>()
+                .type(type);
+    }
+
+    /**
+     * Creates a $out stage with target type/collection
+     *
+     * @param type the type to use to determine the target collection
+     * @param <O>  the output type used to lookup the collection name
+     * @return the new stage
+     * @deprecated use {@link #out(Class)}
+     */
     public static <O> Out<O> to(Class<O> type) {
         return new Out<O>()
                 .type(type);
@@ -44,6 +59,18 @@ public class Out<O> extends Stage {
      *
      * @param collection the target collection
      * @return the new stage
+     */
+    public static Out<Document> out(String collection) {
+        return new Out<Document>()
+                .collection(collection);
+    }
+
+    /**
+     * Creates a $out stage with target collection
+     *
+     * @param collection the target collection
+     * @return the new stage
+     * @deprecated use {@link #out(String)}
      */
     public static Out<Document> to(String collection) {
         return new Out<Document>()

@@ -15,7 +15,7 @@ import static dev.morphia.test.ServerVersion.ANY;
 public class TestAccumulator extends AggregationTest {
     @Test
     public void testExample1() {
-        skipPipelineCheck = true;
+        skipPipelineCheck();
         testPipeline(ANY, false, false, aggregation -> aggregation
                 .pipeline(Group.group(Group.id(field("author")))
                         .field("avgCopies", accumulator(
@@ -46,7 +46,7 @@ public class TestAccumulator extends AggregationTest {
 
     @Test
     public void testExample2() {
-        skipPipelineCheck = true;
+        skipPipelineCheck();
         testPipeline(ANY, false, false, aggregation -> aggregation
                 .pipeline(Group.group(Group.id().field("city", field("city")))
                         .field("restaurants", accumulator(

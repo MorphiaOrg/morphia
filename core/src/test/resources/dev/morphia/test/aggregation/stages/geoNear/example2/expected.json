@@ -1,0 +1,1 @@
+{   "_id" : 8,   "name" : "Sara D. Roosevelt Park",   "category" : "Parks",   "location" : {      "type" : "Point",      "coordinates" : [ -73.9928, 40.7193 ]   },   "dist" : {      "calculated" : 0.9539931676365992,      "location" : {         "type" : "Point",         "coordinates" : [ -73.9928, 40.7193 ]      }   }}

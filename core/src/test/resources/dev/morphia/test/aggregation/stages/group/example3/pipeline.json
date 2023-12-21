@@ -1,0 +1,22 @@
+[
+  {
+    $group: {
+      _id: "$item",
+      totalSaleAmount: {
+        $sum: {
+          $multiply: [
+            "$price",
+            "$quantity"
+          ]
+        }
+      }
+    }
+  },
+  {
+    $match: {
+      "totalSaleAmount": {
+        $gte: 100
+      }
+    }
+  }
+]

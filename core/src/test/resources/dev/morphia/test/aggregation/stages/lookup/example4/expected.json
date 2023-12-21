@@ -1,0 +1,3 @@
+{  _id: 1,  item: 'almonds',  price: 12,  ordered: 2,  stockdata: [    { warehouse: 'A', instock: 120 },    { warehouse: 'B', instock: 60 }  ]},
+{  _id: 2,  item: 'pecans',  price: 20,  ordered: 1,  stockdata: [ { warehouse: 'A', instock: 80 } ]},
+{  _id: 3,  item: 'cookies',  price: 10,  ordered: 60,  stockdata: [ { warehouse: 'A', instock: 80 } ]}

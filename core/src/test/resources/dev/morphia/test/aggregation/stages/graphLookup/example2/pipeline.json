@@ -1,0 +1,13 @@
+ [
+   {
+      $graphLookup: {
+         from: "airports",
+         startWith: "$nearestAirport",
+         connectFromField: "connects",
+         connectToField: "airport",
+         as: "destinations",
+         maxDepth: 2,
+         depthField: "numConnections"
+      }
+   }
+] 

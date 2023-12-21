@@ -1,0 +1,5 @@
+{ "_id" : 0, "airport" : "JFK", "connects" : [ "BOS", "ORD" ] },
+{ "_id" : 1, "airport" : "BOS", "connects" : [ "JFK", "PWM" ] },
+{ "_id" : 2, "airport" : "ORD", "connects" : [ "JFK" ] },
+{ "_id" : 3, "airport" : "PWM", "connects" : [ "BOS", "LHR" ] },
+{ "_id" : 4, "airport" : "LHR", "connects" : [ "PWM" ] }

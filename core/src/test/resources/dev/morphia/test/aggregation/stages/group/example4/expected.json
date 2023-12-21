@@ -1,0 +1,3 @@
+{"_id" : "2014-04-04", "totalSaleAmount" : 200, "averageQuantity" : 15, "count" : 2},
+{"_id" : "2014-03-15", "totalSaleAmount" : 50, "averageQuantity" : 10, "count" : 1},
+{"_id" : "2014-03-01", "totalSaleAmount" : 40, "averageQuantity" : 1.5, "count" : 2}

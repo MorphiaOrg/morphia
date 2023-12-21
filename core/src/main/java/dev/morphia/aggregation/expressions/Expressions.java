@@ -121,6 +121,18 @@ public final class Expressions {
     }
 
     /**
+     * @param elements the list items
+     * @param <T>      the element type
+     * @return a list of them all
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static <T> List<T> toList(T... elements) {
+        return new ArrayList<>(asList(elements));
+    }
+
+    /**
      * Returns a value without parsing. Note that this is different from {@link #literal(Object)} in that the given value will dropped
      * directly in to the pipeline for use/evaluation in whatever context the value is used.
      *

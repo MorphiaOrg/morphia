@@ -4,13 +4,14 @@ import java.io.File;
 import java.util.StringJoiner;
 
 import dev.morphia.mapping.NamingStrategy;
+import dev.morphia.test.TestBase;
 
 import org.testng.annotations.Test;
 
 import static java.util.Arrays.stream;
 import static org.testng.Assert.fail;
 
-public class TestCoverage extends AggregationTest {
+public class TestCoverage extends TestBase {
     @Test
     public void noMissingTestCases() {
         var message = new StringJoiner("\n");
@@ -24,7 +25,7 @@ public class TestCoverage extends AggregationTest {
 
     private void findMissing(String root, StringJoiner message) {
         var type = getClass();
-        File path = rootToCore(root.formatted(type.getPackageName().replace('.', '/')));
+        File path = AggregationTest.rootToCore(root.formatted(type.getPackageName().replace('.', '/')));
         try {
             stream(path.listFiles())
                     .map(file -> {

@@ -21,7 +21,7 @@ import static dev.morphia.query.filters.Filters.expr;
 
 public class TestRand extends AggregationTest {
     public TestRand() {
-        skipDataCheck = true;
+        skipDataCheck();
         minDriver = DriverVersion.v43;
     }
 

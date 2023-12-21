@@ -1,0 +1,5 @@
+{ "altitude": 600, "variety": "Arabica Typica", "score": 68.3 },
+{ "altitude": 750, "variety": "Arabica Typica", "score": 69.5 },
+{ "altitude": 950, "variety": "Arabica Typica", "score": 70.5 },
+{ "altitude": 1250, "variety": "Gesha", "score": 88.15 },
+{ "altitude": 1700, "variety": "Gesha", "score": 95.5, "price": 1029 }

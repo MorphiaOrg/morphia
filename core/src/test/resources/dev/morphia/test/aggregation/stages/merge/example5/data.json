@@ -1,0 +1,6 @@
+{ date: ISODate("2019-05-01"), "thumbsup" : 1, "thumbsdown" : 1 },
+{ date: ISODate("2019-05-02"), "thumbsup" : 3, "thumbsdown" : 1 },
+{ date: ISODate("2019-05-03"), "thumbsup" : 1, "thumbsdown" : 1 },
+{ date: ISODate("2019-05-04"), "thumbsup" : 2, "thumbsdown" : 2 },
+{ date: ISODate("2019-05-05"), "thumbsup" : 6, "thumbsdown" : 10 },
+{ date: ISODate("2019-05-06"), "thumbsup" : 13, "thumbsdown" : 16 }

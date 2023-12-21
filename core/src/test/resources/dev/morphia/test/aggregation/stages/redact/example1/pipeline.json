@@ -1,0 +1,16 @@
+[
+  {
+    $match: {
+      year: 2014
+    }
+  },
+  {
+    $redact: {
+      $cond: [
+        { $gt: [ { $size: { $setIntersection: [ "$tags", [ "STLW", "G" ] ] } }, 0 ] },
+        "$$DESCEND",
+        "$$PRUNE"
+      ]
+    }
+  }
+]

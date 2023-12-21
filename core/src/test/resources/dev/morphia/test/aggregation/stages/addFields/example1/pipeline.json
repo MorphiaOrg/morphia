@@ -1,0 +1,12 @@
+ [
+   {
+     $addFields: {
+       totalHomework: { $sum: "$homework" } ,
+       totalQuiz: { $sum: "$quiz" }
+     }
+   },
+   {
+     $addFields: { totalScore: 
+       { $add: [ "$totalHomework", "$totalQuiz", "$extraCredit" ] } }
+   }
+] 

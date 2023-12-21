@@ -52,7 +52,13 @@ class CodeBlock {
 
     private fun applyReplacements(line: String): String {
         var final = line
-        val replacements = listOf("new Date(" to "ISODate(", " Long(" to " NumberLong(")
+        val replacements =
+            listOf(
+                "new Date(" to "ISODate(",
+                " Long(" to " NumberLong(",
+                " Decimal128(" to " NumberDecimal(",
+                " Int32(" to " NumberInt("
+            )
         replacements.forEach { r -> final = final.replace(r.first, r.second) }
         return final
     }

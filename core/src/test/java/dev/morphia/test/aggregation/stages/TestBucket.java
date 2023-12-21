@@ -5,6 +5,7 @@ import java.util.List;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Artwork;
 import dev.morphia.test.aggregation.model.Book;
@@ -13,17 +14,59 @@ import org.bson.Document;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.StringExpressions.concat;
 import static dev.morphia.aggregation.stages.Bucket.bucket;
+import static dev.morphia.aggregation.stages.Facet.facet;
+import static dev.morphia.aggregation.stages.Match.match;
+import static dev.morphia.query.filters.Filters.gt;
 import static java.lang.Integer.valueOf;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 
 public class TestBucket extends AggregationTest {
+    @Test
+    public void testExample1() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                bucket()
+                        .groupBy(field("year_born"))
+                        .boundaries(value(1840), value(1850), value(1860), value(1870), value(1880))
+                        .defaultValue("Other")
+                        .outputField("count", sum(value(1)))
+                        .outputField("artists", push()
+                                .field("name", concat(field("first_name"), value(" "), field("last_name")))
+                                .field("year_born", field("year_born"))),
+                match(gt("count", 3))));
+    }
+
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                facet()
+                        .field("price", bucket()
+                                .groupBy(field("price"))
+                                .boundaries(value(0), value(200), value(400))
+                                .defaultValue("Other")
+                                .outputField("count", sum(value(1)))
+                                .outputField("artwork", push()
+                                        .field("title", field("title"))
+                                        .field("price", field("price")))
+                                .outputField("averagePrice", avg(field("price"))))
+                        .field("year", bucket()
+                                .groupBy(field("year"))
+                                .boundaries(value(1890), value(1910), value(1920), value(1940))
+                                .defaultValue("Unknown")
+                                .outputField("count", sum(value(1)))
+                                .outputField("artwork", push()
+                                        .field("title", field("title"))
+                                        .field("year", field("year"))))));
+    }
+
     @Test
     public void testBucket() {
         List<Document> list = List.of(
@@ -132,6 +175,7 @@ public class TestBucket extends AggregationTest {
     private static class BucketResult {
         @Id
         private Integer id;
+
         private int count;
 
         public int getCount() {

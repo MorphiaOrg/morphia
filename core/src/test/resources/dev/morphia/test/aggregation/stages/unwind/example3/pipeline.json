@@ -1,0 +1,8 @@
+[
+  {
+    $unwind: {
+      path: "$sizes",
+      preserveNullAndEmptyArrays: true
+    }
+  }
+] 

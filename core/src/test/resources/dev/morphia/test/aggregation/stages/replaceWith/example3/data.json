@@ -1,0 +1,4 @@
+{ "_id" : 1, "item" : "butter", "price" : 10, "quantity": 2, date: ISODate("2019-03-01T08:00:00Z"), status: "C" },
+{ "_id" : 2, "item" : "cream", "price" : 20, "quantity": 1, date: ISODate("2019-03-01T09:00:00Z"), status: "A" },
+{ "_id" : 3, "item" : "jam", "price" : 5, "quantity": 10, date: ISODate("2019-03-15T09:00:00Z"), status: "C" },
+{ "_id" : 4, "item" : "muffins", "price" : 5, "quantity": 10, date: ISODate("2019-03-15T09:00:00Z"), status: "C" }

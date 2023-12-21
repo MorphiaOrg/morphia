@@ -37,7 +37,7 @@ public class DensifyCodec extends StageCodec<Densify> {
                     case FULL, PARTITION -> value(writer, "bounds", range.type());
                 }
             });
-
+            value(registry, writer, "partitionByFields", value.partitionByFields(), encoderContext);
         });
     }
 }

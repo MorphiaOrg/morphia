@@ -1,0 +1,2 @@
+{      _id: ObjectId("618949d60f7bfd5f5689490d"),      zip: 94301,      name: 'Palo Alto',      city_state: [ { zip_id: 94301, name: 'Palo Alto, CA' } ]   },
+{      _id: ObjectId("618949d60f7bfd5f5689490e"),      zip: 10019,      name: 'New York',      city_state: [ { zip_id: 10019, name: 'New York, NY' } ]   }

@@ -1,0 +1,2 @@
+{      _id: 1,      name: "American Steak House",      food: [ "filet", "sirloin" ],      beverages: [ "beer", "wine" ]   },
+{      _id: 2,      name: "Honest John Pizza",      food: [ "cheese pizza", "pepperoni pizza" ],      beverages: [ "soda" ]   }

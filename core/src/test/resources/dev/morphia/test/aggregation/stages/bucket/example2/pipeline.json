@@ -1,0 +1,33 @@
+ [
+  {
+    $facet: {                               
+      "price": [                            
+        {
+          $bucket: { 
+              groupBy: "$price",            
+              boundaries: [ 0, 200, 400 ],  
+              default: "Other",             
+              output: {                     
+                "count": { $sum: 1 },
+                "artwork" : { $push: { "title": "$title", "price": "$price" } },
+                "averagePrice": { $avg: "$price" }
+              }
+          }
+        }
+      ],
+      "year": [                                      
+        { 
+          $bucket: {
+            groupBy: "$year",                        
+            boundaries: [ 1890, 1910, 1920, 1940 ],  
+            default: "Unknown",                      
+            output: {                                
+              "count": { $sum: 1 },
+              "artwork": { $push: { "title": "$title", "year": "$year" } }
+            }
+          }
+        }
+      ]
+    }
+  }
+] 

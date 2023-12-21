@@ -486,30 +486,28 @@ public interface Aggregation<T> {
      * stage outputs the combined result set (including duplicates) to the next stage.
      *
      * @param type   the type to perform the pipeline against
-     * @param first  the first pipeline stage
-     * @param others the other pipeline stages
+     * @param stages the pipeline stages
      * @return this
      * @aggregation.stage $unionWith
      * @mongodb.server.release 4.4
      * @since 2.1
      * @deprecated use {@link #pipeline(Stage...)} instead
      */
-    Aggregation<T> unionWith(Class<?> type, Stage first, Stage... others);
+    Aggregation<T> unionWith(Class<?> type, Stage... stages);
 
     /**
      * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The
      * stage outputs the combined result set (including duplicates) to the next stage.
      *
      * @param collection the collection to perform the pipeline against
-     * @param first      the first pipeline stage
-     * @param others     the other pipeline stages
+     * @param stages     the pipeline stages
      * @return this
      * @aggregation.stage $unionWith
      * @mongodb.server.release 4.4
      * @since 2.1
      * @deprecated use {@link #pipeline(Stage...)} instead
      */
-    Aggregation<T> unionWith(String collection, Stage first, Stage... others);
+    Aggregation<T> unionWith(String collection, Stage... stages);
 
     /**
      * Removes/excludes fields from documents. Names must not start with '$'.

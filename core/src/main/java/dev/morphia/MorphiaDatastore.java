@@ -115,14 +115,14 @@ public class MorphiaDatastore implements Datastore {
     @MorphiaInternal
     public MorphiaDatastore(MongoClient client, MorphiaConfig config) {
         this.mongoClient = client;
-        this.database = mongoClient.getDatabase(config.database());
         this.mapper = new Mapper(config);
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
 
-        codecRegistry = buildRegistry();
+        MongoDatabase clientDatabase = mongoClient.getDatabase(config.database());
+        codecRegistry = buildRegistry(clientDatabase.getCodecRegistry());
 
-        this.database = database.withCodecRegistry(this.codecRegistry);
+        this.database = clientDatabase.withCodecRegistry(this.codecRegistry);
         operations = new CollectionOperations();
 
         config.packages().forEach(packageName -> {
@@ -154,13 +154,12 @@ public class MorphiaDatastore implements Datastore {
         this.mapper = datastore.mapper.copy();
         this.queryFactory = datastore.queryFactory;
         this.operations = datastore.operations;
-        codecRegistry = buildRegistry();
+        codecRegistry = buildRegistry(mongoClient.getDatabase(mapper.getConfig().database()).getCodecRegistry());
     }
 
-    private CodecRegistry buildRegistry() {
+    private CodecRegistry buildRegistry(CodecRegistry codecRegistry) {
         morphiaCodecProviders.add(new MorphiaCodecProvider(this));
 
-        CodecRegistry codecRegistry = database.getCodecRegistry();
         List<CodecProvider> providers = new ArrayList<>();
         mapper.getConfig().codecProvider().ifPresent(providers::add);
 

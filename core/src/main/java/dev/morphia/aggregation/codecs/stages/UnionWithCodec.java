@@ -30,13 +30,17 @@ public class UnionWithCodec extends StageCodec<UnionWith> {
 
     @Override
     protected void encodeStage(BsonWriter writer, UnionWith unionWith, EncoderContext encoderContext) {
-        String name = unionWith.getCollectionName();
+        String name = unionWith.collectionName();
         String collectionName = name != null ? name
-                : getDatastore().getMapper().getEntityModel(unionWith.getCollectionType()).collectionName();
+                : getDatastore().getMapper().getEntityModel(unionWith.collectionType()).collectionName();
 
-        document(writer, () -> {
-            value(writer, "coll", collectionName);
-            value(getDatastore().getCodecRegistry(), writer, "pipeline", unionWith.getStages(), encoderContext);
-        });
+        if (unionWith.pipeline().isEmpty()) {
+            writer.writeString(collectionName);
+        } else {
+            document(writer, () -> {
+                value(writer, "coll", collectionName);
+                value(getDatastore().getCodecRegistry(), writer, "pipeline", unionWith.pipeline(), encoderContext);
+            });
+        }
     }
 }

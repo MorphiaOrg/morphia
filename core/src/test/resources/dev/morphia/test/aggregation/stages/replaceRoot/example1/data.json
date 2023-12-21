@@ -1,0 +1,3 @@
+{ "_id" : 1, "name" : "Arlene", "age" : 34, "pets" : { "dogs" : 2, "cats" : 1 } }
+{ "_id" : 2, "name" : "Sam", "age" : 41, "pets" : { "cats" : 1, "fish" : 3 } }
+{ "_id" : 3, "name" : "Maria", "age" : 25 }

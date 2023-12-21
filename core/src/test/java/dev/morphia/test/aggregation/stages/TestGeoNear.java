@@ -1,46 +1,82 @@
 package dev.morphia.test.aggregation.stages;
 
-import java.util.Iterator;
-
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
-import dev.morphia.test.models.geo.GeoCity;
 
-import org.testng.Assert;
+import org.bson.Document;
 import org.testng.annotations.Test;
 
+import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.GeoNear.geoNear;
+import static dev.morphia.aggregation.stages.Limit.limit;
+import static dev.morphia.aggregation.stages.Lookup.lookup;
+import static dev.morphia.aggregation.stages.Match.match;
+import static dev.morphia.query.filters.Filters.eq;
 
 public class TestGeoNear extends AggregationTest {
     @Test
-    public void testGeoNearWithSphericalGeometry() {
-        // given
-        double latitude = 51.5286416;
-        double longitude = -0.1015987;
-        GeoCity london = new GeoCity("London", new Point(new Position(latitude, longitude)));
-        getDs().save(london);
-        GeoCity manchester = new GeoCity("Manchester", new Point(new Position(53.4722454, -2.2235922)));
-        getDs().save(manchester);
-        GeoCity sevilla = new GeoCity("Sevilla", new Point(new Position(37.3753708, -5.9550582)));
-        getDs().save(sevilla);
+    public void testExample2() {
+        getDatabase().getCollection(AGG_TEST_COLLECTION).createIndex(new Document("location", "2dsphere"));
+        testPipeline(ServerVersion.ANY, true, false, (aggregation) -> aggregation.pipeline(
+                geoNear(new Point(new Position(-73.99279, 40.719296)))
+                        .distanceField("dist.calculated")
+                        .maxDistance(2)
+                        .query(eq("category", "Parks"))
+                        .includeLocs("dist.location")
+                        .spherical(true)));
+    }
 
-        getDs().applyIndexes();
+    @Test
+    public void testExample3() {
+        skipDataCheck();
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                geoNear(new Point(new Position(-73.99279, 40.719296)))
+                        .distanceField("dist.calculated")
+                        .maxDistance(2)
+                        .query(eq("category", "Parks"))
+                        .includeLocs("dist.location")
+                        .spherical(true)));
+    }
 
-        // when
-        Iterator<GeoCity> cities = getDs().aggregate(GeoCity.class)
-                .geoNear(geoNear(new double[] { latitude, longitude })
-                        .distanceField("distance")
-                        .spherical(true))
-                .execute(GeoCity.class);
+    @Test
+    public void testExample4() {
+        skipDataCheck();
+        getDatabase().getCollection(AGG_TEST_COLLECTION).createIndex(new Document("location", "2dsphere"));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                geoNear(new Point(new Position(-73.99279, 40.719296)))
+                        .distanceField("location")
+                        .maxDistance(2)
+                        .query(eq("category", "Parks"))
+                        .includeLocs("dist.location")
+                        .spherical(true)));
+    }
 
-        // then
-        Assert.assertTrue(cities.hasNext());
-        Assert.assertEquals(london, cities.next());
-        Assert.assertEquals(manchester, cities.next());
-        Assert.assertEquals(sevilla, cities.next());
-        Assert.assertFalse(cities.hasNext());
+    @Test
+    public void testExample5() {
+        skipDataCheck();
+        testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
+                lookup("places")
+                        .let("pt", field("location"))
+                        .pipeline(
+                                geoNear(new Point(new Position(-73.98142, 40.71782)))
+                                        .distanceField("distance"))
+                        .as("joinedField"),
+                match(eq("name", "Sara D. Roosevelt Park"))));
+    }
+
+    @Test
+    public void testExample6() {
+        skipDataCheck();
+        getDatabase().getCollection(AGG_TEST_COLLECTION).createIndex(new Document("location", "2dsphere"));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                geoNear(new Point(new Position(-73.98142, 40.71782)))
+                        .key("location")
+                        .distanceField("dist.calculated")
+                        .query(eq("category", "Parks")),
+                limit(5)));
     }
 
 }

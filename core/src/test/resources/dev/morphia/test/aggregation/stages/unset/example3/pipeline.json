@@ -1,0 +1,3 @@
+[
+   { $unset: [ "isbn", "copies" ] }
+]

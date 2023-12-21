@@ -1,0 +1,16 @@
+ [
+   {
+      $lookup: {
+         from: "restaurants",
+         localField: "restaurant_name",
+         foreignField: "name",
+         as: "matches",
+         let: { orders_drink: "$drink" },
+         pipeline: [ {
+            $match: {
+               $expr: { $in: [ "$$orders_drink", "$beverages" ] }
+            }
+         } ],
+      }
+   }
+] 

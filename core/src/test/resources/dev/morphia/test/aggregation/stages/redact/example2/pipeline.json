@@ -1,0 +1,12 @@
+  [
+    { $match: { status: "A" } },
+    {
+      $redact: {
+        $cond: [
+          { $eq: [ "$level", 5 ] },
+          "$$PRUNE",
+          "$$DESCEND"
+        ]
+      }
+    }
+  ]

@@ -1,0 +1,8 @@
+ [ 
+   { 
+     $bucketAuto: { 
+         groupBy: "$price",
+         buckets: 4
+     }
+   }
+] 

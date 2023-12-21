@@ -41,18 +41,20 @@ import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
 public class AggregationTest extends TemplatedTestBase {
-    private File CORE_ROOT = new File(".").getAbsoluteFile();
+    private static File CORE_ROOT = new File(".").getAbsoluteFile();
 
-    public AggregationTest() {
-        super(buildConfig(Martian.class, User.class)
-                .applyIndexes(true)
-                .codecProvider(new ZDTCodecProvider()));
-
+    static {
         while (!new File(CORE_ROOT, ".git").exists()) {
             CORE_ROOT = CORE_ROOT.getParentFile();
         }
 
         CORE_ROOT = new File(CORE_ROOT, "core");
+    }
+
+    public AggregationTest() {
+        super(buildConfig(Martian.class, User.class)
+                .applyIndexes(true)
+                .codecProvider(new ZDTCodecProvider()));
     }
 
     @AfterClass
@@ -65,10 +67,6 @@ public class AggregationTest extends TemplatedTestBase {
                     return Character.toLowerCase(name.charAt(0)) + name.substring(1);
                 })
                 .toList();
-
-        if (methods.isEmpty()) {
-            return;
-        }
         String path = type.getPackageName();
         String simpleName = type.getSimpleName().substring(4);
         var operatorName = Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
@@ -95,7 +93,7 @@ public class AggregationTest extends TemplatedTestBase {
     }
 
     @NotNull
-    public File rootToCore(String path) {
+    public static File rootToCore(String path) {
         return new File(CORE_ROOT, path);
     }
 

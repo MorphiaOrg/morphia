@@ -1,0 +1,12 @@
+ [
+   {
+      $fill:
+         {
+            sortBy: { date: 1 },
+            output:
+               {
+                  "score": { method: "locf" }
+               }
+         }
+   }
+] 

@@ -1,0 +1,15 @@
+ [ 
+   {
+     $unwind: { path: "$sizes", preserveNullAndEmptyArrays: true }
+   },
+   {
+     $group: 
+       { 
+         _id: "$sizes",
+         averagePrice: { $avg: "$price" }
+       }
+   },
+   {
+     $sort: { "averagePrice": -1 }
+   }
+] 

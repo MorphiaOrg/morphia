@@ -1,0 +1,5 @@
+{ "_id" : "writing", "totalSalesAmount" : NumberDecimal("60.00") }
+{ "_id" : "stationary", "totalSalesAmount" : NumberDecimal("264.45") }
+{ "_id" : "electronics", "totalSalesAmount" : NumberDecimal("800.00") }
+{ "_id" : "school", "totalSalesAmount" : NumberDecimal("104.85") }
+{ "_id" : "office", "totalSalesAmount" : NumberDecimal("1019.60") }

@@ -1,0 +1,2 @@
+{ "_id" : "Homer", "books" : [ 'The Odyssey', 'Iliad' ] }
+{ "_id" : "Dante", "books" : [ 'The Banquet', 'Divine Comedy', 'Eclogues' ] }

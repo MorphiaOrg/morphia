@@ -1,0 +1,12 @@
+  [
+    {
+      $match: {
+        score: {
+          $gt: 80
+        }
+      }
+    },
+    {
+      $count: "passing_scores"
+    }
+  ]

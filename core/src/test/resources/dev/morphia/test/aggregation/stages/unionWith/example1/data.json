@@ -1,0 +1,6 @@
+{ store: "General Store", item: "Chocolates", quantity: 150 },
+{ store: "ShopMart", item: "Chocolates", quantity: 50 },
+{ store: "General Store", item: "Cookies", quantity: 100 },
+{ store: "ShopMart", item: "Cookies", quantity: 120 },
+{ store: "General Store", item: "Pie", quantity: 10 },
+{ store: "ShopMart", item: "Pie", quantity: 5 }

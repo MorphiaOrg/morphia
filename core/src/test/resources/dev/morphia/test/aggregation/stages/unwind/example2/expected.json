@@ -1,0 +1,4 @@
+{ _id: 1, item: 'Shirt', sizes: 'S' },
+{ _id: 1, item: 'Shirt', sizes: 'M' },
+{ _id: 1, item: 'Shirt', sizes: 'L' },
+{ _id: 3, item: 'Hat', sizes: 'M' }

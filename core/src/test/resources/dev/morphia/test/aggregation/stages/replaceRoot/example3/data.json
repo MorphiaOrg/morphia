@@ -1,0 +1,3 @@
+{ "_id" : 1, "first_name" : "Gary", "last_name" : "Sheffield", "city" : "New York" }
+{ "_id" : 2, "first_name" : "Nancy", "last_name" : "Walker", "city" : "Anaheim" }
+{ "_id" : 3, "first_name" : "Peter", "last_name" : "Sumner", "city" : "Toledo" }

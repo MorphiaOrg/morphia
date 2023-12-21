@@ -1,12 +1,12 @@
 package dev.morphia.test.aggregation.stages;
 
-import java.util.List;
-
+import dev.morphia.aggregation.expressions.TimeUnit;
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
-import org.bson.Document;
 import org.testng.annotations.Test;
 
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
@@ -15,35 +15,39 @@ import static dev.morphia.query.Sort.ascending;
 
 public class TestSetWindowFields extends AggregationTest {
     @Test
-    public void testSetWindowFields() {
-        cakeSales();
-
-        List<Document> actual = getDs().aggregate("cakeSales")
-                .setWindowFields(setWindowFields()
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
+                setWindowFields()
                         .partitionBy(field("state"))
                         .sortBy(ascending("orderDate"))
                         .output(output("cumulativeQuantityForState")
                                 .operator(sum(field("quantity")))
                                 .window()
-                                .documents("unbounded", "current")))
-                .execute(Document.class)
-                .toList();
+                                .documents("unbounded", "current"))));
+    }
 
-        List<Document> expected = parseDocs(
-                "{ '_id' : 4, 'type' : 'strawberry', 'orderDate' : ISODate('2019-05-18T16:09:01Z'), 'state' : 'CA', 'price' : 41, " +
-                        "'quantity' : 162, 'cumulativeQuantityForState' : 162 }",
-                "{ '_id' : 0, 'type' : 'chocolate', 'orderDate' : ISODate('2020-05-18T14:10:30Z'), 'state' : 'CA', 'price' : 13, " +
-                        "'quantity' : 120, 'cumulativeQuantityForState' : 282 }",
-                "{ '_id' : 2, 'type' : 'vanilla', 'orderDate' : ISODate('2021-01-11T06:31:15Z'), 'state' : 'CA', 'price' : 12, " +
-                        "'quantity' : 145, 'cumulativeQuantityForState' : 427 }",
-                "{ '_id' : 5, 'type' : 'strawberry', 'orderDate' : ISODate('2019-01-08T06:12:03Z'), 'state' : 'WA', 'price' : 43, " +
-                        "'quantity' : 134, 'cumulativeQuantityForState' : 134 }",
-                "{ '_id' : 3, 'type' : 'vanilla', 'orderDate' : ISODate('2020-02-08T13:13:23Z'), 'state' : 'WA', 'price' : 13, " +
-                        "'quantity' : 104, 'cumulativeQuantityForState' : 238 }",
-                "{ '_id' : 1, 'type' : 'chocolate', 'orderDate' : ISODate('2021-03-20T11:30:05Z'), 'state' : 'WA', 'price' : 14, " +
-                        "'quantity' : 140, 'cumulativeQuantityForState' : 378 }");
+    @Test
+    public void testExample3() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                setWindowFields()
+                        .partitionBy(field("state"))
+                        .sortBy(ascending("price"))
+                        .output(output("quantityFromSimilarOrders")
+                                .operator(sum(field("quantity")))
+                                .window()
+                                .range(-10, 10))));
+    }
 
-        assertListEquals(actual, expected);
+    @Test
+    public void testExample4() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                setWindowFields()
+                        .partitionBy(field("state"))
+                        .sortBy(ascending("orderDate"))
+                        .output(output("recentOrders")
+                                .operator(push(field("orderDate")))
+                                .window()
+                                .range("unbounded", 10, TimeUnit.MONTH))));
     }
 
 }

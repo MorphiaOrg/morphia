@@ -1,0 +1,14 @@
+[
+  { $unwind: "$items" },
+  { $unwind: "$items.tags" },
+  {
+    $group: 
+      {
+        _id: "$items.tags",
+        totalSalesAmount: 
+          { 
+            $sum: { $multiply: [ "$items.price", "$items.quantity" ] } 
+          }
+      }
+  }
+]

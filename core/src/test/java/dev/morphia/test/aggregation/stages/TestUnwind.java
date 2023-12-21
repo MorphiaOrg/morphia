@@ -3,13 +3,21 @@ package dev.morphia.test.aggregation.stages;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.models.User;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.expressions.Expressions.field;
+import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
+import static dev.morphia.aggregation.stages.Group.group;
+import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Projection.project;
+import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
 import static java.time.LocalDate.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -17,6 +25,45 @@ import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
 public class TestUnwind extends AggregationTest {
+    @Test
+    public void testExample1() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                unwind("sizes")));
+    }
+
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                unwind("sizes")));
+    }
+
+    @Test
+    public void testExample3() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                unwind("sizes")
+                        .preserveNullAndEmptyArrays(true)));
+    }
+
+    @Test
+    public void testExample4() {
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
+                unwind("sizes")
+                        .preserveNullAndEmptyArrays(true),
+                group(id(field("sizes")))
+                        .field("averagePrice", avg(field("price"))),
+                sort()
+                        .descending("averagePrice")));
+    }
+
+    @Test
+    public void testExample5() {
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
+                unwind("items"),
+                unwind("items.tags"),
+                group(id(field("items.tags")))
+                        .field("totalSalesAmount", sum(multiply(field("items.price"), field("items.quantity"))))));
+    }
+
     @Test
     public void testUnwind() {
         DateTimeFormatter format = ofPattern("yyyy-MM-dd");

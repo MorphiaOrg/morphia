@@ -1,0 +1,40 @@
+ [
+  {
+    $facet: {
+      "price": [
+        {
+          $bucketAuto: {
+            groupBy: "$price",
+            buckets: 4
+          }
+        }
+      ],
+      "year": [
+        { 
+          $bucketAuto: {
+            groupBy: "$year",
+            buckets: 3,
+            output: {
+              "count": { $sum: 1 },
+              "years": { $push: "$year" }
+            }
+          }
+        }
+      ],
+      "area": [
+        {
+          $bucketAuto: {
+            groupBy: {
+              $multiply: [ "$dimensions.height", "$dimensions.width" ] 
+            },
+            buckets: 4,
+            output: {
+              "count": { $sum: 1 },
+              "titles": { $push: "$title" }
+            }
+          }
+        }
+      ]
+    }
+  }
+] 

@@ -1,36 +1,28 @@
 package dev.morphia.test.aggregation.stages;
 
-import java.util.List;
-
-import dev.morphia.aggregation.stages.Unset;
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
-import dev.morphia.test.aggregation.model.Book;
 
-import org.bson.Document;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
+import static dev.morphia.aggregation.stages.Unset.unset;
 
 public class TestUnset extends AggregationTest {
     @Test
-    public void testUnset() {
-        List<Document> documents = parseDocs(
-                "{'_id': 1, title: 'Antelope Antics', isbn: '0001122223334', author: {last:'An', first: 'Auntie' }, copies: "
-                        + "[ {warehouse: 'A', qty: 5 }, {warehouse: 'B', qty: 15 } ] }",
-                "{'_id': 2, title: 'Bees Babble', isbn: '999999999333', author: {last:'Bumble', first: 'Bee' }, copies: [ "
-                        + "{warehouse: 'A', qty: 2 }, {warehouse: 'B', qty: 5 } ] }");
-        insert("books", documents);
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                unset("copies")));
+    }
 
-        for (Document document : documents) {
-            document.remove("copies");
-        }
+    @Test
+    public void testExample3() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                unset("isbn", "copies")));
+    }
 
-        List<Document> copies = getDs().aggregate(Book.class)
-                .unset(Unset.unset("copies"))
-                .execute(Document.class)
-                .toList();
-
-        assertEquals(documents, copies);
-
+    @Test
+    public void testExample4() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                unset("isbn", "author.first", "copies.warehouse")));
     }
 }

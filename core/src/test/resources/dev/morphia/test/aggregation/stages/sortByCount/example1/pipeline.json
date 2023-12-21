@@ -1,0 +1,8 @@
+[
+  {
+    $unwind: "$tags"
+  },
+  {
+    $sortByCount: "$tags"
+  }
+]

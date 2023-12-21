@@ -1,0 +1,2 @@
+{  _id: 1,  item: 'almonds',  description: 'almond clusters',  instock: 120,  price: 12,  quantity: 2},
+{  _id: 2,  item: 'pecans',  description: 'candied pecans',  instock: 60,  price: 20,  quantity: 1}

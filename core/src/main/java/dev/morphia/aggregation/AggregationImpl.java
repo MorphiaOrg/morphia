@@ -12,7 +12,6 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.AddFields;
@@ -323,13 +322,13 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
-    public Aggregation<T> unionWith(Class<?> type, Stage first, Stage... others) {
-        return addStage(new UnionWith(type, Expressions.toList(first, others)));
+    public Aggregation<T> unionWith(Class<?> type, Stage... stages) {
+        return addStage(UnionWith.unionWith(type, stages));
     }
 
     @Override
-    public Aggregation<T> unionWith(String collection, Stage first, Stage... others) {
-        return addStage(new UnionWith(collection, Expressions.toList(first, others)));
+    public Aggregation<T> unionWith(String collection, Stage... stages) {
+        return addStage(UnionWith.unionWith(collection, stages));
     }
 
     @Override

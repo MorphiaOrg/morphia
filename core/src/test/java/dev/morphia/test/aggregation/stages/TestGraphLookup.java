@@ -1,49 +1,57 @@
 package dev.morphia.test.aggregation.stages;
 
-import java.util.List;
-
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
-import dev.morphia.test.aggregation.model.Employee;
 
-import org.bson.Document;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.GraphLookup.graphLookup;
+import static dev.morphia.aggregation.stages.Match.match;
+import static dev.morphia.aggregation.stages.Projection.project;
+import static dev.morphia.query.filters.Filters.eq;
 
 public class TestGraphLookup extends AggregationTest {
     @Test
-    public void testGraphLookup() {
-        List<Document> list = parseDocs("{ '_id' : 1, 'name' : 'Dev' }",
-                "{ '_id' : 2, 'name' : 'Eliot', 'reportsTo' : 'Dev' }",
-                "{ '_id' : 3, 'name' : 'Ron', 'reportsTo' : 'Eliot' }",
-                "{ '_id' : 4, 'name' : 'Andrew', 'reportsTo' : 'Eliot' }",
-                "{ '_id' : 5, 'name' : 'Asya', 'reportsTo' : 'Ron' }",
-                "{ '_id' : 6, 'name' : 'Dan', 'reportsTo' : 'Andrew' }");
-
-        insert("employees", list);
-
-        List<Document> actual = getDs().aggregate(Employee.class)
-                .graphLookup(graphLookup("employees")
+    public void testExample1() {
+        testPipeline(ServerVersion.ANY, true, false, (aggregation) -> aggregation.pipeline(
+                graphLookup(AGG_TEST_COLLECTION)
                         .startWith(field("reportsTo"))
                         .connectFromField("reportsTo")
                         .connectToField("name")
-                        .as("reportingHierarchy"))
-                .execute(Document.class)
-                .toList();
+                        .as("reportingHierarchy")));
+    }
 
-        List<Document> expected = parseDocs("{'_id': 1, 'name': 'Dev', 'reportingHierarchy': []}",
-                "{'_id': 2, 'name': 'Eliot', 'reportsTo': 'Dev', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'}]}",
-                "{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                        + "'Eliot', 'reportsTo': 'Dev'}]}",
-                "{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                        + "'Eliot', 'reportsTo': 'Dev'}]}",
-                "{'_id': 5, 'name': 'Asya', 'reportsTo': 'Ron', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                        + "'Eliot', 'reportsTo': 'Dev'},{'_id': 3, 'name': 'Ron', 'reportsTo': 'Eliot'}]}",
-                "{'_id': 6, 'name': 'Dan', 'reportsTo': 'Andrew', 'reportingHierarchy': [{'_id': 1, 'name': 'Dev'},{'_id': 2, 'name': "
-                        + "'Eliot', 'reportsTo': 'Dev'},{'_id': 4, 'name': 'Andrew', 'reportsTo': 'Eliot'}]}");
+    @Test
+    public void testExample2() {
+        loadData("airports", "data2.json");
 
-        assertDocumentEquals(actual, expected);
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
+                graphLookup("airports")
+                        .startWith(field("nearestAirport"))
+                        .connectFromField("connects")
+                        .connectToField("airport")
+                        .maxDepth(2)
+                        .depthField("numConnections")
+                        .as("destinations")));
+    }
+
+    @Test
+    public void testExample3() {
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
+                match(eq("name", "Tanya Jordan")),
+                graphLookup(AGG_TEST_COLLECTION)
+                        .startWith(field("friends"))
+                        .connectFromField("friends")
+                        .connectToField("name")
+                        .as("golfers")
+                        .restrict(eq("hobbies", "golf")),
+                project()
+                        .include("name")
+                        .include("friends")
+                        .include("connections who play golf", field("golfers.name"))
+
+        ));
     }
 
 }

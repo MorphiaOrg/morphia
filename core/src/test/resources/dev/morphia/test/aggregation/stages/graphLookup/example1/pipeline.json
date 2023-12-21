@@ -1,0 +1,11 @@
+ [
+   {
+      $graphLookup: {
+         from: "aggtest",
+         startWith: "$reportsTo",
+         connectFromField: "reportsTo",
+         connectToField: "name",
+         as: "reportingHierarchy"
+      }
+   }
+] 

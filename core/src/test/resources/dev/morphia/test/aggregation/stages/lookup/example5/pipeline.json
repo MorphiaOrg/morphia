@@ -1,0 +1,14 @@
+ [
+   {
+      $lookup:
+         {
+           from: "holidays",
+           as: "holidays",
+           pipeline: [
+              { $match: { year: 2018 } },
+              { $project: { _id: 0, date: { name: "$name", date: "$date" } } },
+              { $replaceRoot: { newRoot: "$date" } }
+           ],
+         }
+    }
+] 

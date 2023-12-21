@@ -1,0 +1,4 @@
+[
+   { $match: { _id: 1 } },
+   { $addFields: { homework: { $concatArrays: [ "$homework", [ 7 ] ] } } }
+]

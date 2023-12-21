@@ -33,6 +33,7 @@ import org.testng.annotations.Test;
 
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.bson.json.JsonWriterSettings.builder;
@@ -50,8 +51,8 @@ public abstract class TemplatedTestBase extends TestBase {
     protected static final String AGG_TEST_COLLECTION = "aggtest";
 
     protected final ObjectMapper mapper = new ObjectMapper();
-    protected boolean skipPipelineCheck = false;
-    protected boolean skipDataCheck = false;
+    private boolean skipPipelineCheck = false;
+    private boolean skipDataCheck = false;
 
     public TemplatedTestBase() {
     }
@@ -70,6 +71,14 @@ public abstract class TemplatedTestBase extends TestBase {
         return toLowerCase(root.charAt(0)) + root.substring(1);
     }
 
+    public void skipDataCheck() {
+        skipDataCheck = true;
+    }
+
+    public void skipPipelineCheck() {
+        skipPipelineCheck = true;
+    }
+
     public void testPipeline(ServerVersion serverVersion,
             boolean removeIds,
             boolean orderMatters,
@@ -79,11 +88,13 @@ public abstract class TemplatedTestBase extends TestBase {
         var resourceName = discoverResourceName(new Exception().getStackTrace());
         loadData(AGG_TEST_COLLECTION, "data.json");
 
-        List<Document> documents = runPipeline(resourceName, pipeline.apply(getDs().aggregate(AGG_TEST_COLLECTION)));
+        List<Document> actual = runPipeline(resourceName, pipeline.apply(getDs().aggregate(AGG_TEST_COLLECTION)));
 
         if (!skipDataCheck) {
-            List<Document> actual = removeIds ? removeIds(documents) : documents;
             List<Document> expected = loadExpected(resourceName);
+
+            actual = removeIds ? removeIds(actual) : actual;
+            expected = removeIds ? removeIds(expected) : expected;
 
             try {
                 Comparanator.of(null, actual, expected, orderMatters).compare();
@@ -117,8 +128,10 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     protected void loadData(String collection, String fileName) {
-        var resourceName = discoverResourceName(new Exception().getStackTrace());
-        insert(collection, loadJson(format("%s/%s/%s", prefix(), resourceName, fileName)));
+        if (!skipDataCheck) {
+            var resourceName = discoverResourceName(new Exception().getStackTrace());
+            insert(collection, loadJson(format("%s/%s/%s", prefix(), resourceName, fileName)));
+        }
     }
 
     protected @NotNull List<Document> loadExpected(String resourceName) {
@@ -177,16 +190,22 @@ public abstract class TemplatedTestBase extends TestBase {
 
         if (!skipPipelineCheck) {
             List<Document> target = loadPipeline(pipelineName);
-            assertEquals(
-                    pipeline.stream().map(d -> d.toJson(JSON_WRITER_SETTINGS)).collect(joining("\n, ", "[\n", "\n]")),
-                    target.stream().map(d -> d.toJson(JSON_WRITER_SETTINGS)).collect(joining("\n, ", "[\n", "\n]")),
-                    "Should generate the same pipeline");
+            assertEquals(toJson(pipeline), toJson(target), "Should generate the same pipeline");
         }
 
-        try (var cursor = aggregation.execute(Document.class)) {
-            return cursor.toList();
+        if (!skipDataCheck) {
+            try (var cursor = aggregation.execute(Document.class)) {
+                return cursor.toList();
+            }
+        } else {
+            return emptyList();
         }
+    }
 
+    private String toJson(List<Document> pipeline) {
+        return pipeline.stream()
+                .map(d -> d.toJson(JSON_WRITER_SETTINGS, getDatabase().getCodecRegistry().get(Document.class)))
+                .collect(joining("\n, ", "[\n", "\n]"));
     }
 
     private List<Document> loadPipeline(String pipelineName) {

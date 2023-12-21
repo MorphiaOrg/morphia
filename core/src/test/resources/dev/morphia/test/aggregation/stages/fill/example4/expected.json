@@ -1,0 +1,8 @@
+{    _id: ObjectId("620559f4394d47411658b58f"),    date: ISODate("2021-03-08T00:00:00.000Z"),    restaurant: "Joe's Pizza",    score: 90  },
+{    _id: ObjectId("620559f4394d47411658b591"),    date: ISODate("2021-03-09T00:00:00.000Z"),    restaurant: "Joe's Pizza",    score: 92  },
+{    _id: ObjectId("620559f4394d47411658b593"),    date: ISODate("2021-03-10T00:00:00.000Z"),    restaurant: "Joe's Pizza",    score: 92  },
+{    _id: ObjectId("620559f4394d47411658b595"),    date: ISODate("2021-03-11T00:00:00.000Z"),    restaurant: "Joe's Pizza",    score: 93  },
+{    _id: ObjectId("620559f4394d47411658b590"),    date: ISODate("2021-03-08T00:00:00.000Z"),    restaurant: "Sally's Deli",    score: 75  },
+{    _id: ObjectId("620559f4394d47411658b592"),    date: ISODate("2021-03-09T00:00:00.000Z"),    restaurant: "Sally's Deli",    score: 75  },
+{    _id: ObjectId("620559f4394d47411658b594"),    date: ISODate("2021-03-10T00:00:00.000Z"),    restaurant: "Sally's Deli",    score: 68  },
+{    _id: ObjectId("620559f4394d47411658b596"),    date: ISODate("2021-03-11T00:00:00.000Z"),    restaurant: "Sally's Deli",    score: 68  }

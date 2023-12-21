@@ -1,0 +1,3 @@
+ [
+   { $set: { "specs.fuel_type": "unleaded" } }
+] 

@@ -26,15 +26,18 @@ class RstAuditorTest {
                 .aggregations(
                     listOf(
                         // stages
-                        "collStats",
+                        "changeStream",
+                        "changeStreamSplitLargeEvent",
                         "listLocalSessions",
                         "listSampledQueries",
                         "listSearchIndexes",
                         "listSessions",
                         "toHashedIndexKey",
+                        "shardedDataDistribution",
 
                         // expressions
                         "interface",
+                        "queryStats", // unclear how this would be needed in morphia
                         "search", // a complicated animal.  we'll get there.
                         "searchMeta", // a complicated animal.  we'll get there.
                         "substr", // deprecated/aliased away

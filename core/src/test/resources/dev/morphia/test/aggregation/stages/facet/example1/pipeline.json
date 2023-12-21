@@ -1,0 +1,33 @@
+ [
+  {
+    $facet: {
+      "categorizedByTags": [ 
+        { $unwind: "$tags" },
+        { $sortByCount: "$tags" }
+      ], 
+      "categorizedByPrice": [ 
+        
+        { $match: { price: { $exists: true } } },
+        {
+          $bucket: { 
+            groupBy: "$price",
+            boundaries: [  0, 150, 200, 300, 400 ],
+            default: "Other",
+            output: {
+              "count": { $sum: 1 },
+              "titles": { $push: "$title" }
+            }
+          }
+        }
+      ],
+      "categorizedByYears(Auto)": [
+        {
+          $bucketAuto: {
+            groupBy: "$year",
+            buckets: 4
+          }
+        }
+      ]
+    }
+  }
+]

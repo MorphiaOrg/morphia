@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -15,7 +16,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * @since 2.1
  */
 public class UnionWith extends Stage {
-    private final List<Stage> stages;
+    private final List<Stage> pipeline;
     private Class<?> collectionType;
     private String collectionName;
 
@@ -23,30 +24,38 @@ public class UnionWith extends Stage {
      * Creates the new stage
      *
      * @param collection the collection to process
-     * @param stages     the pipeline
+     * @param pipeline   the pipeline
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
-    public UnionWith(String collection, List<Stage> stages) {
+    private UnionWith(String collection, List<Stage> pipeline) {
         super("$unionWith");
         this.collectionName = collection;
-        this.stages = Collections.unmodifiableList(stages);
+        this.pipeline = Collections.unmodifiableList(pipeline);
     }
 
     /**
      * Creates the new stage
      *
-     * @param type   the type to process
-     * @param stages the pipeline
+     * @param type     the type to process
+     * @param pipeline the pipeline
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
-    public UnionWith(Class<?> type, List<Stage> stages) {
+    private UnionWith(Class<?> type, List<Stage> pipeline) {
         super("$unionWith");
         this.collectionType = type;
-        this.stages = Collections.unmodifiableList(stages);
+        this.pipeline = Collections.unmodifiableList(pipeline);
+    }
+
+    public static UnionWith unionWith(Class<?> type, Stage... stages) {
+        return new UnionWith(type, Expressions.toList(stages));
+    }
+
+    static public UnionWith unionWith(String collection, Stage... stages) {
+        return new UnionWith(collection, Expressions.toList(stages));
     }
 
     /**
@@ -56,7 +65,7 @@ public class UnionWith extends Stage {
      */
     @Nullable
     @MorphiaInternal
-    public String getCollectionName() {
+    public String collectionName() {
         return collectionName;
     }
 
@@ -66,7 +75,7 @@ public class UnionWith extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    public Class<?> getCollectionType() {
+    public Class<?> collectionType() {
         return collectionType;
     }
 
@@ -76,7 +85,7 @@ public class UnionWith extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    public List<Stage> getStages() {
-        return stages;
+    public List<Stage> pipeline() {
+        return pipeline;
     }
 }

@@ -299,6 +299,17 @@ public class Merge<M> extends Stage {
     }
 
     /**
+     * Optional. An aggregation pipeline to update the document in the collection.
+     *
+     * @param pipeline the pipeline
+     * @return this
+     */
+    public Merge<M> whenMatched(Stage... pipeline) {
+        this.whenMatchedPipeline = asList(pipeline);
+        return this;
+    }
+
+    /**
      * Optional. The behavior of $merge if a result document does not match an existing document in the out collection.
      *
      * @param whenNotMatched the behavior

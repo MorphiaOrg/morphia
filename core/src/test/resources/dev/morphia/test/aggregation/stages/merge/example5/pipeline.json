@@ -1,0 +1,58 @@
+[
+  {
+    $match: {
+      "$and": [
+        {
+          "date": {
+            "$gte": {
+              "$date": "2019-05-07T00:00:00Z"
+            }
+          }
+        },
+        {
+          "date": {
+            "$lt": {
+              "$date": "2019-05-08T00:00:00Z"
+            }
+          }
+        }
+      ]    }
+  },
+  {
+    $project: {
+      _id: {
+        $dateToString: {
+          date: "$date",
+          format: "%Y-%m"
+        }
+      },
+      thumbsup: 1,
+      thumbsdown: 1
+    }
+  },
+  {
+    $merge: {
+      into: "monthlytotals",
+      on: "_id",
+      whenMatched: [
+        {
+          $addFields: {
+            thumbsup: {
+              $add: [
+                "$thumbsup",
+                "$$new.thumbsup"
+              ]
+            },
+            thumbsdown: {
+              $add: [
+                "$thumbsdown",
+                "$$new.thumbsdown"
+              ]
+            }
+          }
+        }
+      ],
+      whenNotMatched: "insert"
+    }
+  }
+]

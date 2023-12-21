@@ -1,0 +1,3 @@
+{ "_id" : 1, name: "Fred", email: "fred@example.net" },
+{ "_id" : 2, name: "Frank N. Stine", cell: "012-345-9999" },
+{ "_id" : 3, name: "Gren Dell", cell: "987-654-3210", email: "beo@example.net" }

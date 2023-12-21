@@ -1,0 +1,7 @@
+ [ 
+   { $set: { _id: "2017" } },
+   { $unionWith: { coll: "sales_2018", pipeline: [ { $set: { _id: "2018" } } ] } },
+   { $unionWith: { coll: "sales_2019", pipeline: [ { $set: { _id: "2019" } } ] } },
+   { $unionWith: { coll: "sales_2020", pipeline: [ { $set: { _id: "2020" } } ] } },
+   { $sort: { _id: 1, store: 1, item: 1 } }
+] 

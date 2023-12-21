@@ -1,0 +1,10 @@
+{ "_id" : "painting", "count" : 6 }
+{ "_id" : "oil", "count" : 4 }
+{ "_id" : "Expressionism", "count" : 3 }
+{ "_id" : "Surrealism", "count" : 2 }
+{ "_id" : "abstract", "count" : 2 }
+{ "_id" : "woodblock", "count" : 1 }
+{ "_id" : "woodcut", "count" : 1 }
+{ "_id" : "ukiyo-e", "count" : 1 }
+{ "_id" : "satire", "count" : 1 }
+{ "_id" : "caricature", "count" : 1 }

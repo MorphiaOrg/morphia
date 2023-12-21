@@ -1,0 +1,3 @@
+{ "_id" : 1, "item" : "butter", "amount" : 20, "status" : "Complete", "asofDate" : ISODate("2019-06-03T22:47:54.812Z") }
+{ "_id" : 3, "item" : "jam", "amount" : 50, "status" : "Complete", "asofDate" : ISODate("2019-06-03T22:47:54.812Z") }
+{ "_id" : 4, "item" : "muffins", "amount" : 50, "status" : "Complete", "asofDate" : ISODate("2019-06-03T22:47:54.812Z") }

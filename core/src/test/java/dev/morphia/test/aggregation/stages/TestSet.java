@@ -1,47 +1,60 @@
 package dev.morphia.test.aggregation.stages;
 
-import java.util.List;
-
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
-import dev.morphia.test.aggregation.model.Score;
 
-import org.bson.Document;
 import org.testng.annotations.Test;
 
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
+import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
 import static dev.morphia.aggregation.expressions.Expressions.field;
+import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
-import static dev.morphia.aggregation.stages.AddFields.addFields;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Set.set;
-import static org.testng.Assert.assertEquals;
+import static dev.morphia.query.filters.Filters.eq;
 
 public class TestSet extends AggregationTest {
     @Test
-    @SuppressWarnings("deprecation")
-    public void testSet() {
-        List<Document> list = parseDocs(
-                "{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }",
-                "{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }");
-
-        insert("scores", list);
-
-        List<Document> result = getDs().aggregate(Score.class)
-                .set(addFields()
+    public void testExample1() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                set()
                         .field("totalHomework", sum(field("homework")))
-                        .field("totalQuiz", sum(field("quiz"))))
-                .set(set()
+                        .field("totalQuiz", sum(field("quiz"))),
+                set()
                         .field("totalScore", add(field("totalHomework"),
-                                field("totalQuiz"), field("extraCredit"))))
-                .execute(Document.class)
-                .toList();
+                                field("totalQuiz"), field("extraCredit")))));
+    }
 
-        list = parseDocs(
-                "{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"
-                        + " 'totalQuiz' : 18, 'totalScore' : 43 }",
-                "{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
-                        + "'totalQuiz' : 16, 'totalScore' : 40 }");
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                set()
+                        .field("specs.fuel_type", value("unleaded"))));
+    }
 
-        assertEquals(result, list);
+    @Test
+    public void testExample3() {
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
+                set()
+                        .field("cats", value(20))));
+    }
+
+    @Test
+    public void testExample4() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                match(eq("_id", 1)),
+                set()
+                        .field("homework", concatArrays(field("homework"), array(value(7))))));
+    }
+
+    @Test
+    public void testExample5() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                set()
+                        .field("quizAverage", avg(field("quiz")))));
     }
 
 }
