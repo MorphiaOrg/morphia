@@ -36,6 +36,7 @@ class RstAuditorTest {
                         "shardedDataDistribution",
 
                         // expressions
+                        "collStats",
                         "interface",
                         "queryStats", // unclear how this would be needed in morphia
                         "search", // a complicated animal.  we'll get there.

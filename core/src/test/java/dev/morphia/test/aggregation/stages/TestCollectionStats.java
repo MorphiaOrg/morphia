@@ -1,6 +1,6 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Author;
 
 import org.bson.Document;
@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.stages.CollectionStats.collStats;
 import static org.testng.Assert.assertNotNull;
 
-public class TestCollectionStats extends AggregationTest {
+public class TestCollectionStats extends TestBase {
     @Test
     public void testCollectionStats() {
         getDs().save(new Author());
