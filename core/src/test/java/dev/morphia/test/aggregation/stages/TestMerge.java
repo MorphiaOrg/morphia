@@ -2,21 +2,10 @@ package dev.morphia.test.aggregation.stages;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import dev.morphia.InsertOneOptions;
-import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.stages.Group;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
 import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
-import dev.morphia.test.aggregation.model.Salary;
 
-import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.MergeOptions.WhenMatched.FAIL;
@@ -33,7 +22,6 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
-import static dev.morphia.aggregation.stages.Merge.into;
 import static dev.morphia.aggregation.stages.Merge.merge;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.filters.Filters.eq;
@@ -126,61 +114,5 @@ public class TestMerge extends AggregationTest {
     @Test
     public void testExample6() {
         // a bit of arcane example Morphia's not well-suited for
-    }
-
-    @Test
-    public void testMerge() {
-        insert("salaries", parseDocs(
-                "{ '_id' : 1, employee: 'Ant', dept: 'A', salary: 100000, fiscal_year: 2017 }",
-                "{ '_id' : 2, employee: 'Bee', dept: 'A', salary: 120000, fiscal_year: 2017 }",
-                "{ '_id' : 3, employee: 'Cat', dept: 'Z', salary: 115000, fiscal_year: 2017 }",
-                "{ '_id' : 4, employee: 'Ant', dept: 'A', salary: 115000, fiscal_year: 2018 }",
-                "{ '_id' : 5, employee: 'Bee', dept: 'Z', salary: 145000, fiscal_year: 2018 }",
-                "{ '_id' : 6, employee: 'Cat', dept: 'Z', salary: 135000, fiscal_year: 2018 }",
-                "{ '_id' : 7, employee: 'Gecko', dept: 'A', salary: 100000, fiscal_year: 2018 }",
-                "{ '_id' : 8, employee: 'Ant', dept: 'A', salary: 125000, fiscal_year: 2019 }",
-                "{ '_id' : 9, employee: 'Bee', dept: 'Z', salary: 160000, fiscal_year: 2019 }",
-                "{ '_id' : 10, employee: 'Cat', dept: 'Z', salary: 150000, fiscal_year: 2019 }"));
-
-        getDs().aggregate(Salary.class)
-                .group(Group.group(id()
-                        .field("fiscal_year")
-                        .field("dept"))
-                        .field("salaries", sum(field("salary"))))
-                .merge(into("budgets")
-                        .on("_id")
-                        .whenMatched(REPLACE)
-                        .whenNotMatched(INSERT));
-        List<Document> actual = getDs().find("budgets", Document.class).iterator().toList();
-
-        List<Document> expected = parseDocs(
-                "{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'A' }, 'salaries' : 220000 }",
-                "{ '_id' : { 'fiscal_year' : 2017, 'dept' : 'Z' }, 'salaries' : 115000 }",
-                "{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'A' }, 'salaries' : 215000 }",
-                "{ '_id' : { 'fiscal_year' : 2018, 'dept' : 'Z' }, 'salaries' : 280000 }",
-                "{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'A' }, 'salaries' : 125000 }",
-                "{ '_id' : { 'fiscal_year' : 2019, 'dept' : 'Z' }, 'salaries' : 310000 }");
-
-        assertDocumentEquals(actual, expected);
-    }
-
-    @Test
-    public void testMergeWithUnsetMissing() {
-        GenericEntity entity = new GenericEntity();
-        entity.strings = Arrays.asList("Test1", null, "Test2");
-        MorphiaDatastore ds = getDs();
-        ds.save(entity);
-
-        entity.strings = Arrays.asList("Test1", null, "Test2");
-        ds.merge(entity, new InsertOneOptions().unsetMissing(true));
-
-    }
-
-    @Entity
-    private static class GenericEntity {
-        @Id
-        private ObjectId id;
-
-        private List<String> strings = new ArrayList<>();
     }
 }

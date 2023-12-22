@@ -49,6 +49,16 @@ public abstract class TestBase extends MorphiaTestSetup {
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
     protected static final String TEST_DB_NAME = "morphia_test";
 
+    protected static File CORE_ROOT = new File(".").getAbsoluteFile();
+
+    static {
+        while (!new File(CORE_ROOT, ".git").exists()) {
+            CORE_ROOT = CORE_ROOT.getParentFile();
+        }
+
+        CORE_ROOT = new File(CORE_ROOT, "core");
+    }
+
     protected DriverVersion minDriver = DriverVersion.v41;
 
     public TestBase() {
