@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
@@ -72,8 +72,8 @@ public class Mapper {
     /**
      * Set of classes that registered by this mapper
      */
-    private final Map<String, EntityModel> mappedEntities = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
+    private final Map<String, EntityModel> mappedEntities = new WeakHashMap<>();
+    private final Map<String, Set<EntityModel>> mappedEntitiesByCollection = new WeakHashMap<>();
     private final List<EntityListener<?>> listeners = new ArrayList<>();
     private final MorphiaConfig config;
     private final DiscriminatorLookup discriminatorLookup;
