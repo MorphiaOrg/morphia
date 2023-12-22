@@ -6,13 +6,11 @@ import dev.morphia.audits.model.OperatorType.EXPRESSION
 import dev.morphia.audits.model.Results
 import java.io.File
 
-class RstAuditor() {
-    companion object {
-        val auditRoot = File("target/mongodb-docs")
-        val coreTestRoot = File("../core/src/test/resources")
-        val aggRoot = File(auditRoot, "source/reference/operator/aggregation")
-        val includesRoot = File(auditRoot, "source")
-    }
+object RstAuditor {
+    val auditRoot = File("target/mongodb-docs")
+    val coreTestRoot = File("../core/src/test/resources")
+    val aggRoot = File(auditRoot, "source/reference/operator/aggregation")
+    val includesRoot = File(auditRoot, "source")
 
     val methods = findMethods("@aggregation.expression") + findMethods("@aggregation.stage")
 

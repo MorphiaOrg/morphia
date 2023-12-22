@@ -1,22 +1,27 @@
-package dev.morphia.test.aggregation;
+package dev.morphia.test;
 
 import java.io.File;
+import java.util.List;
 import java.util.StringJoiner;
 
 import dev.morphia.mapping.NamingStrategy;
-import dev.morphia.test.TestBase;
+import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
 import static java.util.Arrays.stream;
 import static org.testng.Assert.fail;
 
-public class TestCoverage extends TestBase {
+public abstract class CoverageTest extends TestBase {
+    public abstract List<String> locations();
+
     @Test
     public void noMissingTestCases() {
         var message = new StringJoiner("\n");
-        findMissing("src/test/resources/%s/expressions", message);
-        findMissing("src/test/resources/%s/stages", message);
+        var type = getClass();
+        locations().forEach(location -> {
+            findMissing("src/test/resources/%s/%s".formatted(type.getPackageName().replace('.', '/'), location), message);
+        });
 
         if (message.length() != 0) {
             fail("\n" + message);
@@ -24,8 +29,7 @@ public class TestCoverage extends TestBase {
     }
 
     private void findMissing(String root, StringJoiner message) {
-        var type = getClass();
-        File path = AggregationTest.rootToCore(root.formatted(type.getPackageName().replace('.', '/')));
+        File path = AggregationTest.rootToCore(root);
         try {
             stream(path.listFiles())
                     .map(file -> {
@@ -40,5 +44,4 @@ public class TestCoverage extends TestBase {
             throw new RuntimeException("failure on path: " + path, e);
         }
     }
-
 }
