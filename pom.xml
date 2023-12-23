@@ -310,6 +310,18 @@
                 <module>audits</module>
             </modules>
         </profile>
+
+        <profile>
+            <id>rewrite</id>
+            <activation>
+                <property>
+                    <name>rewrite</name>
+                </property>
+            </activation>
+            <modules>
+                <module>rewrite</module>
+            </modules>
+        </profile>
     </profiles>
 
     <modules>
