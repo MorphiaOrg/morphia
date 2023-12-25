@@ -27,7 +27,7 @@
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>4.11.1</driver.version>
         <driver.minor.version>4.11</driver.minor.version>
-        <jackson.version>2.16.0</jackson.version>
+        <jackson.version>2.16.1</jackson.version>
         <json.assert.version>1.5.1</json.assert.version>
         <logback.version>1.4.14</logback.version>
         <maven.version>3.9.6</maven.version>
