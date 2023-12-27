@@ -65,7 +65,6 @@ import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.regex;
@@ -930,7 +929,7 @@ public class TestUpdateOperations extends TestBase {
         assertNull(query.first().notes);
 
         query.update(set()
-                .field("notes", value("hard worker")));
+                .field("notes", "hard worker"));
 
         assertEquals(query.first().notes, "hard worker");
     }

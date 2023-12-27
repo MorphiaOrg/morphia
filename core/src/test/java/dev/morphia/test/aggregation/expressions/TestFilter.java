@@ -5,9 +5,7 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.filter;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.test.ServerVersion.v52;
 
@@ -16,8 +14,8 @@ public class TestFilter extends AggregationTest {
     public void testExample1() {
         testPipeline(v52, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("items", filter(field("items"),
-                                gte(value("$$item.price"), value(100)))
+                        .include("items", filter("$items",
+                                gte("$$item.price", 100))
                                 .as("item"))));
     }
 
@@ -25,10 +23,10 @@ public class TestFilter extends AggregationTest {
     public void testExample2() {
         testPipeline(v52, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("items", filter(field("items"),
-                                gte(value("$$item.price"), value(100)))
+                        .include("items", filter("$items",
+                                gte("$$item.price", 100))
                                 .as("item")
-                                .limit(value(1)))));
+                                .limit(1))));
     }
 
     @Test
@@ -40,9 +38,9 @@ public class TestFilter extends AggregationTest {
     public void testExample4() {
         testPipeline(v52, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("items", filter(field("items"),
-                                gte(value("$$item.price"), value(100)))
+                        .include("items", filter("$items",
+                                gte("$$item.price", 100))
                                 .as("item")
-                                .limit(value(5)))));
+                                .limit(5))));
     }
 }

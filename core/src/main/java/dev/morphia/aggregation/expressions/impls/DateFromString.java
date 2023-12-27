@@ -26,16 +26,8 @@ public class DateFromString extends Expression {
      * @param dateString the date string
      * @return this
      */
-    public DateFromString dateString(String dateString) {
-        return dateString(Expressions.value(dateString));
-    }
-
-    /**
-     * @param dateString the date string
-     * @return this
-     */
-    public DateFromString dateString(Expression dateString) {
-        this.dateString = dateString;
+    public DateFromString dateString(Object dateString) {
+        this.dateString = Expressions.wrap(dateString);
         return this;
     }
 
@@ -93,33 +85,17 @@ public class DateFromString extends Expression {
      * @param format the format
      * @return this
      */
-    public DateFromString format(Expression format) {
-        this.format = format;
+    public DateFromString format(Object format) {
+        this.format = Expressions.wrap(format);
         return this;
     }
 
     /**
-     * @param format the format
-     * @return this
-     */
-    public DateFromString format(String format) {
-        return format(Expressions.value(format));
-    }
-
-    /**
      * @param onError the onError expression
      * @return this
      */
-    public DateFromString onError(String onError) {
-        return onError(Expressions.value(onError));
-    }
-
-    /**
-     * @param onError the onError expression
-     * @return this
-     */
-    public DateFromString onError(Expression onError) {
-        this.onError = onError;
+    public DateFromString onError(Object onError) {
+        this.onError = Expressions.wrap(onError);
         return this;
     }
 
@@ -127,16 +103,8 @@ public class DateFromString extends Expression {
      * @param onNull the onNull expression
      * @return this
      */
-    public DateFromString onNull(String onNull) {
-        return onNull(Expressions.value(onNull));
-    }
-
-    /**
-     * @param onNull the onNull expression
-     * @return this
-     */
-    public DateFromString onNull(Expression onNull) {
-        this.onNull = onNull;
+    public DateFromString onNull(Object onNull) {
+        this.onNull = Expressions.wrap(onNull);
         return this;
     }
 
@@ -144,16 +112,8 @@ public class DateFromString extends Expression {
      * @param timeZone the timezone
      * @return this
      */
-    public DateFromString timeZone(String timeZone) {
-        return timeZone(Expressions.value(timeZone));
-    }
-
-    /**
-     * @param timeZone the timezone
-     * @return this
-     */
-    public DateFromString timeZone(Expression timeZone) {
-        this.timeZone = timeZone;
+    public DateFromString timeZone(Object timeZone) {
+        this.timeZone = Expressions.wrap(timeZone);
         return this;
     }
 }

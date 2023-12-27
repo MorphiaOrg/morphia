@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.MathExpressions.divide;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.atan;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radiansToDegrees;
@@ -16,7 +15,7 @@ public class TestAtan extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("angle_a", radiansToDegrees(atan(divide(field("side_b"), field("side_a")))))));
+                        .field("angle_a", radiansToDegrees(atan(divide("$side_b", "$side_a"))))));
     }
 
 }

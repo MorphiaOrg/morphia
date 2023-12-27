@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.indexOfArray;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIndexOfArray extends AggregationTest {
@@ -15,7 +13,7 @@ public class TestIndexOfArray extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("index", indexOfArray(field("items"), value(2)))));
+                        .include("index", indexOfArray("$items", 2))));
     }
 
 }

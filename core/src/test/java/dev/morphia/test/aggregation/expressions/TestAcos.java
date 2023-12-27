@@ -4,7 +4,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.MathExpressions.divide;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.acos;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radiansToDegrees;
@@ -20,8 +19,8 @@ public class TestAcos extends AggregationTest {
                                 radiansToDegrees(
                                         acos(
                                                 divide(
-                                                        field("side_b"),
-                                                        field("hypotenuse")))))));
+                                                        "$side_b",
+                                                        "$hypotenuse"))))));
 
     }
 }

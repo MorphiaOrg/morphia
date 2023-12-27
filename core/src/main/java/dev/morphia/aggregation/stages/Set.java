@@ -2,7 +2,6 @@ package dev.morphia.aggregation.stages;
 
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
-import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -44,7 +43,7 @@ public class Set extends Stage {
      * @param value the value expression
      * @return this
      */
-    public Set field(String name, Expression value) {
+    public Set field(String name, Object value) {
         document.field(name, value);
         return this;
     }

@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.WindowExpressions.documentNumber;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.*;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
@@ -16,7 +15,7 @@ public class TestDocumentNumber extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(descending("quantity"))
                         .output(output("documentNumberForState")
                                 .operator(documentNumber()))));
@@ -26,7 +25,7 @@ public class TestDocumentNumber extends AggregationTest {
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(descending("quantity"))
                         .output(output("documentNumberForState")
                                 .operator(documentNumber()))));

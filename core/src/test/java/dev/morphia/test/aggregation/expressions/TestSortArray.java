@@ -7,8 +7,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.sortArray;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
@@ -21,7 +19,7 @@ public class TestSortArray extends AggregationTest {
         testPipeline(v52, (aggregation) -> aggregation
                 .pipeline(project()
                         .suppressId()
-                        .include("result", sortArray(field("team"), ascending("name")))));
+                        .include("result", sortArray("$team", ascending("name")))));
 
     }
 
@@ -31,7 +29,7 @@ public class TestSortArray extends AggregationTest {
             return aggregation
                     .project(project()
                             .suppressId()
-                            .include("result", sortArray(field("team"), descending("address.city"))));
+                            .include("result", sortArray("$team", descending("address.city"))));
         });
 
     }
@@ -42,7 +40,7 @@ public class TestSortArray extends AggregationTest {
                 project()
                         .suppressId()
                         .include("result",
-                                sortArray(field("team"),
+                                sortArray("$team",
                                         descending("age"),
                                         ascending("name")))));
     }
@@ -53,7 +51,7 @@ public class TestSortArray extends AggregationTest {
             return aggregation
                     .project(project()
                             .suppressId()
-                            .include("result", sortArray(array(value(1), value(4), value(1), value(6), value(12), value(5)),
+                            .include("result", sortArray(array(1, 4, 1, 6, 12, 5),
                                     naturalAscending())));
         });
 
@@ -66,12 +64,12 @@ public class TestSortArray extends AggregationTest {
                         .suppressId()
                         .include("result", sortArray(
                                 array(20, 4,
-                                        document("a", value("Free")),
+                                        document("a", "Free"),
                                         6, 21, 5, "Gratis",
-                                        document("a", value(null)),
-                                        document("a", document("sale", value(true)).field("price", value(19))),
+                                        document("a", null),
+                                        document("a", document("sale", true).field("price", 19)),
                                         10.23,
-                                        document("a", value("On sale"))),
+                                        document("a", "On sale")),
                                 naturalAscending()))));
 
     }

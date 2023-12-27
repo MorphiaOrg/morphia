@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -19,10 +20,10 @@ public class MapExpression extends Expression {
      * @morphia.internal
      */
     @MorphiaInternal
-    public MapExpression(Expression input, Expression in) {
+    public MapExpression(Object input, Object in) {
         super("$map");
-        this.input = input;
-        this.in = in;
+        this.input = Expressions.wrap(input);
+        this.in = Expressions.wrap(in);
     }
 
     /**

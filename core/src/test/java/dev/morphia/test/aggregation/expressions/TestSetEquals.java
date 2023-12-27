@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.SetExpressions.setEquals;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -17,7 +16,7 @@ public class TestSetEquals extends AggregationTest {
                         .suppressId()
                         .include("cakes")
                         .include("cupcakes")
-                        .include("sameFlavors", setEquals(field("cakes"), field("cupcakes")))));
+                        .include("sameFlavors", setEquals("$cakes", "$cupcakes"))));
     }
 
 }

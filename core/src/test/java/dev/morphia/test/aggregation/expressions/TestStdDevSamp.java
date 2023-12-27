@@ -5,8 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.WindowExpressions.stdDevSamp;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
@@ -20,18 +18,18 @@ public class TestStdDevSamp extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 sample(100),
-                group(id(value(null)))
-                        .field("ageStdDev", stdDevSamp(field("age")))));
+                group(id(null))
+                        .field("ageStdDev", stdDevSamp("$age"))));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(ascending("orderDate"))
                         .output(output("stdDevSampQuantityForState")
-                                .operator(stdDevSamp(field("quantity")))
+                                .operator(stdDevSamp("$quantity"))
                                 .window()
                                 .documents("unbounded", "current"))));
     }

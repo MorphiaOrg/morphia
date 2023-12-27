@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.Sort;
 import dev.morphia.sofia.Sofia;
@@ -18,13 +19,13 @@ public class SortArrayExpression extends Expression {
      * @param input the input
      * @param sort  the sort
      */
-    public SortArrayExpression(Expression input, Sort... sort) {
+    public SortArrayExpression(Object input, Sort... sort) {
         super("$sortArray");
         if (sort.length == 0) {
             throw new IllegalArgumentException(Sofia.atLeastOneSortRequired());
         }
 
-        this.input = input;
+        this.input = Expressions.wrap(input);
         this.sort = sort;
     }
 

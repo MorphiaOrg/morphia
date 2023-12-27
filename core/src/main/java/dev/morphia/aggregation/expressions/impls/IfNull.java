@@ -7,8 +7,6 @@ import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
-import static dev.morphia.mapping.codec.CodecHelper.coalesce;
-
 /**
  * Evaluates an expression and returns the value of the expression if the expression evaluates to a non-null value. If the
  * expression evaluates to a null value, including instances of undefined values or missing fields, returns the value of the
@@ -29,7 +27,7 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
     }
 
     @Override
-    public IfNull field(String name, Expression expression) {
+    public IfNull field(String name, Object expression) {
         if (replacement != null) {
             throw new AggregationException(Sofia.mixedModesNotAllowed(operation()));
         }
@@ -45,8 +43,8 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
         return input;
     }
 
-    public IfNull input(Expression input, Expression... inputs) {
-        this.input = coalesce(input, inputs);
+    public IfNull input(Object input, Object... inputs) {
+        this.input = Expressions.wrap(input, inputs);
         return this;
     }
 
@@ -54,8 +52,8 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
      * @param replacement the replacement
      * @return this
      */
-    public IfNull replacement(Expression replacement) {
-        this.replacement = replacement;
+    public IfNull replacement(Object replacement) {
+        this.replacement = Expressions.wrap(replacement);
         return this;
     }
 
@@ -63,8 +61,8 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
      * @param target the target
      * @return this
      */
-    public IfNull target(Expression target) {
-        this.input = List.of(target);
+    public IfNull target(Object target) {
+        this.input = List.of(Expressions.wrap(target));
         return this;
     }
 

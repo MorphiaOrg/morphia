@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestGte extends AggregationTest {
@@ -18,7 +16,7 @@ public class TestGte extends AggregationTest {
                         .suppressId()
                         .include("item")
                         .include("qty")
-                        .include("qtyGte250", gte(field("qty"), value(250)))));
+                        .include("qtyGte250", gte("$qty", 250))));
     }
 
 }

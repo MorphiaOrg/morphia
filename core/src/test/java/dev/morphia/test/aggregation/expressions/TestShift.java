@@ -5,8 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.WindowExpressions.shift;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
@@ -17,20 +15,20 @@ public class TestShift extends AggregationTest {
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(descending("quantity"))
                         .output(output("shiftQuantityForState")
-                                .operator(shift(field("quantity"), 1, value("Not available"))))));
+                                .operator(shift("$quantity", 1, "Not available")))));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(descending("quantity"))
                         .output(output("shiftQuantityForState")
-                                .operator(shift(field("quantity"), -1, value("Not available"))))));
+                                .operator(shift("$quantity", -1, "Not available")))));
     }
 
 }

@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.cosh;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.degreesToRadians;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
@@ -15,7 +14,7 @@ public class TestCosh extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("cosh_output", cosh(degreesToRadians(field("$angle"))))));
+                        .field("cosh_output", cosh(degreesToRadians("$angle")))));
     }
 
 }

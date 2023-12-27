@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.expressions.MathExpressions.floor;
 import static dev.morphia.aggregation.expressions.MathExpressions.log;
@@ -21,8 +19,8 @@ public class TestLog extends AggregationTest {
                 project()
                         .include("bitsNeeded", floor(
                                 add(
-                                        value(1),
-                                        log(field("int"), value(2)))))));
+                                        1,
+                                        log("$int", 2))))));
     }
 
 }

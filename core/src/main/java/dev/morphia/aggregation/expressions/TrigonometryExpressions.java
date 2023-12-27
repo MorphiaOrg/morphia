@@ -3,7 +3,8 @@ package dev.morphia.aggregation.expressions;
 import java.util.List;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.expressions.impls.ExpressionList;
+
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 
 /**
  * Defines helper methods for the trigonometry expressions
@@ -21,8 +22,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $acos
      */
-    public static Expression acos(Expression value) {
-        return new Expression("$acos", value);
+    public static Expression acos(Object value) {
+        return new Expression("$acos", wrap(value));
     }
 
     /**
@@ -32,8 +33,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $acosh
      */
-    public static Expression acosh(Expression value) {
-        return new Expression("$acosh", value);
+    public static Expression acosh(Object value) {
+        return new Expression("$acosh", wrap(value));
     }
 
     /**
@@ -43,8 +44,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $asin
      */
-    public static Expression asin(Expression value) {
-        return new Expression("$asin", value);
+    public static Expression asin(Object value) {
+        return new Expression("$asin", wrap(value));
     }
 
     /**
@@ -54,8 +55,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $asinh
      */
-    public static Expression asinh(Expression value) {
-        return new Expression("$asinh", value);
+    public static Expression asinh(Object value) {
+        return new Expression("$asinh", wrap(value));
     }
 
     /**
@@ -65,8 +66,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $atan
      */
-    public static Expression atan(Expression value) {
-        return new Expression("$atan", value);
+    public static Expression atan(Object value) {
+        return new Expression("$atan", wrap(value));
     }
 
     /**
@@ -78,8 +79,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $atan2
      */
-    public static Expression atan2(Expression yValue, Expression xValue) {
-        return new Expression("$atan2", new ExpressionList(List.of(yValue, xValue)));
+    public static Expression atan2(Object yValue, Object xValue) {
+        return new Expression("$atan2", wrap(List.of(yValue, xValue)));
     }
 
     /**
@@ -89,8 +90,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $atanh
      */
-    public static Expression atanh(Expression value) {
-        return new Expression("$atanh", value);
+    public static Expression atanh(Object value) {
+        return new Expression("$atanh", wrap(value));
     }
 
     /**
@@ -100,8 +101,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $cos
      */
-    public static Expression cos(Expression value) {
-        return new Expression("$cos", value);
+    public static Expression cos(Object value) {
+        return new Expression("$cos", wrap(value));
     }
 
     /**
@@ -112,8 +113,8 @@ public final class TrigonometryExpressions {
      * @aggregation.expression $cosh
      * @since 2.2
      */
-    public static Expression cosh(Expression value) {
-        return new Expression("$cosh", value);
+    public static Expression cosh(Object value) {
+        return new Expression("$cosh", wrap(value));
     }
 
     /**
@@ -123,8 +124,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $degreesToRadians
      */
-    public static Expression degreesToRadians(Expression value) {
-        return new Expression("$degreesToRadians", value);
+    public static Expression degreesToRadians(Object value) {
+        return new Expression("$degreesToRadians", wrap(value));
     }
 
     /**
@@ -134,8 +135,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $radiansToDegrees
      */
-    public static Expression radiansToDegrees(Expression value) {
-        return new Expression("$radiansToDegrees", value);
+    public static Expression radiansToDegrees(Object value) {
+        return new Expression("$radiansToDegrees", wrap(value));
     }
 
     /**
@@ -145,8 +146,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $sin
      */
-    public static Expression sin(Expression value) {
-        return new Expression("$sin", value);
+    public static Expression sin(Object value) {
+        return new Expression("$sin", wrap(value));
     }
 
     /**
@@ -157,8 +158,8 @@ public final class TrigonometryExpressions {
      * @aggregation.expression $sinh
      * @since 2.2
      */
-    public static Expression sinh(Expression value) {
-        return new Expression("$sinh", value);
+    public static Expression sinh(Object value) {
+        return new Expression("$sinh", wrap(value));
     }
 
     /**
@@ -168,8 +169,8 @@ public final class TrigonometryExpressions {
      * @return the new expression
      * @aggregation.expression $tan
      */
-    public static Expression tan(Expression value) {
-        return new Expression("$tan", value);
+    public static Expression tan(Object value) {
+        return new Expression("$tan", wrap(value));
     }
 
     /**
@@ -180,8 +181,8 @@ public final class TrigonometryExpressions {
      * @aggregation.expression $tanh
      * @since 2.2
      */
-    public static Expression tanh(Expression value) {
-        return new Expression("$tanh", value);
+    public static Expression tanh(Object value) {
+        return new Expression("$tanh", wrap(value));
     }
 
 }

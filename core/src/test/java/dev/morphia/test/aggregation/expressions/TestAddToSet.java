@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.addToSet;
 import static dev.morphia.aggregation.expressions.DateExpressions.dayOfYear;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
@@ -20,9 +19,9 @@ public class TestAddToSet extends AggregationTest {
     public void testExample1() {
         testPipeline(ANY, false, false, aggregation -> aggregation
                 .pipeline(group(Group.id()
-                        .field("day", dayOfYear(field("date")))
-                        .field("year", year(field("date"))))
-                        .field("itemsSold", addToSet(field("item"))))
+                        .field("day", dayOfYear("$date"))
+                        .field("year", year("$date")))
+                        .field("itemsSold", addToSet("$item")))
 
         );
 
@@ -32,10 +31,10 @@ public class TestAddToSet extends AggregationTest {
     public void testExample2() {
         testPipeline(ANY, false, false, aggregation -> aggregation
                 .setWindowFields(setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(ascending("orderDate"))
                         .output(output("cakeTypesForState")
-                                .operator(addToSet(field("type")))
+                                .operator(addToSet("$type"))
                                 .window()
                                 .documents("unbounded", "current"))));
     }

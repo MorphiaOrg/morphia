@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.SetExpressions.setUnion;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -17,7 +16,7 @@ public class TestSetUnion extends AggregationTest {
                         .suppressId()
                         .include("flowerFieldA")
                         .include("flowerFieldB")
-                        .include("allValues", setUnion(field("flowerFieldA"), field("flowerFieldB")))));
+                        .include("allValues", setUnion("$flowerFieldA", "$flowerFieldB"))));
     }
 
 }

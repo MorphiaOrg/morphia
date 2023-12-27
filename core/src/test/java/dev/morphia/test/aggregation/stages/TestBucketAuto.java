@@ -16,8 +16,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.addToSet;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.stages.AutoBucket.autoBucket;
 import static dev.morphia.aggregation.stages.Facet.facet;
@@ -29,7 +27,7 @@ public class TestBucketAuto extends AggregationTest {
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 autoBucket()
-                        .groupBy(field("price"))
+                        .groupBy("$price")
                         .buckets(4)));
     }
 
@@ -38,18 +36,18 @@ public class TestBucketAuto extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 facet()
                         .field("price", autoBucket()
-                                .groupBy(field("price"))
+                                .groupBy("$price")
                                 .buckets(4))
                         .field("year", autoBucket()
-                                .groupBy(field("year"))
+                                .groupBy("$year")
                                 .buckets(3)
-                                .outputField("count", sum(value(1)))
-                                .outputField("years", push(field("year"))))
+                                .outputField("count", sum(1))
+                                .outputField("years", push("$year")))
                         .field("area", autoBucket()
-                                .groupBy(multiply(field("dimensions.height"), field("dimensions.width")))
+                                .groupBy(multiply("$dimensions.height", "$dimensions.width"))
                                 .buckets(4)
-                                .outputField("count", sum(value(1)))
-                                .outputField("titles", push(field("title"))))));
+                                .outputField("count", sum(1))
+                                .outputField("titles", push("$title")))));
     }
 
     @Test
@@ -61,11 +59,11 @@ public class TestBucketAuto extends AggregationTest {
 
         Iterator<BooksBucketResult> aggregate = getDs().aggregate(Book.class)
                 .autoBucket(autoBucket()
-                        .groupBy(field("copies"))
+                        .groupBy("$copies")
                         .buckets(3)
                         .granularity(BucketGranularity.POWERSOF2)
-                        .outputField("authors", addToSet(field("author")))
-                        .outputField("count", sum(value(1))))
+                        .outputField("authors", addToSet("$author"))
+                        .outputField("count", sum(1)))
                 .execute(BooksBucketResult.class);
         BooksBucketResult result1 = aggregate.next();
         Assert.assertEquals(result1.getId().getMin(), 4);
@@ -98,7 +96,7 @@ public class TestBucketAuto extends AggregationTest {
 
         Iterator<BucketAutoResult> aggregate = getDs().aggregate(Book.class)
                 .autoBucket(autoBucket()
-                        .groupBy(field("copies"))
+                        .groupBy("$copies")
                         .buckets(2))
                 .execute(BucketAutoResult.class);
         BucketAutoResult result1 = aggregate.next();

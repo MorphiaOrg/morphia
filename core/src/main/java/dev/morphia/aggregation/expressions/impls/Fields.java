@@ -33,7 +33,7 @@ public class Fields {
      * @param <T>        the type of the owner
      * @return the owner
      */
-    public <T> T add(String name, Expression expression) {
+    public <T> T add(String name, Object expression) {
         fields.add(new PipelineField(name, expression));
         return (T) owner;
     }

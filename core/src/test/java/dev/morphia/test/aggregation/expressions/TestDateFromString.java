@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.dateFromString;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestDateFromString extends AggregationTest {
@@ -16,8 +14,8 @@ public class TestDateFromString extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("date", dateFromString()
-                                .dateString(field("date"))
-                                .timeZone(field("timezone")))));
+                                .dateString("$date")
+                                .timeZone("$timezone"))));
     }
 
     @Test
@@ -25,9 +23,9 @@ public class TestDateFromString extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("date", dateFromString()
-                                .dateString(field("date"))
-                                .timeZone(field("timezone"))
-                                .onError(field("date")))));
+                                .dateString("$date")
+                                .timeZone("$timezone")
+                                .onError("$date"))));
     }
 
     @Test
@@ -35,9 +33,9 @@ public class TestDateFromString extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("date", dateFromString()
-                                .dateString(field("date"))
-                                .timeZone(field("timezone"))
-                                .onNull(value("oops")))
+                                .dateString("$date")
+                                .timeZone("$timezone")
+                                .onNull("oops"))
 
         ));
     }

@@ -69,4 +69,9 @@ public class ExpressionList extends Expression implements SimpleExpression {
     public List<Expression> values() {
         return values;
     }
+
+    @Override
+    public String toString() {
+        return values.toString();
+    }
 }

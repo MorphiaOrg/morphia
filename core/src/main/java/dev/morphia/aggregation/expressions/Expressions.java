@@ -1,7 +1,9 @@
 package dev.morphia.aggregation.expressions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.mongodb.lang.Nullable;
 
@@ -13,7 +15,9 @@ import dev.morphia.aggregation.expressions.impls.MetaExpression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 import static dev.morphia.aggregation.expressions.MetadataKeyword.*;
+import static dev.morphia.mapping.codec.CodecHelper.coalesce;
 import static java.util.Arrays.asList;
 
 /**
@@ -44,7 +48,7 @@ public final class Expressions {
      * @return the new expression
      * @since 2.3
      */
-    public static DocumentExpression document(String name, Expression expression) {
+    public static DocumentExpression document(String name, Object expression) {
         return new DocumentExpression()
                 .field(name, expression);
     }
@@ -54,7 +58,9 @@ public final class Expressions {
      *
      * @param name the field name
      * @return the new expression
+     * @deprecated
      */
+    @Deprecated(since = "3.0", forRemoval = true)
     public static Expression field(String name) {
         return new ValueExpression(name.startsWith("$") ? name : "$" + name);
     }
@@ -66,8 +72,8 @@ public final class Expressions {
      *
      * @return
      */
-    public static FilterExpression filter(Expression input, Expression cond) {
-        return new FilterExpression(input, cond);
+    public static FilterExpression filter(Object input, Object cond) {
+        return new FilterExpression(wrap(input), wrap(cond));
     }
 
     /**
@@ -138,8 +144,59 @@ public final class Expressions {
      *
      * @param value the value
      * @return the new expression
+     * @deprecated
      */
+    @Deprecated(since = "3.0", forRemoval = true)
     public static ValueExpression value(@Nullable Object value) {
         return new ValueExpression(value);
+    }
+
+    /**
+     * @hidden
+     * @param value
+     * @return
+     */
+    public static Expression wrap(Object value) {
+        if (value instanceof Expression expression) {
+            return expression;
+        }
+        if (value instanceof List<?> list) {
+            throw new UnsupportedOperationException();
+        } else {
+            return new ValueExpression(value);
+        }
+    }
+
+    /**
+     * @param values
+     * @return
+     * @hidden
+     */
+    public static List<Expression> wrap(List<Object> values) {
+        return values.stream()
+                .map(Expressions::wrap)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * @param value
+     * @return
+     * @hidden
+     */
+    public static List<Expression> wrap(Object... value) {
+        return Arrays.stream(value)
+                .map(Expressions::wrap)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * @param value
+     * @return
+     * @hidden
+     */
+    public static List<Expression> wrap(Object first, Object... value) {
+        return coalesce(first, value).stream()
+                .map(Expressions::wrap)
+                .collect(Collectors.toList());
     }
 }

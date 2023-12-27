@@ -5,8 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.round;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -15,7 +13,7 @@ public class TestRound extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("roundedValue", round(field("value"), value(1)))));
+                        .include("roundedValue", round("$value", 1))));
     }
 
 }

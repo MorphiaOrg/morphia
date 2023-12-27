@@ -5,8 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.subtract;
 import static dev.morphia.aggregation.expressions.StringExpressions.strLenCP;
 import static dev.morphia.aggregation.expressions.StringExpressions.substrCP;
@@ -18,9 +16,9 @@ public class TestSubstrCP extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("item")
-                        .include("yearSubstring", substrCP(field("quarter"), 0, 2))
-                        .include("quarterSubtring", substrCP(field("quarter"), value(2),
-                                subtract(strLenCP(field("quarter")), value(2))))));
+                        .include("yearSubstring", substrCP("$quarter", 0, 2))
+                        .include("quarterSubtring", substrCP("$quarter", 2,
+                                subtract(strLenCP("$quarter"), 2)))));
     }
 
     @Test
@@ -28,7 +26,7 @@ public class TestSubstrCP extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("name")
-                        .include("menuCode", substrCP(field("name"), 0, 3))));
+                        .include("menuCode", substrCP("$name", 0, 3))));
     }
 
 }

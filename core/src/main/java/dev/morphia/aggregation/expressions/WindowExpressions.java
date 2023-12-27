@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.expressions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import dev.morphia.aggregation.Aggregation;
@@ -15,7 +14,7 @@ import dev.morphia.aggregation.expressions.impls.RankExpression;
 import dev.morphia.aggregation.expressions.impls.ShiftExpression;
 import dev.morphia.aggregation.stages.SetWindowFields;
 
-import static java.util.Arrays.asList;
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 
 /**
  * Provides window specific operations.
@@ -31,16 +30,16 @@ public final class WindowExpressions {
      * <p>
      * $covariancePop is only available in the $setWindowFields stage.
      *
-     * @param first  the first expression to evaluate
-     * @param second the second expression to evaluate
+     * @param first  the first value to evaluate
+     * @param second the second value to evaluate
      * @return the new expression
      * @mongodb.server.release 5.0
      * @aggregation.expression $covariancePop
      * @see Aggregation#setWindowFields(SetWindowFields)
      * @since 2.3
      */
-    public static Expression covariancePop(Expression first, Expression second) {
-        return new MathExpression("$covariancePop", List.of(first, second));
+    public static Expression covariancePop(Object first, Object second) {
+        return new MathExpression("$covariancePop", wrap(List.of(first, second)));
     }
 
     /**
@@ -48,16 +47,16 @@ public final class WindowExpressions {
      * <p>
      * $covarianceSamp is only available in the $setWindowFields stage.
      *
-     * @param first  the first expression to evaluate
-     * @param second the second expression to evaluate
+     * @param first  the first value to evaluate
+     * @param second the second value to evaluate
      * @return the new expression
      * @mongodb.server.release 5.0
      * @aggregation.expression $covarianceSamp
      * @see Aggregation#setWindowFields(SetWindowFields)
      * @since 2.3
      */
-    public static Expression covarianceSamp(Expression first, Expression second) {
-        return new MathExpression("$covarianceSamp", List.of(first, second));
+    public static Expression covarianceSamp(Object first, Object second) {
+        return new MathExpression("$covarianceSamp", wrap(List.of(first, second)));
     }
 
     /**
@@ -75,14 +74,14 @@ public final class WindowExpressions {
     /**
      * Returns the average rate of change within the specified window.
      *
-     * @param input Specifies the expression to evaluate. The expression must evaluate to a number.
+     * @param input Specifies the value to evaluate. If an expression, it must evaluate to a number.
      * @return the new expression
      * @aggregation.expression $derivative
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static CalculusExpression derivative(Expression input) {
-        return new CalculusExpression("$derivative", input);
+    public static CalculusExpression derivative(Object input) {
+        return new CalculusExpression("$derivative", wrap(input));
     }
 
     /**
@@ -104,7 +103,7 @@ public final class WindowExpressions {
      * <p>
      * $expMovingAvg is only available in the $setWindowFields stage.
      *
-     * @param input Specifies the expression to evaluate. Non-numeric expressions are ignored.
+     * @param input Specifies the value to evaluate. Non-numeric expressions are ignored.
      * @param n     An integer that specifies the number of historical documents that have a significant mathematical weight in the
      *              exponential moving average calculation, with the most recent documents contributing the most weight.
      * @return the new expression
@@ -113,8 +112,8 @@ public final class WindowExpressions {
      * @see Aggregation#setWindowFields(SetWindowFields)
      * @since 2.3
      */
-    public static Expression expMovingAvg(Expression input, int n) {
-        return new ExpMovingAvg(input, n);
+    public static Expression expMovingAvg(Object input, int n) {
+        return new ExpMovingAvg(wrap(input), n);
     }
 
     /**
@@ -132,22 +131,22 @@ public final class WindowExpressions {
      * @see Aggregation#setWindowFields(SetWindowFields)
      * @since 2.3
      */
-    public static Expression expMovingAvg(Expression input, double alpha) {
-        return new ExpMovingAvg(input, alpha);
+    public static Expression expMovingAvg(Object input, double alpha) {
+        return new ExpMovingAvg(wrap(input), alpha);
     }
 
     /**
      * Returns the approximation of the area under a curve, which is calculated using the trapezoidal rule where each set of adjacent
      * documents form a trapezoid using the:
      *
-     * @param input Specifies the expression to evaluate. The expression must evaluate to a number.
+     * @param input Specifies the value to evaluate. If an expression, it must evaluate to a number.
      * @return the new expression
      * @aggregation.expression $integral
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static CalculusExpression integral(Expression input) {
-        return new CalculusExpression("$integral", input);
+    public static CalculusExpression integral(Object input) {
+        return new CalculusExpression("$integral", wrap(input));
     }
 
     /**
@@ -161,8 +160,8 @@ public final class WindowExpressions {
      * @aggregation.expression $linearFill
      * @since 2.3
      */
-    public static Expression linearFill(Expression fillValue) {
-        return new Expression("$linearFill", fillValue);
+    public static Expression linearFill(Object fillValue) {
+        return new Expression("$linearFill", wrap(fillValue));
     }
 
     /**
@@ -174,8 +173,8 @@ public final class WindowExpressions {
      * @aggregation.expression $locf
      * @since 2.3
      */
-    public static Expression locf(Expression fillValue) {
-        return new Expression("$locf", fillValue);
+    public static Expression locf(Object fillValue) {
+        return new Expression("$locf", wrap(fillValue));
     }
 
     /**
@@ -204,8 +203,8 @@ public final class WindowExpressions {
      * @see Aggregation#setWindowFields(SetWindowFields)
      * @since 2.3
      */
-    public static Expression shift(Expression output, long by, Expression defaultValue) {
-        return new ShiftExpression(output, by, defaultValue);
+    public static Expression shift(Object output, long by, Object defaultValue) {
+        return new ShiftExpression(wrap(output), by, wrap(defaultValue));
     }
 
     /**
@@ -217,11 +216,8 @@ public final class WindowExpressions {
      * @aggregation.expression $stdDevPop
      * @since 2.3
      */
-    public static Expression stdDevPop(Expression value, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>();
-        expressions.add(value);
-        expressions.addAll(asList(additional));
-        return new Accumulator("$stdDevPop", expressions);
+    public static Expression stdDevPop(Object value, Object... additional) {
+        return new Accumulator("$stdDevPop", wrap(value, additional));
     }
 
     /**
@@ -233,11 +229,8 @@ public final class WindowExpressions {
      * @aggregation.expression $stdDevSamp
      * @since 2.3
      */
-    public static Expression stdDevSamp(Expression value, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>();
-        expressions.add(value);
-        expressions.addAll(asList(additional));
-        return new Accumulator("$stdDevSamp", expressions);
+    public static Expression stdDevSamp(Object value, Object... additional) {
+        return new Accumulator("$stdDevSamp", wrap(value, additional));
     }
 
 }

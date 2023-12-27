@@ -4,7 +4,6 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 /**
@@ -15,16 +14,6 @@ import static java.util.Collections.emptyList;
 public class ArrayLiteral extends ArrayExpression {
 
     private Object[] objects;
-
-    /**
-     * @param values the values
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public ArrayLiteral(Expression... values) {
-        super("unused", asList(values));
-    }
 
     /**
      * @param objects the values
@@ -38,9 +27,9 @@ public class ArrayLiteral extends ArrayExpression {
     }
 
     /**
+     * @return the objects
      * @hidden
      * @morphia.internal
-     * @return the objects
      */
     @MorphiaInternal
     @Nullable

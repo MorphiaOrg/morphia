@@ -3,6 +3,8 @@ package dev.morphia.aggregation.stages;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Groups incoming documents based on the value of a specified expression, then computes the count of documents in each distinct group.
  *
@@ -17,9 +19,9 @@ public class SortByCount extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    protected SortByCount(Expression expression) {
+    protected SortByCount(Object expression) {
         super("$sortByCount");
-        this.expression = expression;
+        this.expression = wrap(expression);
     }
 
     /**
@@ -29,7 +31,7 @@ public class SortByCount extends Stage {
      * @return this
      * @since 2.2
      */
-    public static SortByCount sortByCount(Expression expression) {
+    public static SortByCount sortByCount(Object expression) {
         return new SortByCount(expression);
     }
 

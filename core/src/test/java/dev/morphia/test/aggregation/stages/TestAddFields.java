@@ -12,8 +12,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -32,11 +30,11 @@ public class TestAddFields extends AggregationTest {
 
         List<Document> result = getDs().aggregate(Score.class)
                 .addFields(addFields()
-                        .field("totalHomework", sum(field("homework")))
-                        .field("totalQuiz", sum(field("quiz"))))
+                        .field("totalHomework", sum("$homework"))
+                        .field("totalQuiz", sum("$quiz")))
                 .addFields(addFields()
-                        .field("totalScore", add(field("totalHomework"),
-                                field("totalQuiz"), field("extraCredit"))))
+                        .field("totalScore", add("$totalHomework",
+                                "$totalQuiz", "$extraCredit")))
                 .execute(Document.class)
                 .toList();
 
@@ -53,14 +51,14 @@ public class TestAddFields extends AggregationTest {
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("specs.fuel_type", value("unleaded"))));
+                        .field("specs.fuel_type", "unleaded")));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("cats", value(20))));
+                        .field("cats", 20)));
     }
 
     @Test
@@ -68,7 +66,7 @@ public class TestAddFields extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 match(eq("_id", 1)),
                 addFields()
-                        .field("homework", concatArrays(field("homework"), array(value(7))))));
+                        .field("homework", concatArrays("$homework", array(7)))));
     }
 
 }

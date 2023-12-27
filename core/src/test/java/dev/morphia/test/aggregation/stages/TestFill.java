@@ -8,8 +8,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.ifNull;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.TypeExpressions.toBool;
 import static dev.morphia.aggregation.stages.Fill.fill;
 import static dev.morphia.aggregation.stages.Set.set;
@@ -23,9 +21,9 @@ public class TestFill extends AggregationTest {
         minDriver = v42;
         testPipeline(v53, aggregation -> aggregation.pipeline(
                 fill()
-                        .field("bootsSold", value(0))
-                        .field("sandalsSold", value(0))
-                        .field("sneakersSold", value(0))));
+                        .field("bootsSold", 0)
+                        .field("sandalsSold", 0)
+                        .field("sneakersSold", 0)));
     }
 
     @Test
@@ -52,7 +50,7 @@ public class TestFill extends AggregationTest {
         testPipeline(v53, aggregation -> aggregation.pipeline(
                 fill()
                         .sortBy(ascending("date"))
-                        .partitionBy(document("restaurant", field("restaurant")))
+                        .partitionBy(document("restaurant", "$restaurant"))
                         .field("score", Method.LOCF)));
     }
 
@@ -61,8 +59,8 @@ public class TestFill extends AggregationTest {
         testPipeline(v53, true, true, (aggregation) -> aggregation.pipeline(
                 set()
                         .field("valueExisted", ifNull()
-                                .target(toBool(StringExpressions.toString(field("score"))))
-                                .replacement(value(false))),
+                                .target(toBool(StringExpressions.toString("$score")))
+                                .replacement(false)),
                 fill()
                         .sortBy(ascending("date"))
                         .field("score", Method.LOCF)));

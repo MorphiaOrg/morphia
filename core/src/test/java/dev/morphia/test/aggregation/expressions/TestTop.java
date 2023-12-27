@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.top;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -19,18 +18,18 @@ public class TestTop extends AggregationTest {
     public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(match(eq("gameId", "G1")),
-                        group(id(field("gameId")))
+                        group(id("$gameId"))
                                 .field("playerId", top(
-                                        array(field("playerId"), field("score")),
+                                        array("$playerId", "$score"),
                                         descending("score")))));
     }
 
     @Test
     public void testExample3() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
-                group(id(field("gameId")))
+                group(id("$gameId"))
                         .field("playerId", top(
-                                array(field("playerId"), field("score")),
+                                array("$playerId", "$score"),
                                 descending("score")))));
     }
 

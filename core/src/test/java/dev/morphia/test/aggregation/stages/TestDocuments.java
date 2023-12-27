@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.AutoBucket.autoBucket;
 import static dev.morphia.aggregation.stages.Documents.documents;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
@@ -19,11 +17,11 @@ public class TestDocuments extends AggregationTest {
         skipDataCheck();
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 documents(
-                        document().field("x", value(10)),
-                        document().field("x", value(2)),
-                        document().field("x", value(5))),
+                        document().field("x", 10),
+                        document().field("x", 2),
+                        document().field("x", 5)),
                 autoBucket()
-                        .groupBy(field("x"))
+                        .groupBy("$x")
                         .buckets(4)));
     }
 
@@ -38,10 +36,10 @@ public class TestDocuments extends AggregationTest {
                             .as("city_state")
                             .pipeline(
                                     documents(
-                                            document("zip_id", value(94301))
-                                                    .field("name", value("Palo Alto, CA")),
-                                            document("zip_id", value(10019))
-                                                    .field("name", value("New York, NY")))));
+                                            document("zip_id", 94301)
+                                                    .field("name", "Palo Alto, CA"),
+                                            document("zip_id", 10019)
+                                                    .field("name", "New York, NY"))));
 
         });
     }

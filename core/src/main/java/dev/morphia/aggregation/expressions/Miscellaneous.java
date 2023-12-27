@@ -8,6 +8,8 @@ import dev.morphia.aggregation.expressions.impls.UnsetFieldExpression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
 import dev.morphia.query.filters.Filter;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Defines miscellaneous operators for aggregations.
  *
@@ -41,8 +43,8 @@ public final class Miscellaneous {
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static GetFieldExpression getField(Expression field) {
-        return new GetFieldExpression(field);
+    public static GetFieldExpression getField(Object field) {
+        return new GetFieldExpression(wrap(field));
     }
 
     /**
@@ -83,41 +85,8 @@ public final class Miscellaneous {
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static Expression setField(String field, Object input, Expression value) {
-        return setField(new ValueExpression(field), input, value);
-    }
-
-    /**
-     * Adds, updates, or removes a specified field in a document.
-     *
-     * @param field Field in the input object that you want to add, update, or remove. field can be any valid expression that resolves to
-     *              a string constant.
-     * @param input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or
-     *              undefined.
-     * @param value The value that you want to assign to field. value can be any valid expression. Set to $$REMOVE to remove field from
-     *              the input document.
-     * @return the new expression
-     * @aggregation.expression $setField
-     * @mongodb.server.release 5.0
-     * @since 2.3
-     */
-    public static Expression setField(Expression field, Object input, Expression value) {
-        return new SetFieldExpression(field, input, value);
-    }
-
-    /**
-     * Removes a specified field in a document.
-     *
-     * @param field the field name
-     * @param input Document that contains the field that you want to add or update. input must resolve to an object, missing, null, or
-     *              undefined.
-     * @return the new expression
-     * @aggregation.expression $unsetField
-     * @mongodb.server.release 5.0
-     * @since 2.3
-     */
-    public static Expression unsetField(String field, Expression input) {
-        return unsetField(new ValueExpression(field), input);
+    public static Expression setField(Object field, Object input, Object value) {
+        return new SetFieldExpression(wrap(field), input, wrap(value));
     }
 
     /**
@@ -131,8 +100,8 @@ public final class Miscellaneous {
      * @mongodb.server.release 5.0
      * @since 2.3
      */
-    public static Expression unsetField(Expression field, Expression input) {
-        return new UnsetFieldExpression(field, input);
+    public static Expression unsetField(Object field, Object input) {
+        return new UnsetFieldExpression(wrap(field), wrap(input));
     }
 
 }

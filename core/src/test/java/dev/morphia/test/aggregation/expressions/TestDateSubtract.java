@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.dateSubtract;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.TimeUnit.DAY;
 import static dev.morphia.aggregation.expressions.TimeUnit.HOUR;
 import static dev.morphia.aggregation.stages.Projection.project;
@@ -24,7 +23,7 @@ public class TestDateSubtract extends AggregationTest {
         testPipeline(v50, true, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("logoutTime",
-                                dateSubtract(field("logout"), 3, HOUR))));
+                                dateSubtract("$logout", 3, HOUR))));
     }
 
     @Test
@@ -55,30 +54,30 @@ public class TestDateSubtract extends AggregationTest {
                         .suppressId()
                         .include("location")
                         .include("start", dateToString()
-                                .date(field("login"))
+                                .date("$login")
                                 .format("%Y-%m-%d %H:%M"))
                         .include("days", dateToString()
-                                .date(dateSubtract(field("login"), 1, DAY)
-                                        .timezone(field("location")))
+                                .date(dateSubtract("$login", 1, DAY)
+                                        .timezone("$location"))
                                 .format("%Y-%m-%d %H:%M"))
                         .include("hours", dateToString()
-                                .date(dateSubtract(field("login"), 24, HOUR)
-                                        .timezone(field("location")))
+                                .date(dateSubtract("$login", 24, HOUR)
+                                        .timezone("$location"))
                                 .format("%Y-%m-%d %H:%M"))
                         .include("startTZInfo", dateToString()
-                                .date(field("login"))
+                                .date("$login")
                                 .format("%Y-%m-%d %H:%M")
-                                .timeZone(field("location")))
+                                .timeZone("$location"))
                         .include("daysTZInfo", dateToString()
-                                .date(dateSubtract(field("login"), 1, DAY)
-                                        .timezone(field("location")))
+                                .date(dateSubtract("$login", 1, DAY)
+                                        .timezone("$location"))
                                 .format("%Y-%m-%d %H:%M")
-                                .timeZone(field("$location")))
+                                .timeZone("$location"))
                         .include("hoursTZInfo", dateToString()
-                                .date(dateSubtract(field("login"), 24, HOUR)
-                                        .timezone(field("location")))
+                                .date(dateSubtract("$login", 24, HOUR)
+                                        .timezone("$location"))
                                 .format("%Y-%m-%d %H:%M")
-                                .timeZone(field("$location")))));
+                                .timeZone("$location"))));
     }
 
 }

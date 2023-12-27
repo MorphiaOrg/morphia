@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -23,10 +24,10 @@ public class MergeObjects extends Expression {
      * @return this
      */
     @SuppressWarnings("unchecked")
-    public MergeObjects add(Expression expression) {
+    public MergeObjects add(Object expression) {
         ExpressionList value = value();
         if (value != null) {
-            value.add(expression);
+            value.add(Expressions.wrap(expression));
         }
         return this;
     }

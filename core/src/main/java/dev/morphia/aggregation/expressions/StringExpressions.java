@@ -7,9 +7,7 @@ import dev.morphia.aggregation.expressions.impls.ReplaceExpression;
 import dev.morphia.aggregation.expressions.impls.TrimExpression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 import static java.util.Arrays.asList;
 
 /**
@@ -19,8 +17,6 @@ import static java.util.Arrays.asList;
  * @since 2.0
  */
 public final class StringExpressions {
-    private static final Logger LOG = LoggerFactory.getLogger(StringExpressions.class);
-
     private StringExpressions() {
     }
 
@@ -32,12 +28,12 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $concat
      */
-    public static Expression concat(Expression first, Expression... additional) {
-        return new Expression("$concat", Expressions.toList(first, additional));
+    public static Expression concat(Object first, Object... additional) {
+        return new Expression("$concat", wrap(first, additional));
     }
 
     /**
-     * Searches a string for an occurence of a substring and returns the UTF-8 byte index of the first occurence. If the substring is not
+     * Searches a string for an occurrence of a substring and returns the UTF-8 byte index of the first occurrence. If the substring is not
      * found, returns -1.
      *
      * @param string    the string to search
@@ -45,8 +41,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $indexOfBytes
      */
-    public static IndexExpression indexOfBytes(Expression string, Expression substring) {
-        return new IndexExpression("$indexOfBytes", string, substring);
+    public static IndexExpression indexOfBytes(Object string, Object substring) {
+        return new IndexExpression("$indexOfBytes", wrap(string), wrap(substring));
     }
 
     /**
@@ -58,8 +54,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $indexOfCP
      */
-    public static IndexExpression indexOfCP(Expression string, Expression substring) {
-        return new IndexExpression("$indexOfCP", string, substring);
+    public static IndexExpression indexOfCP(Object string, Object substring) {
+        return new IndexExpression("$indexOfCP", wrap(string), wrap(substring));
     }
 
     /**
@@ -69,8 +65,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $ltrim
      */
-    public static TrimExpression ltrim(Expression input) {
-        return new TrimExpression("$ltrim", input);
+    public static TrimExpression ltrim(Object input) {
+        return new TrimExpression("$ltrim", wrap(input));
     }
 
     /**
@@ -80,8 +76,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $regexFind
      */
-    public static RegexExpression regexFind(Expression input) {
-        return new RegexExpression("$regexFind", input);
+    public static RegexExpression regexFind(Object input) {
+        return new RegexExpression("$regexFind", wrap(input));
     }
 
     /**
@@ -91,8 +87,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $regexFindAll
      */
-    public static RegexExpression regexFindAll(Expression input) {
-        return new RegexExpression("$regexFindAll", input);
+    public static RegexExpression regexFindAll(Object input) {
+        return new RegexExpression("$regexFindAll", wrap(input));
     }
 
     /**
@@ -102,8 +98,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $regexMatch
      */
-    public static RegexExpression regexMatch(Expression input) {
-        return new RegexExpression("$regexMatch", input);
+    public static RegexExpression regexMatch(Object input) {
+        return new RegexExpression("$regexMatch", wrap(input));
     }
 
     /**
@@ -116,8 +112,8 @@ public final class StringExpressions {
      * @aggregation.expression $replaceAll
      * @since 2.1
      */
-    public static Expression replaceAll(Expression input, Expression find, Expression replacement) {
-        return new ReplaceExpression("$replaceAll", input, find, replacement);
+    public static Expression replaceAll(Object input, Object find, Object replacement) {
+        return new ReplaceExpression("$replaceAll", wrap(input), wrap(find), wrap(replacement));
     }
 
     /**
@@ -130,8 +126,8 @@ public final class StringExpressions {
      * @aggregation.expression $replaceOne
      * @since 2.1
      */
-    public static Expression replaceOne(Expression input, Expression find, Expression replacement) {
-        return new ReplaceExpression("$replaceOne", input, find, replacement);
+    public static Expression replaceOne(Object input, Object find, Object replacement) {
+        return new ReplaceExpression("$replaceOne", wrap(input), wrap(find), wrap(replacement));
     }
 
     /**
@@ -141,8 +137,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $rtrim
      */
-    public static TrimExpression rtrim(Expression input) {
-        return new TrimExpression("$rtrim", input);
+    public static TrimExpression rtrim(Object input) {
+        return new TrimExpression("$rtrim", wrap(input));
     }
 
     /**
@@ -156,8 +152,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $split
      */
-    public static Expression split(Expression input, Expression delimiter) {
-        return new Expression("$split", asList(input, delimiter));
+    public static Expression split(Object input, Object delimiter) {
+        return new Expression("$split", wrap(asList(input, delimiter)));
     }
 
     /**
@@ -167,8 +163,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $strLenBytes
      */
-    public static Expression strLenBytes(Expression input) {
-        return new Expression("$strLenBytes", input);
+    public static Expression strLenBytes(Object input) {
+        return new Expression("$strLenBytes", wrap(input));
     }
 
     /**
@@ -178,8 +174,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $strLenCP
      */
-    public static Expression strLenCP(Expression input) {
-        return new Expression("$strLenCP", input);
+    public static Expression strLenCP(Object input) {
+        return new Expression("$strLenCP", wrap(input));
     }
 
     /**
@@ -191,8 +187,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $strcasecmp
      */
-    public static Expression strcasecmp(Expression first, Expression second) {
-        return new Expression("$strcasecmp", asList(first, second));
+    public static Expression strcasecmp(Object first, Object second) {
+        return new Expression("$strcasecmp", wrap(asList(first, second)));
     }
 
     /**
@@ -205,7 +201,7 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $substrBytes
      */
-    public static Expression substrBytes(Expression input, int start, int length) {
+    public static Expression substrBytes(Object input, int start, int length) {
         return substrBytes(input, new ValueExpression(start), new ValueExpression(length));
     }
 
@@ -219,8 +215,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $substrBytes
      */
-    public static Expression substrBytes(Expression input, Expression start, Expression length) {
-        return new Expression("$substrBytes", asList(input, start, length));
+    public static Expression substrBytes(Object input, Object start, Object length) {
+        return new Expression("$substrBytes", wrap(asList(input, start, length)));
     }
 
     /**
@@ -233,22 +229,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $substrCP
      */
-    public static Expression substrCP(Expression input, int start, int length) {
-        return substrCP(input, new ValueExpression(start), new ValueExpression(length));
-    }
-
-    /**
-     * Returns the substring of a string. Starts with the character at the specified UTF-8 code point (CP) index (zero-based) in the string
-     * and continues for the number of code points specified.
-     *
-     * @param input  the string to process
-     * @param start  Indicates the starting point of the substring
-     * @param length the code points to include.
-     * @return the new expression
-     * @aggregation.expression $substrCP
-     */
-    public static Expression substrCP(Expression input, Expression start, Expression length) {
-        return new Expression("$substrCP", asList(input, start, length));
+    public static Expression substrCP(Object input, Object start, Object length) {
+        return new Expression("$substrCP", wrap(asList(input, start, length)));
     }
 
     /**
@@ -258,8 +240,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $toLower
      */
-    public static Expression toLower(Expression input) {
-        return new Expression("$toLower", input);
+    public static Expression toLower(Object input) {
+        return new Expression("$toLower", wrap(input));
     }
 
     /**
@@ -269,8 +251,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $toString
      */
-    public static Expression toString(Expression input) {
-        return new Expression("$toString", input);
+    public static Expression toString(Object input) {
+        return new Expression("$toString", wrap(input));
     }
 
     /**
@@ -280,8 +262,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $toUpper
      */
-    public static Expression toUpper(Expression input) {
-        return new Expression("$toUpper", input);
+    public static Expression toUpper(Object input) {
+        return new Expression("$toUpper", wrap(input));
     }
 
     /**
@@ -291,8 +273,8 @@ public final class StringExpressions {
      * @return the new expression
      * @aggregation.expression $trim
      */
-    public static TrimExpression trim(Expression input) {
-        return new TrimExpression("$trim", input);
+    public static TrimExpression trim(Object input) {
+        return new TrimExpression("$trim", wrap(input));
     }
 
 }

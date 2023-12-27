@@ -6,7 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.TimeUnit.HOUR;
 import static dev.morphia.aggregation.expressions.WindowExpressions.integral;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
@@ -17,10 +16,10 @@ public class TestIntegral extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("powerMeterID"))
+                        .partitionBy("$powerMeterID")
                         .sortBy(Sort.ascending("timeStamp"))
                         .output(output("powerMeterKilowattHours")
-                                .operator(integral(field("kilowatts")).unit(HOUR))
+                                .operator(integral("$kilowatts").unit(HOUR))
                                 .window()
                                 .range("unbounded", "current", HOUR))));
     }

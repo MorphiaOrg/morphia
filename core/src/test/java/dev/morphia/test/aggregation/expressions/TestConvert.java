@@ -8,8 +8,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.switchExpression;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.expressions.StringExpressions.concat;
 import static dev.morphia.aggregation.expressions.TypeExpressions.convert;
@@ -25,24 +23,24 @@ public class TestConvert extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
                         .field("convertedPrice", convert(
-                                field("price"), DECIMAL)
-                                .onError(value("Error"))
-                                .onNull(value(0.0)))
-                        .field("convertedQty", convert(field("qty"), INT)
+                                "$price", DECIMAL)
+                                .onError("Error")
+                                .onNull(0.0))
+                        .field("convertedQty", convert("$qty", INT)
                                 .onError(concat(
-                                        value("Could not convert "),
-                                        StringExpressions.toString(field("qty")),
-                                        value(" to type integer.")))
-                                .onNull(value(0))),
+                                        "Could not convert ",
+                                        StringExpressions.toString("$qty"),
+                                        " to type integer."))
+                                .onNull(0)),
                 project()
                         .include("totalPrice", switchExpression()
                                 .branch(eq(
-                                        type(field("convertedPrice")),
-                                        value("string")), value("NaN"))
+                                        type("$convertedPrice"),
+                                        "string"), "NaN")
                                 .branch(eq(
-                                        type(field("convertedQty")),
-                                        value("string")), value("NaN"))
-                                .defaultCase(multiply(field("convertedPrice"), field("convertedQty"))))));
+                                        type("$convertedQty"),
+                                        "string"), "NaN")
+                                .defaultCase(multiply("$convertedPrice", "$convertedQty")))));
     }
 
 }

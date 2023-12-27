@@ -8,8 +8,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.accumulator;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAccumulator extends AggregationTest {
@@ -17,7 +15,7 @@ public class TestAccumulator extends AggregationTest {
     public void testExample1() {
         skipPipelineCheck();
         testPipeline(ANY, false, false, aggregation -> aggregation
-                .pipeline(Group.group(Group.id(field("author")))
+                .pipeline(Group.group(Group.id("$author"))
                         .field("avgCopies", accumulator(
                                 """
                                         function() {
@@ -31,7 +29,7 @@ public class TestAccumulator extends AggregationTest {
                                             sum: state.sum + numCopies
                                           }
                                         }""",
-                                List.of(field("copies")),
+                                List.of("$copies"),
                                 """
                                         function(state1, state2) {
                                           return {
@@ -48,7 +46,7 @@ public class TestAccumulator extends AggregationTest {
     public void testExample2() {
         skipPipelineCheck();
         testPipeline(ANY, false, false, aggregation -> aggregation
-                .pipeline(Group.group(Group.id().field("city", field("city")))
+                .pipeline(Group.group(Group.id().field("city", "$city"))
                         .field("restaurants", accumulator(
                                 """
                                         function(city, userProfileCity) {       \s
@@ -64,14 +62,14 @@ public class TestAccumulator extends AggregationTest {
                                                   }
                                                   return state;
                                                 }""",
-                                List.of(field("name")), """
+                                List.of("$name"), """
                                         function(state1, state2) {             \s
                                                   return {
                                                     max: state1.max,
                                                     restaurants: state1.restaurants.concat(state2.restaurants).slice(0, state1.max)
                                                   }\s
                                                 }""")
-                                .initArgs(List.of(field("city"), value("Bettles")))
+                                .initArgs(List.of("$city", "Bettles"))
                                 .finalizeFunction("""
                                         function(state) {
                                                   return state.restaurants

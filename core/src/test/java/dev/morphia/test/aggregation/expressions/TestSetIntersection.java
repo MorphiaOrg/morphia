@@ -5,8 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.BooleanExpressions.*;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -18,7 +16,7 @@ public class TestSetIntersection extends AggregationTest {
                         .suppressId()
                         .include("flowerFieldA")
                         .include("flowerFieldB")
-                        .include("commonToBoth", setIntersection(field("flowerFieldA"), field("flowerFieldB")))));
+                        .include("commonToBoth", setIntersection("$flowerFieldA", "$flowerFieldB"))));
     }
 
     @Test

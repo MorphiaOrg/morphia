@@ -6,9 +6,7 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.literal;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.Miscellaneous.setField;
 import static dev.morphia.aggregation.expressions.SystemVariables.*;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -24,14 +22,14 @@ public class TestSetField extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ServerVersion.v50, false, true, (aggregation) -> aggregation.pipeline(
-                replaceWith(setField("price.usd", ROOT, field("price"))),
+                replaceWith(setField("price.usd", ROOT, "$price")),
                 unset("price")));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceWith(setField(literal("$price"), ROOT, field("price"))),
+                replaceWith(setField(literal("$price"), ROOT, "$price")),
                 unset("price")));
     }
 
@@ -39,14 +37,14 @@ public class TestSetField extends AggregationTest {
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 match(eq("_id", 1)),
-                replaceWith(setField("price.usd", ROOT, value(49.99)))));
+                replaceWith(setField("price.usd", ROOT, 49.99))));
     }
 
     @Test
     public void testExample4() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 match(eq("_id", 1)),
-                replaceWith(setField(literal("$price"), ROOT, value(49.99)))));
+                replaceWith(setField(literal("$price"), ROOT, 49.99))));
     }
 
     @Test

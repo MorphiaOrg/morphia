@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.Sort;
 
@@ -22,10 +23,10 @@ public class NRankedResultsExpression extends Expression {
      * @morphia.internal
      */
     @MorphiaInternal
-    public NRankedResultsExpression(String operation, Expression n, Expression output, Sort... sortBy) {
+    public NRankedResultsExpression(String operation, Object n, Object output, Sort... sortBy) {
         super(operation);
-        this.output = output;
-        this.n = n;
+        this.output = Expressions.wrap(output);
+        this.n = Expressions.wrap(n);
         this.sortBy = sortBy;
     }
 

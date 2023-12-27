@@ -14,5 +14,5 @@ public interface FieldHolder<T> {
      * @param expression the field value
      * @return this
      */
-    T field(String name, Expression expression);
+    T field(String name, Object expression);
 }

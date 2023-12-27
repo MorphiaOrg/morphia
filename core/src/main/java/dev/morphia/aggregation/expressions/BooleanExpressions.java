@@ -3,7 +3,8 @@ package dev.morphia.aggregation.expressions;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
 import dev.morphia.aggregation.expressions.impls.LogicalExpression;
-import dev.morphia.mapping.codec.CodecHelper;
+
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 
 /**
  * Defines helper methods for the boolean expressions
@@ -16,20 +17,20 @@ public final class BooleanExpressions {
     }
 
     /**
-     * Evaluates one or more expressions and returns true if all the expressions are true or if evoked with no argument expressions.
+     * Evaluates one or more values and returns true if all the values are true or if evoked with no argument expressions.
      * Otherwise, $and returns false.
      *
-     * @param first      the first expression
-     * @param additional any additional expressions
+     * @param first      the first value
+     * @param additional any additional values
      * @return the new expression
      * @aggregation.expression $and
      */
-    public static LogicalExpression and(Expression first, Expression... additional) {
-        return new LogicalExpression("$and", new ExpressionList(CodecHelper.coalesce(first, additional)));
+    public static LogicalExpression and(Object first, Object... additional) {
+        return new LogicalExpression("$and", new ExpressionList(wrap(first, additional)));
     }
 
     /**
-     * Evaluates one or more expressions and returns true if all the expressions are true or if evoked with no argument expressions.
+     * Evaluates one or more values and returns true if all the values are true or if evoked with no argument expressions.
      * Otherwise, $and returns false.
      *
      * @return the new expression
@@ -48,24 +49,24 @@ public final class BooleanExpressions {
      * @return the new expression
      * @aggregation.expression $not
      */
-    public static Expression not(Expression value) {
-        return new Expression("$not", new ExpressionList(value));
+    public static Expression not(Object value) {
+        return new Expression("$not", new ExpressionList(wrap(value)));
     }
 
     /**
-     * Evaluates one or more expressions and returns true if any of the expressions are true. Otherwise, $or returns false.
+     * Evaluates one or more values and returns true if any of the values are true. Otherwise, $or returns false.
      *
-     * @param first      the first expression
-     * @param additional any additional expressions
+     * @param first      the first value
+     * @param additional any additional values
      * @return the new expression
      * @aggregation.expression $or
      */
-    public static LogicalExpression or(Expression first, Expression... additional) {
-        return new LogicalExpression("$or", new ExpressionList(CodecHelper.coalesce(first, additional)));
+    public static LogicalExpression or(Object first, Object... additional) {
+        return new LogicalExpression("$or", new ExpressionList(wrap(first, additional)));
     }
 
     /**
-     * Evaluates one or more expressions and returns true if any of the expressions are true. Otherwise, $or returns false.
+     * Evaluates one or more values and returns true if any of the values are true. Otherwise, $or returns false.
      *
      * @return the new expression
      * @aggregation.expression $or

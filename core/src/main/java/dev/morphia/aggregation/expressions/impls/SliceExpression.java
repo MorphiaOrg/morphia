@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -17,9 +18,9 @@ public class SliceExpression extends Expression {
      * @morphia.internal
      */
     @MorphiaInternal
-    public SliceExpression(Expression array, int size) {
+    public SliceExpression(Object array, int size) {
         super("$slice");
-        this.array = array;
+        this.array = Expressions.wrap(array);
         this.size = size;
     }
 

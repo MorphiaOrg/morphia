@@ -11,8 +11,6 @@ import static dev.morphia.aggregation.expressions.ArrayExpressions.arrayToObject
 import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.objectToArray;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -22,22 +20,22 @@ public class TestArrayToObject extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("item")
-                        .include("dimensions", arrayToObject(field("dimensions")))));
+                        .include("dimensions", arrayToObject("$dimensions"))));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("instock", objectToArray(field("instock"))),
+                        .field("instock", objectToArray("$instock")),
                 addFields()
                         .field("instock", concatArrays(
-                                field("instock"),
+                                "$instock",
                                 array(document()
-                                        .field("k", value("total"))
-                                        .field("v", sum(field("instock.v")))))),
+                                        .field("k", "total")
+                                        .field("v", sum("$instock.v"))))),
                 addFields()
-                        .field("instock", arrayToObject(field("instock")))));
+                        .field("instock", arrayToObject("$instock"))));
     }
 
 }

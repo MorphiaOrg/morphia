@@ -3,14 +3,11 @@ package dev.morphia.aggregation.stages;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.Fields;
 import dev.morphia.aggregation.expressions.impls.PipelineField;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.ValidationException;
 import dev.morphia.sofia.Sofia;
-
-import static dev.morphia.aggregation.expressions.Expressions.value;
 
 /**
  * Passes along the documents with the requested fields to the next stage in the pipeline. The specified fields can be existing fields
@@ -49,7 +46,7 @@ public class Projection extends Stage {
      * @return this
      */
     public Projection exclude(String name) {
-        return exclude(name, value(0));
+        return exclude(name, 0);
     }
 
     /**
@@ -62,7 +59,7 @@ public class Projection extends Stage {
         List<PipelineField> fields = new ArrayList<>();
 
         if (suppressId) {
-            fields.add(new PipelineField("_id", value(0)));
+            fields.add(new PipelineField("_id", 0));
         }
         if (includes != null) {
             fields.addAll(includes.fields());
@@ -80,7 +77,7 @@ public class Projection extends Stage {
      * @param value the value expression
      * @return this
      */
-    public Projection include(String name, Expression value) {
+    public Projection include(String name, Object value) {
         if (includes == null) {
             includes = Fields.on(this);
         }
@@ -96,7 +93,7 @@ public class Projection extends Stage {
      * @return this
      */
     public Projection include(String name) {
-        return include(name, value(1));
+        return include(name, 1);
     }
 
     /**
@@ -109,7 +106,7 @@ public class Projection extends Stage {
         return this;
     }
 
-    private Projection exclude(String name, Expression value) {
+    private Projection exclude(String name, Object value) {
         if (excludes == null) {
             excludes = Fields.on(this);
         }

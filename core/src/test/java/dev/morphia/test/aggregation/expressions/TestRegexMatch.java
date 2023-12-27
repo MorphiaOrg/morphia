@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.StringExpressions.regexMatch;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 
@@ -16,7 +14,7 @@ public class TestRegexMatch extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("result", regexMatch(field("description")).pattern("line"))));
+                        .field("result", regexMatch("$description").pattern("line"))));
 
     }
 
@@ -26,10 +24,10 @@ public class TestRegexMatch extends AggregationTest {
                 addFields()
                         .field("category",
                                 condition(
-                                        regexMatch(field("comment"))
+                                        regexMatch("$comment")
                                                 .pattern("[a-z0-9_.+-]+@mongodb.com")
                                                 .options("i"),
-                                        value("Employee"), value("External")))));
+                                        "Employee", "External"))));
     }
 
 }

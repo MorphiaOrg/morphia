@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.TypeExpressions.type;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -14,7 +13,7 @@ public class TestType extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("a", type(field("a")))));
+                        .include("a", type("$a"))));
     }
 
 }

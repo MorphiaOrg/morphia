@@ -5,8 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.exp;
 import static dev.morphia.aggregation.expressions.MathExpressions.subtract;
 import static dev.morphia.aggregation.stages.Projection.project;
@@ -18,8 +16,8 @@ public class TestExp extends AggregationTest {
                 project()
                         .include("effectiveRate",
                                 subtract(
-                                        exp(field("interestRate")),
-                                        value(1)))));
+                                        exp("$interestRate"),
+                                        1))));
     }
 
 }

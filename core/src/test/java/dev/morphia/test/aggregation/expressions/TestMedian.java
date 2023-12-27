@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.MathExpressions.median;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Projection.project;
@@ -19,7 +18,7 @@ public class TestMedian extends AggregationTest {
     public void testExample2() {
         testPipeline(v70, false, false, aggregation -> aggregation
                 .pipeline(
-                        group().field("test01_median", median(field("test01")))));
+                        group().field("test01_median", median("$test01"))));
     }
 
     @Test
@@ -29,7 +28,7 @@ public class TestMedian extends AggregationTest {
                         .suppressId()
                         .include("studentId")
                         .include("testMedians", median(
-                                array(field("test01"), field("test02"), field("test03"))))));
+                                array("$test01", "$test02", "$test03")))));
     }
 
     @Test
@@ -38,7 +37,7 @@ public class TestMedian extends AggregationTest {
                 setWindowFields()
                         .sortBy(ascending("test01"))
                         .output(output("test01_median")
-                                .operator(median(field("test01")))
+                                .operator(median("$test01"))
                                 .window().range(-3, 3)),
                 project().suppressId()
                         .include("studentId")

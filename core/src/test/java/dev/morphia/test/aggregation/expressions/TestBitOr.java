@@ -4,8 +4,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.bitOr;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.test.ServerVersion.v63;
@@ -17,7 +15,7 @@ public class TestBitOr extends AggregationTest {
         testPipeline(v63, false, true, aggregation -> aggregation
                 .pipeline(project()
                         .include("result",
-                                bitOr(field("a"), field("b")))));
+                                bitOr("$a", "$b"))));
     }
 
     @Test
@@ -25,6 +23,6 @@ public class TestBitOr extends AggregationTest {
         testPipeline(v63, false, false, aggregation -> aggregation
                 .project(project()
                         .include("result",
-                                bitOr(field("a"), value(63L)))));
+                                bitOr("$a", 63L))));
     }
 }

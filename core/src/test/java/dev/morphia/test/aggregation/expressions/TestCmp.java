@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.cmp;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestCmp extends AggregationTest {
@@ -18,7 +16,7 @@ public class TestCmp extends AggregationTest {
                         .suppressId()
                         .include("item")
                         .include("qty")
-                        .include("cmpTo250", cmp(field("qty"), value(250)))));
+                        .include("cmpTo250", cmp("$qty", 250))));
     }
 
 }

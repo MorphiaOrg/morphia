@@ -11,8 +11,6 @@ import static dev.morphia.aggregation.expressions.ArrayExpressions.arrayToObject
 import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.objectToArray;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
@@ -25,31 +23,31 @@ public class TestObjectToArray extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("item")
-                        .include("dimensions", objectToArray(field("dimensions")))));
+                        .include("dimensions", objectToArray("$dimensions"))));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("warehouses", objectToArray(field("instock"))),
+                        .include("warehouses", objectToArray("$instock")),
                 unwind("warehouses"),
-                group(id(field("warehouses.k")))
-                        .field("total", sum(field("warehouses.v")))));
+                group(id("$warehouses.k"))
+                        .field("total", sum("$warehouses.v"))));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("instock", objectToArray(field("instock"))),
+                        .field("instock", objectToArray("$instock")),
                 addFields()
-                        .field("instock", concatArrays(field("instock"),
+                        .field("instock", concatArrays("$instock",
                                 array(document()
-                                        .field("k", value("total"))
-                                        .field("v", sum(field("instock.v")))))),
+                                        .field("k", "total")
+                                        .field("v", sum("$instock.v"))))),
                 addFields()
-                        .field("instock", arrayToObject(field("instock")))));
+                        .field("instock", arrayToObject("$instock"))));
     }
 
 }

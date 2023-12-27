@@ -10,6 +10,8 @@ import dev.morphia.aggregation.expressions.impls.Fields;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Groups input documents by the specified _id expression and for each distinct grouping, outputs a document.
  *
@@ -76,30 +78,19 @@ public class Group extends Stage {
      * @param name the id name
      * @return the new groupID
      */
-    public static GroupId id(String name) {
-        return new GroupId(Expressions.field(name));
+    public static GroupId id(@Nullable Object name) {
+        return new GroupId(wrap(name));
     }
 
     /**
-     * Creates a named group ID
-     *
-     * @param name the id name
-     * @return the new groupID
-     */
-    public static GroupId id(Expression name) {
-        return new GroupId(name);
-    }
-
-    /**
-     * Adds a field to the group. This method is equivalent to calling {@code field("name", Expression.field("name"))}
+     * Adds a field to the group.
      *
      * @param name the field name
      * @return this
-     * @see #field(String, Expression)
-     * @see Expressions#field(String)
+     * @see #field(String, Object)
      */
     public Group field(String name) {
-        return field(name, Expressions.field(name));
+        return field(name, wrap(name.startsWith("$") ? name : "$" + name));
     }
 
     /**
@@ -109,7 +100,7 @@ public class Group extends Stage {
      * @param expression the expression giving the value
      * @return this
      */
-    public Group field(String name, Expression expression) {
+    public Group field(String name, Object expression) {
         if (fields == null) {
             fields = Fields.on(this);
         }
@@ -170,29 +161,28 @@ public class Group extends Stage {
         }
 
         /**
-         * Adds a field to the group. This method is equivalent to calling {@code field("name", Expression.field("name"))}
+         * Adds a field to the group.
          *
          * @param name the field name
          * @return this
-         * @see #field(String, Expression)
-         * @see Expressions#field(String)
+         * @see #field(String, Object)
          */
         public GroupId field(String name) {
-            return field(name, Expressions.field(name));
+            return field(name, name.startsWith("$") ? name : "$" + name);
         }
 
         /**
          * Adds a named field to the group with an expression giving the value.
          *
-         * @param name       the name of the field
-         * @param expression the expression giving the value
+         * @param name  the name of the field
+         * @param value the value
          * @return this
          */
-        public GroupId field(String name, Expression expression) {
+        public GroupId field(String name, Object value) {
             if (field != null) {
                 throw new AggregationException(Sofia.mixedModesNotAllowed("_id"));
             }
-            document.field(name, expression);
+            document.field(name, value);
 
             return this;
         }

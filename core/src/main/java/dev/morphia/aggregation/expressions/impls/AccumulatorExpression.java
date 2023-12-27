@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import java.util.List;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -120,8 +121,8 @@ public class AccumulatorExpression extends Expression {
      * @param initArgs the arguments
      * @return this
      */
-    public AccumulatorExpression initArgs(List<Expression> initArgs) {
-        this.initArgs = initArgs;
+    public AccumulatorExpression initArgs(List<Object> initArgs) {
+        this.initArgs = Expressions.wrap(initArgs);
         return this;
     }
 

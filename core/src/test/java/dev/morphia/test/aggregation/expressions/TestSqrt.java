@@ -5,8 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.expressions.MathExpressions.pow;
 import static dev.morphia.aggregation.expressions.MathExpressions.sqrt;
@@ -20,8 +18,8 @@ public class TestSqrt extends AggregationTest {
                 project()
                         .include("distance", sqrt(
                                 add(
-                                        pow(subtract(field("p2.y"), field("p1.y")), value(2)),
-                                        pow(subtract(field("p2.x"), field("p1.x")), value(2)))))));
+                                        pow(subtract("$p2.y", "$p1.y"), 2),
+                                        pow(subtract("$p2.x", "$p1.x"), 2))))));
     }
 
 }

@@ -6,6 +6,8 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.filters.Filter;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Performs a recursive search on a collection, with options for restricting the search by recursion depth and query filter.
  *
@@ -253,8 +255,8 @@ public class GraphLookup extends Stage {
      * @param startWith the expression defining the starting point
      * @return this
      */
-    public GraphLookup startWith(Expression startWith) {
-        this.startWith = startWith;
+    public GraphLookup startWith(Object startWith) {
+        this.startWith = wrap(startWith);
         return this;
     }
 }

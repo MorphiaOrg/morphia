@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
@@ -79,8 +80,8 @@ public class DateDeltaExpression extends Expression {
      * @return this
      * @since 2.3
      */
-    public DateDeltaExpression timezone(Expression timezone) {
-        this.timezone = timezone;
+    public DateDeltaExpression timezone(Object timezone) {
+        this.timezone = Expressions.wrap(timezone);
         return this;
     }
 }

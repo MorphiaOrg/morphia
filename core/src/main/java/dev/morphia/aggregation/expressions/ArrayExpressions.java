@@ -14,9 +14,7 @@ import dev.morphia.aggregation.expressions.impls.ZipExpression;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.query.Sort;
 
-import static dev.morphia.aggregation.expressions.Expressions.value;
-import static dev.morphia.mapping.codec.CodecHelper.coalesce;
-import static java.util.Arrays.asList;
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 
 /**
  * Defines helper methods for the array expressions
@@ -26,17 +24,6 @@ import static java.util.Arrays.asList;
  */
 public final class ArrayExpressions {
     private ArrayExpressions() {
-    }
-
-    /**
-     * Creates an array of the given expressions. This "expression" isn't so much a mongodb expression as it is a convenience method for
-     * building pipeline definitions.
-     *
-     * @param expressions the expressions
-     * @return the new expression
-     */
-    public static Expression array(Expression... expressions) {
-        return new ArrayLiteral(expressions);
     }
 
     /**
@@ -61,8 +48,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $arrayToObject
      */
-    public static Expression arrayToObject(Expression array) {
-        return new Expression("$arrayToObject", array);
+    public static Expression arrayToObject(Object array) {
+        return new Expression("$arrayToObject", wrap(array));
     }
 
     /**
@@ -73,8 +60,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $concatArrays
      */
-    public static Expression concatArrays(Expression array, Expression... additional) {
-        return new Expression("$concatArrays", coalesce(array, additional));
+    public static Expression concatArrays(Object array, Object... additional) {
+        return new Expression("$concatArrays", wrap(array, additional));
     }
 
     /**
@@ -85,8 +72,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $arrayElemAt
      */
-    public static Expression elementAt(Expression array, Expression index) {
-        return new Expression("$arrayElemAt", List.of(array, index));
+    public static Expression elementAt(Object array, Object index) {
+        return new Expression("$arrayElemAt", wrap(List.of(array, index)));
     }
 
     /**
@@ -97,8 +84,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $in
      */
-    public static Expression in(Expression search, Expression array) {
-        return new Expression("$in", List.of(search, array));
+    public static Expression in(Object search, Object array) {
+        return new Expression("$in", wrap(List.of(search, array)));
     }
 
     /**
@@ -110,8 +97,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $indexOfArray
      */
-    public static ArrayIndexExpression indexOfArray(Expression array, Expression search) {
-        return new ArrayIndexExpression(array, search);
+    public static ArrayIndexExpression indexOfArray(Object array, Object search) {
+        return new ArrayIndexExpression(wrap(array), wrap(search));
     }
 
     /**
@@ -121,8 +108,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $isArray
      */
-    public static Expression isArray(Expression array) {
-        return new Expression("$isArray", List.of(array));
+    public static Expression isArray(Object array) {
+        return new Expression("$isArray", wrap(List.of(array)));
     }
 
     /**
@@ -133,7 +120,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $map
      */
-    public static MapExpression map(Expression input, Expression in) {
+    public static MapExpression map(Object input, Object in) {
         return new MapExpression(input, in);
     }
 
@@ -144,8 +131,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $objectToArray
      */
-    public static Expression objectToArray(Expression array) {
-        return new Expression("$objectToArray", array);
+    public static Expression objectToArray(Object array) {
+        return new Expression("$objectToArray", wrap(array));
     }
 
     /**
@@ -157,7 +144,7 @@ public final class ArrayExpressions {
      * @aggregation.expression $range
      */
     public static RangeExpression range(int start, int end) {
-        return new RangeExpression(value(start), value(end));
+        return new RangeExpression(start, end);
     }
 
     /**
@@ -168,7 +155,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $range
      */
-    public static RangeExpression range(Expression start, Expression end) {
+    public static RangeExpression range(Object start, Object end) {
         return new RangeExpression(start, end);
     }
 
@@ -181,7 +168,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $reduce
      */
-    public static Expression reduce(Expression input, Expression initial, Expression in) {
+    public static Expression reduce(Object input, Object initial, Object in) {
         return new ReduceExpression(input, initial, in);
     }
 
@@ -192,8 +179,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $reverseArray
      */
-    public static Expression reverseArray(Expression array) {
-        return new Expression("$reverseArray", array);
+    public static Expression reverseArray(Object array) {
+        return new Expression("$reverseArray", wrap(array));
     }
 
     /**
@@ -203,8 +190,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $size
      */
-    public static Expression size(Expression array) {
-        return new Expression("$size", array);
+    public static Expression size(Object array) {
+        return new Expression("$size", wrap(array));
     }
 
     /**
@@ -215,7 +202,7 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $slice
      */
-    public static Expression slice(Expression array, int size) {
+    public static Expression slice(Object array, int size) {
         return new SliceExpression(array, size);
     }
 
@@ -230,7 +217,7 @@ public final class ArrayExpressions {
      * @aggregation.expression $sortArray
      * @since 2.3
      */
-    public static Expression sortArray(Expression input, Sort... sort) {
+    public static Expression sortArray(Object input, Sort... sort) {
         return new SortArrayExpression(input, sort);
     }
 
@@ -241,8 +228,8 @@ public final class ArrayExpressions {
      * @return the new expression
      * @aggregation.expression $zip
      */
-    public static ZipExpression zip(Expression... arrays) {
-        return new ZipExpression(asList(arrays));
+    public static ZipExpression zip(Object... arrays) {
+        return new ZipExpression(wrap(arrays));
     }
 
 }

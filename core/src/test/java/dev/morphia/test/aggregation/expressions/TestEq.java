@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestEq extends AggregationTest {
@@ -18,7 +16,7 @@ public class TestEq extends AggregationTest {
                         .suppressId()
                         .include("item")
                         .include("qty")
-                        .include("qtyEq250", eq(field("qty"), value(250)))));
+                        .include("qtyEq250", eq("$qty", 250))));
     }
 
 }

@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.ifNull;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIfNull extends AggregationTest {
@@ -17,8 +15,8 @@ public class TestIfNull extends AggregationTest {
                 project()
                         .include("item")
                         .include("description", ifNull()
-                                .target(field("description"))
-                                .replacement(value("Unspecified")))));
+                                .target("$description")
+                                .replacement("Unspecified"))));
     }
 
     @Test
@@ -28,9 +26,9 @@ public class TestIfNull extends AggregationTest {
                         .include("item")
                         .include("value", ifNull()
                                 .input(
-                                        field("description"),
-                                        field("quantity"))
-                                .replacement(value("Unspecified")))));
+                                        "$description",
+                                        "$quantity")
+                                .replacement("Unspecified"))));
     }
 
 }

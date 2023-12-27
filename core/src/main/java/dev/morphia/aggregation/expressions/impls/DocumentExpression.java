@@ -4,6 +4,8 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Defines a document expression
  */
@@ -31,7 +33,7 @@ public class DocumentExpression extends Expression implements SimpleExpression, 
     }
 
     @Override
-    public DocumentExpression field(String name, Expression expression) {
-        return fields.add(name, expression);
+    public DocumentExpression field(String name, Object expression) {
+        return fields.add(name, wrap(expression));
     }
 }

@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.MathExpressions.ceil;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -15,7 +14,7 @@ public class TestCeil extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("value")
-                        .include("ceilingValue", ceil(field("value")))));
+                        .include("ceilingValue", ceil("$value"))));
     }
 
 }

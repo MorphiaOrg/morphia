@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestGt extends AggregationTest {
@@ -18,7 +16,7 @@ public class TestGt extends AggregationTest {
                         .suppressId()
                         .include("item")
                         .include("qty")
-                        .include("qtyGt250", gt(field("qty"), value(250)))));
+                        .include("qtyGt250", gt("$qty", 250))));
     }
 
 }

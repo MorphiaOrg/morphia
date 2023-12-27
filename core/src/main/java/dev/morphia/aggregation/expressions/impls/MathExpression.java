@@ -34,7 +34,7 @@ public class MathExpression extends Expression {
      */
     @MorphiaInternal
     public MathExpression(String operation, Expression operand) {
-        super(operation, new ExpressionList(operand));
+        super(operation, List.of(operand));
     }
 
     /**

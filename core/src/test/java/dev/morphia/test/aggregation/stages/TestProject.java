@@ -10,8 +10,6 @@ import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.StringExpressions.substrBytes;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -56,9 +54,9 @@ public class TestProject extends AggregationTest {
                         .include("author.first")
                         .include("author.last")
                         .include("author.middle", condition(
-                                eq(value(""), field("author.middle")),
+                                eq("", "$author.middle"),
                                 SystemVariables.REMOVE,
-                                field("author.middle")))));
+                                "$author.middle"))));
     }
 
     @Test
@@ -74,20 +72,20 @@ public class TestProject extends AggregationTest {
                 project()
                         .include("title")
                         .include("isbn", document()
-                                .field("prefix", substrBytes(field("isbn"), value(0), value(3)))
-                                .field("group", substrBytes(field("isbn"), value(3), value(2)))
-                                .field("publisher", substrBytes(field("isbn"), value(5), value(4)))
-                                .field("title", substrBytes(field("isbn"), value(9), value(3)))
-                                .field("checkDigit", substrBytes(field("isbn"), value(12), value(1))))
-                        .include("lastName", field("author.last"))
-                        .include("copiesSold", field("copies"))));
+                                .field("prefix", substrBytes("$isbn", 0, 3))
+                                .field("group", substrBytes("$isbn", 3, 2))
+                                .field("publisher", substrBytes("$isbn", 5, 4))
+                                .field("title", substrBytes("$isbn", 9, 3))
+                                .field("checkDigit", substrBytes("$isbn", 12, 1)))
+                        .include("lastName", "$author.last")
+                        .include("copiesSold", "$copies")));
     }
 
     @Test
     public void testExample8() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("myArray", array(field("x"), field("y")))));
+                        .include("myArray", array("$x", "$y"))));
     }
 
     @Test
@@ -95,7 +93,7 @@ public class TestProject extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .suppressId()
-                        .include("x", field("name"))));
+                        .include("x", "$name")));
     }
 
 }

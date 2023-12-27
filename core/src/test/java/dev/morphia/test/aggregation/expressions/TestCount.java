@@ -7,7 +7,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
@@ -17,7 +16,7 @@ public class TestCount extends AggregationTest {
     @Test
     public void testExample2() {
         testPipeline(v50, false, false, aggregation -> aggregation
-                .pipeline(group(Group.id(field("state")))
+                .pipeline(group(Group.id("$state"))
                         .field("countNumberOfDocumentsForState", AccumulatorExpressions.count())));
 
     }
@@ -27,7 +26,7 @@ public class TestCount extends AggregationTest {
         testPipeline(v50, false, false,
                 aggregation -> aggregation
                         .setWindowFields(setWindowFields()
-                                .partitionBy((field("state")))
+                                .partitionBy(("$state"))
                                 .sortBy(Sort.ascending("orderDate"))
                                 .output(output("countNumberOfDocumentsForState")
                                         .operator(AccumulatorExpressions.count())

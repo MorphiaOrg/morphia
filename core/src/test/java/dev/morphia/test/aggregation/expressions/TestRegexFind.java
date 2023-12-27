@@ -8,8 +8,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.expressions.StringExpressions.regexFind;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
@@ -25,7 +23,7 @@ public class TestRegexFind extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("returnObject", regexFind(field("description"))
+                        .field("returnObject", regexFind("$description")
                                 .pattern("line"))));
     }
 
@@ -33,11 +31,11 @@ public class TestRegexFind extends AggregationTest {
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("email", regexFind(field("comment"))
+                        .field("email", regexFind("$comment")
                                 .pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+")
                                 .options("i")),
                 set()
-                        .field("email", field("$email.match"))));
+                        .field("email", "$email.match")));
     }
 
     @Test
@@ -45,20 +43,20 @@ public class TestRegexFind extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 unwind("details"),
                 addFields()
-                        .field("regexemail", regexFind(field("$details"))
+                        .field("regexemail", regexFind("$details")
                                 .pattern("^[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+$")
                                 .options("i"))
-                        .field("regexphone", regexFind(field("$details"))
+                        .field("regexphone", regexFind("$details")
                                 .pattern("^[+]{0,1}[0-9]*\\-?[0-9_\\-]+$")),
                 project()
                         .include("_id")
                         .include("name")
                         .include("details", document()
-                                .field("email", field("regexemail.match"))
-                                .field("phone", field("regexphone.match"))),
-                group(id("_id"))
-                        .field("name", first(field("name")))
-                        .field("details", mergeObjects().add(field("details"))),
+                                .field("email", "$regexemail.match")
+                                .field("phone", "$regexphone.match")),
+                group(id("$_id"))
+                        .field("name", first("$name"))
+                        .field("details", mergeObjects().add("$details")),
                 sort().ascending("_id")));
     }
 
@@ -66,11 +64,11 @@ public class TestRegexFind extends AggregationTest {
     public void testExample4() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("username", regexFind(field("email"))
+                        .field("username", regexFind("$email")
                                 .pattern("^([a-z0-9_.+-]+)@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+$")
                                 .options("i")),
                 set()
-                        .field("username", elementAt(field("username.captures"), value(0)))));
+                        .field("username", elementAt("$username.captures", 0))));
     }
 
 }

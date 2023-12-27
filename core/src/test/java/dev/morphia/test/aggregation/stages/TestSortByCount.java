@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.SortByCount.sortByCount;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
 
@@ -15,6 +14,6 @@ public class TestSortByCount extends AggregationTest {
         // orderMatters is false here because of the indeterminate sort order on equal values
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 unwind("tags"),
-                sortByCount(field("tags"))));
+                sortByCount("$tags")));
     }
 }

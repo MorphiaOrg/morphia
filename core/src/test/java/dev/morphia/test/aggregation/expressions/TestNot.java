@@ -7,8 +7,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.BooleanExpressions.not;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestNot extends AggregationTest {
@@ -17,7 +15,7 @@ public class TestNot extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("item")
-                        .include("result", not(gt(field("qty"), value(250))))));
+                        .include("result", not(gt("$qty", 250)))));
     }
 
 }

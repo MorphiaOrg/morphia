@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.range;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestRange extends AggregationTest {
@@ -17,7 +15,7 @@ public class TestRange extends AggregationTest {
                 project()
                         .suppressId()
                         .include("city")
-                        .include("Rest stops", range(value(0), field("distance")).step(25))));
+                        .include("Rest stops", range(0, "$distance").step(25))));
     }
 
 }

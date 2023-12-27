@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import static java.lang.String.format;
@@ -17,9 +18,9 @@ public class PipelineField {
      * @param name  the name
      * @param value the value
      */
-    public PipelineField(String name, Expression value) {
+    public PipelineField(String name, Object value) {
         this.name = name;
-        this.value = value;
+        this.value = Expressions.wrap(value);
     }
 
     /**

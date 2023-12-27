@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.lte;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestLte extends AggregationTest {
@@ -18,7 +16,7 @@ public class TestLte extends AggregationTest {
                         .suppressId()
                         .include("item")
                         .include("qty")
-                        .include("qtyLte250", lte(field("qty"), value(250)))));
+                        .include("qtyLte250", lte("$qty", 250))));
     }
 
 }

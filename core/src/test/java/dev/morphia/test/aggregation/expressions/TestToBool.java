@@ -8,8 +8,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.switchExpression;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.TypeExpressions.toBool;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -21,9 +19,9 @@ public class TestToBool extends AggregationTest {
                 addFields()
                         .field("convertedShippedFlag",
                                 switchExpression()
-                                        .branch(eq(field("shipped"), value("false")), value(false))
-                                        .branch(eq(field("shipped"), value("")), value(false))
-                                        .defaultCase(toBool(field("shipped")))),
+                                        .branch(eq("$shipped", "false"), false)
+                                        .branch(eq("$shipped", ""), false)
+                                        .defaultCase(toBool("$shipped"))),
                 match(Filters.eq("convertedShippedFlag", false))));
     }
 

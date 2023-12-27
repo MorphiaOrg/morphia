@@ -1,16 +1,13 @@
 package dev.morphia.aggregation.expressions;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.MathExpression;
 import dev.morphia.aggregation.expressions.impls.MedianExpression;
 import dev.morphia.aggregation.expressions.impls.PercentileExpression;
 
-import static dev.morphia.aggregation.expressions.Expressions.value;
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 import static java.util.Arrays.asList;
 
 /**
@@ -30,75 +27,72 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $abs
      */
-    public static Expression abs(Expression value) {
-        return new MathExpression("$abs", value);
+    public static Expression abs(Object value) {
+        return new MathExpression("$abs", wrap(value));
     }
 
     /**
      * Adds numbers together or adds numbers and a date. If one of the arguments is a date, $add treats the other arguments as
      * milliseconds to add to the date.
      *
-     * @param first      the first expression to sum
-     * @param additional any subsequent expressions to include in the sum
+     * @param first      the first value to sum
+     * @param additional any subsequent values to include in the sum
      * @return the new expression
      * @aggregation.expression $add
      */
-    public static Expression add(Expression first, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>();
-        expressions.add(first);
-        expressions.addAll(asList(additional));
-        return new MathExpression("$add", expressions);
+    public static Expression add(Object first, Object... additional) {
+        return new MathExpression("$add", wrap(first, additional));
     }
 
     /**
      * Returns the result of a bitwise and operation on an array of int or long values.
      *
-     * @param first  the first expression to use
-     * @param second the second expression to use
+     * @param first  the first value to use
+     * @param second the second value to use
      * @return the new expression
      * @aggregation.expression $bitAnd
      * @since 3.0
      */
-    public static Expression bitAnd(Expression first, Expression second) {
-        return new MathExpression("$bitAnd", List.of(first, second));
+    public static Expression bitAnd(Object first, Object second) {
+        return new MathExpression("$bitAnd", wrap(List.of(first, second)));
     }
 
     /**
      * Returns the result of a bitwise not operation on a single int or long value.
      *
-     * @param expression the expression to use
+     * @param value the value to use
      * @return the new expression
      * @aggregation.expression $bitNot
      * @since 3.0
      */
-    public static Expression bitNot(Expression expression) {
-        return new MathExpression("$bitNot", expression);
+    public static Expression bitNot(Object value) {
+        return new MathExpression("$bitNot", wrap(value));
     }
 
     /**
      * Returns the result of a bitwise or operation on an array of int or long values.
      *
-     * @param first  the first expression to use
-     * @param second the second expression to use
+     * @param first  the first value to use
+     * @param second the second value to use
      * @return the new expression
      * @aggregation.expression $bitOr
      * @since 3.0
      */
-    public static Expression bitOr(Expression first, Expression second) {
-        return new MathExpression("$bitOr", List.of(first, second));
+    public static Expression bitOr(Object first, Object second) {
+        return new MathExpression("$bitOr", wrap(List.of(first, second)));
     }
 
     /**
      * Returns the result of a bitwise xor operation on an array of int xor long values.
      *
-     * @param first  the first expression to use
-     * @param second the second expression to use
+     * @param first  the first value to use
+     * @param second the second value to use
      * @return the new expression
      * @aggregation.expression $bitXor
      * @since 3.0
      */
-    public static Expression bitXor(Expression first, Expression second) {
-        return new MathExpression("$bitXor", List.of(first, second));
+    public static Expression bitXor(Object first, Object second) {
+        return new MathExpression("$bitXor", wrap(List.of(first, second)));
     }
 
     /**
@@ -108,8 +102,8 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $ceil
      */
-    public static Expression ceil(Expression value) {
-        return new MathExpression("$ceil", value);
+    public static Expression ceil(Object value) {
+        return new MathExpression("$ceil", wrap(value));
     }
 
     /**
@@ -120,8 +114,8 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $divide
      */
-    public static Expression divide(Expression numerator, Expression divisor) {
-        return new MathExpression("$divide", List.of(numerator, divisor));
+    public static Expression divide(Object numerator, Object divisor) {
+        return new MathExpression("$divide", wrap(List.of(numerator, divisor)));
     }
 
     /**
@@ -131,8 +125,8 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $exp
      */
-    public static Expression exp(Expression value) {
-        return new MathExpression("$exp", value);
+    public static Expression exp(Object value) {
+        return new MathExpression("$exp", wrap(value));
     }
 
     /**
@@ -142,8 +136,8 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $floor
      */
-    public static Expression floor(Expression value) {
-        return new MathExpression("$floor", value);
+    public static Expression floor(Object value) {
+        return new MathExpression("$floor", wrap(value));
     }
 
     /**
@@ -153,8 +147,8 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $ln
      */
-    public static Expression ln(Expression value) {
-        return new MathExpression("$ln", value);
+    public static Expression ln(Object value) {
+        return new MathExpression("$ln", wrap(value));
     }
 
     /**
@@ -165,8 +159,8 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $log
      */
-    public static Expression log(Expression number, Expression base) {
-        return new MathExpression("$log", List.of(number, base));
+    public static Expression log(Object number, Object base) {
+        return new MathExpression("$log", wrap(List.of(number, base)));
     }
 
     /**
@@ -176,8 +170,8 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $log10
      */
-    public static Expression log10(Expression value) {
-        return new MathExpression("$log10", value);
+    public static Expression log10(Object value) {
+        return new MathExpression("$log10", wrap(value));
     }
 
     /**
@@ -188,8 +182,8 @@ public final class MathExpressions {
      * @aggregation.expression $median
      * @since 3.0
      */
-    public static Expression median(Expression input) {
-        return new MedianExpression(input);
+    public static Expression median(Object input) {
+        return new MedianExpression(wrap(input));
     }
 
     /**
@@ -200,22 +194,20 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $mod
      */
-    public static Expression mod(Expression dividend, Expression divisor) {
-        return new MathExpression("$mod", List.of(dividend, divisor));
+    public static Expression mod(Object dividend, Object divisor) {
+        return new MathExpression("$mod", wrap(List.of(dividend, divisor)));
     }
 
     /**
      * Multiplies numbers together and returns the result. Pass the arguments to $multiply in an array.
      *
-     * @param first      the first expression to add
-     * @param additional any additional expressions
+     * @param first      the first value to multiply
+     * @param additional any additional values
      * @return the new expression
      * @aggregation.expression $multiply
      */
-    public static Expression multiply(Expression first, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>(List.of(first));
-        expressions.addAll(asList(additional));
-        return new MathExpression("$multiply", expressions);
+    public static Expression multiply(Object first, Object... additional) {
+        return new MathExpression("$multiply", wrap(first, additional));
     }
 
     /**
@@ -229,8 +221,8 @@ public final class MathExpressions {
      * @since 3.0
      *
      */
-    public static Expression percentile(Expression input, List<Expression> percentiles) {
-        return new PercentileExpression(List.of(input), percentiles);
+    public static Expression percentile(Object input, List<Object> percentiles) {
+        return new PercentileExpression(List.of(wrap(input)), wrap(percentiles.toArray(new Object[0])));
     }
 
     /**
@@ -244,8 +236,8 @@ public final class MathExpressions {
      * @since 3.0
      *
      */
-    public static Expression percentile(List<Expression> inputs, List<Expression> percentiles) {
-        return new PercentileExpression(inputs, percentiles);
+    public static Expression percentile(List<Object> inputs, List<Object> percentiles) {
+        return new PercentileExpression(wrap(inputs), wrap(percentiles));
     }
 
     /**
@@ -256,20 +248,20 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $pow
      */
-    public static Expression pow(Expression number, Expression exponent) {
-        return new MathExpression("$pow", List.of(number, exponent));
+    public static Expression pow(Object number, Object exponent) {
+        return new MathExpression("$pow", wrap(List.of(number, exponent)));
     }
 
     /**
-     * Rounds a number to to a whole integer or to a specified decimal place.
+     * Rounds a number to a whole integer or to a specified decimal place.
      *
      * @param number the value
      * @param place  the place to round to
      * @return the new expression
      * @aggregation.expression $round
      */
-    public static Expression round(Expression number, Expression place) {
-        return new MathExpression("$round", asList(number, place));
+    public static Expression round(Object number, Object place) {
+        return new MathExpression("$round", wrap(asList(number, place)));
     }
 
     /**
@@ -279,8 +271,8 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $sqrt
      */
-    public static Expression sqrt(Expression value) {
-        return new MathExpression("$sqrt", value);
+    public static Expression sqrt(Object value) {
+        return new MathExpression("$sqrt", wrap(value));
     }
 
     /**
@@ -294,8 +286,8 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $subtract
      */
-    public static Expression subtract(Expression minuend, Expression subtrahend) {
-        return new MathExpression("$subtract", List.of(minuend, subtrahend));
+    public static Expression subtract(Object minuend, Object subtrahend) {
+        return new MathExpression("$subtract", wrap(List.of(minuend, subtrahend)));
     }
 
     /**
@@ -307,26 +299,22 @@ public final class MathExpressions {
      * @return the new expression
      * @aggregation.expression $trunc
      */
-    public static Expression trunc(Expression number) {
-        return new MathExpression("$trunc", number);
+    public static Expression trunc(Object number) {
+        return new MathExpression("$trunc", wrap(number));
     }
 
     /**
      * Truncates a number to a whole integer or to a specified decimal place.
      * <p>
-     * NOTE: Prior to 4.2, the place value wasn't available. Pass null if your server is older than 4.2.
+     * NOTE: Prior to 4.2, the place value wasn't available. Use {@link #trunc(Object)} if your server is older than 4.2.
      *
      * @param number the value
-     * @param place  the place to trunc to. may be null.
+     * @param place  the place to trunc to.
      * @return the new expression
      * @aggregation.expression $trunc
+     * @see #trunc(Object)
      */
-    public static Expression trunc(Expression number, @Nullable Expression place) {
-        ArrayList<Expression> params = new ArrayList<>();
-        params.add(number);
-        if (place != null) {
-            params.add(place);
-        }
-        return new MathExpression("$trunc", params);
+    public static Expression trunc(Object number, Object place) {
+        return new MathExpression("$trunc", wrap(List.of(number, place)));
     }
 }

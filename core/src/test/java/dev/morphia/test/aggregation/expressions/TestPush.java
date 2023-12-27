@@ -9,7 +9,6 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.DateExpressions.dayOfYear;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.*;
@@ -26,22 +25,22 @@ public class TestPush extends AggregationTest {
                         .ascending("item"),
                 group(id()
                         .field("day",
-                                dayOfYear(field("date")))
+                                dayOfYear("$date"))
                         .field("year",
-                                year(field("date"))))
+                                year("$date")))
                         .field("itemsSold", push(document()
-                                .field("item", field("item"))
-                                .field("quantity", field("quantity"))))));
+                                .field("item", "$item")
+                                .field("quantity", "$quantity")))));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(ascending("orderDate"))
                         .output(output("quantitiesForState")
-                                .operator(push(field("quantity")))
+                                .operator(push("$quantity"))
                                 .window()
                                 .documents("unbounded", "current"))));
     }

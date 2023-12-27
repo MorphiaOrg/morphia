@@ -4,6 +4,8 @@ import java.util.List;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Defines helper methods for the set expressions
  *
@@ -22,20 +24,20 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $allElementsTrue
      */
-    public static Expression allElementsTrue(Expression first, Expression... additional) {
-        return new Expression("$allElementsTrue", Expressions.toList(first, additional));
+    public static Expression allElementsTrue(Object first, Object... additional) {
+        return new Expression("$allElementsTrue", wrap(first, additional));
     }
 
     /**
-     * Returns true if any elements of a set evaluate to true; otherwise, returns false. Accepts a single argument expression.
+     * eturns true if any elements of a set evaluate to true; otherwise, returns false. Accepts a single argument expression.
      *
      * @param first      an expression to evaluate
      * @param additional any additional expressions
      * @return the new expression
      * @aggregation.expression $anyElementTrue
      */
-    public static Expression anyElementTrue(Expression first, Expression... additional) {
-        return new Expression("$anyElementTrue", Expressions.toList(first, additional));
+    public static Expression anyElementTrue(Object first, Object... additional) {
+        return new Expression("$anyElementTrue", wrap(first, additional));
     }
 
     /**
@@ -47,8 +49,8 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setDifference
      */
-    public static Expression setDifference(Expression first, Expression second) {
-        return new Expression("$setDifference", List.of(first, second));
+    public static Expression setDifference(Object first, Object second) {
+        return new Expression("$setDifference", wrap(List.of(first, second)));
     }
 
     /**
@@ -59,8 +61,8 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setEquals
      */
-    public static Expression setEquals(Expression first, Expression... additional) {
-        return new Expression("$setEquals", Expressions.toList(first, additional));
+    public static Expression setEquals(Object first, Object... additional) {
+        return new Expression("$setEquals", wrap(first, additional));
     }
 
     /**
@@ -71,8 +73,8 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setIntersection
      */
-    public static Expression setIntersection(Expression first, Expression... additional) {
-        return new Expression("$setIntersection", Expressions.toList(first, additional));
+    public static Expression setIntersection(Object first, Object... additional) {
+        return new Expression("$setIntersection", wrap(first, additional));
     }
 
     /**
@@ -84,8 +86,8 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setIsSubset
      */
-    public static Expression setIsSubset(Expression first, Expression second) {
-        return new Expression("$setIsSubset", List.of(first, second));
+    public static Expression setIsSubset(Object first, Object second) {
+        return new Expression("$setIsSubset", wrap(List.of(first, second)));
     }
 
     /**
@@ -96,8 +98,8 @@ public final class SetExpressions {
      * @return the new expression
      * @aggregation.expression $setUnion
      */
-    public static Expression setUnion(Expression first, Expression... additional) {
-        return new Expression("$setUnion", Expressions.toList(first, additional));
+    public static Expression setUnion(Object first, Object... additional) {
+        return new Expression("$setUnion", wrap(first, additional));
     }
 
 }

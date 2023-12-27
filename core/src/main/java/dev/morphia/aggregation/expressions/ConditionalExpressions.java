@@ -1,9 +1,12 @@
 package dev.morphia.aggregation.expressions;
 
+import java.util.List;
+
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.expressions.impls.ExpressionList;
 import dev.morphia.aggregation.expressions.impls.IfNull;
 import dev.morphia.aggregation.expressions.impls.SwitchExpression;
+
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 
 /**
  * Defines helper methods for the conditional expressions
@@ -24,8 +27,8 @@ public class ConditionalExpressions {
      * @return the new expression
      * @aggregation.expression $cond
      */
-    public static Expression condition(Expression condition, Expression then, Expression otherwise) {
-        return new Expression("$cond", new ExpressionList(condition, then, otherwise));
+    public static Expression condition(Object condition, Object then, Object otherwise) {
+        return new Expression("$cond", wrap(List.of(condition, then, otherwise)));
     }
 
     /**

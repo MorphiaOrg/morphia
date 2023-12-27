@@ -7,7 +7,6 @@ import dev.morphia.test.models.Author;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Out.out;
@@ -20,18 +19,18 @@ public class TestOut extends AggregationTest {
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                group(id("author"))
+                group(id("$author"))
                         .field("books", push()
-                                .single(field("title"))),
+                                .single("$title")),
                 out(Author.class)));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                group(id("author"))
+                group(id("$author"))
                         .field("books", push()
-                                .single(field("title"))),
+                                .single("$title")),
                 out(Author.class)
                         .database("reporting")));
     }

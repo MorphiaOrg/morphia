@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.WindowExpressions.rank;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
@@ -17,7 +16,7 @@ public class TestRank extends AggregationTest {
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(descending("quantity"))
                         .output(output("rankQuantityForState")
                                 .operator(rank()))));
@@ -27,7 +26,7 @@ public class TestRank extends AggregationTest {
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(ascending("orderDate"))
                         .output(output("rankOrderDateForState")
                                 .operator(rank()))));
@@ -37,7 +36,7 @@ public class TestRank extends AggregationTest {
     public void testExample4() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(descending("quantity"))
                         .output(output("rankQuantityForState")
                                 .operator(rank()))));

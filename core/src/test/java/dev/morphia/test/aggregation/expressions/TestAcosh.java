@@ -4,7 +4,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.acosh;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radiansToDegrees;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
@@ -16,7 +15,7 @@ public class TestAcosh extends AggregationTest {
         testPipeline(ANY, false, true, aggregation -> aggregation
                 .pipeline(addFields()
                         .field("y-coordinate",
-                                radiansToDegrees(acosh(field("x-coordinate"))))));
+                                radiansToDegrees(acosh("$x-coordinate")))));
 
     }
 }

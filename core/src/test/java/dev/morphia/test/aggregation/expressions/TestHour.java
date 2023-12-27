@@ -14,7 +14,6 @@ import static dev.morphia.aggregation.expressions.DateExpressions.minute;
 import static dev.morphia.aggregation.expressions.DateExpressions.month;
 import static dev.morphia.aggregation.expressions.DateExpressions.second;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestHour extends AggregationTest {
@@ -22,15 +21,15 @@ public class TestHour extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("year", year(field("date")))
-                        .include("month", month(field("date")))
-                        .include("day", dayOfMonth(field("date")))
-                        .include("hour", hour(field("date")))
-                        .include("minutes", minute(field("date")))
-                        .include("seconds", second(field("date")))
-                        .include("milliseconds", milliseconds(field("date")))
-                        .include("dayOfYear", dayOfYear(field("date")))
-                        .include("dayOfWeek", dayOfWeek(field("date")))));
+                        .include("year", year("$date"))
+                        .include("month", month("$date"))
+                        .include("day", dayOfMonth("$date"))
+                        .include("hour", hour("$date"))
+                        .include("minutes", minute("$date"))
+                        .include("seconds", second("$date"))
+                        .include("milliseconds", milliseconds("$date"))
+                        .include("dayOfYear", dayOfYear("$date"))
+                        .include("dayOfWeek", dayOfWeek("$date"))));
     }
 
 }

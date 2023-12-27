@@ -25,8 +25,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Sort.sort;
@@ -52,8 +50,8 @@ public class TestAggregation extends TestBase {
                 new Book("Iliad", "Homer", 10)));
 
         MorphiaCursor<Author> aggregate = getDs().aggregate(Book.class)
-                .group(group(id("author"))
-                        .field("books", push(field("title"))))
+                .group(group(id("$author"))
+                        .field("books", push("$title")))
                 .sort(sort().ascending("name"))
                 .execute(Author.class);
 
@@ -74,8 +72,8 @@ public class TestAggregation extends TestBase {
                 new Book("Iliad", "Homer", 10)));
 
         Iterator<CountResult> aggregation = getDs().aggregate(Book.class)
-                .group(group(id("author"))
-                        .field("count", sum(value(1))))
+                .group(group(id("$author"))
+                        .field("count", sum(1)))
                 .sort(sort()
                         .ascending("_id"))
                 .execute(CountResult.class);
@@ -98,7 +96,7 @@ public class TestAggregation extends TestBase {
         Aggregation<User> pipeline = getDs()
                 .aggregate(User.class)
                 .group(Group.group()
-                        .field("count", sum(value(1))));
+                        .field("count", sum(1)));
 
         assertEquals(pipeline.execute(Document.class).next().getInteger("count"), valueOf(4));
     }
@@ -142,7 +140,7 @@ public class TestAggregation extends TestBase {
         final MorphiaCursor<GeoCity> pipeline = getDs().aggregate(GeoCity.class) /* the class is irrelevant for this test */
                 .group(group(
                         id("state"))
-                        .field("total_pop", sum(field("pop"))))
+                        .field("total_pop", sum("$pop")))
                 .match(gte("total_pop", 10000000))
                 .execute(GeoCity.class);
         while (pipeline.hasNext()) {

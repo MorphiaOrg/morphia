@@ -25,16 +25,8 @@ public class DateToString extends Expression {
      * @param date the date
      * @return this
      */
-    public DateToString date(String date) {
-        return date(Expressions.value(date));
-    }
-
-    /**
-     * @param date the date
-     * @return this
-     */
-    public DateToString date(Expression date) {
-        this.date = date;
+    public DateToString date(Object date) {
+        this.date = Expressions.wrap(date);
         return this;
     }
 
@@ -82,16 +74,8 @@ public class DateToString extends Expression {
      * @param format the format
      * @return this
      */
-    public DateToString format(String format) {
-        return format(Expressions.value(format));
-    }
-
-    /**
-     * @param format the format
-     * @return this
-     */
-    public DateToString format(Expression format) {
-        this.format = format;
+    public DateToString format(Object format) {
+        this.format = Expressions.wrap(format);
         return this;
     }
 
@@ -99,16 +83,8 @@ public class DateToString extends Expression {
      * @param onNull the onNull expression
      * @return this
      */
-    public DateToString onNull(String onNull) {
-        return onNull(Expressions.value(onNull));
-    }
-
-    /**
-     * @param onNull the onNull expression
-     * @return this
-     */
-    public DateToString onNull(Expression onNull) {
-        this.onNull = onNull;
+    public DateToString onNull(Object onNull) {
+        this.onNull = Expressions.wrap(onNull);
         return this;
     }
 
@@ -116,16 +92,8 @@ public class DateToString extends Expression {
      * @param timeZone the timezone
      * @return this
      */
-    public DateToString timeZone(String timeZone) {
-        return timeZone(Expressions.value(timeZone));
-    }
-
-    /**
-     * @param timeZone the timezone
-     * @return this
-     */
-    public DateToString timeZone(Expression timeZone) {
-        this.timeZone = timeZone;
+    public DateToString timeZone(Object timeZone) {
+        this.timeZone = Expressions.wrap(timeZone);
         return this;
     }
 }

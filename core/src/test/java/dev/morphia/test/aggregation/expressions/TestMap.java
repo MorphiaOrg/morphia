@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.*;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.expressions.MathExpressions.trunc;
@@ -20,10 +18,10 @@ public class TestMap extends AggregationTest {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("adjustedGrades",
-                                map(field("quizzes"),
+                                map("$quizzes",
                                         add(
-                                                value("$$grade"),
-                                                value(2)))
+                                                "$$grade",
+                                                2))
                                         .as("grade"))));
     }
 
@@ -31,11 +29,11 @@ public class TestMap extends AggregationTest {
     public void testExample2() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("city", field("city"))
+                        .include("city", "$city")
                         .include("integerValues",
                                 map(
-                                        field("distances"),
-                                        trunc(value("$$decimalValue")))
+                                        "$distances",
+                                        trunc("$$decimalValue"))
                                         .as("decimalValue"))));
     }
 
@@ -45,10 +43,10 @@ public class TestMap extends AggregationTest {
                 addFields()
                         .field("tempsF",
                                 map(
-                                        field("tempsC"),
+                                        "$tempsC",
                                         add(
-                                                multiply(value("$$tempInCelsius"), value(1.8)),
-                                                value(32)))
+                                                multiply("$$tempInCelsius", 1.8),
+                                                32))
                                         .as("tempInCelsius"))));
     }
 }

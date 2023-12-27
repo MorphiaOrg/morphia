@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestArrayElemAt extends AggregationTest {
@@ -16,7 +14,7 @@ public class TestArrayElemAt extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("name")
-                        .include("first", elementAt(field("favorites"), value(0)))
-                        .include("last", elementAt(field("favorites"), value(-1)))));
+                        .include("first", elementAt("$favorites", 0))
+                        .include("last", elementAt("$favorites", -1))));
     }
 }

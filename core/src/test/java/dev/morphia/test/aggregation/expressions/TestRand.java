@@ -7,8 +7,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.lt;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.floor;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.expressions.Miscellaneous.rand;
@@ -29,9 +27,9 @@ public class TestRand extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, true, false, (aggregation) -> aggregation.pipeline(
                 set()
-                        .field("amount", multiply(rand(), value(100))),
+                        .field("amount", multiply(rand(), 100)),
                 set()
-                        .field("amount", floor(field("amount"))),
+                        .field("amount", floor("$amount")),
                 merge("donors")));
     }
 
@@ -39,7 +37,7 @@ public class TestRand extends AggregationTest {
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 match(eq("district", 3)),
-                match(expr(lt(value(0.5), rand()))),
+                match(expr(lt(0.5, rand()))),
                 project()
                         .suppressId()
                         .include("name")

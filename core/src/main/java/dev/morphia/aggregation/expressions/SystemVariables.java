@@ -1,9 +1,5 @@
 package dev.morphia.aggregation.expressions;
 
-import dev.morphia.aggregation.expressions.impls.Expression;
-
-import static dev.morphia.aggregation.expressions.Expressions.value;
-
 /**
  * Defines helper fields for referencing system variables
  */
@@ -18,7 +14,7 @@ public final class SystemVariables {
      *
      * @aggregation.expression $$CLUSTER_TIME
      */
-    public static final Expression CLUSTER_TIME = value("$$CLUSTER_TIME");
+    public static final String CLUSTER_TIME = "$$CLUSTER_TIME";
     /**
      * References the start of the field path being processed in the aggregation pipeline stage. Unless documented otherwise, all
      * stages start with CURRENT the same as ROOT.
@@ -28,32 +24,32 @@ public final class SystemVariables {
      *
      * @aggregation.expression $$CURRENT
      */
-    public static final Expression CURRENT = value("$$CURRENT");
+    public static final String CURRENT = "$$CURRENT";
     /**
      * One of the allowed results of a $redact expression.
      *
      * @aggregation.expression $$DESCEND
      */
-    public static final Expression DESCEND = value("$$DESCEND");
+    public static final String DESCEND = "$$DESCEND";
     /**
      * One of the allowed results of a $redact expression.
      *
      * @aggregation.expression $$KEEP
      */
-    public static final Expression KEEP = value("$$KEEP");
+    public static final String KEEP = "$$KEEP";
     /**
      * A variable that returns the current datetime value. NOW returns the same value for all members of the deployment and remains
      * the same throughout all stages of the aggregation pipeline.
      *
      * @aggregation.expression $$NOW
      */
-    public static final Expression NOW = value("$$NOW");
+    public static final String NOW = "$$NOW";
     /**
      * One of the allowed results of a $redact expression.
      *
      * @aggregation.expression $$PRUNE
      */
-    public static final Expression PRUNE = value("$$PRUNE");
+    public static final String PRUNE = "$$PRUNE";
     /**
      * A variable which evaluates to the missing value. Allows for the conditional exclusion of fields. In a $projection, a field
      * set to the variable REMOVE is excluded from the output.
@@ -62,13 +58,13 @@ public final class SystemVariables {
      *
      * @aggregation.expression $$REMOVE
      */
-    public static final Expression REMOVE = value("$$REMOVE");
+    public static final String REMOVE = "$$REMOVE";
     /**
      * References the root document, i.e. the top-level document, currently being processed in the aggregation pipeline stage.
      *
      * @aggregation.expression $$ROOT
      */
-    public static final Expression ROOT = value("$$ROOT");
+    public static final String ROOT = "$$ROOT";
 
     private SystemVariables() {
     }

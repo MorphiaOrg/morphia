@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
@@ -49,8 +48,8 @@ public class TestUnwind extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 unwind("sizes")
                         .preserveNullAndEmptyArrays(true),
-                group(id(field("sizes")))
-                        .field("averagePrice", avg(field("price"))),
+                group(id("$sizes"))
+                        .field("averagePrice", avg("$price")),
                 sort()
                         .descending("averagePrice")));
     }
@@ -60,8 +59,8 @@ public class TestUnwind extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 unwind("items"),
                 unwind("items.tags"),
-                group(id(field("items.tags")))
-                        .field("totalSalesAmount", sum(multiply(field("items.price"), field("items.quantity"))))));
+                group(id("$items.tags"))
+                        .field("totalSalesAmount", sum(multiply("$items.price", "$items.quantity")))));
     }
 
     @Test

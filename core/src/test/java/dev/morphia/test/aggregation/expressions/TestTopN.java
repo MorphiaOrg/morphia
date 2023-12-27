@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
+import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
@@ -9,8 +10,6 @@ import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -23,8 +22,8 @@ public class TestTopN extends AggregationTest {
     public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 match(eq("gameId", "G1")),
-                group(id(field("gameId")))
-                        .field("playerId", topN(value(3), array(field("playerId"), field("score")),
+                group(id("$gameId"))
+                        .field("playerId", topN(3, array("$playerId", "$score"),
                                 descending("score")))));
     }
 
@@ -32,10 +31,10 @@ public class TestTopN extends AggregationTest {
     public void testExample3() {
         testPipeline(v52, false, false, (aggregation) -> {
             return aggregation
-                    .group(group(id(field("gameId")))
+                    .group(group(id("$gameId"))
                             .field("playerId", topN(
-                                    value(3),
-                                    array(field("playerId"), field("score")),
+                                    3,
+                                    array("$playerId", "$score"),
                                     descending("score"))));
         });
     }
@@ -44,13 +43,13 @@ public class TestTopN extends AggregationTest {
     public void testExample4() {
         testPipeline(v52, false, false, (aggregation) -> {
             return aggregation
-                    .group(group(id(document("gameId", field("gameId"))))
+                    .group(group(id(document("gameId", "$gameId")))
                             .field("gamescores", topN(
                                     condition(
-                                            eq(field("gameId"), value("G2")),
-                                            value(1),
-                                            value(3)),
-                                    field("score"),
+                                            ComparisonExpressions.eq("$gameId", "G2"),
+                                            1,
+                                            3),
+                                    "$score",
                                     descending("score"))));
         });
     }

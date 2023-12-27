@@ -13,8 +13,6 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
@@ -27,21 +25,21 @@ public class TestGroup extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                group(id(value(null)))
+                group(id(null))
                         .field("count", AccumulatorExpressions.count())));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id(field("item")))));
+                group(id("$item"))));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id(field("item")))
-                        .field("totalSaleAmount", sum(multiply(field("price"), field("quantity")))),
+                group(id("$item"))
+                        .field("totalSaleAmount", sum(multiply("$price", "$quantity"))),
                 match(gte("totalSaleAmount", 100))));
     }
 
@@ -52,11 +50,11 @@ public class TestGroup extends AggregationTest {
                         gte("date", LocalDate.of(2014, Month.JANUARY, 1)),
                         lt("date", LocalDate.of(2015, Month.JANUARY, 1))),
                 group(id(dateToString()
-                        .date(field("date"))
+                        .date("$date")
                         .format("%Y-%m-%d")))
-                        .field("totalSaleAmount", sum(multiply(field("price"), field("quantity"))))
-                        .field("averageQuantity", avg(field("quantity")))
-                        .field("count", sum(value(1))),
+                        .field("totalSaleAmount", sum(multiply("$price", "$quantity")))
+                        .field("averageQuantity", avg("$quantity"))
+                        .field("count", sum(1)),
                 sort()
                         .descending("totalSaleAmount")));
     }
@@ -64,8 +62,8 @@ public class TestGroup extends AggregationTest {
     @Test
     public void testExample5() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id(field("author")))
-                        .field("books", push(field("title")))));
+                group(id("$author"))
+                        .field("books", push("$title"))));
     }
 
 }

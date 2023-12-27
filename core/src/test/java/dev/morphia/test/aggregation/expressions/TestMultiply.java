@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -16,7 +15,7 @@ public class TestMultiply extends AggregationTest {
                 project()
                         .include("date")
                         .include("item")
-                        .include("total", multiply(field("price"), field("quantity")))));
+                        .include("total", multiply("$price", "$quantity"))));
     }
 
 }

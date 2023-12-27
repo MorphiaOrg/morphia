@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.TimeUnit.HOUR;
 import static dev.morphia.aggregation.expressions.TimeUnit.SECOND;
 import static dev.morphia.aggregation.expressions.WindowExpressions.derivative;
@@ -20,10 +19,10 @@ public class TestDerivative extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("truckID"))
+                        .partitionBy("$truckID")
                         .sortBy(ascending("timeStamp"))
                         .output(output("truckAverageSpeed")
-                                .operator(derivative(field("miles"))
+                                .operator(derivative("$miles")
                                         .unit(HOUR))
                                 .window()
                                 .range(-30, 0, SECOND)),

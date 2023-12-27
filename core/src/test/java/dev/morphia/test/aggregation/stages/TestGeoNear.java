@@ -9,7 +9,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.bson.Document;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.GeoNear.geoNear;
 import static dev.morphia.aggregation.stages.Limit.limit;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
@@ -59,7 +58,7 @@ public class TestGeoNear extends AggregationTest {
         skipDataCheck();
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 lookup("places")
-                        .let("pt", field("location"))
+                        .let("pt", "$location")
                         .pipeline(
                                 geoNear(new Point(new Position(-73.98142, 40.71782)))
                                         .distanceField("distance"))

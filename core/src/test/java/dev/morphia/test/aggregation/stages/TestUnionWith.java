@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Set.set;
@@ -26,13 +24,13 @@ public class TestUnionWith extends AggregationTest {
         loadData("sales_2019", "data3.json");
         loadData("sales_2020", "data4.json");
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                set().field("_id", value("2017")),
+                set().field("_id", "2017"),
                 unionWith("sales_2018",
-                        set().field("_id", value("2018"))),
+                        set().field("_id", "2018")),
                 unionWith("sales_2019",
-                        set().field("_id", value("2019"))),
+                        set().field("_id", "2019")),
                 unionWith("sales_2020",
-                        set().field("_id", value("2020"))),
+                        set().field("_id", "2020")),
                 sort().ascending("_id", "store", "item")));
     }
 
@@ -45,8 +43,8 @@ public class TestUnionWith extends AggregationTest {
                 unionWith("sales_2018"),
                 unionWith("sales_2019"),
                 unionWith("sales_2020"),
-                group(id(field("item")))
-                        .field("total", sum(field("quantity"))),
+                group(id("$item"))
+                        .field("total", sum("$quantity")),
                 sort().descending("total")));
     }
 }

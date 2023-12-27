@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.WindowExpressions.linearFill;
 import static dev.morphia.aggregation.expressions.WindowExpressions.locf;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
@@ -19,7 +18,7 @@ public class TestLinearFill extends AggregationTest {
                 setWindowFields()
                         .sortBy(Sort.ascending("time"))
                         .output(output("price")
-                                .operator(linearFill(field("price"))))));
+                                .operator(linearFill("$price")))));
 
     }
 
@@ -29,9 +28,9 @@ public class TestLinearFill extends AggregationTest {
                 setWindowFields()
                         .sortBy(Sort.ascending("time"))
                         .output(output("linearFillPrice")
-                                .operator(linearFill(field("price"))),
+                                .operator(linearFill("$price")),
                                 output("locfPrice")
-                                        .operator(locf(field("price"))))));
+                                        .operator(locf("$price")))));
 
     }
 

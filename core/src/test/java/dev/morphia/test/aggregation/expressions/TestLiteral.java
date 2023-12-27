@@ -6,7 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.literal;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -16,7 +15,7 @@ public class TestLiteral extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("costsOneDollar",
-                                eq(field("price"), literal("$1")))));
+                                eq("$price", literal("$1")))));
     }
 
     @Test

@@ -8,8 +8,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.isArray;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.size;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSize extends AggregationTest {
@@ -19,9 +17,9 @@ public class TestSize extends AggregationTest {
                 project()
                         .include("item")
                         .include("numberOfColors", condition(
-                                isArray(field("colors")),
-                                size(field("colors")),
-                                value("NA")))));
+                                isArray("$colors"),
+                                size("$colors"),
+                                "NA"))));
     }
 
 }

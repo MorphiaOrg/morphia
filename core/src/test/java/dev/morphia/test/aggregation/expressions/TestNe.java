@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.ne;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestNe extends AggregationTest {
@@ -18,7 +16,7 @@ public class TestNe extends AggregationTest {
                         .suppressId()
                         .include("item")
                         .include("qty")
-                        .include("qtyNe250", ne(field("qty"), value(250)))));
+                        .include("qtyNe250", ne("$qty", 250))));
     }
 
 }

@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.Expressions.meta;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MetadataKeyword.*;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -25,7 +24,7 @@ public class TestMeta extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 match(text("cake")),
                 group(id(meta()))
-                        .field("count", sum(value(1)))));
+                        .field("count", sum(1))));
     }
 
     @Test

@@ -8,9 +8,7 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.lte;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.literal;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.Miscellaneous.getField;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.expr;
@@ -20,13 +18,13 @@ public class TestGetField extends AggregationTest {
     public void testExample1() {
         minDriver = DriverVersion.v43;
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(expr(gt(getField("price.usd"), value(200))))));
+                match(expr(gt(getField("price.usd"), 200)))));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(expr(gt(getField(literal("$price")), value(200))))));
+                match(expr(gt(getField(literal("$price")), 200)))));
     }
 
     @Test
@@ -36,8 +34,8 @@ public class TestGetField extends AggregationTest {
                         expr(
                                 lte(
                                         getField(literal("$small"))
-                                                .input(field("quantity")),
-                                        value(20))))));
+                                                .input("$quantity"),
+                                        20)))));
     }
 
 }

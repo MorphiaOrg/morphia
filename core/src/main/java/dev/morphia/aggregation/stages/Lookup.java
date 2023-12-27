@@ -6,7 +6,6 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
-import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import static java.util.Arrays.asList;
@@ -197,7 +196,7 @@ public class Lookup extends Stage {
      * @param expression the variable value expression
      * @return this
      */
-    public Lookup let(String name, Expression expression) {
+    public Lookup let(String name, Object expression) {
         if (variables == null) {
             variables = Expressions.document();
         }

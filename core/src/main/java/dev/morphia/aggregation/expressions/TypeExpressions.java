@@ -4,6 +4,8 @@ import dev.morphia.aggregation.expressions.impls.ConvertExpression;
 import dev.morphia.aggregation.expressions.impls.ConvertType;
 import dev.morphia.aggregation.expressions.impls.Expression;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Defines helper methods for the type expressions
  *
@@ -22,8 +24,8 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $convert
      */
-    public static ConvertExpression convert(Expression input, ConvertType to) {
-        return new ConvertExpression(input, to);
+    public static ConvertExpression convert(Object input, ConvertType to) {
+        return new ConvertExpression(wrap(input), to);
     }
 
     /**
@@ -35,8 +37,8 @@ public final class TypeExpressions {
      * @aggregation.expression $isNumber
      * @since 2.1
      */
-    public static Expression isNumber(Expression input) {
-        return new Expression("$isNumber", input);
+    public static Expression isNumber(Object input) {
+        return new Expression("$isNumber", wrap(input));
     }
 
     /**
@@ -46,20 +48,8 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toBool
      */
-    public static Expression toBool(Expression input) {
-        return new Expression("$toBool", input);
-    }
-
-    /**
-     * Converts value to a Date.
-     *
-     * @param input the value to process
-     * @return the new expression
-     * @aggregation.expression $toDate
-     * @see DateExpressions#toDate(Expression)
-     */
-    public static Expression toDate(Expression input) {
-        return DateExpressions.toDate(input);
+    public static Expression toBool(Object input) {
+        return new Expression("$toBool", wrap(input));
     }
 
     /**
@@ -69,8 +59,8 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toDecimal
      */
-    public static Expression toDecimal(Expression input) {
-        return new Expression("$toDecimal", input);
+    public static Expression toDecimal(Object input) {
+        return new Expression("$toDecimal", wrap(input));
     }
 
     /**
@@ -80,8 +70,8 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toDouble
      */
-    public static Expression toDouble(Expression input) {
-        return new Expression("$toDouble", input);
+    public static Expression toDouble(Object input) {
+        return new Expression("$toDouble", wrap(input));
     }
 
     /**
@@ -91,8 +81,8 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toInt
      */
-    public static Expression toInt(Expression input) {
-        return new Expression("$toInt", input);
+    public static Expression toInt(Object input) {
+        return new Expression("$toInt", wrap(input));
     }
 
     /**
@@ -102,8 +92,8 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toLong
      */
-    public static Expression toLong(Expression input) {
-        return new Expression("$toLong", input);
+    public static Expression toLong(Object input) {
+        return new Expression("$toLong", wrap(input));
     }
 
     /**
@@ -113,8 +103,8 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toObjectId
      */
-    public static Expression toObjectId(Expression input) {
-        return new Expression("$toObjectId", input);
+    public static Expression toObjectId(Object input) {
+        return new Expression("$toObjectId", wrap(input));
     }
 
     /**
@@ -124,7 +114,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $toString
      */
-    public static Expression toString(Expression input) {
+    public static Expression toString(Object input) {
         return StringExpressions.toString(input);
     }
 
@@ -135,7 +125,7 @@ public final class TypeExpressions {
      * @return the new expression
      * @aggregation.expression $type
      */
-    public static Expression type(Expression input) {
-        return new Expression("$type", input);
+    public static Expression type(Object input) {
+        return new Expression("$type", wrap(input));
     }
 }

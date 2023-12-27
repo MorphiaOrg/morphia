@@ -3,7 +3,7 @@ package dev.morphia.aggregation.stages;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 
 /**
  * Deconstructs an array field from the input documents to output a document for each element. Each output document is the input document
@@ -105,8 +105,8 @@ public class Unwind extends Stage {
         return this;
     }
 
-    private Unwind path(String path) {
-        this.path = field(path);
+    private Unwind path(String name) {
+        this.path = wrap(name.startsWith("$") ? name : "$" + name);
         return this;
     }
 }

@@ -6,7 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.max;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
@@ -19,28 +18,28 @@ public class TestMax extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id(field("item")))
-                        .field("maxTotalAmount", max(multiply(field("price"), field("quantity"))))
-                        .field("maxQuantity", max(field("quantity")))));
+                group(id("$item"))
+                        .field("maxTotalAmount", max(multiply("$price", "$quantity")))
+                        .field("maxQuantity", max("$quantity"))));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("quizMax", max(field("quizzes")))
-                        .include("labMax", max(field("labs")))
-                        .include("examMax", max(field("final"), field("midterm")))));
+                        .include("quizMax", max("$quizzes"))
+                        .include("labMax", max("$labs"))
+                        .include("examMax", max("$final", "$midterm"))));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(ascending("orderDate"))
                         .output(output("maximumQuantityForState")
-                                .operator(max(field("quantity")))
+                                .operator(max("$quantity"))
                                 .window()
                                 .documents("unbounded", "current"))));
     }

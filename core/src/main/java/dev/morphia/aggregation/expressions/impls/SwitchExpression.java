@@ -3,6 +3,7 @@ package dev.morphia.aggregation.expressions.impls;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -32,8 +33,8 @@ public class SwitchExpression extends Expression {
      * @param then           the expression to evaluate if the case is true
      * @return this
      */
-    public SwitchExpression branch(Expression caseExpression, Expression then) {
-        branches.add(new Pair(caseExpression, then));
+    public SwitchExpression branch(Object caseExpression, Object then) {
+        branches.add(new Pair(Expressions.wrap(caseExpression), Expressions.wrap(then)));
         return this;
     }
 
@@ -43,8 +44,8 @@ public class SwitchExpression extends Expression {
      * @param caseExpression the default case
      * @return this
      */
-    public SwitchExpression defaultCase(Expression caseExpression) {
-        this.defaultCase = caseExpression;
+    public SwitchExpression defaultCase(Object caseExpression) {
+        this.defaultCase = Expressions.wrap(caseExpression);
         return this;
     }
 

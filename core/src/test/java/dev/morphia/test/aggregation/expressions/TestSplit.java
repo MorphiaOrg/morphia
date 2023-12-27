@@ -8,8 +8,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.StringExpressions.regexMatch;
 import static dev.morphia.aggregation.expressions.StringExpressions.split;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -23,16 +21,16 @@ public class TestSplit extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> {
-            RegexExpression regex = regexMatch(value("city_state")).pattern("[A-Z]{2}");
+            RegexExpression regex = regexMatch("$city_state").pattern("[A-Z]{2}");
             return aggregation.pipeline(
                     project()
-                            .include("city_state", split(field("city"), value(", ")))
+                            .include("city_state", split("$city", ", "))
                             .include("qty"),
                     unwind("city_state"),
                     match(Filters.regex("city_state", "[A-Z]{2}")),
                     group(id()
-                            .field("state", field("city_state")))
-                            .field("total_qty", sum(field("$qty"))),
+                            .field("state", "$city_state"))
+                            .field("total_qty", sum("$qty")),
                     sort()
                             .descending("total_qty"));
         });

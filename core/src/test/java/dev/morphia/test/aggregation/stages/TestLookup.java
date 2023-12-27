@@ -2,6 +2,7 @@ package dev.morphia.test.aggregation.stages;
 
 import java.util.List;
 
+import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Inventory;
@@ -12,11 +13,8 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.in;
 import static dev.morphia.aggregation.expressions.BooleanExpressions.and;
-import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.expressions.SystemVariables.ROOT;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
@@ -58,7 +56,7 @@ public class TestLookup extends AggregationTest {
                         .foreignField("item")
                         .as("fromItems"),
                 replaceRoot(mergeObjects()
-                        .add(elementAt(field("fromItems"), value(0)))
+                        .add(elementAt("$fromItems", 0))
                         .add(ROOT)),
                 project()
                         .exclude("fromItems")));
@@ -72,14 +70,14 @@ public class TestLookup extends AggregationTest {
                         .pipeline(
                                 match(expr(
                                         and(
-                                                eq(field("stock_item"), value("$$order_item")),
-                                                gte(field("instock"), value("$$order_qty"))))),
+                                                ComparisonExpressions.eq("$stock_item", "$$order_item"),
+                                                gte("$instock", "$$order_qty")))),
                                 project()
                                         .suppressId()
                                         .exclude("stock_item"))
                         .as("stockdata")
-                        .let("order_item", field("item"))
-                        .let("order_qty", field("ordered"))));
+                        .let("order_item", "$item")
+                        .let("order_qty", "$ordered")));
     }
 
     @Test
@@ -92,9 +90,9 @@ public class TestLookup extends AggregationTest {
                                 project()
                                         .suppressId()
                                         .include("date", document()
-                                                .field("name", field("name"))
-                                                .field("date", field("date"))),
-                                replaceRoot(field("date")))
+                                                .field("name", "$name")
+                                                .field("date", "$date")),
+                                replaceRoot("$date"))
                         .as("holidays")));
     }
 
@@ -105,8 +103,8 @@ public class TestLookup extends AggregationTest {
                 lookup("restaurants")
                         .localField("restaurant_name")
                         .foreignField("name")
-                        .pipeline(match(expr(in(value("$$orders_drink"), field("beverages")))))
-                        .let("orders_drink", field("drink"))
+                        .pipeline(match(expr(in("$$orders_drink", "$beverages"))))
+                        .let("orders_drink", "$drink")
                         .as("matches")));
     }
 

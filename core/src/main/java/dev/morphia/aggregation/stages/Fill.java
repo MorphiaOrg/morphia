@@ -7,10 +7,10 @@ import java.util.Map;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.aggregation.expressions.impls.ValueExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.Sort;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 import static java.util.Arrays.asList;
 
 /**
@@ -57,8 +57,8 @@ public class Fill extends Stage {
      * @param value the value to fill with
      * @return this
      */
-    public Fill field(String name, ValueExpression value) {
-        fields.put(name, value);
+    public Fill field(String name, Object value) {
+        fields.put(name, wrap(value));
         return this;
     }
 

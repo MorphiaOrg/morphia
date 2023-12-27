@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.expressions.StringExpressions.concat;
 import static dev.morphia.aggregation.expressions.SystemVariables.ROOT;
@@ -22,11 +20,11 @@ public class TestReplaceRoot extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 replaceRoot(mergeObjects()
                         .add(document()
-                                .field("dogs", value(0))
-                                .field("cats", value(0))
-                                .field("birds", value(0))
-                                .field("fish", value(0)))
-                        .add(field("pets")))));
+                                .field("dogs", 0)
+                                .field("cats", 0)
+                                .field("birds", 0)
+                                .field("fish", 0))
+                        .add("$pets"))));
     }
 
     @Test
@@ -34,14 +32,14 @@ public class TestReplaceRoot extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 unwind("grades"),
                 match(gte("grades.grade", 90)),
-                replaceRoot(field("grades"))));
+                replaceRoot("$grades")));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 replaceRoot()
-                        .field("full_name", concat(field("first_name"), value(" "), field("last_name")))));
+                        .field("full_name", concat("$first_name", " ", "$last_name"))));
     }
 
     @Test
@@ -49,11 +47,11 @@ public class TestReplaceRoot extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 replaceRoot(mergeObjects()
                         .add(document()
-                                .field("_id", value(""))
-                                .field("name", value(""))
-                                .field("email", value(""))
-                                .field("cell", value(""))
-                                .field("home", value("")))
+                                .field("_id", "")
+                                .field("name", "")
+                                .field("email", "")
+                                .field("cell", "")
+                                .field("home", ""))
                         .add(ROOT))));
     }
 }

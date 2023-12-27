@@ -11,8 +11,6 @@ import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.reduce;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.expressions.StringExpressions.concat;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -25,14 +23,14 @@ public class TestReduce extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id(field("experimentId")))
-                        .field("probabilityArr", push(field("probability"))),
+                group(id("$experimentId"))
+                        .field("probabilityArr", push("$probability")),
                 project()
                         .include("description")
                         .include("results", reduce(
-                                field("probabilityArr"),
-                                value(1),
-                                multiply(value("$$value"), value("$$this"))))));
+                                "$probabilityArr",
+                                1,
+                                multiply("$$value", "$$this")))));
     }
 
     @Test
@@ -42,15 +40,15 @@ public class TestReduce extends AggregationTest {
                 project()
                         .include("name")
                         .include("bio", reduce(
-                                field("hobbies"),
-                                value("My hobbies include:"),
+                                "$hobbies",
+                                "My hobbies include:",
                                 concat(
-                                        value("$$value"),
+                                        "$$value",
                                         condition(
-                                                eq(value("$$value"), value("My hobbies include:")),
-                                                value(" "),
-                                                value(", ")),
-                                        value("$$this"))))));
+                                                eq("$$value", "My hobbies include:"),
+                                                " ",
+                                                ", "),
+                                        "$$this")))));
     }
 
     @Test
@@ -58,9 +56,9 @@ public class TestReduce extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("collapsed", reduce(
-                                field("arr"),
+                                "$arr",
                                 array(),
-                                concatArrays(value("$$value"), value("$$this"))))));
+                                concatArrays("$$value", "$$this")))));
     }
 
 }

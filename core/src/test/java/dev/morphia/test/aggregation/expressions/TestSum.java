@@ -10,8 +10,6 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.DateExpressions.dayOfYear;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
@@ -26,29 +24,29 @@ public class TestSum extends AggregationTest {
         testPipeline(v50, false, false, (aggregation) -> aggregation.pipeline(
                 group(
                         id(document()
-                                .field("day", dayOfYear(field("date")))
-                                .field("year", year(field("date")))))
-                        .field("totalAmount", sum(multiply(field("price"), field("quantity"))))
-                        .field("count", sum(value(1)))));
+                                .field("day", dayOfYear("$date"))
+                                .field("year", year("$date"))))
+                        .field("totalAmount", sum(multiply("$price", "$quantity")))
+                        .field("count", sum(1))));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("quizTotal", sum(field("quizzes")))
-                        .include("labTotal", sum(field("labs")))
-                        .include("examTotal", sum(field("final"), field("midterm")))));
+                        .include("quizTotal", sum("$quizzes"))
+                        .include("labTotal", sum("$labs"))
+                        .include("examTotal", sum("$final", "$midterm"))));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(Sort.ascending("orderDate"))
                         .output(output("sumQuantityForState")
-                                .operator(sum(field("quantity")))
+                                .operator(sum("$quantity"))
                                 .window()
                                 .documents("unbounded", "current"))));
     }

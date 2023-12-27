@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.expressions.VariableExpressions.let;
@@ -18,10 +16,10 @@ public class TestLet extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("finalTotal", let(multiply(value("$$total"), value("$$discounted")))
-                                .variable("total", add(field("price"), field("tax")))
+                        .include("finalTotal", let(multiply("$$total", "$$discounted"))
+                                .variable("total", add("$price", "$tax"))
                                 .variable("discounted",
-                                        condition(field("applyDiscount"), value(0.9), value(1))))));
+                                        condition("$applyDiscount", 0.9, 1)))));
     }
 
 }

@@ -9,6 +9,8 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.Sort;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Performs operations on a specified span of documents in a collection, known as a window, and returns the results based on the chosen
  * window operator.
@@ -81,8 +83,8 @@ public class SetWindowFields extends Stage {
      * @param partition the expression
      * @return this
      */
-    public SetWindowFields partitionBy(Expression partition) {
-        this.partition = partition;
+    public SetWindowFields partitionBy(Object partition) {
+        this.partition = wrap(partition);
         return this;
     }
 

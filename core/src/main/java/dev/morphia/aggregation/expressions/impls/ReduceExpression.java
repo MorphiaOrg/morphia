@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -20,11 +21,11 @@ public class ReduceExpression extends Expression {
      * @morphia.internal
      */
     @MorphiaInternal
-    public ReduceExpression(Expression input, Expression initial, Expression in) {
+    public ReduceExpression(Object input, Object initial, Object in) {
         super("$reduce");
-        this.input = input;
-        this.initial = initial;
-        this.in = in;
+        this.input = Expressions.wrap(input);
+        this.initial = Expressions.wrap(initial);
+        this.in = Expressions.wrap(in);
     }
 
     /**

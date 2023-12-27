@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.GraphLookup.graphLookup;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
@@ -16,7 +15,7 @@ public class TestGraphLookup extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, true, false, (aggregation) -> aggregation.pipeline(
                 graphLookup(AGG_TEST_COLLECTION)
-                        .startWith(field("reportsTo"))
+                        .startWith("$reportsTo")
                         .connectFromField("reportsTo")
                         .connectToField("name")
                         .as("reportingHierarchy")));
@@ -28,7 +27,7 @@ public class TestGraphLookup extends AggregationTest {
 
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 graphLookup("airports")
-                        .startWith(field("nearestAirport"))
+                        .startWith("$nearestAirport")
                         .connectFromField("connects")
                         .connectToField("airport")
                         .maxDepth(2)
@@ -41,7 +40,7 @@ public class TestGraphLookup extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 match(eq("name", "Tanya Jordan")),
                 graphLookup(AGG_TEST_COLLECTION)
-                        .startWith(field("friends"))
+                        .startWith("$friends")
                         .connectFromField("friends")
                         .connectToField("name")
                         .as("golfers")
@@ -49,7 +48,7 @@ public class TestGraphLookup extends AggregationTest {
                 project()
                         .include("name")
                         .include("friends")
-                        .include("connections who play golf", field("golfers.name"))
+                        .include("connections who play golf", "$golfers.name")
 
         ));
     }

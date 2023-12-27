@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.WindowExpressions.expMovingAvg;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
@@ -16,19 +15,19 @@ public class TestExpMovingAvg extends AggregationTest {
     public void testExample2() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("stock"))
+                        .partitionBy("$stock")
                         .sortBy(ascending("date"))
                         .output(output("expMovingAvgForStock")
-                                .operator(expMovingAvg(field("price"), 2)))));
+                                .operator(expMovingAvg("$price", 2)))));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("stock"))
+                        .partitionBy("$stock")
                         .sortBy(ascending("date"))
                         .output(output("expMovingAvgForStock")
-                                .operator(expMovingAvg(field("price"), 0.75)))));
+                                .operator(expMovingAvg("$price", 0.75)))));
     }
 }

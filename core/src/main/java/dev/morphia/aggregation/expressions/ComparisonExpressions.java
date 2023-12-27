@@ -7,6 +7,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 import static java.util.Arrays.asList;
 
 /**
@@ -28,8 +29,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $cmp
      */
-    public static Expression cmp(Expression first, Expression second) {
-        return new Expression("$cmp", List.of(first, second));
+    public static Expression cmp(Object first, Object second) {
+        return new Expression("$cmp", wrap(List.of(first, second)));
     }
 
     /**
@@ -40,8 +41,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $eq
      */
-    public static Expression eq(Expression first, @Nullable Expression second) {
-        return new Expression("$eq", asList(first, second));
+    public static Expression eq(Object first, @Nullable Object second) {
+        return new Expression("$eq", asList(wrap(first), wrap(second)));
     }
 
     /**
@@ -57,8 +58,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $gt
      */
-    public static Expression gt(Expression first, Expression second) {
-        return new Expression("$gt", new ExpressionList(first, second));
+    public static Expression gt(Object first, Object second) {
+        return new Expression("$gt", new ExpressionList(wrap(first), wrap(second)));
     }
 
     /**
@@ -74,8 +75,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $gte
      */
-    public static Expression gte(Expression first, Expression second) {
-        return new Expression("$gte", List.of(first, second));
+    public static Expression gte(Object first, Object second) {
+        return new Expression("$gte", wrap(List.of(first, second)));
     }
 
     /**
@@ -86,8 +87,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $lt
      */
-    public static Expression lt(Expression first, Expression second) {
-        return new Expression("$lt", List.of(first, second));
+    public static Expression lt(Object first, Object second) {
+        return new Expression("$lt", wrap(List.of(first, second)));
     }
 
     /**
@@ -103,8 +104,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $lte
      */
-    public static Expression lte(Expression first, Expression second) {
-        return new Expression("$lte", List.of(first, second));
+    public static Expression lte(Object first, Object second) {
+        return new Expression("$lte", wrap(List.of(first, second)));
     }
 
     /**
@@ -115,8 +116,8 @@ public final class ComparisonExpressions {
      * @return the new expression
      * @aggregation.expression $ne
      */
-    public static Expression ne(Expression first, @Nullable Expression second) {
-        return new Expression("$ne", asList(first, second));
+    public static Expression ne(Object first, @Nullable Object second) {
+        return new Expression("$ne", wrap(asList(first, second)));
     }
 
 }

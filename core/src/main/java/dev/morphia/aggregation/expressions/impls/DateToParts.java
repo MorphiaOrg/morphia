@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -71,8 +72,8 @@ public class DateToParts extends Expression {
      * @param timezone the expression
      * @return this
      */
-    public DateToParts timezone(Expression timezone) {
-        this.timeZone = timezone;
+    public DateToParts timezone(Object timezone) {
+        this.timeZone = Expressions.wrap(timezone);
         return this;
     }
 }

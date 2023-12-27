@@ -47,7 +47,7 @@ public class Push extends Expression implements FieldHolder<Push> {
     }
 
     @Override
-    public Push field(String name, Expression expression) {
+    public Push field(String name, Object expression) {
         if (field != null) {
             throw new AggregationException(Sofia.mixedModesNotAllowed(operation()));
         }
@@ -65,11 +65,11 @@ public class Push extends Expression implements FieldHolder<Push> {
      * @param value the value to push
      * @return this
      */
-    public Push single(Expression value) {
+    public Push single(Object value) {
         if (document != null) {
             throw new AggregationException(Sofia.mixedModesNotAllowed(operation()));
         }
-        this.field = value;
+        this.field = Expressions.wrap(value);
         return this;
     }
 }

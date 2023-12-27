@@ -6,7 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -32,8 +31,8 @@ public class TestMatch extends AggregationTest {
                                 gt("score", 70),
                                 lt("score", 90)),
                         gte("views", 1000))),
-                group(id(value(null)))
-                        .field("count", sum(value(1)))));
+                group(id(null))
+                        .field("count", sum(1))));
     }
 
 }

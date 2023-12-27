@@ -9,6 +9,8 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Replaces the input document with the specified document. The operation replaces all existing fields in the input document, including
  * the _id field. With $replaceWith, you can promote an embedded document to the top-level. You can also specify a new document as the
@@ -28,9 +30,9 @@ public class ReplaceWith extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    protected ReplaceWith(Expression expression) {
+    protected ReplaceWith(Object expression) {
         this();
-        this.value = expression;
+        this.value = wrap(expression);
     }
 
     /**
@@ -60,7 +62,7 @@ public class ReplaceWith extends Stage {
      * @return the new stage
      * @since 2.2
      */
-    public static ReplaceWith replaceWith(Expression expression) {
+    public static ReplaceWith replaceWith(Object expression) {
         return new ReplaceWith(expression);
     }
 
@@ -71,7 +73,7 @@ public class ReplaceWith extends Stage {
      * @param expression the value expression
      * @return this
      */
-    public ReplaceWith field(String name, Expression expression) {
+    public ReplaceWith field(String name, Object expression) {
         if (value != null) {
             throw new AggregationException(Sofia.mixedModesNotAllowed(stageName()));
         }

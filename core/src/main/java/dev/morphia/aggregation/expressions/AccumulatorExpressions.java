@@ -15,7 +15,7 @@ import dev.morphia.aggregation.expressions.impls.Push;
 import dev.morphia.aggregation.expressions.impls.RankedResultsExpression;
 import dev.morphia.query.Sort;
 
-import static java.util.Arrays.asList;
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 
 /**
  * Defines helper methods for accumulator expressions
@@ -41,9 +41,9 @@ public final class AccumulatorExpressions {
      */
     public static AccumulatorExpression accumulator(String initFunction,
             String accumulateFunction,
-            List<Expression> accumulateArgs,
+            List<Object> accumulateArgs,
             String mergeFunction) {
-        return new AccumulatorExpression(initFunction, accumulateFunction, accumulateArgs, mergeFunction);
+        return new AccumulatorExpression(initFunction, accumulateFunction, wrap(accumulateArgs), mergeFunction);
     }
 
     /**
@@ -53,8 +53,8 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $addToSet
      */
-    public static Expression addToSet(Expression value) {
-        return new Expression("$addToSet", value);
+    public static Expression addToSet(Object value) {
+        return new Expression("$addToSet", wrap(value));
     }
 
     /**
@@ -65,11 +65,8 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $avg
      */
-    public static Expression avg(Expression value, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>();
-        expressions.add(value);
-        expressions.addAll(asList(additional));
-        return new Accumulator("$avg", expressions);
+    public static Expression avg(Object value, Object... additional) {
+        return new Accumulator("$avg", wrap(value, additional));
     }
 
     /**
@@ -82,7 +79,7 @@ public final class AccumulatorExpressions {
      * @mongodb.server.release 5.2
      * @since 2.3
      */
-    public static Expression bottom(Expression output, Sort... sortBy) {
+    public static Expression bottom(Object output, Sort... sortBy) {
         return new RankedResultsExpression("$bottom", output, sortBy);
     }
 
@@ -100,7 +97,7 @@ public final class AccumulatorExpressions {
      * @mongodb.server.release 5.2
      * @since 2.3
      */
-    public static Expression bottomN(Expression n, Expression output, Sort... sortBy) {
+    public static Expression bottomN(Object n, Object output, Sort... sortBy) {
         return new NRankedResultsExpression("$bottomN", n, output, sortBy);
     }
 
@@ -123,8 +120,8 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $first
      */
-    public static Expression first(Expression value) {
-        return new Expression("$first", value);
+    public static Expression first(Object value) {
+        return new Expression("$first", wrap(value));
     }
 
     /**
@@ -139,7 +136,7 @@ public final class AccumulatorExpressions {
      * @mongodb.server.release 5.2
      * @since 2.3
      */
-    public static Expression firstN(Expression n, Expression input) {
+    public static Expression firstN(Object n, Object input) {
         return new EndResultsExpression("$firstN", n, input);
     }
 
@@ -152,8 +149,8 @@ public final class AccumulatorExpressions {
      * @aggregation.expression $function
      * @since 2.1
      */
-    public static Expression function(String body, Expression... args) {
-        return new FunctionExpression(body, asList(args));
+    public static Expression function(String body, Object... args) {
+        return new FunctionExpression(body, wrap(args));
     }
 
     /**
@@ -163,8 +160,8 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $last
      */
-    public static Expression last(Expression value) {
-        return new Expression("$last", value);
+    public static Expression last(Object value) {
+        return new Expression("$last", wrap(value));
     }
 
     /**
@@ -179,7 +176,7 @@ public final class AccumulatorExpressions {
      * @mongodb.server.release 5.2
      * @since 2.3
      */
-    public static Expression lastN(Expression n, Expression input) {
+    public static Expression lastN(Object n, Object input) {
         return new EndResultsExpression("$lastN", n, input);
     }
 
@@ -191,12 +188,12 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $max
      */
-    public static Expression max(Expression value, Expression... others) {
-        var maxValue = value;
+    public static Expression max(Object value, Object... others) {
+        var maxValue = wrap(value);
         if (others.length != 0) {
             var list = new ArrayList<Expression>();
-            list.add(value);
-            list.addAll(asList(others));
+            list.add(wrap(value));
+            list.addAll(wrap(others));
             maxValue = new ExpressionList(list);
         }
         return new Expression("$max", maxValue);
@@ -215,7 +212,7 @@ public final class AccumulatorExpressions {
      * @mongodb.server.release 5.2
      * @since 2.3
      */
-    public static Expression maxN(Expression n, Expression input) {
+    public static Expression maxN(Object n, Object input) {
         return new EndResultsExpression("$maxN", n, input);
     }
 
@@ -226,12 +223,12 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $min
      */
-    public static Expression min(Expression value, Expression... others) {
-        var minValue = value;
+    public static Expression min(Object value, Object... others) {
+        var minValue = wrap(value);
         if (others.length != 0) {
             var list = new ArrayList<Expression>();
-            list.add(value);
-            list.addAll(asList(others));
+            list.add(wrap(value));
+            list.addAll(wrap(others));
             minValue = new ExpressionList(list);
         }
         return new Expression("$min", minValue);
@@ -250,7 +247,7 @@ public final class AccumulatorExpressions {
      * @mongodb.server.release 5.2
      * @since 2.3
      */
-    public static Expression minN(Expression n, Expression input) {
+    public static Expression minN(Object n, Object input) {
         return new EndResultsExpression("$minN", n, input);
     }
 
@@ -261,8 +258,8 @@ public final class AccumulatorExpressions {
      * @return the new expression
      * @aggregation.expression $push
      */
-    public static Expression push(Expression value) {
-        return new Expression("$push", value);
+    public static Expression push(Object value) {
+        return new Expression("$push", wrap(value));
     }
 
     /**
@@ -281,16 +278,13 @@ public final class AccumulatorExpressions {
     /**
      * Calculates and returns the sum of numeric values. $sum ignores non-numeric values.
      *
-     * @param first      the first expression to sum
-     * @param additional any subsequent expressions to include in the sum
+     * @param first      the first value to sum
+     * @param additional any subsequent values to include in the sum
      * @return the new expression
      * @aggregation.expression $sum
      */
-    public static Expression sum(Expression first, Expression... additional) {
-        List<Expression> expressions = new ArrayList<>();
-        expressions.add(first);
-        expressions.addAll(asList(additional));
-        return new Accumulator("$sum", expressions);
+    public static Expression sum(Object first, Object... additional) {
+        return new Accumulator("$sum", wrap(first, additional));
     }
 
     /**
@@ -303,7 +297,7 @@ public final class AccumulatorExpressions {
      * @mongodb.server.release 5.2
      * @since 2.3
      */
-    public static Expression top(Expression output, Sort... sortBy) {
+    public static Expression top(Object output, Sort... sortBy) {
         return new RankedResultsExpression("$top", output, sortBy);
     }
 
@@ -321,7 +315,7 @@ public final class AccumulatorExpressions {
      * @mongodb.server.release 5.2
      * @since 2.3
      */
-    public static Expression topN(Expression n, Expression output, Sort... sortBy) {
+    public static Expression topN(Object n, Object output, Sort... sortBy) {
         return new NRankedResultsExpression("$topN", n, output, sortBy);
     }
 

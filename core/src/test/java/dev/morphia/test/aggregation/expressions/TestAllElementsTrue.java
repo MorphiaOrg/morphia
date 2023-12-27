@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.SetExpressions.allElementsTrue;
 import static dev.morphia.test.ServerVersion.ANY;
 
@@ -16,7 +15,7 @@ public class TestAllElementsTrue extends AggregationTest {
                 .pipeline(Projection.project()
                         .suppressId()
                         .include("responses")
-                        .include("isAllTrue", allElementsTrue(field("responses")))));
+                        .include("isAllTrue", allElementsTrue("$responses"))));
 
     }
 }

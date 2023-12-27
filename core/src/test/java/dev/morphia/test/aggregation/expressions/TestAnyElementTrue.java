@@ -4,7 +4,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.SetExpressions.anyElementTrue;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.test.ServerVersion.ANY;
@@ -16,7 +15,7 @@ public class TestAnyElementTrue extends AggregationTest {
                 project()
                         .suppressId()
                         .include("responses")
-                        .include("isAnyTrue", anyElementTrue(field("responses")))));
+                        .include("isAnyTrue", anyElementTrue("$responses"))));
 
     }
 }

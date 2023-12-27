@@ -6,8 +6,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.expressions.SystemVariables.*;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -25,7 +23,7 @@ public class TestMergeObjects extends AggregationTest {
                         .localField("item")
                         .as("fromItems"),
                 replaceRoot(mergeObjects()
-                        .add(elementAt(field("fromItems"), value(0)))
+                        .add(elementAt("$fromItems", 0))
                         .add(ROOT)),
                 project()
                         .exclude("fromItems")));
@@ -34,8 +32,8 @@ public class TestMergeObjects extends AggregationTest {
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id(field("item")))
-                        .field("mergedSales", mergeObjects().add(field("quantity")))));
+                group(id("$item"))
+                        .field("mergedSales", mergeObjects().add("$quantity"))));
     }
 
 }

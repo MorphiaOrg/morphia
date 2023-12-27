@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -70,8 +71,8 @@ public class ConvertExpression extends Expression {
      * @param onError the value
      * @return this
      */
-    public ConvertExpression onError(Expression onError) {
-        this.onError = onError;
+    public ConvertExpression onError(Object onError) {
+        this.onError = Expressions.wrap(onError);
         return this;
     }
 
@@ -81,8 +82,8 @@ public class ConvertExpression extends Expression {
      * @param onNull the value
      * @return this
      */
-    public ConvertExpression onNull(Expression onNull) {
-        this.onNull = onNull;
+    public ConvertExpression onNull(Object onNull) {
+        this.onNull = Expressions.wrap(onNull);
         return this;
     }
 }

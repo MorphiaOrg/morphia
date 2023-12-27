@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.expressions.TypeExpressions.toDecimal;
 import static dev.morphia.aggregation.expressions.TypeExpressions.toInt;
@@ -17,12 +16,12 @@ public class TestToInt extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("convertedPrice", toDecimal(field("price")))
-                        .field("convertedQty", toInt(field("qty"))),
+                        .field("convertedPrice", toDecimal("$price"))
+                        .field("convertedQty", toInt("$qty")),
                 project()
                         .include("item")
                         .include("totalPrice",
-                                multiply(field("convertedPrice"), field("convertedQty")))));
+                                multiply("$convertedPrice", "$convertedQty"))));
     }
 
 }

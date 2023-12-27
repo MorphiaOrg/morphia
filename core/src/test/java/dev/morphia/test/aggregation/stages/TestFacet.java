@@ -8,8 +8,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.stages.AutoBucket.autoBucket;
 import static dev.morphia.aggregation.stages.Bucket.bucket;
 import static dev.morphia.aggregation.stages.Facet.facet;
@@ -24,17 +22,17 @@ public class TestFacet extends AggregationTest {
                 facet()
                         .field("categorizedByTags",
                                 unwind("tags"),
-                                sortByCount(field("tags")))
+                                sortByCount("$tags"))
                         .field("categorizedByPrice",
                                 Match.match(exists("price")),
                                 bucket()
-                                        .groupBy(field("price"))
-                                        .boundaries(value(0), value(150), value(200), value(300), value(400))
+                                        .groupBy("$price")
+                                        .boundaries(0, 150, 200, 300, 400)
                                         .defaultValue("Other")
-                                        .outputField("count", sum(value(1)))
-                                        .outputField("titles", push().single(field("title"))))
+                                        .outputField("count", sum(1))
+                                        .outputField("titles", push().single("$title")))
                         .field("categorizedByYears(Auto)", autoBucket()
-                                .groupBy(field("year"))
+                                .groupBy("$year")
                                 .buckets(4))));
     }
 }

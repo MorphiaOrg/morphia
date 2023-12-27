@@ -6,8 +6,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.DataSizeExpressions.bsonSize;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.SystemVariables.ROOT;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
@@ -30,7 +28,7 @@ public class TestBsonSize extends AggregationTest {
     @Test
     public void testExample2() {
         testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
-                group(id(value(null)))
+                group(id(null))
                         .field("combined_object_size",
                                 sum(bsonSize(ROOT)))));
 
@@ -40,9 +38,9 @@ public class TestBsonSize extends AggregationTest {
     public void testExample3() {
         testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
                 project()
-                        .include("name", field("name"))
+                        .include("name", "$name")
                         .include("task_object_size",
-                                bsonSize(value("$$CURRENT"))),
+                                bsonSize("$$CURRENT")),
                 sort()
                         .descending("task_object_size"),
                 limit(1)));

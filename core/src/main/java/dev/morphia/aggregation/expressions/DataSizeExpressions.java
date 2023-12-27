@@ -2,6 +2,8 @@ package dev.morphia.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Defines helper methods for the data size expressions
  *
@@ -15,22 +17,22 @@ public final class DataSizeExpressions {
     /**
      * Returns the size of a given string or binary data value’s content in bytes.
      *
-     * @param expression the binary size expression
-     * @return the new expression
+     * @param value the value to examine
+     * @return the new value
      * @aggregation.expression $binarySize
      */
-    public static Expression binarySize(Expression expression) {
-        return new Expression("$binarySize", expression);
+    public static Expression binarySize(Object value) {
+        return new Expression("$binarySize", wrap(value));
     }
 
     /**
      * Returns the size in bytes of a given document (i.e. bsontype Object) when encoded as BSON.
      *
-     * @param expression the bson size expression
+     * @param value the value to examine
      * @return the new expression
      * @aggregation.expression $bsonSize
      */
-    public static Expression bsonSize(Expression expression) {
-        return new Expression("$bsonSize", expression);
+    public static Expression bsonSize(Object value) {
+        return new Expression("$bsonSize", wrap(value));
     }
 }

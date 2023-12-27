@@ -116,20 +116,8 @@ public class DateTruncExpression extends Expression {
      * @return this
      * @since 2.3
      */
-    public DateTruncExpression timezone(String timezone) {
-        return timezone(Expressions.value(timezone));
-    }
-
-    /**
-     * The timezone to carry out the operation. {@code timezone} must be a valid expression that resolves to a string formatted as either
-     * an Olson Timezone Identifier or a UTC Offset. If no timezone is provided, the result is displayed in UTC.
-     *
-     * @param timezone the timezone expression
-     * @return this
-     * @since 2.3
-     */
-    public DateTruncExpression timezone(Expression timezone) {
-        this.timezone = timezone;
+    public DateTruncExpression timezone(Object timezone) {
+        this.timezone = Expressions.wrap(timezone);
         return this;
     }
 }

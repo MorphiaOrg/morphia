@@ -2,6 +2,7 @@ package dev.morphia.aggregation.expressions.impls;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -19,10 +20,10 @@ public class RangeExpression extends Expression {
      * @morphia.internal
      */
     @MorphiaInternal
-    public RangeExpression(Expression start, Expression end) {
+    public RangeExpression(Object start, Object end) {
         super("$range");
-        this.start = start;
-        this.end = end;
+        this.start = Expressions.wrap(start);
+        this.end = Expressions.wrap(end);
     }
 
     /**

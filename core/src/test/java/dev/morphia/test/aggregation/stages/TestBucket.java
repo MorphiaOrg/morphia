@@ -17,8 +17,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.StringExpressions.concat;
 import static dev.morphia.aggregation.stages.Bucket.bucket;
 import static dev.morphia.aggregation.stages.Facet.facet;
@@ -34,13 +32,13 @@ public class TestBucket extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 bucket()
-                        .groupBy(field("year_born"))
-                        .boundaries(value(1840), value(1850), value(1860), value(1870), value(1880))
+                        .groupBy("$year_born")
+                        .boundaries(1840, 1850, 1860, 1870, 1880)
                         .defaultValue("Other")
-                        .outputField("count", sum(value(1)))
+                        .outputField("count", sum(1))
                         .outputField("artists", push()
-                                .field("name", concat(field("first_name"), value(" "), field("last_name")))
-                                .field("year_born", field("year_born"))),
+                                .field("name", concat("$first_name", " ", "$last_name"))
+                                .field("year_born", "$year_born")),
                 match(gt("count", 3))));
     }
 
@@ -49,22 +47,22 @@ public class TestBucket extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 facet()
                         .field("price", bucket()
-                                .groupBy(field("price"))
-                                .boundaries(value(0), value(200), value(400))
+                                .groupBy("$price")
+                                .boundaries(0, 200, 400)
                                 .defaultValue("Other")
-                                .outputField("count", sum(value(1)))
+                                .outputField("count", sum(1))
                                 .outputField("artwork", push()
-                                        .field("title", field("title"))
-                                        .field("price", field("price")))
-                                .outputField("averagePrice", avg(field("price"))))
+                                        .field("title", "$title")
+                                        .field("price", "$price"))
+                                .outputField("averagePrice", avg("$price")))
                         .field("year", bucket()
-                                .groupBy(field("year"))
-                                .boundaries(value(1890), value(1910), value(1920), value(1940))
+                                .groupBy("$year")
+                                .boundaries(1890, 1910, 1920, 1940)
                                 .defaultValue("Unknown")
-                                .outputField("count", sum(value(1)))
+                                .outputField("count", sum(1))
                                 .outputField("artwork", push()
-                                        .field("title", field("title"))
-                                        .field("year", field("year"))))));
+                                        .field("title", "$title")
+                                        .field("year", "$year")))));
     }
 
     @Test
@@ -83,11 +81,11 @@ public class TestBucket extends AggregationTest {
 
         List<Document> results = getDs().aggregate(Artwork.class)
                 .bucket(bucket()
-                        .groupBy(field("price"))
-                        .boundaries(value(0), value(200), value(400))
+                        .groupBy("$price")
+                        .boundaries(0, 200, 400)
                         .defaultValue("Other")
-                        .outputField("count", sum(value(1)))
-                        .outputField("titles", push().single(field("title"))))
+                        .outputField("count", sum(1))
+                        .outputField("titles", push().single("$title")))
                 .execute(Document.class)
                 .toList();
 
@@ -104,9 +102,9 @@ public class TestBucket extends AggregationTest {
 
         getDs().aggregate(Book.class)
                 .bucket(bucket()
-                        .groupBy(field("copies"))
-                        .boundaries(value(10))
-                        .outputField("count", sum(value(1))))
+                        .groupBy("$copies")
+                        .boundaries(10)
+                        .outputField("count", sum(1)))
                 .execute(BucketResult.class);
     }
 
@@ -124,10 +122,10 @@ public class TestBucket extends AggregationTest {
 
         Iterator<BucketResult> aggregate = getDs().aggregate(Book.class)
                 .bucket(bucket()
-                        .groupBy(field("copies"))
-                        .boundaries(value(1), value(5), value(10))
+                        .groupBy("$copies")
+                        .boundaries(1, 5, 10)
                         .defaultValue(-1)
-                        .outputField("count", sum(value(1))))
+                        .outputField("count", sum(1)))
                 .execute(BucketResult.class);
 
         BucketResult result2 = aggregate.next();
@@ -146,10 +144,10 @@ public class TestBucket extends AggregationTest {
 
         Iterator<BucketResult> aggregate = getDs().aggregate(Book.class)
                 .bucket(bucket()
-                        .groupBy(field("copies"))
-                        .boundaries(value(5), value(1), value(10))
+                        .groupBy("$copies")
+                        .boundaries(5, 1, 10)
                         .defaultValue("test")
-                        .outputField("count", sum(value(1))))
+                        .outputField("count", sum(1)))
                 .execute(BucketResult.class);
     }
 
@@ -159,8 +157,8 @@ public class TestBucket extends AggregationTest {
 
         Iterator<BucketResult> aggregate = getDs().aggregate(Book.class)
                 .bucket(bucket()
-                        .groupBy(field("copies"))
-                        .boundaries(value(1), value(5), value(12)))
+                        .groupBy("$copies")
+                        .boundaries(1, 5, 12))
                 .execute(BucketResult.class);
         BucketResult result1 = aggregate.next();
         Assert.assertEquals(result1.getId(), 1);

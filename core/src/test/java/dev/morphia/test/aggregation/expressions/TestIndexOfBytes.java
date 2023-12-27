@@ -5,8 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.StringExpressions.indexOfBytes;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -15,7 +13,7 @@ public class TestIndexOfBytes extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("byteLocation", indexOfBytes(field("item"), value("foo")))));
+                        .include("byteLocation", indexOfBytes("$item", "foo"))));
     }
 
 }

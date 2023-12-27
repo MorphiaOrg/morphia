@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 public class FilterExpression extends Expression {
@@ -59,8 +60,8 @@ public class FilterExpression extends Expression {
         return limit;
     }
 
-    public FilterExpression limit(Expression limit) {
-        this.limit = limit;
+    public FilterExpression limit(Object limit) {
+        this.limit = Expressions.wrap(limit);
         return this;
     }
 }

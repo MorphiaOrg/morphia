@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -36,8 +37,8 @@ public class GetFieldExpression extends Expression {
      * @param input the input expression
      * @return this
      */
-    public GetFieldExpression input(Expression input) {
-        this.input = input;
+    public GetFieldExpression input(Object input) {
+        this.input = Expressions.wrap(input);
         return this;
     }
 }

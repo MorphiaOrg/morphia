@@ -9,6 +9,7 @@ import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.result.InsertManyResult;
 
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
+import dev.morphia.aggregation.stages.Count;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
@@ -25,11 +26,9 @@ import org.bson.Document;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.Miscellaneous.rand;
 import static dev.morphia.aggregation.expressions.Miscellaneous.sampleRate;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.and;
 import static dev.morphia.query.filters.Filters.bitsAllClear;
 import static dev.morphia.query.filters.Filters.bitsAllSet;
@@ -186,7 +185,7 @@ public class FiltersTest extends TemplatedTestBase {
                 parse("{ '_id' : 5, 'category' : 'travel', 'budget': 200, 'spent': 650 }")));
 
         List<Budget> budgets = getDs().find(Budget.class)
-                .filter(expr(gt(field("spent"), field("budget")))).iterator()
+                .filter(expr(ComparisonExpressions.gt("$spent", "$budget"))).iterator()
                 .toList();
 
         assertEquals(budgets.size(), 3);
@@ -210,23 +209,24 @@ public class FiltersTest extends TemplatedTestBase {
                 parse("{ item: 'apple', qty: NumberInt(45), status: 'A', instock: true }"),
                 parse("{ item: 'pears', qty: NumberInt(50), status: 'A', instock: true }")));
 
-        Document myschema = parse("{\n"
-                + "  required: [ 'item', 'qty', 'instock' ],\n"
-                + "  properties: {\n"
-                + "    item: { bsonType: 'string' },\n"
-                + "    qty: { bsonType: 'int' },\n"
-                + "    size: {\n"
-                + "      bsonType: 'object',\n"
-                + "      required: [ 'uom' ],\n"
-                + "      properties: {\n"
-                + "        uom: { bsonType: 'string' },\n"
-                + "        h: { bsonType: 'double' },\n"
-                + "        w: { bsonType: 'double' }\n"
-                + "      }\n"
-                + "    },\n"
-                + "    instock: { bsonType: 'bool' }\n"
-                + "  }\n"
-                + "}");
+        Document myschema = parse("""
+                {
+                  required: [ 'item', 'qty', 'instock' ],
+                  properties: {
+                    item: { bsonType: 'string' },
+                    qty: { bsonType: 'int' },
+                    size: {
+                      bsonType: 'object',
+                      required: [ 'uom' ],
+                      properties: {
+                        uom: { bsonType: 'string' },
+                        h: { bsonType: 'double' },
+                        w: { bsonType: 'double' }
+                      }
+                    },
+                    instock: { bsonType: 'bool' }
+                  }
+                }""");
 
         List<Document> inventory = getDs().find("inventory", Document.class).filter(jsonSchema(myschema))
                 .iterator()
@@ -306,7 +306,7 @@ public class FiltersTest extends TemplatedTestBase {
         InsertManyResult bulk = getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
         assertEquals(bulk.getInsertedIds().size(), count);
         long matches = getDs().find(collectionName, Document.class)
-                .filter(expr(ComparisonExpressions.lt(value(0.5), rand())))
+                .filter(expr(ComparisonExpressions.lt(0.5, rand())))
                 .count();
         assertTrue(matches < 100);
     }
@@ -321,9 +321,9 @@ public class FiltersTest extends TemplatedTestBase {
         String collectionName = "sampleRate";
         InsertManyResult bulk = getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
         assertEquals(bulk.getInsertedIds().size(), count);
-        Document matches = getDs().aggregate(collectionName)
-                .match(sampleRate(0.33))
-                .count("numMatches")
+        Document matches = getDs().aggregate(collectionName).pipeline(
+                match(sampleRate(0.33)),
+                Count.count("numMatches"))
                 .execute(Document.class)
                 .next();
         assertTrue(matches.getInteger("numMatches") < 100);

@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radiansToDegrees;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 
@@ -14,9 +13,9 @@ public class TestRadiansToDegrees extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 addFields()
-                        .field("angle_a_deg", radiansToDegrees(field("angle_a")))
-                        .field("angle_b_deg", radiansToDegrees(field("angle_b")))
-                        .field("angle_c_deg", radiansToDegrees(field("angle_c")))));
+                        .field("angle_a_deg", radiansToDegrees("$angle_a"))
+                        .field("angle_b_deg", radiansToDegrees("$angle_b"))
+                        .field("angle_c_deg", radiansToDegrees("$angle_c"))));
     }
 
 }

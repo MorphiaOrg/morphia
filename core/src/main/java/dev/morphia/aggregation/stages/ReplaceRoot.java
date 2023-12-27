@@ -9,6 +9,8 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Replaces the input document with the specified document. The operation replaces all existing fields in the input document, including
  * the _id field.
@@ -57,8 +59,8 @@ public class ReplaceRoot extends Stage {
      * @return the new stage
      * @since 2.2
      */
-    public static ReplaceRoot replaceRoot(Expression expression) {
-        return new ReplaceRoot(expression);
+    public static ReplaceRoot replaceRoot(Object expression) {
+        return new ReplaceRoot(wrap(expression));
     }
 
     /**

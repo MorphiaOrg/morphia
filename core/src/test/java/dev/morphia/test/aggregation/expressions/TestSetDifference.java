@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.SetExpressions.setDifference;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -17,7 +16,7 @@ public class TestSetDifference extends AggregationTest {
                         .suppressId()
                         .include("flowerFieldA")
                         .include("flowerFieldB")
-                        .include("inBOnly", setDifference(field("flowerFieldB"), field("flowerFieldA")))));
+                        .include("inBOnly", setDifference("$flowerFieldB", "$flowerFieldA"))));
     }
 
 }

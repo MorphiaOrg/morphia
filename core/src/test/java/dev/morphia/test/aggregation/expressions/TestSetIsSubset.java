@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.SetExpressions.setIsSubset;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -17,7 +16,7 @@ public class TestSetIsSubset extends AggregationTest {
                         .suppressId()
                         .include("flowerFieldA")
                         .include("flowerFieldB")
-                        .include("AisSubset", setIsSubset(field("flowerFieldA"), field("flowerFieldB")))));
+                        .include("AisSubset", setIsSubset("$flowerFieldA", "$flowerFieldB"))));
     }
 
 }

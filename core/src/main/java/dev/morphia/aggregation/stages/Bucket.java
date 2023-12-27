@@ -8,6 +8,8 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ExpressionList;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
  * <p>
@@ -49,13 +51,13 @@ public class Bucket extends Stage {
      * An array of values based on the groupBy expression that specify the boundaries for each bucket. Each adjacent pair of values acts
      * as the inclusive lower boundary and the exclusive upper boundary for the bucket. You must specify at least two boundaries.
      * <p>
-     * The specified values must be in ascending order and all of the same type.
+     * The specified values must be in ascending order and of the same type.
      *
      * @param boundaries the boundaries
      * @return this
      */
-    public Bucket boundaries(Expression... boundaries) {
-        this.boundaries = new ExpressionList(boundaries);
+    public Bucket boundaries(Object... boundaries) {
+        this.boundaries = new ExpressionList(wrap(boundaries));
         return this;
     }
 
@@ -124,8 +126,8 @@ public class Bucket extends Stage {
      * @param groupBy the grouping expression
      * @return this
      */
-    public Bucket groupBy(Expression groupBy) {
-        this.groupBy = groupBy;
+    public Bucket groupBy(Object groupBy) {
+        this.groupBy = wrap(groupBy);
         return this;
     }
 

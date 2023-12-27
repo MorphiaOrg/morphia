@@ -1,5 +1,6 @@
 package dev.morphia.aggregation.expressions.impls;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -21,10 +22,10 @@ public class EndResultsExpression extends Expression {
      * @morphia.internal
      */
     @MorphiaInternal
-    public EndResultsExpression(String operation, Expression n, Expression input) {
+    public EndResultsExpression(String operation, Object n, Object input) {
         super(operation);
-        this.input = input;
-        this.n = n;
+        this.input = Expressions.wrap(input);
+        this.n = Expressions.wrap(n);
     }
 
     /**

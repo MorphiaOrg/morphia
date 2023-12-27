@@ -8,7 +8,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
@@ -22,8 +21,8 @@ public class TestFirst extends AggregationTest {
         testPipeline(v50, false, false, (aggregation) -> aggregation.pipeline(
                 sort()
                         .ascending("item", "date"),
-                group(id(field("item")))
-                        .field("firstSale", first(field("date")))));
+                group(id("$item"))
+                        .field("firstSale", first("$date"))));
     }
 
     @Test
@@ -31,8 +30,8 @@ public class TestFirst extends AggregationTest {
         testPipeline(v50, false, false, (aggregation) -> aggregation.pipeline(
                 sort()
                         .ascending("item", "price"),
-                group(id(field("item")))
-                        .field("inStock", first(field("quantity")))
+                group(id("$item"))
+                        .field("inStock", first("$quantity"))
 
         ));
     }
@@ -41,10 +40,10 @@ public class TestFirst extends AggregationTest {
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(Sort.ascending("orderDate"))
                         .output(Output.output("firstOrderTypeForState")
-                                .operator(first(field("type")))
+                                .operator(first("$type"))
                                 .window()
                                 .documents("unbounded", "current"))));
     }

@@ -8,6 +8,8 @@ import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.ValueExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression. Bucket boundaries
  * are automatically determined in an attempt to evenly distribute the documents into the specified number of buckets.
@@ -115,8 +117,8 @@ public class AutoBucket extends Stage {
      * @param groupBy the expression to use
      * @return this
      */
-    public AutoBucket groupBy(Expression groupBy) {
-        this.groupBy = groupBy;
+    public AutoBucket groupBy(Object groupBy) {
+        this.groupBy = wrap(groupBy);
         return this;
     }
 

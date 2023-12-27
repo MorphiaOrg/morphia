@@ -3,13 +3,14 @@ package dev.morphia.aggregation.stages;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.sofia.Sofia;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
 
 /**
  * Removes/excludes fields from documents.
@@ -63,7 +64,7 @@ public class Unset extends Stage {
             fieldName = fieldName.substring(1);
             LOG.warn(Sofia.unsetNamesDollarSign());
         }
-        fields.add(Expressions.value(fieldName));
+        fields.add(wrap(fieldName));
         return this;
     }
 }

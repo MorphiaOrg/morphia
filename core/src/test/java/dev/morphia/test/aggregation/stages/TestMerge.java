@@ -15,8 +15,6 @@ import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
-import static dev.morphia.aggregation.expressions.Expressions.field;
-import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -37,9 +35,9 @@ public class TestMerge extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 group(id()
-                        .field("fiscal_year", field("fiscal_year"))
-                        .field("dept", field("dept")))
-                        .field("salaries", sum(field("salary"))),
+                        .field("fiscal_year", "$fiscal_year")
+                        .field("dept", "$dept"))
+                        .field("salaries", sum("$salary")),
                 merge("reporting", "budgets")
                         .on("_id")
                         .whenMatched(REPLACE)
@@ -51,9 +49,9 @@ public class TestMerge extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 match(gte("fiscal_year", 2019)),
                 group(id()
-                        .field("fiscal_year", field("fiscal_year"))
-                        .field("dept", field("dept")))
-                        .field("salaries", sum(field("salary"))),
+                        .field("fiscal_year", "$fiscal_year")
+                        .field("dept", "$dept"))
+                        .field("salaries", sum("$salary")),
                 merge("reporting", "budgets")
                         .on("_id")
                         .whenMatched(REPLACE)
@@ -65,13 +63,13 @@ public class TestMerge extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 match(eq("fiscal_year", 2019)),
                 group(id()
-                        .field("fiscal_year", field("fiscal_year"))
-                        .field("dept", field("dept")))
-                        .field("employees", push(field("employee"))),
+                        .field("fiscal_year", "$fiscal_year")
+                        .field("dept", "$dept"))
+                        .field("employees", push("$employee")),
                 project()
                         .suppressId()
-                        .include("dept", field("_id.dept"))
-                        .include("fiscal_year", field("_id.fiscal_year"))
+                        .include("dept", "$_id.dept")
+                        .include("fiscal_year", "$_id.fiscal_year")
                         .include("employees"),
                 merge("reporting", "orgArchive")
                         .on("dept", "fiscal_year")
@@ -82,8 +80,8 @@ public class TestMerge extends AggregationTest {
     public void testExample4() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 group()
-                        .field("_id", field("quarter"))
-                        .field("purchased", sum(field("qty"))),
+                        .field("_id", "$quarter")
+                        .field("purchased", sum("$qty")),
                 merge("quarterlyreport")
                         .on("_id")
                         .whenMatched(MERGE)
@@ -98,7 +96,7 @@ public class TestMerge extends AggregationTest {
                         lt("date", LocalDate.of(2019, Month.MAY, 8))),
                 project()
                         .include("_id", dateToString()
-                                .date(field("date"))
+                                .date("$date")
                                 .format("%Y-%m"))
                         .include("thumbsup")
                         .include("thumbsdown"),
@@ -106,8 +104,8 @@ public class TestMerge extends AggregationTest {
                         .on("_id")
                         .whenMatched(
                                 addFields()
-                                        .field("thumbsup", add(field("thumbsup"), value("$$new.thumbsup")))
-                                        .field("thumbsdown", add(field("thumbsdown"), value("$$new.thumbsdown"))))
+                                        .field("thumbsup", add("$thumbsup", "$$new.thumbsup"))
+                                        .field("thumbsdown", add("$thumbsdown", "$$new.thumbsdown")))
                         .whenNotMatched(INSERT)));
     }
 

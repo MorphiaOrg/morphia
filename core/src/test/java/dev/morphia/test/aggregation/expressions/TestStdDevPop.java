@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.WindowExpressions.stdDevPop;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
@@ -18,25 +17,25 @@ public class TestStdDevPop extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id(field("quiz")))
-                        .field("stdDev", stdDevPop(field("score")))));
+                group(id("$quiz"))
+                        .field("stdDev", stdDevPop("$score"))));
     }
 
     @Test
     public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("stdDev", stdDevPop(field("scores.score")))));
+                        .include("stdDev", stdDevPop("$scores.score"))));
     }
 
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
-                        .partitionBy(field("state"))
+                        .partitionBy("$state")
                         .sortBy(ascending("orderDate"))
                         .output(output("stdDevPopQuantityForState")
-                                .operator(stdDevPop(field("quantity")))
+                                .operator(stdDevPop("$quantity"))
                                 .window()
                                 .documents("unbounded", "current"))
 
