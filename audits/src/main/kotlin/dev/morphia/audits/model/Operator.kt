@@ -8,7 +8,6 @@ import dev.morphia.audits.notControl
 import dev.morphia.audits.removeWhile
 import dev.morphia.audits.sections
 import java.io.File
-import java.io.FileNotFoundException
 
 class Operator(var source: File) {
     var name = source.nameWithoutExtension
@@ -20,11 +19,7 @@ class Operator(var source: File) {
     val examples: List<Example>
 
     init {
-        try {
-            type = if (source.readText().contains(".. pipeline:: \$")) STAGE else EXPRESSION
-        } catch (e: FileNotFoundException) {
-            TODO("Not yet implemented")
-        }
+        type = if (source.readText().contains(".. pipeline:: \$")) STAGE else EXPRESSION
         resourceFolder =
             File(
                     RstAuditor.coreTestRoot,
@@ -39,6 +34,9 @@ class Operator(var source: File) {
                 prior = example
                 example
             }
+    }
+
+    fun output() {
         examples
             .filterNot { it.isEmpty() }
             .forEachIndexed { index, it -> it.output(File(resourceFolder, "example${index + 1}")) }

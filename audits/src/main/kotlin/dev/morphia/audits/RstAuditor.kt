@@ -2,7 +2,9 @@ package dev.morphia.audits
 
 import dev.morphia.audits.OperationAudit.Companion.findMethods
 import dev.morphia.audits.model.Operator
+import dev.morphia.audits.model.OperatorType
 import dev.morphia.audits.model.OperatorType.EXPRESSION
+import dev.morphia.audits.model.OperatorType.STAGE
 import dev.morphia.audits.model.Results
 import java.io.File
 
@@ -12,9 +14,12 @@ object RstAuditor {
     val aggRoot = File(auditRoot, "source/reference/operator/aggregation")
     val includesRoot = File(auditRoot, "source")
 
-    val methods = findMethods("@aggregation.expression") + findMethods("@aggregation.stage")
-
-    fun aggregations(exclusions: List<String> = listOf()): Results {
+    fun aggregations(type: OperatorType, exclusions: List<String> = listOf()): Results {
+        val methods =
+            when (type) {
+                EXPRESSION -> findMethods("@aggregation.expression")
+                STAGE -> findMethods("@aggregation.stage")
+            }
         val operators =
             aggRoot
                 .walk()
@@ -22,16 +27,18 @@ object RstAuditor {
                 .filter { !it.equals(aggRoot) }
                 .filter { it.nameWithoutExtension !in exclusions }
                 .map { Operator(it) }
+                .filter { it.type == type }
                 .toList()
 
         val keys = methods.keys
-        val notImplemented = operators.filter { it.type == EXPRESSION && it.operator !in keys }
+        val notImplemented = operators.filter { it.operator !in keys }
         val created =
             GithubProject.updateGH(
                 "aggregation operator",
                 notImplemented,
                 listOf("enhancement", "aggregation")
             )
+        operators.forEach { it.output() }
         val empty =
             operators
                 .filter { it.examples.size == 1 }
