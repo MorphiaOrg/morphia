@@ -1,5 +1,6 @@
 package dev.morphia.audits
 
+import dev.morphia.audits.OperationAudit.Companion.DOC_ROOT
 import dev.morphia.audits.OperationAudit.Companion.findMethods
 import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType
@@ -7,6 +8,9 @@ import dev.morphia.audits.model.OperatorType.EXPRESSION
 import dev.morphia.audits.model.OperatorType.STAGE
 import dev.morphia.audits.model.Results
 import java.io.File
+import java.util.TreeMap
+import org.jboss.forge.roaster.model.source.MethodSource
+import org.jboss.forge.roaster.model.source.ParameterSource
 
 object RstAuditor {
     val auditRoot = File("target/mongodb-docs")
@@ -44,8 +48,68 @@ object RstAuditor {
                 .filter { it.examples.size == 1 }
                 .flatMap { it.examples }
                 .filterNot { it.folder.exists() }
+
+        emitDocs(TreeMap(methods), type)
         return Results(created, empty)
     }
+
+    private fun emitDocs(methods: Map<String, List<MethodSource<*>>>, type: OperatorType) {
+        var docRoot = File(DOC_ROOT, "modules/ROOT/pages/${type.docsName()}.adoc")
+        docRoot.writeText(
+            """
+                [%header,cols="1,2"]
+                |===
+                |Operator|Docs
+                
+                
+            """
+                .trimIndent()
+        )
+
+        methods.forEach {
+            val methods = it.value
+            val docs = docsLinks(methods)
+            val operator = it.key
+            var referenceLink =
+                "http://docs.mongodb.org/manual/reference/operator/aggregation/${operator.substringAfter("$")}"
+            docRoot.appendText("| $referenceLink[${operator}]\n")
+            docRoot.appendText(docs + "\n")
+        }
+        docRoot.appendText("|===\n")
+    }
+
+    private fun docsLinks(methods: List<MethodSource<*>>): String {
+        val lines =
+            methods.map { method ->
+                val className = method.getOrigin().getName()
+                val packageName = method.getOrigin().getPackage().replace('.', '/')
+                val anchor =
+                    method.getName() +
+                        method.getParameters().joinToString(",", "(", ")") { it.anchorLink() }
+                val signature =
+                    method.getName() +
+                        method.getParameters().joinToString(",", "(", ")") { it.anchorLink(false) }
+                "link:javadoc/${packageName}/${className}.html#$anchor[${className}#$signature]"
+            }
+
+        var line = "| "
+        if (lines.size == 1) {
+            line += lines[0]
+        } else {
+            line = "a$line" + lines.joinToString("\n * ", "\n\n * ", "\n")
+        }
+
+        return line + "\n"
+    }
+}
+
+private fun ParameterSource<*>.anchorLink(anchor: Boolean = true): String {
+    val ellipsis = if (anchor) "%2E%2E%2E" else "..."
+    val type = getType()
+    var name = if (anchor) type.getQualifiedName() else type.getSimpleName()
+    val varargs = isVarArgs()
+    val qualified = type.isQualified()
+    return if (varargs) "$name${ellipsis}" else name
 }
 
 fun <String> MutableList<String>.removeWhile(function: (String) -> Boolean): List<String> {

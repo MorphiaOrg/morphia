@@ -32,6 +32,16 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
                 .filterIsInstance<MethodSource<*>>()
                 .filter { it.javaDoc.tagNames.contains(taglet) }
                 .groupBy { it.javaDoc.getTags(taglet)[0].value.substringAfter(" ") }
+
+        var DOC_ROOT: File = File(".").absoluteFile
+
+        init {
+            while (!File(DOC_ROOT, ".git").exists()) {
+                DOC_ROOT = DOC_ROOT.parentFile
+            }
+
+            DOC_ROOT = File(DOC_ROOT, "docs")
+        }
     }
 
     val github by lazy {
@@ -61,7 +71,6 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
                 .sorted()
                 .distinctBy { it }
                 .filter { it !in excludes && methods[it] == null }
-
         var issuesCreated = 0
         if (remaining.isNotEmpty()) {
             val enhancement = github.getLabel("enhancement")

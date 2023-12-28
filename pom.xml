@@ -323,6 +323,17 @@
                 <module>rewrite</module>
             </modules>
         </profile>
+        <profile>
+            <id>critter</id>
+            <activation>
+                <property>
+                    <name>critter</name>
+                </property>
+            </activation>
+            <modules>
+                <module>critter</module>
+            </modules>
+        </profile>
     </profiles>
 
     <modules>
@@ -330,7 +341,6 @@
         <module>util</module>
         <module>core</module>
         <module>kotlin</module>
-        <module>critter</module>
         <module>validation</module>
         <module>examples</module>
     </modules>

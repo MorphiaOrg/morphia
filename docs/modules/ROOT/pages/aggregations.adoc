@@ -115,3 +115,14 @@ A merge is slightly more complex and so has more options to consider.
 In this example, we're merging in to the `budgets` collection and merging any existing documents based on the `_id` as denoted using the `on()` method.
 Because there may be existing data in the collection, we need to instruct the operation how to handle those cases.
 In this example, when documents matching we're choosing to replace them and when they don't we're instructing the operation to insert the new documents in to the collection.
+
+=== Supported Operators
+Every effort is made to provide 100% coverage of all the operators offered by MongoDB. A select handful of operators have been excluded
+for reasons of suitability in Morphia.  In short, some operators just don't make sense in Morphia.  Below is listed all the currently
+supported operators. If an operator is missing and you think it should be included, please file an [issue](https://github.com/MorphiaOrg/morphia/issues) for that operator.
+
+.Stages
+include::aggregation-stages.adoc[]
+
+.Expressions
+include::aggregation-expressions.adoc[]
