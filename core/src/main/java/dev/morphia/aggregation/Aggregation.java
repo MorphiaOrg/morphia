@@ -1,5 +1,7 @@
 package dev.morphia.aggregation;
 
+import com.mongodb.client.model.geojson.Point;
+
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.stages.AddFields;
@@ -7,24 +9,35 @@ import dev.morphia.aggregation.stages.AutoBucket;
 import dev.morphia.aggregation.stages.Bucket;
 import dev.morphia.aggregation.stages.ChangeStream;
 import dev.morphia.aggregation.stages.CollectionStats;
+import dev.morphia.aggregation.stages.Count;
 import dev.morphia.aggregation.stages.CurrentOp;
 import dev.morphia.aggregation.stages.Densify;
+import dev.morphia.aggregation.stages.Densify.Range;
+import dev.morphia.aggregation.stages.Documents;
 import dev.morphia.aggregation.stages.Facet;
 import dev.morphia.aggregation.stages.Fill;
 import dev.morphia.aggregation.stages.GeoNear;
 import dev.morphia.aggregation.stages.GraphLookup;
 import dev.morphia.aggregation.stages.Group;
+import dev.morphia.aggregation.stages.Group.GroupId;
+import dev.morphia.aggregation.stages.IndexStats;
 import dev.morphia.aggregation.stages.Lookup;
+import dev.morphia.aggregation.stages.Match;
 import dev.morphia.aggregation.stages.Merge;
 import dev.morphia.aggregation.stages.Out;
+import dev.morphia.aggregation.stages.PlanCacheStats;
 import dev.morphia.aggregation.stages.Projection;
 import dev.morphia.aggregation.stages.Redact;
 import dev.morphia.aggregation.stages.ReplaceRoot;
 import dev.morphia.aggregation.stages.ReplaceWith;
+import dev.morphia.aggregation.stages.Sample;
 import dev.morphia.aggregation.stages.Set;
 import dev.morphia.aggregation.stages.SetWindowFields;
+import dev.morphia.aggregation.stages.Skip;
 import dev.morphia.aggregation.stages.Sort;
+import dev.morphia.aggregation.stages.SortByCount;
 import dev.morphia.aggregation.stages.Stage;
+import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.query.MorphiaCursor;
@@ -113,9 +126,8 @@ public interface Aggregation<T> {
      *
      * @param bucket the bucket definition
      * @return this
-     * @aggregation.stage $bucketAuto
-     * @mongodb.server.release 3.4
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see AutoBucket#autoBucket()
      */
     Aggregation<T> autoBucket(AutoBucket bucket);
 
@@ -130,9 +142,8 @@ public interface Aggregation<T> {
      *
      * @param bucket the bucket definition
      * @return this
-     * @aggregation.stage $bucket
-     * @mongodb.server.release 3.4
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Bucket#bucket()
      */
     Aggregation<T> bucket(Bucket bucket);
 
@@ -141,8 +152,8 @@ public interface Aggregation<T> {
      *
      * @param stats the stats configuration
      * @return this
-     * @aggregation.stage $collStats
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see CollectionStats#collStats()
      */
     Aggregation<T> collStats(CollectionStats stats);
 
@@ -151,9 +162,9 @@ public interface Aggregation<T> {
      *
      * @param name the field name for the resulting count value
      * @return this
-     * @aggregation.stage $count
      * @mongodb.server.release 3.4
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Count#count(String)
      */
     Aggregation<T> count(String name);
 
@@ -172,9 +183,8 @@ public interface Aggregation<T> {
      *
      * @param currentOp the configuration
      * @return this
-     * @aggregation.stage $currentOp
-     * @mongodb.server.release 3.6
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see CurrentOp#currentOp()
      */
     Aggregation<T> currentOp(CurrentOp currentOp);
 
@@ -183,10 +193,9 @@ public interface Aggregation<T> {
      *
      * @param densify the Densify stage
      * @return this
-     * @mongodb.server.release 5.1
-     * @aggregation.stage $densify
      * @since 2.3
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Densify#densify(String, Range)
      */
     Aggregation<T> densify(Densify densify);
 
@@ -195,10 +204,9 @@ public interface Aggregation<T> {
      *
      * @param documents the documents to use
      * @return this
-     * @mongodb.server.release 5.1
-     * @aggregation.stage $documents
      * @since 2.3
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Documents#documents(DocumentExpression...)
      */
     Aggregation<T> documents(DocumentExpression... documents);
 
@@ -215,9 +223,8 @@ public interface Aggregation<T> {
      *
      * @param facet the facet definition
      * @return this
-     * @aggregation.stage $facet
-     * @mongodb.server.release 3.4
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Facet#facet()
      */
     Aggregation<T> facet(Facet facet);
 
@@ -232,10 +239,9 @@ public interface Aggregation<T> {
      *
      * @param fill the fill definition
      * @return this
-     * @aggregation.stage $fill
-     * @mongodb.server.release 5.3
      * @since 2.3
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Fill#fill()
      */
     Aggregation<T> fill(Fill fill);
 
@@ -244,8 +250,9 @@ public interface Aggregation<T> {
      *
      * @param near the geo query definition
      * @return this
-     * @aggregation.stage $geoNear
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see GeoNear#geoNear(Point)
+     * @see GeoNear#geoNear(double[])
      */
     Aggregation<T> geoNear(GeoNear near);
 
@@ -254,8 +261,9 @@ public interface Aggregation<T> {
      *
      * @param lookup the lookup configuration
      * @return this
-     * @aggregation.stage $graphLookup
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see GraphLookup#graphLookup(String)
+     * @see GraphLookup#graphLookup(Class)
      */
     Aggregation<T> graphLookup(GraphLookup lookup);
 
@@ -266,8 +274,9 @@ public interface Aggregation<T> {
      *
      * @param group the group definition
      * @return this
-     * @aggregation.stage $group
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Group#group(GroupId)
+     * @see Group#group()
      */
     Aggregation<T> group(Group group);
 
@@ -276,9 +285,8 @@ public interface Aggregation<T> {
      * privileges that include indexStats action.
      *
      * @return this
-     * @aggregation.stage $indexStats
-     * @mongodb.server.release 3.2
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see IndexStats#indexStats()
      */
     Aggregation<T> indexStats();
 
@@ -287,8 +295,8 @@ public interface Aggregation<T> {
      *
      * @param limit the maximum docs to pass along to the next stage
      * @return this
-     * @aggregation.stage $limit
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see dev.morphia.aggregation.stages.Limit#limit(long)
      */
     Aggregation<T> limit(long limit);
 
@@ -299,9 +307,10 @@ public interface Aggregation<T> {
      *
      * @param lookup the lookup definition
      * @return this
-     * @aggregation.stage $lookup
-     * @mongodb.server.release 3.6
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Lookup#lookup()
+     * @see Lookup#lookup(String)
+     * @see Lookup#lookup(Class)
      */
     Aggregation<T> lookup(Lookup lookup);
 
@@ -311,8 +320,8 @@ public interface Aggregation<T> {
      *
      * @param filters the filters to use when matching
      * @return this
-     * @aggregation.stage $match
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Match#match(Filter...)
      */
     Aggregation<T> match(Filter... filters);
 
@@ -320,9 +329,8 @@ public interface Aggregation<T> {
      * Returns plan cache information for a collection. The stage returns a document for each plan cache entry.
      *
      * @return this
-     * @aggregation.stage $planCacheStats
-     * @mongodb.server.release 4.2
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see PlanCacheStats#planCacheStats()
      */
     Aggregation<T> planCacheStats();
 
@@ -332,8 +340,8 @@ public interface Aggregation<T> {
      *
      * @param projection the project definition
      * @return this
-     * @aggregation.stage $project
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Projection#project()
      */
     Aggregation<T> project(Projection projection);
 
@@ -342,8 +350,8 @@ public interface Aggregation<T> {
      *
      * @param redact the redaction definition
      * @return this
-     * @aggregation.stage $redact
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Redact#redact(Expression)
      */
     Aggregation<T> redact(Redact redact);
 
@@ -353,9 +361,8 @@ public interface Aggregation<T> {
      *
      * @param root the new root definition
      * @return this
-     * @aggregation.stage $replaceRoot
-     * @mongodb.server.release 3.4
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see ReplaceRoot#replaceRoot()
      */
     Aggregation<T> replaceRoot(ReplaceRoot root);
 
@@ -368,9 +375,8 @@ public interface Aggregation<T> {
      *
      * @param with the replacement definition
      * @return this
-     * @aggregation.stage $replaceWith
-     * @mongodb.server.release 4.2
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see ReplaceWith#replaceWith()
      */
     Aggregation<T> replaceWith(ReplaceWith with);
 
@@ -379,9 +385,8 @@ public interface Aggregation<T> {
      *
      * @param sample the sample definition
      * @return this
-     * @aggregation.stage $sample
-     * @mongodb.server.release 3.2
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Sample#sample(long)
      */
     Aggregation<T> sample(long sample);
 
@@ -394,26 +399,10 @@ public interface Aggregation<T> {
      *
      * @param fields the stage definition
      * @return this
-     * @aggregation.stage $set
-     * @deprecated use {@link #addFields(AddFields)}
-     */
-    default Aggregation<T> set(AddFields fields) {
-        return addFields(fields);
-    }
-
-    /**
-     * Adds new fields to documents. $addFields outputs documents that contain all existing fields from the input documents and newly
-     * added fields.
-     * <p>
-     * The $addFields stage is equivalent to a $project stage that explicitly specifies all existing fields in the input documents and
-     * adds the new fields.
-     *
-     * @param fields the stage definition
-     * @return this
-     * @aggregation.stage $addFields
-     * @mongodb.server.release 3.4
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see AddFields#addFields()
      */
+    @Deprecated(since = "3.0", forRemoval = true)
     Aggregation<T> addFields(AddFields fields);
 
     /**
@@ -427,20 +416,18 @@ public interface Aggregation<T> {
      *
      * @param set the stage to add
      * @return this
-     * @aggregation.stage $set
-     * @mongodb.server.release 4.2
      * @since 2.3
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Set#set()
      */
     Aggregation<T> set(Set set);
 
     /**
      * @param fields the window fields
      * @return this
-     * @mongodb.server.release 5.0
-     * @aggregation.stage $setWindowFields
      * @since 2.3
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see SetWindowFields#setWindowFields()
      */
     Aggregation<T> setWindowFields(SetWindowFields fields);
 
@@ -450,8 +437,8 @@ public interface Aggregation<T> {
      *
      * @param skip the skip definition
      * @return this
-     * @aggregation.stage $skip
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Skip#skip(long)
      */
     Aggregation<T> skip(long skip);
 
@@ -460,8 +447,8 @@ public interface Aggregation<T> {
      *
      * @param sort the sort definition
      * @return this
-     * @aggregation.stage $sort
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Sort#sort()
      */
     Aggregation<T> sort(Sort sort);
 
@@ -475,9 +462,8 @@ public interface Aggregation<T> {
      *
      * @param sort the sort definition
      * @return this
-     * @aggregation.stage $sortByCount
-     * @mongodb.server.release 3.4
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see SortByCount#sortByCount(Object)
      */
     Aggregation<T> sortByCount(Expression sort);
 
@@ -488,10 +474,9 @@ public interface Aggregation<T> {
      * @param type   the type to perform the pipeline against
      * @param stages the pipeline stages
      * @return this
-     * @aggregation.stage $unionWith
-     * @mongodb.server.release 4.4
      * @since 2.1
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see UnionWith#unionWith(Class, Stage...)
      */
     Aggregation<T> unionWith(Class<?> type, Stage... stages);
 
@@ -506,6 +491,7 @@ public interface Aggregation<T> {
      * @mongodb.server.release 4.4
      * @since 2.1
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see UnionWith#unionWith(String, Stage...)
      */
     Aggregation<T> unionWith(String collection, Stage... stages);
 
@@ -514,9 +500,8 @@ public interface Aggregation<T> {
      *
      * @param unset the unset definition
      * @return this
-     * @aggregation.stage $unset
-     * @mongodb.server.release 4.2
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Unset#unset(String, String...)
      */
     Aggregation<T> unset(Unset unset);
 
@@ -526,9 +511,8 @@ public interface Aggregation<T> {
      *
      * @param unwind the unwind definition
      * @return this
-     * @aggregation.stage $unwind
      * @deprecated use {@link #pipeline(Stage...)} instead
-     * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see Unwind#unwind(String)
      */
     Aggregation<T> unwind(Unwind unwind);
 
@@ -537,9 +521,9 @@ public interface Aggregation<T> {
      * aggregation pipeline.
      *
      * @return this
-     * @aggregation.stage $changeStream
      * @since 2.3
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see ChangeStream#changeStream()
      */
     Aggregation changeStream();
 
@@ -549,9 +533,9 @@ public interface Aggregation<T> {
      *
      * @param stream the options to apply to the stage
      * @return this
-     * @aggregation.stage $changeStream
      * @since 2.3
      * @deprecated use {@link #pipeline(Stage...)} instead
+     * @see ChangeStream#changeStream()
      */
     Aggregation changeStream(ChangeStream stream);
 }

@@ -4,8 +4,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Returns statistics regarding a collection or view.
- *
- * @aggregation.stage $collStats
  */
 public class CollectionStats extends Stage {
     private boolean histogram;
@@ -26,6 +24,7 @@ public class CollectionStats extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $collStats
      */
     public static CollectionStats collStats() {
         return new CollectionStats();

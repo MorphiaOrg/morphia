@@ -33,7 +33,7 @@ a|
 | http://docs.mongodb.org/manual/reference/operator/aggregation/anyElementTrue[$anyElementTrue]
 | link:javadoc/dev/morphia/aggregation/expressions/SetExpressions.html#anyElementTrue(java.lang.Object,java.lang.Object%2E%2E%2E)[SetExpressions#anyElementTrue(Object,Object...)]
 
-| http://docs.mongodb.org/manual/reference/operator/aggregation/arrayElemAt[$elementAt]
+| http://docs.mongodb.org/manual/reference/operator/aggregation/arrayElemAt[$arrayElemAt]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#elementAt(java.lang.Object,java.lang.Object)[ArrayExpressions#elementAt(Object,Object)]
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/arrayToObject[$arrayToObject]
@@ -93,7 +93,7 @@ a|
 | http://docs.mongodb.org/manual/reference/operator/aggregation/concatArrays[$concatArrays]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#concatArrays(java.lang.Object,java.lang.Object%2E%2E%2E)[ArrayExpressions#concatArrays(Object,Object...)]
 
-| http://docs.mongodb.org/manual/reference/operator/aggregation/cond[$condition]
+| http://docs.mongodb.org/manual/reference/operator/aggregation/cond[$cond]
 | link:javadoc/dev/morphia/aggregation/expressions/ConditionalExpressions.html#condition(java.lang.Object,java.lang.Object,java.lang.Object)[ConditionalExpressions#condition(Object,Object,Object)]
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/convert[$convert]
@@ -298,7 +298,7 @@ a|
  * link:javadoc/dev/morphia/query/Meta.html#textScore(java.lang.String)[Meta#textScore(String)]
 
 
-| http://docs.mongodb.org/manual/reference/operator/aggregation/millisecond[$milliseconds]
+| http://docs.mongodb.org/manual/reference/operator/aggregation/millisecond[$millisecond]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#milliseconds(java.lang.Object)[DateExpressions#milliseconds(Object)]
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/min[$min]
@@ -474,7 +474,7 @@ a|
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sum[$sum]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#sum(java.lang.Object,java.lang.Object%2E%2E%2E)[AccumulatorExpressions#sum(Object,Object...)]
 
-| http://docs.mongodb.org/manual/reference/operator/aggregation/switch[$switchExpression]
+| http://docs.mongodb.org/manual/reference/operator/aggregation/switch[$switch]
 | link:javadoc/dev/morphia/aggregation/expressions/ConditionalExpressions.html#switchExpression()[ConditionalExpressions#switchExpression()]
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/tan[$tan]

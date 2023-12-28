@@ -30,6 +30,8 @@ public class AddFields extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $addFields
+     * @mongodb.server.release 3.4
      */
     public static AddFields addFields() {
         return new AddFields();

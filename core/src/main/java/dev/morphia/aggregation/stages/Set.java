@@ -31,6 +31,8 @@ public class Set extends Stage {
      * Creates a new Set stage
      *
      * @return the new stage
+     * @aggregation.stage $set
+     * @mongodb.server.release 4.2
      */
     public static Set set() {
         return new Set();

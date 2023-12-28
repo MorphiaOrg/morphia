@@ -34,6 +34,7 @@ public class Projection extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $project
      */
     public static Projection project() {
         return new Projection();

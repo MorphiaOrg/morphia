@@ -26,6 +26,7 @@ public class Redact extends Stage {
      * @param expression the expression
      * @return the new field
      * @since 2.2
+     * @aggregation.stage $redact
      */
     public static Redact redact(Expression expression) {
         Redact redact = new Redact();

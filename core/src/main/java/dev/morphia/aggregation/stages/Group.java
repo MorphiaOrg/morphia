@@ -48,6 +48,7 @@ public class Group extends Stage {
      * @param id the group ID
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $group
      */
     public static Group group(GroupId id) {
         return new Group(id);
@@ -58,6 +59,7 @@ public class Group extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $group
      */
     public static Group group() {
         return new Group();

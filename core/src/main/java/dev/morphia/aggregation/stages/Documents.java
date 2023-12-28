@@ -2,6 +2,7 @@ package dev.morphia.aggregation.stages;
 
 import java.util.List;
 
+import dev.morphia.aggregation.expressions.Expressions;
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
@@ -33,6 +34,9 @@ public class Documents extends Stage {
      *
      * @param expressions the documents
      * @return the new stage
+     * @mongodb.server.release 5.1
+     * @aggregation.stage $documents
+     * @see Expressions#document()
      */
     public static Documents documents(DocumentExpression... expressions) {
         return new Documents(asList(expressions));

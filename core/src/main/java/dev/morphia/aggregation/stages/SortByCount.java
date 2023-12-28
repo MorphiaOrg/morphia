@@ -30,6 +30,8 @@ public class SortByCount extends Stage {
      * @param expression the expression
      * @return this
      * @since 2.2
+     * @aggregation.stage $sortByCount
+     * @mongodb.server.release 3.4
      */
     public static SortByCount sortByCount(Object expression) {
         return new SortByCount(expression);

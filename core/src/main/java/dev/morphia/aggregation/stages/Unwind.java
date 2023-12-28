@@ -31,6 +31,7 @@ public class Unwind extends Stage {
      * @param name the array field
      * @return this
      * @since 2.2
+     * @aggregation.stage $unwind
      */
     public static Unwind unwind(String name) {
         return new Unwind()

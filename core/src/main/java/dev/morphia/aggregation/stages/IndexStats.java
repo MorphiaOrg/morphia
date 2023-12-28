@@ -22,6 +22,8 @@ public class IndexStats extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $indexStats
+     * @mongodb.server.release 3.2
      */
     public static IndexStats indexStats() {
         return new IndexStats();

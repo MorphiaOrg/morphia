@@ -29,6 +29,8 @@ public class CurrentOp extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $currentOp
+     * @mongodb.server.release 3.6
      */
     public static CurrentOp currentOp() {
         return new CurrentOp();

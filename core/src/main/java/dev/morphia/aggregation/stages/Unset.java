@@ -38,6 +38,8 @@ public class Unset extends Stage {
      * @param names the others
      * @return this
      * @since 2.2
+     * @aggregation.stage $unset
+     * @mongodb.server.release 4.2
      */
     public static Unset unset(String name, String... names) {
         Unset unset = new Unset()

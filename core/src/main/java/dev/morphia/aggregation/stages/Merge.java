@@ -99,7 +99,9 @@ public class Merge<M> extends Stage {
      * @param type the target type
      * @param <M>  the entity type
      * @return the new stage
+     * @deprecated use {@link #merge(Class)}
      */
+    @Deprecated(since = "3.0", forRemoval = true)
     public static <M> Merge<M> into(Class<M> type) {
         return new Merge<>(type);
     }
@@ -109,7 +111,9 @@ public class Merge<M> extends Stage {
      *
      * @param collection the target collection
      * @return the new stage
+     * @deprecated use {@link #merge(String)}
      */
+    @Deprecated(since = "3.0", forRemoval = true)
     public static Merge<?> into(String collection) {
         return new Merge<>(collection);
     }
@@ -130,7 +134,9 @@ public class Merge<M> extends Stage {
      * @param database   the target database
      * @param collection the target collection
      * @return the new stage
+     * @deprecated use {@link #merge(String, String)}
      */
+    @Deprecated(since = "3.0", forRemoval = true)
     public static Merge<?> into(String database, String collection) {
         return new Merge<>(database, collection);
     }

@@ -32,7 +32,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    public GraphLookup(String from) {
+    protected GraphLookup(String from) {
         this();
         this.from = from;
     }
@@ -54,7 +54,7 @@ public class GraphLookup extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    public GraphLookup(Class from) {
+    protected GraphLookup(Class from) {
         this();
         this.fromType = from;
     }
@@ -65,6 +65,7 @@ public class GraphLookup extends Stage {
      * @param from the target collection name
      * @return this
      * @since 2.2
+     * @aggregation.stage $graphLookup
      */
     public static GraphLookup graphLookup(String from) {
         return new GraphLookup(from);
@@ -76,6 +77,7 @@ public class GraphLookup extends Stage {
      * @param from the target collection name
      * @return this
      * @since 2.2
+     * @aggregation.stage $graphLookup
      */
     public static GraphLookup graphLookup(Class<?> from) {
         return new GraphLookup(from);

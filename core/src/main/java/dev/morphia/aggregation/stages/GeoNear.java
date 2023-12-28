@@ -60,6 +60,7 @@ public class GeoNear extends Stage {
      * @param point the center point
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $geoNear
      */
     public static GeoNear geoNear(Point point) {
         return new GeoNear(point);
@@ -71,6 +72,7 @@ public class GeoNear extends Stage {
      * @param coordinates the center point coordinates
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $geoNear
      */
     public static GeoNear geoNear(double[] coordinates) {
         return new GeoNear(coordinates);

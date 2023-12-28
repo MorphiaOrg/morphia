@@ -50,11 +50,35 @@ public class UnionWith extends Stage {
         this.pipeline = Collections.unmodifiableList(pipeline);
     }
 
-    public static UnionWith unionWith(Class<?> type, Stage... stages) {
+    /**
+     * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The
+     * stage outputs the combined result set (including duplicates) to the next stage.
+     *
+     * @param type   the type to perform the pipeline against
+     * @param stages the pipeline stages
+     * 
+     * @return the new Stage
+     *
+     * @aggregation.stage $unionWith
+     * @mongodb.server.release 4.4
+     */
+    public static Stage unionWith(Class<?> type, Stage... stages) {
         return new UnionWith(type, Expressions.toList(stages));
     }
 
-    static public UnionWith unionWith(String collection, Stage... stages) {
+    /**
+     * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The
+     * stage outputs the combined result set (including duplicates) to the next stage.
+     *
+     * @param collection the collection to perform the pipeline against
+     * @param stages     the pipeline stages
+     *
+     * @return the new stage
+     *
+     * @aggregation.stage $unionWith
+     * @mongodb.server.release 4.4
+     */
+    static public Stage unionWith(String collection, Stage... stages) {
         return new UnionWith(collection, Expressions.toList(stages));
     }
 

@@ -27,6 +27,7 @@ public class Limit extends Stage {
      * @param limit the limit to apply
      * @return this
      * @since 2.2
+     * @aggregation.stage $limit
      */
     public static Limit limit(long limit) {
         return new Limit(limit);

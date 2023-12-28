@@ -16,7 +16,6 @@ import static java.lang.String.format;
  * Returns a Change Stream cursor on a collection, a database, or an entire cluster. Must be used as the first stage in an aggregation
  * pipeline.
  *
- * @aggregation.stage $changeStream
  * @since 2.3
  */
 public class ChangeStream extends Stage {
@@ -31,7 +30,6 @@ public class ChangeStream extends Stage {
      * Defines a Change Stream cursor on a collection, a database, or an entire cluster. Must be used as the first stage in an aggregation
      * pipeline.
      *
-     * @aggregation.stage $changeStream
      * @since 2.3
      * @hidden
      * @morphia.internal

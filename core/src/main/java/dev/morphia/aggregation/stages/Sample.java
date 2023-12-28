@@ -27,6 +27,8 @@ public class Sample extends Stage {
      * @param size the sample size
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $sample
+     * @mongodb.server.release 3.2
      */
     public static Sample sample(long size) {
         return new Sample(size);

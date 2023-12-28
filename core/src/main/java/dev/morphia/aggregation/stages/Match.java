@@ -28,6 +28,7 @@ public class Match extends Stage {
      * @param filters the filters to apply
      * @return this
      * @since 2.2
+     * @aggregation.stage $match
      */
     public static Match match(Filter... filters) {
         return new Match(filters);

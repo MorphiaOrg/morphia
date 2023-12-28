@@ -38,6 +38,8 @@ public class Facet extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $facet
+     * @mongodb.server.release 3.4
      */
     public static Facet facet() {
         return new Facet();

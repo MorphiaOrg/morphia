@@ -64,6 +64,8 @@ public class Lookup extends Stage {
      * @param from the type to use for determining the target collection
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $lookup
+     * @mongodb.server.release 3.6
      */
     public static Lookup lookup(Class<?> from) {
         return new Lookup(from);
@@ -75,6 +77,8 @@ public class Lookup extends Stage {
      * @param from the target collection
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $lookup
+     * @mongodb.server.release 3.6
      */
     public static Lookup lookup(String from) {
         return new Lookup(from);
@@ -85,6 +89,8 @@ public class Lookup extends Stage {
      *
      * @return the new stage
      * @since 2.3
+     * @aggregation.stage $lookup
+     * @mongodb.server.release 3.6
      */
     public static Lookup lookup() {
         return new Lookup();

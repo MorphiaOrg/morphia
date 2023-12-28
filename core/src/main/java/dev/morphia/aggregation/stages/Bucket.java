@@ -42,6 +42,8 @@ public class Bucket extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $bucket
+     * @mongodb.server.release 3.4
      */
     public static Bucket bucket() {
         return new Bucket();

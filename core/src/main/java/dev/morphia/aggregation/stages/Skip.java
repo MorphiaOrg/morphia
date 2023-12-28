@@ -27,6 +27,7 @@ public class Skip extends Stage {
      * @param size the skip size
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $skip
      */
     public static Skip skip(long size) {
         return new Skip(size);

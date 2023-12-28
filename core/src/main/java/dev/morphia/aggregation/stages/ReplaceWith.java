@@ -49,6 +49,8 @@ public class ReplaceWith extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $replaceWith
+     * @mongodb.server.release 4.2
      */
     public static ReplaceWith replaceWith() {
         return new ReplaceWith();

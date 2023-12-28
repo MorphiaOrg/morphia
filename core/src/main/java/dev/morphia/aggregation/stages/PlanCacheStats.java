@@ -22,10 +22,9 @@ public class PlanCacheStats extends Stage {
      *
      * @return the new stage
      * @since 2.2
-     * @hidden
-     * @morphia.internal
+     * @aggregation.stage $planCacheStats
+     * @mongodb.server.release 4.2
      */
-    @MorphiaInternal
     public static PlanCacheStats planCacheStats() {
         return new PlanCacheStats();
     }

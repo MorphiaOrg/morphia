@@ -28,6 +28,7 @@ public class Count extends Stage {
      * @param name the field name
      * @return the new stage
      * @since 3.0
+     * @aggregation.stage $count
      */
     public static Count count(String name) {
         return new Count(name);

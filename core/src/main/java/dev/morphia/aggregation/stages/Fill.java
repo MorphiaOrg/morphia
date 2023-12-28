@@ -45,6 +45,8 @@ public class Fill extends Stage {
      * Creates a new $fill stage
      *
      * @return the new stage
+     * @aggregation.stage $fill
+     * @mongodb.server.release 5.3
      */
     public static Fill fill() {
         return new Fill();

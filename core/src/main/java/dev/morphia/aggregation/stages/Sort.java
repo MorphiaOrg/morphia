@@ -31,6 +31,7 @@ public class Sort extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $sort
      */
     public static Sort sort() {
         return new Sort();

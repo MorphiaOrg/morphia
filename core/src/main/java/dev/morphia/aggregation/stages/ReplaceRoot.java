@@ -46,6 +46,8 @@ public class ReplaceRoot extends Stage {
      *
      * @return the new stage
      * @since 2.2
+     * @aggregation.stage $replaceRoot
+     * @mongodb.server.release 3.4
      */
     public static ReplaceRoot replaceRoot() {
         return new ReplaceRoot();
