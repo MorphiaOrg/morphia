@@ -67,7 +67,11 @@ object RstAuditor {
                 .filterNot { it.folder.exists() }
 
         emitDocs(TreeMap(methods), type)
-        return Results(created, empty, missingServerRelease)
+        return Results(
+            created,
+            empty,
+            if (type == EXPRESSION) missingServerRelease else emptyList()
+        )
     }
 
     private fun hasReleaseTag(it: Pair<Operator, List<MethodSource<*>>?>): Boolean {
