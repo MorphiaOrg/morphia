@@ -52,6 +52,7 @@ public final class Miscellaneous {
      *
      * @return the filter
      * @aggregation.expression $rand
+     * @mongodb.server.release 4.4.2
      * @since 2.2
      */
     public static Expression rand() {
@@ -65,6 +66,7 @@ public final class Miscellaneous {
      * @param rate the rate to check against
      * @return the filter
      * @aggregation.expression $sampleRate
+     * @mongodb.server.release 4.4.2
      * @since 2.2
      */
     public static Filter sampleRate(double rate) {

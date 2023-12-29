@@ -35,6 +35,7 @@ public final class TypeExpressions {
      * @param input the value to check
      * @return the new expression
      * @aggregation.expression $isNumber
+     * @mongodb.server.release 4.4
      * @since 2.1
      */
     public static Expression isNumber(Object input) {

@@ -75,6 +75,7 @@ public final class StringExpressions {
      * @param input the string to evaluate
      * @return the new expression
      * @aggregation.expression $regexFind
+     * @mongodb.server.release 4.2
      */
     public static RegexExpression regexFind(Object input) {
         return new RegexExpression("$regexFind", wrap(input));
@@ -86,6 +87,7 @@ public final class StringExpressions {
      * @param input the string to evaluate
      * @return the new expression
      * @aggregation.expression $regexFindAll
+     * @mongodb.server.release 4.2
      */
     public static RegexExpression regexFindAll(Object input) {
         return new RegexExpression("$regexFindAll", wrap(input));
@@ -97,6 +99,7 @@ public final class StringExpressions {
      * @param input the string to process
      * @return the new expression
      * @aggregation.expression $regexMatch
+     * @mongodb.server.release 4.2
      */
     public static RegexExpression regexMatch(Object input) {
         return new RegexExpression("$regexMatch", wrap(input));
@@ -110,6 +113,7 @@ public final class StringExpressions {
      * @param replacement the replacement value
      * @return the new expression
      * @aggregation.expression $replaceAll
+     * @mongodb.server.release 4.4
      * @since 2.1
      */
     public static Expression replaceAll(Object input, Object find, Object replacement) {
@@ -124,6 +128,7 @@ public final class StringExpressions {
      * @param replacement the replacement value
      * @return the new expression
      * @aggregation.expression $replaceOne
+     * @mongodb.server.release 4.4
      * @since 2.1
      */
     public static Expression replaceOne(Object input, Object find, Object replacement) {

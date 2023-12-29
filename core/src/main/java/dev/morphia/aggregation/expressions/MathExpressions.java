@@ -51,6 +51,7 @@ public final class MathExpressions {
      * @param second the second value to use
      * @return the new expression
      * @aggregation.expression $bitAnd
+     * @mongodb.server.release 6.3
      * @since 3.0
      */
     public static Expression bitAnd(Object first, Object second) {
@@ -63,6 +64,7 @@ public final class MathExpressions {
      * @param value the value to use
      * @return the new expression
      * @aggregation.expression $bitNot
+     * @mongodb.server.release 6.3
      * @since 3.0
      */
     public static Expression bitNot(Object value) {
@@ -76,6 +78,7 @@ public final class MathExpressions {
      * @param second the second value to use
      * @return the new expression
      * @aggregation.expression $bitOr
+     * @mongodb.server.release 6.3
      * @since 3.0
      */
     public static Expression bitOr(Object first, Object second) {
@@ -89,6 +92,7 @@ public final class MathExpressions {
      * @param second the second value to use
      * @return the new expression
      * @aggregation.expression $bitXor
+     * @mongodb.server.release 6.3
      * @since 3.0
      */
     public static Expression bitXor(Object first, Object second) {
@@ -180,6 +184,7 @@ public final class MathExpressions {
      * @param input the input
      * @return the new expression
      * @aggregation.expression $median
+     * @mongodb.server.release 7.0
      * @since 3.0
      */
     public static Expression median(Object input) {
@@ -259,6 +264,7 @@ public final class MathExpressions {
      * @param place  the place to round to
      * @return the new expression
      * @aggregation.expression $round
+     * @mongodb.server.release 4.2
      */
     public static Expression round(Object number, Object place) {
         return new MathExpression("$round", wrap(asList(number, place)));

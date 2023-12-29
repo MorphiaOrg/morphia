@@ -9,6 +9,7 @@ import dev.morphia.audits.model.OperatorType.STAGE
 import dev.morphia.audits.model.Results
 import java.io.File
 import org.testng.Assert.assertEquals
+import org.testng.Assert.assertTrue
 import org.testng.annotations.Test
 
 class AggregationAuditTest {
@@ -18,7 +19,7 @@ class AggregationAuditTest {
 
     @Test
     fun testOperator() {
-        var operator = Operator(File("${aggRoot}/count-accumulator.txt"))
+        var operator = Operator(File("${aggRoot}/unsetField.txt"))
     }
 
     @Test
@@ -74,6 +75,11 @@ class AggregationAuditTest {
                 results.noExamples.joinToString("\n\t", prefix = "\n\t") {
                     "${it.operator}: ${it.name}"
                 }
+        )
+        val noTags = results.noServerRelease.joinToString("\n", "\n")
+        assertTrue(
+            noTags.trim().isEmpty(),
+            "Some operators are missing server release tags: ${noTags}"
         )
     }
 }

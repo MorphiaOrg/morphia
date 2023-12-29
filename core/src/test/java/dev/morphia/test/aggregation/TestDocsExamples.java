@@ -1,11 +1,11 @@
 package dev.morphia.test.aggregation;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.stages.Documents;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.aggregation.model.Author;
 import dev.morphia.test.aggregation.model.Book;
 
+import org.bson.Document;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
@@ -38,7 +38,7 @@ var aggregate = datastore.aggregate(Book.class).pipeline(
     @Test
     public void testMerge() {
         var datastore = getDs();
-        var aggregation = datastore.aggregate(Documents.class);
+        var aggregation = datastore.aggregate(Document.class);
 // @formatter:off
 // tag::merge[]
 aggregation.pipeline(

@@ -38,6 +38,7 @@ public class ConditionalExpressions {
      *
      * @return the new expression
      * @aggregation.expression $ifNull
+     * @mongodb.server.release 5.0
      */
     public static IfNull ifNull() {
         return new IfNull();

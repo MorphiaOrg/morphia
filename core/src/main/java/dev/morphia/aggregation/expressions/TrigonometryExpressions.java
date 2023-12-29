@@ -21,6 +21,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $acos
+     * @mongodb.server.release 4.2
      */
     public static Expression acos(Object value) {
         return new Expression("$acos", wrap(value));
@@ -32,6 +33,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $acosh
+     * @mongodb.server.release 4.2
      */
     public static Expression acosh(Object value) {
         return new Expression("$acosh", wrap(value));
@@ -43,6 +45,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $asin
+     * @mongodb.server.release 4.2
      */
     public static Expression asin(Object value) {
         return new Expression("$asin", wrap(value));
@@ -54,6 +57,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $asinh
+     * @mongodb.server.release 4.2
      */
     public static Expression asinh(Object value) {
         return new Expression("$asinh", wrap(value));
@@ -65,6 +69,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $atan
+     * @mongodb.server.release 4.2
      */
     public static Expression atan(Object value) {
         return new Expression("$atan", wrap(value));
@@ -78,6 +83,7 @@ public final class TrigonometryExpressions {
      * @param xValue the x value
      * @return the new expression
      * @aggregation.expression $atan2
+     * @mongodb.server.release 4.2
      */
     public static Expression atan2(Object yValue, Object xValue) {
         return new Expression("$atan2", wrap(List.of(yValue, xValue)));
@@ -89,6 +95,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $atanh
+     * @mongodb.server.release 4.2
      */
     public static Expression atanh(Object value) {
         return new Expression("$atanh", wrap(value));
@@ -100,6 +107,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $cos
+     * @mongodb.server.release 4.2
      */
     public static Expression cos(Object value) {
         return new Expression("$cos", wrap(value));
@@ -111,6 +119,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $cosh
+     * @mongodb.server.release 4.2
      * @since 2.2
      */
     public static Expression cosh(Object value) {
@@ -123,6 +132,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $degreesToRadians
+     * @mongodb.server.release 4.2
      */
     public static Expression degreesToRadians(Object value) {
         return new Expression("$degreesToRadians", wrap(value));
@@ -134,6 +144,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $radiansToDegrees
+     * @mongodb.server.release 4.2
      */
     public static Expression radiansToDegrees(Object value) {
         return new Expression("$radiansToDegrees", wrap(value));
@@ -145,6 +156,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $sin
+     * @mongodb.server.release 4.2
      */
     public static Expression sin(Object value) {
         return new Expression("$sin", wrap(value));
@@ -156,6 +168,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $sinh
+     * @mongodb.server.release 4.2
      * @since 2.2
      */
     public static Expression sinh(Object value) {
@@ -168,6 +181,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $tan
+     * @mongodb.server.release 4.2
      */
     public static Expression tan(Object value) {
         return new Expression("$tan", wrap(value));
@@ -179,6 +193,7 @@ public final class TrigonometryExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $tanh
+     * @mongodb.server.release 4.2
      * @since 2.2
      */
     public static Expression tanh(Object value) {

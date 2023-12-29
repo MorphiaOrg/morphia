@@ -214,6 +214,7 @@ public final class WindowExpressions {
      * @param additional any subsequent expressions to include in the expression
      * @return the new expression
      * @aggregation.expression $stdDevPop
+     * @mongodb.server.release 5.0
      * @since 2.3
      */
     public static Expression stdDevPop(Object value, Object... additional) {
@@ -227,6 +228,7 @@ public final class WindowExpressions {
      * @param additional any subsequent expressions to include in the expression
      * @return the new expression
      * @aggregation.expression $stdDevSamp
+     * @mongodb.server.release 5.0
      * @since 2.3
      */
     public static Expression stdDevSamp(Object value, Object... additional) {

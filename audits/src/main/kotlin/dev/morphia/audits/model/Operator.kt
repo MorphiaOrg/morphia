@@ -10,6 +10,7 @@ import dev.morphia.audits.sections
 import java.io.File
 
 class Operator(var source: File) {
+    var versionAdded: String?
     var name = source.nameWithoutExtension
     var resourceFolder: File
     val created: Boolean
@@ -20,6 +21,14 @@ class Operator(var source: File) {
 
     init {
         type = if (source.readText().contains(".. pipeline:: \$")) STAGE else EXPRESSION
+        versionAdded =
+            source
+                .readLines()
+                .filter { it.contains(".. versionadded:: ") }
+                .firstOrNull()
+                ?.substringAfterLast(":")
+                ?.trim()
+
         resourceFolder =
             File(
                     RstAuditor.coreTestRoot,

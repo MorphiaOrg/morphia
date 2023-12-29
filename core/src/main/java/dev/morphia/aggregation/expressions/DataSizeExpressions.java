@@ -20,6 +20,7 @@ public final class DataSizeExpressions {
      * @param value the value to examine
      * @return the new value
      * @aggregation.expression $binarySize
+     * @mongodb.server.release 4.4
      */
     public static Expression binarySize(Object value) {
         return new Expression("$binarySize", wrap(value));
@@ -31,6 +32,7 @@ public final class DataSizeExpressions {
      * @param value the value to examine
      * @return the new expression
      * @aggregation.expression $bsonSize
+     * @mongodb.server.release 4.4
      */
     public static Expression bsonSize(Object value) {
         return new Expression("$bsonSize", wrap(value));

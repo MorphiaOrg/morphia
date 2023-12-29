@@ -9,6 +9,7 @@ import dev.morphia.audits.model.OperatorType.STAGE
 import dev.morphia.audits.model.Results
 import java.io.File
 import java.util.TreeMap
+import kotlin.collections.Map.Entry
 import org.jboss.forge.roaster.model.source.MethodSource
 import org.jboss.forge.roaster.model.source.ParameterSource
 
@@ -42,6 +43,22 @@ object RstAuditor {
                 notImplemented,
                 listOf("enhancement", "aggregation")
             )
+        var mapped =
+            operators
+                .map { it to methods[it.operator] }
+                .filter { it.first.versionAdded != null && !hasReleaseTag(it) }
+                .toMap()
+
+        var missingServerRelease =
+            mapped
+                .map { it: Entry<Operator, List<MethodSource<*>>?> ->
+                    val version = it.key.versionAdded
+                    it.value?.map { method ->
+                        "${method.getOrigin().getQualifiedName()}#${method.name} needs a release tag with version $version"
+                    }
+                }
+                .flatMap { it as List<String?> }
+                .filterNotNull()
         operators.forEach { it.output() }
         val empty =
             operators
@@ -50,7 +67,19 @@ object RstAuditor {
                 .filterNot { it.folder.exists() }
 
         emitDocs(TreeMap(methods), type)
-        return Results(created, empty)
+        return Results(created, empty, missingServerRelease)
+    }
+
+    private fun hasReleaseTag(it: Pair<Operator, List<MethodSource<*>>?>): Boolean {
+        return it.second?.all { method ->
+            val tag =
+                method.javaDoc.tags
+                    .filter { it.name == "@mongodb.server.release" }
+                    .map { it.value }
+                    .firstOrNull()
+
+            return tag == it.first.versionAdded
+        } == true
     }
 
     private fun emitDocs(methods: Map<String, List<MethodSource<*>>>, type: OperatorType) {

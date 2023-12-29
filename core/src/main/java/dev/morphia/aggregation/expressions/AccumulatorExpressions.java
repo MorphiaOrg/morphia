@@ -37,6 +37,7 @@ public final class AccumulatorExpressions {
      * @param mergeFunction      used to merge two internal states.
      * @return the new expression
      * @aggregation.expression $accumulator
+     * @mongodb.server.release 4.4
      * @since 2.1
      */
     public static AccumulatorExpression accumulator(String initFunction,
@@ -52,6 +53,7 @@ public final class AccumulatorExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $addToSet
+     * @mongodb.server.release 5.0
      */
     public static Expression addToSet(Object value) {
         return new Expression("$addToSet", wrap(value));
@@ -64,6 +66,7 @@ public final class AccumulatorExpressions {
      * @param additional any subsequent expressions to include in the expression
      * @return the new expression
      * @aggregation.expression $avg
+     * @mongodb.server.release 5.0
      */
     public static Expression avg(Object value, Object... additional) {
         return new Accumulator("$avg", wrap(value, additional));
@@ -119,6 +122,7 @@ public final class AccumulatorExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $first
+     * @mongodb.server.release 5.0
      */
     public static Expression first(Object value) {
         return new Expression("$first", wrap(value));
@@ -147,6 +151,7 @@ public final class AccumulatorExpressions {
      * @param args the function arguments
      * @return the new expression
      * @aggregation.expression $function
+     * @mongodb.server.release 4.4
      * @since 2.1
      */
     public static Expression function(String body, Object... args) {
@@ -159,6 +164,7 @@ public final class AccumulatorExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $last
+     * @mongodb.server.release 5.0
      */
     public static Expression last(Object value) {
         return new Expression("$last", wrap(value));
@@ -187,6 +193,7 @@ public final class AccumulatorExpressions {
      * @param others optional other fields to consider
      * @return the new expression
      * @aggregation.expression $max
+     * @mongodb.server.release 5.0
      */
     public static Expression max(Object value, Object... others) {
         var maxValue = wrap(value);
@@ -222,6 +229,7 @@ public final class AccumulatorExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $min
+     * @mongodb.server.release 5.0
      */
     public static Expression min(Object value, Object... others) {
         var minValue = wrap(value);
@@ -257,6 +265,7 @@ public final class AccumulatorExpressions {
      * @param value the value
      * @return the new expression
      * @aggregation.expression $push
+     * @mongodb.server.release 5.0
      */
     public static Expression push(Object value) {
         return new Expression("$push", wrap(value));
@@ -270,6 +279,7 @@ public final class AccumulatorExpressions {
      *
      * @return the new expression
      * @aggregation.expression $push
+     * @mongodb.server.release 5.0
      */
     public static Push push() {
         return new Push();
@@ -282,6 +292,7 @@ public final class AccumulatorExpressions {
      * @param additional any subsequent values to include in the sum
      * @return the new expression
      * @aggregation.expression $sum
+     * @mongodb.server.release 5.0
      */
     public static Expression sum(Object first, Object... additional) {
         return new Accumulator("$sum", wrap(first, additional));
