@@ -340,6 +340,7 @@
         <module>build-plugins</module>
         <module>util</module>
         <module>core</module>
+        <module>docs</module>
         <module>kotlin</module>
         <module>validation</module>
         <module>examples</module>

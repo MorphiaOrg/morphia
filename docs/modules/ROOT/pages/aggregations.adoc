@@ -12,31 +12,21 @@ As with querying, we start with the `Datastore`:
 
 [source,java]
 ----
-MorphiaCursor<Author> aggregate = getDs().aggregate(Book.class)
-     .group(of(id("author"))
-                .field("books", push(field("title"))))
-     .sort(Sort.on().ascending("name"))
-     .execute(Author.class);
+include::example$TestDocsExamples.java[tag=basic]
 ----
 
-`aggregate()` takes a `Class` literal.
-This lets Morphia know which collection to perform this aggregation against.
-Because of the transformational operations available in the aggregation {docsRef}/core/aggregation-pipeline[pipeline], Morphia can not validate as much as it can with querying so care will need to be taken to ensure document fields actually exist when referencing them in your pipeline.
+`aggregate()` takes a `Class` literal. This lets Morphia know which collection to perform this aggregation against. Because of the transformational operations available in the aggregation {docsRef}/core/aggregation-pipeline[pipeline], Morphia can not validate as much as it can with querying so care will need to be taken to ensure document fields actually exist when referencing them in your pipeline.
 
 === The Pipeline
 
 Aggregation pipelines are comprised of a series stages.
-Our example here has only one stage: `group()`.
-This method is the Morphia equivalent of the {docsRef}/reference/operator/aggregation/group/[$group] operator.
-This stage, as the name suggests, groups together documents based on various criteria.
-In this example, we are collecting together all the books by author.  `group()` takes one parameter: a `Group` instance.
-This instance is created using the `Group.of()` method which will return a new `Group` stage instance.
-There are a few overloads but the simplest version, `of()`, will generate a `$group` stage with no `_id`
-field in the document.
-In this case, we're passing the output of the `id(String)` method which creates an `_id` field using the values found in the `author` properties found in the collection's documents.
+Our example here with the `group()` stage. This method is the Morphia equivalent of the
+{docsRef}/reference/operator/aggregation/group/[$group] operator. This stage, as the name suggests, groups together documents based on
+various criteria. In this example, we are defining the group ID as the `author` field which will collect all the books by the author
+together.
 
-The next step defines a new field, `books` comprised of the titles of the books found in each document.
-(For reference, this example is the Morphia equivalent of an {docsRef}/reference/operator/aggregation/group/#group-title-by-author[example] found in the aggregation tutorials.) This results in a series of documents that look like this:
+The next step defines a new field, `books` comprised of the titles of the books found in each document.  (For reference, this example is
+the Morphia equivalent of an {docsRef}/reference/operator/aggregation/group/#group-title-by-author[example] found in the aggregation tutorials.) This results in a series of documents that look like this:
 
 [source,json]
 ----
@@ -47,7 +37,7 @@ The next step defines a new field, `books` comprised of the titles of the books 
 === Executing the Pipeline
 
 Once your pipeline is complete, you can execute it via the `execute()` method.
-This method takes a `Class` reference for the target type of your aggregation.
+This method optionally takes a `Class` reference for the target type of your aggregation.
 Given this type, Morphia will map each document in the results and return it.
 Additionally, you can also include some options to `execute()`.
 We can use the various options on the
@@ -55,10 +45,9 @@ link:javadoc/dev/morphia/aggregation/AggregationOptions.html[AggregationOptions]
 
 ==== $out
 
-Depending your use case, you might not watch to return the results of your aggregation but simply output them to another collection.
+Depending your use case, you might not want to return the results of your aggregation but simply output them to another collection.
 That's where `$out` comes in.  {docsRef}/reference/operator/aggregation/out/[$out] is an operator that allows the results of a pipeline to be stored in to a named collection.
-This collection can not be sharded or a capped collection, however.
-This collection, if it does not exist, will be created upon execution of the pipeline.
+This collection can not be sharded or a capped collection, however. This collection, if it does not exist, will be created upon execution of the pipeline.
 
 [WARNING]
 ====
@@ -69,52 +58,33 @@ An example aggregation using the `$out` stage looks like this:
 
 [source,java]
 ----
-datastore.aggregate(Book.class)
-       .group(Group.of(id("author"))
-                   .field("books", push()
-                                       .single(field("title"))))
-       .out(Out.to(Author.class));
+include::example$TestDocsExamples.java[tag=out]
 ----
 
-You'll note that `out()` is the final method called here rather than `execute()`.
-This is because `$out` must be the final stage in the pipeline and it simply makes no sense to do anything other than execute the pipeline at that point.
-If you look at what we're passing to the method, you'll notice the `Out` class.
-There are currently two methods of note on `Out`:  `to(Class)` and `to(String)`.
-Using either of these methods instructs Morphia to write to either the collection mapped for the given `Class` or the named collection as noted by the String give.
-
-[NOTE]
-====
-You may be wondering about the use of `Out` here and that it seems a bit overcomplicated.
-One of the design goals for the 2.0 API is to simplify the overall API and to reduce the number of overloads through the introduction of parameter or options objects.
-By limiting the `Aggregation` API to two methods for `$out` (the seconds takes an `AggregationOptions` reference), we can keep `Aggregation` itself slim and incorporate any future variations in `$out` limited to the `Out` class.
-This should, hopefully, make both APIs easier to digest and evolve.
-====
+You'll note that `out()` is the final stage.  `$out` and `$merge` must be the final stage in our pipeline.  We pass a type to `out()`
+that reflects the collection we want to write our output to.  Morphia will use the type-to-collection mapping you've defined when mapping
+your entities to determine that collection name.  You may also pass a String with the collection name as well if the target collection
+does not correspond to a mapped entity.
 
 ==== $merge
 
 {docsRef}/reference/operator/aggregation/merge/[$merge] is a very similar option with a some major differences.
-The biggest difference is that `$merge` can write to existing collections without destroying the existing documents.  `$out` would obliterate any existing documents and replace them with the results of the pipeline.  `$merge`, however, can deposit these new results alongside existing data and update existing data.
+The biggest difference is that `$merge` can write to existing collections without destroying the existing documents.  `$out` would
+overwrite any existing documents and replace them with the results of the pipeline.  `$merge`, however, can deposit these new results alongside existing data and update existing data.
 
 Using `$merge` might look something like this:
 
 [source,java]
 ----
-datastore.aggregate(Salary.class)
-   .group(Group.of(id()
-                       .field("fiscal_year")
-                       .field("dept"))
-               .field("salaries", sum(field("salary"))))
-   .merge(Merge.into("budgets")
-               .on("_id")
-               .whenMatched(WhenMatched.REPLACE)
-               .whenNotMatched(WhenNotMatched.INSERT));
+include::example$TestDocsExamples.java[tag=merge]
 ----
 
-Much like `out()` above, for `merge()` we pass in a `Merge` reference as created by the `Merge.into()` method.
-A merge is slightly more complex and so has more options to consider.
-In this example, we're merging in to the `budgets` collection and merging any existing documents based on the `_id` as denoted using the `on()` method.
+Much like `out()` above, for `merge()` we pass in a collection information but here we are also passing in which database to find/create
+the collection in. A merge is slightly more complex and so has more options to consider.
+In this example, we're merging in to the `budgets` collection in the `reporting` database and merging any existing documents based on the`_id` as denoted using the `on()` method.
 Because there may be existing data in the collection, we need to instruct the operation how to handle those cases.
-In this example, when documents matching we're choosing to replace them and when they don't we're instructing the operation to insert the new documents in to the collection.
+In this example, when documents matching we're choosing to replace them and when they don't we're instructing the operation to insert the
+new documents in to the collection.  Other options are defined on `com.mongodb.client.model.MergeOptions` type defined by the Java driver.
 
 === Supported Operators
 Every effort is made to provide 100% coverage of all the operators offered by MongoDB. A select handful of operators have been excluded

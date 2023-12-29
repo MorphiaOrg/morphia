@@ -58,6 +58,14 @@ public interface Aggregation<T> {
     Aggregation<T> pipeline(Stage... stages);
 
     /**
+     * Execute the aggregation. This form and {@link #execute(AggregationOptions)} should be used for pipelines with $out and $merge
+     * that do no expect any results to be returned.
+     *
+     * @see #execute(AggregationOptions)
+     */
+    void execute();
+
+    /**
      * Execute the aggregation and get the results.
      *
      * @param resultType the type of the result
@@ -65,6 +73,14 @@ public interface Aggregation<T> {
      * @return a MorphiaCursor
      */
     <S> MorphiaCursor<S> execute(Class<S> resultType);
+
+    /**
+     * Execute the aggregation. This form and {@link #execute()} should be used for pipelines with $out and $merge
+     * that do no expect any results to be returned.
+     *
+     * @see #execute()
+     */
+    void execute(AggregationOptions options);
 
     /**
      * Execute the aggregation and get the results.

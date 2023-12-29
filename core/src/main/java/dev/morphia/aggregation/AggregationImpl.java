@@ -121,6 +121,16 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    public void execute() {
+        execute(Document.class);
+    }
+
+    @Override
+    public void execute(AggregationOptions options) {
+        execute(Document.class, options);
+    }
+
+    @Override
     public <R> MorphiaCursor<R> execute(Class<R> resultType) {
         MongoCursor<R> cursor;
         List<Document> pipeline = pipeline();
