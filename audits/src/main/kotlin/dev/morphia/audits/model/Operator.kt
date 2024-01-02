@@ -45,8 +45,10 @@ class Operator(var source: File) {
             }
     }
 
+    fun ignored() = File(resourceFolder, "ignored").exists()
+
     fun output() {
-        if (!File(resourceFolder, "ignored").exists()) {
+        if (!ignored()) {
             examples
                 .filterNot { it.isEmpty() }
                 .forEachIndexed { index, it ->

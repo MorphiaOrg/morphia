@@ -56,11 +56,12 @@ object RstAuditor {
                         "${method.getOrigin().getQualifiedName()}#${method.name} needs a release tag with version $version"
                     }
                 }
-                .flatMap { it as List<String?> }
+                .flatMap { it as? List<String?> ?: emptyList() }
                 .filterNotNull()
-        operators.forEach { it.output() }
+        operators.filterNot { it.ignored() }.forEach { it.output() }
         val empty =
             operators
+                .filterNot { it.ignored() }
                 .filter { it.examples.size == 1 }
                 .flatMap { it.examples }
                 .filterNot { it.folder.exists() }
