@@ -46,9 +46,13 @@ class Operator(var source: File) {
     }
 
     fun output() {
-        examples
-            .filterNot { it.isEmpty() }
-            .forEachIndexed { index, it -> it.output(File(resourceFolder, "example${index + 1}")) }
+        if (!File(resourceFolder, "ignored").exists()) {
+            examples
+                .filterNot { it.isEmpty() }
+                .forEachIndexed { index, it ->
+                    it.output(File(resourceFolder, "example${index + 1}"))
+                }
+        }
     }
 
     private fun subpath() = if (type == EXPRESSION) "expressions" else "stages"

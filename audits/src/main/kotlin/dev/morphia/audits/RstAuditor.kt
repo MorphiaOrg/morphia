@@ -19,7 +19,7 @@ object RstAuditor {
     val aggRoot = File(auditRoot, "source/reference/operator/aggregation")
     val includesRoot = File(auditRoot, "source")
 
-    fun aggregations(type: OperatorType, exclusions: List<String> = listOf()): Results {
+    fun aggregations(type: OperatorType): Results {
         val methods =
             when (type) {
                 EXPRESSION -> findMethods("@aggregation.expression")
@@ -30,7 +30,6 @@ object RstAuditor {
                 .walk()
                 .filter { it.isFile }
                 .filter { !it.equals(aggRoot) }
-                .filter { it.nameWithoutExtension !in exclusions }
                 .map { Operator(it) }
                 .filter { it.type == type }
                 .toList()

@@ -13,6 +13,32 @@ import org.testng.Assert.assertTrue
 import org.testng.annotations.Test
 
 class AggregationAuditTest {
+    companion object {
+        val EXPRESSION_IGNORES =
+            listOf(
+                "interface",
+                "search", // a complicated animal.  we'll get there.
+                "searchMeta", // a complicated animal.  we'll get there.
+                "substr", // deprecated/aliased away
+                "toggle-logging",
+                "vectorSearch"
+            )
+        val STAGE_IGNORES =
+            listOf(
+                "changeStream",
+                "changeStreamSplitLargeEvent",
+                "collStats",
+                "listLocalSessions",
+                "listSampledQueries",
+                "listSearchIndexes",
+                "listSessions",
+                "queryStats", // unclear how this would be needed in morphia
+                "shardedDataDistribution",
+                "toHashedIndexKey",
+                "vectorSearch",
+            )
+    }
+
     init {
         GithubProject.dryRun = System.getenv()["GITHUB_ACTION"] == null
     }
@@ -24,41 +50,12 @@ class AggregationAuditTest {
 
     @Test
     fun expressions() {
-        validate(
-            RstAuditor.aggregations(
-                EXPRESSION,
-                listOf(
-                    "interface",
-                    "search", // a complicated animal.  we'll get there.
-                    "searchMeta", // a complicated animal.  we'll get there.
-                    "substr", // deprecated/aliased away
-                    "toggle-logging",
-                    "vectorSearch"
-                )
-            )
-        )
+        validate(RstAuditor.aggregations(EXPRESSION))
     }
 
     @Test
     fun stages() {
-        validate(
-            RstAuditor.aggregations(
-                STAGE,
-                listOf(
-                    "changeStream",
-                    "changeStreamSplitLargeEvent",
-                    "collStats",
-                    "listLocalSessions",
-                    "listSampledQueries",
-                    "listSearchIndexes",
-                    "listSessions",
-                    "queryStats", // unclear how this would be needed in morphia
-                    "shardedDataDistribution",
-                    "toHashedIndexKey",
-                    "vectorSearch",
-                )
-            )
-        )
+        validate(RstAuditor.aggregations(STAGE))
     }
 
     private fun validate(results: Results) {

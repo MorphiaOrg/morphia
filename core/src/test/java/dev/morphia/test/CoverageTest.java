@@ -1,6 +1,8 @@
 package dev.morphia.test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -32,6 +34,20 @@ public abstract class CoverageTest extends TestBase {
         File path = AggregationTest.rootToCore(root);
         try {
             stream(path.listFiles())
+                    .filter(file -> new File(file, "ignored").exists())
+                    .map(file -> new File(file, "ignored"))
+                    .filter(file -> {
+                        try {
+                            return Files.readAllLines(file.toPath()).isEmpty();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .forEach(file -> {
+                        message.add("Missing an ignore reason: " + file);
+                    });
+            stream(path.listFiles())
+                    .filter(file -> !new File(file, "ignored").exists())
                     .map(file -> {
                         var parent = new File(file.getPath().replace("resources", "java")).getParentFile();
                         return new File(parent, "Test%s.java".formatted(NamingStrategy.title().apply(file.getName())));
