@@ -56,15 +56,11 @@ class DocumentState extends ValueState<Map<String, Object>> {
 
     @Override
     void end() {
-        finished = new Document();
+        finished = new MergingDocument();
         values.forEach(v -> {
-            Object doc = finished.get(v.name());
-            if (doc == null) {
-                finished.put(v.name(), v.value());
-            } else {
-                andTogether(finished, v.name(), v.value());
-            }
+            finished.put(v.name(), v.value());
         });
+        finished = new Document(finished);
         super.end();
     }
 
@@ -73,5 +69,29 @@ class DocumentState extends ValueState<Map<String, Object>> {
         NameState state = new NameState(getWriter(), name, this);
         values.add(state);
         return state;
+    }
+
+    private static class MergingDocument extends Document {
+        @Override
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        public Object put(String key, Object value) {
+            if (containsKey(key)) {
+                var current = get(key);
+                if (current instanceof Document && value instanceof Document) {
+                    ((Document) current).putAll((Document) value);
+                    return current;
+                } else if ((key.equals("$and") || key.equals("$or")) && current instanceof List && value instanceof List) {
+                    ((List) current).addAll(((List) value));
+                    return current;
+                }
+            }
+            return super.put(key, value);
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ?> map) {
+            map.entrySet().forEach(entry -> put(entry.getKey(), entry.getValue()));
+            super.putAll(map);
+        }
     }
 }

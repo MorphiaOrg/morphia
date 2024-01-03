@@ -1,9 +1,14 @@
 package dev.morphia.test.mapping.codec;
 
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Query;
+import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TestBase;
+import dev.morphia.test.models.User;
 
 import org.bson.Document;
+import org.bson.json.JsonWriterSettings;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
@@ -15,6 +20,21 @@ import static java.util.Arrays.asList;
 import static java.util.List.of;
 
 public class TestDocumentWriter extends TestBase {
+
+    @Test
+    public void testAnd() {
+        Query<User> query = getDs().find(User.class).disableValidation();
+        query.filter(Filters.gte("field1", "field1"));
+        query.filter(Filters.lt("field1", "field1"));
+
+        query.filter(Filters.gte("field2", "field2"));
+        query.filter(Filters.lt("field2", "field2"));
+
+        query.iterator(new FindOptions().logQuery()).tryNext();
+        var loggedQuery = Document.parse(query.getLoggedQuery());
+        System.out.println("loggedQuery = " + loggedQuery.toJson(JsonWriterSettings.builder().indent(true).build()));
+    }
+
     @Test
     public void arrays() {
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());

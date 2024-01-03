@@ -864,12 +864,9 @@ public class TestQuery extends TestBase {
                                         exists("belongsToContentId"),
                                         eq("showAtGuideLevel", Boolean.TRUE))));
 
-        var newDoc = newQ.toDocument();
-        List<?> $and = (List<?>) newDoc.get("$and");
-        assertEquals($and.size(), 2);
-        assertDocumentEquals(newDoc, Document.parse("{\"$and\": [{\"$or\": [{\"status\": {\"$exists\": false}}, {\"status\": 0}]}, " +
-                "{\"$or\": [{\"belongsToContentId\": {\"$exists\": false}}, {\"$and\": " +
-                "[{\"belongsToContentId\": {\"$exists\": true}}, {\"showAtGuideLevel\": true}]}]}]}"));
+        assertDocumentEquals(newQ.toDocument(), Document.parse("{\"$or\": [{\"status\": {\"$exists\": false}}, {\"status\": 0}, " +
+                "{\"belongsToContentId\": {\"$exists\": false}}, {\"$and\": [{\"belongsToContentId\": {\"$exists\": true}}, " +
+                "{\"showAtGuideLevel\": true}]}]}"));
     }
 
     @Test
@@ -1411,13 +1408,18 @@ public class TestQuery extends TestBase {
     public static class ContainsPic {
         @Id
         private ObjectId id;
+
         private String name = "test";
+
         @Reference
         private Pic pic;
+
         @Reference(lazy = true)
         private Pic lazyPic;
+
         @Reference(lazy = true)
         private PicWithObjectId lazyObjectIdPic;
+
         @Indexed
         private int size;
 
@@ -1483,8 +1485,10 @@ public class TestQuery extends TestBase {
     public static class ContainsRenamedFields {
         @Id
         private ObjectId id;
+
         @Property("first_name")
         private String firstName;
+
         @Property("last_name")
         private String lastName;
 
@@ -1526,6 +1530,7 @@ public class TestQuery extends TestBase {
     private static class HasPhotoReference {
         @Id
         private ObjectId id;
+
         @Reference
         private Photo photo;
     }
@@ -1534,7 +1539,9 @@ public class TestQuery extends TestBase {
     static class IntVector {
         @Id
         private ObjectId id;
+
         private String name;
+
         private int[] scalars;
 
         IntVector() {
@@ -1549,11 +1556,13 @@ public class TestQuery extends TestBase {
     private static class KeyValue {
         @Id
         private ObjectId id;
+
         /**
          * The list of keys for this value.
          */
         @Indexed(options = @IndexOptions(unique = true))
         private List<Object> key;
+
         /**
          * The id of the value document
          */
@@ -1564,6 +1573,7 @@ public class TestQuery extends TestBase {
     @Entity
     public static class Keyword {
         private String keyword;
+
         private int score;
 
         protected Keyword() {
@@ -1613,6 +1623,7 @@ public class TestQuery extends TestBase {
     public static class Photo {
         @Id
         private ObjectId id;
+
         private List<String> keywords = singletonList("amazing");
 
         public Photo() {
@@ -1627,6 +1638,7 @@ public class TestQuery extends TestBase {
     public static class PhotoWithKeywords {
         @Id
         private ObjectId id;
+
         private List<Keyword> keywords = new ArrayList<>();
 
         PhotoWithKeywords() {
@@ -1674,8 +1686,10 @@ public class TestQuery extends TestBase {
     public static class Pic {
         @Id
         private ObjectId id;
+
         @Indexed
         private String name;
+
         private boolean prePersist;
 
         public Pic() {
@@ -1747,6 +1761,7 @@ public class TestQuery extends TestBase {
     public static class PicWithObjectId {
         @Id
         private ObjectId id;
+
         private String name;
     }
 
@@ -1786,6 +1801,7 @@ public class TestQuery extends TestBase {
     static class ReferenceKey {
         @Id
         private ObjectId id;
+
         private String name;
 
         ReferenceKey() {
@@ -1824,12 +1840,14 @@ public class TestQuery extends TestBase {
     private static class ReferenceKeyValue {
         @Id
         private ReferenceKey id;
+
         /**
          * The list of keys for this value.
          */
         @Indexed(options = @IndexOptions(unique = true))
         @Reference
         private List<Pic> key;
+
         /**
          * The id of the value document
          */
