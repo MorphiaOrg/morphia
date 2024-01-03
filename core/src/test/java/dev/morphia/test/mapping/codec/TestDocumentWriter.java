@@ -1,5 +1,7 @@
 package dev.morphia.test.mapping.codec;
 
+import java.util.Map;
+
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -8,7 +10,6 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.User;
 
 import org.bson.Document;
-import org.bson.json.JsonWriterSettings;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.Assert;
@@ -18,6 +19,7 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
+import static org.testng.Assert.assertEquals;
 
 public class TestDocumentWriter extends TestBase {
 
@@ -32,7 +34,8 @@ public class TestDocumentWriter extends TestBase {
 
         query.iterator(new FindOptions().logQuery()).tryNext();
         var loggedQuery = Document.parse(query.getLoggedQuery());
-        System.out.println("loggedQuery = " + loggedQuery.toJson(JsonWriterSettings.builder().indent(true).build()));
+        assertEquals(((Map<?, ?>) loggedQuery.get("field1")).size(), 2);
+        assertEquals(((Map<?, ?>) loggedQuery.get("field2")).size(), 2);
     }
 
     @Test
