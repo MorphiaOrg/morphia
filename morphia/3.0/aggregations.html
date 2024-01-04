@@ -251,9 +251,9 @@ As with querying, we start with the <code>Datastore</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">var aggregate = datastore.aggregate(Book.class).pipeline(
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.aggregate(Book.class).pipeline(
     group(id("author"))
-      .field("books", push(field("title"))),
+      .field("books", push("$title")),
     sort()
        .ascending("name"))
     .execute(Author.class);</code></pre>
