@@ -7,7 +7,6 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.mapping.codec.expressions.AccumulatorCodec;
 import dev.morphia.mapping.codec.expressions.AccumulatorExpressionCodec;
-import dev.morphia.mapping.codec.expressions.ArrayFilterExpressionCodec;
 import dev.morphia.mapping.codec.expressions.ArrayIndexExpressionCodec;
 import dev.morphia.mapping.codec.expressions.ArrayLiteralCodec;
 import dev.morphia.mapping.codec.expressions.BaseExpressionCodec;
@@ -77,7 +76,6 @@ public class MorphiaExpressionCodecProvider implements CodecProvider {
     public MorphiaExpressionCodecProvider(MorphiaDatastore datastore) {
         addCodec(new AccumulatorCodec(datastore));
         addCodec(new AccumulatorExpressionCodec(datastore));
-        addCodec(new ArrayFilterExpressionCodec(datastore));
         addCodec(new ArrayIndexExpressionCodec(datastore));
         addCodec(new ArrayLiteralCodec(datastore));
         addCodec(new CalculusExpressionCodec(datastore));

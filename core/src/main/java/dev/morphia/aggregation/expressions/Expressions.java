@@ -71,6 +71,7 @@ public final class Expressions {
      *              The expression references each element of the input array individually with the variable name specified in as.
      *
      * @return
+     * @aggregation.expression $filter
      */
     public static FilterExpression filter(Object input, Object cond) {
         return new FilterExpression(wrap(input), wrap(cond));
