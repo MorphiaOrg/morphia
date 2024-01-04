@@ -126,7 +126,7 @@
                         <goals>
                             <goal>docs-config</goal>
                         </goals>
-                        <phase>generate-sources</phase>
+                        <phase>generate-test-resources</phase>
                     </execution>
                 </executions>
             </plugin>
