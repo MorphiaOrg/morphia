@@ -34,11 +34,7 @@ public class DocsConfig extends AbstractMojo {
 
     private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
-    private final Map antora;
-
-    private final Model model;
-
-    private final boolean master;
+    private boolean master;
 
     protected static File PROJECT_ROOT = new File(".").getAbsoluteFile();
 
@@ -48,41 +44,41 @@ public class DocsConfig extends AbstractMojo {
         }
     }
 
-    public DocsConfig() throws IOException, XmlPullParserException {
-        antora = antora();
-        model = pom();
-        master = "master".equals(gitProperties().get("git.branch"));
-    }
-
     @Override
     public void execute() throws MojoExecutionException {
-        Version pomVersion = Version.valueOf(model.getVersion());
-        String url = model.getUrl();
-
-        var updated = new LinkedHashMap<String, Object>();
-        copy(updated, antora, "name");
-        copy(updated, antora, "title");
-        updated.put("version", String.format("%s.%s", pomVersion.getMajorVersion(), pomVersion.getMinorVersion()));
-        if (master) {
-            updated.put("prerelease", "-SNAPSHOT");
-        }
-        copy(updated, antora, "nav");
-        copy(updated, antora, "asciidoc");
-        Map<String, Object> attributes = walk(antora, of("asciidoc", "attributes"));
-        attributes.put("version", previous(pomVersion).toString());
-
-        String path;
-        if (master) {
-            path = "/blob/master";
-        } else {
-            path = String.format("/tree/%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
-        }
-        attributes.put("srcRef", String.format("%s%s", url, path));
-
+        Model model;
+        Map antora;
         try {
+            antora = antora();
+            model = pom();
+            master = "master".equals(gitProperties().get("git.branch"));
+
+            Version pomVersion = Version.valueOf(model.getVersion());
+            String url = model.getUrl();
+
+            var updated = new LinkedHashMap<String, Object>();
+            copy(updated, antora, "name");
+            copy(updated, antora, "title");
+            updated.put("version", String.format("%s.%s", pomVersion.getMajorVersion(), pomVersion.getMinorVersion()));
+            if (master) {
+                updated.put("prerelease", "-SNAPSHOT");
+            }
+            copy(updated, antora, "nav");
+            copy(updated, antora, "asciidoc");
+            Map<String, Object> attributes = walk(antora, of("asciidoc", "attributes"));
+            attributes.put("version", previous(pomVersion).toString());
+
+            String path;
+            if (master) {
+                path = "/blob/master";
+            } else {
+                path = String.format("/tree/%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
+            }
+            attributes.put("srcRef", String.format("%s%s", url, path));
+
             SequenceWriter sw = objectMapper.writer().writeValues(new FileWriter(DOCS_ANTORA_YML));
             sw.write(updated);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
     }
