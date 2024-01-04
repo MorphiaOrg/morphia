@@ -15,21 +15,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>build-plugins</artifactId>
-                <version>${project.version}</version>
-                <executions>
-                    <execution>
-                        <id>morphia-annotations</id>
-                        <goals>
-                            <goal>morphia-annotations</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.3.0</version>
@@ -41,24 +26,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.antwerkz.sofia</groupId>
-                <artifactId>sofia-maven</artifactId>
-                <version>${sofia.version}</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <loggingType>slf4j</loggingType>
-                    <outputType>java</outputType>
-                    <packageName>dev.morphia.sofia</packageName>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -131,7 +98,7 @@
                 <executions>
                     <execution>
                         <id>git info</id>
-                        <phase>initialize</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>revision</goal>
                         </goals>
@@ -140,6 +107,45 @@
                 <configuration>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <generateGitPropertiesFilename>target/git.properties</generateGitPropertiesFilename>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>build-plugins</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>morphia-annotations</id>
+                        <goals>
+                            <goal>morphia-annotations</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                    <execution>
+                        <id>docs-config</id>
+                        <goals>
+                            <goal>docs-config</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.antwerkz.sofia</groupId>
+                <artifactId>sofia-maven</artifactId>
+                <version>${sofia.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <loggingType>slf4j</loggingType>
+                    <outputType>java</outputType>
+                    <packageName>dev.morphia.sofia</packageName>
                 </configuration>
             </plugin>
         </plugins>
@@ -210,12 +216,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
