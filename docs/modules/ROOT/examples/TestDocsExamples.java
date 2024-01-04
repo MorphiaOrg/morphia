@@ -11,22 +11,24 @@ import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
 import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Merge.merge;
 import static dev.morphia.aggregation.stages.Out.out;
 import static dev.morphia.aggregation.stages.Sort.sort;
 
+/**
+ * This file gets copied in to the docs directory for inclusion in the examples.
+ */
 public class TestDocsExamples extends TestBase {
     @Test
     public void testBasic() {
         MorphiaDatastore datastore = getDs();
 // @formatter:off
 // tag::basic[]
-var aggregate = datastore.aggregate(Book.class).pipeline(
+datastore.aggregate(Book.class).pipeline(
     group(id("author"))
-      .field("books", push(field("title"))),
+      .field("books", push("$title")),
     sort()
        .ascending("name"))
     .execute(Author.class);
