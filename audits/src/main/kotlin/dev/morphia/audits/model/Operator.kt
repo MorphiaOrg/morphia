@@ -13,7 +13,7 @@ class Operator(var source: File) {
     var versionAdded: String?
     var name = source.nameWithoutExtension
     var resourceFolder: File
-    val created: Boolean
+    val implemented: Boolean
     val operator = "\$${name.substringBefore("-")}"
     val type: OperatorType
     val url: String = "https://www.mongodb.com/docs/manual/reference/operator/aggregation/$name/"
@@ -35,7 +35,7 @@ class Operator(var source: File) {
                     "dev/morphia/test/aggregation/${subpath()}/${name.substringBefore("-")}"
                 )
                 .canonicalFile
-        created = resourceFolder.exists()
+        implemented = resourceFolder.exists()
         var prior: Example? = null
         examples =
             extractCodeBlocks(source).map {

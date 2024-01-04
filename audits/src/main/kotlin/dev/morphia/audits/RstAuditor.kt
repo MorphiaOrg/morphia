@@ -34,8 +34,7 @@ object RstAuditor {
                 .filter { it.type == type }
                 .toList()
 
-        val keys = methods.keys
-        val notImplemented = operators.filter { it.operator !in keys }
+        val notImplemented = operators.filter { !it.implemented && !it.ignored() }
         val created =
             GithubProject.updateGH(
                 "aggregation operator",
