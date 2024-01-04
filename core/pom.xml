@@ -119,7 +119,7 @@
                         <goals>
                             <goal>morphia-annotations</goal>
                         </goals>
-                        <phase>generate-sources</phase>
+                        <phase>generate-resources</phase>
                     </execution>
                     <execution>
                         <id>docs-config</id>
