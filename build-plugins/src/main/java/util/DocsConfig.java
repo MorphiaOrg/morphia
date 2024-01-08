@@ -30,7 +30,7 @@ import static java.util.List.of;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Mojo(name = "docs-config", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class DocsConfig extends AbstractMojo {
-    private static final String DOCS_ANTORA_YML = "docs/antora.yml";
+    private static final File DOCS_ANTORA_YML;
 
     private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
@@ -42,6 +42,7 @@ public class DocsConfig extends AbstractMojo {
         while (!new File(PROJECT_ROOT, ".git").exists()) {
             PROJECT_ROOT = PROJECT_ROOT.getParentFile();
         }
+        DOCS_ANTORA_YML = new File(PROJECT_ROOT, "docs/antora.yml");
     }
 
     @Override
