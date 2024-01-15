@@ -1,7 +1,5 @@
-package dev.morphia
+package dev.morphia.audits
 
-import dev.morphia.audits.GithubProject
-import dev.morphia.audits.RstAuditor
 import dev.morphia.audits.RstAuditor.aggRoot
 import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType.EXPRESSION

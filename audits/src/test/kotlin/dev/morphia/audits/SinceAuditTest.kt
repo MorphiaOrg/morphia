@@ -1,6 +1,5 @@
-package dev.morphia
+package dev.morphia.audits
 
-import dev.morphia.audits.SinceAudit
 import dev.morphia.audits.model.MorphiaMethod
 import dev.morphia.audits.model.State
 import dev.morphia.audits.model.Version

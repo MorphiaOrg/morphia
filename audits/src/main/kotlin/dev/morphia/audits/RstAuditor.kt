@@ -174,4 +174,4 @@ fun notControl(it: String): Boolean {
     return !it.trim().startsWith(":")
 }
 
-fun findIndent(line: String) = line.length - line.trimIndent().length
+fun String.findIndent() = length - trimIndent().length

@@ -100,10 +100,10 @@ class Operator(var source: File) {
     private fun readBlock(lines: MutableList<String>): CodeBlock {
         lines.removeWhile { !notControl(it) || it.isBlank() }.toMutableList()
         var block = CodeBlock()
-        block.indent = findIndent(lines.first())
+        block.indent = lines.first().findIndent()
         while (
             lines.isNotEmpty() &&
-                (findIndent(lines.first()) >= block.indent || lines.first().isBlank())
+                (lines.first().findIndent() >= block.indent || lines.first().isBlank())
         ) {
             block += lines.removeFirst()
         }
