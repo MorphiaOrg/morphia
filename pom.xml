@@ -220,7 +220,7 @@
             <dependency>
                 <groupId>com.github.zafarkhaja</groupId>
                 <artifactId>java-semver</artifactId>
-                <version>0.9.0</version>
+                <version>0.10.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
