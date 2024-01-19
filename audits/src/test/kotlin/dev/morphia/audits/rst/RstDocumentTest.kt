@@ -71,11 +71,11 @@ class RstDocumentTest {
         var document = readAggOperator("meta")
         val subsections = document.examples().subsections()
 
+        assertEquals(subsections.size, 8, "Should have a subsection for each tab")
         val tab = subsections.first()
         assertNotNull(tab.dataBlock, "Should have a data block")
         assertNotNull(tab.actionBlock, "Should have a action block")
         assertNotNull(tab.expectedBlock, "Should have a expected block")
-        assertEquals(subsections.size, 6, "Should have a subsection for each tab")
     }
 
     private fun readAggOperator(operator: String) =

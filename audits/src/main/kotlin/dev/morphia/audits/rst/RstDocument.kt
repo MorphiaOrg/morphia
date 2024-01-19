@@ -1,6 +1,7 @@
 package dev.morphia.audits.rst
 
 import dev.morphia.audits.RstAuditor
+import dev.morphia.audits.sections
 import java.io.File
 
 class RstDocument(lines: MutableList<String>) {
@@ -10,7 +11,7 @@ class RstDocument(lines: MutableList<String>) {
         }
     }
 
-    val sections: List<Section>
+    val sections: Map<String, Section>
 
     init {
         sections =
@@ -25,6 +26,8 @@ class RstDocument(lines: MutableList<String>) {
                 }
                 .toMutableList()
                 .sections()
+                .map { it.name to it }
+                .toMap()
     }
 
     private fun MutableList<String>.sections(): List<Section> {
@@ -37,8 +40,8 @@ class RstDocument(lines: MutableList<String>) {
     }
 
     fun tag(name: String): Tag? {
-        return sections.map { it.tag(name) }.firstOrNull()
+        return sections.values.map { it.tag(name) }.firstOrNull()
     }
 
-    fun examples() = sections.first { it.name == "Examples" || it.name == "Example" }
+    fun examples() = (sections["Examples"] ?: sections["Example"]) as Section
 }

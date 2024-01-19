@@ -68,8 +68,7 @@ jobs:
       - name: Find Driver snapshot version
         id: driver-snapshot
         run: |
-          curl -Ls https://sh.jbang.dev | bash -s - app setup
-          echo "driver_snapshot=$( ~/.jbang/bin/jbang --verbose .github/DriverSnapshot.java )" >> $GITHUB_OUTPUT
+          echo "driver_snapshot=$( jbang .github/DriverSnapshot.java )" >> $GITHUB_OUTPUT
 
     outputs:
       driver_latest: ${{ steps.latest-driver-version.outputs.latest_driver_version }}

@@ -1,50 +1,56 @@
 package dev.morphia.audits.rst
 
+import com.antwerkz.expression.RegularExpression
+import com.antwerkz.expression.toRegex
 import dev.morphia.audits.findIndent
 import dev.morphia.audits.model.CodeBlock
 import dev.morphia.audits.notControl
 import dev.morphia.audits.removeWhile
+import dev.morphia.audits.rst.Section.Companion.SEPARATOR.DASH
 
-class Section(lines: MutableList<String>) {
-    private var lines: List<String>
+class Section(
+    lines: MutableList<String>,
+    val parent: Section? = null,
+    val separator: SEPARATOR = DASH
+) {
+    companion object {
+        fun sectionSeparator(separator: SEPARATOR) =
+            (separator?.let {
+                    RegularExpression.startOfInput().atLeast(5) { char(separator.separator) }
+                }
+                    ?: RegularExpression.endOfInput().startOfInput())
+                .toRegex()
+
+        enum class SEPARATOR(val separator: Char) {
+            DASH('-'),
+            TILDE('~'),
+            TICK('`'),
+            TERMINAL(0.toChar());
+
+            fun next(): SEPARATOR {
+                return if (ordinal < entries.size) entries[ordinal + 1] else TERMINAL
+            }
+        }
+    }
+
     var name = "header"
     val tags: List<Tag> by lazy { findTags() }
-    val codeBlocks: List<CodeBlock> by lazy { findBlocks() }
-    var actionBlock: CodeBlock?
-        private set
-
-    var dataBlock: CodeBlock?
-        private set
-
-    var expectedBlock: CodeBlock?
-        private set
+    val actionBlock: CodeBlock? by lazy { actionBlock() }
+    val dataBlock: CodeBlock? by lazy { dataBlock() }
+    val expectedBlock: CodeBlock? by lazy { expectedBlock() }
+    private var lines = mutableListOf<String>()
+    private val codeBlocks: List<CodeBlock> by lazy { findBlocks() }
 
     init {
-        var sectionLines = mutableListOf<String>()
-        while (lines.isNotEmpty() && !lines.last().startsWith("---")) {
-            sectionLines += lines.removeLast()
-        }
+        val regex = sectionSeparator(separator)
+
+        while (lines.isNotEmpty() && !regex.matches(lines.last())) this.lines += lines.removeLast()
         if (lines.isNotEmpty()) {
             lines.removeLast()
             name = lines.removeLast()
         }
 
-        this.lines = sectionLines.asReversed()
-        dataBlock = dataBlock()
-        actionBlock = actionBlock()
-        expectedBlock = expectedBlock()
-    }
-
-    constructor(parent: Section, lines: MutableList<String>) : this(lines) {
-        if (dataBlock == null) {
-            dataBlock = parent.dataBlock
-        }
-        if (actionBlock == null) {
-            actionBlock = parent.actionBlock
-        }
-        if (expectedBlock == null) {
-            expectedBlock = parent.expectedBlock
-        }
+        this.lines.reverse()
     }
 
     override fun toString(): String {
@@ -103,85 +109,47 @@ class Section(lines: MutableList<String>) {
 
     fun subsections(): List<Section> {
         val subsections = lines.subsections()
-        return subsections
-            .map { (name, lines) -> Section(lines).also { section -> section.name = name } }
-            .flatMap { section ->
-                if (section.hasTabs()) {
-                    section.extractTabs()
-                } else {
-                    listOf(section)
-                }
+        val map =
+            subsections.map { (name, lines) ->
+                Section(lines, this, separator.next()).also { section -> section.name = name }
             }
+        return map.flatMap { section ->
+            if (section.hasTabs()) {
+                section.extractTabs()
+            } else {
+                listOf(section)
+            }
+        }
     }
 
     private fun extractTabs(): List<Section> {
-        return if (lines.any { it.trim().startsWith(".. tab:: ") }) fancyTabs() else basicTabs()
+        val tabs = mutableListOf<Section>()
+        while (hasTabs()) {
+            tabs +=
+                if (lines.any { it.trim().startsWith(".. tab:: ") })
+                    separateTabs(lines, "   .. tab:: ")
+                else separateTabs(lines, "     - id: ")
+        }
+
+        return tabs.reversed()
     }
 
-    private fun fancyTabs(): List<Section> {
-        val list = mutableListOf<Section>()
-        var lines = this.lines.toMutableList()
-        while (lines.isNotEmpty() && !lines[0].startsWith(".. tabs::")) {
-            lines.removeFirst()
-        }
-        if (lines.isNotEmpty()) {
-            lines.removeFirst()
-            if (lines[0].isBlank()) {
-                lines.removeFirst()
-            }
-            val tabs = separateTabs(lines, ".. tab:: ")
-
-            println("**************** tabs.size = ${tabs.size}")
-            list +=
-                tabs.map { tab ->
-                    Section(this, tab.toMutableList()).also {
-                        it.name = "${this.name} - ${tab.first().substringAfter("tab:: ")} tab"
-                    }
-                }
-        }
-        return list
-    }
-
-    private fun basicTabs(): MutableList<Section> {
-        val list = mutableListOf<Section>()
-        var lines = this.lines.toMutableList()
-        while (lines.isNotEmpty() && !lines[0].startsWith("   tabs:")) {
-            lines.removeFirst()
-        }
-        if (lines.isNotEmpty()) {
-            lines.removeFirst()
-            if (lines[0].isBlank()) {
-                lines.removeFirst()
-            }
-            val tabs = separateTabs(lines, "- id: ")
-            println("**************** tabs.size = ${tabs.size}")
-            list +=
-                tabs.map { tab ->
-                    Section(tab.toMutableList()).also {
-                        it.name = "${this.name} - ${tab.first().substringAfter("id: ")} tab"
-                    }
-                }
-        }
-        return list
-    }
-
-    private fun separateTabs(
-        lines: MutableList<String>,
-        separator: String
-    ): MutableList<List<String>> {
-        val tabs = mutableListOf<List<String>>()
-        while (lines.isNotEmpty()) {
-            if (lines[0].trim().startsWith(separator)) {
-                val indent = lines[0].findIndent()
-                val tab = mutableListOf(lines.removeFirst())
-                tabs += tab
-                while (lines.isNotEmpty() && isTabLine(lines, indent, separator)) {
-                    tab += lines.removeFirst()
-                }
+    private fun separateTabs(lines: MutableList<String>, separator: String): List<Section> {
+        val tabs = mutableListOf<Section>()
+        var tabLines = mutableListOf<String>()
+        while (lines.isNotEmpty() && lines.last().trim() != ".. tabs::") {
+            if (!lines.last().startsWith(separator)) {
+                tabLines += lines.removeLast()
             } else {
-                lines.removeFirst()
+                tabLines += lines.removeLast()
+                tabs +=
+                    Section(tabLines.reversed().toMutableList(), this, this.separator.next()).also {
+                        it.name = "$name - ${it.lines.first().substringAfter(separator).trim()} tab"
+                    }
+                tabLines = mutableListOf()
             }
         }
+        if (lines.isNotEmpty() && lines.last().trim() == ".. tabs::") lines.removeLast()
         return tabs
     }
 
@@ -194,8 +162,9 @@ class Section(lines: MutableList<String>) {
         var sections = mutableMapOf<String, MutableList<String>>()
         var current = mutableListOf<String>()
         sections.put("main", current)
+        val sectionSeparator = sectionSeparator(separator.next())
         forEach {
-            if (it.startsWith("~~~")) {
+            if (sectionSeparator.matches(it)) {
                 val name = current.removeLast()
                 current = mutableListOf()
                 sections.put(name, current)
