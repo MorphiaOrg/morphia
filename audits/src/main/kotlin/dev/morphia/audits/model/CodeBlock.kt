@@ -1,10 +1,30 @@
 package dev.morphia.audits.model
 
 import dev.morphia.audits.findIndent
+import dev.morphia.audits.model.CodeBlock.Type.ACTION
+import dev.morphia.audits.model.CodeBlock.Type.DATA
+import dev.morphia.audits.model.CodeBlock.Type.EXPECTED
+import dev.morphia.audits.model.CodeBlock.Type.INDEX
 import dev.morphia.audits.notControl
 import java.io.Writer
 
 class CodeBlock {
+    enum class Type {
+        DATA,
+        ACTION,
+        EXPECTED,
+        INDEX
+    }
+
+    val type: Type by lazy {
+        when {
+            isData() -> DATA
+            isAction() -> ACTION
+            isIndex() -> INDEX
+            else -> EXPECTED
+        }
+    }
+
     private var prefix = ""
     var indent: Int = 0
         set(value) {
@@ -20,7 +40,7 @@ class CodeBlock {
         }
     }
 
-    override fun toString() = lines.joinToString("\n")
+    override fun toString() = "CodeBlock[$type, ${lines.joinToString("\n")}]"
 
     fun hasData() = lines.isNotEmpty()
 
@@ -84,22 +104,11 @@ class CodeBlock {
     }
 
     private fun collect(line: String, iterator: MutableIterator<String>): String {
-        var line1 = line
-        while (iterator.hasNext() && line1.count { it == '{' } != line1.count { it == '}' }) {
-            line1 += iterator.next()
-            /*
-                        var newLine = ""
-                        while (line1 != "}") {
-                            newLine += line1;
-                            try {
-                            } catch (e: Exception) {
-                                throw e
-                            }
-                        }
-            line1 = newLine + line1
-            */
-        }
-        return line1
+        var collected = line
+        while (
+            iterator.hasNext() && collected.count { it == '{' } != collected.count { it == '}' }
+        ) collected += iterator.next()
+        return collected
     }
 
     fun contains(text: String): Boolean {
@@ -128,9 +137,11 @@ class CodeBlock {
         return result
     }
 
-    fun isAction(): Boolean = contains(".aggregate(")
+    fun isAction(): Boolean = contains(".aggregate(") || contains(".find(")
 
     fun isData(): Boolean = contains(".insertOne(") || contains(".insertMany(")
+
+    fun isIndex(): Boolean = contains(".createIndex(")
 
     fun write(output: Writer) {
         output.write(sanitizeData().joinToString("\n"))

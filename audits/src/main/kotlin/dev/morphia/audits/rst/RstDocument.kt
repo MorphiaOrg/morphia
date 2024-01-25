@@ -1,7 +1,6 @@
 package dev.morphia.audits.rst
 
 import dev.morphia.audits.RstAuditor
-import dev.morphia.audits.sections
 import java.io.File
 
 class RstDocument(lines: MutableList<String>) {

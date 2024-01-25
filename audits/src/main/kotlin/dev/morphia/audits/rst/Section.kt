@@ -4,6 +4,11 @@ import com.antwerkz.expression.RegularExpression
 import com.antwerkz.expression.toRegex
 import dev.morphia.audits.findIndent
 import dev.morphia.audits.model.CodeBlock
+import dev.morphia.audits.model.CodeBlock.Type
+import dev.morphia.audits.model.CodeBlock.Type.ACTION
+import dev.morphia.audits.model.CodeBlock.Type.DATA
+import dev.morphia.audits.model.CodeBlock.Type.EXPECTED
+import dev.morphia.audits.model.CodeBlock.Type.INDEX
 import dev.morphia.audits.notControl
 import dev.morphia.audits.removeWhile
 import dev.morphia.audits.rst.Section.Companion.SEPARATOR.DASH
@@ -15,10 +20,8 @@ class Section(
 ) {
     companion object {
         fun sectionSeparator(separator: SEPARATOR) =
-            (separator?.let {
-                    RegularExpression.startOfInput().atLeast(5) { char(separator.separator) }
-                }
-                    ?: RegularExpression.endOfInput().startOfInput())
+            separator
+                .let { RegularExpression.startOfInput().atLeast(5) { char(separator.separator) } }
                 .toRegex()
 
         enum class SEPARATOR(val separator: Char) {
@@ -35,11 +38,18 @@ class Section(
 
     var name = "header"
     val tags: List<Tag> by lazy { findTags() }
-    val actionBlock: CodeBlock? by lazy { actionBlock() }
-    val dataBlock: CodeBlock? by lazy { dataBlock() }
-    val expectedBlock: CodeBlock? by lazy { expectedBlock() }
+    val actionBlock: CodeBlock? by lazy {
+        codeBlocks[ACTION]?.removeFirstOrNull() ?: parent?.actionBlock
+    }
+    val dataBlock: CodeBlock? by lazy { codeBlocks[DATA]?.removeFirstOrNull() ?: parent?.dataBlock }
+    val expectedBlock: CodeBlock? by lazy {
+        codeBlocks[EXPECTED]?.removeFirstOrNull() ?: parent?.expectedBlock
+    }
+    val indexBlock: CodeBlock? by lazy {
+        codeBlocks[INDEX]?.removeFirstOrNull() ?: parent?.indexBlock
+    }
     private var lines = mutableListOf<String>()
-    private val codeBlocks: List<CodeBlock> by lazy { findBlocks() }
+    private val codeBlocks: Map<Type, MutableList<CodeBlock>> by lazy { findBlocks() }
 
     init {
         val regex = sectionSeparator(separator)
@@ -61,12 +71,12 @@ class Section(
         return tags.firstOrNull { it.type == name }
     }
 
-    private fun findBlocks(): List<CodeBlock> {
+    fun findBlocks(): Map<Type, MutableList<CodeBlock>> {
         val sections = lines.subsections()
-        var blocks = mutableListOf<CodeBlock>()
+        val blocks = mutableListOf<CodeBlock>()
 
         sections.forEach { name, data ->
-            var line = ""
+            var line: String
             while (data.isNotEmpty()) {
                 line = data.removeFirst().trim()
                 if (line.trim().startsWith(".. code-block:: ")) {
@@ -74,13 +84,24 @@ class Section(
                 }
             }
         }
+        val grouped =
+            blocks
+                .groupBy { it.type }
+                .map { it.key to it.value.toMutableList() }
+                .toMap()
+                .toMutableMap()
+        val expected = grouped[EXPECTED]
+        val action = blocks.indexOfFirst { it.type == ACTION }
+        if (grouped[DATA] == null && expected != null && expected.size > 1 && action != 0) {
+            grouped[DATA] = mutableListOf(expected.removeFirst())
+        }
 
-        return blocks
+        return grouped
     }
 
     private fun readBlock(lines: MutableList<String>): CodeBlock {
         lines.removeWhile { !notControl(it) || it.isBlank() }.toMutableList()
-        var block = CodeBlock()
+        val block = CodeBlock()
         block.indent = lines.first().findIndent()
         while (
             lines.isNotEmpty() &&
@@ -131,80 +152,56 @@ class Section(
                 else separateTabs(lines, "     - id: ")
         }
 
-        return tabs.reversed()
+        return tabs
     }
 
     private fun separateTabs(lines: MutableList<String>, separator: String): List<Section> {
         val tabs = mutableListOf<Section>()
         var tabLines = mutableListOf<String>()
-        while (lines.isNotEmpty() && lines.last().trim() != ".. tabs::") {
-            if (!lines.last().startsWith(separator)) {
-                tabLines += lines.removeLast()
+        lines.removeWhile { !it.startsWith(separator) }
+        val index = lines.indexOfFirst { it.startsWith(separator) }
+
+        val indent = lines[index].findIndent()
+        tabLines += lines.removeAt(index)
+        while (
+            index < lines.size && (lines[index].isBlank() || lines[index].findIndent() >= indent)
+        ) {
+            if (!lines[index].startsWith(separator)) {
+                tabLines += lines.removeAt(index)
             } else {
-                tabLines += lines.removeLast()
                 tabs +=
-                    Section(tabLines.reversed().toMutableList(), this, this.separator.next()).also {
+                    Section(tabLines, this, this.separator.next()).also {
                         it.name = "$name - ${it.lines.first().substringAfter(separator).trim()} tab"
                     }
-                tabLines = mutableListOf()
+                tabLines = mutableListOf(lines.removeAt(index))
             }
         }
-        if (lines.isNotEmpty() && lines.last().trim() == ".. tabs::") lines.removeLast()
+        if (tabLines.isNotEmpty() && tabLines.first().startsWith(separator))
+            tabs +=
+                Section(tabLines, this, this.separator.next()).also {
+                    it.name = "$name - ${it.lines.first().substringAfter(separator).trim()} tab"
+                }
         return tabs
     }
 
-    private fun isTabLine(lines: MutableList<String>, indent: Int, prefix: String) =
-        lines[0].isBlank() || lines[0].findIndent() > indent && !lines[0].trim().startsWith(prefix)
-
     private fun hasTabs() = lines.any { it.startsWith(".. tabs::") }
 
-    private fun List<String>.subsections(): Map<String, MutableList<String>> {
-        var sections = mutableMapOf<String, MutableList<String>>()
+    private fun MutableList<String>.subsections(): Map<String, MutableList<String>> {
+        val sections = mutableMapOf<String, MutableList<String>>()
         var current = mutableListOf<String>()
         sections.put("main", current)
         val sectionSeparator = sectionSeparator(separator.next())
-        forEach {
-            if (sectionSeparator.matches(it)) {
+        while (isNotEmpty()) {
+            val first = removeFirst()
+            if (sectionSeparator.matches(first)) {
                 val name = current.removeLast()
                 current = mutableListOf()
                 sections.put(name, current)
             } else {
-                current.add(it)
+                current.add(first)
             }
         }
 
         return sections
-    }
-
-    private fun dataBlock(): CodeBlock? {
-        val dataBlock = codeBlocks.firstOrNull { it.isData() }
-        return when {
-            dataBlock != null -> dataBlock
-            else -> {
-                val actionBlock = actionBlock()
-                if (actionBlock == null) {
-                    findBlocks().firstOrNull()
-                } else {
-                    val blocks = codeBlocks
-                    blocks
-                        .filterIndexed { index, codeBlock ->
-                            index + 1 < blocks.size && blocks[index + 1] == actionBlock
-                        }
-                        .firstOrNull()
-                }
-            }
-        }
-    }
-
-    private fun expectedBlock(): CodeBlock? {
-        val actionBlock = actionBlock()
-        val blocks = codeBlocks
-        return blocks
-            .filterIndexed { index, codeBlock -> index > 0 && blocks[index - 1] == actionBlock }
-            .firstOrNull()
-    }
-
-    private fun actionBlock(): CodeBlock? {
-        return codeBlocks.firstOrNull { it.isAction() }
     }
 }
