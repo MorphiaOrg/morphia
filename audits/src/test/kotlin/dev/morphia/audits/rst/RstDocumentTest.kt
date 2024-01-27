@@ -1,6 +1,7 @@
 package dev.morphia.audits.rst
 
 import dev.morphia.audits.RstAuditor
+import dev.morphia.audits.model.CodeBlock
 import java.io.File
 import java.io.StringWriter
 import org.testng.Assert.assertEquals
@@ -60,14 +61,12 @@ class RstDocumentTest {
     @Test
     fun testAcos() {
         val document = readAggOperator("acos")
-        val subsections = document.examples().subsections
+        val examples = document.examples().examples
 
-        assertEquals(subsections.size, 2, "Should have a subsection for each tab")
+        assertEquals(examples.size, 2, "Should have a subsection for each tab")
         validateTabs(
-            firstName = "main - degrees tab",
-            subsections[0],
-            secondName = "main - radians tab",
-            subsections[1],
+            "Inverse Cosine of Value in Degrees" to examples[0],
+            "Inverse Cosine of Value in Radians" to examples[1],
             sameSections = SameSections()
         )
     }
@@ -110,21 +109,24 @@ class RstDocumentTest {
     */
 
     private fun validateTabs(
-        firstName: String,
-        first: OperatorExample,
-        secondName: String,
-        second: OperatorExample,
+        first: Pair<String, OperatorExample>,
+        second: Pair<String, OperatorExample>,
         hasSections: HasSections = HasSections(),
         sameSections: SameSections
     ) {
-        validateSection(first, firstName, hasSections)
-        validateSection(second, secondName, hasSections)
+        validateSection(first.first, first.second, hasSections)
+        validateSection(second.first, second.second, hasSections)
 
-        isSame("data", sameSections.data, first.dataBlock, second.dataBlock)
-        isSame("action", sameSections.action, first.actionBlock, second.actionBlock)
-        isSame("expected", sameSections.expected, first.expectedBlock, second.expectedBlock)
+        isSame("data", sameSections.data, first.second.dataBlock, second.second.dataBlock)
+        isSame("action", sameSections.action, first.second.actionBlock, second.second.actionBlock)
+        isSame(
+            "expected",
+            sameSections.expected,
+            first.second.expectedBlock,
+            second.second.expectedBlock
+        )
         if (hasSections.index) {
-            isSame("index", sameSections.index, first.indexBlock, second.indexBlock)
+            isSame("index", sameSections.index, first.second.indexBlock, second.second.indexBlock)
         }
     }
 
@@ -137,8 +139,8 @@ class RstDocumentTest {
     }
 
     private fun validateSection(
-        example: OperatorExample,
         name: String,
+        example: OperatorExample,
         hasSections: HasSections = HasSections()
     ) {
         assertEquals(example.name, name, "Should have the correct name")

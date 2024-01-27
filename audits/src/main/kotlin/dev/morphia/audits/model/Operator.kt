@@ -5,7 +5,7 @@ import dev.morphia.audits.findIndent
 import dev.morphia.audits.model.OperatorType.EXPRESSION
 import dev.morphia.audits.model.OperatorType.STAGE
 import dev.morphia.audits.notControl
-import dev.morphia.audits.removeWhile
+import dev.morphia.audits.rst.removeWhile
 import dev.morphia.audits.sections
 import java.io.File
 

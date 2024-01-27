@@ -15,15 +15,16 @@ enum class Separator(val separator: Char) {
 
     val section = let { RegularExpression.startOfInput().atLeast(5) { char(separator) } }.toRegex()
 
-    fun partition(lines: MutableList<String>): List<MutableList<String>> {
-        val partitions = mutableListOf(mutableListOf<String>())
+    fun partition(input: List<String>): Map<String, List<String>> {
+        var name = "main"
+        val partitions = mutableMapOf(name to mutableListOf<String>())
+        var lines = input.toMutableList()
         while (lines.isNotEmpty()) {
-            if (!section.matches(lines.first())) {
-                partitions.last() += lines.removeFirst()
-            } else {
-                var next = mutableListOf(partitions.last().removeLast())
-                next += lines.removeFirst()
-                partitions += next
+            partitions[name]?.plusAssign(lines.removeWhile { !section.matches(lines.first()) })
+            if (lines.isNotEmpty()) {
+                name = partitions[name]!!.removeLast()
+                lines.removeFirst()
+                partitions[name] = mutableListOf()
             }
         }
 

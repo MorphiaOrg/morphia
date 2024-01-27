@@ -30,8 +30,10 @@ class RstDocument(lines: MutableList<String>) {
                 .toMap()
     }
 
-    private fun MutableList<String>.sections(): List<Section> {
-        return DASH.partition(this).map { Section(it) }
+    private fun List<String>.sections(): List<Section> {
+        return DASH.partition(this)
+            .filter { it.key in listOf("Example", "Examples") }
+            .map { Section(it.key, it.value) }
     }
 
     fun tag(name: String): List<Tag> {
@@ -39,4 +41,13 @@ class RstDocument(lines: MutableList<String>) {
     }
 
     fun examples() = (sections["Examples"] ?: sections["Example"]) as Section
+}
+
+fun <String> MutableList<String>.removeWhile(function: (String) -> Boolean): List<String> {
+    val removed = mutableListOf<String>()
+    while (isNotEmpty() && function(first())) {
+        removed += removeFirst()
+    }
+
+    return removed
 }

@@ -6,9 +6,50 @@ import dev.morphia.audits.model.CodeBlock.Type.DATA
 import dev.morphia.audits.model.CodeBlock.Type.EXPECTED
 import dev.morphia.audits.model.CodeBlock.Type.INDEX
 import dev.morphia.audits.notControl
+import dev.morphia.audits.rst.removeWhile
 import java.io.Writer
 
 class CodeBlock {
+    companion object {
+        fun findBlocks(lines: List<String>): Map<Type, MutableList<CodeBlock>> {
+            val blocks = mutableListOf<CodeBlock>()
+            val data = lines.toMutableList()
+            var line: String
+            while (data.isNotEmpty()) {
+                line = data.removeFirst().trim()
+                if (line.trim().startsWith(".. code-block:: ")) {
+                    blocks += readBlock(data)
+                }
+            }
+            val grouped =
+                blocks
+                    .groupBy { it.type }
+                    .map { it.key to it.value.toMutableList() }
+                    .toMap()
+                    .toMutableMap()
+            val expected = grouped[EXPECTED]
+            val action = blocks.indexOfFirst { it.type == ACTION }
+            if (grouped[DATA] == null && expected != null && expected.size > 1 && action != 0) {
+                grouped[DATA] = mutableListOf(expected.removeFirst())
+            }
+
+            return grouped
+        }
+
+        fun readBlock(lines: MutableList<String>): CodeBlock {
+            lines.removeWhile { !notControl(it) || it.isBlank() }.toMutableList()
+            val block = CodeBlock()
+            block.indent = lines.first().findIndent()
+            while (
+                lines.isNotEmpty() &&
+                    (lines.first().findIndent() >= block.indent || lines.first().isBlank())
+            ) {
+                block += lines.removeFirst()
+            }
+            return block
+        }
+    }
+
     enum class Type {
         DATA,
         ACTION,
@@ -52,8 +93,8 @@ class CodeBlock {
         if (isAction()) {
             return sanitizeAction()
         }
-        var iterator = lines.iterator()
-        var sanitized = mutableListOf<String>()
+        val iterator = lines.iterator()
+        val sanitized = mutableListOf<String>()
         while (iterator.hasNext()) {
             var line = iterator.next()
             if (line.contains(".insertMany") || line.contains("insertOne")) {
@@ -75,7 +116,7 @@ class CodeBlock {
     }
 
     private fun sanitizeAction(): List<String> {
-        var sanitized = mutableListOf(*lines.toTypedArray())
+        val sanitized = mutableListOf(*lines.toTypedArray())
         val first = sanitized.first()
         if (first.contains("[")) {
             sanitized[0] = first.substringAfterLast("(")

@@ -144,15 +144,6 @@ private fun ParameterSource<*>.anchorLink(anchor: Boolean = true): String {
     return if (varargs) "$name${ellipsis}" else name
 }
 
-fun <String> MutableList<String>.removeWhile(function: (String) -> Boolean): List<String> {
-    var removed = mutableListOf<String>()
-    while (function(first())) {
-        removed += removeFirst()
-    }
-
-    return removed
-}
-
 fun List<String>.sections(): Map<String, MutableList<String>> {
     var sections = mutableMapOf<String, MutableList<String>>()
     var current = mutableListOf<String>()

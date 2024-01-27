@@ -1,21 +1,27 @@
 package dev.morphia.audits.rst
 
+import dev.morphia.audits.rst.OperatorExample.Companion.extractTabs
 import dev.morphia.audits.rst.Separator.DASH
+import dev.morphia.audits.rst.Separator.TILDE
 
-class Section(input: MutableList<String>, val separator: Separator = DASH) {
-    var name = "header"
+class Section(val name: String, input: List<String>, val separator: Separator = DASH) {
 
     val tags: List<Tag>
-    val examples = mutableListOf<OperatorExample>()
+    var examples = mutableListOf<OperatorExample>()
+        private set
 
     init {
         tags = findTags(input)
-        name = input.removeFirst()
-        input.removeFirst()
+        val partitions = TILDE.partition(input)
         examples +=
-            Separator.TILDE.partition(input)
-                .map { OperatorExample(it, examples.lastOrNull(), separator.next()) }
-                .flatMap { it.extractTabs() }
+            partitions
+                .flatMap { extractTabs(it.key, it.value).entries }
+                .map {
+                    OperatorExample(it.key, it.value, examples.lastOrNull(), separator.next())
+                    //                    extractTabs(it).map {
+                    //                    }
+                }
+        //                .map { OperatorExample(it, examples.lastOrNull(), separator.next()) }
     }
 
     override fun toString(): String {
