@@ -1,6 +1,7 @@
 package dev.morphia.audits.rst
 
 import dev.morphia.audits.RstAuditor
+import dev.morphia.audits.rst.Separator.DASH
 import java.io.File
 
 class RstDocument(lines: MutableList<String>) {
@@ -30,16 +31,11 @@ class RstDocument(lines: MutableList<String>) {
     }
 
     private fun MutableList<String>.sections(): List<Section> {
-        var sections = mutableListOf<Section>()
-        while (isNotEmpty()) {
-            sections += Section(this)
-        }
-
-        return sections.reversed()
+        return DASH.partition(this).map { Section(it) }
     }
 
-    fun tag(name: String): Tag? {
-        return sections.values.map { it.tag(name) }.firstOrNull()
+    fun tag(name: String): List<Tag> {
+        return sections.values.flatMap { it.tag(name) }
     }
 
     fun examples() = (sections["Examples"] ?: sections["Example"]) as Section
