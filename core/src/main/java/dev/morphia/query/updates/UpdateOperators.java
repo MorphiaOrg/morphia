@@ -245,12 +245,12 @@ public final class UpdateOperators {
      * The $pull operator removes from an existing array all instances of a value or values that match a specified condition.
      *
      * @param field  the field to update
-     * @param filter the filter to apply
+     * @param value the instance of a value or the filter to apply
      * @return the update operator
      * @update.operator $pull
      */
-    public static UpdateOperator pull(String field, Filter filter) {
-        return new PullOperator(field, filter);
+    public static UpdateOperator pull(String field, Object value) {
+        return new PullOperator(field, value);
     }
 
     /**
