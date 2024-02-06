@@ -2,10 +2,10 @@
   {
     $addFields: {
       "points" : {
-        $cond : [
-          { $isNumber : "$grade" },
-          "$grade" ,
-          {
+        $cond : {
+          if : { $isNumber : "$grade" },
+          then: "$grade" ,
+          else: {
             $switch : {
               branches: [
                 { case: {$eq : ["$grade" , "A"]}, then : 4.0 },
@@ -16,16 +16,14 @@
               ]
             }
           }
-        ]
+        }
       }
     }
   },
   {
-    $group: {
-      _id: "$student_id",
-      GPA: {
-        $avg: "$points"
+    $group : {
+      _id : "$student_id",
+      GPA : {
+        $avg : "$points"
       }
     }
-  }
-]

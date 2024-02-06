@@ -22,8 +22,9 @@ class OperatorExample(
                 codeBlock.isData() && dataBlock == null -> dataBlock = codeBlock
                 codeBlock.isAction() && actionBlock == null -> actionBlock = codeBlock
                 codeBlock.isIndex() && indexBlock == null -> indexBlock = codeBlock
-                index == 0 -> dataBlock = codeBlock
-                index != 0 && expectedBlock == null -> expectedBlock = codeBlock
+                index == 0 && codeBlock.isExpected() -> dataBlock = codeBlock
+                index != 0 && codeBlock.isExpected() && expectedBlock == null ->
+                    expectedBlock = codeBlock
             }
         }
     }
@@ -100,4 +101,8 @@ class OperatorExample(
         "OperatorExample(name='$name', actionBlock: ${actionBlock != null}, dataBlock: ${dataBlock != null}, " +
             "expectedBlock=${expectedBlock != null}, " +
             "indexBlock: ${indexBlock != null})"
+
+    fun valid(): Boolean {
+        return dataBlock != null && actionBlock != null && expectedBlock != null
+    }
 }

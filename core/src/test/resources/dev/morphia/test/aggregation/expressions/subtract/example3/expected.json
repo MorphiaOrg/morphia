@@ -1,2 +1,2 @@
-{ "_id" : 1, "item" : "abc", "dateDifference" : NumberLong("50400000") }
-{ "_id" : 2, "item" : "jkl", "dateDifference" : NumberLong("46800000") }
+{ "_id" : 1, "item" : "abc", "dateDifference" : ISODate("2014-03-01T07:55:00Z") }
+{ "_id" : 2, "item" : "jkl", "dateDifference" : ISODate("2014-03-01T08:55:00Z") }

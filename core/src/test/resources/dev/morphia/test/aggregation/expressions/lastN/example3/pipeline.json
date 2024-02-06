@@ -1,8 +1,8 @@
  [
+      { $sort : { score : -1 } },
       {
          $group:
-         { 
-         _id: "$gameId", playerId:
+         { _id: "$gameId", playerId:
             {
                $lastN:
                   {
@@ -12,4 +12,4 @@
             }
          }
       }
-] 
+   ] 

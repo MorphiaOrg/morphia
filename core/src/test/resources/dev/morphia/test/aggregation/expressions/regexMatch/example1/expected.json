@@ -1,6 +1,6 @@
-{ _id : 1, description : "Single LINE description.", result : false }
-{ _id : 2, description : "First lines\nsecond line", result : true }
-{ _id : 3, description : "Many spaces before     line", result : true }
-{ _id : 4, description : "Multiple\nline descriptions", result : true }
-{ _id : 5, description : "anchors, links and hyperlinks", result : false }
-{ _id : 6, description : "métier work vocation", result : false }
+{ "_id" : 1, "description" : "Single LINE description.", "result" : false }
+{ "_id" : 2, "description" : "First lines\nsecond line", "result" : true }
+{ "_id" : 3, "description" : "Many spaces before     line", "result" : true }
+{ "_id" : 4, "description" : "Multiple\nline descriptions", "result" : true }
+{ "_id" : 5, "description" : "anchors, links and hyperlinks", "result" : false }
+{ "_id" : 6, "description" : "métier work vocation", "result" : false }

@@ -7,7 +7,7 @@
       ], 
       "categorizedByPrice": [ 
         
-        { $match: { price: { $exists: true } } },
+        { $match: { price: { $exists: 1 } } },
         {
           $bucket: { 
             groupBy: "$price",

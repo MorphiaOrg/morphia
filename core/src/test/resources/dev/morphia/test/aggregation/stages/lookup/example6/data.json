@@ -1,3 +1,2 @@
-{_id: 1, item: "filet", restaurant_name: "American Steak House"},
-{_id: 2, item: "cheese pizza", restaurant_name: "Honest John Pizza", drink: "lemonade"},
-{_id: 3, item: "cheese pizza", restaurant_name: "Honest John Pizza", drink: "soda"}
+{      _id: 1,      name: "American Steak House",      food: [ "filet", "sirloin" ],      beverages: [ "beer", "wine" ]   },
+{      _id: 2,      name: "Honest John Pizza",      food: [ "cheese pizza", "pepperoni pizza" ],      beverages: [ "soda" ]   }

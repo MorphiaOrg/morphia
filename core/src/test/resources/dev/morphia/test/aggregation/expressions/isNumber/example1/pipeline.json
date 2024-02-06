@@ -1,6 +1,6 @@
 [{ 
   $addFields : {   
     "isNumber" : { $isNumber : "$reading" },
-    "type" : {$type : "$reading"}
+    "hasType" : {$type : "$reading"}   
   } 
 }]

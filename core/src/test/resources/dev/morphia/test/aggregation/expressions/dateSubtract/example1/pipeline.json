@@ -1,13 +1,40 @@
-[
-  {
-    $project: {
-      logoutTime: {
-        $dateSubtract: {
-          startDate: "$logout",
-          unit: "hour",
-          amount: 3
+   [
+      {
+         $match: 
+            {
+               $expr:
+                  {
+                     $eq:
+                        [
+                            { $year: "$logout" },
+                              2021 
+                        ]
+                  },  
+               $expr:
+                  { 
+                     $eq:
+                        [
+                            { $month: "$logout" },
+                              1
+                        ]
+                   }
+             }
+       },
+       {
+          $project:
+             {
+                logoutTime: 
+                   {
+                      $dateSubtract: 
+                         {
+                            startDate: "$logout",
+                            unit: "hour",
+                            amount: 3 
+                         }
+                   }
+              }
+        },
+        {
+           $merge: "connectionTime"
         }
-      }
-    }
-  }
-]
+   ]

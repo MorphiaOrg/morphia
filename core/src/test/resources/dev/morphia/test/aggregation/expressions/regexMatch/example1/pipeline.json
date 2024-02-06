@@ -1,12 +1,3 @@
 [
-  {
-    $addFields: {
-      result: {
-        $regexMatch: {
-          input: "$description",
-          regex: /line/
-        }
-      }
-    }
-  }
+   { $addFields: { result: { $regexMatch: { input: "$description", regex: /line/ } } } }
 ]

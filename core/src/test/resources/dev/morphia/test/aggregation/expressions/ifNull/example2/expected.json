@@ -1,3 +1,3 @@
-{ "_id" : 1, "item" : "buggy", "description" : "toy car" }
-{ "_id" : 2, "item" : "bicycle", "description" : "Unspecified" }
-{ "_id" : 3, "item" : "flag", "description" : "Unspecified" }
+{ "_id" : 1, "item" : "buggy", "value" : "toy car" }
+{ "_id" : 2, "item" : "bicycle", "value" : 200 }
+{ "_id" : 3, "item" : "flag", "value" : "Unspecified" }

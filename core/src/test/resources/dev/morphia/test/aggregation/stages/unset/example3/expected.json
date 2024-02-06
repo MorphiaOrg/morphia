@@ -1,2 +1,2 @@
-{ "_id" : 1, "title" : "Antelope Antics", "author" : { "last" : "An", "first" : "Auntie" } }
-{ "_id" : 2, "title" : "Bees Babble", "author" : { "last" : "Bumble", "first" : "Bee" } }
+{ "_id" : 1, "title" : "Antelope Antics", "author" : { "last" : "An" }, "copies" : [ { "qty" : 5 }, { "qty" : 15 } ] }
+{ "_id" : 2, "title" : "Bees Babble", "author" : { "last" : "Bumble" }, "copies" : [ { "qty" : 2 }, { "qty" : 5 } ] }

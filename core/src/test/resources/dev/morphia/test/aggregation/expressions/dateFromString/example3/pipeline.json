@@ -4,7 +4,7 @@
          $dateFromString: {
             dateString: '$date',
             timezone: '$timezone',
-            onNull: "oops"
+            onNull: new Date(0)
          }
       }
    }

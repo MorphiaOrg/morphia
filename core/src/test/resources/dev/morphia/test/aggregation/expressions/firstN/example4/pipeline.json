@@ -1,15 +1,16 @@
- [
-      { $sort : { score : -1 } },
+[
+   {
+      $group:
       {
-         $group:
-         { _id: "$gameId", playerId:
+         _id: {"gameId": "$gameId"},
+         gamescores:
             {
                $firstN:
                   {
-                     input: [ "$playerId","$score" ],
-                     n: 3
+                     input: "$score",
+                     n: { $cond: { if: {$eq: ["$gameId","G2"] }, then: 1, else: 3 } }
                   }
             }
-         }
       }
-   ] 
+   }
+] 

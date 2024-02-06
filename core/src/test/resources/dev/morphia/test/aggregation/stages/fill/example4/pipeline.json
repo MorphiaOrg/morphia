@@ -2,8 +2,8 @@
    {
       $fill:
          {
-            partitionBy: { "restaurant": "$restaurant" },
             sortBy: { date: 1 },
+            partitionBy: { "restaurant": "$restaurant" },
             output:
                {
                   "score": { method: "locf" }

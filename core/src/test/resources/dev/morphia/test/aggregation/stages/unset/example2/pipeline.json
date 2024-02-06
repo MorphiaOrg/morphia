@@ -1,1 +1,3 @@
-[ { $unset: "copies" } ]
+[
+   { $unset: [ "isbn", "copies" ] }
+]

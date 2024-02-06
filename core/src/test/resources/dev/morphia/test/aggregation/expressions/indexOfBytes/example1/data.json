@@ -1,6 +1,6 @@
-{ "_id" : 1, "item" : "foo" },
-{ "_id" : 2, "item" : "fóofoo" },
-{ "_id" : 3, "item" : "the foo bar" },
-{ "_id" : 4, "item" : "hello world fóo" },
-{ "_id" : 5, "item" : null },
-{ "_id" : 6, "amount" : 3 },
+{ "_id" : 1, "item" : "foo" }
+{ "_id" : 2, "item" : "fóofoo" }
+{ "_id" : 3, "item" : "the foo bar" }
+{ "_id" : 4, "item" : "hello world fóo" }
+{ "_id" : 5, "item" : null }
+{ "_id" : 6, "amount" : 3 }

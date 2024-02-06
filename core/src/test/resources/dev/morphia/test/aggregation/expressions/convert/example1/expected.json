@@ -1,5 +1,5 @@
-{ _id: 1, totalPrice: 50.0 },
-{ _id: 2, totalPrice: 200.0 },
-{ _id: 3, totalPrice: 9.98 },
-{ _id: 4, totalPrice: 0.0 },
+{ _id: 1, totalPrice: NumberDecimal("50") },
+{ _id: 2, totalPrice: NumberDecimal("200.0") },
+{ _id: 3, totalPrice: NumberDecimal("9.98") },
+{ _id: 4, totalPrice: NumberDecimal("0") },
 { _id: 5, totalPrice: 'NaN' }

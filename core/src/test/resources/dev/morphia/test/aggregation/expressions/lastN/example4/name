@@ -1,1 +1,1 @@
-Using ``$sort`` With ``$lastN``
+Computing ``n`` Based on the Group Key for ``$group``

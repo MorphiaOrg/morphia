@@ -2,7 +2,7 @@
       {
          $project: {
             item: 1,
-            description: { $ifNull: [ "$description", "Unspecified" ] }
+            value: { $ifNull: [ "$description", "$quantity", "Unspecified" ] }
          }
       }
    ]

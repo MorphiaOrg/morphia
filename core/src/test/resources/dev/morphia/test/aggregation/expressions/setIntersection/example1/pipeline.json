@@ -1,12 +1,3 @@
-[
-  {
-    $project: {
-      _id: 0,
-      flowerFieldA: 1,
-      flowerFieldB: 1,
-      commonToBoth: {
-        $setIntersection: ["$flowerFieldA", "$flowerFieldB"]
-      }
-    }
-  }
-]
+   [
+     { $project: { flowerFieldA: 1, flowerFieldB: 1, commonToBoth: { $setIntersection: [ "$flowerFieldA", "$flowerFieldB" ] }, _id: 0 } }
+   ]

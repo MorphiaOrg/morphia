@@ -1,6 +1,6 @@
 [{
   $project: {
-    _id: 0,
+    _id: false,
     transposed: {
       $zip: {
         inputs: [

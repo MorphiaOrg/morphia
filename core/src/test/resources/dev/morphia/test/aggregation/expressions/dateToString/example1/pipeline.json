@@ -1,13 +1,13 @@
    [
      {
        $project: {
-          yearMonthDayUTC: { $dateToString: { date: "$date", format: "%Y-%m-%d" } },
-          timewithOffsetNY: { $dateToString: { date: "$date", format: "%H:%M:%S:%L%z", timezone: "America/New_York"} },
-          timewithOffset430: { $dateToString: { date: "$date", format: "%H:%M:%S:%L%z", timezone: "+04:30" } },
-          minutesOffsetNY: { $dateToString: { date: "$date", format: "%Z", timezone: "America/New_York" } },
-          minutesOffset430: { $dateToString: { date: "$date", format: "%Z", timezone: "+04:30" } },
-          abbreviated_month: { $dateToString: {date: "$date", format: "%b", timezone: "+04:30" } },
-          full_month: { $dateToString: { date: "$date", format: "%B", timezone: "+04:30" } }
+          yearMonthDayUTC: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          timewithOffsetNY: { $dateToString: { format: "%H:%M:%S:%L%z", date: "$date", timezone: "America/New_York"} },
+          timewithOffset430: { $dateToString: { format: "%H:%M:%S:%L%z", date: "$date", timezone: "+04:30" } },
+          minutesOffsetNY: { $dateToString: { format: "%Z", date: "$date", timezone: "America/New_York" } },
+          minutesOffset430: { $dateToString: { format: "%Z", date: "$date", timezone: "+04:30" } },
+          abbreviated_month: { $dateToString: {format: "%b", date: "$date", timezone: "+04:30" } },
+          full_month: { $dateToString: { format: "%B", date: "$date", timezone: "+04:30" } }
        }
      }
    ]

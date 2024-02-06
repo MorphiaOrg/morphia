@@ -2,10 +2,10 @@
      {
        $project:
           {
-            _id: 0,
             item: 1,
             qty: 1,
-            qtyLte250: { $lte: [ "$qty", 250 ] }
+            qtyLte250: { $lte: [ "$qty", 250 ] },
+            _id: 0
           }
      }
    ]

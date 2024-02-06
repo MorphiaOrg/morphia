@@ -4,13 +4,15 @@
          {
             _id: 0,
             result: 
-               { 
-                  $sortArray: 
-                     {
-                         input: [ 1, 4, 1, 6, 12, 5 ],
-                         sortBy: 1 
-                     } 
-               }
+            { 
+               $sortArray: 
+                  {
+                     input: [ 20, 4, { a: "Free" }, 6, 21, 5, "Gratis", 
+                             { a: null }, { a: { sale: true, price: 19 } },
+                             Decimal128( "10.23" ), { a: "On sale" } ],
+                     sortBy: 1 
+                  }
+            }
          }
    }
 ] 

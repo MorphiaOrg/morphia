@@ -1,21 +1,4 @@
 [
-  {
-    $match: {
-      status: "C"
-    }
-  },
-  {
-    $replaceWith: {
-      _id: "$_id",
-      item: "$item",
-      amount: {
-        $multiply: [
-          "$price",
-          "$quantity"
-        ]
-      },
-      status: "Complete",
-      asofDate: "$$NOW"
-    }
-  }
+   { $match: { status: "C" } },
+   { $replaceWith: { _id: "$_id", item: "$item", amount: { $multiply: [ "$price", "$quantity"]}, status: "Complete", asofDate: "$$NOW" } }
 ]

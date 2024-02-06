@@ -1,17 +1,1 @@
-[
-  {
-    $project: {
-      item: 1,
-      dateDifference: {
-        $subtract: [
-          {
-            "$dateFromString": {
-              "dateString": "2014-03-01T22:00:00Z"
-            }
-          },
-          "$date"
-        ]
-      }
-    }
-  }
-]
+ [ { $project: { item: 1, dateDifference: { $subtract: [ "$date", 5 * 60 * 1000 ] } } } ] 

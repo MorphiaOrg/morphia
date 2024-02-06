@@ -1,6 +1,6 @@
 { "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid" ], "AisSubset" : true }
 { "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "orchid", "rose", "orchid" ], "AisSubset" : true }
-{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid", "jasmine" ], "AisSubset" : true }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "blue", "jasmine" ], "AisSubset" : true }
 { "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "jasmine", "rose" ], "AisSubset" : false }
 { "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ ], "AisSubset" : false }
 { "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ [ "rose" ], [ "orchid" ] ], "AisSubset" : false }

@@ -1,4 +1,4 @@
-{ "_id" : 1, "name" : "Aunt Arc Tikka", "email" : "aunt.tica@example.com", "username" : "aunt.tica" }
-{ "_id" : 2, "name" : "Belle Gium", "email" : "belle.gium@example.com", "username" : "belle.gium" }
-{ "_id" : 3, "name" : "Cam Bo Dia", "email" : "cam.dia@example.com", "username" : "cam.dia" }
+{ "_id" : 1, "name" : "Aunt Arc Tikka", "email" : "aunt.tica@example.com", "username" : { "match" : "aunt.tica@example.com", "idx" : 0, "captures" : [ "aunt.tica" ] } }
+{ "_id" : 2, "name" : "Belle Gium", "email" : "belle.gium@example.com", "username" : { "match" : "belle.gium@example.com", "idx" : 0, "captures" : [ "belle.gium" ] } }
+{ "_id" : 3, "name" : "Cam Bo Dia", "email" : "cam.dia@example.com", "username" : { "match" : "cam.dia@example.com", "idx" : 0, "captures" : [ "cam.dia" ] } }
 { "_id" : 4, "name" : "Fred", "username" : null }

@@ -1,8 +1,1 @@
-[
-  {
-    $unwind: "$tags"
-  },
-  {
-    $sortByCount: "$tags"
-  }
-]
+ [ { $unwind: "$tags" },  { $sortByCount: "$tags" } ] 

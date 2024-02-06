@@ -5,7 +5,7 @@
          sortBy: { date: 1 },
          output: {
             expMovingAvgForStock: {
-               $expMovingAvg: { input: "$price", N: 2 }
+               $expMovingAvg: { input: "$price", alpha: 0.75 }
             }
          }
       }

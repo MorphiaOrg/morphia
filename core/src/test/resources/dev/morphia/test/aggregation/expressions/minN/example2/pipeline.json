@@ -1,19 +1,16 @@
  [
    {
-      $match : { gameId : "G1" }
-   },
-   {
       $group:
-         {
-            _id: "$gameId",
-            minScores:
-               {
-                  $minN:
+      { 
+         _id: "$gameId", 
+         minScores:
+            {
+               $minN:
                   {
                      input: ["$score","$playerId"],
-                     n:3
+                     n: 3
                   }
-               }
-         }
+            }
+      }
    }
 ] 

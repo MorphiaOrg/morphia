@@ -17,7 +17,8 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
         }
     }
 
-    val examples: List<OperatorExample>
+    var examples: List<OperatorExample>
+        private set
 
     init {
         val partition = DASH.partition(lines).entries.last()
@@ -36,6 +37,8 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
                     .filter { it.dataBlock == null }
                     .forEach { it.dataBlock = main.dataBlock }
             }
+
+        examples = examples.filter { it.valid() }
     }
 
     private fun MutableList<String>.extractTabs(name: String): Map<String, MutableList<String>> {

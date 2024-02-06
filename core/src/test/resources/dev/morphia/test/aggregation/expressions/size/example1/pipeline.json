@@ -2,13 +2,7 @@
    {
       $project: {
          item: 1,
-         numberOfColors: {
-            $cond: [
-               { $isArray: [ "$colors" ] },
-               { $size: "$colors" },
-               "NA"
-            ]
-         }
+         numberOfColors: { $cond: { if: { $isArray: "$colors" }, then: { $size: "$colors" }, else: "NA"} }
       } 
    }
 ] 

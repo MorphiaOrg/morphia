@@ -4,5 +4,5 @@
 { "_id" : 4, "title" : "The Great Wave off Kanagawa", "artist" : "Hokusai",      "price" : NumberDecimal("167.30") },
 { "_id" : 5, "title" : "The Persistence of Memory", "artist" : "Dali", "year" : 1931,      "price" : NumberDecimal("483.00") },
 { "_id" : 6, "title" : "Composition VII", "artist" : "Kandinsky", "year" : 1913,      "price" : NumberDecimal("385.00") },
-{ "_id" : 7, "title" : "The Scream", "artist" : "Munch", "year" : 1893       },
+{ "_id" : 7, "title" : "The Scream", "artist" : "Munch", "year" : 1893      /* No price*/ },
 { "_id" : 8, "title" : "Blue Flower", "artist" : "O'Keefe", "year" : 1918,      "price" : NumberDecimal("118.42") }

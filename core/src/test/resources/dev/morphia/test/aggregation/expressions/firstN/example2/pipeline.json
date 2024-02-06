@@ -1,19 +1,15 @@
  [
    {
-      $match : { gameId : "G1" }
-   },
-   {
       $group:
+      { 
+      _id: "$gameId", playerId:
          {
-            _id: "$gameId",
-            firstThreeScores:
+            $firstN:
                {
-                  $firstN:
-                  {
-                     input: ["$playerId", "$score"],
-                     n:3
-                  }
+                  input: [ "$playerId","$score" ],
+                  n: 3
                }
          }
+      }
    }
 ] 

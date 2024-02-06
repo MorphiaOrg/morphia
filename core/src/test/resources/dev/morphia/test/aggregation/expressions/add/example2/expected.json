@@ -1,3 +1,3 @@
-{ "_id" : 1, "item" : "abc", "total" : 12 }
-{ "_id" : 2, "item" : "jkl", "total" : 21 }
-{ "_id" : 3, "item" : "xyz", "total" : 5 }
+{ "_id" : 1, "item" : "abc", "billing_date" : ISODate("2014-03-04T08:00:00Z") }
+{ "_id" : 2, "item" : "jkl", "billing_date" : ISODate("2014-03-04T09:00:00Z") }
+{ "_id" : 3, "item" : "xyz", "billing_date" : ISODate("2014-03-18T09:00:00Z") }

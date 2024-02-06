@@ -1,2 +1,2 @@
-{      _id: 'G2',      playerId: [ [ 'PlayerD', 80 ], [ 'PlayerC', 66 ], [ 'PlayerB', 14 ] ]   },
-{      _id: 'G1',      playerId: [ [ 'PlayerC', 99 ], [ 'PlayerB', 33 ], [ 'PlayerA', 31 ] ]   }
+{ _id: { gameId: 'G1' }, gamescores: [ 31, 33, 99 ] },
+{ _id: { gameId: 'G2' }, gamescores: [ 10 ] }

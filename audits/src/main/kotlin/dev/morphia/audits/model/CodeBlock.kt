@@ -177,6 +177,8 @@ class CodeBlock {
 
     fun isData(): Boolean = contains(".insertOne(") || contains(".insertMany(")
 
+    fun isExpected(): Boolean = !isData() && !isAction() && !isIndex()
+
     fun isIndex(): Boolean = contains(".createIndex(")
 
     fun write(output: Writer) {

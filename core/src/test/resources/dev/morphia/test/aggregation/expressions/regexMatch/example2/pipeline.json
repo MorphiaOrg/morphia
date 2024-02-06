@@ -1,13 +1,5 @@
  [ 
-    {
-      $addFields: {
-        "category": {
-          $cond: [
-            { $regexMatch: { input: "$comment", regex: /[a-z0-9_.+-]+@mongodb.com/, options: "i" } },
-                "Employee",
-                "External"
-            ]
-        }
-      }
-    }
-]
+    { $addFields: { 
+       "category": { $cond: { if:  { $regexMatch: { input: "$comment", regex: /[a-z0-9_.+-]+@mongodb.com/i } },
+                              then: "Employee",
+                              else: "External" } }

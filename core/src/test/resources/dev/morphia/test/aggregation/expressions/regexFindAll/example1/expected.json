@@ -1,6 +1,6 @@
-{ _id : 1, description : "Single LINE description.", returnObject : [ ]}
-{ _id : 2, description : 'First lines\nsecond line', returnObject : [{ match: 'line', idx: 6, captures: [] }, { match: 'line', idx: 19, captures: [] }]},
-{ _id : 3, description : 'Many spaces before     line', returnObject : [ { match : 'line', idx : 23, captures : [] } ] },
-{ _id : 4, description : 'Multiple\nline descriptions', returnObject : [ { match : 'line', idx : 9, captures : [] } ] }
-{ _id : 5, description : "anchors, links and hyperlinks", returnObject : [ ]}
-{ _id : 6, description : "métier work vocation", returnObject : [ ] }
+{   "_id" : 1,   "description" : "Single LINE description.",   "returnObject" : [ ]}
+{   "_id" : 2,   "description" : "First lines\nsecond line",   "returnObject" : [ { "match" : "line", "idx" : 6, "captures" : [ ]}, { "match" : "line", "idx" : 19, "captures" : [ ] } ]}
+{   "_id" : 3,   "description" : "Many spaces before     line",   "returnObject" : [ { "match" : "line", "idx" : 23, "captures" : [ ] } ]}
+{   "_id" : 4,   "description" : "Multiple\nline descriptions",   "returnObject" : [ { "match" : "line", "idx" : 9, "captures" : [ ] }] }
+{   "_id" : 5,   "description" : "anchors, links and hyperlinks",   "returnObject" : [ ]}
+{    "_id" : 6,   "description" : "métier work vocation",   "returnObject" : [ ]}

@@ -5,7 +5,7 @@
             $let: {
                vars: {
                   total: { $add: [ '$price', '$tax' ] },
-                  discounted: { $cond: [ '$applyDiscount', 0.9, 1 ] }
+                  discounted: { $cond: { if: '$applyDiscount', then: 0.9, else: 1 } }
                },
                in: { $multiply: [ "$$total", "$$discounted" ] }
             }

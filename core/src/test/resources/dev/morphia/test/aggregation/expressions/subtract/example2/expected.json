@@ -1,2 +1,2 @@
-{ "_id" : 1, "item" : "abc", "total" : 7 }
-{ "_id" : 2, "item" : "jkl", "total" : 19 }
+{ "_id" : 1, "item" : "abc", "dateDifference" : NumberLong("186136746187") }
+{ "_id" : 2, "item" : "jkl", "dateDifference" : NumberLong("186133146187") }

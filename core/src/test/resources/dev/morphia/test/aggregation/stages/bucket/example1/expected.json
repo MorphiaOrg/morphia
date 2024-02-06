@@ -1,1 +1,4 @@
-{ "_id" : 1860, "count" : 4, "artists" :  [     { "name" : "Emil Bernard", "year_born" : 1868 },     { "name" : "Joszef Rippl-Ronai", "year_born" : 1861 },     { "name" : "Alfred Maurer", "year_born" : 1868 },     { "name" : "Edvard Munch", "year_born" : 1863 }   ]}
+{ "_id" : 1840, "count" : 1, "artists" : [ { "name" : "Odilon Redon", "year_born" : 1840 } ] }
+{ "_id" : 1850, "count" : 2, "artists" : [ { "name" : "Vincent Van Gogh", "year_born" : 1853 },                                            { "name" : "Edvard Diriks", "year_born" : 1855 } ] }
+{ "_id" : 1860, "count" : 4, "artists" : [ { "name" : "Emil Bernard", "year_born" : 1868 },                                            { "name" : "Joszef Rippl-Ronai", "year_born" : 1861 },                                            { "name" : "Alfred Maurer", "year_born" : 1868 },                                            { "name" : "Edvard Munch", "year_born" : 1863 } ] }
+{ "_id" : 1870, "count" : 1, "artists" : [ { "name" : "Anna Ostroumova", "year_born" : 1871 } ] }

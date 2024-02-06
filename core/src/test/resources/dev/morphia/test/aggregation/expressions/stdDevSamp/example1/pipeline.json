@@ -1,15 +1,4 @@
-[
-  {
-    $sample: {
-      size: 100
-    }
-  },
-  {
-    $group: {
-      _id: null,
-      ageStdDev: {
-        $stdDevSamp: "$age"
-      }
-    }
-  }
-]
+   [
+      { $sample: { size: 100 } },
+      { $group: { _id: null, ageStdDev: { $stdDevSamp: "$age" } } }
+   ]

@@ -1,4 +1,4 @@
-{ _id: 1, item: 'apple', totalPrice: 50.0 },
-{ _id: 2, item: 'pie', totalPrice: 200.0 },
-{ _id: 3, item: 'ice cream', totalPrice: 9.98 },
-{ _id: 4, item: 'almonds', totalPrice: 25.0 }
+{ _id: 1, item: 'apple', totalPrice: NumberDecimal("50") },
+{ _id: 2, item: 'pie', totalPrice: NumberDecimal("200.0") },
+{ _id: 3, item: 'ice cream', totalPrice: NumberDecimal("9.98") },
+{ _id: 4, item: 'almonds', totalPrice: NumberDecimal("25") }

@@ -1,7 +1,7 @@
-    [
-      {
-         $addFields : {
-            "cosh_output" : { $cosh : { $degreesToRadians : "$angle" } }
-         }
+ [
+   {
+      $addFields : {
+         "cosh_output" : { $cosh : { $degreesToRadians : "$angle" } }
       }
-   ]
+   }
+] 

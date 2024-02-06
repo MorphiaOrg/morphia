@@ -1,1 +1,1 @@
-Test a Pipeline Stage
+Use a ``$documents`` Stage in a ``$lookup`` Stage

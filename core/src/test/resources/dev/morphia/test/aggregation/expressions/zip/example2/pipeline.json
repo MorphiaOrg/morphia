@@ -1,6 +1,6 @@
 [{
   $project: {
-    _id: 0,
+    _id: false,
     pages: {
       $filter: {
         input: {
@@ -8,6 +8,7 @@
             inputs: [ "$pages", { $range: [0, { $size: "$pages" }] } ]
           }
         },
+        as: "pageWithIndex",
         cond: {
           $let: {
             vars: {
@@ -15,8 +16,7 @@
             },
             in: { $gte: [ "$$page.reviews", 1 ] }
           }
-        },
-        as: "pageWithIndex"
+        }
       }
     }
   }

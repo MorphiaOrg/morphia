@@ -1,20 +1,22 @@
-[
-  {
-    $addFields: {
-      convertedShippedFlag: {
-        $switch: {
-          branches: [
-            { case: { $eq: [ "$shipped", "false" ] }, then: false },
-            { case: { $eq: [ "$shipped", "" ] }, then: false }
-          ],
-          default: { $toBool: "$shipped" }
+
+shippedConversionStage = {
+   $addFields: {
+      convertedShippedFlag: { 
+         $switch: { 
+            branches: [
+              { case: { $eq: [ "$shipped", "false" ] }, then: false } , 
+              { case: { $eq: [ "$shipped", "" ] }, then: false }
+            ],
+            default: { $toBool: "$shipped" }
         }
       }
-    }
-  },
-  {
-    $match: {
-      "convertedShippedFlag": false
-    }
-  }
+   }
+};
+
+unshippedMatchStage = {
+   $match: { "convertedShippedFlag": false }
+};
+db.orders.aggregate( [
+  shippedConversionStage,
+  unshippedMatchStage
 ] 

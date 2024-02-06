@@ -1,12 +1,3 @@
 [
-  {
-    $project: {
-      truncatedValue: {
-        $trunc: [
-          "$value",
-          1
-        ]
-      }
-    }
-  }
+   { $project: { truncatedValue: { $trunc: [ "$value", 1 ] } } }
 ]

@@ -1,21 +1,28 @@
-[
- { $match: { "hobbies": { $gt: [ ] } } },
- {
-   $project: {
-     "name": 1,
-     "bio": {
-       $reduce: {
-         input: "$hobbies",
-         initialValue: "My hobbies include:",
-         in: {
-           $concat: [
-             "$$value",
-             { $cond: [ { $eq: [ "$$value", "My hobbies include:" ] }, " ", ", " ] },
-             "$$this"
-           ]
+   [
+     
+     { $match: { "hobbies": { $gt: [ ] } } },
+     {
+       $project: {
+         "name": 1,
+         "bio": {
+           $reduce: {
+             input: "$hobbies",
+             initialValue: "My hobbies include:",
+             in: {
+               $concat: [
+                 "$$value",
+                 {
+                   $cond: {
+                     if: { $eq: [ "$$value", "My hobbies include:" ] },
+                     then: " ",
+                     else: ", "
+                   }
+                 },
+                 "$$this"
+               ]
+             }
+           }
          }
        }
      }
-   }
- }
-]
+   ]

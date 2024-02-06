@@ -1,15 +1,15 @@
  [
-   {
-      $group:
-      { 
-      _id: "$gameId", playerId:
-         {
-            $firstN:
-               {
-                  input: [ "$playerId","$score" ],
-                  n: 3
-               }
+      { $sort : { score : -1 } },
+      {
+         $group:
+         { _id: "$gameId", playerId:
+            {
+               $firstN:
+                  {
+                     input: [ "$playerId","$score" ],
+                     n: 3
+                  }
+            }
          }
       }
-   }
-] 
+   ] 

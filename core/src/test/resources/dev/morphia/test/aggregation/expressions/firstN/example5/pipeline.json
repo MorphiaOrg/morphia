@@ -1,16 +1,16 @@
-[
+ [ 
    {
-      $group:
-      {
-         _id: {"gameId": "$gameId"},
-         gamescores:
-            {
-               $firstN:
-                  {
-                     input: "$score",
-                     n: { $cond: [ {$eq: ["$gameId","G2"] }, 1, 3 ] }
-                  }
-            }
-      }
+      $documents: [
+         { array: [10, 20, 30, 40] } ] 
+   },
+   { $project: { 
+      firstThreeElements:{
+                           $firstN: 
+                           { 
+                              input: "$array", 
+                              n: 3 
+                           }
+                        }
+               } 
    }
 ] 

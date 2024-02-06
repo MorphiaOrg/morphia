@@ -1,14 +1,13 @@
-[
-  {
-    $addFields: {
-      convertedQty: {
-        $toLong: "$qty"
-      }
-    }
-  },
-  {
-    $sort: {
-      "convertedQty": -1
-    }
-  }
+qtyConversionStage = { 
+   $addFields: { 
+      convertedQty: { $toLong: "$qty" }
+   }
+};
+
+sortStage = {
+   $sort: { "convertedQty": -1 }
+};
+db.orders.aggregate( [
+   qtyConversionStage,
+   sortStage
 ]

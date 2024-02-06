@@ -1,5 +1,4 @@
-{ "numMatches" : 38 }
-{ "numMatches" : 36 }
-{ "numMatches" : 29 }
-{ "numMatches" : 29 }
-{ "numMatches" : 28 }
+N = 100
+bulk = db.collection.initializeUnorderedBulkOp()
+for ( i = 0; i < N; i++) { bulk.insert( {_id: i, r: 0} ) }
+bulk.execute()

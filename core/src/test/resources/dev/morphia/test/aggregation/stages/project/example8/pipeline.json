@@ -1,1 +1,3 @@
- [ { $project: { myArray: [ "$x", "$y" ] } } ] 
+ [
+   { $project: { x: '$name', _id: 0 } },
+] 

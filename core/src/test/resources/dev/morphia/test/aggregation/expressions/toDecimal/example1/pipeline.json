@@ -1,23 +1,14 @@
-[
-  {
-    $addFields: {
-      convertedPrice: {
-        $toDecimal: "$price"
-      },
-      convertedQty: {
-        $toInt: "$qty"
-      }
-    }
-  },
-  {
-    $project: {
-      item: 1,
-      totalPrice: {
-        $multiply: [
-          "$convertedPrice",
-          "$convertedQty"
-        ]
-      }
-    }
-  }
+priceQtyConversionStage = { 
+   $addFields: { 
+      convertedPrice: { $toDecimal: "$price" },
+      convertedQty: { $toInt: "$qty" },
+   }
+};
+
+totalPriceCalculationStage = { 
+   $project: { item: 1, totalPrice: { $multiply: [ "$convertedPrice", "$convertedQty" ] } }
+};
+db.orders.aggregate( [
+   priceQtyConversionStage,
+   totalPriceCalculationStage
 ] 

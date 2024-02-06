@@ -1,3 +1,4 @@
- [ 
-   { $planCacheStats: { } }
+ [
+   { $planCacheStats: { } },
+   { $match: { planCacheKey: "B1435201"} }
 ] 

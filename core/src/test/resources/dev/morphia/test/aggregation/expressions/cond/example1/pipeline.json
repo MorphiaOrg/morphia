@@ -5,7 +5,7 @@
              item: 1,
              discount:
                {
-                 $cond: [ { $gte: [ "$qty", 250 ] }, 30, 20 ]
+                 $cond: { if: { $gte: [ "$qty", 250 ] }, then: 30, else: 20 }
                }
            }
       }

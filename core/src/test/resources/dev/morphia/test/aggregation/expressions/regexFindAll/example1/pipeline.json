@@ -1,12 +1,3 @@
 [
-  {
-    $addFields: {
-      returnObject: {
-        $regexFindAll: {
-          input: "$description",
-          regex: /line/
-        }
-      }
-    }
-  }
+   { $addFields: { returnObject: { $regexFindAll: { input: "$description", regex: /line/ } } } }
 ]
