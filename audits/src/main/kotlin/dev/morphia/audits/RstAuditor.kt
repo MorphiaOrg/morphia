@@ -162,7 +162,7 @@ fun List<String>.sections(): Map<String, MutableList<String>> {
 }
 
 fun notControl(it: String): Boolean {
-    return !it.trim().startsWith(":")
+    return !(it.trim().startsWith(":") || it.trim().startsWith(".. "))
 }
 
 fun String.findIndent() = length - trimIndent().length

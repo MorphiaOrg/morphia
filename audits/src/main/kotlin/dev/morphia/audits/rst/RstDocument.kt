@@ -6,15 +6,19 @@ import java.io.File
 
 class RstDocument(lines: MutableList<String>) {
     companion object {
+        val TABS_START = ".. tabs::"
+        val FANCY_TAB_START = ".. tab::"
+        val SIMPLE_TAB_START = "tabs:"
+
         fun read(file: File): RstDocument {
             return RstDocument(file.readLines().toMutableList())
         }
     }
 
-    val sections: Map<String, Section>
+    val exampleSection: Section
 
     init {
-        sections =
+        exampleSection =
             lines
                 .flatMap { line ->
                     if (line.trim().startsWith(".. include:: ")) {
@@ -26,8 +30,7 @@ class RstDocument(lines: MutableList<String>) {
                 }
                 .toMutableList()
                 .sections()
-                .map { it.name to it }
-                .toMap()
+                .first()
     }
 
     private fun List<String>.sections(): List<Section> {
@@ -37,10 +40,8 @@ class RstDocument(lines: MutableList<String>) {
     }
 
     fun tag(name: String): List<Tag> {
-        return sections.values.flatMap { it.tag(name) }
+        return exampleSection.tag(name)
     }
-
-    fun examples() = (sections["Examples"] ?: sections["Example"]) as Section
 }
 
 fun <String> MutableList<String>.removeWhile(function: (String) -> Boolean): List<String> {

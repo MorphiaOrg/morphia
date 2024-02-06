@@ -14,10 +14,9 @@ class CodeBlock {
         fun findBlocks(lines: List<String>): Map<Type, MutableList<CodeBlock>> {
             val blocks = mutableListOf<CodeBlock>()
             val data = lines.toMutableList()
-            var line: String
             while (data.isNotEmpty()) {
-                line = data.removeFirst().trim()
-                if (line.trim().startsWith(".. code-block:: ")) {
+                data.removeWhile { !it.trim().startsWith(".. code-block:: ") }
+                if (data.isNotEmpty()) {
                     blocks += readBlock(data)
                 }
             }
@@ -27,27 +26,42 @@ class CodeBlock {
                     .map { it.key to it.value.toMutableList() }
                     .toMap()
                     .toMutableMap()
-            val expected = grouped[EXPECTED]
             val action = blocks.indexOfFirst { it.type == ACTION }
-            if (grouped[DATA] == null && expected != null && expected.size > 1 && action != 0) {
-                grouped[DATA] = mutableListOf(expected.removeFirst())
-            }
+            blocks.forEachIndexed { index, it -> it.label(index, action) }
+            //            val expected = grouped[EXPECTED]
+            //            if (grouped[DATA] == null && expected != null && expected.size > 1 &&
+            // action != 0) {
+            //                grouped[DATA] = mutableListOf(expected.removeFirst())
+            //            }
 
             return grouped
         }
 
         fun readBlock(lines: MutableList<String>): CodeBlock {
-            lines.removeWhile { !notControl(it) || it.isBlank() }.toMutableList()
+            lines.removeWhile { !notControl(it) || it.isBlank() }
             val block = CodeBlock()
             block.indent = lines.first().findIndent()
             while (
                 lines.isNotEmpty() &&
+                    notControl(lines.first()) &&
                     (lines.first().findIndent() >= block.indent || lines.first().isBlank())
             ) {
                 block += lines.removeFirst()
             }
             return block
         }
+    }
+
+    private fun label(index: Int, action: Int) {
+        type =
+            when {
+                isData() -> DATA
+                isAction() -> ACTION
+                isIndex() -> INDEX
+                else -> {
+                    if (index < action) DATA else EXPECTED
+                }
+            }
     }
 
     enum class Type {
@@ -57,14 +71,8 @@ class CodeBlock {
         INDEX
     }
 
-    val type: Type by lazy {
-        when {
-            isData() -> DATA
-            isAction() -> ACTION
-            isIndex() -> INDEX
-            else -> EXPECTED
-        }
-    }
+    lateinit var type: Type
+        private set
 
     private var prefix = ""
     var indent: Int = 0
@@ -79,6 +87,7 @@ class CodeBlock {
         if (!line.isBlank() && line.findIndent() >= indent && notControl(line)) {
             lines += line.removePrefix(prefix).substringBefore("//")
         }
+        label(0, 0)
     }
 
     override fun toString() = "CodeBlock[$type, ${lines.joinToString("\n")}]"

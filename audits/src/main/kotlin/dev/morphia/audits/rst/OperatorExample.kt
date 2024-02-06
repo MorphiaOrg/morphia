@@ -1,5 +1,6 @@
 package dev.morphia.audits.rst
 
+import dev.morphia.audits.findIndent
 import dev.morphia.audits.model.CodeBlock
 import dev.morphia.audits.model.CodeBlock.Companion.findBlocks
 import dev.morphia.audits.model.CodeBlock.Type.ACTION
@@ -15,42 +16,73 @@ class OperatorExample(
     separator: Separator = TILDE
 ) {
     companion object {
+        fun String.sanitize(): String {
+            return replace("`", "")
+        }
+
         fun hasTabs(input: List<String>) = input.any { it.startsWith(".. tabs::") }
 
         fun extractTabs(name: String, input: List<String>): Map<String, List<String>> {
-            var tabName = name
+            var tabName = name.sanitize()
             if (tabName.isBlank()) tabName = "main"
-            return if (hasTabs(input)) {
-                if (input.any { it.trim().startsWith(".. tab:: ") })
-                    separateTabs(input, "   .. tab:: ")
-                else separateTabs(input, "     - id: ")
-            } else {
-                mutableMapOf(tabName to input)
-            }
+            val map =
+                if (hasTabs(input)) {
+                    separateTabs(
+                        tabName,
+                        input,
+                        if (fancy(input)) "   .. tab:: " else "     - id: "
+                    )
+                    //                if (input.any { it.trim().startsWith(".. tab:: ") })
+                    //                    separateTabs(tabName, input, "   .. tab:: ")
+                    //                else separateTabs(tabName, input, "     - id: ")
+                } else {
+                    mutableMapOf(tabName to input)
+                }
+            return map
         }
 
+        private fun fancy(input: List<String>) = input.any { it.trim().startsWith(".. tab:: ") }
+
         private fun separateTabs(
+            tabName: String,
             input: List<String>,
             separator: String
         ): Map<String, MutableList<String>> {
             val tabs = mutableMapOf<String, MutableList<String>>()
             val lines = input.toMutableList()
-            val main = lines.removeWhile { !it.startsWith(".. tabs::") }.filter { it.isNotBlank() }
-            lines.removeWhile { !it.startsWith(separator) }
-
-            while (lines.isNotEmpty()) {
-                val tab =
-                    mutableListOf(lines.removeFirst()) +
-                        lines.removeWhile { !it.startsWith(separator) }
-                tabs[nameTab(tab, separator)] = (main + tab).toMutableList()
+            val main = lines.removeWhile { !it.startsWith(".. tabs::") }
+            val tabSections = mutableListOf<MutableList<String>>()
+            while (lines.contains(".. tabs::")) {
+                lines.removeFirst()
+                tabSections += lines.removeWhile { !it.startsWith(".. tabs::") }.toMutableList()
+            }
+            tabSections.forEach { tabSection ->
+                tabSection.removeWhile { !it.startsWith(separator) }
+                val indent = tabSection.first().findIndent()
+                while (tabSection.isNotEmpty() && tabSection.first().findIndent() >= indent) {
+                    val tab =
+                        mutableListOf(tabSection.removeFirst()) +
+                            tabSection.removeWhile {
+                                !it.startsWith(separator) &&
+                                    (tabSection.first().isBlank() ||
+                                        tabSection.first().findIndent() >= indent)
+                            }
+                    var name = nameTab(tabName, tab, separator)
+                    var count = 0
+                    while (tabs.containsKey(name)) {
+                        count++
+                        name = nameTab(tabName, tab, separator) + " [$count]"
+                    }
+                    tabs[name] = (main + tab).toMutableList()
+                }
             }
             return tabs
         }
 
-        private fun nameTab(tab: List<String>, separator: String): String {
+        private fun nameTab(tabName: String, tab: List<String>, separator: String): String {
             var name = tab[0].substringAfter(separator)
             if (tab[1].trim().startsWith("name: ")) name = tab[1].substringAfter("name: ")
-            return name
+            return "$tabName :: $name tab"
         }
     }
 
@@ -61,18 +93,6 @@ class OperatorExample(
     val indexBlock: CodeBlock?
 
     init {
-        /*
-                testCases =
-                    TILDE.partition(input)
-                        .flatMap {
-                            val tabs = extractTabs(name, it)
-                            var index = 1
-                            tabs.map {
-                                OperatorExample("${it.key} #${index++}", it.value, this, separator.next())
-                            }
-                        }
-        */
-
         val codeBlocks = findBlocks(input)
         actionBlock = codeBlocks[ACTION]?.removeFirstOrNull() ?: parent?.actionBlock
         dataBlock = codeBlocks[DATA]?.removeFirstOrNull() ?: parent?.dataBlock

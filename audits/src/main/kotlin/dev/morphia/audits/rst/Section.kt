@@ -13,14 +13,13 @@ class Section(val name: String, input: List<String>, val separator: Separator = 
     init {
         tags = findTags(input)
         val partitions = TILDE.partition(input)
+        val map = partitions.flatMap { extractTabs(it.key, it.value).entries }
         examples +=
-            partitions
-                .flatMap { extractTabs(it.key, it.value).entries }
-                .map {
-                    OperatorExample(it.key, it.value, examples.lastOrNull(), separator.next())
-                    //                    extractTabs(it).map {
-                    //                    }
-                }
+            map.map {
+                OperatorExample(it.key, it.value, examples.lastOrNull(), separator.next())
+                //                    extractTabs(it).map {
+                //                    }
+            }
         //                .map { OperatorExample(it, examples.lastOrNull(), separator.next()) }
     }
 

@@ -15,7 +15,7 @@ enum class Separator(val separator: Char) {
 
     val section = let { RegularExpression.startOfInput().atLeast(5) { char(separator) } }.toRegex()
 
-    fun partition(input: List<String>): Map<String, List<String>> {
+    fun partition(input: List<String>): Map<String, MutableList<String>> {
         var name = "main"
         val partitions = mutableMapOf(name to mutableListOf<String>())
         var lines = input.toMutableList()
