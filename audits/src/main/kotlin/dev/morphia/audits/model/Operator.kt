@@ -5,6 +5,8 @@ import dev.morphia.audits.findIndent
 import dev.morphia.audits.model.OperatorType.EXPRESSION
 import dev.morphia.audits.model.OperatorType.STAGE
 import dev.morphia.audits.notControl
+import dev.morphia.audits.rst.OperatorExample
+import dev.morphia.audits.rst.RstDocument
 import dev.morphia.audits.rst.removeWhile
 import dev.morphia.audits.sections
 import java.io.File
@@ -17,7 +19,7 @@ class Operator(var source: File) {
     val operator = "\$${name.substringBefore("-")}"
     val type: OperatorType
     val url: String = "https://www.mongodb.com/docs/manual/reference/operator/aggregation/$name/"
-    val examples: List<Example>
+    val examples: List<OperatorExample>
 
     init {
         type = if (source.readText().contains(".. pipeline:: \$")) STAGE else EXPRESSION
@@ -36,21 +38,15 @@ class Operator(var source: File) {
                 )
                 .canonicalFile
         implemented = resourceFolder.exists()
-        var prior: Example? = null
-        examples =
-            extractCodeBlocks(source).map {
-                val example = Example(this, it.key, it.value, prior)
-                prior = example
-                example
-            }
+        examples = RstDocument.read(operator, source).examples
     }
 
     fun ignored() = File(resourceFolder, "ignored").exists()
 
-    fun output() {
+    fun output(aggOnly: Boolean = true) {
         if (!ignored()) {
             examples
-                .filterNot { it.isEmpty() }
+                .filter { it.actionBlock?.isPipeline() == true }
                 .forEachIndexed { index, it ->
                     it.output(File(resourceFolder, "example${index + 1}"))
                 }

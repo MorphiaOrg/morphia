@@ -59,11 +59,7 @@ object RstAuditor {
                 .filterNotNull()
         operators.filterNot { it.ignored() }.forEach { it.output() }
         val empty =
-            operators
-                .filterNot { it.ignored() }
-                .filter { it.examples.size == 1 }
-                .flatMap { it.examples }
-                .filterNot { it.folder.exists() }
+            operators.filterNot { it.ignored() }.flatMap { it.examples }.filter { it.created }
 
         emitDocs(TreeMap(methods), type)
         return Results(

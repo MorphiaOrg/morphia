@@ -175,6 +175,9 @@ a|
  * link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#expMovingAvg(java.lang.Object,double)[WindowExpressions#expMovingAvg(Object,double)]
 
 
+| http://docs.mongodb.org/manual/reference/operator/aggregation/filter[$filter]
+| link:javadoc/dev/morphia/aggregation/expressions/Expressions.html#filter(java.lang.Object,java.lang.Object)[Expressions#filter(Object,Object)]
+
 | http://docs.mongodb.org/manual/reference/operator/aggregation/first[$first]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#first(java.lang.Object)[AccumulatorExpressions#first(Object)]
 

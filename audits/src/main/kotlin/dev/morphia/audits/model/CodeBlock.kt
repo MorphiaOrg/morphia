@@ -196,4 +196,8 @@ class CodeBlock {
     fun write(output: Writer) {
         output.write(sanitizeData().joinToString("\n"))
     }
+
+    fun isPipeline(): Boolean {
+        return isAction() && lines.any { it.contains(".aggregate(") }
+    }
 }
