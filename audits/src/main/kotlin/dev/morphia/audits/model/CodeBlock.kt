@@ -11,7 +11,7 @@ import java.io.Writer
 
 class CodeBlock {
     companion object {
-        fun findBlocks(lines: List<String>): Map<Type, MutableList<CodeBlock>> {
+        fun findBlocks(lines: List<String>): MutableList<CodeBlock> {
             val blocks = mutableListOf<CodeBlock>()
             val data = lines.toMutableList()
             while (data.isNotEmpty()) {
@@ -20,21 +20,7 @@ class CodeBlock {
                     blocks += readBlock(data)
                 }
             }
-            val grouped =
-                blocks
-                    .groupBy { it.type }
-                    .map { it.key to it.value.toMutableList() }
-                    .toMap()
-                    .toMutableMap()
-            val action = blocks.indexOfFirst { it.type == ACTION }
-            blocks.forEachIndexed { index, it -> it.label(index, action) }
-            //            val expected = grouped[EXPECTED]
-            //            if (grouped[DATA] == null && expected != null && expected.size > 1 &&
-            // action != 0) {
-            //                grouped[DATA] = mutableListOf(expected.removeFirst())
-            //            }
-
-            return grouped
+            return blocks
         }
 
         fun readBlock(lines: MutableList<String>): CodeBlock {

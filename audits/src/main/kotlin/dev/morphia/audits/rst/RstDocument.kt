@@ -1,7 +1,6 @@
 package dev.morphia.audits.rst
 
 import dev.morphia.audits.findIndent
-import dev.morphia.audits.rst.OperatorExample.Companion.sanitize
 import dev.morphia.audits.rst.Separator.DASH
 import dev.morphia.audits.rst.Separator.TILDE
 import java.io.File
@@ -22,12 +21,21 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
 
     init {
         val partition = DASH.partition(lines).entries.last()
-        val map = TILDE.partition(partition.value)
-        val tabs = map.map { it.value.extractTabs(it.key.sanitize()) }
-        val flatMap = tabs.flatMap { it.entries }
-        val operatorExamples = flatMap.map { OperatorExample(operator, it.key, it.value) }
-        val filter = operatorExamples.filter { it.expectedBlock != null }
-        examples = filter
+        examples =
+            TILDE.partition(partition.value)
+                .map { it.value.extractTabs(it.key) }
+                .flatMap { it.entries }
+                .map { OperatorExample(operator, it.key, it.value) }
+        //                .filter { it.expectedBlock != null }
+        examples
+            .filter { it.dataBlock != null }
+            .firstOrNull { it.name == "main" }
+            ?.let { main ->
+                examples
+                    .filter { it.name != "main" }
+                    .filter { it.dataBlock == null }
+                    .forEach { it.dataBlock = main.dataBlock }
+            }
     }
 
     private fun MutableList<String>.extractTabs(name: String): Map<String, MutableList<String>> {
@@ -41,9 +49,8 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
             extractSimpleTabs(localTabs)
             val appendix = removeWhile { !it.startsWith(TABS_SECTION_START) }.toMutableList()
             //            localTabs.values.forEach { it += appendix }
-
             localTabs.forEach {
-                tabs["$name :: ${it.key} tab"] = (main + it.value + appendix).toMutableList()
+                tabs["$name :: ${it.key}"] = (main + it.value + appendix).toMutableList()
             }
         }
         return if (tabs.isEmpty()) {
@@ -56,7 +63,6 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
             // [${index}]", list)
             //                }
             //            }
-
             tabs
         }
     }

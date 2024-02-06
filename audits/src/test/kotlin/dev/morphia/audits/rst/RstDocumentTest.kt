@@ -56,6 +56,46 @@ class RstDocumentTest {
     }
 
     @Test
+    fun testAcosh() {
+        val examples = readAggOperator("acosh").examples
+        assertEquals(examples.size, 2)
+        val example = examples.first()
+        val data = StringWriter().also { example.dataBlock?.write(it) }
+        val action = StringWriter().also { example.actionBlock?.write(it) }
+        val expected = StringWriter().also { example.expectedBlock?.write(it) }
+
+        assertEquals(
+            data.toString(),
+            "{  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),  \"x-coordinate\" : NumberDecimal(\"3\")}",
+            "Data block should match"
+        )
+        assertEquals(
+            action.toString(),
+            """
+            [
+              { 
+                ${"$"}addFields : {
+                  "y-coordinate" : {
+                    ${"$"}radiansToDegrees : { ${"$"}acosh : "${"$"}x-coordinate" }
+                  }
+                }
+              }
+            ]
+        """
+                .trimIndent(),
+            "Action block should match"
+        )
+        assertEquals(
+            expected.toString(),
+            "{  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),  \"x-coordinate\" : NumberDecimal(\"3\"),  \"y-coordinate\" : " +
+                "NumberDecimal(\"100.9979734210524228844295260083432\")}",
+            "Expected block should match"
+        )
+
+        assertNull(example.indexBlock)
+    }
+
+    @Test
     fun testAcos() {
         val examples = readAggOperator("acos").examples
 
@@ -70,7 +110,10 @@ class RstDocumentTest {
     fun testAccumulator() {
         val examples = readAggOperator("accumulator").examples
         assertEquals(examples.size, 2)
-        assertEquals(examples.first().name, "Use \$accumulator to Implement the \$avg Operator")
+        assertEquals(
+            examples.first().name,
+            "Use ``\$accumulator`` to Implement the ``\$avg`` Operator"
+        )
     }
 
     @Test
@@ -85,15 +128,15 @@ class RstDocumentTest {
         validateExample("main", examples[0], ExampleValidator(false))
         var name = "\$meta: \"textScore\""
         val validator = ExampleValidator(index = true)
-        validateExample("$name :: Aggregation tab", examples[1], validator)
-        validateExample("$name :: Find and Project tab", examples[2], validator)
+        validateExample("$name :: Aggregation", examples[1], validator)
+        validateExample("$name :: Find and Project", examples[2], validator)
 
         name = "\$meta: \"indexKey\""
-        validateExample("$name :: Aggregation tab", examples[3], validator)
-        validateExample("$name :: Find and Project tab", examples[4], validator)
+        validateExample("$name :: Aggregation", examples[3], validator)
+        validateExample("$name :: Find and Project", examples[4], validator)
 
-        validateExample("$name :: Aggregation tab [1]", examples[5], validator)
-        validateExample("$name :: Find and Project tab [1]", examples[6], validator)
+        validateExample("$name :: Aggregation [1]", examples[5], validator)
+        validateExample("$name :: Find and Project [1]", examples[6], validator)
     }
 
     private fun validateExample(

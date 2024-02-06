@@ -2,10 +2,6 @@ package dev.morphia.audits.rst
 
 import dev.morphia.audits.model.CodeBlock
 import dev.morphia.audits.model.CodeBlock.Companion.findBlocks
-import dev.morphia.audits.model.CodeBlock.Type.ACTION
-import dev.morphia.audits.model.CodeBlock.Type.DATA
-import dev.morphia.audits.model.CodeBlock.Type.EXPECTED
-import dev.morphia.audits.model.CodeBlock.Type.INDEX
 import java.io.File
 
 class OperatorExample(
@@ -13,39 +9,40 @@ class OperatorExample(
     val name: String,
     private val input: List<String>,
 ) {
-    companion object {
-        fun String.sanitize(): String {
-            return replace("`", "")
-        }
-    }
-
     lateinit var folder: File
-
     var created = false
-    val actionBlock: CodeBlock?
-    val dataBlock: CodeBlock?
-    val expectedBlock: CodeBlock?
-    val indexBlock: CodeBlock?
+    var actionBlock: CodeBlock? = null
+    var dataBlock: CodeBlock? = null
+    var expectedBlock: CodeBlock? = null
+    var indexBlock: CodeBlock? = null
 
     init {
-        val codeBlocks = findBlocks(input)
-        actionBlock = codeBlocks[ACTION]?.removeFirstOrNull() // ?: parent?.actionBlock
-        dataBlock = codeBlocks[DATA]?.removeFirstOrNull() // ?: parent?.dataBlock
-        expectedBlock = codeBlocks[EXPECTED]?.removeFirstOrNull() // ?: parent?.expectedBlock
-        indexBlock = codeBlocks[INDEX]?.removeFirstOrNull() // ?: parent?.indexBlock
+        findBlocks(input).forEachIndexed { index, codeBlock ->
+            when {
+                codeBlock.isData() && dataBlock == null -> dataBlock = codeBlock
+                codeBlock.isAction() && actionBlock == null -> actionBlock = codeBlock
+                codeBlock.isIndex() && indexBlock == null -> indexBlock = codeBlock
+                index == 0 -> dataBlock = codeBlock
+                index != 0 && expectedBlock == null -> expectedBlock = codeBlock
+            }
+        }
     }
 
     fun output(folder: File) {
         this.folder = folder
         val lock = File(folder, "lock")
         if (!lock.exists() || System.getProperty("IGNORE_LOCKS") != null) {
-            created = folder.mkdirs()
-            writeInputData(folder)
-            writeAction(folder)
-            writeExpectedData(folder)
-            writeIndexData(folder)
-            if (this.folder.exists()) {
-                File(folder, "name").writeText(name)
+            try {
+                created = this.folder.mkdirs()
+                writeInputData(folder)
+                writeAction(folder)
+                writeExpectedData(folder)
+                writeIndexData(folder)
+                if (this.folder.exists()) {
+                    File(folder, "name").writeText(name)
+                }
+            } catch (e: Exception) {
+                throw RuntimeException("Failed to extract example to ${this.folder}", e)
             }
         } else {
             if (lock.readText().isBlank()) {
