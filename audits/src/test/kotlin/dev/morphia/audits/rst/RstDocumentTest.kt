@@ -16,29 +16,23 @@ import org.testng.annotations.Test
 class RstDocumentTest {
     @Test
     fun testQuickParse() {
-        val operator = "meta"
-        val lines = File("${RstAuditor.aggRoot}/${operator}.txt").readLines().toMutableList()
-        val partition = DASH.partition(lines).entries.last()
-
-        println("**************** partition = ${partition.key}")
-        val examples = TILDE.partition(partition.value)
-        val cases =
-            examples
-                .map { it.key.sanitize() to it.value.extractTabs() }
-                .flatMap { (name, map) ->
-                    val mapTo = map.entries.map { (key, value) -> "$name :: $key" to value }
-                    mapTo
-                }
-                .toMap()
-        //            .map {
-        //                OperatorExample(it.key, it.value)
-        //            }
-        println("**************** cases = ${cases}")
+        parseDoc("meta")
     }
 
-    private fun MutableList<String>.extractTabs(): Map<String, MutableList<String>> {
+    private fun parseDoc(operator: String): List<OperatorExample> {
+        val lines = File("${RstAuditor.aggRoot}/${operator}.txt").readLines().toMutableList()
+        val partition = DASH.partition(lines).entries.last()
+        val cases =
+            TILDE.partition(partition.value)
+                .map { it.value.extractTabs(it.key.sanitize()) }
+                .flatMap { it.entries }
+                .map { OperatorExample(it.key, it.value) }
+        return cases
+    }
+
+    private fun MutableList<String>.extractTabs(name: String): Map<String, MutableList<String>> {
         val main = removeWhile { !it.startsWith(TABS_START) }.toMutableList()
-        val tabs = multiMapOf<String, String>()
+        val tabs = dedupeMap<String>()
         while (contains(TABS_START)) {
             val localTabs = mutableMapOf<String, MutableList<String>>()
             removeFirst()
@@ -46,26 +40,29 @@ class RstDocumentTest {
             extractFancyTabs(localTabs)
             extractSimpleTabs(localTabs)
             val appendix = removeWhile { !it.startsWith(TABS_START) }.toMutableList()
-            localTabs.values.forEach { it += appendix }
+            //            localTabs.values.forEach { it += appendix }
 
-            localTabs.forEach { tabs[it.key] += it.value }
+            localTabs.forEach {
+                tabs["$name :: ${it.key} tab"] = (main + it.value + appendix).toMutableList()
+            }
         }
         return if (tabs.isEmpty()) {
             mapOf("main" to main)
         } else {
-            val tabMaps = mutableMapOf<String, MutableList<String>>()
-            tabs.forEach { entry ->
-                entry.value.forEachIndexed { index, list ->
-                    tabMaps.put(if (index == 0) entry.key else "${entry.key} [${index}]", list)
-                }
-            }
+            //            val tabMaps = mutableMapOf<String, MutableList<String>>()
+            //            tabs.forEach { entry ->
+            //                entry.value.forEachIndexed { index, list ->
+            //                    tabMaps.put(if (index == 0) entry.key else "${entry.key}
+            // [${index}]", list)
+            //                }
+            //            }
 
-            tabMaps
+            tabs
         }
     }
 
     private fun MutableList<String>.extractSimpleTabs(
-        tabs: MutableMap<String, MutableList<String>>
+        tabs: MutableMap<String, MutableList<String>>,
     ) {
         if (isNotEmpty() && first().trim().startsWith(SIMPLE_TAB_START)) {
             removeFirst()
@@ -100,15 +97,15 @@ class RstDocumentTest {
         }
     }
 
-    fun <K, V> multiMapOf(): MultiMap<K, MutableList<V>> = MultiMap()
+    fun <V> dedupeMap(): DedupeMap<MutableList<V>> = DedupeMap()
 
     fun String.atLeastIndent(indent: Int) = isBlank() || findIndent() >= indent
 
     @Test
     fun testAbs() {
-        val document = readAggOperator("abs")
-        assertEquals(document.exampleSection.examples.size, 1)
-        val example = document.exampleSection.examples.first()
+        val examples = parseDoc("abs")
+        assertEquals(examples.size, 1)
+        val example = examples.first()
         val data = StringWriter().also { example.dataBlock?.write(it) }
         val action = StringWriter().also { example.actionBlock?.write(it) }
         val expected = StringWriter().also { example.expectedBlock?.write(it) }
@@ -151,56 +148,36 @@ class RstDocumentTest {
 
     @Test
     fun testAcos() {
-        val document = readAggOperator("acos")
-        val examples = document.exampleSection.examples
+        val examples = parseDoc("acos")
 
         assertEquals(
             examples.size,
             2,
-            "Should have a subsection for each " + "tab: ${examples.map { it.name }}"
+            "Should have a subsection for each tab: ${examples.map { it.name }}"
         )
-        compareBlocks(examples[0], examples[1])
     }
 
     @Test
     fun testMeta() {
-        val document = readAggOperator("meta")
-        val examples = document.exampleSection.examples
+        val examples = parseDoc("meta")
 
         assertEquals(
             examples.size,
             7,
-            "Should have a subsection for each " + "tab: ${examples.map { it.name }}"
+            "Should have a subsection for each tab: ${examples.map { it.name }}"
         )
         validateExample("main", examples[0], ExampleValidator(false))
         var name = "\$meta: \"textScore\""
         val validator = ExampleValidator(index = true)
         validateExample("$name :: Aggregation tab", examples[1], validator)
         validateExample("$name :: Find and Project tab", examples[2], validator)
-        var comparator = BlockComparator(data = true, index = true)
-        compareBlocks(examples[1], examples[2], comparator)
-
-        comparator = BlockComparator(data = true, expected = true, index = true)
 
         name = "\$meta: \"indexKey\""
         validateExample("$name :: Aggregation tab", examples[3], validator)
         validateExample("$name :: Find and Project tab", examples[4], validator)
-        compareBlocks(examples[3], examples[4], comparator)
 
-        validateExample("$name :: Aggregation tab", examples[5], validator)
-        validateExample("$name :: Find and Project tab", examples[6], validator)
-        compareBlocks(examples[5], examples[6], comparator)
-    }
-
-    private fun compareBlocks(
-        first: OperatorExample,
-        second: OperatorExample,
-        comparator: BlockComparator = BlockComparator(),
-    ) {
-        comparator.action(first, second)
-        comparator.data(first, second)
-        comparator.expected(first, second)
-        comparator.index(first, second)
+        validateExample("$name :: Aggregation tab [1]", examples[5], validator)
+        validateExample("$name :: Find and Project tab [1]", examples[6], validator)
     }
 
     private fun validateExample(
@@ -220,18 +197,14 @@ class RstDocumentTest {
     }
 }
 
-class MultiMap<K, V> : LinkedHashMap<K, MutableList<V>>() {
-    override fun get(key: K): MutableList<V> {
-        if (!containsKey(key)) {
-            put(key, mutableListOf())
+class DedupeMap<V> : LinkedHashMap<String, V>() {
+    override fun put(key: String, value: V): V? {
+        var count = 1
+        var newKey = key
+        while (contains(newKey)) {
+            newKey = "$key [$count]"
         }
-        return super.get(key)!!
-    }
-    /*
-        override fun put(key: K, value: MutableList<V>): MutableList<V> {
-            get(key) += value
 
-            return value
-        }
-    */
+        return super.put(newKey, value)
+    }
 }

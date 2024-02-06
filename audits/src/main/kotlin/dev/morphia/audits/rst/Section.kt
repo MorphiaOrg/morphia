@@ -1,8 +1,6 @@
 package dev.morphia.audits.rst
 
-import dev.morphia.audits.rst.OperatorExample.Companion.extractTabs
 import dev.morphia.audits.rst.Separator.DASH
-import dev.morphia.audits.rst.Separator.TILDE
 
 class Section(val name: String, input: List<String>, val separator: Separator = DASH) {
 
@@ -12,14 +10,16 @@ class Section(val name: String, input: List<String>, val separator: Separator = 
 
     init {
         tags = findTags(input)
-        val partitions = TILDE.partition(input)
-        val map = partitions.flatMap { extractTabs(it.key, it.value).entries }
-        examples +=
-            map.map {
-                OperatorExample(it.key, it.value, examples.lastOrNull(), separator.next())
-                //                    extractTabs(it).map {
-                //                    }
-            }
+        /*
+                val partitions = TILDE.partition(input)
+                val map = partitions.flatMap { extractTabs(it.key, it.value).entries }
+                examples +=
+                    map.map {
+                        OperatorExample(it.key, it.value, examples.lastOrNull(), separator.next())
+                        //                    extractTabs(it).map {
+                        //                    }
+                    }
+        */
         //                .map { OperatorExample(it, examples.lastOrNull(), separator.next()) }
     }
 

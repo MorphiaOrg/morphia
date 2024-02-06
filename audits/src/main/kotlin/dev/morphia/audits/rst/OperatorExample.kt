@@ -7,13 +7,12 @@ import dev.morphia.audits.model.CodeBlock.Type.ACTION
 import dev.morphia.audits.model.CodeBlock.Type.DATA
 import dev.morphia.audits.model.CodeBlock.Type.EXPECTED
 import dev.morphia.audits.model.CodeBlock.Type.INDEX
-import dev.morphia.audits.rst.Separator.TILDE
 
 class OperatorExample(
     val name: String,
-    input: List<String>,
-    parent: OperatorExample? = null,
-    separator: Separator = TILDE
+    private val input: List<String>,
+//    parent: OperatorExample? = null,
+//    separator: Separator = TILDE
 ) {
     companion object {
         fun String.sanitize(): String {
@@ -94,9 +93,14 @@ class OperatorExample(
 
     init {
         val codeBlocks = findBlocks(input)
-        actionBlock = codeBlocks[ACTION]?.removeFirstOrNull() ?: parent?.actionBlock
-        dataBlock = codeBlocks[DATA]?.removeFirstOrNull() ?: parent?.dataBlock
-        expectedBlock = codeBlocks[EXPECTED]?.removeFirstOrNull() ?: parent?.expectedBlock
-        indexBlock = codeBlocks[INDEX]?.removeFirstOrNull() ?: parent?.indexBlock
+        actionBlock = codeBlocks[ACTION]?.removeFirstOrNull() // ?: parent?.actionBlock
+        dataBlock = codeBlocks[DATA]?.removeFirstOrNull() // ?: parent?.dataBlock
+        expectedBlock = codeBlocks[EXPECTED]?.removeFirstOrNull() // ?: parent?.expectedBlock
+        indexBlock = codeBlocks[INDEX]?.removeFirstOrNull() // ?: parent?.indexBlock
     }
+
+    override fun toString() =
+        "OperatorExample(name='$name', actionBlock: ${actionBlock != null}, dataBlock: ${dataBlock != null}, " +
+            "expectedBlock=${expectedBlock != null}, " +
+            "indexBlock: ${indexBlock != null})"
 }
