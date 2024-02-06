@@ -22,11 +22,12 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
 
     init {
         val partition = DASH.partition(lines).entries.last()
-        examples =
-            TILDE.partition(partition.value)
-                .map { it.value.extractTabs(it.key.sanitize()) }
-                .flatMap { it.entries }
-                .map { OperatorExample(operator, it.key, it.value) }
+        val map = TILDE.partition(partition.value)
+        val tabs = map.map { it.value.extractTabs(it.key.sanitize()) }
+        val flatMap = tabs.flatMap { it.entries }
+        val operatorExamples = flatMap.map { OperatorExample(operator, it.key, it.value) }
+        val filter = operatorExamples.filter { it.expectedBlock != null }
+        examples = filter
     }
 
     private fun MutableList<String>.extractTabs(name: String): Map<String, MutableList<String>> {
@@ -46,7 +47,7 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
             }
         }
         return if (tabs.isEmpty()) {
-            mapOf("main" to main)
+            mapOf(name to main)
         } else {
             //            val tabMaps = mutableMapOf<String, MutableList<String>>()
             //            tabs.forEach { entry ->

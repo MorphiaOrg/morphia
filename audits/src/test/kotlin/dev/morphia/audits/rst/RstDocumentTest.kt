@@ -67,6 +67,13 @@ class RstDocumentTest {
     }
 
     @Test
+    fun testAccumulator() {
+        val examples = readAggOperator("accumulator").examples
+        assertEquals(examples.size, 2)
+        assertEquals(examples.first().name, "Use \$accumulator to Implement the \$avg Operator")
+    }
+
+    @Test
     fun testMeta() {
         val examples = readAggOperator("meta").examples
 
