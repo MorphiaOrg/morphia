@@ -4,6 +4,7 @@ import dev.morphia.audits.RstAuditor
 import java.io.File
 import java.io.StringWriter
 import org.testng.Assert.assertEquals
+import org.testng.Assert.assertNull
 import org.testng.annotations.Test
 
 class RstDocumentTest {
@@ -50,6 +51,8 @@ class RstDocumentTest {
                 .trimIndent(),
             "Action block should match"
         )
+
+        assertNull(example.indexBlock)
     }
 
     @Test

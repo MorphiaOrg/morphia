@@ -17,7 +17,9 @@ class AggregationAuditTest {
 
     @Test
     fun testOperator() {
-        var operator = Operator(File("${aggRoot}/unsetField.txt"))
+        val name = "abs"
+        var operator = Operator(File("${aggRoot}/$name.txt"))
+        operator.examples.forEach { it.output(File("target/testOperator-${name}")) }
     }
 
     @Test

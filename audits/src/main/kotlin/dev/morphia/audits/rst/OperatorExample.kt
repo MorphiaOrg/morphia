@@ -63,14 +63,14 @@ class OperatorExample(
     }
 
     private fun writeExpectedData(folder: File) {
-        actionBlock?.let { block ->
+        expectedBlock?.let { block ->
             var output = File(folder, "expected.json")
             output.writeText(block.sanitizeData().joinToString("\n"))
         }
     }
 
     private fun writeIndexData(folder: File) {
-        actionBlock?.let { block ->
+        indexBlock?.let { block ->
             var output = File(folder, "index.json")
             output.writeText(block.sanitizeData().joinToString("\n"))
         }
