@@ -27,7 +27,6 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
                 .map { it.value.extractTabs(it.key) }
                 .flatMap { it.entries }
                 .map { OperatorExample(operator, it.key, it.value) }
-        //                .filter { it.expectedBlock != null }
         examples
             .filter { it.dataBlock != null }
             .firstOrNull { it.name == "main" }

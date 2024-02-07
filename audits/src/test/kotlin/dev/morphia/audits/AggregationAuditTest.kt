@@ -19,7 +19,7 @@ class AggregationAuditTest {
     fun testOperator() {
         val name = "merge"
         var operator = Operator(File("${aggRoot}/$name.txt"))
-        operator.examples.forEach { it.output(File("target/testOperator-${name}")) }
+        operator.examples.forEach { it.output(File("target/testOperator-${name}/${it.name}")) }
     }
 
     @Test
