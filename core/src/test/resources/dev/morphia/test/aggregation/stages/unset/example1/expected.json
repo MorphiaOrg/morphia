@@ -1,0 +1,2 @@
+{ "_id" : 1, "title" : "Antelope Antics", "isbn" : "0001122223334", "author" : { "last" : "An", "first" : "Auntie" } }
+{ "_id" : 2, "title" : "Bees Babble", "isbn" : "999999999333", "author" : { "last" : "Bumble", "first" : "Bee" } }

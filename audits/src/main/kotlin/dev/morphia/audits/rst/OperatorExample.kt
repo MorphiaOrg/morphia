@@ -35,10 +35,10 @@ class OperatorExample(
         if (!lock.exists() || System.getProperty("IGNORE_LOCKS") != null) {
             try {
                 created = this.folder.mkdirs()
-                writeInputData(folder)
-                writeAction(folder)
-                writeExpectedData(folder)
-                writeIndexData(folder)
+                dataBlock?.output(File(folder, "data.json"))
+                indexBlock?.output(File(folder, "index.json"))
+                actionBlock?.output(File(folder, "pipeline.json"), false)
+                expectedBlock?.output(File(folder, "expected.json"))
                 if (this.folder.exists()) {
                     File(folder, "name").writeText(name)
                 }
@@ -49,51 +49,6 @@ class OperatorExample(
             if (lock.readText().isBlank()) {
                 throw RuntimeException("${lock} has no message explaining the need for a lock")
             }
-        }
-    }
-
-    fun writeInputData(folder: File) {
-        dataBlock?.let { block ->
-            var output = File(folder, "data.json")
-
-            output.writeText(block.sanitizeData().joinToString("\n"))
-        }
-    }
-
-    private fun writeExpectedData(folder: File) {
-        expectedBlock?.let { block ->
-            var output = File(folder, "expected.json")
-            output.writeText(block.sanitizeData().joinToString("\n"))
-        }
-    }
-
-    private fun writeIndexData(folder: File) {
-        indexBlock?.let { block ->
-            var output = File(folder, "index.json")
-            output.writeText(block.sanitizeData().joinToString("\n"))
-        }
-    }
-
-    private fun writeAction(folder: File) {
-        actionBlock?.let { block ->
-            var output = File(folder, "pipeline.json")
-            var lines = block.code().toMutableList()
-            val first = lines.first()
-            if (first.contains("[")) {
-                lines[0] = first.substringAfterLast("(")
-            } else {
-                lines.removeFirst()
-            }
-            val last =
-                try {
-                    lines.removeLast()
-                } catch (e: NoSuchElementException) {
-                    TODO("Not yet implemented")
-                }
-            if (last.contains("]")) {
-                lines += last.substringBefore(")")
-            }
-            output.writeText(lines.joinToString("\n"))
         }
     }
 

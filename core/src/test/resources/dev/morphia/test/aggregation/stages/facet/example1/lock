@@ -1,1 +1,1 @@
-tweak pipeline to match morphia
+change $exists to use true

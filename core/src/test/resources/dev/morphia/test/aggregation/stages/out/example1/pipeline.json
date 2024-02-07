@@ -1,4 +1,4 @@
  [
     { $group : { _id : "$author", books: { $push: "$title" } } },
-    { $out : { db: "reporting", coll: "authors" } }
+    { $out : "authors" }
 ] 

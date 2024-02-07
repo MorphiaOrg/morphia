@@ -7,6 +7,7 @@ import dev.morphia.audits.model.CodeBlock.Type.EXPECTED
 import dev.morphia.audits.model.CodeBlock.Type.INDEX
 import dev.morphia.audits.notControl
 import dev.morphia.audits.rst.removeWhile
+import java.io.File
 import java.io.Writer
 
 class CodeBlock {
@@ -84,9 +85,13 @@ class CodeBlock {
         return lines
     }
 
-    fun sanitizeData(): List<String> {
+    fun output(output: File, applyReplacements: Boolean = true) {
+        output.writeText(sanitizeData(applyReplacements))
+    }
+
+    fun sanitizeData(applyReplacements: Boolean): String {
         if (isAction()) {
-            return sanitizeAction()
+            return sanitizeAction(applyReplacements)
         }
         val iterator = lines.iterator()
         val sanitized = mutableListOf<String>()
@@ -107,11 +112,15 @@ class CodeBlock {
             }
         }
 
-        return sanitized
+        return sanitized.joinToString("\n")
     }
 
-    private fun sanitizeAction(): List<String> {
-        val sanitized = mutableListOf(*lines.toTypedArray())
+    private fun sanitizeAction(applyReplacements: Boolean): String {
+        val sanitized =
+            lines
+                .map { line -> if (applyReplacements) applyReplacements(line) else line }
+                .toMutableList()
+
         val first = sanitized.first()
         if (first.contains("[")) {
             sanitized[0] = first.substringAfterLast("(")
@@ -123,7 +132,7 @@ class CodeBlock {
             sanitized += last.substringBefore(")")
         }
 
-        return sanitized
+        return sanitized.joinToString("\n")
     }
 
     private fun applyReplacements(line: String): String {
@@ -182,7 +191,7 @@ class CodeBlock {
     fun isIndex(): Boolean = contains(".createIndex(")
 
     fun write(output: Writer) {
-        output.write(sanitizeData().joinToString("\n"))
+        output.write(sanitizeData(true))
     }
 
     fun isPipeline(): Boolean {

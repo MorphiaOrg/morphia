@@ -1,3 +1,0 @@
-[
-   { $unset: [ "isbn", "author.first", "copies.warehouse" ] }
-]
