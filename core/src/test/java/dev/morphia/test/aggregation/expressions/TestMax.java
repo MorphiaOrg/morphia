@@ -34,7 +34,7 @@ public class TestMax extends AggregationTest {
 
     @Test
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(ServerVersion.v50, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$state")
                         .sortBy(ascending("orderDate"))

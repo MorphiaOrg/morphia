@@ -1,4 +1,4 @@
-{ "_id" : 1, "name" : "Alice", "object_size" : 222 }
-{ "_id" : 2, "name" : "Bob", "object_size" : 248 }
-{ "_id" : 3, "name" : "Charlie", "object_size" : 112 }
-{ "_id" : 4, "name" : "Dianne", "object_size" : 207 }
+{ "_id" : 1, "name" : "Alice", "object_size" : 203 }
+{ "_id" : 2, "name" : "Bob", "object_size" : 229 }
+{ "_id" : 3, "name" : "Charlie", "object_size" : 105 }
+{ "_id" : 4, "name" : "Dianne", "object_size" : 196 }

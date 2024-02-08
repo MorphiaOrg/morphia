@@ -1,13 +1,12 @@
-dateConversionStage = { 
+[
+  {
    $addFields: { 
       convertedDate: { $toDate: "$order_date" }
    }
-};
-
-sortStage = {
-   $sort: { "convertedDate": 1 }
-};
-db.orders.aggregate( [
-   dateConversionStage,
-   sortStage
+  },
+  {
+    $sort: {
+      "convertedDate": 1
+    }
+  }
 ] 

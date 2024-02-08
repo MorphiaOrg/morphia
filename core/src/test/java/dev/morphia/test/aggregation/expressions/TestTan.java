@@ -20,4 +20,11 @@ public class TestTan extends AggregationTest {
                                 "$side_a"))));
     }
 
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                addFields()
+                        .field("side_b", multiply(tan("$angle_a"), "$side_a"))));
+    }
+
 }

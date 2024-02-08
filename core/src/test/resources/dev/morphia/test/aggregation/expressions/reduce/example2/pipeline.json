@@ -1,5 +1,4 @@
    [
-     
      { $match: { "hobbies": { $gt: [ ] } } },
      {
        $project: {
@@ -12,12 +11,11 @@
                $concat: [
                  "$$value",
                  {
-                   $cond: {
-                     if: { $eq: [ "$$value", "My hobbies include:" ] },
-                     then: " ",
-                     else: ", "
-                   }
-                 },
+                   $cond: [
+                     { $eq: [ "$$value", "My hobbies include:" ] },
+                     " ",
+                     ", "
+                   ] },
                  "$$this"
                ]
              }

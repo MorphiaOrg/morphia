@@ -15,7 +15,7 @@ public class TestDateFromString extends AggregationTest {
                 project()
                         .include("date", dateFromString()
                                 .dateString("$date")
-                                .timeZone("$timezone"))));
+                                .timeZone("America/New_York"))));
     }
 
     @Test

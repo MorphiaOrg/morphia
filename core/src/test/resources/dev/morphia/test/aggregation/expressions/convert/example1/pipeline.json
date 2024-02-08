@@ -1,49 +1,65 @@
-
-
-
-
-
-priceQtyConversionStage = { 
+[
+  {
    $addFields: { 
       convertedPrice: { $convert:
          {
             input: "$price",
             to: "decimal",
-            onError: "Error",
-            onNull: Decimal128("0")
-         } },
+          onNull: 0.0,
+          onError: "Error"
+        }
+      },
       convertedQty: { $convert:
          { 
             input: "$qty",
             to: "int", 
-            onError:{ $concat:
-               [
+          onNull: 0,
+          onError: {
+            $concat: [
                   "Could not convert ",
                   { $toString:"$qty" },
                   " to type integer."
                ]
-            },
-         onNull: Int32("0") 
-      } },
+          }
    }
-};
-totalPriceCalculationStage = { 
+      }
+    }
+  },
+  {
    $project: { totalPrice: {
      $switch: {
         branches: [
-          { case:
-             { $eq: [ { $type: "$convertedPrice" }, "string" ] },
+            {
+              case: {
+                $eq: [
+                  {
+                    $type: "$convertedPrice"
+                  },
+                  "string"
+                ]
+              },
              then: "NaN"
           },
-          { case:
-             { $eq: [ { $type: "$convertedQty" }, "string" ] },
+            {
+              case: {
+                $eq: [
+                  {
+                    $type: "$convertedQty"
+                  },
+                  "string"
+                ]
+              },
              then: "NaN"
-          },
+            }
         ],
-        default: { $multiply: [ "$convertedPrice", "$convertedQty" ] }
+          default: {
+            $multiply: [
+              "$convertedPrice",
+              "$convertedQty"
+            ]
+          }
+        }
+      }
      }
-} } };
-db.orders.aggregate( [
-   priceQtyConversionStage,
-   totalPriceCalculationStage
+  }
 ]

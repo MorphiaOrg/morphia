@@ -1,13 +1,12 @@
-idConversionStage = { 
+[
+  {
    $addFields: { 
       convertedId: { $toObjectId: "$_id" }
    }
-};
-
-sortStage = {
-   $sort: { "convertedId": -1 }
-};
-db.orders.aggregate( [
-   idConversionStage,
-   sortStage
+  },
+  {
+    $sort: {
+      "convertedId": -1
+    }
+  }
 ] 

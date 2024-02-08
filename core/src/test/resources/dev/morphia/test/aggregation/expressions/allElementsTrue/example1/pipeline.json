@@ -1,3 +1,13 @@
-   [
-     { $project: { responses: 1, isAllTrue: { $allElementsTrue: [ "$responses" ] }, _id: 0 } }
-   ]
+[
+  {
+    $project: {
+      _id: 0,
+      responses: 1,
+      isAllTrue: {
+        $allElementsTrue: [
+          "$responses"
+        ]
+      }
+    }
+  }
+]

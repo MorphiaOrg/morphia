@@ -10,17 +10,15 @@ import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAdd extends AggregationTest {
     @Test
-    public void testExample2() {
-        testPipeline(ANY, false, true, aggregation -> aggregation
-                .pipeline(project()
-                        .include("item", 1)
-                        .include("total",
-                                add("$price", "$fee"))));
-
+    public void testExample1() {
+        testPipeline(ANY, false, true, (aggregation) -> aggregation.pipeline(
+                project()
+                        .include("item")
+                        .include("total", add("$price", "$fee"))));
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(ANY, false, true, aggregation -> aggregation
                 .pipeline(project()
                         .include("item", 1)

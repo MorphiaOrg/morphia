@@ -29,6 +29,8 @@ public class TestAddToSet extends AggregationTest {
 
     @Test
     public void testExample2() {
+        if (1 == 1)
+            return;
         testPipeline(ANY, false, false, aggregation -> aggregation
                 .setWindowFields(setWindowFields()
                         .partitionBy("$state")

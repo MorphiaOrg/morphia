@@ -12,13 +12,23 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSubtract extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("item")
                         .include("total", subtract(
                                 add("$price", "$fee"),
                                 "$discount"))));
+    }
+
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                project()
+                        .include("item")
+                        .include("dateDifference", subtract(
+                                "$$NOW",
+                                "$date"))));
     }
 
     @Test

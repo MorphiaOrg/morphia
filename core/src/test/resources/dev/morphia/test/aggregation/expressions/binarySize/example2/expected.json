@@ -1,5 +1,1 @@
-{ "_id" : 1, "name" : "cat.jpg", "imageSize" : 16 }
-{ "_id" : 2, "name" : "big_ben.jpg", "imageSize" : 41 }
-{ "_id" : 3, "name" : "teaset.jpg", "imageSize" : 16 }
 { "_id" : 4, "name" : "concert.jpg", "imageSize" : 269 }
-{ "_id" : 5, "name" : "empty.jpg", "imageSize" : 0 }

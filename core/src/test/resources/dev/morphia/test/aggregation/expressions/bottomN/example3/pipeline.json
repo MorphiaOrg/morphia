@@ -7,9 +7,9 @@
             {
                $bottomN:
                   {
-                     output: "$score",
-                     n: { $cond: { if: {$eq: ["$gameId","G2"] }, then: 1, else: 3 } },
-                     sortBy: { "score": -1 }
+                    output: "$score",
+                    sortBy: { "score": -1 },
+                     n: { $cond: [ {$eq: ["$gameId","G2"] }, 1, 3 ] },
                   }
             }
       }

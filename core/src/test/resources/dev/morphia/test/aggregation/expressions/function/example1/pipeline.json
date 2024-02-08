@@ -4,9 +4,9 @@
         isFound:
             { $function:
                {
-                  body: function(name) { 
-                     return hex_md5(name) == "15b0a220baa16331e8d80e15367677ad"
-                  },
+                  body: "function(name) {\n
+                     return hex_md5(name) == \"15b0a220baa16331e8d80e15367677ad\"\n
+                  }",
                   args: [ "$name" ],
                   lang: "js"
                }
@@ -14,10 +14,10 @@
          message: 
             { $function:
                {
-                  body: function(name, scores) {
-                     let total = Array.sum(scores);
-                     return `Hello ${name}.  Your total score is ${total}.`
-                  },
+                  body: "function(name, scores) {\n
+                     let total = Array.sum(scores);\n
+                     return `Hello ${name}.  Your total score is ${total}.`\n
+                  }",
                   args: [ "$name", "$scores"],
                   lang: "js"
                }

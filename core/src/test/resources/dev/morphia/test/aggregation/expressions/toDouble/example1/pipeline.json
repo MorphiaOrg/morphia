@@ -1,8 +1,11 @@
-tempConversionStage = { 
+[
+  {
    $addFields: { 
-      degrees: { $toDouble: { $substrBytes: [ "$temp", 0, 4 ] } } 
+      degrees: {
+        $toDouble: {
+          $substrBytes: ["$temp", 0, 4]
+        }
    }
-};
-db.weather.aggregate( [
-   tempConversionStage,
+    }
+  }
 ] 

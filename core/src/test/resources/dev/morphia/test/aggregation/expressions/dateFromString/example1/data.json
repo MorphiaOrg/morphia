@@ -1,5 +1,5 @@
-{ _id: 1, date: "2017-02-08T12:10:40.787", timezone: "America/New_York", message:  "Step 1: Started" },
-{ _id: 2, date: "2017-02-08", timezone: "-05:00", message:  "Step 1: Ended" },
-{ _id: 3, message:  " Step 1: Ended " },
+{ _id: 1, date: "2017-02-08T12:10:40.787", timezone: "America/New_York", message: "Step 1: Started" },
+{ _id: 2, date: "2017-02-08", timezone: "-05:00", message: "Step 1: Ended" },
+{ _id: 3, message: " Step 1: Ended " },
 { _id: 4, date: "2017-02-09", timezone: "Europe/London", message: "Step 2: Started"},
 { _id: 5, date: "2017-02-09T03:35:02.055", timezone: "+0530", message: "Step 2: In Progress"}

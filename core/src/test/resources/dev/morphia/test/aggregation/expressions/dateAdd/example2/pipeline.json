@@ -27,16 +27,16 @@
                    {
                        $dateToString: 
                           {
-                             format: "%Y-%m-%d",
-                             date: "$purchaseDate"
+                             date: "$purchaseDate",
+                             format: "%Y-%m-%d"
                           }
                    },
                 delivery:
                    {
                       $dateToString:
                          {
-                            format: "%Y-%m-%d",
-                            date: "$deliveryDate"
+                            date: "$deliveryDate",
+                            format: "%Y-%m-%d"
                          }
                    }
              }

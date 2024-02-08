@@ -1,3 +1,3 @@
-{ _id: 1, interestRate: .08, presentValue: 10000 },
-{ _id: 2, interestRate: .0825, presentValue: 250000 },
-{ _id: 3, interestRate: .0425, presentValue: 1000 }
+{ _id: 1, interestRate: 0.08, presentValue: 10000 },
+{ _id: 2, interestRate: 0.0825, presentValue: 250000 },
+{ _id: 3, interestRate: 0.0425, presentValue: 1000 }

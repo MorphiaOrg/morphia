@@ -1,8 +1,5 @@
 [
-   
    { $project: { name: "$name", imageSize: { $binarySize: "$binary" } }  },
-   
    { $sort: { "imageSize" : -1 } },
-   
    { $limit: 1 }
 ]

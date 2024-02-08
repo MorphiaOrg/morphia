@@ -1,5 +1,5 @@
-
-shippedConversionStage = {
+[
+  {
    $addFields: {
       convertedShippedFlag: { 
          $switch: { 
@@ -11,12 +11,10 @@ shippedConversionStage = {
         }
       }
    }
-};
-
-unshippedMatchStage = {
-   $match: { "convertedShippedFlag": false }
-};
-db.orders.aggregate( [
-  shippedConversionStage,
-  unshippedMatchStage
+  },
+  {
+    $match: {
+      "convertedShippedFlag": false
+    }
+  }
 ] 
