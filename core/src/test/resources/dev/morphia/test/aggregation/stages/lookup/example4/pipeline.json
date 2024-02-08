@@ -3,6 +3,7 @@
       $lookup:
          {
            from: "warehouses",
+           as: "stockdata",
            let: { order_item: "$item", order_qty: "$ordered" },
            pipeline: [
               { $match: 
@@ -15,9 +16,8 @@
                     }
                  }
               },
-              { $project: { stock_item: 0, _id: 0 } }
+              { $project: { _id: 0, stock_item: 0 } }
            ],
-           as: "stockdata"
          }
     }
 ] 

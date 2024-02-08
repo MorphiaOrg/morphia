@@ -1,9 +1,15 @@
  [
    {
-      $group: {
-         _id: "$state",
-         countNumberOfDocumentsForState: {
-            $count: {}
+      $setWindowFields: {
+         partitionBy: "$state",
+         sortBy: { orderDate: 1 },
+         output: {
+            countNumberOfDocumentsForState: {
+               $count: {},
+               window: {
+                  documents: [ "unbounded", "current" ]
+               }         
+            }
          }
       }
    }

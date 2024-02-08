@@ -1,5 +1,5 @@
 { cakes: [ "chocolate", "vanilla" ], cupcakes: [ "chocolate", "vanilla" ], sameFlavors: true},
 { cakes: [ "chocolate", "vanilla" ], cupcakes: [ "vanilla", "chocolate" ], sameFlavors: true},
-{  cakes: [ "chocolate", "chocolate" ], cupcakes: [ "chocolate" ], sameFlavors: true},
+{ cakes: [ "chocolate", "chocolate" ], cupcakes: [ "chocolate" ], sameFlavors: true},
 { cakes: [ "vanilla" ], cupcakes: [ "chocolate" ], sameFlavors: false},
-{    cakes: [ "vanilla" ],    cupcakes: [],    sameFlavors: false }
+{ cakes: [ "vanilla" ], cupcakes: [], sameFlavors: false }

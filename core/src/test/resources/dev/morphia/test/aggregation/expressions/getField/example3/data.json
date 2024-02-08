@@ -1,5 +1,5 @@
-{ "_id" : 1, "item" : "sweatshirt",  "price.usd": 45.99,     "quantity": { "$large": 50, "$medium": 50, "$small": 25 }   },
-{ "_id" : 2, "item" : "winter coat", "price.usd": 499.99,     "quantity": { "$large": 35, "$medium": 35, "$small": 35 }   },
-{ "_id" : 3, "item" : "sun dress", "price.usd": 199.99,     "quantity": { "$large": 45, "$medium": 40, "$small": 5 }   },
-{ "_id" : 4, "item" : "leather boots", "price.usd": 249.99,     "quantity": { "$large": 20, "$medium": 30, "$small": 40 }   },
-{ "_id" : 5, "item" : "bow tie", "price.usd": 9.99,     "quantity": { "$large": 0, "$medium": 10, "$small": 75 }   }
+{ "_id" : 1, "item" : "sweatshirt", "price.usd": 45.99, "quantity": { "$large": 50, "$medium": 50, "$small": 25 } },
+{ "_id" : 2, "item" : "winter coat", "price.usd": 499.99, "quantity": { "$large": 35, "$medium": 35, "$small": 35 } },
+{ "_id" : 3, "item" : "sun dress", "price.usd": 199.99, "quantity": { "$large": 45, "$medium": 40, "$small": 5 } },
+{ "_id" : 4, "item" : "leather boots", "price.usd": 249.99, "quantity": { "$large": 20, "$medium": 30, "$small": 40 } },
+{ "_id" : 5, "item" : "bow tie", "price.usd": 9.99, "quantity": { "$large": 0, "$medium": 10, "$small": 75 } }

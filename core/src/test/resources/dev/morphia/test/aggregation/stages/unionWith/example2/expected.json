@@ -1,35 +1,5 @@
-{ "_id" : "2017", "store" : "General Store", "item" : "Chocolates", "quantity" : 150 }
-{ "_id" : "2017", "store" : "General Store", "item" : "Cookies", "quantity" : 100 }
-{ "_id" : "2017", "store" : "General Store", "item" : "Pie", "quantity" : 10 }
-{ "_id" : "2017", "store" : "ShopMart", "item" : "Chocolates", "quantity" : 50 }
-{ "_id" : "2017", "store" : "ShopMart", "item" : "Cookies", "quantity" : 120 }
-{ "_id" : "2017", "store" : "ShopMart", "item" : "Pie", "quantity" : 5 }
-{ "_id" : "2018", "store" : "General Store", "item" : "Cheese", "quantity" : 30 }
-{ "_id" : "2018", "store" : "General Store", "item" : "Chocolates", "quantity" : 125 }
-{ "_id" : "2018", "store" : "General Store", "item" : "Cookies", "quantity" : 200 }
-{ "_id" : "2018", "store" : "General Store", "item" : "Pie", "quantity" : 30 }
-{ "_id" : "2018", "store" : "ShopMart", "item" : "Cheese", "quantity" : 50 }
-{ "_id" : "2018", "store" : "ShopMart", "item" : "Chocolates", "quantity" : 150 }
-{ "_id" : "2018", "store" : "ShopMart", "item" : "Cookies", "quantity" : 100 }
-{ "_id" : "2018", "store" : "ShopMart", "item" : "Nuts", "quantity" : 100 }
-{ "_id" : "2018", "store" : "ShopMart", "item" : "Pie", "quantity" : 25 }
-{ "_id" : "2019", "store" : "General Store", "item" : "Cheese", "quantity" : 50 }
-{ "_id" : "2019", "store" : "General Store", "item" : "Chocolates", "quantity" : 125 }
-{ "_id" : "2019", "store" : "General Store", "item" : "Cookies", "quantity" : 200 }
-{ "_id" : "2019", "store" : "General Store", "item" : "Nuts", "quantity" : 80 }
-{ "_id" : "2019", "store" : "General Store", "item" : "Pie", "quantity" : 50 }
-{ "_id" : "2019", "store" : "ShopMart", "item" : "Cheese", "quantity" : 20 }
-{ "_id" : "2019", "store" : "ShopMart", "item" : "Chocolates", "quantity" : 150 }
-{ "_id" : "2019", "store" : "ShopMart", "item" : "Cookies", "quantity" : 100 }
-{ "_id" : "2019", "store" : "ShopMart", "item" : "Nuts", "quantity" : 30 }
-{ "_id" : "2019", "store" : "ShopMart", "item" : "Pie", "quantity" : 75 }
-{ "_id" : "2020", "store" : "General Store", "item" : "Cheese", "quantity" : 100 }
-{ "_id" : "2020", "store" : "General Store", "item" : "Chocolates", "quantity" : 200 }
-{ "_id" : "2020", "store" : "General Store", "item" : "Cookies", "quantity" : 500 }
-{ "_id" : "2020", "store" : "General Store", "item" : "Nuts", "quantity" : 100 }
-{ "_id" : "2020", "store" : "General Store", "item" : "Pie", "quantity" : 100 }
-{ "_id" : "2020", "store" : "ShopMart", "item" : "Cheese", "quantity" : 100 }
-{ "_id" : "2020", "store" : "ShopMart", "item" : "Chocolates", "quantity" : 300 }
-{ "_id" : "2020", "store" : "ShopMart", "item" : "Cookies", "quantity" : 400 }
-{ "_id" : "2020", "store" : "ShopMart", "item" : "Nuts", "quantity" : 200 }
-{ "_id" : "2020", "store" : "ShopMart", "item" : "Pie", "quantity" : 100 }
+{ "_id" : "Cookies", "total" : 1720 }
+{ "_id" : "Chocolates", "total" : 1250 }
+{ "_id" : "Nuts", "total" : 510 }
+{ "_id" : "Pie", "total" : 395 }
+{ "_id" : "Cheese", "total" : 350 }

@@ -1,2 +1,2 @@
-{ "_id" : 1, "student" : "Ann Aardvark", sickdays: [ new Date ("2018-05-01"),new Date ("2018-08-23") ] },
-{ "_id" : 2, "student" : "Zoe Zebra", sickdays: [ new Date ("2018-02-01"),new Date ("2018-05-23") ] },
+{ "_id" : 1, "student" : "Ann Aardvark", sickdays: [ ISODate("2018-05-01"), ISODate("2018-08-23") ] },
+{ "_id" : 2, "student" : "Zoe Zebra", sickdays: [ ISODate("2018-02-01"), ISODate("2018-05-23") ] },

@@ -1,3 +1,3 @@
-{     _id: ObjectId("6202df9f394d47411658b51e"),     date: ISODate("2022-02-02T00:00:00.000Z"),     bootsSold: 10,     sandalsSold: 20,     sneakersSold: 12   },
-{     _id: ObjectId("6202df9f394d47411658b51f"),     date: ISODate("2022-02-03T00:00:00.000Z"),     bootsSold: 7,     sneakersSold: 18,     sandalsSold: 0   },
-{     _id: ObjectId("6202df9f394d47411658b520"),     date: ISODate("2022-02-04T00:00:00.000Z"),     sneakersSold: 5,     bootsSold: 0,     sandalsSold: 0   }
+{ _id: ObjectId("6202df9f394d47411658b51e"), date: ISODate("2022-02-02T00:00:00.000Z"), bootsSold: 10, sandalsSold: 20, sneakersSold: 12 },
+{ _id: ObjectId("6202df9f394d47411658b51f"), date: ISODate("2022-02-03T00:00:00.000Z"), bootsSold: 7, sneakersSold: 18, sandalsSold: 0 },
+{ _id: ObjectId("6202df9f394d47411658b520"), date: ISODate("2022-02-04T00:00:00.000Z"), sneakersSold: 5, bootsSold: 0, sandalsSold: 0 }

@@ -1,13 +1,16 @@
-var userAccess = [ "STLW", "G" ];
-db.forecasts.aggregate(
-   [
-     { $match: { year: 2014 } },
-     { $redact: {
-        $cond: {
-           if: { $gt: [ { $size: { $setIntersection: [ "$tags", userAccess ] } }, 0 ] },
-           then: "$$DESCEND",
-           else: "$$PRUNE"
-         }
-       }
-     }
-   ]
+[
+  {
+    $match: {
+      year: 2014
+    }
+  },
+  {
+    $redact: {
+      $cond: [
+        { $gt: [ { $size: { $setIntersection: [ "$tags", [ "STLW", "G" ] ] } }, 0 ] },
+        "$$DESCEND",
+        "$$PRUNE"
+      ]
+    }
+  }
+]

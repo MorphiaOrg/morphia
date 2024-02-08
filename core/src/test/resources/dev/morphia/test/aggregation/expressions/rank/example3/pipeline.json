@@ -2,9 +2,9 @@
    {
       $setWindowFields: {
          partitionBy: "$state",
-         sortBy: { orderDate: 1 },
+         sortBy: { quantity: -1 },
          output: {
-            rankOrderDateForState: {
+            rankQuantityForState: {
                $rank: {}
             }
          }

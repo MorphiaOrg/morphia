@@ -1,9 +1,3 @@
- [ {
-   $match: {
-      $expr: {
-         $not: {
-            $eq: [ { $setIntersection: [ "$allowedRoles", "$$USER_ROLES.role" ] }, [] ]
-         }
-      }
-   }
-} ] 
+   [
+     { $project: { flowerFieldA: 1, flowerFieldB: 1, commonToBoth: { $setIntersection: [ "$flowerFieldA", "$flowerFieldB" ] }, _id: 0 } }
+   ]

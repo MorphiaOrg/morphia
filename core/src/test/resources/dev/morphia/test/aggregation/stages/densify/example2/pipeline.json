@@ -2,11 +2,11 @@
    {
       $densify: {
          field: "altitude",
-         partitionByFields: [ "variety" ],
          range: {
-            bounds: "full",
-            step: 200
-         }
+            step: 200,
+            bounds: "full"
+         },
+         partitionByFields: [ "variety" ]
       }
    }
 ] 

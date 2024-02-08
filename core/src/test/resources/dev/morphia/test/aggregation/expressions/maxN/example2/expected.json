@@ -1,2 +1,2 @@
-{      _id: 'G1',      maxScores: [ [ 99, 'PlayerC' ], [ 33, 'PlayerB' ], [ 31, 'PlayerA' ] ]   },
-{      _id: 'G2',      maxScores: [ [ 80, 'PlayerD' ], [ 66, 'PlayerC' ], [ 14, 'PlayerB' ] ]   }
+{ _id: 'G1', maxScores: [ [ 99, 'PlayerC' ], [ 33, 'PlayerB' ], [ 31, 'PlayerA' ] ] },
+{ _id: 'G2', maxScores: [ [ 80, 'PlayerD' ], [ 66, 'PlayerC' ], [ 14, 'PlayerB' ] ] }

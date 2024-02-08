@@ -1,2 +1,1 @@
-db.pizzas.insert( [
-{ _id: 0, name: [ 'Pepperoni' ] },
+{ _id: 0, name: [ 'Pepperoni' ] }

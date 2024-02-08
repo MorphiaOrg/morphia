@@ -1,6 +1,6 @@
-{      _id: ObjectId("620ad41c394d47411658b5e9"),      time: ISODate("2021-03-08T09:00:00.000Z"),      price: 500   },
-{      _id: ObjectId("620ad41c394d47411658b5ea"),      time: ISODate("2021-03-08T10:00:00.000Z"),      price: 507.5   },
-{      _id: ObjectId("620ad41c394d47411658b5eb"),      time: ISODate("2021-03-08T11:00:00.000Z"),      price: 515   },
-{      _id: ObjectId("620ad41c394d47411658b5ec"),      time: ISODate("2021-03-08T12:00:00.000Z"),      price: 505   },
-{      _id: ObjectId("620ad41c394d47411658b5ed"),      time: ISODate("2021-03-08T13:00:00.000Z"),      price: 495   },
-{      _id: ObjectId("620ad41c394d47411658b5ee"),      time: ISODate("2021-03-08T14:00:00.000Z"),      price: 485   }
+{ _id: ObjectId("620ad41c394d47411658b5e9"), time: ISODate("2021-03-08T09:00:00.000Z"), price: 500 },
+{ _id: ObjectId("620ad41c394d47411658b5ea"), time: ISODate("2021-03-08T10:00:00.000Z"), price: 507.5 },
+{ _id: ObjectId("620ad41c394d47411658b5eb"), time: ISODate("2021-03-08T11:00:00.000Z"), price: 515 },
+{ _id: ObjectId("620ad41c394d47411658b5ec"), time: ISODate("2021-03-08T12:00:00.000Z"), price: 505 },
+{ _id: ObjectId("620ad41c394d47411658b5ed"), time: ISODate("2021-03-08T13:00:00.000Z"), price: 495 },
+{ _id: ObjectId("620ad41c394d47411658b5ee"), time: ISODate("2021-03-08T14:00:00.000Z"), price: 485 }

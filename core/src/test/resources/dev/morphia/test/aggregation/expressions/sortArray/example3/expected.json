@@ -1,3 +1,3 @@
-{  name: 'charlie',  age: 42,  address: { street: '12 French St', city: 'New Brunswick' }},
-{  name: 'dallas',  age: 36,  address: { street: '12 Cowper St', city: 'Palo Alto' }},
-{  name: 'pat',  age: 30,  address: { street: '12 Baker St', city: 'London' }}
+{ name: 'charlie', age: 42, address: { street: '12 French St', city: 'New Brunswick' }},
+{ name: 'dallas', age: 36, address: { street: '12 Cowper St', city: 'Palo Alto' }},
+{ name: 'pat', age: 30, address: { street: '12 Baker St', city: 'London' }}

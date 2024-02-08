@@ -61,6 +61,8 @@ class CodeBlock {
     lateinit var type: Type
         private set
 
+    var supplemental: Int? = null
+
     private var prefix = ""
     var indent: Int = 0
         set(value) {
@@ -86,7 +88,15 @@ class CodeBlock {
     }
 
     fun output(output: File, applyReplacements: Boolean = true) {
-        output.writeText(sanitizeData(applyReplacements))
+        if (supplemental != null) {
+            File(
+                    output.parentFile,
+                    output.nameWithoutExtension + supplemental + "." + output.extension
+                )
+                .writeText(sanitizeData(applyReplacements))
+        } else {
+            output.writeText(sanitizeData(applyReplacements))
+        }
     }
 
     fun sanitizeData(applyReplacements: Boolean): String {
@@ -108,7 +118,9 @@ class CodeBlock {
             }
             line = applyReplacements(line)
             if (line.isNotBlank()) {
-                sanitized += collect(line, iterator).trim()
+                var collected = collect(line, iterator).trim()
+                collected = collected.replace(Regex("  +"), " ")
+                sanitized += collected
             }
         }
 
@@ -119,6 +131,7 @@ class CodeBlock {
         val sanitized =
             lines
                 .map { line -> if (applyReplacements) applyReplacements(line) else line }
+                .filter { it.isNotBlank() }
                 .toMutableList()
 
         val first = sanitized.first()
@@ -145,6 +158,9 @@ class CodeBlock {
                 " Int32(" to " NumberInt("
             )
         replacements.forEach { r -> final = final.replace(r.first, r.second) }
+        if (final.contains("/*") && final.contains("*/"))
+            final = final.removeRange(final.indexOf("/*")..(final.indexOf("*/") + 1))
+
         return final
     }
 
@@ -152,7 +168,7 @@ class CodeBlock {
         var collected = line
         while (
             iterator.hasNext() && collected.count { it == '{' } != collected.count { it == '}' }
-        ) collected += iterator.next()
+        ) collected += applyReplacements(iterator.next())
         return collected
     }
 

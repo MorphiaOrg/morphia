@@ -1,5 +1,8 @@
- [
-   { $addFields: { instock: { $objectToArray: "$instock" } } },
-   { $addFields: { instock: { $concatArrays: [ "$instock", [ { "k": "total", "v": { $sum: "$instock.v" } } ] ] } } } ,
-   { $addFields: { instock: { $arrayToObject: "$instock" } } }
-] 
+   [
+      {
+         $project: {
+            item: 1,
+            dimensions: { $objectToArray: "$dimensions" }
+         }
+      }
+   ]

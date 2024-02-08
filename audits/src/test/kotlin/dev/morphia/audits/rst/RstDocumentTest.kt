@@ -13,7 +13,7 @@ class RstDocumentTest {
         val examples = readAggOperator("abs").examples
         assertEquals(examples.size, 1)
         val example = examples.first()
-        val data = StringWriter().also { example.dataBlock?.write(it) }
+        val data = StringWriter().also { example.dataBlock.first().write(it) }
         val action = StringWriter().also { example.actionBlock?.write(it) }
         val expected = StringWriter().also { example.expectedBlock?.write(it) }
 
@@ -60,7 +60,7 @@ class RstDocumentTest {
         val examples = readAggOperator("acosh").examples
         assertEquals(examples.size, 2)
         val example = examples.first()
-        val data = StringWriter().also { example.dataBlock?.write(it) }
+        val data = StringWriter().also { example.dataBlock.first().write(it) }
         val action = StringWriter().also { example.actionBlock?.write(it) }
         val expected = StringWriter().also { example.expectedBlock?.write(it) }
 

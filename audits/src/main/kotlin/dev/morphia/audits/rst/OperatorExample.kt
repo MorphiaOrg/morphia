@@ -5,6 +5,7 @@ import dev.morphia.audits.model.CodeBlock.Companion.findBlocks
 import java.io.File
 
 class OperatorExample(
+    val parent: OperatorExample?,
     val operator: String,
     val name: String,
     private val input: List<String>,
@@ -12,21 +13,28 @@ class OperatorExample(
     lateinit var folder: File
     var created = false
     var actionBlock: CodeBlock? = null
-    var dataBlock: CodeBlock? = null
+    var dataBlock = mutableListOf<CodeBlock>()
     var expectedBlock: CodeBlock? = null
     var indexBlock: CodeBlock? = null
 
     init {
         findBlocks(input).forEachIndexed { index, codeBlock ->
             when {
-                codeBlock.isData() && dataBlock == null -> dataBlock = codeBlock
+                codeBlock.isData() -> {
+                    if (dataBlock.isNotEmpty()) {
+                        codeBlock.supplemental = dataBlock.size + 1
+                    }
+                    dataBlock += codeBlock
+                }
                 codeBlock.isAction() && actionBlock == null -> actionBlock = codeBlock
                 codeBlock.isIndex() && indexBlock == null -> indexBlock = codeBlock
-                index == 0 && codeBlock.isExpected() -> dataBlock = codeBlock
+                index == 0 && codeBlock.isExpected() -> dataBlock += codeBlock
                 index != 0 && codeBlock.isExpected() && expectedBlock == null ->
                     expectedBlock = codeBlock
             }
         }
+        dataBlock = if (dataBlock.isNotEmpty()) dataBlock else parent?.dataBlock ?: mutableListOf()
+        indexBlock = indexBlock ?: parent?.indexBlock
     }
 
     fun output(folder: File) {
@@ -35,7 +43,7 @@ class OperatorExample(
         if (!lock.exists() || System.getProperty("IGNORE_LOCKS") != null) {
             try {
                 created = this.folder.mkdirs()
-                dataBlock?.output(File(folder, "data.json"))
+                dataBlock.forEach { it.output(File(folder, "data.json")) }
                 indexBlock?.output(File(folder, "index.json"))
                 actionBlock?.output(File(folder, "pipeline.json"), false)
                 expectedBlock?.output(File(folder, "expected.json"))

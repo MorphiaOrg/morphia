@@ -15,11 +15,6 @@ import static dev.morphia.aggregation.stages.UnionWith.unionWith;
 public class TestUnionWith extends AggregationTest {
     @Test
     public void testExample1() {
-        // the examples here are in subsections which the parser doesn't handle
-    }
-
-    @Test
-    public void testExample2() {
         loadData("sales_2018", "data2.json");
         loadData("sales_2019", "data3.json");
         loadData("sales_2020", "data4.json");
@@ -35,7 +30,7 @@ public class TestUnionWith extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         loadData("sales_2018", "data2.json");
         loadData("sales_2019", "data3.json");
         loadData("sales_2020", "data4.json");

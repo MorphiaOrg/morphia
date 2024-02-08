@@ -1,1 +1,1 @@
-replace $substr with $substrBytes
+use $substrBytes instead of $substr

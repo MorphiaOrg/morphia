@@ -33,9 +33,7 @@ public class TestProject extends AggregationTest {
 
     @Test
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .exclude("lastModified")));
+        // no expected data
     }
 
     @Test

@@ -1,8 +1,8 @@
-{ powerMeterID: "1", timeStamp: ISODate( "2020-05-18T14:10:30Z" ),     kilowatts: 2.95 },
-{ powerMeterID: "1", timeStamp: ISODate( "2020-05-18T14:11:00Z" ),     kilowatts: 2.7 },
-{ powerMeterID: "1", timeStamp: ISODate( "2020-05-18T14:11:30Z" ),     kilowatts: 2.6 },
-{ powerMeterID: "1", timeStamp: ISODate( "2020-05-18T14:12:00Z" ),     kilowatts: 2.98 },
-{ powerMeterID: "2", timeStamp: ISODate( "2020-05-18T14:10:30Z" ),     kilowatts: 2.5 },
-{ powerMeterID: "2", timeStamp: ISODate( "2020-05-18T14:11:00Z" ),     kilowatts: 2.25 },
-{ powerMeterID: "2", timeStamp: ISODate( "2020-05-18T14:11:30Z" ),     kilowatts: 2.75 },
-{ powerMeterID: "2", timeStamp: ISODate( "2020-05-18T14:12:00Z" ),     kilowatts: 2.82 }
+{ powerMeterID: "1", timeStamp: ISODate( "2020-05-18T14:10:30Z" ), kilowatts: 2.95 },
+{ powerMeterID: "1", timeStamp: ISODate( "2020-05-18T14:11:00Z" ), kilowatts: 2.7 },
+{ powerMeterID: "1", timeStamp: ISODate( "2020-05-18T14:11:30Z" ), kilowatts: 2.6 },
+{ powerMeterID: "1", timeStamp: ISODate( "2020-05-18T14:12:00Z" ), kilowatts: 2.98 },
+{ powerMeterID: "2", timeStamp: ISODate( "2020-05-18T14:10:30Z" ), kilowatts: 2.5 },
+{ powerMeterID: "2", timeStamp: ISODate( "2020-05-18T14:11:00Z" ), kilowatts: 2.25 },
+{ powerMeterID: "2", timeStamp: ISODate( "2020-05-18T14:11:30Z" ), kilowatts: 2.75 },
+{ powerMeterID: "2", timeStamp: ISODate( "2020-05-18T14:12:00Z" ), kilowatts: 2.82 }

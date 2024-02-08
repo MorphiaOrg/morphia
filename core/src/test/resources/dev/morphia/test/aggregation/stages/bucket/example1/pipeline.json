@@ -1,5 +1,4 @@
  [
-  
   {
     $bucket: { 
       groupBy: "$year_born",                        
@@ -17,7 +16,6 @@
       }
     }
   },
-  
   {
     $match: { count: {$gt: 3} }
   }

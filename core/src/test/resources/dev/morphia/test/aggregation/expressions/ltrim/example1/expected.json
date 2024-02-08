@@ -1,3 +1,3 @@
 { "_id" : 1, "item" : "ABC1", "description" : "product 1" }
-{ "_id" : 2, "item" : "ABC2", "description" : "product 2 \n The product is in stock.  \n\n  " }
+{ "_id" : 2, "item" : "ABC2", "description" : "product 2 \n The product is in stock. \n\n " }
 { "_id" : 3, "item" : "XYZ1", "description" : null }

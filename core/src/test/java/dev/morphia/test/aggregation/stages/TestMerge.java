@@ -111,6 +111,16 @@ public class TestMerge extends AggregationTest {
 
     @Test
     public void testExample6() {
-        // a bit of arcane example Morphia's not well-suited for
+        // merging in to another db complicates the test infra and doesn't really provide much value as another test
+    }
+
+    @Test
+    public void testExample7() {
+        // merging in to another db complicates the test infra and doesn't really provide much value as another test
+    }
+
+    @Test
+    public void testExample8() {
+        // merging in to another db complicates the test infra and doesn't really provide much value as another test
     }
 }

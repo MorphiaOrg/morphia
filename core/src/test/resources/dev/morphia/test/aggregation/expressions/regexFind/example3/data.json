@@ -1,4 +1,4 @@
 { "_id" : 1, name: "Aunt Arc Tikka", details: [ "+672-19-9999", "aunt.arc.tica@example.com" ] },
-{ "_id" : 2, name: "Belle Gium",  details: [ "+32-2-111-11-11", "belle.gium@example.com" ] },
-{ "_id" : 3, name: "Cam Bo Dia",  details: [ "+855-012-000-0000", "cam.bo.dia@example.com" ] },
+{ "_id" : 2, name: "Belle Gium", details: [ "+32-2-111-11-11", "belle.gium@example.com" ] },
+{ "_id" : 3, name: "Cam Bo Dia", details: [ "+855-012-000-0000", "cam.bo.dia@example.com" ] },
 { "_id" : 4, name: "Fred", details: [ "+1-111-222-3333" ] }

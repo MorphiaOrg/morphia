@@ -13,7 +13,7 @@ public class TestSortByCount extends AggregationTest {
     public void testExample1() {
         // orderMatters is false here because of the indeterminate sort order on equal values
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                unwind("tags"),
+                unwind("$tags"),
                 sortByCount("$tags")));
     }
 }

@@ -1,3 +1,3 @@
-{ "_id" : 1, "item" : "ABC1",  dimensions: { l: 25, w: 10, uom: "cm" } }
-{ "_id" : 2, "item" : "ABC2",  dimensions: { l: 50, w: 25, uom: "cm" } }
-{ "_id" : 3, "item" : "XYZ1",  dimensions: { l: 70, w: 75, uom: "cm" } }
+{ "_id" : 1, "item" : "ABC1", dimensions: { l: 25, w: 10, uom: "cm" } }
+{ "_id" : 2, "item" : "ABC2", dimensions: { l: 50, w: 25, uom: "cm" } }
+{ "_id" : 3, "item" : "XYZ1", dimensions: { l: 70, w: 75, uom: "cm" } }

@@ -1,2 +1,9 @@
-{      _id: 1,      allowedRoles: [ 'Sales' ],      comment: 'For sales team',      yearlyBudget: 17000,      salesEventsBudget: 1000   },
-{      _id: 2,      allowedRoles: [ 'Operations' ],      comment: 'For operations team',      yearlyBudget: 19000,      cloudBudget: 12000   }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid" ], "commonToBoth" : [ "orchid", "rose" ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "orchid", "rose", "orchid" ], "commonToBoth" : [ "orchid", "rose" ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid", "jasmine" ], "commonToBoth" : [ "orchid", "rose" ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "jasmine", "rose" ], "commonToBoth" : [ "rose" ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ ], "commonToBoth" : [ ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ [ "rose" ], [ "orchid" ] ], "commonToBoth" : [ ] }
+{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ [ "rose", "orchid" ] ], "commonToBoth" : [ ] }
+{ "flowerFieldA" : [ ], "flowerFieldB" : [ ], "commonToBoth" : [ ] }
+{ "flowerFieldA" : [ ], "flowerFieldB" : [ "rose" ], "commonToBoth" : [ ] }

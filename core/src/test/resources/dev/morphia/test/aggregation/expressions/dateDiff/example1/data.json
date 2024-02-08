@@ -1,3 +1,3 @@
-{          custId: 456,          purchased: ISODate("2020-12-31"),          delivered: ISODate("2021-01-05")      },
-{          custId: 457,          purchased: ISODate("2021-02-28"),          delivered: ISODate("2021-03-07")      },
-{          custId: 458,          purchased: ISODate("2021-02-16"),          delivered: ISODate("2021-02-18")      }
+{ custId: 456, purchased: ISODate("2020-12-31"), delivered: ISODate("2021-01-05") },
+{ custId: 457, purchased: ISODate("2021-02-28"), delivered: ISODate("2021-03-07") },
+{ custId: 458, purchased: ISODate("2021-02-16"), delivered: ISODate("2021-02-18") }

@@ -24,7 +24,7 @@ import static java.util.Collections.singleton;
 
 public class TestBucketAuto extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 autoBucket()
                         .groupBy("$price")
@@ -32,7 +32,7 @@ public class TestBucketAuto extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 facet()
                         .field("price", autoBucket()
@@ -48,6 +48,28 @@ public class TestBucketAuto extends AggregationTest {
                                 .buckets(4)
                                 .outputField("count", sum(1))
                                 .outputField("titles", push("$title")))));
+    }
+
+    @Test
+    public void testExample3() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                facet()
+                        .field("price",
+                                autoBucket()
+                                        .groupBy("$price")
+                                        .buckets(4))
+                        .field("year",
+                                autoBucket()
+                                        .groupBy("$year")
+                                        .buckets(3)
+                                        .outputField("count", sum(1))
+                                        .outputField("years", push("$year")))
+                        .field("area",
+                                autoBucket()
+                                        .groupBy(multiply("$dimensions.height", "$dimensions.width"))
+                                        .buckets(4)
+                                        .outputField("count", sum(1))
+                                        .outputField("titles", push("$titles")))));
     }
 
     @Test

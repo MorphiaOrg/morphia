@@ -107,7 +107,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
     private static String toString(List<Document> actual, String prefix) {
         return actual.stream()
-                .map(c -> c.toString())
+                .map(c -> c.toJson(JSON_WRITER_SETTINGS))
                 .collect(joining("\n\t", prefix, ""));
     }
 

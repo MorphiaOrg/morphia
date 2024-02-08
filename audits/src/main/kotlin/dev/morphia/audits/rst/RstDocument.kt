@@ -17,25 +17,35 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
         }
     }
 
-    var examples: List<OperatorExample>
+    var examples: List<OperatorExample> = mutableListOf()
         private set
 
     init {
         val partition = DASH.partition(lines).entries.last()
-        examples =
-            TILDE.partition(partition.value)
-                .map { it.value.extractTabs(it.key) }
-                .flatMap { it.entries }
-                .map { OperatorExample(operator, it.key, it.value) }
-        examples
-            .filter { it.dataBlock != null }
-            .firstOrNull { it.name == "main" }
-            ?.let { main ->
-                examples
-                    .filter { it.name != "main" }
-                    .filter { it.dataBlock == null }
-                    .forEach { it.dataBlock = main.dataBlock }
+        val partitions = TILDE.partition(partition.value)
+        partitions
+            .map { it.value.extractTabs(it.key) }
+            .flatMap { it.entries }
+            .forEach {
+                examples +=
+                    OperatorExample(
+                        examples.firstOrNull { it.dataBlock.isNotEmpty() },
+                        operator,
+                        it.key,
+                        it.value
+                    )
             }
+        /*
+                examples
+                    .filter { it.dataBlock.isEmpty() }
+                    .firstOrNull { it.name == "main" }
+                    ?.let { main ->
+                        examples
+                            .filter { it.name != "main" }
+                            .filter { it.dataBlock == null }
+                            .forEach { it.dataBlock = main.dataBlock }
+                    }
+        */
 
         examples = examples.filter { it.valid() }
     }

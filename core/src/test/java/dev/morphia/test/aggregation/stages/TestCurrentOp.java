@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.stages.CurrentOp.currentOp;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
-import static dev.morphia.query.filters.Filters.exists;
 
 public class TestCurrentOp extends AggregationTest {
     public TestCurrentOp() {
@@ -22,7 +21,7 @@ public class TestCurrentOp extends AggregationTest {
                 currentOp()
                         .allUsers(true)
                         .idleSessions(true),
-                match(eq("active", false), exists("transaction"))));
+                match(eq("desc", "transaction coordinator"))));
     }
 
     @Test

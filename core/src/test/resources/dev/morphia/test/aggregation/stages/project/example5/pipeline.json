@@ -1,1 +1,16 @@
- [ { $project: { "stop.title": 1 } } ] 
+ [ 
+   {
+      $project: { 
+         title: 1,
+         "author.first": 1,
+         "author.last" : 1,
+         "author.middle": {
+            $cond: [
+               { $eq: [ "", "$author.middle" ] },
+               "$$REMOVE",
+               "$author.middle"
+            ]
+         }
+      }
+   }
+] 

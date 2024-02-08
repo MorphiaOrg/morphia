@@ -2,11 +2,11 @@
     { $match: { status: "A" } },
     {
       $redact: {
-        $cond: {
-          if: { $eq: [ "$level", 5 ] },
-          then: "$$PRUNE",
-          else: "$$DESCEND"
-        }
+        $cond: [
+          { $eq: [ "$level", 5 ] },
+          "$$PRUNE",
+          "$$DESCEND"
+        ]
       }
     }
   ]
