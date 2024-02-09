@@ -6,7 +6,6 @@ import java.util.Map;
 
 import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.PopOperator;
 import dev.morphia.query.updates.PushOperator;
 import dev.morphia.query.updates.UpdateOperators;
@@ -147,7 +146,7 @@ public class UpdateOpsImpl<T> extends UpdateBase<T> implements UpdateOperations<
 
     @Override
     public UpdateOperations<T> removeAll(String field, Object value) {
-        add(UpdateOperators.pull(field, Filters.eq(field, value)));
+        add(UpdateOperators.pull(field, value));
         return this;
     }
 

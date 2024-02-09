@@ -21,27 +21,31 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 @MorphiaInternal
 public class PullOperator extends UpdateOperator {
     /**
-     * @param field  the field
-     * @param filter the filter to apply
+     * @param field the field
+     * @param value a value object or filter to apply
      * @morphia.internal
      */
     @MorphiaInternal
-    public PullOperator(String field, Filter filter) {
-        super("$pull", field, filter);
+    public PullOperator(String field, Object value) {
+        super("$pull", field, value);
     }
 
     @Override
     public OperationTarget toTarget(PathTarget pathTarget) {
-        return new OperationTarget(pathTarget, value()) {
-            @Override
-            public Object encode(Datastore datastore) {
-                DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
-                document(writer, () -> {
-                    ((Filter) getValue()).encode(datastore, writer, EncoderContext.builder().build());
-                });
+        Object value = value();
+        if (value instanceof Filter) {
+            return new OperationTarget(pathTarget, value) {
+                @Override
+                public Object encode(Datastore datastore) {
+                    DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
+                    document(writer, () -> {
+                        ((Filter) getValue()).encode(datastore, writer, EncoderContext.builder().build());
+                    });
+                    return new Document(pathTarget.translatedPath(), writer.getDocument());
+                }
+            };
+        }
 
-                return new Document(pathTarget.translatedPath(), writer.getDocument());
-            }
-        };
+        return new OperationTarget(pathTarget, value);
     }
 }
