@@ -51,7 +51,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .addToSet("idSet", toAdd);
+                .addToSet("idSet", toAdd);
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -68,7 +68,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .addToSet("idSet", toAdd);
+                .addToSet("idSet", toAdd);
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -85,7 +85,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .dec("intField");
+                .dec("intField");
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -100,7 +100,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .dec("intField", new Long(2));
+                .dec("intField", new Long(2));
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -115,7 +115,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .inc("intField");
+                .inc("intField");
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -130,7 +130,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .max("intField", 9);
+                .max("intField", 9);
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -145,7 +145,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .min("intField", -1);
+                .min("intField", -1);
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -161,7 +161,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .push("idSet", toAdd);
+                .push("idSet", toAdd);
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -177,9 +177,9 @@ public class TestLegacyUpdate extends TestBase {
         ObjectId toAdd = ObjectId.get();
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class).filter("embeddedDocs.field1 in",
-            List.of("foo1"));
+                List.of("foo1"));
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .push("embeddedDocs.$.objectIds", toAdd, PushOptions.options().position(1));
+                .push("embeddedDocs.$.objectIds", toAdd, PushOptions.options().position(1));
 
         UpdateResult result = getDs().update(query, update, new UpdateOptions().multi(true));
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -195,7 +195,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .push("idSet", toAdd);
+                .push("idSet", toAdd);
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -230,7 +230,7 @@ public class TestLegacyUpdate extends TestBase {
         Query<MyDocument> query = getDs().createQuery(MyDocument.class).filter("embeddedDocs.field1", testEmbeddedDoc2.field1);
 
         UpdateOperations<MyDocument> removeAllOp = getDs().createUpdateOperations(MyDocument.class)
-            .removeAll("embeddedDocs.$.objectIds", testObjectIds);
+                .removeAll("embeddedDocs.$.objectIds", testObjectIds);
 
         UpdateResult result = getDs().update(query, removeAllOp);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -283,7 +283,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .removeFirst("embeddedDocs");
+                .removeFirst("embeddedDocs");
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -298,7 +298,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .removeLast("embeddedDocs");
+                .removeLast("embeddedDocs");
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -313,7 +313,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .set("intField", 100);
+                .set("intField", 100);
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
@@ -327,7 +327,7 @@ public class TestLegacyUpdate extends TestBase {
         ObjectId id = ObjectId.get();
         Query<MyDocument> query = getDs().createQuery(MyDocument.class).filter("id = ", id);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .setOnInsert("intField", 999);
+                .setOnInsert("intField", 999);
 
         UpdateResult result = getDs().update(query, update, new UpdateOptions().upsert(true));
         Assert.assertEquals(result.getModifiedCount(), 0);
@@ -343,7 +343,7 @@ public class TestLegacyUpdate extends TestBase {
 
         Query<MyDocument> query = getDs().createQuery(MyDocument.class);
         UpdateOperations<MyDocument> update = getDs().createUpdateOperations(MyDocument.class)
-            .unset("intField");
+                .unset("intField");
 
         UpdateResult result = getDs().update(query, update);
         Assert.assertEquals(result.getModifiedCount(), 1);
