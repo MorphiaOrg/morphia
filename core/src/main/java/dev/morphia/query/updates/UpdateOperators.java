@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import dev.morphia.query.Query;
+import dev.morphia.query.filters.Filter;
 import dev.morphia.sofia.Sofia;
 
 import static java.util.Collections.singletonList;
@@ -238,6 +239,18 @@ public final class UpdateOperators {
      */
     public static PopOperator pop(String field) {
         return new PopOperator(field);
+    }
+
+    /**
+     * The $pull operator removes from an existing array all instances of a value or values that match a specified condition.
+     *
+     * @param field  the field to update
+     * @param filter the filter to apply
+     * @return the update operator
+     * @update.operator $pull
+     */
+    public static UpdateOperator pull(String field, Filter filter) {
+        return new PullOperator(field, filter);
     }
 
     /**

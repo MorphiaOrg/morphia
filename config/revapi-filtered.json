@@ -678,6 +678,15 @@
           "code": "java.method.added",
           "new": "method dev.morphia.Datastore dev.morphia.Morphia::createDatastore(com.mongodb.client.MongoClient, dev.morphia.config.MorphiaConfig)",
           "justification": "experimental API"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.added",
+          "new": "method dev.morphia.query.updates.UpdateOperator dev.morphia.query.updates.UpdateOperators::pull(java.lang.String, java.lang.Object)",
+          "justification": "necessary to fix a bug",
+          "package": "dev.morphia.query.updates",
+          "classQualifiedName": "dev.morphia.query.updates.UpdateOperators",
+          "methodName": "pull"
         }
       ]
     }
