@@ -1,0 +1,9 @@
+[
+  { 
+    $addFields : {
+      "y-coordinate" : {
+        $asinh : "$x-coordinate"
+      }
+    }
+  }
+]

@@ -6,11 +6,16 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
+import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateSubtract;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
+import static dev.morphia.aggregation.expressions.DateExpressions.month;
+import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.expressions.TimeUnit.DAY;
 import static dev.morphia.aggregation.expressions.TimeUnit.HOUR;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
+import static dev.morphia.query.filters.Filters.expr;
 import static dev.morphia.test.ServerVersion.v50;
 
 public class TestDateSubtract extends AggregationTest {
@@ -20,7 +25,10 @@ public class TestDateSubtract extends AggregationTest {
 
     @Test
     public void testExample1() {
-        testPipeline(v50, true, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(v50, true, false, (aggregation) -> aggregation.pipeline(
+                match(
+                        expr(eq(year("$logout"), 2021)),
+                        expr(eq(month("$logout"), 1))),
                 project()
                         .include("logoutTime",
                                 dateSubtract("$logout", 3, HOUR))));

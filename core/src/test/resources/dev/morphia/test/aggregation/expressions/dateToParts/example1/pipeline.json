@@ -1,12 +1,23 @@
 [
-{
-   $project: {
+  {
+    $project: {
       date: {
-         $dateToParts: { date: "$date" } 
+        $dateToParts: {
+          date: "$date"
+        }
       },
-      date_iso: { 
-         $dateToParts: { date: "$date", iso8601: true }
+      date_iso: {
+        $dateToParts: {
+          date: "$date",
+          iso8601: true
+        }
       },
       date_timezone: {
-         $dateToParts: { date: "$date", timezone: "America/New_York" }
-      }  
+        $dateToParts: {
+          date: "$date",
+          timezone: "America/New_York"
+        }
+      }
+    }
+  }
+]

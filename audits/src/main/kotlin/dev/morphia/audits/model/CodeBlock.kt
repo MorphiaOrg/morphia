@@ -155,7 +155,8 @@ class CodeBlock {
                 "new Date(" to "ISODate(",
                 " Long(" to " NumberLong(",
                 " Decimal128(" to " NumberDecimal(",
-                " Int32(" to " NumberInt("
+                " Int32(" to " NumberInt(",
+                "\$substr:" to "\$substrBytes"
             )
         replacements.forEach { r -> final = final.replace(r.first, r.second) }
         if (final.contains("/*") && final.contains("*/"))

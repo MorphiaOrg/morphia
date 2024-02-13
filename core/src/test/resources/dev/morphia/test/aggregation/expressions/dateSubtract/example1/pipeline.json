@@ -2,24 +2,29 @@
       {
          $match: 
             {
-               $expr:
-                  {
-                     $eq:
-                        [
-                            { $year: "$logout" },
-                              2021 
-                        ]
-                  },  
-               $expr:
-                  { 
-                     $eq:
-                        [
-                            { $month: "$logout" },
-                              1
-                        ]
-                   }
-             }
-       },
+              "$and": [
+                {
+                  $expr: {
+                    $eq: [
+                      {
+                        $year: "$logout"
+                      },
+                      2021
+                    ]
+                  }
+                },
+                {
+                  $expr: {
+                    $eq: [
+                      {
+                        $month: "$logout"
+                      },
+                      1
+                    ]
+                  }
+                }
+              ]}
+            },
        {
           $project:
              {
@@ -33,8 +38,5 @@
                          }
                    }
               }
-        },
-        {
-           $merge: "connectionTime"
         }
    ]

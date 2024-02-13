@@ -1,2 +1,4 @@
 removed the $merge
-massage the data to sidestep a shortcoming in the parser tramples on the double $expr in the match
+the driver's parser needs the 'Z' for the timezone
+add the $and operator for the $expr entries
+the expected data should only have the logout times and only two entries

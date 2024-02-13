@@ -1,1 +1,1 @@
-{  "_id" : 2,  "item" : "abc",  "price" : 10,  "quantity" : 2,  "date" : ISODate("2017-01-01T01:29:09.123Z")}
+{ "_id" : 2, "item" : "abc", "price" : 10, "quantity" : 2, "date" : ISODate("2017-01-01T01:29:09.123Z")}

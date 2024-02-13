@@ -18,4 +18,13 @@ public class TestAcosh extends AggregationTest {
                                 radiansToDegrees(acosh("$x-coordinate")))));
 
     }
+
+    @Test
+    public void testExample2() {
+        testPipeline(ANY, false, true, aggregation -> aggregation
+                .pipeline(addFields()
+                        .field("y-coordinate",
+                                acosh("$x-coordinate"))));
+
+    }
 }

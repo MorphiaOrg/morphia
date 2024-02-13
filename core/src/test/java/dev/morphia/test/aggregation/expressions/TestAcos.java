@@ -23,4 +23,16 @@ public class TestAcos extends AggregationTest {
                                                         "$hypotenuse"))))));
 
     }
+
+    @Test
+    public void testExample2() {
+        testPipeline(ANY, false, true, aggregation -> aggregation
+                .pipeline(addFields()
+                        .field("angle_a",
+                                acos(
+                                        divide(
+                                                "$side_b",
+                                                "$hypotenuse")))));
+
+    }
 }

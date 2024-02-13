@@ -28,19 +28,11 @@ public class TestBottom extends AggregationTest {
 
     @Test
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 group(id("$gameId"))
                         .field("playerId",
                                 bottom(array("$playerId", "$score"),
                                         descending("score")))));
     }
 
-    @Test
-    public void testExample3() {
-        testPipeline(v52, false, false, (aggregation) -> aggregation
-                .pipeline(group(id("$gameId"))
-                        .field("playerId", bottom(
-                                array("$playerId", "$score"),
-                                descending("score")))));
-    }
 }

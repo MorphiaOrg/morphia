@@ -17,4 +17,11 @@ public class TestAsinh extends AggregationTest {
                         .field("y-coordinate", radiansToDegrees(asinh("$x-coordinate")))));
     }
 
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                addFields()
+                        .field("y-coordinate", asinh("$x-coordinate"))));
+    }
+
 }

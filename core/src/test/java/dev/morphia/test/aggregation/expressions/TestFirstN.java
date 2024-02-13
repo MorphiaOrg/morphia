@@ -21,7 +21,7 @@ import static dev.morphia.test.ServerVersion.v52;
 
 public class TestFirstN extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 match(eq("gameId", "G1")),
                 group(id("$gameId"))
@@ -31,7 +31,7 @@ public class TestFirstN extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 group(id("$gameId"))
                         .field("playerId", firstN(
@@ -41,7 +41,7 @@ public class TestFirstN extends AggregationTest {
     }
 
     @Test
-    public void testExample4() {
+    public void testExample3() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 sort().descending("score"),
                 group(id("$gameId"))
@@ -52,7 +52,7 @@ public class TestFirstN extends AggregationTest {
     }
 
     @Test
-    public void testExample5() {
+    public void testExample4() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 group(id()
                         .field("gameId", "$gameId"))

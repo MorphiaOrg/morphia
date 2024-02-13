@@ -12,7 +12,7 @@ import static dev.morphia.query.Sort.*;
 
 public class TestExpMovingAvg extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$stock")
@@ -22,7 +22,7 @@ public class TestExpMovingAvg extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$stock")

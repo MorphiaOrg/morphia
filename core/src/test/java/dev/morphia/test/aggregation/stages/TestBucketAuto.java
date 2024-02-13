@@ -69,7 +69,7 @@ public class TestBucketAuto extends AggregationTest {
                                         .groupBy(multiply("$dimensions.height", "$dimensions.width"))
                                         .buckets(4)
                                         .outputField("count", sum(1))
-                                        .outputField("titles", push("$titles")))));
+                                        .outputField("titles", push("$title")))));
     }
 
     @Test
