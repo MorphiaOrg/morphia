@@ -1,0 +1,11 @@
+[
+  { 
+    $addFields : {
+      "angle_a" : {
+        $acos : {
+          $divide : [ "$side_b", "$hypotenuse" ]
+        }
+      }
+    }
+  }
+]

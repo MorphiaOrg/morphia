@@ -15,9 +15,10 @@ import static java.time.DayOfWeek.*;
 
 public class TestDateTrunc extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
+                        .include("_id")
                         .include("orderDate")
                         .include("truncatedOrderDate", dateTrunc("$orderDate",
                                 WEEK).binSize(2)
@@ -26,7 +27,7 @@ public class TestDateTrunc extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 group(id().field("truncatedOrderDate", dateTrunc("$orderDate", MONTH).binSize(6)))
                         .field("sumQuantity", sum("$quantity"))));

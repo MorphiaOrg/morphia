@@ -18,4 +18,11 @@ public class TestAtan extends AggregationTest {
                         .field("angle_a", radiansToDegrees(atan(divide("$side_b", "$side_a"))))));
     }
 
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                addFields()
+                        .field("angle_a", atan(divide("$side_b", "$side_a")))));
+    }
+
 }

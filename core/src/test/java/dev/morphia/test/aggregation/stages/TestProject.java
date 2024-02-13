@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
+import static dev.morphia.aggregation.expressions.Expressions.document;
+import static dev.morphia.aggregation.expressions.StringExpressions.substrBytes;
 import static dev.morphia.aggregation.expressions.SystemVariables.REMOVE;
 import static dev.morphia.aggregation.stages.Projection.project;
 
@@ -59,7 +61,15 @@ public class TestProject extends AggregationTest {
     public void testExample6() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
-                        .include("stop.title")));
+                        .include("title")
+                        .include("isbn", document()
+                                .field("prefix", substrBytes("$isbn", 0, 3))
+                                .field("group", substrBytes("$isbn", 3, 2))
+                                .field("publisher", substrBytes("$isbn", 5, 4))
+                                .field("title", substrBytes("$isbn", 9, 3))
+                                .field("checkDigit", substrBytes("$isbn", 12, 1)))
+                        .include("lastName", "$author.last")
+                        .include("copiesSold", "$copies")));
     }
 
     @Test

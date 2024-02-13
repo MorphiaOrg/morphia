@@ -18,4 +18,11 @@ public class TestCos extends AggregationTest {
                         .field("side_a", multiply(cos(degreesToRadians("$angle_a")), "$hypotenuse"))));
     }
 
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                addFields()
+                        .field("side_b", multiply(cos("$angle_a"), "$hypotenuse"))));
+    }
+
 }

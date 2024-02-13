@@ -17,4 +17,11 @@ public class TestCosh extends AggregationTest {
                         .field("cosh_output", cosh(degreesToRadians("$angle")))));
     }
 
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
+                addFields()
+                        .field("cosh_output", cosh("$angle"))));
+    }
+
 }
