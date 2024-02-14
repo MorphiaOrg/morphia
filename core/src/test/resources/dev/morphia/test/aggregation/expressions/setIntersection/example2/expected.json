@@ -1,9 +1,2 @@
-{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid" ], "commonToBoth" : [ "orchid", "rose" ] }
-{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "orchid", "rose", "orchid" ], "commonToBoth" : [ "orchid", "rose" ] }
-{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid", "jasmine" ], "commonToBoth" : [ "orchid", "rose" ] }
-{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "jasmine", "rose" ], "commonToBoth" : [ "rose" ] }
-{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ ], "commonToBoth" : [ ] }
-{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ [ "rose" ], [ "orchid" ] ], "commonToBoth" : [ ] }
-{ "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ [ "rose", "orchid" ] ], "commonToBoth" : [ ] }
-{ "flowerFieldA" : [ ], "flowerFieldB" : [ ], "commonToBoth" : [ ] }
-{ "flowerFieldA" : [ ], "flowerFieldB" : [ "rose" ], "commonToBoth" : [ ] }
+db.createUser( { user: "John", pwd: "jn008", roles: [ { role: "Marketing", db: "test" }, { role: "Development", db: "test" }, { role: "Operations", db: "test" }, { role: "read", db: "test" } ]} )
+db.createUser( { user: "Jane", pwd: "je009", roles: [ { role: "Sales", db: "test" }, { role: "Operations", db: "test" }, { role: "read", db: "test" } ]} )

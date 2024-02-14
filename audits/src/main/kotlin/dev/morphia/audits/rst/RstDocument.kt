@@ -1,5 +1,6 @@
 package dev.morphia.audits.rst
 
+import dev.morphia.audits.RstAuditor
 import dev.morphia.audits.findIndent
 import dev.morphia.audits.rst.Separator.DASH
 import dev.morphia.audits.rst.Separator.TILDE
@@ -13,7 +14,21 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
         val SIMPLE_TAB_START = "- id:"
 
         fun read(operator: String, file: File): RstDocument {
-            return RstDocument(operator, file.readLines().toMutableList())
+            val lines =
+                file
+                    .readLines()
+                    .dropWhile { line -> line.trim() !in listOf("Example", "Examples") }
+                    .drop(3)
+                    .flatMap { line ->
+                        if (line.trim().startsWith(".. include:: ")) {
+                            val include = File(RstAuditor.includesRoot, line.substringAfter(":: "))
+                            if (include.exists()) {
+                                include.readLines()
+                            } else listOf(line)
+                        } else listOf(line)
+                    }
+                    .toMutableList()
+            return RstDocument(operator, lines)
         }
     }
 

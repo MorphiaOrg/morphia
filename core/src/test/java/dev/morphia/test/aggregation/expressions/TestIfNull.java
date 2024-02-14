@@ -10,7 +10,7 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIfNull extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("item")
@@ -20,7 +20,7 @@ public class TestIfNull extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("item")

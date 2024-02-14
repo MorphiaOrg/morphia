@@ -1,6 +1,6 @@
-{ "_id" : 1, "byteLocation" : "0" }
-{ "_id" : 2, "byteLocation" : "4" }
-{ "_id" : 3, "byteLocation" : "4" }
-{ "_id" : 4, "byteLocation" : "-1" }
+{ "_id" : 1, "byteLocation" : 0 }
+{ "_id" : 2, "byteLocation" : 4 }
+{ "_id" : 3, "byteLocation" : 4 }
+{ "_id" : 4, "byteLocation" : -1 }
 { "_id" : 5, "byteLocation" : null }
 { "_id" : 6, "byteLocation" : null }

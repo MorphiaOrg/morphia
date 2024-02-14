@@ -22,7 +22,7 @@ public class TestCount extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(v50, false, false,
                 aggregation -> aggregation
                         .setWindowFields(setWindowFields()

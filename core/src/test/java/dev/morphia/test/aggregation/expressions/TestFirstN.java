@@ -65,7 +65,7 @@ public class TestFirstN extends AggregationTest {
     }
 
     @Test(enabled = false, description = "this needs to run against the db rather than a collection and that requires fixes in the agg code")
-    public void testExample6() {
+    public void testExample5() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 documents(document().field("array", array(10, 20, 30, 40))),
                 project()

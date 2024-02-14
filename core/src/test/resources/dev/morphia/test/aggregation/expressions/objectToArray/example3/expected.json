@@ -1,3 +1,2 @@
-{ "_id" : 1, "item" : "ABC1", "dimensions" : [ { "k" : "l", "v" : 25 }, { "k" : "w", "v" : 10 }, { "k" : "uom", "v" : "cm" } ] }
-{ "_id" : 2, "item" : "ABC2", "dimensions" : [ { "k" : "l", "v" : 50 }, { "k" : "w", "v" : 25 }, { "k" : "uom", "v" : "cm" } ] }
-{ "_id" : 3, "item" : "XYZ1", "dimensions" : [ { "k" : "l", "v" : 70 }, { "k" : "w", "v" : 75 }, { "k" : "uom", "v" : "cm" } ] }
+{ "_id" : 1, "item" : "ABC1", "instock" : { "warehouse1" : 2500, "warehouse2" : 500, "total" : 3000 } }
+{ "_id" : 2, "item" : "ABC2", "instock" : { "warehouse2" : 500, "warehouse3" : 200, "total" : 700 } }

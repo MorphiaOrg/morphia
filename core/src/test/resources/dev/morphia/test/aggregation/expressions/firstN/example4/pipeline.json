@@ -1,16 +1,21 @@
 [
-   {
-      $group:
-      {
-         _id: {"gameId": "$gameId"},
-         gamescores:
-            {
-               $firstN:
-                  {
-                     input: "$score",
-                     n: { $cond: { if: {$eq: ["$gameId","G2"] }, then: 1, else: 3 } }
-                  }
-            }
+  {
+    $group: {
+      _id: {
+        "gameId": "$gameId"
+      },
+      gamescores: {
+        $firstN: {
+          input: "$score",
+          n: {
+            $cond: [
+              { $eq: [ "$gameId", "G2" ] },
+              1,
+              3
+            ]
+          }
+        }
       }
-   }
+    }
+  }
 ] 

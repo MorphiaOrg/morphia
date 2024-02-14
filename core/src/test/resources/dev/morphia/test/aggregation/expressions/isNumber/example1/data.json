@@ -1,6 +1,6 @@
-{ "_id" : 1, "reading" : NumberDecimal(26.0) },
-{ "_id" : 2, "reading" : NumberLong(25.0) },
-{ "_id" : 3, "reading" : NumberInt(24) },
+{ "_id" : 1, "reading" : NumberDecimal("26.0") },
+{ "_id" : 2, "reading" : NumberLong("25.0") },
+{ "_id" : 3, "reading" : NumberInt("24") },
 { "_id" : 4, "reading" : 24.0 },
 { "_id" : 5, "reading" : "24" },
-{ "_id" : 6, "reading" : [ NumberDecimal(26) ]}
+{ "_id" : 6, "reading" : [ NumberDecimal("26") ]}

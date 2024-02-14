@@ -1,6 +1,6 @@
-{ "_id" : 1, "cpLocation" : "0" }
-{ "_id" : 2, "cpLocation" : "3" }
-{ "_id" : 3, "cpLocation" : "4" }
-{ "_id" : 4, "cpLocation" : "-1" }
+{ "_id" : 1, "cpLocation" : 0 }
+{ "_id" : 2, "cpLocation" : 3 }
+{ "_id" : 3, "cpLocation" : 4 }
+{ "_id" : 4, "cpLocation" : -1 }
 { "_id" : 5, "cpLocation" : null }
 { "_id" : 6, "cpLocation" : null }

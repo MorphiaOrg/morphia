@@ -1,14 +1,14 @@
  [
    { $project:
-      { items: 
+      { items:
           { $cond:
-            {
-              if: { $and: [ { $isArray: "$instock" },
-                            { $isArray: "$ordered" } 
+            [
+              { $and: [ { $isArray: [ "$instock" ] },
+                        { $isArray: [ "$ordered" ] }
                           ] },
-              then: { $concatArrays: [ "$instock", "$ordered" ] },
-              else: "One or more fields is not an array."
-            }
+              { $concatArrays: [ "$instock", "$ordered" ] },
+              "One or more fields is not an array."
+            ]
           }
       }
    }

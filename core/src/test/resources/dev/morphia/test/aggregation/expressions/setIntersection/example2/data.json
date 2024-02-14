@@ -1,9 +1,4 @@
-{ "_id" : 1, "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid" ] },
-{ "_id" : 2, "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "orchid", "rose", "orchid" ] },
-{ "_id" : 3, "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "rose", "orchid", "jasmine" ] },
-{ "_id" : 4, "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ "jasmine", "rose" ] },
-{ "_id" : 5, "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ ] },
-{ "_id" : 6, "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ [ "rose" ], [ "orchid" ] ] },
-{ "_id" : 7, "flowerFieldA" : [ "rose", "orchid" ], "flowerFieldB" : [ [ "rose", "orchid" ] ] },
-{ "_id" : 8, "flowerFieldA" : [ ], "flowerFieldB" : [ ] },
-{ "_id" : 9, "flowerFieldA" : [ ], "flowerFieldB" : [ "rose" ] }
+db.createRole( { role: "Marketing", roles: [], privileges: [] } )
+db.createRole( { role: "Sales", roles: [], privileges: [] } )
+db.createRole( { role: "Development", roles: [], privileges: [] } )
+db.createRole( { role: "Operations", roles: [], privileges: [] } )
