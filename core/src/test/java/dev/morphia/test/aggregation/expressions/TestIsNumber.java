@@ -21,7 +21,7 @@ public class TestIsNumber extends AggregationTest {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
                         .field("isNumber", isNumber("$reading"))
-                        .field("type", type("$reading"))));
+                        .field("hasType", type("$reading"))));
     }
 
     @Test

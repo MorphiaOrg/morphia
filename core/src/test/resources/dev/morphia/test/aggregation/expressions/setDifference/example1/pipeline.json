@@ -1,3 +1,15 @@
-   [
-     { $project: { flowerFieldA: 1, flowerFieldB: 1, inBOnly: { $setDifference: [ "$flowerFieldB", "$flowerFieldA" ] }, _id: 0 } }
-   ]
+[
+  {
+    $project: {
+      _id: 0,
+      flowerFieldA: 1,
+      flowerFieldB: 1,
+      inBOnly: {
+        $setDifference: [
+          "$flowerFieldB",
+          "$flowerFieldA"
+        ]
+      }
+    }
+  }
+]

@@ -8,7 +8,7 @@
                $minN:
                   {
                      input: ["$score","$playerId"],
-                     n: { $cond: { if: {$eq: ["$gameId","G2"] }, then: 1, else: 3 } }
+                     n: { $cond: [ {$eq: ["$gameId","G2"] }, 1, 3 ] }
                   }
             }
       }

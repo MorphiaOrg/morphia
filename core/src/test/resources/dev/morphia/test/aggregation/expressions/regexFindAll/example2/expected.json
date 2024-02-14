@@ -1,4 +1,4 @@
-{ "_id" : 1, "comment" : "Hi, I'm just reading about MongoDB -- aunt.arc.tica@example.com", "email" : [ { "match" : "aunt.arc.tica@example.com", "idx" : 38, "captures" : [ ] } ] }
+{ "_id" : 1, "comment" : "Hi, I'm just reading about MongoDB -- aunt.arc.tica@example.com", "email" : [ "aunt.arc.tica@example.com" ] }
 { "_id" : 2, "comment" : "I wanted to concatenate a string", "email" : [ ] }
-{ "_id" : 3, "comment" : "How do I convert a date to string? Contact me at either cam@mongodb.com or c.dia@mongodb.com", "email" : [ { "match" : "cam@mongodb.com", "idx" : 56, "captures" : [ ] }, { "match" : "c.dia@mongodb.com", "idx" : 75, "captures" : [ ] } ] }
-{ "_id" : 4, "comment" : "It's just me. I'm testing.  fred@MongoDB.com", "email" : [ { "match" : "fred@MongoDB.com", "idx" : 28, "captures" : [ ] } ] }
+{ "_id" : 3, "comment" : "How do I convert a date to string? Contact me at either cam@mongodb.com or c.dia@mongodb.com", "email" : [ "cam@mongodb.com", "c.dia@mongodb.com" ] }
+{ "_id" : 4, "comment" : "It's just me. I'm testing.  fred@MongoDB.com", "email" : [ "fred@MongoDB.com" ] }

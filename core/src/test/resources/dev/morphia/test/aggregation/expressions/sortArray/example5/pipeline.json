@@ -8,8 +8,8 @@
                $sortArray: 
                   {
                      input: [ 20, 4, { a: "Free" }, 6, 21, 5, "Gratis", 
-                             { a: null }, { a: { sale: true, price: 19 } },
-                             Decimal128( "10.23" ), { a: "On sale" } ],
+                            { a: null }, { a: { sale: true, price: 19 } },
+                            NumberDecimal("10.23"), { a: "On sale" } ],
                      sortBy: 1 
                   }
             }

@@ -13,7 +13,7 @@ import static dev.morphia.query.Sort.descending;
 
 public class TestRank extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$state")
@@ -23,7 +23,7 @@ public class TestRank extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$state")
@@ -33,7 +33,7 @@ public class TestRank extends AggregationTest {
     }
 
     @Test
-    public void testExample4() {
+    public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$state")

@@ -61,7 +61,7 @@ public class TestLastN extends AggregationTest {
     }
 
     @Test
-    public void testExample6() {
+    public void testExample5() {
         //  needs db.aggregate() support
     }
 

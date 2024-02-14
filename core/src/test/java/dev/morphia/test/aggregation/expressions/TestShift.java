@@ -12,7 +12,7 @@ import static dev.morphia.query.Sort.descending;
 
 public class TestShift extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$state")
@@ -22,7 +22,7 @@ public class TestShift extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$state")

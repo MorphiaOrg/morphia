@@ -1,7 +1,10 @@
 package dev.morphia.test.aggregation.expressions;
 
+import java.math.BigDecimal;
+
 import dev.morphia.test.aggregation.AggregationTest;
 
+import org.bson.types.Decimal128;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
@@ -15,7 +18,7 @@ import static dev.morphia.test.ServerVersion.v52;
 
 public class TestSortArray extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(v52, (aggregation) -> aggregation
                 .pipeline(project()
                         .suppressId()
@@ -24,7 +27,7 @@ public class TestSortArray extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(v52, (aggregation) -> {
             return aggregation
                     .project(project()
@@ -35,7 +38,7 @@ public class TestSortArray extends AggregationTest {
     }
 
     @Test
-    public void testExample4() {
+    public void testExample3() {
         testPipeline(v52, (aggregation) -> aggregation.pipeline(
                 project()
                         .suppressId()
@@ -46,7 +49,7 @@ public class TestSortArray extends AggregationTest {
     }
 
     @Test
-    public void testExample5() {
+    public void testExample4() {
         testPipeline(v52, (aggregation) -> {
             return aggregation
                     .project(project()
@@ -58,7 +61,7 @@ public class TestSortArray extends AggregationTest {
     }
 
     @Test
-    public void testExample6() {
+    public void testExample5() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 project()
                         .suppressId()
@@ -68,7 +71,7 @@ public class TestSortArray extends AggregationTest {
                                         6, 21, 5, "Gratis",
                                         document("a", null),
                                         document("a", document("sale", true).field("price", 19)),
-                                        10.23,
+                                        new Decimal128(BigDecimal.valueOf(10.23)),
                                         document("a", "On sale")),
                                 naturalAscending()))));
 

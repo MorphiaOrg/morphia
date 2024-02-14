@@ -7,7 +7,7 @@
             shiftQuantityForState: {
                $shift: {
                   output: "$quantity",
-                  by: -1,
+                  by: 1,
                   default: "Not available"
                }
             }

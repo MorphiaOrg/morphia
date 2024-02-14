@@ -2,10 +2,10 @@
   {
     $addFields: {
       "points" : {
-        $cond : {
-          if : { $isNumber : "$grade" },
-          then: "$grade" ,
-          else: {
+        $cond : [
+          { $isNumber : "$grade" },
+          "$grade" ,
+          {
             $switch : {
               branches: [
                 { case: {$eq : ["$grade" , "A"]}, then : 4.0 },
@@ -16,7 +16,7 @@
               ]
             }
           }
-        }
+        ]
       }
     }
   },
