@@ -1,13 +1,14 @@
-zipConversionStage = {
-   $addFields: {
-      convertedZipCode: { $toString: "$zipcode" }
-   }
-};
-
-sortStage = {
-   $sort: { "convertedZipCode": 1 }
-};
-db.orders.aggregate( [
-  zipConversionStage,
-  sortStage
-] 
+[
+  {
+    $addFields: {
+      convertedZipCode: {
+        $toString: "$zipcode"
+      }
+    }
+  },
+  {
+    $sort: {
+      "convertedZipCode": 1
+    }
+  }
+]

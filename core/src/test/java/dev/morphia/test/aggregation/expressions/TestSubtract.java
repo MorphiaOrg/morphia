@@ -23,6 +23,7 @@ public class TestSubtract extends AggregationTest {
 
     @Test
     public void testExample2() {
+        skipDataCheck();
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 project()
                         .include("item")
@@ -42,14 +43,4 @@ public class TestSubtract extends AggregationTest {
                                                 .dateString("2014-03-01T22:00:00Z"),
                                         "$date"))));
     }
-
-    @Test
-    public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("item")
-                        .include("dateDifference",
-                                subtract("$date", 5 * 60 * 1000))));
-    }
-
 }

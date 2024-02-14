@@ -19,7 +19,7 @@ import static dev.morphia.test.ServerVersion.v52;
 
 public class TestTopN extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 match(eq("gameId", "G1")),
                 group(id("$gameId"))
@@ -28,7 +28,7 @@ public class TestTopN extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> {
             return aggregation
                     .group(group(id("$gameId"))
@@ -40,7 +40,7 @@ public class TestTopN extends AggregationTest {
     }
 
     @Test
-    public void testExample4() {
+    public void testExample3() {
         testPipeline(v52, false, false, (aggregation) -> {
             return aggregation
                     .group(group(id(document("gameId", "$gameId")))

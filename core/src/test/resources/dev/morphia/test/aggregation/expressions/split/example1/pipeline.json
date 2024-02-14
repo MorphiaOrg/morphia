@@ -1,7 +1,7 @@
 [
   { $project : { city_state : { $split: ["$city", ", "] }, qty : 1 } },
   { $unwind : "$city_state" },
-  { $match : { city_state : /[A-Z]{2}/ } },
+  { $match : { city_state : { "$regex": "[A-Z]{2}" } } },
   { $group : { _id: { "state" : "$city_state" }, total_qty : { "$sum" : "$qty" } } },
   { $sort : { total_qty : -1 } }
 ]
