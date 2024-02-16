@@ -1,7 +1,7 @@
  [
    {
       $lookup: {
-         from: "places",
+         from: "aggtest",
          as: "joinedField",
          let: { pt: "$location" },
          pipeline: [

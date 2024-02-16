@@ -1,13 +1,20 @@
-[ 
+ [
    {
-     $geoNear: {
-        near: { type: "Point", coordinates: [ -73.99279 , 40.719296 ] },
-        distanceField: "dist.calculated",
-       spherical: true,
-       maxDistance: 2,
-        query: { category: "Parks" },
-        includeLocs: "dist.location",
-        spherical: true
-     }
+      $lookup: {
+         from: "aggtest",
+         as: "joinedField",
+         let: { pt: "$location" },
+         pipeline: [
+            {
+               $geoNear: {
+                  near: "$$pt",
+                  distanceField: "distance"
+               }
+            }
+         ]
+      }
+   },
+   { 
+      $match: { name: "Sara D. Roosevelt Park" }
    }
-]
+] 

@@ -1,12 +1,16 @@
 [
    {
-     $geoNear: {
-        near: { type: "Point", coordinates: [ -73.99279 , 40.719296 ] },
-        distanceField: "dist.calculated",
-       spherical: true,
-       maxDistance: 2,
-       query: { category: "Parks" },
-       includeLocs: "dist.location"
-     }
+      "$geoNear":
+      {
+         "near":"$$pt",
+         "distanceField":"distance",
+         "maxDistance":2,
+         "query":{"category":"Parks"},
+         "includeLocs":"dist.location",
+         "spherical":true
+      }
    }
-]
+],
+{
+   "let":{ "pt": [ -73.99279, 40.719296 ] }
+}

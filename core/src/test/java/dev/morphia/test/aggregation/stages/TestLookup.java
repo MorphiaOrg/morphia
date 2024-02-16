@@ -30,7 +30,7 @@ import static org.testng.Assert.assertEquals;
 public class TestLookup extends AggregationTest {
     @Test
     public void testExample1() {
-        loadData("inventory", "data2.json");
+        loadData("inventory");
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 lookup("inventory")
                         .localField("item")
@@ -40,7 +40,7 @@ public class TestLookup extends AggregationTest {
 
     @Test
     public void testExample2() {
-        loadData("members", "data2.json");
+        loadData("members");
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 lookup("members")
                         .localField("enrollmentlist")
@@ -64,7 +64,7 @@ public class TestLookup extends AggregationTest {
 
     @Test
     public void testExample4() {
-        loadData("warehouses", "data2.json");
+        loadData("warehouses");
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 lookup("warehouses")
                         .pipeline(
@@ -82,7 +82,7 @@ public class TestLookup extends AggregationTest {
 
     @Test
     public void testExample5() {
-        loadData("holidays", "data2.json");
+        loadData("holidays");
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 lookup("holidays")
                         .pipeline(
@@ -98,7 +98,7 @@ public class TestLookup extends AggregationTest {
 
     @Test
     public void testExample6() {
-        loadData("restaurants", "data2.json");
+        loadData("restaurants");
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 lookup("restaurants")
                         .localField("restaurant_name")

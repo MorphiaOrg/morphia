@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.NonNull;
 
 import dev.morphia.aggregation.Aggregation;
@@ -86,7 +87,8 @@ public abstract class TemplatedTestBase extends TestBase {
         checkMinServerVersion(serverVersion);
         checkMinDriverVersion(minDriver);
         var resourceName = discoverResourceName(new Exception().getStackTrace());
-        loadData(AGG_TEST_COLLECTION, "data.json");
+        loadData(AGG_TEST_COLLECTION);
+        loadIndex(AGG_TEST_COLLECTION);
 
         List<Document> actual = runPipeline(resourceName, pipeline.apply(getDs().aggregate(AGG_TEST_COLLECTION)));
 
@@ -114,7 +116,7 @@ public abstract class TemplatedTestBase extends TestBase {
     public <D> void testQuery(MorphiaQuery<D> query, FindOptions options, boolean orderMatters) {
         var resourceName = discoverResourceName(new Exception().getStackTrace());
 
-        loadData(getDs().getCollection(query.getEntityClass()).getNamespace().getCollectionName(), "data.json");
+        loadData(getDs().getCollection(query.getEntityClass()).getNamespace().getCollectionName());
 
         List<D> actual = runQuery(resourceName, query, options);
 
@@ -127,15 +129,24 @@ public abstract class TemplatedTestBase extends TestBase {
         }
     }
 
-    protected void loadData(String collection, String fileName) {
+    protected void loadData(String collection) {
         if (!skipDataCheck) {
             var resourceName = discoverResourceName(new Exception().getStackTrace());
-            insert(collection, loadJson(format("%s/%s/%s", prefix(), resourceName, fileName)));
+            insert(collection, loadJson(format("%s/%s/data.json", prefix(), resourceName), "data", true));
         }
     }
 
+    protected void loadIndex(String collectionName) {
+        var resourceName = discoverResourceName(new Exception().getStackTrace());
+        MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
+        List<Document> documents = loadJson("%s/%s/index.json".formatted(prefix(), resourceName), "index", false);
+        documents.forEach(document -> {
+            collection.createIndex(document);
+        });
+    }
+
     protected @NotNull List<Document> loadExpected(String resourceName) {
-        return loadJson(format("%s/%s/expected.json", prefix(), resourceName));
+        return loadJson("%s/%s/expected.json".formatted(prefix(), resourceName), "expected", true);
     }
 
     protected @NotNull <T> List<T> loadExpected(Class<T> type, String resourceName) {
@@ -143,23 +154,27 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     @NotNull
-    protected List<Document> loadJson(String name) {
+    protected List<Document> loadJson(String name, String type, boolean failOnMissing) {
         List<Document> data = new ArrayList<>();
         InputStream stream = getClass().getResourceAsStream(name);
         if (stream == null) {
-            fail(format("missing data file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'), name));
-        }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-            while (reader.ready()) {
-                String json = reader.readLine();
-                try {
-                    data.add(Document.parse(json));
-                } catch (JsonParseException e) {
-                    throw new JsonParseException(e.getMessage() + "\n" + json, e);
-                }
+            if (failOnMissing) {
+                fail(format("missing " + type + " file: src/test/resources/%s/%s",
+                        getClass().getPackageName().replace('.', '/'), name));
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
+        } else {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+                while (reader.ready()) {
+                    String json = reader.readLine();
+                    try {
+                        data.add(Document.parse(json));
+                    } catch (JsonParseException e) {
+                        throw new JsonParseException(e.getMessage() + "\n" + json, e);
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
         }
         return data;
     }

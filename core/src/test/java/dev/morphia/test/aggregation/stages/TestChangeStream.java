@@ -32,7 +32,7 @@ public class TestChangeStream extends AggregationTest {
         checkMinDriverVersion(v47);
         checkForReplicaSet();
 
-        Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream")).iterator();
+        Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream"), "data", true).iterator();
         MongoCollection<Document> collection = getDatabase().getCollection(AGG_TEST_COLLECTION);
 
         try (MorphiaCursor<Document> cursor = getDs().aggregate(AGG_TEST_COLLECTION)

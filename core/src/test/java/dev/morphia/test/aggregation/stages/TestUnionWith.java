@@ -15,9 +15,9 @@ import static dev.morphia.aggregation.stages.UnionWith.unionWith;
 public class TestUnionWith extends AggregationTest {
     @Test
     public void testExample1() {
-        loadData("sales_2018", "data2.json");
-        loadData("sales_2019", "data3.json");
-        loadData("sales_2020", "data4.json");
+        loadData("sales_2018");
+        loadData("sales_2019");
+        loadData("sales_2020");
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 set().field("_id", "2017"),
                 unionWith("sales_2018",
@@ -31,9 +31,9 @@ public class TestUnionWith extends AggregationTest {
 
     @Test
     public void testExample2() {
-        loadData("sales_2018", "data2.json");
-        loadData("sales_2019", "data3.json");
-        loadData("sales_2020", "data4.json");
+        loadData("sales_2018");
+        loadData("sales_2019");
+        loadData("sales_2020");
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 unionWith("sales_2018"),
                 unionWith("sales_2019"),

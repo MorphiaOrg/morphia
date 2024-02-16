@@ -107,10 +107,17 @@ class CodeBlock {
         val sanitized = mutableListOf<String>()
         while (iterator.hasNext()) {
             var line = iterator.next()
-            if (line.contains(".insertMany") || line.contains("insertOne")) {
+            if (
+                line.contains(".insertMany") ||
+                    line.contains("insertOne") ||
+                    line.contains("createIndex")
+            ) {
                 line = line.substringAfterLast("(")
                 if (line.isBlank()) {
                     line = iterator.next()
+                }
+                if (line.endsWith(")")) {
+                    line = line.dropLast(1)
                 }
             }
             while (line.trim() in listOf("[", "]", "(", ")", "])", "] )")) {

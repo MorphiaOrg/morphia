@@ -1,2 +1,2 @@
-{ name: 'Sara D. Roosevelt Park', location: { type: 'Point', coordinates: [ -73.9928, 40.7193 ] }, category: 'Parks', distance: 1.4957325341976439e-7, dist: { location: { type: 'Point', coordinates: [ -73.9928, 40.7193 ] } }},
-{ name: 'Central Park', location: { type: 'Point', coordinates: [ -73.97, 40.77 ] }, category: 'Parks', distance: 0.0009348548688841822, dist: { location: { type: 'Point', coordinates: [ -73.97, 40.77 ] } }}
+{ "_id" : 2, "name" : "Sara D. Roosevelt Park", "location" : { "type" : "Point", "coordinates" : [ -73.9928, 40.7193 ] }, "category" : "Parks", "dist" : { "calculated" : 974.175764916902 }}
+{ "_id" : 1, "name" : "Central Park", "location" : { "type" : "Point", "coordinates" : [ -73.97, 40.77 ] }, "legacy" : [ -73.97, 40.77 ], "category" : "Parks", "dist" : { "calculated" : 5887.927929580962 }}

@@ -38,6 +38,7 @@
 | http://docs.mongodb.org/manual/reference/operator/aggregation/geoNear[$geoNear]
 a| 
 
+ * link:javadoc/dev/morphia/aggregation/stages/GeoNear.html#geoNear(java.lang.String)[GeoNear#geoNear(String)]
  * link:javadoc/dev/morphia/aggregation/stages/GeoNear.html#geoNear(com.mongodb.client.model.geojson.Point)[GeoNear#geoNear(Point)]
  * link:javadoc/dev/morphia/aggregation/stages/GeoNear.html#geoNear(double)[GeoNear#geoNear(double)]
 

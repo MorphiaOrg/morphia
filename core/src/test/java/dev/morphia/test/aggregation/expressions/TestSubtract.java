@@ -5,7 +5,6 @@ import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.DateExpressions.dateFromString;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.expressions.MathExpressions.subtract;
 import static dev.morphia.aggregation.stages.Projection.project;
@@ -38,9 +37,6 @@ public class TestSubtract extends AggregationTest {
                 project()
                         .include("item")
                         .include("dateDifference",
-                                subtract(
-                                        dateFromString()
-                                                .dateString("2014-03-01T22:00:00Z"),
-                                        "$date"))));
+                                subtract("$date", 5 * 60 * 1000))));
     }
 }

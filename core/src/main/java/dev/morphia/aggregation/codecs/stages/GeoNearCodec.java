@@ -26,6 +26,7 @@ public class GeoNearCodec extends StageCodec<GeoNear> {
     protected void encodeStage(BsonWriter writer, GeoNear value, EncoderContext encoderContext) {
         document(writer, () -> {
             CodecRegistry registry = getDatastore().getCodecRegistry();
+            value(registry, writer, "near", value.getVariable(), encoderContext);
             value(registry, writer, "near", value.getPoint(), encoderContext);
             value(registry, writer, "near", value.getCoordinates(), encoderContext);
             value(writer, "key", value.getKey());

@@ -12,7 +12,12 @@ import dev.morphia.query.filters.Filter;
  * @aggregation.stage $geoNear
  */
 public class GeoNear extends Stage {
+    @Nullable
+    private String variable;
+
+    @Nullable
     private Point point;
+    @Nullable
     private double[] coordinates;
     private String distanceField;
     private Boolean spherical;
@@ -22,6 +27,21 @@ public class GeoNear extends Stage {
     private String includeLocs;
     private Number minDistance;
     private String key;
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected GeoNear() {
+        super("$geoNear");
+    }
+
+    @MorphiaInternal
+    protected GeoNear(String variable) {
+        this();
+        this.variable = variable;
+    }
 
     /**
      * @param point the point
@@ -35,15 +55,6 @@ public class GeoNear extends Stage {
     }
 
     /**
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    protected GeoNear() {
-        super("$geoNear");
-    }
-
-    /**
      * @param coordinates the coordinates
      * @hidden
      * @morphia.internal
@@ -52,6 +63,18 @@ public class GeoNear extends Stage {
     protected GeoNear(double[] coordinates) {
         this();
         this.coordinates = coordinates;
+    }
+
+    /**
+     * Creates a new geoNear stage
+     *
+     * @param variable the variable to use as a reference
+     * @return the new stage
+     * @since 3.0
+     * @aggregation.stage $geoNear
+     */
+    public static GeoNear geoNear(String variable) {
+        return new GeoNear(variable);
     }
 
     /**
@@ -106,6 +129,7 @@ public class GeoNear extends Stage {
      * @hidden
      * @morphia.internal
      */
+    @Nullable
     @MorphiaInternal
     public double[] getCoordinates() {
         return coordinates;
@@ -187,6 +211,7 @@ public class GeoNear extends Stage {
      * @hidden
      * @morphia.internal
      */
+    @Nullable
     @MorphiaInternal
     public Point getPoint() {
         return point;
@@ -200,6 +225,12 @@ public class GeoNear extends Stage {
     @MorphiaInternal
     public Boolean getSpherical() {
         return spherical;
+    }
+
+    @Nullable
+    @MorphiaInternal
+    public String getVariable() {
+        return variable;
     }
 
     /**
