@@ -118,6 +118,8 @@ class CodeBlock {
                 }
                 if (line.endsWith(")")) {
                     line = line.dropLast(1)
+                } else if (line.endsWith(");")) {
+                    line = line.dropLast(2)
                 }
             }
             while (line.trim() in listOf("[", "]", "(", ")", "])", "] )")) {

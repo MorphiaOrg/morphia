@@ -1,7 +1,4 @@
-{ "_id" : 1, "name" : "Aunt Arc Tikka", "details" : "+672-19-9999" }
-{ "_id" : 1, "name" : "Aunt Arc Tikka", "details" : "aunt.arc.tica@example.com" }
-{ "_id" : 2, "name" : "Belle Gium", "details" : "+32-2-111-11-11" }
-{ "_id" : 2, "name" : "Belle Gium", "details" : "belle.gium@example.com" }
-{ "_id" : 3, "name" : "Cam Bo Dia", "details" : "+855-012-000-0000" }
-{ "_id" : 3, "name" : "Cam Bo Dia", "details" : "cam.bo.dia@example.com" }
-{ "_id" : 4, "name" : "Fred", "details" : "+1-111-222-3333" }
+{ "_id" : 1, "name" : "Aunt Arc Tikka", "details" : { "phone" : "+672-19-9999", "email" : "aunt.arc.tica@example.com" } }
+{ "_id" : 2, "name" : "Belle Gium", "details" : { "phone" : "+32-2-111-11-11", "email" : "belle.gium@example.com" } }
+{ "_id" : 3, "name" : "Cam Bo Dia", "details" : { "phone" : "+855-012-000-0000", "email" : "cam.bo.dia@example.com" } }
+{ "_id" : 4, "name" : "Fred", "details" : { "phone" : "+1-111-222-3333" } }

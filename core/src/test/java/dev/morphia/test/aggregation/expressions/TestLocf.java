@@ -14,7 +14,7 @@ import static dev.morphia.test.ServerVersion.v52;
 
 public class TestLocf extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(v52, true, false, (aggregation) -> aggregation
                 .pipeline(setWindowFields()
                         .sortBy(ascending("time"))
@@ -23,7 +23,7 @@ public class TestLocf extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(ServerVersion.v52, true, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .sortBy(ascending("time"))
