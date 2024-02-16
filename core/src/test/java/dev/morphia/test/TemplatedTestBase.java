@@ -136,6 +136,13 @@ public abstract class TemplatedTestBase extends TestBase {
         }
     }
 
+    protected void loadData(String collection, int index) {
+        if (!skipDataCheck) {
+            var resourceName = discoverResourceName(new Exception().getStackTrace());
+            insert(collection, loadJson(format("%s/%s/data%d.json", prefix(), resourceName, index), "data", true));
+        }
+    }
+
     protected void loadIndex(String collectionName) {
         var resourceName = discoverResourceName(new Exception().getStackTrace());
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);

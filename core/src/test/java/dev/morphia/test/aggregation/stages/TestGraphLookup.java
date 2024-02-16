@@ -23,7 +23,7 @@ public class TestGraphLookup extends AggregationTest {
 
     @Test
     public void testExample2() {
-        loadData("airports");
+        loadData("airports", 2);
 
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 graphLookup("airports")
