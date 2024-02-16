@@ -2,12 +2,12 @@
    {
       $setWindowFields: {
          partitionBy: "$state",
-         sortBy: { orderDate: 1 },
+         sortBy: { price: 1 },
          output: {
-            cumulativeQuantityForState: {
+            quantityFromSimilarOrders: {
                $sum: "$quantity",
                window: {
-                  documents: [ "unbounded", "current" ]
+                  range: [ -10, 10 ]
                }
             }
          }

@@ -1,0 +1,4 @@
+{ "_id" : 11, employee: "Wren", dept: "Z", salary: 100000, fiscal_year: 2019 },
+{ "_id" : 12, employee: "Zebra", dept: "A", salary: 150000, fiscal_year: 2019 },
+{ "_id" : 13, employee: "headcount1", dept: "Z", salary: 120000, fiscal_year: 2020 },
+{ "_id" : 14, employee: "headcount2", dept: "Z", salary: 120000, fiscal_year: 2020 }

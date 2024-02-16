@@ -1,0 +1,4 @@
+{ "_id" : { "min" : NumberDecimal("76.04"), "max" : NumberDecimal("159.00") }, "count" : 2}
+{ "_id" : { "min" : NumberDecimal("159.00"), "max" : NumberDecimal("199.99") }, "count" : 2}
+{ "_id" : { "min" : NumberDecimal("199.99"), "max" : NumberDecimal("385.00") }, "count" : 2}
+{ "_id" : { "min" : NumberDecimal("385.00"), "max" : NumberDecimal("483.00") }, "count" : 2}

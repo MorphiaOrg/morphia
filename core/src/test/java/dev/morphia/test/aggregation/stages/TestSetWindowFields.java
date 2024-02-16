@@ -14,7 +14,7 @@ import static dev.morphia.query.Sort.ascending;
 
 public class TestSetWindowFields extends AggregationTest {
     @Test
-    public void testExample2() {
+    public void testExample1() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$state")
@@ -26,7 +26,7 @@ public class TestSetWindowFields extends AggregationTest {
     }
 
     @Test
-    public void testExample3() {
+    public void testExample2() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$state")
@@ -38,7 +38,7 @@ public class TestSetWindowFields extends AggregationTest {
     }
 
     @Test
-    public void testExample4() {
+    public void testExample3() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 setWindowFields()
                         .partitionBy("$state")

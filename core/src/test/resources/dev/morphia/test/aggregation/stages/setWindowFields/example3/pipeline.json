@@ -2,12 +2,13 @@
    {
       $setWindowFields: {
          partitionBy: "$state",
-         sortBy: { price: 1 },
+         sortBy: { orderDate: 1 },
          output: {
-            quantityFromSimilarOrders: {
-               $sum: "$quantity",
+            recentOrders: {
+               $push: "$orderDate",
                window: {
-                  range: [ -10, 10 ]
+                  range: [ "unbounded", 10 ],
+                  unit: "month"
                }
             }
          }

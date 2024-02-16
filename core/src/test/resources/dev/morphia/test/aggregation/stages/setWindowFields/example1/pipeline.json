@@ -4,11 +4,10 @@
          partitionBy: "$state",
          sortBy: { orderDate: 1 },
          output: {
-            recentOrders: {
-               $push: "$orderDate",
+            cumulativeQuantityForState: {
+               $sum: "$quantity",
                window: {
-                  range: [ "unbounded", 10 ],
-                  unit: "month"
+                  documents: [ "unbounded", "current" ]
                }
             }
          }

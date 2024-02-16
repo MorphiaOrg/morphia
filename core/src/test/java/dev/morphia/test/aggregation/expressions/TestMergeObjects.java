@@ -17,6 +17,7 @@ import static dev.morphia.aggregation.stages.ReplaceRoot.replaceRoot;
 public class TestMergeObjects extends AggregationTest {
     @Test
     public void testExample1() {
+        loadData("items", 2);
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 lookup("items")
                         .foreignField("item")
