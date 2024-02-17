@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
@@ -28,7 +27,7 @@ public class TestBottom extends AggregationTest {
 
     @Test
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
+        testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 group(id("$gameId"))
                         .field("playerId",
                                 bottom(array("$playerId", "$score"),

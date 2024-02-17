@@ -1,8 +1,6 @@
- [
-   {
+{
       $lookup: {
-         from: "aggtest",
-         as: "joinedField",
+         from: "places",
          let: { pt: "$location" },
          pipeline: [
             {
@@ -11,10 +9,10 @@
                   distanceField: "distance"
                }
             }
-         ]
+         ],
+         as: "joinedField"
       }
    },
    { 
       $match: { name: "Sara D. Roosevelt Park" }
    }
-] 

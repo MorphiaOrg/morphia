@@ -17,7 +17,7 @@ class AggregationAuditTest {
 
     @Test
     fun testOperator() {
-        val name = "dateDiff"
+        val name = "geoNear"
         var operator = Operator(File("${aggRoot}/$name.txt"))
         operator.examples.forEach { it.output(File("target/testOperator-${name}/${it.name}")) }
     }

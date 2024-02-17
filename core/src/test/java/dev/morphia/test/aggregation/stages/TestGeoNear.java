@@ -34,7 +34,7 @@ public class TestGeoNear extends AggregationTest {
 
     @Test
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
+        testPipeline(ServerVersion.v60, true, true, (aggregation) -> aggregation.pipeline(
                 lookup(AGG_TEST_COLLECTION)
                         .as("joinedField")
                         .let("pt", "$location")
