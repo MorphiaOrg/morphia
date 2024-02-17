@@ -17,4 +17,11 @@ public class TestTanh extends AggregationTest {
                         .field("tanh_output", tanh(degreesToRadians("$angle")))));
     }
 
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                addFields()
+                        .field("tanh_output", tanh("$angle"))));
+    }
+
 }

@@ -18,4 +18,11 @@ public class TestSin extends AggregationTest {
                         .field("side_b", multiply(sin(degreesToRadians("$angle_a")), "$hypotenuse"))));
     }
 
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                addFields()
+                        .field("side_b", multiply(sin("$angle_a"), "$hypotenuse"))));
+    }
+
 }

@@ -17,4 +17,11 @@ public class TestSinh extends AggregationTest {
                         .field("sinh_output", sinh(degreesToRadians("$angle")))));
     }
 
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                addFields()
+                        .field("sinh_output", sinh("$angle"))));
+    }
+
 }

@@ -1,1 +1,1 @@
-{  "_id" : ObjectId("5c50782193f833234ba90d85"),  "angle_a" : NumberDecimal("53.13010235415597870314438744090659"),  "side_b" : NumberDecimal("4.000000000000000000000000000000000"),  "hypotenuse" : NumberDecimal("5"),}
+{ "_id" : ObjectId("5c50782193f833234ba90d85"), "angle_a" : NumberDecimal("53.13010235415597870314438744090659"), "side_b" : NumberDecimal("4.000000000000000000000000000000000"), "hypotenuse" : NumberDecimal("5"),}
