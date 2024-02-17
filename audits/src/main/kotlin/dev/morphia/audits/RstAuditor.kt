@@ -14,7 +14,11 @@ import org.jboss.forge.roaster.model.source.MethodSource
 import org.jboss.forge.roaster.model.source.ParameterSource
 
 object RstAuditor {
-    val auditRoot = File("target/mongodb-docs")
+    val auditRoot by lazy {
+        var gitRoot = File(".").canonicalFile
+        while (!File(gitRoot, ".git").exists()) gitRoot = gitRoot.parentFile
+        File(gitRoot, "audits/target/mongodb-docs")
+    }
     val coreTestRoot = File("../core/src/test/resources")
     val aggRoot = File(auditRoot, "source/reference/operator/aggregation")
     val includesRoot = File(auditRoot, "source")
@@ -41,13 +45,13 @@ object RstAuditor {
                 notImplemented,
                 listOf("enhancement", "aggregation")
             )
-        var mapped =
+        val mapped =
             operators
                 .map { it to methods[it.operator] }
                 .filter { it.first.versionAdded != null && !hasReleaseTag(it) }
                 .toMap()
 
-        var missingServerRelease =
+        val missingServerRelease =
             mapped
                 .map { it: Entry<Operator, List<MethodSource<*>>?> ->
                     val version = it.key.versionAdded
@@ -82,7 +86,7 @@ object RstAuditor {
     }
 
     private fun emitDocs(methods: Map<String, List<MethodSource<*>>>, type: OperatorType) {
-        var docRoot = File(DOC_ROOT, "modules/ROOT/pages/${type.docsName()}.adoc")
+        val docRoot = File(DOC_ROOT, "modules/ROOT/pages/${type.docsName()}.adoc")
         docRoot.writeText(
             """
                 [%header,cols="1,2"]
@@ -98,7 +102,7 @@ object RstAuditor {
             val methods = it.value
             val docs = docsLinks(methods)
             val operator = it.key
-            var referenceLink =
+            val referenceLink =
                 "http://docs.mongodb.org/manual/reference/operator/aggregation/${operator.substringAfter("$")}"
             docRoot.appendText("| $referenceLink[${operator}]\n")
             docRoot.appendText(docs + "\n")
@@ -134,14 +138,14 @@ object RstAuditor {
 private fun ParameterSource<*>.anchorLink(anchor: Boolean = true): String {
     val ellipsis = if (anchor) "%2E%2E%2E" else "..."
     val type = getType()
-    var name = if (anchor) type.getQualifiedName() else type.getSimpleName()
+    val name = if (anchor) type.getQualifiedName() else type.getSimpleName()
     val varargs = isVarArgs()
     val qualified = type.isQualified()
     return if (varargs) "$name${ellipsis}" else name
 }
 
 fun List<String>.sections(): Map<String, MutableList<String>> {
-    var sections = mutableMapOf<String, MutableList<String>>()
+    val sections = mutableMapOf<String, MutableList<String>>()
     var current = mutableListOf<String>()
     sections.put("main", current)
     forEach {

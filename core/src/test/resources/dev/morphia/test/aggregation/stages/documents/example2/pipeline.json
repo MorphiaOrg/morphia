@@ -1,5 +1,4 @@
-   [
-      { $match: {} },
+{ $match: {} },
       { $lookup:
          {
             localField: "zip",
@@ -16,4 +15,3 @@
               ]
          }
       }
-   ]

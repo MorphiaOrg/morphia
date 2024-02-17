@@ -1,5 +1,4 @@
-  [
-    {
+{
       $project: {
         item: 1,
         yearSubstring: { $substrBytes: [ "$quarter", 0, 2 ] },
@@ -10,4 +9,3 @@
         }
       }
     }
-  ]

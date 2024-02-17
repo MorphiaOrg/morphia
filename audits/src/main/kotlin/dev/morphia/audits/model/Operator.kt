@@ -39,7 +39,7 @@ class Operator(var source: File) {
 
     fun ignored() = File(resourceFolder, "ignored").exists()
 
-    fun output(aggOnly: Boolean = true) {
+    fun output() {
         if (!ignored()) {
             examples
                 .filter { it.actionBlock?.isPipeline() == true }

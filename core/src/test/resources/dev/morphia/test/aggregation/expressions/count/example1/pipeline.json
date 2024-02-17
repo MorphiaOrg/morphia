@@ -1,5 +1,4 @@
- [
-   {
+{
       $group: {
          _id: "$state",
          countNumberOfDocumentsForState: {
@@ -7,4 +6,3 @@
          }
       }
    }
-] 

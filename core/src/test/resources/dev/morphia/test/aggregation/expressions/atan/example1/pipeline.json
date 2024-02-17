@@ -1,5 +1,4 @@
-[
-  { 
+{ 
     $addFields : {
       "angle_a" : {
         $radiansToDegrees : {
@@ -10,4 +9,3 @@
       }
     }
   }
-]

@@ -1,9 +1,7 @@
-   [
-     {
+{
        $group:
          {
            _id: { day: { $dayOfYear: "$date"}, year: { $year: "$date" } },
            itemsSold: { $addToSet: "$item" }
          }
      }
-   ]

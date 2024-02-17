@@ -1,5 +1,4 @@
- [
-   {
+{
       $setWindowFields: {
         sortBy: { time: 1 },
         output: {
@@ -7,4 +6,3 @@
         }
       }
     }
-] 

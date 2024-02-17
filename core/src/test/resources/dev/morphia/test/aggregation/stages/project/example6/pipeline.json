@@ -1,5 +1,4 @@
-   [
-      {
+{
          $project: {
             title: 1,
             isbn: {
@@ -13,4 +12,3 @@
             copiesSold: "$copies"
          }
       }
-   ]

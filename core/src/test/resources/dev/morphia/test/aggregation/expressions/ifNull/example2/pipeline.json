@@ -1,8 +1,6 @@
-   [
-      {
+{
          $project: {
             item: 1,
             value: { $ifNull: [ "$description", "$quantity", "Unspecified" ] }
          }
       }
-   ]

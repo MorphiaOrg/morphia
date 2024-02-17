@@ -1,3 +1,1 @@
- [
-   { $project: { costsOneDollar: { $eq: [ "$price", { $literal: "$1" } ] } } }
-] 
+{ $project: { costsOneDollar: { $eq: [ "$price", { $literal: "$1" } ] } } }

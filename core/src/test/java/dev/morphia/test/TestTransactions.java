@@ -162,7 +162,7 @@ public class TestTransactions extends TemplatedTestBase {
     public void aggregation() {
         getDs().withTransaction(session -> {
             testPipeline(ServerVersion.ANY, false, false, aggregation -> {
-                loadData("aggTest2");
+                loadData("aggTest2", 2);
                 return aggregation
                         .lookup(Lookup.lookup("aggTest2")
                                 .localField("item")

@@ -1,1 +1,1 @@
-[ { $unset: "copies" } ]
+{ $unset: "copies" }

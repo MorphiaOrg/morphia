@@ -1,8 +1,6 @@
- [
-   { $replaceWith:  {
+{ $replaceWith:  {
         $setField: { 
            field: "price.usd",
            input: "$$ROOT", 
            value: "$$REMOVE" 
    } } }
-] 

@@ -1,10 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
-import java.math.BigDecimal;
-
 import dev.morphia.test.aggregation.AggregationTest;
 
-import org.bson.types.Decimal128;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
@@ -71,7 +68,7 @@ public class TestSortArray extends AggregationTest {
                                         6, 21, 5, "Gratis",
                                         document("a", null),
                                         document("a", document("sale", true).field("price", 19)),
-                                        new Decimal128(BigDecimal.valueOf(10.23)),
+                                        10.23,
                                         document("a", "On sale")),
                                 naturalAscending()))));
 

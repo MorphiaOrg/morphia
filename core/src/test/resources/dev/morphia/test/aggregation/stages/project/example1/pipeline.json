@@ -1,1 +1,1 @@
- [ { $project : { title : 1 , author : 1 } } ] 
+{ $project : { title : 1 , author : 1 } }

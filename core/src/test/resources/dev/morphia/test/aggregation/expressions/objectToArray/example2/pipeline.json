@@ -1,5 +1,3 @@
-[
-   { $project: { warehouses: { $objectToArray: "$instock" } } },
+{ $project: { warehouses: { $objectToArray: "$instock" } } },
    { $unwind: "$warehouses" },
-   { $group: { _id: "$warehouses.k", total: { $sum: "$warehouses.v" } } } 
-]
+   { $group: { _id: "$warehouses.k", total: { $sum: "$warehouses.v" } } }

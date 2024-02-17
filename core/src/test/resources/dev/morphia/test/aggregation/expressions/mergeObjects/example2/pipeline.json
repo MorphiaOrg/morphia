@@ -1,3 +1,1 @@
- [
-   { $group: { _id: "$item", mergedSales: { $mergeObjects: "$quantity" } } }
-] 
+{ $group: { _id: "$item", mergedSales: { $mergeObjects: "$quantity" } } }

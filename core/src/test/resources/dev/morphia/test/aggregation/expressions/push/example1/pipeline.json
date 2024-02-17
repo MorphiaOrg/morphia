@@ -1,5 +1,4 @@
-   [
-   { $sort: { date: 1, item: 1 } },
+{ $sort: { date: 1, item: 1 } },
    {
        $group:
          {
@@ -7,4 +6,3 @@
            itemsSold: { $push:  { item: "$item", quantity: "$quantity" } }
          }
      }
-   ]

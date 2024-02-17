@@ -1,5 +1,4 @@
-   [
-     { $sort: { item: 1, date: 1 } },
+{ $sort: { item: 1, date: 1 } },
      {
        $group:
          {
@@ -7,4 +6,3 @@
            firstSale: { $first: "$date" }
          }
      }
-   ]

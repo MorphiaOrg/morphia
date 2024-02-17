@@ -1,8 +1,6 @@
-  [
-    {
+{
       $project: {
         "name": 1,
         "menuCode": { $substrBytes: [ "$name", 0, 3 ] }
       }
     }
-  ]

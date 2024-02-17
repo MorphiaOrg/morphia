@@ -1,3 +1,1 @@
-   [
-      { $project: { itemDescription: { $concat: [ "$item", " - ", "$description" ] } } }
-   ]
+{ $project: { itemDescription: { $concat: [ "$item", " - ", "$description" ] } } }

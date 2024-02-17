@@ -1,5 +1,4 @@
- [
-   { $replaceWith: {
+{ $replaceWith: {
         $setField: {
            field: "price",
            input: "$$ROOT",
@@ -8,4 +7,3 @@
                  field: "euro",
                  input: { $getField: "price" }
    } } } } }
-] 

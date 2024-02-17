@@ -1,9 +1,7 @@
-[
-  { 
+{ 
     $addFields : {
       "y-coordinate" : {
         $acosh : "$x-coordinate"
       }
     }
   }
-]

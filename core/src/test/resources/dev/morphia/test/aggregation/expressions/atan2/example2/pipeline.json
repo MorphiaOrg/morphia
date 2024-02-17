@@ -1,9 +1,7 @@
-[
-  { 
+{ 
     $addFields : {
       "angle_a" : {
         $atan2 : [ "$side_b", "$side_a" ]
       }
     }
   }
-]

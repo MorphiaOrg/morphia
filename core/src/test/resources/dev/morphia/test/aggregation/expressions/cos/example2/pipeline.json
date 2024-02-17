@@ -1,5 +1,4 @@
-[
-  {
+{
     $addFields : {
       "side_b" : {
         $multiply : [
@@ -9,4 +8,3 @@
       }
     }
   }
-]

@@ -1,1 +1,1 @@
- [ { $project: { x: "$year", y: { $ln: "$sales"  } } } ] 
+{ $project: { x: "$year", y: { $ln: "$sales"  } } }

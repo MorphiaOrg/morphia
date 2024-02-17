@@ -1,5 +1,4 @@
- [
-   {
+{
       $setWindowFields: {
          partitionBy: "$truckID",
          sortBy: { timeStamp: 1 },
@@ -24,4 +23,3 @@
          }
       }
    }
-] 

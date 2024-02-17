@@ -1,5 +1,4 @@
- [
-   {
+{
       $lookup: {
          from: "items",
          localField: "item",    
@@ -11,4 +10,3 @@
       $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromItems", 0 ] }, "$$ROOT" ] } }
    },
    { $project: { fromItems: 0 } }
-] 

@@ -142,7 +142,7 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
             var count = 1
             var newKey = key
             while (contains(newKey)) {
-                newKey = "$key [$count++]"
+                newKey = "$key [${count++}]"
             }
 
             return super.put(newKey, value)

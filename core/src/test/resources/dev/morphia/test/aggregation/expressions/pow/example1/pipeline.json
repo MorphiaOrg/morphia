@@ -1,3 +1,1 @@
-[
-   { $project: { variance: { $pow: [ { $stdDevPop: "$scores.score" }, 2 ] } } }
-]
+{ $project: { variance: { $pow: [ { $stdDevPop: "$scores.score" }, 2 ] } } }

@@ -49,14 +49,18 @@ public abstract class TestBase extends MorphiaTestSetup {
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
     protected static final String TEST_DB_NAME = "morphia_test";
 
-    protected static File CORE_ROOT = new File(".").getAbsoluteFile();
+    public static File GIT_ROOT = new File(".").getAbsoluteFile();
+    protected static File CORE_ROOT;
 
     static {
-        while (!new File(CORE_ROOT, ".git").exists()) {
-            CORE_ROOT = CORE_ROOT.getParentFile();
+        while (!new File(GIT_ROOT, ".git").exists()) {
+            GIT_ROOT = GIT_ROOT.getParentFile();
         }
-
-        CORE_ROOT = new File(CORE_ROOT, "core");
+        try {
+            CORE_ROOT = new File(GIT_ROOT, "core").getCanonicalFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     protected DriverVersion minDriver = DriverVersion.v41;

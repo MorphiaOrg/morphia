@@ -1,9 +1,7 @@
-[
-   {
+{
      $project: {
        quizTotal: { $sum: "$quizzes"},
        labTotal: { $sum: "$labs" },
        examTotal: { $sum: [ "$final", "$midterm" ] }
      }
    }
-]

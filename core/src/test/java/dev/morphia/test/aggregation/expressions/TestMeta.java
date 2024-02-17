@@ -36,7 +36,7 @@ public class TestMeta extends AggregationTest {
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
-                match(gte("price", 10.0)),
+                match(gte("price", 10)),
                 addFields()
                         .field("idxKey", meta(INDEXKEY))));
     }

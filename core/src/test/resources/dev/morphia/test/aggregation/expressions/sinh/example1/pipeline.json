@@ -1,7 +1,5 @@
- [
-   {
+{
       $addFields : {
          "sinh_output" : { $sinh : { $degreesToRadians : "$angle" } }
       }
    }
-] 

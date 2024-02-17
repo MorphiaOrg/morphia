@@ -1,5 +1,4 @@
-   [
-     {
+{
        $project:
          {
            year: { $year: "$date" },
@@ -13,4 +12,3 @@
            dayOfWeek: { $dayOfWeek: "$date" }
          }
      }
-   ]

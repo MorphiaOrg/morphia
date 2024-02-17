@@ -1,5 +1,4 @@
- [
-   { $replaceRoot:
+{ $replaceRoot:
       { newRoot:
          { $mergeObjects: 
              [
@@ -9,4 +8,3 @@
           } 
       }
    }
-] 

@@ -1,3 +1,1 @@
- [
-   { $project: { "title": 1, "editionNumber": { $literal: 1 } } }
-] 
+{ $project: { "title": 1, "editionNumber": { $literal: 1 } } }

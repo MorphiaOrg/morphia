@@ -1,5 +1,4 @@
-   [
-      { 
+{ 
          $project: { 
             _id: 0, 
             cakes: 1, 
@@ -7,4 +6,3 @@
             sameFlavors: { $setEquals: [ "$cakes", "$cupcakes" ] } 
          } 
       }
-   ] 

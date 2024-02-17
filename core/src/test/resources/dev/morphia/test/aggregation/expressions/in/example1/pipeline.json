@@ -1,5 +1,4 @@
-[
-  {
+{
     $project: {
       "store location" : "$location",
       "has bananas" : {
@@ -7,4 +6,3 @@
       }
     }
   }
-]

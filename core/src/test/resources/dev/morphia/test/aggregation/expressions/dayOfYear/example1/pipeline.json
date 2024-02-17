@@ -1,5 +1,4 @@
-   [
-     {
+{
        $project:
          {
            year: { $year: "$date" },
@@ -14,4 +13,3 @@
            week: { $week: "$date" }
          }
      }
-   ]

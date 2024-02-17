@@ -1,5 +1,4 @@
- [
-      { $sort : { score : -1 } },
+{ $sort : { score : -1 } },
       {
          $group:
          { _id: "$gameId", playerId:
@@ -12,4 +11,3 @@
             }
          }
       }
-   ] 

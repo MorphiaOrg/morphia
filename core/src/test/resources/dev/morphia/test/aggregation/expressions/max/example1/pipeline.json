@@ -1,5 +1,4 @@
-   [
-     {
+{
        $group:
          {
            _id: "$item",
@@ -7,4 +6,3 @@
            maxQuantity: { $max: "$quantity" }
          }
      }
-   ]

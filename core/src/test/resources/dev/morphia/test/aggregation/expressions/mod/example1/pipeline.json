@@ -1,3 +1,1 @@
-   [
-     { $project: { remainder: { $mod: [ "$hours", "$tasks" ] } } }
-   ]
+{ $project: { remainder: { $mod: [ "$hours", "$tasks" ] } } }

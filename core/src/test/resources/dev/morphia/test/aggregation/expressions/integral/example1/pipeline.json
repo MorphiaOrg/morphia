@@ -1,5 +1,4 @@
- [
-   {
+{
       $setWindowFields: {
          partitionBy: "$powerMeterID",
          sortBy: { timeStamp: 1 },
@@ -17,4 +16,3 @@
          }
       }
    }
-] 

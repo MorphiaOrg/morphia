@@ -1,3 +1,1 @@
- [ 
-   { $project: { pH: { $multiply: [ -1, { $log10: "$H3O" } ] } } }
-] 
+{ $project: { pH: { $multiply: [ -1, { $log10: "$H3O" } ] } } }

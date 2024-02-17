@@ -1,5 +1,4 @@
- [
-   {
+{
       $setWindowFields: {
          partitionBy: "$state",
          sortBy: { quantity: -1 },
@@ -14,4 +13,3 @@
          }
       }
    }
-] 

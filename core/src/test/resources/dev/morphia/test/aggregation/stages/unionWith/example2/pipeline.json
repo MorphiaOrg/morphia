@@ -1,7 +1,5 @@
- [ 
-   { $unionWith: "sales_2018" }, 
+{ $unionWith: "sales_2018" }, 
    { $unionWith: "sales_2019" },
    { $unionWith: "sales_2020" },
    { $group: { _id: "$item", total: { $sum: "$quantity" } } },
    { $sort: { total: -1 } }
-] 

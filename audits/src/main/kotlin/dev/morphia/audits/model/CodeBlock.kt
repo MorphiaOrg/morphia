@@ -137,24 +137,19 @@ class CodeBlock {
     }
 
     private fun sanitizeAction(applyReplacements: Boolean): String {
-        val sanitized =
+        var sanitized =
             lines
                 .map { line -> if (applyReplacements) applyReplacements(line) else line }
+                .map { line -> line.replace(Regex("NumberDecimal\\(\"(.+)\"\\)"), "$1") }
                 .filter { it.isNotBlank() }
-                .toMutableList()
+                .joinToString("\n")
 
-        val first = sanitized.first()
-        if (first.contains("[")) {
-            sanitized[0] = first.substringAfterLast("(")
-        } else {
-            sanitized.removeFirst()
-        }
-        val last = sanitized.removeLast()
-        if (last.contains("]")) {
-            sanitized += last.substringBefore(")")
-        }
+        if (sanitized.contains(".aggregate"))
+            sanitized = sanitized.substringAfter(".aggregate").trim()
+        if (sanitized.startsWith("(")) sanitized = sanitized.drop(1).dropLast(1).trim()
+        if (sanitized.startsWith("[")) sanitized = sanitized.drop(1).dropLast(1).trim()
 
-        return sanitized.joinToString("\n")
+        return sanitized
     }
 
     private fun applyReplacements(line: String): String {

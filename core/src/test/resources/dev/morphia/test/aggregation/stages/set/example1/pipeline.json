@@ -1,5 +1,4 @@
- [
-   {
+{
      $set: {
         totalHomework: { $sum: "$homework" },
         totalQuiz: { $sum: "$quiz" }
@@ -9,4 +8,3 @@
      $set: { 
         totalScore: { $add: [ "$totalHomework", "$totalQuiz", "$extraCredit" ] } }
    }
-] 

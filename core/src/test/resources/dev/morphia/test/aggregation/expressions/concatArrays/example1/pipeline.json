@@ -1,3 +1,1 @@
-[
-   { $project: { items: { $concatArrays: [ "$instock", "$ordered" ] } } }
-]
+{ $project: { items: { $concatArrays: [ "$instock", "$ordered" ] } } }

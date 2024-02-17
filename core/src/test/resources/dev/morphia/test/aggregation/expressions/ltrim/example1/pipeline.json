@@ -1,3 +1,1 @@
-[
-   { $project: { item: 1, description: { $ltrim: { input: "$description" } } } }
-]
+{ $project: { item: 1, description: { $ltrim: { input: "$description" } } } }

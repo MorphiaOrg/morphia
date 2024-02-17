@@ -22,6 +22,7 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
 import dev.morphia.test.util.Comparanator;
 
+import org.bson.BsonInvalidOperationException;
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
 import org.bson.json.JsonParseException;
@@ -269,9 +270,17 @@ public abstract class TemplatedTestBase extends TestBase {
         List<Document> stages = new ArrayList<>();
         String current = "";
         while (json.hasNext()) {
-            while (!balanced(current += json.next())) {
+            while (current.isBlank() || !balanced(current)) {
+                var next = json.next();
+                if (!next.trim().isBlank()) {
+                    current += next;
+                }
             }
-            stages.add(Document.parse(current));
+            try {
+                stages.add(Document.parse(current));
+            } catch (BsonInvalidOperationException e) {
+                throw new BsonInvalidOperationException("Failed to parse:\n" + current, e);
+            }
             current = "";
         }
 

@@ -1,4 +1,2 @@
-   [
-      { $documents: [ { x: 10 }, { x: 2 }, { x: 5 } ] }, 
+{ $documents: [ { x: 10 }, { x: 2 }, { x: 5 } ] }, 
       { $bucketAuto: { groupBy: "$x", buckets: 4 } }
-   ]

@@ -1,5 +1,4 @@
- [
-   {
+{
       $group:
       { 
       _id: "$gameId", playerId:
@@ -12,4 +11,3 @@
          }
       }
    }
-] 

@@ -1,8 +1,6 @@
- [
-  {
+{
     $match: 
       { $expr: 
         { $gt: [ { $getField: "price.usd" }, 200 ] }
       }
    }
-] 

@@ -1,5 +1,4 @@
- [
-   {
+{
       $group: {
          _id: {
             truncatedOrderDate: {
@@ -11,4 +10,3 @@
          sumQuantity: { $sum: "$quantity" }
       }
    }
-] 

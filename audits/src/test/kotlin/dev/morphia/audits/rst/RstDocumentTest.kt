@@ -40,13 +40,11 @@ class RstDocumentTest {
             "Expected block should match"
         )
         assertEquals(
-            action.toString(),
+            action.toString().trim(),
             """
-            [
                {
-                  ${"$"}project: { delta: { ${"$"}abs: { ${"$"}subtract: [ "${"$"}startTemp", "${"$"}endTemp" ] } } }
-               }
-            ]
+                     ${"$"}project: { delta: { ${"$"}abs: { ${"$"}subtract: [ "${"$"}startTemp", "${"$"}endTemp" ] } } }
+                  }
         """
                 .trimIndent(),
             "Action block should match"
@@ -66,28 +64,26 @@ class RstDocumentTest {
 
         assertEquals(
             data.toString(),
-            "{  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),  \"x-coordinate\" : NumberDecimal(\"3\")}",
+            "{ \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"), \"x-coordinate\" : NumberDecimal(\"3\")}",
             "Data block should match"
         )
         assertEquals(
-            action.toString(),
+            action.toString().trim(),
             """
-            [
               { 
-                ${"$"}addFields : {
-                  "y-coordinate" : {
-                    ${"$"}radiansToDegrees : { ${"$"}acosh : "${"$"}x-coordinate" }
+                  ${"$"}addFields : {
+                    "y-coordinate" : {
+                      ${"$"}radiansToDegrees : { ${"$"}acosh : "${"$"}x-coordinate" }
+                    }
                   }
                 }
-              }
-            ]
         """
                 .trimIndent(),
             "Action block should match"
         )
         assertEquals(
             expected.toString(),
-            "{  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),  \"x-coordinate\" : NumberDecimal(\"3\"),  \"y-coordinate\" : " +
+            "{ \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"), \"x-coordinate\" : NumberDecimal(\"3\"), \"y-coordinate\" : " +
                 "NumberDecimal(\"100.9979734210524228844295260083432\")}",
             "Expected block should match"
         )
@@ -122,21 +118,20 @@ class RstDocumentTest {
 
         assertEquals(
             examples.size,
-            7,
+            6,
             "Should have a subsection for each tab: ${examples.map { it.name }}"
         )
-        validateExample("main", examples[0], ExampleValidator(false))
-        var name = "\$meta: \"textScore\""
+        var name = "``\$meta: \"textScore\"``"
         val validator = ExampleValidator(index = true)
-        validateExample("$name :: Aggregation", examples[1], validator)
-        validateExample("$name :: Find and Project", examples[2], validator)
+        validateExample("$name :: Aggregation", examples[0], validator)
+        validateExample("$name :: Find and Project", examples[1], validator)
 
-        name = "\$meta: \"indexKey\""
-        validateExample("$name :: Aggregation", examples[3], validator)
-        validateExample("$name :: Find and Project", examples[4], validator)
+        name = "``\$meta: \"indexKey\"``"
+        validateExample("$name :: Aggregation", examples[2], validator)
+        validateExample("$name :: Find and Project", examples[3], validator)
 
-        validateExample("$name :: Aggregation [1]", examples[5], validator)
-        validateExample("$name :: Find and Project [1]", examples[6], validator)
+        validateExample("$name :: Aggregation [1]", examples[4], validator)
+        validateExample("$name :: Find and Project [1]", examples[5], validator)
     }
 
     private fun validateExample(

@@ -1,4 +1,4 @@
- [ {
+{
    $project: {
       date: {
          $dateFromString: {
@@ -7,4 +7,4 @@
          }
       }
    }
-} ] 
+}

@@ -1,5 +1,4 @@
- [
-   {
+{
       $replaceRoot: {
          newRoot: {
             full_name: {
@@ -8,4 +7,3 @@
          }
       }
    }
-] 

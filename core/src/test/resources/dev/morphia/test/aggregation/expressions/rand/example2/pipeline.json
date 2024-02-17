@@ -1,5 +1,3 @@
-   [
-      { $match: { district: 3 } },
+{ $match: { district: 3 } },
       { $match: { $expr: { $lt: [0.5, {$rand: {} } ] } } },
       { $project: { _id: 0, name: 1, registered: 1 } }
-   ]
