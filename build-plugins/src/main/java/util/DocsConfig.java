@@ -54,13 +54,13 @@ public class DocsConfig extends AbstractMojo {
             model = pom();
             master = "master".equals(gitProperties().get("git.branch"));
 
-            Version pomVersion = Version.valueOf(model.getVersion());
+            Version pomVersion = Version.parse(model.getVersion());
             String url = model.getUrl();
 
             var updated = new LinkedHashMap<String, Object>();
             copy(updated, antora, "name");
             copy(updated, antora, "title");
-            updated.put("version", String.format("%s.%s", pomVersion.getMajorVersion(), pomVersion.getMinorVersion()));
+            updated.put("version", String.format("%s.%s", pomVersion.majorVersion(), pomVersion.minorVersion()));
             if (master) {
                 updated.put("prerelease", "-SNAPSHOT");
             }
@@ -73,7 +73,7 @@ public class DocsConfig extends AbstractMojo {
             if (master) {
                 path = "/blob/master";
             } else {
-                path = String.format("/tree/%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
+                path = String.format("/tree/%s.%s.x", pomVersion.majorVersion(), pomVersion.minorVersion());
             }
             attributes.put("srcRef", String.format("%s%s", url, path));
 
@@ -85,8 +85,8 @@ public class DocsConfig extends AbstractMojo {
     }
 
     private Object previous(Version version) {
-        Version previous = Version.forIntegers(version.getMajorVersion(), version.getMinorVersion(),
-                Math.max(version.getPatchVersion() - 1, 0));
+        Version previous = Version.of(version.majorVersion(), version.minorVersion(),
+                Math.max(version.patchVersion() - 1, 0));
         if (master) {
             previous = previous.setPreReleaseVersion("SNAPSHOT");
         }

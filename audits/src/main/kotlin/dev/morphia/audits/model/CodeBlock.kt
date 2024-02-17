@@ -146,7 +146,12 @@ class CodeBlock {
 
         if (sanitized.contains(".aggregate"))
             sanitized = sanitized.substringAfter(".aggregate").trim()
-        if (sanitized.startsWith("(")) sanitized = sanitized.drop(1).dropLast(1).trim()
+        if (sanitized.startsWith("(")) {
+            sanitized = sanitized.drop(1).trim()
+            if (sanitized.endsWith(")")) {
+                sanitized = sanitized.dropLast(1).trim()
+            }
+        }
         if (sanitized.startsWith("[")) sanitized = sanitized.drop(1).dropLast(1).trim()
 
         return sanitized
