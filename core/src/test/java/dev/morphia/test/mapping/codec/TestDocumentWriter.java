@@ -2,6 +2,7 @@ package dev.morphia.test.mapping.codec;
 
 import java.util.Map;
 
+import dev.morphia.mapping.codec.writer.DocumentState.MergingDocument;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;
@@ -16,6 +17,8 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.codecs.ExpressionHelper.array;
 import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
+import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.or;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
@@ -34,6 +37,24 @@ public class TestDocumentWriter extends TestBase {
         Document document = query.toDocument();
         assertEquals(((Map<?, ?>) document.get("field1")).size(), 2);
         assertEquals(((Map<?, ?>) document.get("field2")).size(), 2);
+    }
+
+    @Test
+    public void testOr() {
+        var query = getDs().find(User.class)
+                .disableValidation();
+
+        query.filter(or(eq("name", "A"), eq("name", "B")));
+        query.filter(or(eq("name", "C"), eq("name", "D")));
+        Document document = query.toDocument();
+        document.remove("_t");
+        Document expected = new Document("$and",
+                of(
+                        new MergingDocument("$or", of(new Document("name", "A"), new Document("name", "B"))),
+                        new MergingDocument("$or", of(new Document("name", "C"), new Document("name", "D")))));
+        System.out.println("document = " + document.toJson(JSON_WRITER_SETTINGS));
+        System.out.println("expected = " + expected.toJson(JSON_WRITER_SETTINGS));
+        assertDocumentEquals(document, expected);
     }
 
     @Test

@@ -34,6 +34,7 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.json.JsonWriterSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -50,6 +51,8 @@ import static org.testng.Assert.fail;
 public abstract class TestBase extends MorphiaTestSetup {
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
     protected static final String TEST_DB_NAME = "morphia_test";
+
+    protected static final JsonWriterSettings JSON_WRITER_SETTINGS = JsonWriterSettings.builder().indent(true).build();
 
     public TestBase() {
     }
@@ -270,14 +273,14 @@ public abstract class TestBase extends MorphiaTestSetup {
                 assertDocumentEquals(path + "." + key, actualValue, expectedValue);
             }
         } else if (expected instanceof List) {
-            List list = (List) expected;
-            List copy = new ArrayList<>((List) actual);
+            List expectedList = (List) expected;
+            List actualCopy = new ArrayList<>((List) actual);
 
             Object o;
-            for (int i = 0; i < list.size(); i++) {
-                o = list.get(i);
+            for (int i = 0; i < expectedList.size(); i++) {
+                o = expectedList.get(i);
                 boolean found = false;
-                final Iterator other = copy.iterator();
+                final Iterator other = actualCopy.iterator();
                 while (!found && other.hasNext()) {
                     try {
                         String newPath = format("%s[%d]", path, i);

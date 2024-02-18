@@ -7,11 +7,18 @@ import java.util.StringJoiner;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.Document;
 
 import static java.util.List.of;
 
-class DocumentState extends ValueState<Map<String, Object>> {
+/**
+ * @morphia.internal
+ * @hidden
+ */
+@MorphiaInternal
+public class DocumentState extends ValueState<Map<String, Object>> {
     private final List<NameState> values = new ArrayList<>();
     private Document finished;
 
@@ -71,7 +78,19 @@ class DocumentState extends ValueState<Map<String, Object>> {
         return state;
     }
 
-    private static class MergingDocument extends Document {
+    /**
+     * @morphia.internal
+     * @hidden
+     */
+    @MorphiaInternal
+    public static class MergingDocument extends Document {
+        public MergingDocument() {
+        }
+
+        public MergingDocument(String key, Object value) {
+            super(key, value);
+        }
+
         @Override
         @SuppressWarnings({ "rawtypes", "unchecked" })
         public Object put(String key, Object value) {
@@ -81,7 +100,9 @@ class DocumentState extends ValueState<Map<String, Object>> {
                     ((Document) current).putAll((Document) value);
                     return current;
                 } else if ((key.equals("$and") || key.equals("$or")) && current instanceof List && value instanceof List) {
-                    ((List) current).addAll(((List) value));
+                    var list = List.of(new MergingDocument(key, current), new MergingDocument(key, value));
+                    remove(key);
+                    put("$and", list);
                     return current;
                 }
             }

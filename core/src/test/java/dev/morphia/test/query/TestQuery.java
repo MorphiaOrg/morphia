@@ -62,7 +62,6 @@ import static dev.morphia.query.Sort.naturalDescending;
 import static dev.morphia.query.filters.Filters.and;
 import static dev.morphia.query.filters.Filters.elemMatch;
 import static dev.morphia.query.filters.Filters.eq;
-import static dev.morphia.query.filters.Filters.exists;
 import static dev.morphia.query.filters.Filters.gt;
 import static dev.morphia.query.filters.Filters.gte;
 import static dev.morphia.query.filters.Filters.in;
@@ -846,27 +845,6 @@ public class TestQuery extends TestBase {
             inputStage = (Map<String, Object>) queryPlan.get("inputStage");
         }
         assertEquals(inputStage.get("stage"), "IXSCAN");
-    }
-
-    @Test
-    public void testMultipleFilters() {
-        var newQ = getDs().find(UserInterface.class).disableValidation();
-        newQ.filter(
-                or(
-                        exists("status").not(),
-                        eq("status", 0)));
-
-        newQ
-                .filter(
-                        or(
-                                exists("belongsToContentId").not(),
-                                and(
-                                        exists("belongsToContentId"),
-                                        eq("showAtGuideLevel", Boolean.TRUE))));
-
-        assertDocumentEquals(newQ.toDocument(), Document.parse("{\"$or\": [{\"status\": {\"$exists\": false}}, {\"status\": 0}, " +
-                "{\"belongsToContentId\": {\"$exists\": false}}, {\"$and\": [{\"belongsToContentId\": {\"$exists\": true}}, " +
-                "{\"showAtGuideLevel\": true}]}]}"));
     }
 
     @Test

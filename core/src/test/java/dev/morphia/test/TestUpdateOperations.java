@@ -70,7 +70,6 @@ import dev.morphia.test.query.TestQuery.Pic;
 import org.bson.BsonTimestamp;
 import org.bson.Document;
 import org.bson.codecs.Codec;
-import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
@@ -1545,7 +1544,7 @@ public class TestUpdateOperations extends TestBase {
                 .update(params.operator);
         Document document = update.toDocument();
         Codec<Document> documentCodec = getDs().getCodecRegistry().get(Document.class);
-        var json = document.toJson(JsonWriterSettings.builder().indent(true).build(), documentCodec);
+        var json = document.toJson(JSON_WRITER_SETTINGS, documentCodec);
 
         String format = format("\"%s\"", params.mappedName);
         assertTrue(json.contains(format), format("failed to find '%s' in:%n%s", format, json));
