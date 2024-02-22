@@ -26,6 +26,7 @@ public class UnwrapFieldTest implements RewriteTest {
                     import dev.morphia.aggregation.expressions.ComparisonExpressions;
                     import static dev.morphia.aggregation.stages.Projection.project;
                     import static dev.morphia.aggregation.expressions.Expressions.field;
+                    import static dev.morphia.aggregation.expressions.Expressions.value;
                     import dev.morphia.aggregation.Aggregation;
                     
                     public class UnwrapTest {
@@ -38,34 +39,32 @@ public class UnwrapFieldTest implements RewriteTest {
                                     .suppressId()
                                     .include("item")
                                     .include("qty")
-                                    .include("qtyGte250", ComparisonExpressions.gte(field("$qty"), 250)));
+                                    .include("qtyGte250", ComparisonExpressions.gte(field("$qty"), value(250))));
                        }
                     }
                 """,
                 """
-                    package com.yourorg;
+                    package dev.morphia;
 
-                    import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
+                    import dev.morphia.aggregation.expressions.ComparisonExpressions;
                     import static dev.morphia.aggregation.stages.Projection.project;
+                    import static dev.morphia.aggregation.expressions.Expressions.field;
+                    import static dev.morphia.aggregation.expressions.Expressions.value;
                     import dev.morphia.aggregation.Aggregation;
                     
                     public class UnwrapTest {
                         public void something() {
                         }
                         
-                        public void update(Aggregation aggregation) {
-                        }
-                        
-                        public void update(Aggregation aggregation) {
+                       public void update(Aggregation<?> aggregation) {
                             aggregation.pipeline(
                                 project()
                                     .suppressId()
                                     .include("item")
                                     .include("qty")
-                                    .include("qtyGte250", gte("$qty", 250)));
+                                    .include("qtyGte250", ComparisonExpressions.gte("$qty",250)));
                        }
                     }
-                
                 """
             )
         );
