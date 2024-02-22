@@ -13,7 +13,7 @@ public class UnwrapFieldTest implements RewriteTest {
     public void defaults(RecipeSpec spec) {
         spec.recipe(new UnwrapFieldExpressions())
             .parser(JavaParser.fromJavaVersion()
-                              .classpath("morphia-core"));
+                              .classpath("morphia/core"));
     }
 
     @Test
@@ -25,24 +25,25 @@ public class UnwrapFieldTest implements RewriteTest {
 
                     import dev.morphia.aggregation.expressions.ComparisonExpressions;
                     import static dev.morphia.aggregation.stages.Projection.project;
+                    import static dev.morphia.aggregation.expressions.Expressions.field;
                     import dev.morphia.aggregation.Aggregation;
                     
                     public class UnwrapTest {
                         public void something() {
                         }
                         
-                       public void update(Aggregation aggregation) {
+                       public void update(Aggregation<?> aggregation) {
                             aggregation.pipeline(
                                 project()
                                     .suppressId()
                                     .include("item")
                                     .include("qty")
-                                    .include("qtyGte250", ComparisonExpressions.gte("$qty", 250)));
+                                    .include("qtyGte250", ComparisonExpressions.gte(field("$qty"), 250)));
                        }
                     }
                 """,
                 """
-                                    package com.yourorg;
+                    package com.yourorg;
 
                     import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
                     import static dev.morphia.aggregation.stages.Projection.project;
@@ -54,8 +55,8 @@ public class UnwrapFieldTest implements RewriteTest {
                         
                         public void update(Aggregation aggregation) {
                         }
-/*
-                       public void update(Aggregation aggregation) {
+                        
+                        public void update(Aggregation aggregation) {
                             aggregation.pipeline(
                                 project()
                                     .suppressId()
@@ -63,7 +64,6 @@ public class UnwrapFieldTest implements RewriteTest {
                                     .include("qty")
                                     .include("qtyGte250", gte("$qty", 250)));
                        }
-*/
                     }
                 
                 """

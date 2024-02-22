@@ -39,6 +39,7 @@
                             <extractors>
                                 <extractor>java-annotations</extractor>
                             </extractors>
+                            <goalPrefix>morphia-builds</goalPrefix>
                         </configuration>
                     </execution>
                 </executions>

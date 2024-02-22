@@ -1,0 +1,10 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: dev.morphia.UpgradetoMorphia3
+displayName: Upgrade to Morphia 3
+description: Adopt new dependencies and breaking changes in moving to Morphia 3.
+recipeList:
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: dev.morphia.aggregation.stages.Out to(..)
+      newMethodName: out
+      matchOverrides: "True"
+      ignoreDefinition: "False"

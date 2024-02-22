@@ -37,6 +37,7 @@
             <scope>compile</scope>
         </dependency>
 
+<!--
         <dependency>
             <groupId>org.openrewrite</groupId>
             <artifactId>rewrite-java-8</artifactId>
@@ -47,6 +48,7 @@
             <artifactId>rewrite-java-11</artifactId>
             <scope>runtime</scope>
         </dependency>
+-->
         <dependency>
             <groupId>org.openrewrite</groupId>
             <artifactId>rewrite-java-17</artifactId>
