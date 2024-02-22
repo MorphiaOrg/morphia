@@ -156,7 +156,10 @@ jobs:
           server-id: central
           cache: maven
       - name: Perform Upgrade and Test
-        run: .github/test-upgrade.sh
+        run: |
+          pwd
+          ls
+          sh .github/test-upgrade.sh
         working-directory: upgrade-test
 
   Release:
