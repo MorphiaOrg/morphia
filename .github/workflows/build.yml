@@ -160,7 +160,7 @@ jobs:
           pwd
           ls -a
           ls -a .github/
-          sh .github/test-upgrade.txt
+          sh .github/Upgrade.java
         working-directory: upgrade-test
 
   Release:
