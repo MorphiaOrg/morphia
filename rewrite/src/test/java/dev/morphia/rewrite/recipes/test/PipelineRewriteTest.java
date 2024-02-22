@@ -1,6 +1,7 @@
 package dev.morphia.rewrite.recipes.test;
 
 import dev.morphia.rewrite.recipes.PipelineRewrite;
+
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
 import org.testng.annotations.Test;

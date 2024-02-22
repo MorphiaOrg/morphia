@@ -122,6 +122,43 @@ jobs:
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
       optional: ${{ matrix.optional == true }}
 
+  UpgradeTests:
+    name: Upgrades
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs:
+      - Build
+    strategy:
+      fail-fast: false
+      matrix:
+        morphia-branch: [ 2.4.x, 2.3.x, 2.2.x, 2.1.x, 2.0.x ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: 'https://github.com/MorphiaOrg/morphia.git'
+          ref: ${{ morphia-branch }}
+          path: upgrade-test
+      - name: Restore cached build artifacts
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/target
+            ~/.m2/repository
+          key: cache-${{ github.run_number }}
+          restore-keys: cache-${{ github.run_number }}
+          fail-on-cache-miss: true
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+          server-id: central
+          cache: maven
+      - name: Perform Upgrade and Test
+        run: test-upgrade.sh
+        working-directory: upgrade-test
+
   Release:
     needs:
       - Matrix
