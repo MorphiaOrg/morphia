@@ -159,6 +159,7 @@ jobs:
         run: |
           pwd
           ls -a
+          ls -a .github/
           sh .github/test-upgrade.sh
         working-directory: upgrade-test
 

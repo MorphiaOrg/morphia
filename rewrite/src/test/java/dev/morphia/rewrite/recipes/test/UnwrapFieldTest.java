@@ -14,7 +14,7 @@ public class UnwrapFieldTest implements RewriteTest {
     public void defaults(RecipeSpec spec) {
         spec.recipe(new UnwrapFieldExpressions())
                 .parser(JavaParser.fromJavaVersion()
-                        .classpath("morphia/core"));
+                        .classpath("morphia/core", "morphia-core"));
     }
 
     @Test
