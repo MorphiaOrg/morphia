@@ -142,7 +142,7 @@ jobs:
           ref: ${{ matrix.morphia-branch }}
           path: upgrade-test
       - name: Restore cached build artifacts
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             **/target
