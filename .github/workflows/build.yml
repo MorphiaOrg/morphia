@@ -160,14 +160,12 @@ jobs:
           pwd
           ls ~/ #morphia/.github
           ls ../
-#          mvn install -DskipTests
           for i in *
           do
             [ -e $i/src/main/java ] && rm -rf $i/src/main/java
             [ -e $i/src/main/kotlin ] && rm -rf $i/src/main/kotlin
             [ -e $i/target/generated-sources/ ] && rm -rf $i/target/generated-sources/
           done
-#          mvn -Dmorphia.version=3.0.0-SNAPSHOT test
         working-directory: upgrade-test
 
 #  Release:
