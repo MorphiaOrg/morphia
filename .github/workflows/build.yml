@@ -160,7 +160,8 @@ jobs:
           mvn install -DskipTests
           for i in *
           do
-            [ -e $i/src/main ] && rm -vrf $i/src/main
+            [ -e $i/src/main/java ] && rm -vrf $i/src/main/java
+            [ -e $i/src/main/kotlin ] && rm -vrf $i/src/main/kotlin
           done
           mvn -Dmorphia.version=3.0.0-SNAPSHOT test
         working-directory: upgrade-test
