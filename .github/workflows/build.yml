@@ -158,7 +158,8 @@ jobs:
       - name: Perform Upgrade and Test
         run: |
           pwd
-          ls ~/morphia/.github
+          ls ~/ #morphia/.github
+          #ls ~/morphia/.github
           mvn install -DskipTests
           for i in *
           do
