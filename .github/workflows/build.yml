@@ -135,6 +135,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Checkout older version
+        uses: actions/checkout@v3
         with:
           repository: MorphiaOrg/morphia
           ref: ${{ matrix.morphia-branch }}
@@ -158,8 +160,13 @@ jobs:
       - name: Perform Upgrade and Test
         run: |
           pwd
+          echo "-----"
           ls ~/ #morphia/.github
+          echo "-----"
           ls ../
+          echo "-----"
+          ls ../*
+          echo "-----"
           for i in *
           do
             [ -e $i/src/main/java ] && rm -rf $i/src/main/java
