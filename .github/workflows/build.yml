@@ -134,9 +134,9 @@ jobs:
         morphia-branch: [ 2.4.x ] #, 2.3.x, 2.2.x, 2.1.x, 2.0.x ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Checkout older version
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: MorphiaOrg/morphia
           ref: ${{ matrix.morphia-branch }}
