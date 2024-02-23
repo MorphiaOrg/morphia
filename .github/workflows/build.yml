@@ -162,7 +162,7 @@ jobs:
           ls -a .github/
           for i in *
           do
-            [-e $i/src/main ] && rm -rf $i/src/main
+            [ -e $i/src/main ] && rm -rf $i/src/main
           done
           mvn -Dmorphia.version=3.0.0-SNAPSHOT
         working-directory: upgrade-test
