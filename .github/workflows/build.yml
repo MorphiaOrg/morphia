@@ -157,6 +157,7 @@ jobs:
           cache: maven
       - name: Perform Upgrade and Test
         run: |
+          pwd
           mvn install -DskipTests
           for i in *
           do
