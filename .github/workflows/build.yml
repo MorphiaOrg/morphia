@@ -146,7 +146,7 @@ jobs:
             **/target
             ~/.m2/repository
           key: cache-${{ github.run_number }}
-          restore-keys: cache-${{ github.run_number }}
+          restore-keys: target-cache-${{ github.run_number }}
           fail-on-cache-miss: true
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -158,6 +158,7 @@ jobs:
       - name: Perform Upgrade and Test
         run: |
           pwd
+          ls ~/morphia/.github
           mvn install -DskipTests
           for i in *
           do
