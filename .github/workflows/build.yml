@@ -157,14 +157,12 @@ jobs:
           cache: maven
       - name: Perform Upgrade and Test
         run: |
-          pwd
-          ls -a
-          ls -a .github/
+          mvn install -DskipTests
           for i in *
           do
-            [ -e $i/src/main ] && rm -rf $i/src/main
+            [ -e $i/src/main ] && rm -vrf $i/src/main
           done
-          mvn -Dmorphia.version=3.0.0-SNAPSHOT
+          mvn -Dmorphia.version=3.0.0-SNAPSHOT test
         working-directory: upgrade-test
 
   Release:
