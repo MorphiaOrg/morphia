@@ -160,11 +160,11 @@ jobs:
       - name: Perform Upgrade and Test
         run: |
           pwd
-          echo "-----"
+          echo "----- ls ~/ #morphia/.github"
           ls ~/ #morphia/.github
-          echo "-----"
-          ls ../
-          echo "-----"
+          echo "-----  ls ../.github"
+          ls ../.github
+          echo "----- ls ../*"
           ls ../*
           echo "-----"
           for i in *
