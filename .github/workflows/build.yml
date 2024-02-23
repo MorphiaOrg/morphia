@@ -139,22 +139,22 @@ jobs:
           repository: MorphiaOrg/morphia
           ref: ${{ matrix.morphia-branch }}
           path: upgrade-test
-#      - name: Restore cached build artifacts
-#        uses: actions/cache@v3
-#        with:
-#          path: |
-#            **/target
-#            ~/.m2/repository
-#          key: cache-${{ github.run_number }}
-#          restore-keys: target-cache-${{ github.run_number }}
-#          fail-on-cache-miss: true
-#      - name: Setup Java
-#        uses: actions/setup-java@v3
-#        with:
-#          java-version: 17
-#          distribution: 'zulu'
-#          server-id: central
-#          cache: maven
+      - name: Restore cached build artifacts
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/target
+            ~/.m2/repository
+          key: cache-${{ github.run_number }}
+          restore-keys: target-cache-${{ github.run_number }}
+          fail-on-cache-miss: true
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+          server-id: central
+          cache: maven
       - name: Perform Upgrade and Test
         run: |
           pwd
