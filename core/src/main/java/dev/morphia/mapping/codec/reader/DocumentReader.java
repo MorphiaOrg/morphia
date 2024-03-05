@@ -1,6 +1,8 @@
 package dev.morphia.mapping.codec.reader;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -33,7 +35,18 @@ import static java.lang.String.format;
  */
 @MorphiaInternal
 public class DocumentReader implements BsonReader {
-    private static final BsonTypeMap TYPE_MAP = new BsonTypeMap();
+    private static final BsonTypeMap TYPE_MAP = new BsonTypeMap() {
+        private final Map<Class<?>, BsonType> localMap = new HashMap<>();
+        {
+            localMap.put(BsonBinary.class, BsonType.BINARY);
+        }
+
+        @Override
+        public BsonType get(Class<?> type) {
+            BsonType bsonType = super.get(type);
+            return bsonType != null ? bsonType : localMap.get(type);
+        }
+    };
     private final ReaderState start;
     private ReaderState current;
 

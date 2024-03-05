@@ -1,15 +1,26 @@
 package dev.morphia.test.mapping.codec;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityListener;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Index;
+import dev.morphia.annotations.Indexed;
+import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Version;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.reader.NameState;
 import dev.morphia.mapping.codec.reader.ValueState;
@@ -19,6 +30,7 @@ import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonType;
 import org.bson.Document;
+import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
@@ -79,6 +91,77 @@ public class DocumentReaderTest extends TestBase {
         step(BsonReader::readEndDocument);
 
         step(BsonReader::close);
+    }
+
+    @Test
+    public void testDiscordJson() {
+        String json = "{\"_id\": \"bf318157-d365-422d-84fa-0c923211965b\", \"_t\": \"SyncProfilePerm\", \"version\": 32, \"payloadId\": " +
+                "\"b22ec90f-e4e1-4ad5-bdef-43e225044576\", \"loginIp\": \"128.114.255.171\", \"username\": \"KamikazeJAM_YT\", \"lastReceivedFrom\": {\"$binary\": {\"base64\": \"2klmLmZaSlqsplV7Pae1Zw==\", \"subType\": \"04\"}}, \"socialSpy\": false, \"messageToggle\": false, \"ignoredList\": [], \"replyToggle\": true, \"lastSentTo\": {\"$binary\": {\"base64\": \"2klmLmZaSlqsplV7Pae1Zw==\", \"subType\": \"04\"}}}";
+
+        Document doc = Document.parse(json);
+
+        EntityModel model = getMapper().map(SyncProfilePerm.class).get(0);
+
+        Codec<SyncProfilePerm> codec = getDs().getCodecRegistry().get(SyncProfilePerm.class);
+
+        DocumentReader reader = new DocumentReader(doc);
+        codec.decode(reader, DecoderContext.builder().build());
+
+    }
+
+    @Entity(value = "SyncProfilePerm", discriminator = "SyncProfilePerm")
+    public static class SyncProfilePerm extends PayloadProfile {
+
+        // Morphia Constructor
+        public SyncProfilePerm() {
+        }
+
+        // ...
+
+        // -------------------------------------------- //
+        // FIELDS
+        // -------------------------------------------- //
+        @Property("ignoredList")
+        private Set<UUID> ignoredList = new HashSet<>();
+
+        @Property("replyToggle")
+        private boolean replyToggle = false;
+
+        @Property("socialSpy")
+        private boolean socialSpy = false;
+
+        @Property("messageToggle")
+        private boolean messageToggle = false;
+
+        @Property("lastSentTo")
+        private @Nullable UUID lastSentTo = null;
+
+        @Property("lastReceivedFrom")
+        private @Nullable UUID lastReceivedFrom = null;
+
+        @PreLoad
+        public void preload() {
+
+        }
+    }
+
+    @Indexes({
+            @Index(fields = @Field("username")),
+            @Index(fields = @Field("uniqueId"))
+    })
+    public static abstract class PayloadProfile {
+        @Id
+        protected String uniqueId;
+
+        @Version
+        protected long version = 0;
+
+        @Indexed
+        protected String username;
+
+        protected String loginIp = null;
+
+        protected String payloadId;
     }
 
     @Test
