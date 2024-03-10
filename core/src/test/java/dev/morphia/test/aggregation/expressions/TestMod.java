@@ -16,4 +16,11 @@ public class TestMod extends AggregationTest {
                         .include("remainder", mod("$hours", "$tasks"))));
     }
 
+    @Test
+    public void testExample2() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                project()
+                        .include("remainder", mod("$dividend", "$divisor"))));
+    }
+
 }
