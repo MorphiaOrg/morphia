@@ -14,6 +14,7 @@
     <artifactId>rewrite</artifactId>
 
     <properties>
+        <morphia.prior.version>2.4.13</morphia.prior.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
@@ -30,6 +31,27 @@
         </dependencies>
     </dependencyManagement>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <artifact>${project.groupId}:morphia-core:${morphia.prior.version}</artifact>
+                            <outputDirectory>target/classes/META-INF/rewrite/classpath</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>org.openrewrite</groupId>
@@ -37,18 +59,6 @@
             <scope>compile</scope>
         </dependency>
 
-<!--
-        <dependency>
-            <groupId>org.openrewrite</groupId>
-            <artifactId>rewrite-java-8</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openrewrite</groupId>
-            <artifactId>rewrite-java-11</artifactId>
-            <scope>runtime</scope>
-        </dependency>
--->
         <dependency>
             <groupId>org.openrewrite</groupId>
             <artifactId>rewrite-java-17</artifactId>
@@ -74,9 +84,9 @@
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
             <artifactId>morphia-core</artifactId>
-            <version>${project.version}</version>
+            <version>${morphia.prior.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
 </project>
