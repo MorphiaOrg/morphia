@@ -20,10 +20,6 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-minor", "version-update:semver-major" ]
-  - package-ecosystem: maven
-    directory: "/audits"
-    schedule:
-      interval: daily
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
