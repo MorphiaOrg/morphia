@@ -57,8 +57,8 @@ public class UnwrapFieldTest implements RewriteTest {
                                         }
 
                                        public void update(Aggregation<?> aggregation) {
-                                            aggregation.pipeline(
-                                                project()
+                                            aggregation
+                                                .project(project()
                                                     .suppressId()
                                                     .include("item")
                                                     .include("qty")
@@ -80,8 +80,8 @@ public class UnwrapFieldTest implements RewriteTest {
                                         }
 
                                        public void update(Aggregation<?> aggregation) {
-                                            aggregation.pipeline(
-                                                project()
+                                            aggregation
+                                                .project(project()
                                                     .suppressId()
                                                     .include("item")
                                                     .include("qty")
