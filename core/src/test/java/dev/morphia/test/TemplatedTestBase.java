@@ -46,7 +46,7 @@ import static org.testng.Assert.fail;
 public abstract class TemplatedTestBase extends TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(TemplatedTestBase.class);
 
-    private static final JsonWriterSettings JSON_WRITER_SETTINGS = builder()
+    public static final JsonWriterSettings JSON_WRITER_SETTINGS = builder()
             .indent(true)
             .build();
 

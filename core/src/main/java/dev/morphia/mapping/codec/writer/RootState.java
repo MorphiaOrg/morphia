@@ -1,5 +1,7 @@
 package dev.morphia.mapping.codec.writer;
 
+import dev.morphia.mapping.codec.writer.DocumentState.MergingDocument;
+
 import org.bson.Document;
 
 class RootState extends WriteState {
@@ -17,7 +19,7 @@ class RootState extends WriteState {
     }
 
     public Document getDocument() {
-        Document document = new Document();
+        Document document = new MergingDocument();
         if (seed != null) {
             document.putAll(seed);
         }

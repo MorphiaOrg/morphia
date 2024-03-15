@@ -1,7 +1,13 @@
 package dev.morphia.test.mapping.codec;
 
+import java.util.Map;
+
+import dev.morphia.mapping.codec.writer.DocumentState.MergingDocument;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+import dev.morphia.query.MorphiaQuery;
+import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TestBase;
+import dev.morphia.test.models.User;
 
 import org.bson.Document;
 import org.json.JSONException;
@@ -11,10 +17,43 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.mapping.codec.CodecHelper.array;
 import static dev.morphia.mapping.codec.CodecHelper.document;
+import static dev.morphia.query.filters.Filters.*;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
+import static org.testng.Assert.assertEquals;
 
 public class TestDocumentWriter extends TestBase {
+
+    @Test
+    public void testAnd() {
+        MorphiaQuery<User> query = (MorphiaQuery<User>) getDs().find(User.class).disableValidation();
+        query.filter(Filters.gte("field1", 100));
+        query.filter(Filters.lt("field1", 1000));
+
+        query.filter(Filters.gte("field2", 200));
+        query.filter(Filters.lt("field2", 2000));
+
+        Document document = query.toDocument();
+        assertEquals(((Map<?, ?>) document.get("field1")).size(), 2);
+        assertEquals(((Map<?, ?>) document.get("field2")).size(), 2);
+    }
+
+    @Test
+    public void testOr() {
+        MorphiaQuery query = (MorphiaQuery) getDs().find(User.class)
+                .disableValidation();
+
+        query.filter(or(eq("name", "A"), eq("name", "B")));
+        query.filter(or(eq("name", "C"), eq("name", "D")));
+        Document document = query.toDocument();
+        document.remove("_t");
+        Document expected = new Document("$and",
+                of(
+                        new MergingDocument("$or", of(new Document("name", "A"), new Document("name", "B"))),
+                        new MergingDocument("$or", of(new Document("name", "C"), new Document("name", "D")))));
+        assertDocumentEquals(document, expected);
+    }
+
     @Test
     public void arrays() {
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
@@ -44,7 +83,7 @@ public class TestDocumentWriter extends TestBase {
             });
         });
 
-        Assert.assertEquals(writer.getDocument(), new Document("stuff", of(new Document("doc", 42))));
+        Assert.assertEquals(writer.getDocument(), new MergingDocument("stuff", of(new MergingDocument("doc", 42))));
     }
 
     @Test
@@ -80,7 +119,7 @@ public class TestDocumentWriter extends TestBase {
                 });
             });
         });
-        Document top = new Document("top", of(of(1, 2, 3, new Document("nested", "string"))));
+        Document top = new MergingDocument("top", of(of(1, 2, 3, new MergingDocument("nested", "string"))));
         Assert.assertEquals(top, writer.getDocument());
     }
 
@@ -129,7 +168,7 @@ public class TestDocumentWriter extends TestBase {
             document(writer, () -> writer.writeInt32("nested", 42));
         });
 
-        Assert.assertEquals(writer.getDocument(), new Document("subdoc", new Document("nested", 42)));
+        Assert.assertEquals(writer.getDocument(), new MergingDocument("subdoc", new MergingDocument("nested", 42)));
 
     }
 }

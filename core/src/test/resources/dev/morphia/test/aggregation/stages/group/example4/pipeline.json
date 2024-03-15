@@ -1,32 +1,43 @@
 [
   {
-    $match : { "$and": [
-      {
-        "date": {
-          "$gte": {
-            "$date": "2014-01-01T00:00:00Z"
-          }
-        }
-      },
-      {
-        "date": {
-          "$lt": {
-            "$date": "2015-01-01T00:00:00Z"
-          }
+    $match: {
+      "date": {
+        "$gte": {
+          "$date": "2014-01-01T00:00:00Z"
+        },
+        "$lt": {
+          "$date": "2015-01-01T00:00:00Z"
         }
       }
-    ]
     }
   },
   {
-    $group : {
-       _id : { $dateToString: { date: "$date", format: "%Y-%m-%d" } },
-       totalSaleAmount: { $sum: { $multiply: [ "$price", "$quantity" ] } },
-       averageQuantity: { $avg: "$quantity" },
-       count: { $sum: 1 }
+    $group: {
+      _id: {
+        $dateToString: {
+          date: "$date",
+          format: "%Y-%m-%d"
+        }
+      },
+      totalSaleAmount: {
+        $sum: {
+          $multiply: [
+            "$price",
+            "$quantity"
+          ]
+        }
+      },
+      averageQuantity: {
+        $avg: "$quantity"
+      },
+      count: {
+        $sum: 1
+      }
     }
   },
   {
-    $sort : { totalSaleAmount: -1 }
+    $sort: {
+      totalSaleAmount: -1
+    }
   }
- ]
+]

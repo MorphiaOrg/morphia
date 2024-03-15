@@ -7,11 +7,19 @@ import java.util.StringJoiner;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 import org.bson.Document;
+import org.bson.json.JsonWriterSettings;
 
 import static java.util.List.of;
 
-class DocumentState extends ValueState<Map<String, Object>> {
+/**
+ * @morphia.internal
+ * @hidden
+ */
+@MorphiaInternal
+public class DocumentState extends ValueState<Map<String, Object>> {
     private final List<NameState> values = new ArrayList<>();
     private Document finished;
 
@@ -56,15 +64,11 @@ class DocumentState extends ValueState<Map<String, Object>> {
 
     @Override
     void end() {
-        finished = new Document();
+        finished = new MergingDocument();
         values.forEach(v -> {
-            Object doc = finished.get(v.name());
-            if (doc == null) {
-                finished.put(v.name(), v.value());
-            } else {
-                andTogether(finished, v.name(), v.value());
-            }
+            finished.put(v.name(), v.value());
         });
+        //        finished = new Document(finished);
         super.end();
     }
 
@@ -73,5 +77,48 @@ class DocumentState extends ValueState<Map<String, Object>> {
         NameState state = new NameState(getWriter(), name, this);
         values.add(state);
         return state;
+    }
+
+    /**
+     * @morphia.internal
+     * @hidden
+     */
+    @MorphiaInternal
+    public static class MergingDocument extends Document {
+        public MergingDocument() {
+        }
+
+        public MergingDocument(String key, Object value) {
+            super(key, value);
+        }
+
+        @Override
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        public Object put(String key, Object value) {
+            if (containsKey(key)) {
+                var current = get(key);
+                if (key.startsWith("$")) {
+                    var list = List.of(new MergingDocument(key, current), new MergingDocument(key, value));
+                    remove(key);
+                    put("$and", list);
+                    return current;
+                } else if (current instanceof Document && value instanceof Document) {
+                    ((Document) current).putAll((Document) value);
+                    return current;
+                }
+            }
+            return super.put(key, value);
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ?> map) {
+            map.entrySet().forEach(entry -> put(entry.getKey(), entry.getValue()));
+            super.putAll(map);
+        }
+
+        @Override
+        public String toString() {
+            return toJson(JsonWriterSettings.builder().indent(true).build());
+        }
     }
 }

@@ -33,7 +33,6 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
@@ -58,7 +57,6 @@ import static dev.morphia.query.Sort.naturalDescending;
 import static dev.morphia.query.filters.Filters.and;
 import static dev.morphia.query.filters.Filters.elemMatch;
 import static dev.morphia.query.filters.Filters.eq;
-import static dev.morphia.query.filters.Filters.exists;
 import static dev.morphia.query.filters.Filters.gt;
 import static dev.morphia.query.filters.Filters.gte;
 import static dev.morphia.query.filters.Filters.in;
@@ -730,30 +728,6 @@ public class TestQuery extends TestBase {
             inputStage = walk(explain, List.of("queryPlanner", "winningPlan", "queryPlan", "inputStage"));
         }
         assertEquals(inputStage.get("stage"), "IXSCAN");
-    }
-
-    @Test
-    public void testMultipleFilters() {
-        var newQ = getDs().find(User.class).disableValidation();
-        newQ.filter(
-                or(
-                        exists("status").not(),
-                        eq("status", 0)));
-
-        newQ
-                .filter(
-                        or(
-                                exists("belongsToContentId").not(),
-                                and(
-                                        exists("belongsToContentId"),
-                                        eq("showAtGuideLevel", Boolean.TRUE))));
-
-        var newDoc = ((MorphiaQuery<?>) newQ).toDocument();
-        List<?> $and = (List<?>) newDoc.get("$and");
-        assertEquals($and.size(), 2);
-        assertDocumentEquals(newDoc, Document.parse("{\"$and\": [{\"$or\": [{\"status\": {\"$exists\": false}}, {\"status\": 0}]}, " +
-                "{\"$or\": [{\"belongsToContentId\": {\"$exists\": false}}, {\"$and\": " +
-                "[{\"belongsToContentId\": {\"$exists\": true}}, {\"showAtGuideLevel\": true}]}]}]}"));
     }
 
     @Test
