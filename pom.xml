@@ -250,7 +250,7 @@
             <dependency>
                 <groupId>org.kohsuke</groupId>
                 <artifactId>github-api</artifactId>
-                <version>1.319</version>
+                <version>1.320</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
