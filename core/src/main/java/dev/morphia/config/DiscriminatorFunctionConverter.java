@@ -20,18 +20,13 @@ public class DiscriminatorFunctionConverter implements Converter<DiscriminatorFu
     @Override
     public DiscriminatorFunction convert(String value) throws IllegalArgumentException, NullPointerException {
         try {
-            switch (value) {
-                case "className":
-                    return className();
-                case "lowerClassName":
-                    return lowerClassName();
-                case "lowerSimpleName":
-                    return lowerSimpleName();
-                case "simpleName":
-                    return simpleName();
-                default:
-                    return (DiscriminatorFunction) Class.forName(value).getDeclaredConstructor().newInstance();
-            }
+            return switch (value) {
+                case "className" -> className();
+                case "lowerClassName" -> lowerClassName();
+                case "lowerSimpleName" -> lowerSimpleName();
+                case "simpleName" -> simpleName();
+                default -> (DiscriminatorFunction) Class.forName(value).getDeclaredConstructor().newInstance();
+            };
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
         }
