@@ -151,7 +151,7 @@ jobs:
       - Release
     steps:
       - name: Invoke antora build
-        uses: benc-uk/workflow-dispatch@v121
+        uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Docs
           repo: MorphiaOrg/morphia-docs
