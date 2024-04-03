@@ -110,6 +110,10 @@ jobs:
           - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
             java: 21
             mongo: 7
+          - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
+            java: 22
+            mongo: 7
+            optional: tre
           - driver: ${{ needs.matrix.outputs.driver_snapshot }}
             java: 17
             mongo: 7
