@@ -24,3 +24,13 @@ updates:
     directory: "/"
     schedule:
       interval: daily
+  - package-ecosystem: "github-actions"
+    target-branch: 2.4.x
+    directory: "/"
+    schedule:
+      interval: daily
+  - package-ecosystem: "github-actions"
+    target-branch: 2.3.x
+    directory: "/"
+    schedule:
+      interval: daily
