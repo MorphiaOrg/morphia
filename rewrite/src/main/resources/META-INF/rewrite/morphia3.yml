@@ -8,6 +8,9 @@ recipeList:
       newMethodName: out
       matchOverrides: "true"
       ignoreDefinition: "false"
+  - dev.morphia.rewrite.recipes.PipelineRewrite:
+      matchOverrides: "true"
+      ignoreDefinition: "false"
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.EntityInterceptor
       newFullyQualifiedTypeName: dev.morphia.EntityListener

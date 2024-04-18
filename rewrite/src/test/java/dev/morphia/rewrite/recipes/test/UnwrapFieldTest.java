@@ -1,42 +1,19 @@
 package dev.morphia.rewrite.recipes.test;
 
-import java.net.URI;
-import java.util.List;
-
 import dev.morphia.rewrite.recipes.UnwrapFieldExpressions;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.openrewrite.java.JavaParser;
-import org.openrewrite.test.RecipeSpec;
-import org.openrewrite.test.RewriteTest;
-
-import io.github.classgraph.ClassGraph;
+import org.openrewrite.Recipe;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class UnwrapFieldTest implements RewriteTest {
-    private static final String ARTIFACT;
-    static {
-        List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
-        var core = runtimeClasspath.stream()
-                .filter(uri -> {
-                    String string = uri.toString();
-                    return string.contains("morphia") && string.contains("core");
-                })
-                .findFirst().orElseThrow().toString();
-        if (core.contains("morphia-core")) {
-            ARTIFACT = "morphia-core";
-        } else {
-            ARTIFACT = "morphia/core";
-
-        }
-    }
+public class UnwrapFieldTest extends MorphiaRewriteTest {
 
     @Override
-    public void defaults(RecipeSpec spec) {
-        spec.recipe(new UnwrapFieldExpressions())
-                .parser(JavaParser.fromJavaVersion()
-                        .classpath(ARTIFACT));
+    @NotNull
+    protected Recipe getRecipe() {
+        return new UnwrapFieldExpressions();
     }
 
     @Test
