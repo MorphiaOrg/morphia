@@ -254,7 +254,7 @@ public abstract class TestBase extends MorphiaTestSetup {
     }
 
     protected String toString(Document document) {
-        return document.toJson(getDs().getCodecRegistry().get(Document.class));
+        return document.toJson(JSON_WRITER_SETTINGS, getDs().getCodecRegistry().get(Document.class));
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
