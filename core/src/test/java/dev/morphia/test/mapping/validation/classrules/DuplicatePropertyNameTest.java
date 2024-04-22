@@ -8,6 +8,7 @@ import dev.morphia.annotations.Property;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;
 
+import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 public class DuplicatePropertyNameTest extends TestBase {
@@ -19,6 +20,11 @@ public class DuplicatePropertyNameTest extends TestBase {
     @Test(expectedExceptions = ConstraintViolationException.class)
     public void testDuplicatedPropertyNameSameType() {
         getMapper().map(DuplicatedPropertyName.class);
+    }
+
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public void testNameShadowMapping() {
+        getMapper().map(MappingToExistingFieldName.class);
     }
 
     @Entity
@@ -43,4 +49,18 @@ public class DuplicatePropertyNameTest extends TestBase {
         private String content2;
     }
 
+    @Entity(useDiscriminator = false)
+    private static class MappingToExistingFieldName {
+        @Id
+        ObjectId id;
+
+        @Property("id")
+        String customId;
+        String whatever;
+
+        public MappingToExistingFieldName(String customId, String whatever) {
+            this.customId = customId;
+            this.whatever = whatever;
+        }
+    }
 }
