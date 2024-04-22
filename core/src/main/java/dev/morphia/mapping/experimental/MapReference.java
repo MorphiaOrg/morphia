@@ -20,6 +20,7 @@ import dev.morphia.mapping.codec.references.ReferenceCodec;
 
 import org.bson.Document;
 
+import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.in;
 
 /**
@@ -32,8 +33,11 @@ import static dev.morphia.query.filters.Filters.in;
 @Deprecated(forRemoval = true, since = "2.3")
 public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     private Map<String, Object> ids;
+
+    private EntityModel entityModel;
+
     private Map<Object, T> values;
-    private final Map<String, List<Object>> collections = new HashMap<>();
+    private final Map<String, List<Object>> collated = new HashMap<>();
 
     /**
      * @param ids         the IDs of the entities
@@ -43,10 +47,8 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     @MorphiaInternal
     public MapReference(Datastore datastore, Map<String, Object> ids, EntityModel entityModel) {
         super(datastore);
-        for (Entry<String, Object> entry : ids.entrySet()) {
-            CollectionReference.collate(entityModel, collections, entry.getValue());
-        }
         this.ids = ids;
+        this.entityModel = entityModel;
     }
 
     private void setValues(Map<String, Object> values) {
@@ -121,10 +123,21 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
     }
 
     private void mergeReads() {
-        for (Entry<String, List<Object>> entry : collections.entrySet()) {
-            readFromSingleCollection(entry.getKey(), entry.getValue());
+        for (Entry<String, Object> entry : ids.entrySet()) {
+            DBRef id = normalizeId(entry.getValue());
+            try (MongoCursor<T> cursor = (MongoCursor<T>) getDatastore().find(id.getCollectionName())
+                    .filter(eq("_id", id.getId())).iterator()) {
+                values.put(entry.getKey(), cursor.next());
+            }
         }
+
         resolve();
+    }
+
+    private DBRef normalizeId(Object value) {
+        return value instanceof DBRef
+                ? (DBRef) value
+                : new DBRef(entityModel.getCollectionName(), value);
     }
 
     @SuppressWarnings("unchecked")

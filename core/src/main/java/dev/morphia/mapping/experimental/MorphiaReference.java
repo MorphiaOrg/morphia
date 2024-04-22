@@ -35,10 +35,10 @@ public abstract class MorphiaReference<T> {
     }
 
     /**
-     * Wraps an value in a MorphiaReference to storing on an entity
+     * Wraps an idValue in a MorphiaReference to storing on an entity
      *
-     * @param value the value wrap
-     * @param <V>   the type of the value
+     * @param value the idValue wrap
+     * @param <V>   the type of the idValue
      * @return the MorphiaReference wrapper
      */
     @SuppressWarnings("unchecked")
@@ -136,4 +136,19 @@ public abstract class MorphiaReference<T> {
     }
 
     abstract Object getId(Mapper mapper, EntityModel entityModel);
+
+    private <T> T fetchEntities(Object idValue) {
+        if (idValue instanceof Map) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        } else if (idValue instanceof List) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        } else if (idValue instanceof Set) {
+            //TODO:  implement this
+            throw new UnsupportedOperationException();
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
 }
