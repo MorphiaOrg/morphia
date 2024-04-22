@@ -136,19 +136,4 @@ public abstract class MorphiaReference<T> {
     }
 
     abstract Object getId(Mapper mapper, EntityModel entityModel);
-
-    private <T> T fetchEntities(Object idValue) {
-        if (idValue instanceof Map) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
-        } else if (idValue instanceof List) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
-        } else if (idValue instanceof Set) {
-            //TODO:  implement this
-            throw new UnsupportedOperationException();
-        } else {
-            throw new UnsupportedOperationException();
-        }
-    }
 }
