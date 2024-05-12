@@ -61,10 +61,9 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                                 public class UnwrapTest {
                                     public void update(Aggregation<?> aggregation) {
                                         aggregation
-                                            .pipeline(
-                                                group(id("author")).field("count", sum(value(1))),
-                                                sort().ascending("_id")
-                                            ).execute(Document.class);
+                                            .pipeline(group(id("author")).field("count", sum(value(1))))
+                                            .pipeline(sort().ascending("_id"))
+                                            .execute(Document.class);
                                     }
                                 }
                                 """));
