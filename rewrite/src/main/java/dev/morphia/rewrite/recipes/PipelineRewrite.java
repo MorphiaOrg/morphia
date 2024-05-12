@@ -9,8 +9,16 @@ import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.J.Assignment;
+import org.openrewrite.java.tree.J.AssignmentOperation;
+import org.openrewrite.java.tree.J.FieldAccess;
+import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.java.tree.J.VariableDeclarations;
+import org.openrewrite.java.tree.J.VariableDeclarations.NamedVariable;
+import org.openrewrite.java.tree.JavaType;
+import org.openrewrite.java.tree.JavaType.Class;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.Class;
 
