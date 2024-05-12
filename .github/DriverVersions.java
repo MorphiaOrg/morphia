@@ -32,6 +32,8 @@ public class DriverVersions {
         // props to Chris Dellaway for the pointer to this
         var url = "https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-sync/maven-metadata.xml";
 
+        var min = System.getenv().getOrDefault("DRIVER_MIN", "5.0.0");
+        Version driverMinimum = Version.valueOf(min);
         var mapper = new XmlMapper();
         var document = mapper.readTree(new URL(url));
         var versioning = (ObjectNode) document.get("versioning");
@@ -44,16 +46,12 @@ public class DriverVersions {
         var grouped = stream(spliteratorUnknownSize(versions.elements(), Spliterator.ORDERED), false)
                           .map(JsonNode::asText)
                           .map(Version::valueOf)
-                          .filter(it -> it.lessThan(Version.valueOf("5.0.0")))
-                          .filter(it -> it.greaterThan(Version.valueOf("4.0.0")))
+                          .filter(it -> it.greaterThan(driverMinimum))
                           .filter(it1 -> it1.getBuildMetadata().isEmpty())
                           .filter(it1 -> it1.getPreReleaseVersion().isEmpty())
                           .collect(groupingBy(v -> forIntegers(v.getMajorVersion(), v.getMinorVersion()), LinkedHashMap::new, toList()));
         var result = grouped.values().stream()
-                            .map(it -> {
-                                it.sort(comparator);
-                                return it;
-                            })
+                            .peek(it -> it.sort(comparator))
                             .map(it -> it.get(0))
                             .map(it -> format("'%s'", it))
                             .collect(toList());
@@ -70,7 +68,6 @@ public class DriverVersions {
         } else {
             System.out.println(map.get("latest"));
             System.out.println(map.get("versions"));
-            System.out.println(map);
         }
     }
 }

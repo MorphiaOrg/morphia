@@ -90,6 +90,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <apiVersion>1.8</apiVersion>
+                </configuration>
             </plugin>
 
             <plugin>

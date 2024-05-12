@@ -28,7 +28,6 @@ import org.bson.types.ObjectId;
 
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_6_0;
-import static dev.morphia.internal.MorphiaInternals.DriverVersion.v5_0_0;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 
 /**
@@ -50,7 +49,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     private Document sort;
     private CursorType cursorType;
     private boolean noCursorTimeout;
-    private boolean oplogReplay;
     private boolean partial;
     private Collation collation;
     private BsonValue comment;
@@ -112,7 +110,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         iterable.maxTime(maxTimeMS, TimeUnit.MILLISECONDS);
         iterable.min(min);
         iterable.noCursorTimeout(noCursorTimeout);
-        tryInvoke(v5_0_0, () -> iterable.oplogReplay(oplogReplay));
         iterable.partial(partial);
         iterable.returnKey(returnKey);
         iterable.showRecordId(showRecordId);
@@ -226,7 +223,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         this.sort = original.sort;
         this.cursorType = original.cursorType;
         this.noCursorTimeout = original.noCursorTimeout;
-        this.oplogReplay = original.oplogReplay;
         this.partial = original.partial;
         this.collation = original.collation;
         this.comment = original.comment;
@@ -262,7 +258,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     @MorphiaInternal
     @Override
     public int hashCode() {
-        return Objects.hash(allowDiskUse, batchSize, limit, maxTimeMS, maxAwaitTimeMS, skip, sort, cursorType, noCursorTimeout, oplogReplay,
+        return Objects.hash(allowDiskUse, batchSize, limit, maxTimeMS, maxAwaitTimeMS, skip, sort, cursorType, noCursorTimeout,
                 partial, collation, comment, hint, hintString, max, min, returnKey, showRecordId, readConcern, readPreference, projection,
                 queryLogId);
     }
@@ -282,7 +278,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         }
         FindOptions that = (FindOptions) o;
         return batchSize == that.batchSize && limit == that.limit && maxTimeMS == that.maxTimeMS && maxAwaitTimeMS == that.maxAwaitTimeMS
-                && skip == that.skip && noCursorTimeout == that.noCursorTimeout && oplogReplay == that.oplogReplay
+                && skip == that.skip && noCursorTimeout == that.noCursorTimeout
                 && partial == that.partial
                 && returnKey == that.returnKey && showRecordId == that.showRecordId && Objects.equals(allowDiskUse, that.allowDiskUse)
                 && Objects.equals(sort, that.sort) && cursorType == that.cursorType && Objects.equals(collation, that.collation)
@@ -451,10 +447,11 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      *
      * @param oplogReplay if oplog replay is enabled
      * @return this
+     * @deprecated removed from the driver
      */
+    @Deprecated(since = "3.0")
     public FindOptions oplogReplay(boolean oplogReplay) {
-        this.oplogReplay = oplogReplay;
-        return this;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -563,7 +560,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
                 .add("sort=" + sort)
                 .add("cursorType=" + cursorType)
                 .add("noCursorTimeout=" + noCursorTimeout)
-                .add("oplogReplay=" + oplogReplay)
                 .add("partial=" + partial)
                 .add("collation=" + collation)
                 .add("comment='" + comment + "'")

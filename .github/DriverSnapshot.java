@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import java.util.Spliterators;
 import java.util.Spliterator;
 import java.util.stream.StreamSupport;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.zafarkhaja.semver.Version;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -20,19 +22,23 @@ public class DriverSnapshot {
         // props to Chris Dellaway for the pointer to this
         var url = "https://oss.sonatype.org/content/repositories/snapshots/org/mongodb/mongodb-driver-sync/maven-metadata.xml";
         var mapper = new XmlMapper();
+        var min = System.getenv().getOrDefault("DRIVER_MIN", "5.0.0");
+        Version driverMinimum = Version.valueOf(min);
 
         var document = mapper.readTree(new URL(url));
 
-        var list = (ObjectNode)document.get("versioning");
-        var latest = Version.valueOf(list.get("latest").asText());
-        var versions = list.get("versions").get("version");
+        var versions = document
+                           .get("versioning")
+                           .get("versions")
+                           .get("version");
 
         var result = StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(versions.elements(), Spliterator.ORDERED), false)
-                .map(v -> v.asText())
-                .map(v -> Version.valueOf(v))
-                .filter(it -> it.greaterThanOrEqualTo(Version.valueOf("5.0.0-SNAPSHOT")))
-                .collect(Collectors.toList());
-        System.out.println(result.get(0));
+                .map(JsonNode::asText)
+                .map(Version::valueOf)
+                .filter(it -> it.greaterThanOrEqualTo(driverMinimum))
+                         .sorted()
+                .toList();
+        System.out.println(result.get(result.size() - 1));
     }
 }
