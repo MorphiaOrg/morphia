@@ -1,5 +1,7 @@
 package dev.morphia.test.aggregation.stages;
 
+import com.github.zafarkhaja.semver.Version;
+
 import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
@@ -47,6 +49,7 @@ public class TestUnionWith extends AggregationTest {
 
     @Test
     public void testExample3() {
+        serverIsAtLeastVersion(Version.of(6));
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 unionWith(
                         documents(
