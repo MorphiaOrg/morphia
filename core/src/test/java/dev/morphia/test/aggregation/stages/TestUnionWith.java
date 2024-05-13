@@ -49,7 +49,7 @@ public class TestUnionWith extends AggregationTest {
 
     @Test
     public void testExample3() {
-        serverIsAtLeastVersion(Version.of(6));
+        assumeTrue(serverIsAtLeastVersion(Version.of(6)), "Minimum server version is 6");
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 unionWith(
                         documents(
