@@ -6,6 +6,8 @@ import dev.morphia.test.aggregation.AggregationTest;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.expressions.Expressions.document;
+import static dev.morphia.aggregation.stages.Documents.documents;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Set.set;
@@ -42,4 +44,17 @@ public class TestUnionWith extends AggregationTest {
                         .field("total", sum("$quantity")),
                 sort().descending("total")));
     }
+
+    @Test
+    public void testExample3() {
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
+                unionWith(
+                        documents(
+                                document("_id", 4)
+                                        .field("flavor", "orange"),
+                                document("_id", 5)
+                                        .field("flavor", "vanilla")
+                                        .field("price", 20)))));
+    }
+
 }

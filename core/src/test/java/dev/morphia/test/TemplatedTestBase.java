@@ -175,6 +175,9 @@ public abstract class TemplatedTestBase extends TestBase {
                 while (reader.ready()) {
                     String json = reader.readLine();
                     try {
+                        if (json.startsWith("[") && json.endsWith("]")) {
+                            json = json.substring(1, json.length() - 1);
+                        }
                         data.add(Document.parse(json));
                     } catch (JsonParseException e) {
                         throw new JsonParseException(e.getMessage() + "\n" + json, e);

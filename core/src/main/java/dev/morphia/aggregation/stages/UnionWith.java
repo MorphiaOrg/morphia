@@ -23,6 +23,19 @@ public class UnionWith extends Stage {
     /**
      * Creates the new stage
      *
+     * @param pipeline the pipeline
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    private UnionWith(List<Stage> pipeline) {
+        super("$unionWith");
+        this.pipeline = Collections.unmodifiableList(pipeline);
+    }
+
+    /**
+     * Creates the new stage
+     *
      * @param collection the collection to process
      * @param pipeline   the pipeline
      * @hidden
@@ -54,9 +67,25 @@ public class UnionWith extends Stage {
      * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The
      * stage outputs the combined result set (including duplicates) to the next stage.
      *
-     * @param type   the type to perform the pipeline against
      * @param stages the pipeline stages
      * 
+     * @return the new Stage
+     *
+     * @aggregation.stage $unionWith
+     * @mongodb.server.release 4.4
+     * @since 3.0
+     */
+    public static Stage unionWith(Stage... stages) {
+        return new UnionWith(Expressions.toList(stages));
+    }
+
+    /**
+     * Performs a union of two collections; i.e. $unionWith combines pipeline results from two collections into a single result set. The
+     * stage outputs the combined result set (including duplicates) to the next stage.
+     *
+     * @param type   the type to perform the pipeline against
+     * @param stages the pipeline stages
+     *
      * @return the new Stage
      *
      * @aggregation.stage $unionWith
@@ -98,6 +127,7 @@ public class UnionWith extends Stage {
      * @hidden
      * @morphia.internal
      */
+    @Nullable
     @MorphiaInternal
     public Class<?> collectionType() {
         return collectionType;

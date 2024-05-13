@@ -1,0 +1,12 @@
+{
+      $unionWith: {
+         pipeline: [
+            {
+               $documents: [
+                  { _id: 4, flavor: "orange" },
+                  { _id: 5, flavor: "vanilla", price: 20 }
+               ]
+            }
+         ]
+      }
+   }
