@@ -77,6 +77,7 @@ public class Mapper {
     private final List<EntityListener<?>> listeners = new ArrayList<>();
     private final MorphiaConfig config;
     private final DiscriminatorLookup discriminatorLookup;
+    private final Object entityRegistrationMonitor = new Object();
 
     /**
      * Creates a Mapper with the given options.
@@ -567,22 +568,27 @@ public class Mapper {
         var existing = mappedEntities.get(model.getType().getName());
         if (existing != null) {
             return existing;
-        }
-        mappedEntities.put(model.getType().getName(), model);
+        } else {
+            synchronized (entityRegistrationMonitor) {
+                existing = mappedEntities.get(model.getType().getName());
+                if (existing != null) {
+                    return existing;
+                } else {
+                    mappedEntities.put(model.getType().getName(), model);
+                    if (validate && !model.isInterface()) {
+                        new MappingValidator().validate(this, model);
+                    }
+                    discriminatorLookup.addModel(model);
+                    mappedEntitiesByCollection.computeIfAbsent(model.getCollectionName(), s -> new CopyOnWriteArraySet<>()).add(model);
 
-        if (validate && !model.isInterface()) {
-            new MappingValidator()
-                    .validate(this, model);
+                    EntityModel superClass = model.getSuperClass();
+                    if (superClass != null) {
+                        superClass.addSubtype(model);
+                    }
+                    return model;
+                }
+            }
         }
-        discriminatorLookup.addModel(model);
-        mappedEntitiesByCollection.computeIfAbsent(model.getCollectionName(), s -> new CopyOnWriteArraySet<>())
-                .add(model);
-        EntityModel superClass = model.getSuperClass();
-        if (superClass != null) {
-            superClass.addSubtype(model);
-        }
-
-        return model;
     }
 
     private List<Class> getClasses(String packageName)
