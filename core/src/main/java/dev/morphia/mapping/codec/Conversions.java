@@ -96,9 +96,7 @@ public final class Conversions {
                 throw new MappingException("Could not convert String to char: " + s);
             }
         });
-        register(Class.class, String.class, aClass -> {
-            return aClass.getName();
-        });
+        register(Class.class, String.class, Class::getName);
         register(String.class, Class.class, className -> {
             try {
                 return Thread.currentThread().getContextClassLoader().loadClass(className);
