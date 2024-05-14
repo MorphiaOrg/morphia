@@ -242,7 +242,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             final Map<Object, Object> ids = new LinkedHashMap<>();
             Map<Object, Object> map = (Map<Object, Object>) value;
             for (Map.Entry<Object, Object> o : map.entrySet()) {
-                ids.put(o.getKey().toString(), collectIdValues(o.getValue()));
+                ids.put(o.getKey(), collectIdValues(o.getValue()));
             }
             return ids;
         } else if (value.getClass().isArray()) {

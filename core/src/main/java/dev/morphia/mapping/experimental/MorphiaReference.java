@@ -35,7 +35,7 @@ public abstract class MorphiaReference<T> {
     }
 
     /**
-     * Wraps an value in a MorphiaReference to storing on an entity
+     * Wraps a value in a MorphiaReference to store on an entity
      *
      * @param value the value wrap
      * @param <V>   the type of the value
