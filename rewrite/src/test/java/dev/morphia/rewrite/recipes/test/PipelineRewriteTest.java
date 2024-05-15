@@ -39,7 +39,10 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                                     public void update(Aggregation<?> aggregation) {
                                         aggregation
                                             .group(group(id("author")).field("count", sum(value(1))))
-                                            .sort(sort().ascending("_id"))
+                                            .sort(sort().ascending("1"))
+                                            .sort(sort().ascending("2"))
+                                            .sort(sort().ascending("3"))
+                                            .sort(sort().ascending("4"))
                                             .execute(Document.class);
                                     }
                                 }
@@ -62,7 +65,10 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                                     public void update(Aggregation<?> aggregation) {
                                         aggregation
                                             .pipeline(group(id("author")).field("count", sum(value(1))))
-                                            .pipeline(sort().ascending("_id"))
+                                            .pipeline(sort().ascending("1"))
+                                            .pipeline(sort().ascending("2"))
+                                            .pipeline(sort().ascending("3"))
+                                            .pipeline(sort().ascending("4"))
                                             .execute(Document.class);
                                     }
                                 }
