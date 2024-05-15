@@ -148,7 +148,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private CodecRegistry buildRegistry() {
-        morphiaCodecProviders.add(new MorphiaCodecProvider(this));
+        morphiaCodecProviders.add(createDefaultMorphiaCodecProvider());
 
         CodecRegistry codecRegistry = database.getCodecRegistry();
         List<CodecProvider> providers = new ArrayList<>();
@@ -163,6 +163,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         providers.add(codecRegistry);
         codecRegistry = fromProviders(providers);
         return codecRegistry;
+    }
+
+    protected MorphiaCodecProvider createDefaultMorphiaCodecProvider() {
+        return new MorphiaCodecProvider(this);
     }
 
     @Override
