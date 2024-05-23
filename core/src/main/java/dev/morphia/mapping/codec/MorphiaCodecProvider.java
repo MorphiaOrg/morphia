@@ -48,13 +48,14 @@ public class MorphiaCodecProvider implements CodecProvider {
         this.datastore = datastore;
         this.mapper = datastore.getMapper();
 
-        propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
-                new MorphiaCollectionPropertyCodecProvider()));
-
+        // Load user-provided custom codecs first, to prevent the defaults from overriding them.
         ServiceLoader<MorphiaPropertyCodecProvider> providers = ServiceLoader.load(MorphiaPropertyCodecProvider.class);
         providers.forEach(provider -> {
             propertyCodecProviders.add(provider);
         });
+
+        propertyCodecProviders.addAll(List.of(new MorphiaMapPropertyCodecProvider(),
+                new MorphiaCollectionPropertyCodecProvider()));
     }
 
     protected Map<Class<?>, Codec<?>> getCodecs() {
