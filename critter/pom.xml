@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,20 +11,31 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>critter</artifactId>
+    <artifactId>morphia-critter</artifactId>
     <description>A buildtime code generator for various serde facilities</description>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
         <skipTests>true</skipTests>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>dev.morphia.morphia</groupId>
-            <artifactId>morphia-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
-    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>dev.morphia.morphia</groupId>
+                <artifactId>morphia-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib</artifactId>
+                <version>${kotlin.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>core</module>
+    </modules>
 </project>
