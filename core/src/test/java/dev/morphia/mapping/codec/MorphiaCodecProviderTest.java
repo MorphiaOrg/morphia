@@ -14,7 +14,7 @@ import static org.testng.AssertJUnit.assertTrue;
 public class MorphiaCodecProviderTest extends TestBase {
 
     @Test
-    public void NewMorphiaCodecProvider_NoOpPropertyCodecProviderInConfig_ExpectedOrderOfProvidersReturned() {
+    public void ensureCustomCodedProvidersComeFirst() {
         // given a custom 'no-op' codec is provided in the service configuration
         // (see META-INF/services/dev.morphia.mapping.codec.MorphiaPropertyCodecProvider)
         // when we instantiate a morphia codec provider
