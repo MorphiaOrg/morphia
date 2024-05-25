@@ -9,10 +9,12 @@ import org.testng.annotations.Test
 class TestParsing {
     @Test(dataProvider = "sources")
     fun basicClass(file: File) {
-        println("**************** stream = ${file}")
         val klass = CritterParser.parser(file)
-        klass.newInstance()
-        println("**************** CritterParser.parser(stream) = $klass")
+        val newInstance = klass.newInstance()
+        klass.declaredMethods.forEach { method ->
+            val message = method.invoke(newInstance)
+            println(message)
+        }
 
 //        assertEquals(klass.name, "BasicClass")
     }
@@ -21,8 +23,7 @@ class TestParsing {
     fun sources(testMethod: Method): Array<File> {
         val name = testMethod.name.titleCase()
 
-        println("**************** testMethod = ${testMethod}")
-        return arrayOf(load(name, "Java"))
+        return arrayOf(load(name, "Java"), load(name, "Kotlin"))
     }
 
     private fun load(name: String, type: String): File {
