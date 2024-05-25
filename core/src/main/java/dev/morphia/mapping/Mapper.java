@@ -541,14 +541,19 @@ public class Mapper {
                 && !query.containsKey("_id")
                 && !query.containsKey(model.getDiscriminatorKey())) {
             List<String> values = new ArrayList<>();
-            values.add(model.getDiscriminator());
+            List<EntityModel> classesMappedToCollection = getClassesMappedToCollection(model.getCollectionName());
+            if (classesMappedToCollection.size() > 1 || config.enablePolymorphicQueries()) {
+                values.add(model.getDiscriminator());
+            }
             if (config.enablePolymorphicQueries()) {
                 for (EntityModel subtype : model.getSubtypes()) {
                     values.add(subtype.getDiscriminator());
                 }
             }
-            query.put(model.getDiscriminatorKey(),
-                    new Document("$in", values));
+            if (!values.isEmpty()) {
+                query.put(model.getDiscriminatorKey(),
+                        new Document("$in", values));
+            }
         }
     }
 

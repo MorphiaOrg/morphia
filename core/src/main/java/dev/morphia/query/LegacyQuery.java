@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.MorphiaInternals.DriverVersion;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
@@ -435,19 +435,16 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @MorphiaInternal
     public Document toDocument() {
         final Document query = getQueryDocument();
-        EntityModel model = datastore.getMapper().getEntityModel(getEntityClass());
+        Mapper mapper = datastore.getMapper();
+        EntityModel model = mapper.getEntityModel(getEntityClass());
         Entity entityAnnotation = model.getEntityAnnotation();
         if (entityAnnotation != null && entityAnnotation.useDiscriminator()
                 && !query.containsKey("_id")
                 && !query.containsKey(model.getDiscriminatorKey())) {
 
-            List<String> values = new ArrayList<>();
-            values.add(model.getDiscriminator());
-            for (EntityModel subtype : datastore.getMapper().getEntityModel(getEntityClass()).getSubtypes()) {
-                values.add(subtype.getDiscriminator());
+            if (mapper.isMappable(getEntityClass())) {
+                mapper.updateQueryWithDiscriminators(mapper.getEntityModel(getEntityClass()), query);
             }
-            query.put(model.getDiscriminatorKey(),
-                    new Document("$in", values));
         }
         return query;
     }

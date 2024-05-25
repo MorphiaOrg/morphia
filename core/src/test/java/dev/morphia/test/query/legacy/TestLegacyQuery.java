@@ -28,9 +28,11 @@ import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.query.ArraySlice;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
+import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
@@ -40,6 +42,7 @@ import dev.morphia.test.mapping.TestReferences.ChildId;
 import dev.morphia.test.mapping.TestReferences.Complex;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Rectangle;
+import dev.morphia.test.models.TestDiscriminatorEntity;
 import dev.morphia.test.models.User;
 import dev.morphia.test.query.TestQuery;
 import dev.morphia.test.query.TestQuery.CappedPic;
@@ -80,19 +83,6 @@ public class TestLegacyQuery extends TestBase {
                 .applyCaps(true)
                 .applyIndexes(true)
                 .legacy());
-    }
-
-    @Test
-    public void testNativeQuery() {
-        User user = getDs().save(new User("Malcolm 'Mal' Reynolds", now()));
-
-        assertEquals(getDs().find(User.class, new Document("_id", user.getId())).first(),
-                user);
-
-        assertEquals(getDs().find(User.class, new Document())
-                .field("id").equal(user.getId())
-                .first(),
-                user);
     }
 
     @Test
@@ -339,6 +329,26 @@ public class TestLegacyQuery extends TestBase {
         }
     }
 
+    private String getCommentFromProfileRecord(Document profileRecord) {
+        if (profileRecord != null) {
+            if (profileRecord.containsKey("command")) {
+                Document commandDocument = ((Document) profileRecord.get("command"));
+                if (commandDocument.containsKey("comment")) {
+                    return (String) commandDocument.get("comment");
+                }
+            }
+            if (profileRecord.containsKey("query")) {
+                Document queryDocument = ((Document) profileRecord.get("query"));
+                if (queryDocument.containsKey("comment")) {
+                    return (String) queryDocument.get("comment");
+                } else if (queryDocument.containsKey("$comment")) {
+                    return (String) queryDocument.get("$comment");
+                }
+            }
+        }
+        return null;
+    }
+
     @Test
     public void testComplexElemMatchQuery() {
         Keyword oscar = new Keyword("Oscar", 42);
@@ -404,6 +414,30 @@ public class TestLegacyQuery extends TestBase {
     @Test
     public void testCriteriaContainers() {
         check(getDs().find(User.class).disableValidation());
+    }
+
+    private void check(Query<User> query) {
+        query
+                .field("version").equal("latest")
+                .and(
+                        query.or(
+                                query.criteria("fieldA").equal("a"),
+                                query.criteria("fieldB").equal("b")),
+                        query.and(
+                                query.criteria("fieldC").equal("c"),
+                                query.or(
+                                        query.criteria("fieldD").equal("d"),
+                                        query.criteria("fieldE").equal("e"))));
+
+        query.and(query.criteria("fieldF").equal("f"));
+
+        final Document queryObject = query.toDocument();
+
+        final Document parse = parse(
+                "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
+                        + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\"}}");
+
+        assertEquals(queryObject, parse);
     }
 
     @Test
@@ -526,6 +560,12 @@ public class TestLegacyQuery extends TestBase {
                         .find(Keyword.class)
                         .field("keyword").equal("Scott"))
                 .keys());
+    }
+
+    private <T> void assertListEquals(List<Key<T>> list, MongoCursor<?> cursor) {
+        for (Key<T> tKey : list) {
+            assertEquals(cursor.next(), tKey, list.toString());
+        }
     }
 
     @Test
@@ -770,6 +810,19 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Test
+    public void testNativeQuery() {
+        User user = getDs().save(new User("Malcolm 'Mal' Reynolds", now()));
+
+        assertEquals(getDs().find(User.class, new Document("_id", user.getId())).first(),
+                user);
+
+        assertEquals(getDs().find(User.class, new Document())
+                .field("id").equal(user.getId())
+                .first(),
+                user);
+    }
+
+    @Test
     public void testNaturalSortAscending() {
         getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
@@ -918,6 +971,10 @@ public class TestLegacyQuery extends TestBase {
                         .next().scalars);
     }
 
+    private int[] copy(int[] array, int start, int count) {
+        return copyOfRange(array, start, start + count);
+    }
+
     @Test
     public void testQueryCount() {
         getDs().save(asList(new Rectangle(1, 10),
@@ -930,6 +987,22 @@ public class TestLegacyQuery extends TestBase {
         assertEquals(getDs().find(Rectangle.class).filter("height", 10D).count(), 2);
         assertEquals(getDs().find(Rectangle.class).filter("width", 10D).count(), 5);
 
+    }
+
+    @Test
+    public void testQueryDoesNotContainDiscriminator() {
+        withConfig(buildConfig(TestDiscriminatorEntity.class)
+                .discriminator(DiscriminatorFunction.className())
+                .queryFactory(new LegacyQueryFactory())
+                .enablePolymorphicQueries(false), () -> {
+
+                    Datastore datastore = getDs();
+                    Query<TestDiscriminatorEntity> q = datastore.createQuery(TestDiscriminatorEntity.class);
+                    q.field("something").equal("foo");
+                    Document doc = q.toDocument();
+                    assertFalse(doc.containsKey("_t"), "The discriminator was found in the query document: \n"
+                            + doc.toJson(JSON_WRITER_SETTINGS));
+                });
     }
 
     @Test
@@ -1185,64 +1258,9 @@ public class TestLegacyQuery extends TestBase {
                 .tryNext());
     }
 
-    private <T> void assertListEquals(List<Key<T>> list, MongoCursor<?> cursor) {
-        for (Key<T> tKey : list) {
-            assertEquals(cursor.next(), tKey, list.toString());
-        }
-    }
-
-    private void check(Query<User> query) {
-        query
-                .field("version").equal("latest")
-                .and(
-                        query.or(
-                                query.criteria("fieldA").equal("a"),
-                                query.criteria("fieldB").equal("b")),
-                        query.and(
-                                query.criteria("fieldC").equal("c"),
-                                query.or(
-                                        query.criteria("fieldD").equal("d"),
-                                        query.criteria("fieldE").equal("e"))));
-
-        query.and(query.criteria("fieldF").equal("f"));
-
-        final Document queryObject = query.toDocument();
-
-        final Document parse = parse(
-                "{\"version\": \"latest\", \"$and\": [{\"$or\": [{\"fieldA\": \"a\"}, {\"fieldB\": \"b\"}]}, {\"fieldC\": \"c\", \"$or\": "
-                        + "[{\"fieldD\": \"d\"}, {\"fieldE\": \"e\"}]}], \"fieldF\": \"f\","
-                        + "\"className\": { \"$in\" : [ \"dev.morphia.test.models.User\"]}}");
-
-        assertEquals(queryObject, parse);
-    }
-
-    private int[] copy(int[] array, int start, int count) {
-        return copyOfRange(array, start, start + count);
-    }
-
     private void dropProfileCollection() {
         MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
         profileCollection.drop();
-    }
-
-    private String getCommentFromProfileRecord(Document profileRecord) {
-        if (profileRecord != null) {
-            if (profileRecord.containsKey("command")) {
-                Document commandDocument = ((Document) profileRecord.get("command"));
-                if (commandDocument.containsKey("comment")) {
-                    return (String) commandDocument.get("comment");
-                }
-            }
-            if (profileRecord.containsKey("query")) {
-                Document queryDocument = ((Document) profileRecord.get("query"));
-                if (queryDocument.containsKey("comment")) {
-                    return (String) queryDocument.get("comment");
-                } else if (queryDocument.containsKey("$comment")) {
-                    return (String) queryDocument.get("$comment");
-                }
-            }
-        }
-        return null;
     }
 
     private Query<Pic> getQuery(QueryFactory queryFactory) {
@@ -1255,6 +1273,59 @@ public class TestLegacyQuery extends TestBase {
 
     private void turnOnProfiling() {
         getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
+    }
+
+    @Entity
+    static class IntVector {
+        @Id
+        private ObjectId id;
+        private String name;
+        private int[] scalars;
+
+        IntVector() {
+        }
+
+        IntVector(int... scalars) {
+            this.scalars = scalars;
+        }
+    }
+
+    @Entity
+    static class ReferenceKey {
+        @Id
+        private ObjectId id;
+        private String name;
+
+        ReferenceKey() {
+        }
+
+        ReferenceKey(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            final ReferenceKey that = (ReferenceKey) o;
+
+            if (id != null ? !id.equals(that.id) : that.id != null) {
+                return false;
+            }
+            return name != null ? name.equals(that.name) : that.name == null;
+        }
     }
 
     @Entity(value = "legacy_capped_pic", cap = @CappedAt(count = 1000))
@@ -1277,13 +1348,18 @@ public class TestLegacyQuery extends TestBase {
     private static class ContainsPic {
         @Id
         private ObjectId id;
-        private String name = "test";
-        @Reference
-        private Pic pic;
-        @Reference(lazy = true)
-        private Pic lazyPic;
+
         @Reference(lazy = true)
         private PicWithObjectId lazyObjectIdPic;
+
+        @Reference(lazy = true)
+        private Pic lazyPic;
+
+        private String name = "test";
+
+        @Reference
+        private Pic pic;
+
         @Indexed
         private int size;
 
@@ -1347,10 +1423,12 @@ public class TestLegacyQuery extends TestBase {
 
     @Entity(useDiscriminator = false)
     private static class ContainsRenamedFields {
-        @Id
-        private ObjectId id;
         @Property("first_name")
         private String firstName;
+
+        @Id
+        private ObjectId id;
+
         @Property("last_name")
         private String lastName;
 
@@ -1420,21 +1498,6 @@ public class TestLegacyQuery extends TestBase {
     }
 
     @Entity
-    static class IntVector {
-        @Id
-        private ObjectId id;
-        private String name;
-        private int[] scalars;
-
-        IntVector() {
-        }
-
-        IntVector(int... scalars) {
-            this.scalars = scalars;
-        }
-    }
-
-    @Entity
     private static class KeyValue {
         @Id
         private ObjectId id;
@@ -1455,8 +1518,10 @@ public class TestLegacyQuery extends TestBase {
     private static class Keys {
         @Id
         private ObjectId id;
-        private List<Key<FacebookUser>> users;
+
         private Key<Rectangle> rect;
+
+        private List<Key<FacebookUser>> users;
 
         private Keys() {
         }
@@ -1578,6 +1643,14 @@ public class TestLegacyQuery extends TestBase {
             this.name = name;
         }
 
+        @Override
+        public int hashCode() {
+            int result = getId() != null ? getId().hashCode() : 0;
+            result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+            result = 31 * result + (isPrePersist() ? 1 : 0);
+            return result;
+        }
+
         public ObjectId getId() {
             return id;
         }
@@ -1594,12 +1667,12 @@ public class TestLegacyQuery extends TestBase {
             this.name = name;
         }
 
-        @Override
-        public int hashCode() {
-            int result = getId() != null ? getId().hashCode() : 0;
-            result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-            result = 31 * result + (isPrePersist() ? 1 : 0);
-            return result;
+        boolean isPrePersist() {
+            return prePersist;
+        }
+
+        public void setPrePersist(boolean prePersist) {
+            this.prePersist = prePersist;
         }
 
         @Override
@@ -1625,14 +1698,6 @@ public class TestLegacyQuery extends TestBase {
         @PrePersist
         public void tweak() {
             prePersist = true;
-        }
-
-        boolean isPrePersist() {
-            return prePersist;
-        }
-
-        public void setPrePersist(boolean prePersist) {
-            this.prePersist = prePersist;
         }
     }
 
@@ -1672,44 +1737,6 @@ public class TestLegacyQuery extends TestBase {
         public int compare(Rectangle o1, Rectangle o2) {
             int compare = Double.compare(o1.getWidth(), o2.getWidth());
             return compare != 0 ? compare : Double.compare(o1.getHeight(), o2.getHeight());
-        }
-    }
-
-    @Entity
-    static class ReferenceKey {
-        @Id
-        private ObjectId id;
-        private String name;
-
-        ReferenceKey() {
-        }
-
-        ReferenceKey(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id != null ? id.hashCode() : 0;
-            result = 31 * result + (name != null ? name.hashCode() : 0);
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            final ReferenceKey that = (ReferenceKey) o;
-
-            if (id != null ? !id.equals(that.id) : that.id != null) {
-                return false;
-            }
-            return name != null ? name.equals(that.name) : that.name == null;
         }
     }
 

@@ -19,7 +19,7 @@ import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
 @Entity
-public class TestEntity {
+public class TestDiscriminatorEntity {
     @Id
     public ObjectId id;
     public String something;
