@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -32,12 +35,22 @@ import static java.util.Arrays.asList;
 
 @Mojo(name = "morphia-annotations", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class AnnotationBuilders extends AbstractMojo {
+
+    private Map<String, JavaClassSource> builders = new TreeMap<>();
+
+    private MethodSource<JavaClassSource> factoryMethod;
+
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
+    private JavaClassSource factory;
+
     private JavaClassSource builder;
+
     private JavaAnnotationSource source;
+
     private File generated;
+
     private final FileFilter filter = pathname -> pathname.getName().endsWith(".java")
             && !pathname.getName().endsWith("Handler.java")
             && !pathname.getName().endsWith("Helper.java")
@@ -52,15 +65,53 @@ public class AnnotationBuilders extends AbstractMojo {
         files.addAll(find(project.getBasedir() + "/src/main/java/dev/morphia/annotations"));
         project.addCompileSourceRoot(generated.getAbsolutePath());
 
-        for (File file : files) {
-            try {
-                emitBuilder(file);
-            } catch (ParserException e) {
-                throw new MojoExecutionException("Could not parse " + file, e);
-            } catch (IOException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
+        try {
+            for (File file : files) {
+                try {
+                    emitBuilder(file);
+                } catch (ParserException e) {
+                    throw new MojoExecutionException("Could not parse " + file, e);
+                }
             }
+            emitFactory();
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
         }
+    }
+
+    private void emitFactory() throws IOException {
+        if (factory == null) {
+            factory = createClass("AnnotationFactory");
+
+            factoryMethod = factory.addMethod()
+                    .setReturnType("K")
+                    .setPublic()
+                    .setStatic(true);
+            factoryMethod
+                    .setName("build")
+                    .addParameter("Class<K>", "kind");
+
+            factoryMethod.addTypeVariable()
+                    .setName("K");
+            var code = builders.entrySet().stream()
+                    .map(entry -> {
+                        JavaClassSource builder = entry.getValue();
+                        return "if (kind.equals(%s.class)) return (K)%s.%s().build();".formatted(entry.getKey(), builder.getQualifiedName(),
+                                methodCase(builder.getName()));
+                    })
+                    .collect(Collectors.joining("\n"));
+            code += "\nthrow new UnsupportedOperationException(kind.getName());";
+            factoryMethod.setBody(code);
+        }
+
+        var outputFile = new File(generated, factory.getQualifiedName().replace('.', '/') + ".java");
+        if (!outputFile.getParentFile().mkdirs() && !outputFile.getParentFile().exists()) {
+            throw new IOException(format("Could not create directory: %s", outputFile.getParentFile()));
+        }
+        try (var writer = new FileWriter(outputFile)) {
+            writer.write(factory.toString());
+        }
+
     }
 
     private JavaClassSource annotationType(JavaAnnotationSource source, JavaClassSource builder) {
@@ -112,15 +163,8 @@ public class AnnotationBuilders extends AbstractMojo {
     private void emitBuilder(File sourceFile) throws IOException {
         source = Roaster.parse(JavaAnnotationSource.class, sourceFile);
         if (source.isPublic()) {
-            builder = Roaster.create(JavaClassSource.class)
-                    .setName(source.getName() + "Builder")
-                    .setPackage(source.getPackage() + ".internal")
-                    .setFinal(true);
-            builder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal");
-            JavaDocSource<JavaClassSource> javaDoc = builder.getJavaDoc();
-            javaDoc.addTagValue("@since", "2.3");
-            javaDoc.addTagValue("@hidden", "");
-            javaDoc.addTagValue("@morphia.internal", "");
+            builder = createClass(source.getName() + "Builder");
+            builders.put(source.getQualifiedName(), builder);
 
             MethodSource<JavaClassSource> constructor = builder.addMethod()
                     .setConstructor(true)
@@ -183,6 +227,20 @@ public class AnnotationBuilders extends AbstractMojo {
             builder.addImport(Objects.class);
             output();
         }
+    }
+
+    private JavaClassSource createClass(String name) {
+        var classBuilder = Roaster.create(JavaClassSource.class)
+                .setName(name)
+                .setPackage(source.getPackage() + ".internal")
+                .setFinal(true);
+        classBuilder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal");
+        JavaDocSource<JavaClassSource> javaDoc = classBuilder.getJavaDoc();
+        javaDoc.addTagValue("@since", "2.3");
+        javaDoc.addTagValue("@hidden", "");
+        javaDoc.addTagValue("@morphia.internal", "");
+
+        return classBuilder;
     }
 
     private String parameterType(AnnotationElementSource element) {
@@ -270,4 +328,9 @@ public class AnnotationBuilders extends AbstractMojo {
         constructor.setBody(body);
 
     }
+
+    String methodCase(String name) {
+        return name.substring(0, 1).toLowerCase() + name.substring(1);
+    }
+
 }

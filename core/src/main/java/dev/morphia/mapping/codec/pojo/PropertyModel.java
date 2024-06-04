@@ -59,7 +59,7 @@ import static java.util.Arrays.asList;
  */
 @MorphiaInternal
 @SuppressWarnings("removal")
-public final class PropertyModel {
+public class PropertyModel {
     private boolean isFinal;
 
     private String name;
