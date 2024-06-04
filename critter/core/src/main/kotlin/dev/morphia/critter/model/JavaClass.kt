@@ -1,4 +1,3 @@
 package dev.morphia.critter.model
 
-class JavaClass(name: String): CritterClass(name) {
-}
+class JavaClass(name: String) : CritterClass(name) {}

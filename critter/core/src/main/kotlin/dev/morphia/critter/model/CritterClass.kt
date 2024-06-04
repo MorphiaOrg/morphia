@@ -5,4 +5,3 @@ sealed class CritterClass(val name: String) {
         return "CritterClass(name='$name')"
     }
 }
-
