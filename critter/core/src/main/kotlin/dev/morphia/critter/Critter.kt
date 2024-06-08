@@ -35,8 +35,14 @@ class Critter(val root: File) {
     }
 
     fun process() {
-        KotlinSymbolProcessing(build(), listOf(CritterProcessorProvider()), KspGradleLogger(KspGradleLogger.LOGGING_LEVEL_WARN)).execute()
+        KotlinSymbolProcessing(
+                build(),
+                listOf(CritterProcessorProvider()),
+                KspGradleLogger(KspGradleLogger.LOGGING_LEVEL_WARN)
+            )
+            .execute()
     }
 
-    private fun Class<Entity>.loadPath() = getProtectionDomain().getCodeSource().getLocation().toURI()
+    private fun Class<Entity>.loadPath() =
+        getProtectionDomain().getCodeSource().getLocation().toURI()
 }

@@ -211,7 +211,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected List<Document> runPipeline(String pipelineTemplate, Aggregation<Document> aggregation) {
-        String pipelineName = format("%s/%s/pipeline.json", prefix(), pipelineTemplate);
+        String pipelineName = format("%s/%s/action.json", prefix(), pipelineTemplate);
         List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
 
         if (!skipPipelineCheck) {

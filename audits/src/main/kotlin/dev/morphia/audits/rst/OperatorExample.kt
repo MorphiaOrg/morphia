@@ -45,7 +45,7 @@ class OperatorExample(
                 created = this.folder.mkdirs()
                 dataBlock.forEach { it.output(File(folder, "data.json")) }
                 indexBlock?.output(File(folder, "index.json"))
-                actionBlock?.output(File(folder, "pipeline.json"))
+                actionBlock?.output(File(folder, "action.json"))
                 expectedBlock?.output(File(folder, "expected.json"))
                 if (this.folder.exists()) {
                     File(folder, "name").writeText(name)

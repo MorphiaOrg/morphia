@@ -9,7 +9,6 @@ import com.google.devtools.ksp.symbol.ClassKind.CLASS
 import com.google.devtools.ksp.symbol.ClassKind.INTERFACE
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.Nullability
 import dev.morphia.annotations.Entity
 import dev.morphia.annotations.ExternalEntity
 
@@ -25,13 +24,16 @@ class CritterProcessor(val environment: SymbolProcessorEnvironment) : SymbolProc
                         klass.classKind == CLASS || klass.classKind == INTERFACE
                     }
                 }
-                .filter { it.isAnnotationPresent(Entity::class) || it.isAnnotationPresent(ExternalEntity::class) }
+                .filter {
+                    it.isAnnotationPresent(Entity::class) ||
+                        it.isAnnotationPresent(ExternalEntity::class)
+                }
                 .toList()
 
-//        println("**************** files[1].declarations.toList() = ${klass.declarations.toList()}")
+        //        println("**************** files[1].declarations.toList() =
+        // ${klass.declarations.toList()}")
         println("**************** classes = ${classes}")
 
         return listOf()
     }
-
 }

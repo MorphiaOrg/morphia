@@ -124,6 +124,7 @@ a|
 | http://docs.mongodb.org/manual/reference/operator/aggregation/unionWith[$unionWith]
 a| 
 
+ * link:javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(dev.morphia.aggregation.stages.Stage%2E%2E%2E)[UnionWith#unionWith(Stage...)]
  * link:javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.Class,dev.morphia.aggregation.stages.Stage%2E%2E%2E)[UnionWith#unionWith(Class,Stage...)]
  * link:javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage%2E%2E%2E)[UnionWith#unionWith(String,Stage...)]
  * link:javadoc/dev/morphia/aggregation/Aggregation.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage%2E%2E%2E)[Aggregation#unionWith(String,Stage...)]

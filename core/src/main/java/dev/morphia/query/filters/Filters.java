@@ -483,6 +483,7 @@ public final class Filters {
      * @param pattern the regex pattern
      * @return the filter
      * @query.filter $regex
+     * @mongodb.server.release 1.9.0
      * @since 2.4.0
      */
     public static RegexFilter regex(String field, String pattern) {
@@ -496,6 +497,7 @@ public final class Filters {
      * @param pattern the regex pattern
      * @return the filter
      * @query.filter $regex
+     * @mongodb.server.release 1.9.0
      * @since 2.4.0
      */
     public static RegexFilter regex(String field, Pattern pattern) {

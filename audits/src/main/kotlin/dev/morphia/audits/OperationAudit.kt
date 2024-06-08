@@ -14,7 +14,7 @@ import org.jsoup.select.Evaluator
 import org.kohsuke.github.GHIssueState.OPEN
 import org.kohsuke.github.GitHubBuilder
 
-private val core = File("../core/src/main/java")
+val mainRoot = File("../core/src/main/java").absoluteFile
 
 class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
     companion object {
@@ -23,7 +23,7 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
         }
 
         fun findMethods(taglet: String) =
-            core
+            mainRoot
                 .walkBottomUp()
                 .filter { it.extension == "java" }
                 .map { Roaster.parse(JavaType::class.java, it) }

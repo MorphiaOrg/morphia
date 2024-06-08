@@ -170,3 +170,10 @@ link:++javadoc/dev/morphia/config/MorphiaConfig.html#enablePolymorphicQueries()+
 Queries by ID will ignore this setting since such queries are filtering by a specific, unique value and polymorphic queries do incur
 potential performance hits due to the wider scope of the query filter.
 ====
+
+=== Supported Operators
+Every effort is made to provide 100% coverage of all the operators offered by MongoDB. Below is listed all the currently
+supported operators. If an operator is missing and you think it should be included, please file an https://github.com/MorphiaOrg/morphia/issues[issue] for that operator.
+
+.Filters
+include::query-filters.adoc[]

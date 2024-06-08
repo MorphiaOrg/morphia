@@ -2,7 +2,6 @@ package dev.morphia.audits.rst
 
 import dev.morphia.audits.RstAuditor
 import dev.morphia.audits.findIndent
-import dev.morphia.audits.rst.Separator.DASH
 import dev.morphia.audits.rst.Separator.TILDE
 import java.io.File
 
@@ -36,8 +35,7 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
         private set
 
     init {
-        val partition = DASH.partition(lines).entries.last()
-        val partitions = TILDE.partition(partition.value)
+        val partitions = TILDE.partition(lines)
         partitions
             .map { it.value.extractTabs(it.key) }
             .flatMap { it.entries }

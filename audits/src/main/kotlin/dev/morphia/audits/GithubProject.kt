@@ -8,7 +8,8 @@ import org.kohsuke.github.GHLabel
 import org.kohsuke.github.GitHubBuilder
 
 object GithubProject {
-    var dryRun = false
+
+    var dryRun = System.getenv()["GITHUB_ACTION"] == null
     val github by lazy {
         GitHubBuilder.fromEnvironment().build().getRepository("MorphiaOrg/Morphia")
     }
