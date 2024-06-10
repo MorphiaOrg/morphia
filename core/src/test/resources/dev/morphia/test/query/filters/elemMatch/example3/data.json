@@ -1,0 +1,5 @@
+{ "_id": 1, "results": [ { "product": "abc", "score": 10 }, { "product": "xyz", "score": 5 } ] },
+{ "_id": 2, "results": [ { "product": "abc", "score": 8 }, { "product": "xyz", "score": 7 } ] },
+{ "_id": 3, "results": [ { "product": "abc", "score": 7 }, { "product": "xyz", "score": 8 } ] },
+{ "_id": 4, "results": [ { "product": "abc", "score": 7 }, { "product": "def", "score": 8 } ] },
+{ "_id": 5, "results": { "product": "xyz", "score": 7 } }

@@ -11,6 +11,7 @@ import dev.morphia.mapping.codec.filters.ElemMatchFilterCodec;
 import dev.morphia.mapping.codec.filters.EqFilterCodec;
 import dev.morphia.mapping.codec.filters.ExistsFilterCodec;
 import dev.morphia.mapping.codec.filters.ExprFilterCodec;
+import dev.morphia.mapping.codec.filters.FieldLessFilterCodec;
 import dev.morphia.mapping.codec.filters.FilterCodec;
 import dev.morphia.mapping.codec.filters.GeoIntersectsFilterCodec;
 import dev.morphia.mapping.codec.filters.JsonSchemaFilterCodec;
@@ -40,6 +41,7 @@ public class MorphiaFilterCodecProvider implements CodecProvider {
         addCodec(new ExistsFilterCodec(datastore));
         addCodec(new ExprFilterCodec(datastore));
         addCodec(new FilterCodec(datastore));
+        addCodec(new FieldLessFilterCodec(datastore));
         addCodec(new GeoIntersectsFilterCodec(datastore));
         addCodec(new JsonSchemaFilterCodec(datastore));
         addCodec(new LogicalFilterCodec(datastore));

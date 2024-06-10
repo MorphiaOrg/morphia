@@ -180,6 +180,17 @@ public final class Filters {
     }
 
     /**
+     * Selects documents if a value in the results matches all the specified $elemMatch conditions.
+     *
+     * @param filters the filters to evaluate against
+     * @return the filter
+     * @query.filter $elemMatch
+     */
+    public static Filter elemMatch(Filter... filters) {
+        return new ElemMatchFilter(asList(filters));
+    }
+
+    /**
      * Selects documents if element in the array field matches all the specified $elemMatch conditions.
      *
      * @param field   the field to check
@@ -286,7 +297,7 @@ public final class Filters {
     }
 
     /**
-     * $gte selects the documents where the value of the field is greater than or equal to a specified value (e.g. value.)
+     * $gte selects the documents where the value of the field is greater than or equal to a specified value
      *
      * @param field the field to check
      * @param val   the value to check
@@ -295,6 +306,18 @@ public final class Filters {
      */
     public static Filter gte(String field, Object val) {
         return new Filter("$gte", field, val);
+    }
+
+    /**
+     * $gte selects the documents where the value of the target field is greater than or equal to a specified value
+     *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $gte
+     * @since 3.0
+     */
+    public static Filter gte(Object val) {
+        return new FieldLessFilter("$gte", val);
     }
 
     /**
@@ -319,6 +342,18 @@ public final class Filters {
      */
     public static Filter jsonSchema(Document schema) {
         return new JsonSchemaFilter(schema);
+    }
+
+    /**
+     * $lt selects the documents where the value of the field is less than the specified value.
+     *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $lt
+     * @since 3.0
+     */
+    public static Filter lt(Object val) {
+        return new FieldLessFilter("$lt", val);
     }
 
     /**

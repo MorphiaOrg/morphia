@@ -25,12 +25,14 @@ import static java.lang.String.format;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class Filter {
     private final String name;
+    @Nullable
     private String field;
     @Nullable
     private Object value;
     private boolean not;
     private boolean validate;
     private Class<?> entityClass;
+    @Nullable
     private PathTarget pathTarget;
     private boolean mapped;
 

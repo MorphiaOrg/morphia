@@ -41,7 +41,11 @@ a|
 | link:javadoc/dev/morphia/query/filters/Filters.html#comment(java.lang.String,java.lang.Object)[Filters#comment(String,Object)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/elemMatch[$elemMatch]
-| link:javadoc/dev/morphia/query/filters/Filters.html#elemMatch(java.lang.String,dev.morphia.query.filters.Filter%2E%2E%2E)[Filters#elemMatch(String,Filter...)]
+a| 
+
+ * link:javadoc/dev/morphia/query/filters/Filters.html#elemMatch(dev.morphia.query.filters.Filter%2E%2E%2E)[Filters#elemMatch(Filter...)]
+ * link:javadoc/dev/morphia/query/filters/Filters.html#elemMatch(java.lang.String,dev.morphia.query.filters.Filter%2E%2E%2E)[Filters#elemMatch(String,Filter...)]
+
 
 | http://docs.mongodb.org/manual/reference/operator/query/eq[$eq]
 | link:javadoc/dev/morphia/query/filters/Filters.html#eq(java.lang.String,java.lang.Object)[Filters#eq(String,Object)]
@@ -69,7 +73,11 @@ a|
 | link:javadoc/dev/morphia/query/filters/Filters.html#gt(java.lang.String,java.lang.Object)[Filters#gt(String,Object)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/gte[$gte]
-| link:javadoc/dev/morphia/query/filters/Filters.html#gte(java.lang.String,java.lang.Object)[Filters#gte(String,Object)]
+a| 
+
+ * link:javadoc/dev/morphia/query/filters/Filters.html#gte(java.lang.String,java.lang.Object)[Filters#gte(String,Object)]
+ * link:javadoc/dev/morphia/query/filters/Filters.html#gte(java.lang.Object)[Filters#gte(Object)]
+
 
 | http://docs.mongodb.org/manual/reference/operator/query/in[$in]
 | link:javadoc/dev/morphia/query/filters/Filters.html#in(java.lang.String,java.lang.Iterable)[Filters#in(String,Iterable)]
@@ -78,7 +86,11 @@ a|
 | link:javadoc/dev/morphia/query/filters/Filters.html#jsonSchema(org.bson.Document)[Filters#jsonSchema(Document)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/lt[$lt]
-| link:javadoc/dev/morphia/query/filters/Filters.html#lt(java.lang.String,java.lang.Object)[Filters#lt(String,Object)]
+a| 
+
+ * link:javadoc/dev/morphia/query/filters/Filters.html#lt(java.lang.Object)[Filters#lt(Object)]
+ * link:javadoc/dev/morphia/query/filters/Filters.html#lt(java.lang.String,java.lang.Object)[Filters#lt(String,Object)]
+
 
 | http://docs.mongodb.org/manual/reference/operator/query/lte[$lte]
 | link:javadoc/dev/morphia/query/filters/Filters.html#lte(java.lang.String,java.lang.Object)[Filters#lte(String,Object)]

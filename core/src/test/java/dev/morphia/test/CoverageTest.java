@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.StringJoiner;
 
 import dev.morphia.mapping.NamingStrategy;
-import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
 
@@ -31,7 +30,7 @@ public abstract class CoverageTest extends TestBase {
     }
 
     private void findMissing(String root, StringJoiner message) {
-        File path = AggregationTest.rootToCore(root);
+        File path = TemplatedTestBase.rootToCore(root);
         try {
             stream(path.listFiles())
                     .filter(file -> new File(file, "ignored").exists())

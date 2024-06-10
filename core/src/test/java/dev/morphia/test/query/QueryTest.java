@@ -9,7 +9,6 @@ import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.AfterClass;
 
-import static dev.morphia.test.aggregation.AggregationTest.rootToCore;
 import static java.util.Arrays.stream;
 import static org.testng.Assert.fail;
 

@@ -3,6 +3,8 @@ package dev.morphia.mapping.codec.writer;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
@@ -54,7 +56,7 @@ public class DocumentWriter implements BsonWriter {
      * @param config
      * @param seed   the seed Document
      */
-    public DocumentWriter(MorphiaConfig config, Document seed) {
+    public DocumentWriter(MorphiaConfig config, @Nullable Document seed) {
         root = new RootState(this, seed);
         this.config = config;
         state = root;

@@ -13,6 +13,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.filters.Filters;
+import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.mapping.lazy.TestLazyCircularReference.ReferencedEntity;
 import dev.morphia.test.mapping.lazy.TestLazyCircularReference.RootEntity;
 import dev.morphia.test.models.Rectangle;
@@ -32,7 +33,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 //@Tags(@Tag("transactions"))
-public class TestTransactions extends TemplatedTestBase {
+public class TestTransactions extends AggregationTest {
     @BeforeMethod
     public void before() {
         checkForReplicaSet();

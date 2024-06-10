@@ -20,14 +20,23 @@ public class ElemMatchFilterCodec extends BaseFilterCodec<ElemMatchFilter> {
 
     @Override
     public void encode(BsonWriter writer, ElemMatchFilter elemMatch, EncoderContext encoderContext) {
-        document(writer, elemMatch.path(datastore.getMapper()), () -> {
-            if (elemMatch.isNot()) {
-                document(writer, "$not", () -> encodeFilter(writer, elemMatch, encoderContext));
-            } else {
-                encodeFilter(writer, elemMatch, encoderContext);
-            }
-        });
-
+        if (elemMatch.getField() != null && !elemMatch.getField().equals("")) {
+            document(writer, elemMatch.path(datastore.getMapper()), () -> {
+                if (elemMatch.isNot()) {
+                    document(writer, "$not", () -> encodeFilter(writer, elemMatch, encoderContext));
+                } else {
+                    encodeFilter(writer, elemMatch, encoderContext);
+                }
+            });
+        } else {
+            document(writer, () -> {
+                if (elemMatch.isNot()) {
+                    document(writer, "$not", () -> encodeFilter(writer, elemMatch, encoderContext));
+                } else {
+                    encodeFilter(writer, elemMatch, encoderContext);
+                }
+            });
+        }
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

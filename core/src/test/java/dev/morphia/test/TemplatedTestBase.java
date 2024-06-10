@@ -1,6 +1,7 @@
 package dev.morphia.test;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,7 +9,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
@@ -20,7 +21,6 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
-import dev.morphia.test.util.Comparanator;
 
 import org.bson.BsonInvalidOperationException;
 import org.bson.Document;
@@ -30,11 +30,13 @@ import org.bson.json.JsonWriterSettings;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
+import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -52,9 +54,11 @@ public abstract class TemplatedTestBase extends TestBase {
 
     protected static final String AGG_TEST_COLLECTION = "aggtest";
 
+    private static final Pattern FIND = Pattern.compile("^db\\.(\\w+)\\.find\\(.*$");
+
     protected final ObjectMapper mapper = new ObjectMapper();
-    private boolean skipPipelineCheck = false;
-    private boolean skipDataCheck = false;
+    protected boolean skipActionCheck = false;
+    protected boolean skipDataCheck = false;
 
     public TemplatedTestBase() {
     }
@@ -63,9 +67,14 @@ public abstract class TemplatedTestBase extends TestBase {
         super(config);
     }
 
+    @NotNull
+    public static File rootToCore(String path) {
+        return new File(CORE_ROOT, path);
+    }
+
     @BeforeMethod
     public void resetSkip() {
-        skipPipelineCheck = false;
+        skipActionCheck = false;
     }
 
     public final String prefix() {
@@ -77,43 +86,52 @@ public abstract class TemplatedTestBase extends TestBase {
         skipDataCheck = true;
     }
 
-    public void skipPipelineCheck() {
-        skipPipelineCheck = true;
+    public void skipActionCheck() {
+        skipActionCheck = true;
     }
 
-    public void testPipeline(ServerVersion serverVersion,
-            boolean removeIds,
-            boolean orderMatters,
-            Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        checkMinServerVersion(serverVersion);
-        checkMinDriverVersion(minDriver);
-        var resourceName = discoverResourceName(new Exception().getStackTrace());
-        loadData(AGG_TEST_COLLECTION);
-        loadIndex(AGG_TEST_COLLECTION);
+    @AfterClass
+    public void testCoverage() {
+        var type = getClass();
+        var methods = stream(type.getDeclaredMethods())
+                .filter(m -> m.getName().startsWith("testExample"))
+                .map(m -> {
+                    String name = m.getName().substring(4);
+                    return toLowerCase(name.charAt(0)) + name.substring(1);
+                })
+                .toList();
+        String path = type.getPackageName();
+        String simpleName = type.getSimpleName().substring(4);
+        var operatorName = toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
+        var resourceFolder = TemplatedTestBase.rootToCore("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
 
-        List<Document> actual = runPipeline(resourceName, pipeline.apply(getDs().aggregate(AGG_TEST_COLLECTION)));
+        if (!resourceFolder.exists()) {
+            throw new IllegalStateException("%s does not exist inside %s".formatted(resourceFolder,
+                    new File(".").getAbsolutePath()));
+        }
+        List<File> list = Arrays.stream(resourceFolder.list())
+                .map(s -> new File(resourceFolder, s))
+                .toList();
 
-        if (!skipDataCheck) {
-            List<Document> expected = loadExpected(resourceName);
-
-            actual = removeIds ? removeIds(actual) : actual;
-            expected = removeIds ? removeIds(expected) : expected;
-
-            try {
-                Comparanator.of(null, actual, expected, orderMatters).compare();
-            } catch (AssertionError e) {
-                throw new AssertionError("%s\n\n actual: %s".formatted(e.getMessage(), toString(actual, "\n\t")),
-                        e);
-            }
+        List<String> examples = list.stream()
+                .filter(d -> new File(d, "expected.json").exists())
+                .map(File::getName)
+                .toList();
+        var missing = examples.stream()
+                .filter(example -> !methods.contains(example))
+                .collect(joining(", "));
+        if (!missing.isEmpty()) {
+            fail("Missing test cases for $%s: %s".formatted(operatorName, missing));
         }
     }
 
-    private static String toString(List<Document> actual, String prefix) {
+    protected static String toString(List<Document> actual, String prefix) {
         return actual.stream()
                 .map(c -> c.toJson(JSON_WRITER_SETTINGS))
                 .collect(joining("\n\t", prefix, ""));
     }
 
+    @Deprecated
     public <D> void testQuery(MorphiaQuery<D> query, FindOptions options, boolean orderMatters) {
         var resourceName = discoverResourceName(new Exception().getStackTrace());
 
@@ -214,7 +232,7 @@ public abstract class TemplatedTestBase extends TestBase {
         String pipelineName = format("%s/%s/action.json", prefix(), pipelineTemplate);
         List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
 
-        if (!skipPipelineCheck) {
+        if (!skipActionCheck) {
             List<Document> target = loadPipeline(pipelineName);
             assertEquals(toJson(pipeline), toJson(target), "Should generate the same pipeline");
         }
@@ -234,6 +252,20 @@ public abstract class TemplatedTestBase extends TestBase {
                 .collect(joining("\n, ", "[\n", "\n]"));
     }
 
+    protected String toJson(Document document) {
+        return document.toJson(JSON_WRITER_SETTINGS, getDatabase().getCodecRegistry().get(Document.class));
+    }
+
+    protected Document loadQuery(String pipelineName) {
+        InputStream stream = getClass().getResourceAsStream(pipelineName);
+        if (stream == null) {
+            fail(format("missing data file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
+                    pipelineName));
+        }
+
+        return parseAction(stream).get(0);
+    }
+
     private List<Document> loadPipeline(String pipelineName) {
         InputStream stream = getClass().getResourceAsStream(pipelineName);
         if (stream == null) {
@@ -241,33 +273,17 @@ public abstract class TemplatedTestBase extends TestBase {
                     pipelineName));
         }
 
-        return parsePipeline(stream);
+        return parseAction(stream);
     }
 
-    private List<Document> parsePipeline(InputStream stream) {
+    private List<Document> parseAction(InputStream stream) {
         List<String> list = new ArrayList<>(new BufferedReader(new InputStreamReader(stream))
                 .lines()
                 .map(String::trim)
                 //                .map(line -> line.replaceAll("(\\$*\\w+?):", "\"$1\":"))
                 .toList());
-        String line = list.get(0);
-        if (line.startsWith("[")) {
-            line = line.substring(1);
-            if (!line.isBlank()) {
-                list.set(0, line);
-            } else {
-                list.remove(0);
-            }
-        }
-        line = list.get(list.size() - 1);
-        if (line.endsWith("]")) {
-            line = line.substring(0, line.length() - 1);
-            if (!line.isBlank()) {
-                list.set(list.size() - 1, line);
-            } else {
-                list.remove(list.size() - 1);
-            }
-        }
+        unwrapArray(list);
+        extractQueryFilters(list);
 
         var json = list.iterator();
         List<Document> stages = new ArrayList<>();
@@ -288,6 +304,42 @@ public abstract class TemplatedTestBase extends TestBase {
         }
 
         return stages;
+    }
+
+    private void extractQueryFilters(List<String> list) {
+        String line = list.stream().collect(joining());
+        if (FIND.matcher(line).matches()) {
+            if (line.endsWith(")")) {
+                line = line.substring(line.indexOf("(") + 1, line.lastIndexOf(")"));
+                list.clear();
+                list.add(line.trim());
+            } else {
+                throw new IllegalStateException("I don't know how to parse this line: \n\t" + line);
+            }
+
+        }
+
+    }
+
+    private static void unwrapArray(List<String> list) {
+        String line = list.get(0);
+        if (line.startsWith("[")) {
+            line = line.substring(1);
+            if (!line.isBlank()) {
+                list.set(0, line);
+            } else {
+                list.remove(0);
+            }
+        }
+        line = list.get(list.size() - 1);
+        if (line.endsWith("]")) {
+            line = line.substring(0, line.length() - 1);
+            if (!line.isBlank()) {
+                list.set(list.size() - 1, line);
+            } else {
+                list.remove(list.size() - 1);
+            }
+        }
     }
 
     private boolean balanced(String input) {
