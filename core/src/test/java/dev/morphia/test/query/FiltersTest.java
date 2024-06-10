@@ -24,6 +24,7 @@ import dev.morphia.test.models.User;
 
 import org.bson.Document;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Miscellaneous.rand;
@@ -58,6 +59,11 @@ import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings("resource")
 public class FiltersTest extends TemplatedTestBase {
+    @AfterClass
+    @Override
+    public void testCoverage() {
+    }
+
     @Test
     public void testAnd() {
         getDs().find(Budget.class)

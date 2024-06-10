@@ -22,6 +22,7 @@ import dev.morphia.transactions.MorphiaSession;
 
 import org.bson.types.ObjectId;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,6 +42,11 @@ public class TestTransactions extends AggregationTest {
         getDs().find(Rectangle.class).findAndDelete();
         getDs().save(new User("", LocalDate.now()));
         getDs().find(User.class).findAndDelete();
+    }
+
+    @AfterClass
+    @Override
+    public void testCoverage() {
     }
 
     @Test

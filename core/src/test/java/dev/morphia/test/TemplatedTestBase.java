@@ -114,7 +114,7 @@ public abstract class TemplatedTestBase extends TestBase {
                 .toList();
 
         List<String> examples = list.stream()
-                .filter(d -> new File(d, "expected.json").exists())
+                .filter(d -> new File(d, "action.json").exists())
                 .map(File::getName)
                 .toList();
         var missing = examples.stream()
