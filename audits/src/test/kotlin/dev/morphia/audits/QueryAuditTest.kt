@@ -1,11 +1,20 @@
 package dev.morphia.audits
 
+import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType.FILTER
+import java.io.File
 import org.testng.annotations.Test
 
 class QueryAuditTest : BaseAuditTest() {
     @Test
     fun filters() {
-        validate(RstAuditor.audit(FILTER))
+        validate(RstAuditor(FILTER).audit())
+    }
+
+    @Test
+    fun testOperator() {
+        val name = "bitsAllClear"
+        val operator = Operator(FILTER, name)
+        operator.examples.forEach { it.output(File("target/testOperator-${name}/${it.name}")) }
     }
 }

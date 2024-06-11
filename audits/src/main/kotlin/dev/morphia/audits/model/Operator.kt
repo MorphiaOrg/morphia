@@ -4,51 +4,59 @@ import dev.morphia.audits.RstAuditor
 import dev.morphia.audits.model.OperatorType.EXPRESSION
 import dev.morphia.audits.model.OperatorType.FILTER
 import dev.morphia.audits.model.OperatorType.STAGE
-import dev.morphia.audits.rst.OperatorExample
 import dev.morphia.audits.rst.RstDocument
 import java.io.File
 
-class Operator(var type: OperatorType, var source: File) {
-    var versionAdded: String?
-    var name = source.nameWithoutExtension
-    var resourceFolder: File
-    var testSource: File
-    val implemented: Boolean
-    val testCaseExists: Boolean
-    val operator = "\$${name.substringBefore("-")}"
+class Operator private constructor(var type: OperatorType) {
+    val versionAdded by lazy {
+        source
+            .readLines()
+            .filter { it.contains(".. versionadded:: ") }
+            .firstOrNull()
+            ?.substringAfterLast(":")
+            ?.trim()
+    }
+    val resourceFolder by lazy {
+        File(
+                RstAuditor.coreTestRoot,
+                "dev/morphia/test/${type.root()}/${subpath()}/${name.substringBefore("-")}"
+            )
+            .canonicalFile
+    }
+    val testSource by lazy {
+        File(
+                RstAuditor.coreTestSourceRoot,
+                "dev/morphia/test/${type.root()}/${subpath()}/Test${name.substringBefore("-").titleCase()}.java"
+            )
+            .canonicalFile
+    }
+    val implemented by lazy { resourceFolder.exists() }
+    val testCaseExists by lazy { testSource.exists() }
+    val rstAuditor = RstAuditor(type)
+    val operator by lazy { "\$${name.substringBefore("-")}" }
+    val url: String by lazy {
+        "https://www.mongodb.com/docs/manual/reference/operator/${type.root()}/$name/"
+    }
+    val examples by lazy { RstDocument.read(operator, source).examples }
+    lateinit var source: File
+    lateinit var name: String
 
-    //    val type: OperatorType
-    val url: String = "https://www.mongodb.com/docs/manual/reference/operator/${type.root()}/$name/"
-    val examples: List<OperatorExample>
+    constructor(type: OperatorType, file: File) : this(type) {
+        source = file
+        name = file.nameWithoutExtension
+        updateType()
+    }
 
-    init {
+    constructor(type: OperatorType, name: String) : this(type) {
+        this.name = name
+        source = File("${rstAuditor.operatorRoot}/$name.txt")
+        updateType()
+    }
+
+    private fun updateType() {
         if (type == STAGE || type == EXPRESSION) {
             type = if (source.readText().contains(".. pipeline:: \$")) STAGE else EXPRESSION
         }
-        versionAdded =
-            source
-                .readLines()
-                .filter { it.contains(".. versionadded:: ") }
-                .firstOrNull()
-                ?.substringAfterLast(":")
-                ?.trim()
-
-        resourceFolder =
-            File(
-                    RstAuditor.coreTestRoot,
-                    "dev/morphia/test/${type.root()}/${subpath()}/${name.substringBefore("-")}"
-                )
-                .canonicalFile
-        testSource =
-            File(
-                    RstAuditor.coreTestSourceRoot,
-                    "dev/morphia/test/${type.root()}/${subpath()}/Test${name.substringBefore("-").titleCase()}.java"
-                )
-                .canonicalFile
-
-        implemented = resourceFolder.exists()
-        testCaseExists = testSource.exists()
-        examples = RstDocument.read(operator, source).examples
     }
 
     fun ignored() = File(resourceFolder, "ignored").exists()

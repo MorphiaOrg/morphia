@@ -11,6 +11,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.query.Type;
 
+import org.bson.BsonBinary;
 import org.bson.Document;
 
 import static java.util.Arrays.asList;
@@ -70,6 +71,19 @@ public final class Filters {
      */
     public static Filter bitsAllClear(String field, int bitMask) {
         return new Filter("$bitsAllClear", field, bitMask);
+    }
+
+    /**
+     * Matches numeric or binary values in which a set of bit positions all have a value of 0.
+     *
+     * @param field the field to check
+     * @param data  the data to use
+     * @return the filter
+     * @query.filter $bitsAllClear
+     * @since 3.0
+     */
+    public static Filter bitsAllClear(String field, byte[] data) {
+        return new Filter("$bitsAllClear", field, new BsonBinary(data));
     }
 
     /**

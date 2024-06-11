@@ -1,6 +1,7 @@
 package dev.morphia.audits.rst
 
 import dev.morphia.audits.RstAuditor
+import dev.morphia.audits.RstAuditor.Companion.includesRoot
 import dev.morphia.audits.findIndent
 import dev.morphia.audits.rst.Separator.TILDE
 import java.io.File
@@ -23,11 +24,37 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
                             val include = File(RstAuditor.includesRoot, line.substringAfter(":: "))
                             if (include.exists()) {
                                 include.readLines()
-                            } else listOf(line)
+                            } else {
+                                loadInclude(line.substringAfterLast("/").substringBefore("."))
+                                    ?: listOf(line)
+                            }
                         } else listOf(line)
                     }
                     .toMutableList()
             return RstDocument(operator, lines)
+        }
+
+        private fun loadInclude(keyword: String): List<String>? {
+            return File(includesRoot, "includes")
+                .listFiles()
+                .filter { file -> file.isFile }
+                .mapNotNull { file -> loadReference(keyword, file) }
+                .firstOrNull()
+        }
+
+        private fun loadReference(keyword: String, file: File): List<String>? {
+            var lines =
+                file.readLines().dropWhile { line -> !line.contains("ref: $keyword") }.drop(1)
+            if (lines.isEmpty()) {
+                return null
+            }
+            lines = lines.dropWhile { !it.startsWith("content") && !it.startsWith("---") }
+            if (!lines[0].startsWith("content")) {
+                return null
+            }
+            val removeWhile =
+                lines.drop(1).toMutableList().removeWhile { it.isBlank() || it.startsWith("  ") }
+            return removeWhile
         }
     }
 

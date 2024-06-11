@@ -11,20 +11,21 @@ import kotlin.collections.Map.Entry
 import org.jboss.forge.roaster.model.source.MethodSource
 import org.jboss.forge.roaster.model.source.ParameterSource
 
-object RstAuditor {
-    val auditRoot by lazy {
-        var gitRoot = File(".").canonicalFile
-        while (!File(gitRoot, ".git").exists()) gitRoot = gitRoot.parentFile
-        File(gitRoot, "audits/target/mongodb-docs")
+class RstAuditor(val type: OperatorType) {
+    companion object {
+        val auditRoot by lazy {
+            var gitRoot = File(".").canonicalFile
+            while (!File(gitRoot, ".git").exists()) gitRoot = gitRoot.parentFile
+            File(gitRoot, "audits/target/mongodb-docs")
+        }
+        val coreTestRoot = File("../core/src/test/resources").absoluteFile
+        val coreTestSourceRoot = File("../core/src/test/java").absoluteFile
+        val includesRoot = File(auditRoot, "source")
     }
-    val coreTestRoot = File("../core/src/test/resources").absoluteFile
-    val coreTestSourceRoot = File("../core/src/test/java").absoluteFile
-    lateinit var operatorRoot: File
-    val includesRoot = File(auditRoot, "source")
 
-    fun audit(type: OperatorType): Results {
-        operatorRoot = File(auditRoot, "source/reference/operator/${type.root()}")
+    var operatorRoot = File(auditRoot, "source/reference/operator/${type.root()}")
 
+    fun audit(): Results {
         val methods = findMethods(type.taglet())
         val operators = emitExampleData(type)
         val created = updateGH(operators)

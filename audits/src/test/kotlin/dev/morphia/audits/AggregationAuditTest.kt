@@ -1,6 +1,5 @@
 package dev.morphia.audits
 
-import dev.morphia.audits.RstAuditor.operatorRoot
 import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType.EXPRESSION
 import dev.morphia.audits.model.OperatorType.STAGE
@@ -12,17 +11,17 @@ class AggregationAuditTest : BaseAuditTest() {
     @Test
     fun testOperator() {
         val name = "geoNear"
-        var operator = Operator(EXPRESSION, File("${operatorRoot}/$name.txt"))
+        val operator = Operator(EXPRESSION, name)
         operator.examples.forEach { it.output(File("target/testOperator-${name}/${it.name}")) }
     }
 
     @Test
     fun expressions() {
-        validate(RstAuditor.audit(EXPRESSION))
+        validate(RstAuditor(EXPRESSION).audit())
     }
 
     @Test
     fun stages() {
-        validate(RstAuditor.audit(STAGE))
+        validate(RstAuditor(STAGE).audit())
     }
 }

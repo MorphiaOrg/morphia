@@ -57,6 +57,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
+@Deprecated
 @SuppressWarnings("resource")
 public class FiltersTest extends TemplatedTestBase {
     @AfterClass
