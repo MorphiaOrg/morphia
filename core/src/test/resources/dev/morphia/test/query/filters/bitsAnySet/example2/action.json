@@ -1,0 +1,1 @@
+db.collection.find( { a: { $bitsAnySet: 35 } } )

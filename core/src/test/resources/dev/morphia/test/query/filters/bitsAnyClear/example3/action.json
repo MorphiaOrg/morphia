@@ -1,0 +1,1 @@
+db.collection.find( { a: { $bitsAnyClear: BinData(0, "MA==") } } )

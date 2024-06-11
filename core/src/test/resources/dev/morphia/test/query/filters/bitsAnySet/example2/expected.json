@@ -1,0 +1,2 @@
+{ "_id" : 1, "a" : 54, "binaryValueofA" : "00110110" }
+{ "_id" : 4, "a" : BinData(0,"Zg=="), "binaryValueofA" : "01100110" }
