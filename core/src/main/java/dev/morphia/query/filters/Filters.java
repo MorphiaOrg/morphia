@@ -11,7 +11,6 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.query.Type;
 
-import org.bson.BsonBinary;
 import org.bson.Document;
 
 import static java.util.Arrays.asList;
@@ -52,62 +51,27 @@ public final class Filters {
     /**
      * Matches numeric or binary values in which a set of bit positions all have a value of 0.
      *
-     * @param field     the field to check
-     * @param positions the value to check
+     * @param field the field to check
+     * @param val   the value to check
      * @return the filter
      * @query.filter $bitsAllClear
+     * @since 3.0 changed to take a plain Object instead of overloading
      */
-    public static Filter bitsAllClear(String field, int[] positions) {
-        return new Filter("$bitsAllClear", field, positions);
+    public static Filter bitsAllClear(String field, Object val) {
+        return new Filter("$bitsAllClear", field, val);
     }
 
     /**
-     * Matches numeric or binary values in which a set of bit positions all have a value of 0.
-     *
-     * @param field   the field to check
-     * @param bitMask the numeric bitmask to use
-     * @return the filter
-     * @query.filter $bitsAllClear
-     */
-    public static Filter bitsAllClear(String field, int bitMask) {
-        return new Filter("$bitsAllClear", field, bitMask);
-    }
-
-    /**
-     * Matches numeric or binary values in which a set of bit positions all have a value of 0.
+     * Matches numeric or binary values in which a set of bit positions all have a value of 1.
      *
      * @param field the field to check
-     * @param data  the data to use
-     * @return the filter
-     * @query.filter $bitsAllClear
-     * @since 3.0
-     */
-    public static Filter bitsAllClear(String field, byte[] data) {
-        return new Filter("$bitsAllClear", field, new BsonBinary(data));
-    }
-
-    /**
-     * Matches numeric or binary values in which a set of bit positions all have a value of 1.
-     *
-     * @param field   the field to check
-     * @param bitMask the numeric bitmask to use
+     * @param val   the value to check
      * @return the filter
      * @query.filter $bitsAllSet
+     * @since 3.0 changed to take a plain Object instead of overloading
      */
-    public static Filter bitsAllSet(String field, int bitMask) {
-        return new Filter("$bitsAllSet", field, bitMask);
-    }
-
-    /**
-     * Matches numeric or binary values in which a set of bit positions all have a value of 1.
-     *
-     * @param field     the field to check
-     * @param positions the value to check
-     * @return the filter
-     * @query.filter $bitsAllSet
-     */
-    public static Filter bitsAllSet(String field, int[] positions) {
-        return new Filter("$bitsAllSet", field, positions);
+    public static Filter bitsAllSet(String field, Object val) {
+        return new Filter("$bitsAllSet", field, val);
     }
 
     /**
