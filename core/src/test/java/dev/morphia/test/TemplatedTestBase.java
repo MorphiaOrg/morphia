@@ -9,11 +9,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.NonNull;
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
@@ -133,9 +135,9 @@ public abstract class TemplatedTestBase extends TestBase {
 
     @Deprecated
     public <D> void testQuery(MorphiaQuery<D> query, FindOptions options, boolean orderMatters) {
-        var resourceName = discoverResourceName(new Exception().getStackTrace());
+        var resourceName = discoverResourceName();
 
-        loadData(getDs().getCollection(query.getEntityClass()).getNamespace().getCollectionName());
+        loadData(resourceName, getDs().getCollection(query.getEntityClass()).getNamespace().getCollectionName());
 
         List<D> actual = runQuery(resourceName, query, options);
 
@@ -148,22 +150,26 @@ public abstract class TemplatedTestBase extends TestBase {
         }
     }
 
-    protected void loadData(String collection) {
+    protected void loadData(String resourceName, String collection) {
         if (!skipDataCheck) {
-            var resourceName = discoverResourceName(new Exception().getStackTrace());
             insert(collection, loadJson(format("%s/%s/data.json", prefix(), resourceName), "data", true));
         }
     }
 
     protected void loadData(String collection, int index) {
         if (!skipDataCheck) {
-            var resourceName = discoverResourceName(new Exception().getStackTrace());
+            insert(collection, loadJson(format("%s/%s/data%d.json", prefix(), discoverResourceName(), index), "data", true));
+        }
+    }
+
+    protected void loadData(String resourceName, String collection, int index) {
+        if (!skipDataCheck) {
             insert(collection, loadJson(format("%s/%s/data%d.json", prefix(), resourceName, index), "data", true));
         }
     }
 
-    protected void loadIndex(String collectionName) {
-        var resourceName = discoverResourceName(new Exception().getStackTrace());
+    protected void loadIndex(String resourceName, String collectionName) {
+        final StackTraceElement[] stackTrace = new Exception().getStackTrace();
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
         List<Document> documents = loadJson("%s/%s/index.json".formatted(prefix(), resourceName), "index", false);
         documents.forEach(document -> {
@@ -264,6 +270,21 @@ public abstract class TemplatedTestBase extends TestBase {
         }
 
         return parseAction(stream).get(0);
+    }
+
+    protected String loadTestName(String resourceName) {
+        String name = format("%s/%s/name", prefix(), resourceName);
+
+        InputStream stream = getClass().getResourceAsStream(name);
+        if (stream == null) {
+            fail(format("missing name file: %s", name));
+        }
+
+        try (var reader = new BufferedReader(new InputStreamReader(stream))) {
+            return reader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private List<Document> loadPipeline(String pipelineName) {
@@ -377,11 +398,10 @@ public abstract class TemplatedTestBase extends TestBase {
         }
     }
 
-    protected String discoverResourceName(StackTraceElement[] stackTrace) {
-        String methodName = Arrays.stream(stackTrace)
-                .filter(e -> isTestMethod(e))
-                .findFirst()
-                .get().getMethodName();
+    protected String discoverResourceName() {
+        var method = findTestMethod();
+        String methodName = method.getName();
+
         if (methodName.startsWith("test")) {
             methodName = methodName.substring(4);
             methodName = methodName.substring(0, 1).toLowerCase() + methodName.substring(1);
@@ -389,14 +409,23 @@ public abstract class TemplatedTestBase extends TestBase {
         return methodName;
     }
 
-    private boolean isTestMethod(StackTraceElement element) {
+    protected Method findTestMethod() {
+        return stream(new Exception().getStackTrace())
+                .map(this::isTestMethod)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .get();
+    }
+
+    @Nullable
+    private Method isTestMethod(StackTraceElement element) {
         try {
             Class<?> klass = Class.forName(element.getClassName());
             Method method = klass.getDeclaredMethod(element.getMethodName());
 
-            return method.getAnnotation(Test.class) != null;
+            return method.getAnnotation(Test.class) != null ? method : null;
         } catch (ReflectiveOperationException e) {
-            return false;
+            return null;
         }
     }
 

@@ -48,9 +48,9 @@ public class AggregationTest extends TemplatedTestBase {
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         checkMinServerVersion(serverVersion);
         checkMinDriverVersion(minDriver);
-        var resourceName = discoverResourceName(new Exception().getStackTrace());
-        loadData(AGG_TEST_COLLECTION);
-        loadIndex(AGG_TEST_COLLECTION);
+        var resourceName = discoverResourceName();
+        loadData(resourceName, AGG_TEST_COLLECTION);
+        loadIndex(resourceName, AGG_TEST_COLLECTION);
 
         List<Document> actual = runPipeline(resourceName, pipeline.apply(getDs().aggregate(AGG_TEST_COLLECTION)));
 
