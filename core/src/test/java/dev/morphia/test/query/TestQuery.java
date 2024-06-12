@@ -1104,7 +1104,6 @@ public class TestQuery extends TestBase {
                     Query<TestDiscriminatorEntity> q = datastore.createQuery(TestDiscriminatorEntity.class);
                     q.filter(eq("something", "foo"));
                     Document doc = q.toDocument();
-                    System.out.println(doc);
                     assertFalse(doc.containsKey("_t"), "The discriminator was found in the query document: \n"
                             + doc.toJson(JSON_WRITER_SETTINGS));
                 });

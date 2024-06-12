@@ -542,6 +542,9 @@ public class Mapper {
                 && !query.containsKey(model.getDiscriminatorKey())) {
             List<String> values = new ArrayList<>();
             List<EntityModel> classesMappedToCollection = getClassesMappedToCollection(model.getCollectionName());
+            // the discriminator is added here if size > 1 because, unless polymorphic queries are enabled, historically Morphia has only
+            // returned the type given to the query. adding the discriminator value here ensures that only the query type is returned
+            // unless polymorphic queries are explicitly enabled.
             if (classesMappedToCollection.size() > 1 || config.enablePolymorphicQueries()) {
                 values.add(model.getDiscriminator());
             }
