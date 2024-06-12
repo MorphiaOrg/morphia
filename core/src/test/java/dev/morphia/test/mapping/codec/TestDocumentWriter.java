@@ -52,8 +52,6 @@ public class TestDocumentWriter extends TestBase {
                 of(
                         new MergingDocument("$or", of(new Document("name", "A"), new Document("name", "B"))),
                         new MergingDocument("$or", of(new Document("name", "C"), new Document("name", "D")))));
-        System.out.println("document = " + document.toJson(JSON_WRITER_SETTINGS));
-        System.out.println("expected = " + expected.toJson(JSON_WRITER_SETTINGS));
         assertDocumentEquals(document, expected);
     }
 

@@ -541,14 +541,22 @@ public class Mapper {
                 && !query.containsKey("_id")
                 && !query.containsKey(model.getDiscriminatorKey())) {
             List<String> values = new ArrayList<>();
-            values.add(model.getDiscriminator());
+            List<EntityModel> classesMappedToCollection = getClassesMappedToCollection(model.getCollectionName());
+            // the discriminator is added here if size > 1 because, unless polymorphic queries are enabled, historically Morphia has only
+            // returned the type given to the query. adding the discriminator value here ensures that only the query type is returned
+            // unless polymorphic queries are explicitly enabled.
+            if (classesMappedToCollection.size() > 1 || config.enablePolymorphicQueries()) {
+                values.add(model.getDiscriminator());
+            }
             if (config.enablePolymorphicQueries()) {
                 for (EntityModel subtype : model.getSubtypes()) {
                     values.add(subtype.getDiscriminator());
                 }
             }
-            query.put(model.getDiscriminatorKey(),
-                    new Document("$in", values));
+            if (!values.isEmpty()) {
+                query.put(model.getDiscriminatorKey(),
+                        new Document("$in", values));
+            }
         }
     }
 
