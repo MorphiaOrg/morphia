@@ -106,6 +106,7 @@ public class Filter {
      * @hidden
      * @morphia.internal
      */
+    @Nullable
     @MorphiaInternal
     public String getName() {
         return name;

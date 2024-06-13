@@ -1,0 +1,3 @@
+db.places.find( {
+   loc: { $geoWithin: { $box:  [ [ 0.0, 0.0 ], [ 100.0, 100.0 ] ] } }
+} )

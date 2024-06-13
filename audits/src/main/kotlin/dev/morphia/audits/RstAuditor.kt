@@ -180,7 +180,6 @@ class RstAuditor(val type: OperatorType) {
             }
         source.addTestCases(operator)
 
-        println("**************** source = \n\n${source}")
         if (!outputFile.parentFile.mkdirs() && !outputFile.parentFile.exists()) {
             throw IOException(
                 String.format("Could not create directory: %s", outputFile.parentFile)
@@ -212,7 +211,6 @@ class RstAuditor(val type: OperatorType) {
             text = "test data: ${example.folder.relativeTo(coreTestRoot)}\n" + text
             method.javaDoc.text = text
         }
-        println("**************** text = ${text}")
     }
 
     private fun updateTestAnnotation(

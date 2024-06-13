@@ -30,6 +30,7 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         addCodec(new MorphiaMapCodec(datastore));
         addCodec(new MorphiaLocalDateTimeCodec(datastore));
         addCodec(new MorphiaLocalTimeCodec());
+        addCodec(new PolygonCoordinatesCodec());
         addCodec(new ClassCodec());
         addCodec(new LocaleCodec());
         addCodec(new ObjectCodec(datastore));

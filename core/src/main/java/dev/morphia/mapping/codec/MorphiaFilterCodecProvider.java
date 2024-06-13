@@ -14,6 +14,7 @@ import dev.morphia.mapping.codec.filters.ExprFilterCodec;
 import dev.morphia.mapping.codec.filters.FieldLessFilterCodec;
 import dev.morphia.mapping.codec.filters.FilterCodec;
 import dev.morphia.mapping.codec.filters.GeoIntersectsFilterCodec;
+import dev.morphia.mapping.codec.filters.GeoWithinFilterCodec;
 import dev.morphia.mapping.codec.filters.JsonSchemaFilterCodec;
 import dev.morphia.mapping.codec.filters.LogicalFilterCodec;
 import dev.morphia.mapping.codec.filters.NearFilterCodec;
@@ -43,6 +44,7 @@ public class MorphiaFilterCodecProvider implements CodecProvider {
         addCodec(new FilterCodec(datastore));
         addCodec(new FieldLessFilterCodec(datastore));
         addCodec(new GeoIntersectsFilterCodec(datastore));
+        addCodec(new GeoWithinFilterCodec(datastore));
         addCodec(new JsonSchemaFilterCodec(datastore));
         addCodec(new LogicalFilterCodec(datastore));
         addCodec(new ModFilterCodec(datastore));

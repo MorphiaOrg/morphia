@@ -21,6 +21,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationOptions;
+import com.mongodb.client.model.geojson.codecs.GeoJsonCodecProvider;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
@@ -172,6 +173,7 @@ public class MorphiaDatastore implements Datastore {
 
         providers.addAll(morphiaCodecProviders);
         providers.add(codecRegistry);
+        providers.add(new GeoJsonCodecProvider());
         codecRegistry = fromProviders(providers);
         return codecRegistry;
     }
