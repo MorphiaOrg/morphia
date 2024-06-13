@@ -9,18 +9,10 @@
 | link:javadoc/dev/morphia/query/filters/Filters.html#and(dev.morphia.query.filters.Filter%2E%2E%2E)[Filters#and(Filter...)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/bitsAllClear[$bitsAllClear]
-a| 
-
- * link:javadoc/dev/morphia/query/filters/Filters.html#bitsAllClear(java.lang.String,int)[Filters#bitsAllClear(String,int)]
- * link:javadoc/dev/morphia/query/filters/Filters.html#bitsAllClear(java.lang.String,int)[Filters#bitsAllClear(String,int)]
-
+| link:javadoc/dev/morphia/query/filters/Filters.html#bitsAllClear(java.lang.String,java.lang.Object)[Filters#bitsAllClear(String,Object)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/bitsAllSet[$bitsAllSet]
-a| 
-
- * link:javadoc/dev/morphia/query/filters/Filters.html#bitsAllSet(java.lang.String,int)[Filters#bitsAllSet(String,int)]
- * link:javadoc/dev/morphia/query/filters/Filters.html#bitsAllSet(java.lang.String,int)[Filters#bitsAllSet(String,int)]
-
+| link:javadoc/dev/morphia/query/filters/Filters.html#bitsAllSet(java.lang.String,java.lang.Object)[Filters#bitsAllSet(String,Object)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/bitsAnyClear[$bitsAnyClear]
 | link:javadoc/dev/morphia/query/filters/Filters.html#bitsAnyClear(java.lang.String,java.lang.Object)[Filters#bitsAnyClear(String,Object)]

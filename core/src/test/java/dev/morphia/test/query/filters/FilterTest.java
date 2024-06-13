@@ -6,7 +6,6 @@ import java.util.function.Function;
 
 import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Martian;
 import dev.morphia.test.models.User;
@@ -30,17 +29,14 @@ public class FilterTest extends TemplatedTestBase {
                 .codecProvider(new ZDTCodecProvider()));
     }
 
-    public void testQuery(ServerVersion serverVersion,
-            Function<Query<Document>, Query<Document>> function) {
-        testQuery(serverVersion, true, true, function);
+    public void testQuery(Function<Query<Document>, Query<Document>> function) {
+        testQuery(new QueryTestOptions(), function);
     }
 
-    public void testQuery(ServerVersion serverVersion,
-            boolean removeIds,
-            boolean orderMatters,
+    public void testQuery(QueryTestOptions options,
             Function<Query<Document>, Query<Document>> function) {
 
-        checkMinServerVersion(serverVersion);
+        checkMinServerVersion(options.serverVersion());
         checkMinDriverVersion(minDriver);
         var resourceName = discoverResourceName();
         validateTestName(resourceName);
@@ -53,11 +49,11 @@ public class FilterTest extends TemplatedTestBase {
         if (!skipDataCheck) {
             List<Document> expected = loadExpected(resourceName);
 
-            actual = removeIds ? removeIds(actual) : actual;
-            expected = removeIds ? removeIds(expected) : expected;
+            actual = options.removeIds() ? removeIds(actual) : actual;
+            expected = options.removeIds() ? removeIds(expected) : expected;
 
             try {
-                Comparanator.of(null, actual, expected, orderMatters).compare();
+                Comparanator.of(null, actual, expected, options.orderMatters()).compare();
             } catch (AssertionError e) {
                 throw new AssertionError("%s\n\n actual: %s".formatted(e.getMessage(), toString(actual, "\n\t")),
                         e);
@@ -69,7 +65,7 @@ public class FilterTest extends TemplatedTestBase {
         Method method = findTestMethod();
         Test test = method.getAnnotation(Test.class);
         assertEquals(
-                loadTestName(resourceName), test.testName(),
+                test.testName(), loadTestName(resourceName),
                 "%s#%s does not have a name configured on the test.".formatted(method.getDeclaringClass().getName(),
                         method.getName()));
     }
