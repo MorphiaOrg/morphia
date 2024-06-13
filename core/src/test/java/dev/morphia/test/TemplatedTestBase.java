@@ -60,6 +60,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
     protected final ObjectMapper mapper = new ObjectMapper();
     protected boolean skipActionCheck = false;
+    @Deprecated
     protected boolean skipDataCheck = false;
 
     public TemplatedTestBase() {
@@ -84,6 +85,7 @@ public abstract class TemplatedTestBase extends TestBase {
         return toLowerCase(root.charAt(0)) + root.substring(1);
     }
 
+    @Deprecated
     public void skipDataCheck() {
         skipDataCheck = true;
     }

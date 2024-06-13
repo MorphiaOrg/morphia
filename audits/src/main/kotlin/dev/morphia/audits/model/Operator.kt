@@ -76,7 +76,6 @@ class Operator private constructor(var type: OperatorType) {
             EXPRESSION -> "expressions"
             STAGE -> "stages"
             FILTER -> "filters"
-            else -> ""
         }
 
     override fun toString(): String {
@@ -84,6 +83,6 @@ class Operator private constructor(var type: OperatorType) {
     }
 }
 
-private fun String.titleCase(): String {
+fun String.titleCase(): String {
     return first().uppercase() + substring(1)
 }

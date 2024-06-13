@@ -5,20 +5,24 @@ import dev.morphia.test.ServerVersion;
 import static dev.morphia.test.ServerVersion.ANY;
 
 public class QueryTestOptions {
-    private ServerVersion serverVersion = ANY;
-    private boolean removeIds = false;
     private boolean orderMatters = true;
+
+    private boolean removeIds = false;
+
+    private ServerVersion serverVersion = ANY;
+
+    private boolean skipDataCheck = false;
 
     public QueryTestOptions() {
         serverVersion = ANY;
     }
 
-    public ServerVersion serverVersion() {
-        return serverVersion;
+    public boolean orderMatters() {
+        return orderMatters;
     }
 
-    public QueryTestOptions serverVersion(ServerVersion serverVersion) {
-        this.serverVersion = serverVersion;
+    public QueryTestOptions orderMatters(boolean orderMatters) {
+        this.orderMatters = orderMatters;
         return this;
     }
 
@@ -31,12 +35,21 @@ public class QueryTestOptions {
         return this;
     }
 
-    public boolean orderMatters() {
-        return orderMatters;
+    public ServerVersion serverVersion() {
+        return serverVersion;
     }
 
-    public QueryTestOptions orderMatters(boolean orderMatters) {
-        this.orderMatters = orderMatters;
+    public QueryTestOptions serverVersion(ServerVersion serverVersion) {
+        this.serverVersion = serverVersion;
+        return this;
+    }
+
+    public boolean skipDataCheck() {
+        return skipDataCheck;
+    }
+
+    public QueryTestOptions skipDataCheck(boolean skipDataCheck) {
+        this.skipDataCheck = skipDataCheck;
         return this;
     }
 }

@@ -40,13 +40,14 @@ public class FilterTest extends TemplatedTestBase {
         checkMinDriverVersion(minDriver);
         var resourceName = discoverResourceName();
         validateTestName(resourceName);
-        loadData(resourceName, AGG_TEST_COLLECTION);
+        if (!options.skipDataCheck())
+            loadData(resourceName, AGG_TEST_COLLECTION);
         loadIndex(resourceName, AGG_TEST_COLLECTION);
 
         List<Document> actual = runQuery(resourceName, function.apply(getDs().find(AGG_TEST_COLLECTION, Document.class)
                 .disableValidation()));
 
-        if (!skipDataCheck) {
+        if (!options.skipDataCheck()) {
             List<Document> expected = loadExpected(resourceName);
 
             actual = options.removeIds() ? removeIds(actual) : actual;

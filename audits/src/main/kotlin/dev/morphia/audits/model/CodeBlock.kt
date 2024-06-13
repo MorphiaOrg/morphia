@@ -70,7 +70,7 @@ class CodeBlock {
             prefix = "%${field}s".format("")
         }
 
-    private val lines = mutableListOf<String>()
+    val lines = mutableListOf<String>()
 
     operator fun plusAssign(line: String) {
         if (!line.isBlank() && line.findIndent() >= indent && notControl(line)) {

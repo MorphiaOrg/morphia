@@ -4,22 +4,33 @@ import dev.morphia.audits.OperationAudit.Companion.DOC_ROOT
 import dev.morphia.audits.OperationAudit.Companion.findMethods
 import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType
+import dev.morphia.audits.model.OperatorType.EXPRESSION
+import dev.morphia.audits.model.OperatorType.FILTER
+import dev.morphia.audits.model.OperatorType.STAGE
 import dev.morphia.audits.model.Results
+import dev.morphia.audits.model.titleCase
+import dev.morphia.audits.rst.OperatorExample
 import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 import java.util.TreeMap
 import kotlin.collections.Map.Entry
+import org.jboss.forge.roaster.Roaster
+import org.jboss.forge.roaster.model.Visibility.PUBLIC
+import org.jboss.forge.roaster.model.source.JavaClassSource
 import org.jboss.forge.roaster.model.source.MethodSource
 import org.jboss.forge.roaster.model.source.ParameterSource
 
 class RstAuditor(val type: OperatorType) {
     companion object {
-        val auditRoot by lazy {
-            var gitRoot = File(".").canonicalFile
-            while (!File(gitRoot, ".git").exists()) gitRoot = gitRoot.parentFile
-            File(gitRoot, "audits/target/mongodb-docs")
+        val gitRoot by lazy {
+            var root = File(".").canonicalFile
+            while (!File(root, ".git").exists()) root = root.parentFile
+            root
         }
-        val coreTestRoot = File("../core/src/test/resources").absoluteFile
-        val coreTestSourceRoot = File("../core/src/test/java").absoluteFile
+        val auditRoot by lazy { File(gitRoot, "audits/target/mongodb-docs") }
+        val coreTestRoot = File(gitRoot, "core/src/test/resources").absoluteFile
+        val coreTestSourceRoot = File(gitRoot, "core/src/test/java").absoluteFile
         val includesRoot = File(auditRoot, "source")
     }
 
@@ -40,19 +51,20 @@ class RstAuditor(val type: OperatorType) {
                 .filter { !it.testCaseExists }
                 .filter { !File(it.resourceFolder, "ignored").exists() }
 
+        operators.forEach { update(it) }
         emitDocs(TreeMap(methods), type)
         return Results(created, noExamples, noTest, missingServerRelease)
     }
 
     private fun emitExampleData(type: OperatorType): List<Operator> {
-        val toList =
+        val operators =
             operatorRoot
                 .walk()
+                .toList()
                 .filter { it.isFile }
                 .filter { !it.equals(operatorRoot) }
                 .map { Operator(type, it) }
-                .toList()
-        val operators = toList.filter { it.type == type }
+                .filter { it.type == type }
 
         operators.forEach { it.output() }
         return operators
@@ -142,6 +154,94 @@ class RstAuditor(val type: OperatorType) {
         }
 
         return line + "\n"
+    }
+
+    private fun update(operator: Operator) {
+        val outputFile: File = operator.testSource
+        val source =
+            if (!outputFile.exists()) {
+                Roaster.create(JavaClassSource::class.java).apply {
+                    name = "Test${operator.name.titleCase()}"
+                    `package` =
+                        when (operator.type) {
+                            FILTER -> "dev.morphia.test.query.filters"
+                            EXPRESSION -> "dev.morphia.test.aggregation.expressions"
+                            STAGE -> "dev.morphia.test.aggregation.stages"
+                        }
+                    superType =
+                        when (operator.type) {
+                            FILTER -> "dev.morphia.test.query.filters.FilterTest"
+                            EXPRESSION -> "dev.morphia.test.aggregation.AggregationTest"
+                            STAGE -> "dev.morphia.test.aggregation.AggregationTest"
+                        }
+                }
+            } else {
+                Roaster.parse(outputFile) as JavaClassSource
+            }
+        source.addTestCases(operator)
+
+        println("**************** source = \n\n${source}")
+        if (!outputFile.parentFile.mkdirs() && !outputFile.parentFile.exists()) {
+            throw IOException(
+                String.format("Could not create directory: %s", outputFile.parentFile)
+            )
+        }
+        FileWriter(outputFile).use { writer -> writer.write(source.toString()) }
+    }
+
+    private fun JavaClassSource.addTestCases(operator: Operator) {
+        operator.examples.forEachIndexed { index, example ->
+            val testCaseName = "testExample${index + 1}"
+
+            if (methods.none { it.name == testCaseName }) {
+                createTestCase(testCaseName, example)
+            } else {
+                methods
+                    .filter { it.name == testCaseName }
+                    .forEach { method ->
+                        updateJavadoc(method, example)
+                        updateTestAnnotation(method, example)
+                    }
+            }
+        }
+    }
+
+    private fun updateJavadoc(method: MethodSource<JavaClassSource>, example: OperatorExample) {
+        var text = method.javaDoc.text
+        if (!text.startsWith("test data")) {
+            text = "test data: ${example.folder.relativeTo(coreTestRoot)}\n" + text
+            method.javaDoc.text = text
+        }
+        println("**************** text = ${text}")
+    }
+
+    private fun updateTestAnnotation(
+        method: MethodSource<JavaClassSource>,
+        example: OperatorExample,
+    ) {
+        val annotation = method.getAnnotation("org.testng.annotations.Test")
+        if (annotation.getStringValue("testName") == null) {
+            annotation.setStringValue("testName", example.name)
+        }
+    }
+
+    private fun JavaClassSource.createTestCase(
+        testCaseName: String,
+        example: OperatorExample,
+    ) {
+        val method = addMethod().setName(testCaseName).setVisibility(PUBLIC)
+
+        val text = "test data: ${example.folder.relativeTo(coreTestRoot)}\n\n"
+        method.javaDoc.text = text + example.actionBlock?.lines?.joinToString("\n")
+
+        method.addAnnotation("org.testng.annotations.Test").setStringValue("testName", example.name)
+
+        method.setBody(
+            """
+                        |testQuery((query) -> query.filter(  ));
+                        | """
+                .trimMargin()
+        )
     }
 }
 

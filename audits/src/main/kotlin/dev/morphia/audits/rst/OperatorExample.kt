@@ -61,11 +61,11 @@ class OperatorExample(
     }
 
     override fun toString() =
-        "OperatorExample(name='$name', actionBlock: ${actionBlock != null}, dataBlock: ${dataBlock != null}, " +
+        "OperatorExample(name='$name', actionBlock: ${actionBlock != null}, dataBlock: ${dataBlock.isNotEmpty()}, " +
             "expectedBlock=${expectedBlock != null}, " +
             "indexBlock: ${indexBlock != null})"
 
     fun valid(): Boolean {
-        return dataBlock != null && actionBlock != null && expectedBlock != null
+        return actionBlock != null
     }
 }
