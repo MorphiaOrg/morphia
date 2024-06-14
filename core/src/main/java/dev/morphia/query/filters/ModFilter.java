@@ -8,11 +8,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  */
 @MorphiaInternal
 public class ModFilter extends Filter {
-    private final long divisor;
+    private final Number divisor;
 
-    private final long remainder;
+    private final Number remainder;
 
-    public ModFilter(String field, long divisor, long remainder) {
+    public ModFilter(String field, Number divisor, Number remainder) {
         super("$mod", field, null);
         this.divisor = divisor;
         this.remainder = remainder;
@@ -24,7 +24,7 @@ public class ModFilter extends Filter {
      * @return the divisor
      */
     @MorphiaInternal
-    public long divisor() {
+    public Number divisor() {
         return divisor;
     }
 
@@ -34,7 +34,7 @@ public class ModFilter extends Filter {
      * @return the remainder
      */
     @MorphiaInternal
-    public long remainder() {
+    public Number remainder() {
         return remainder;
     }
 }

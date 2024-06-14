@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Function;
 
+import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.test.TemplatedTestBase;
@@ -37,15 +38,17 @@ public class FilterTest extends TemplatedTestBase {
             Function<Query<Document>, Query<Document>> function) {
 
         checkMinServerVersion(options.serverVersion());
-        checkMinDriverVersion(minDriver);
+        checkMinDriverVersion(options.minDriver());
         var resourceName = discoverResourceName();
         validateTestName(resourceName);
-        if (!options.skipDataCheck())
+        if (!options.skipDataCheck()) {
             loadData(resourceName, AGG_TEST_COLLECTION);
+        }
         loadIndex(resourceName, AGG_TEST_COLLECTION);
 
-        List<Document> actual = runQuery(resourceName, function.apply(getDs().find(AGG_TEST_COLLECTION, Document.class)
-                .disableValidation()));
+        Query<Document> apply = function.apply(getDs().find(AGG_TEST_COLLECTION, Document.class)
+                .disableValidation());
+        List<Document> actual = runQuery(resourceName, apply, options.findOptions());
 
         if (!options.skipDataCheck()) {
             List<Document> expected = loadExpected(resourceName);
@@ -72,7 +75,7 @@ public class FilterTest extends TemplatedTestBase {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected List<Document> runQuery(String pipelineTemplate, Query<Document> query) {
+    protected List<Document> runQuery(String pipelineTemplate, Query<Document> query, FindOptions options) {
         String resourceName = format("%s/%s/action.json", prefix(), pipelineTemplate);
         Document document = ((MorphiaQuery) query).toDocument();
 
@@ -82,7 +85,7 @@ public class FilterTest extends TemplatedTestBase {
         }
 
         if (!skipDataCheck) {
-            try (var cursor = query.iterator()) {
+            try (var cursor = query.iterator(options)) {
                 return cursor.toList();
             }
         } else {

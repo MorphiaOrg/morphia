@@ -1,0 +1,2 @@
+db.inventory.find( { $nor: [ { price: 1.99 }, { price: { $exists: false } },
+                             { sale: true }, { sale: { $exists: false } } ] } )

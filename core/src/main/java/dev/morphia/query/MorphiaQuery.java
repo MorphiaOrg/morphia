@@ -206,8 +206,8 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public MorphiaCursor<T> iterator(FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, collection));
+    public MorphiaCursor<T> iterator(@Nullable FindOptions options) {
+        return new MorphiaCursor<>(prepareCursor(options != null ? options : new FindOptions(), collection));
     }
 
     /**
@@ -317,6 +317,7 @@ public class MorphiaQuery<T> implements Query<T> {
         if (options.isLogQuery()) {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
+        options.disableValidation(!isValidate());
         try {
             return options
                     .apply(iterable(options, collection), mapper, type)

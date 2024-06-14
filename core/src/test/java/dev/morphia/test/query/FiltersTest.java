@@ -14,11 +14,9 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
-import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.Type;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.aggregation.model.Inventory;
 import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
 
@@ -30,19 +28,10 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.Miscellaneous.rand;
 import static dev.morphia.aggregation.expressions.Miscellaneous.sampleRate;
 import static dev.morphia.aggregation.stages.Match.match;
-import static dev.morphia.query.filters.Filters.and;
-import static dev.morphia.query.filters.Filters.bitsAllClear;
-import static dev.morphia.query.filters.Filters.bitsAllSet;
-import static dev.morphia.query.filters.Filters.bitsAnyClear;
-import static dev.morphia.query.filters.Filters.bitsAnySet;
 import static dev.morphia.query.filters.Filters.expr;
 import static dev.morphia.query.filters.Filters.gt;
-import static dev.morphia.query.filters.Filters.gte;
-import static dev.morphia.query.filters.Filters.in;
 import static dev.morphia.query.filters.Filters.jsonSchema;
 import static dev.morphia.query.filters.Filters.lt;
-import static dev.morphia.query.filters.Filters.lte;
-import static dev.morphia.query.filters.Filters.mod;
 import static dev.morphia.query.filters.Filters.nin;
 import static dev.morphia.query.filters.Filters.nor;
 import static dev.morphia.query.filters.Filters.or;
@@ -66,16 +55,6 @@ public class FiltersTest extends TemplatedTestBase {
     }
 
     @Test
-    public void testAnd() {
-        getDs().find(Budget.class)
-                .filter(and(lt("budget", 10000), gt("budget", 12)))
-                .iterator();
-        getDs().find(Budget.class)
-                .filter(and(lte("budget", 10000), gte("budget", 12)))
-                .iterator();
-    }
-
-    @Test
     public void testType() {
         User entity = new User();
         entity.name = "first_name";
@@ -86,100 +65,6 @@ public class FiltersTest extends TemplatedTestBase {
         Query<User> query = getDs().find(User.class);
         query.filter(type("name", Type.STRING));
         Assert.assertTrue(query.count() > 0);
-    }
-
-    @Test
-    public void testBitsAllClear() {
-        MongoCollection<Document> collection = getDatabase().getCollection("users");
-
-        String discriminator = User.class.getName();
-        collection.insertMany(asList(
-                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", discriminator),
-                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", discriminator),
-                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", discriminator)));
-
-        FindOptions options = new FindOptions().logQuery();
-
-        Query<User> query = getDs().find(User.class)
-                .disableValidation()
-                .filter(bitsAllClear("a", 35));
-        assertEquals(query.iterator(options).toList().size(), 2, query.getLoggedQuery());
-
-        query = getDs().find(User.class)
-                .disableValidation()
-                .filter(bitsAllClear("a", new int[] { 1, 5 }));
-        assertEquals(query.iterator(options).toList().size(), 2, query.getLoggedQuery());
-    }
-
-    @Test
-    public void testBitsAllSet() {
-        MongoCollection<Document> collection = getDatabase().getCollection("users");
-
-        String discriminator = User.class.getName();
-        collection.insertMany(asList(
-                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", discriminator),
-                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", discriminator),
-                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", discriminator)));
-
-        final FindOptions options = new FindOptions().logQuery();
-
-        Query<User> query = getDs().find(User.class)
-                .disableValidation()
-                .filter(bitsAllSet("a", 50));
-        assertEquals(query.iterator(options).toList().size(), 1, query.getLoggedQuery());
-
-        query = getDs().find(User.class)
-                .disableValidation()
-                .filter(bitsAllSet("a", new int[] { 1, 5 }));
-        assertEquals(query.iterator(options)
-                .toList().size(), 1, query.getLoggedQuery());
-    }
-
-    @Test
-    public void testBitsAnyClear() {
-        MongoCollection<Document> collection = getDatabase().getCollection("users");
-
-        String discriminator = User.class.getName();
-        collection.insertMany(asList(
-                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", discriminator),
-                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", discriminator),
-                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", discriminator)));
-
-        FindOptions options = new FindOptions().logQuery();
-
-        Query<User> query = getDs().find(User.class)
-                .disableValidation()
-                .filter(bitsAnyClear("a", 35));
-        assertEquals(query.iterator(options).toList().size(), 3, query.getLoggedQuery());
-
-        query = getDs().find(User.class)
-                .disableValidation()
-                .filter(bitsAnyClear("a", new int[] { 1, 5 }));
-        assertEquals(query.iterator(options)
-                .toList().size(), 2, query.getLoggedQuery());
-    }
-
-    @Test
-    public void testBitsAnySet() {
-        MongoCollection<Document> collection = getDatabase().getCollection("users");
-
-        String discriminator = User.class.getName();
-        collection.insertMany(asList(
-                new Document("a", 54).append("binaryValueofA", "00110110").append("_t", discriminator),
-                new Document("a", 20).append("binaryValueofA", "00010100").append("_t", discriminator),
-                new Document("a", 20.0).append("binaryValueofA", "00010100").append("_t", discriminator)));
-
-        FindOptions options = new FindOptions().logQuery();
-
-        Query<User> query = getDs().find(User.class)
-                .disableValidation()
-                .filter(bitsAnySet("a", 35));
-        assertEquals(query.iterator(options).toList().size(), 1, query.getLoggedQuery());
-
-        assertEquals(getDs().find(User.class)
-                .disableValidation()
-                .filter(bitsAnySet("a", new int[] { 1, 5 })).iterator(options)
-                .toList().size(), 1, query.getLoggedQuery());
     }
 
     @Test
@@ -196,13 +81,6 @@ public class FiltersTest extends TemplatedTestBase {
                 .toList();
 
         assertEquals(budgets.size(), 3);
-    }
-
-    @Test
-    public void testIn() {
-        getDs().find(Budget.class)
-                .filter(in("budget", asList(123, 234)))
-                .iterator();
     }
 
     @Test
@@ -267,15 +145,6 @@ public class FiltersTest extends TemplatedTestBase {
                 .findFirst()
                 .orElseThrow();
         assertEquals(document.get("score"), 1.0, query.getLoggedQuery());
-
-    }
-
-    @Test
-    public void testMod() {
-        var query = getDs().find(Inventory.class)
-                .disableValidation()
-                .filter(mod("qty", 4, 0));
-        testQuery((MorphiaQuery<?>) query, new FindOptions(), true);
 
     }
 

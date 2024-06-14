@@ -33,8 +33,8 @@ public class NearFilterCodec extends BaseFilterCodec<NearFilter> {
         document(writer, near.getName(), () -> {
             writer.writeName("$geometry");
             CodecHelper.unnamedValue(writer, datastore, near.getValue(datastore), context);
-            value(writer, "$maxDistance", near.maxDistance());
             value(writer, "$minDistance", near.minDistance());
+            value(writer, "$maxDistance", near.maxDistance());
             value(datastore.getCodecRegistry(), writer, "crs", near.crs(), context);
         });
     }

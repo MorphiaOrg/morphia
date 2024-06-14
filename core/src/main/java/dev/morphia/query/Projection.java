@@ -7,9 +7,9 @@ import java.util.StringJoiner;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
@@ -19,6 +19,9 @@ import org.bson.Document;
  */
 public class Projection {
     private final FindOptions options;
+
+    private boolean disableValidation;
+
     private List<String> includes;
     private List<String> excludes;
     private String arrayField;
@@ -28,6 +31,17 @@ public class Projection {
 
     Projection(FindOptions options) {
         this.options = options;
+    }
+
+    /**
+     * @param disableValidation
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public void disableValidation(boolean disableValidation) {
+
+        this.disableValidation = disableValidation;
     }
 
     /**
@@ -112,7 +126,8 @@ public class Projection {
             int include) {
         if (fields != null) {
             for (String field : fields) {
-                projection.put(new PathTarget(mapper, mapper.getEntityModel(clazz), field).translatedPath(), include);
+                String key = disableValidation ? field : new PathTarget(mapper, mapper.getEntityModel(clazz), field).translatedPath();
+                projection.put(key, include);
             }
         }
     }
@@ -137,8 +152,10 @@ public class Projection {
         iterate(mapper, projection, clazz, includes, 1);
         iterate(mapper, projection, clazz, excludes, 0);
 
-        final EntityModel model = mapper.getEntityModel(clazz);
-        Entity entityAnnotation = model.getEntityAnnotation();
+        Entity entityAnnotation = null;
+        if (!clazz.equals(Document.class)) {
+            entityAnnotation = mapper.getEntityModel(clazz).getEntityAnnotation();
+        }
 
         if (isIncluding() && entityAnnotation != null && entityAnnotation.useDiscriminator()) {
             projection.put(mapper.getConfig().discriminatorKey(), 1);
@@ -148,7 +165,9 @@ public class Projection {
     }
 
     private Document slice(Mapper mapper, Class<?> clazz) {
-        String fieldName = new PathTarget(mapper, mapper.getEntityModel(clazz), arrayField).translatedPath();
+        String fieldName = disableValidation
+                ? arrayField
+                : new PathTarget(mapper, mapper.getEntityModel(clazz), arrayField).translatedPath();
         return new Document(fieldName, slice.toDatabase());
     }
 

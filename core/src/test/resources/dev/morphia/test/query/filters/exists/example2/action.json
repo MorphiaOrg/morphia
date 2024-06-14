@@ -1,0 +1,1 @@
+db.spices.find( { cinnamon: { $exists: false } } )

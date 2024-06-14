@@ -396,6 +396,20 @@ public final class Filters {
     }
 
     /**
+     * Performs a modulo operation on the value of a field and selects documents with a specified result.
+     *
+     * @param field     the field to check
+     * @param divisor   the value to divide by
+     * @param remainder the remainder to check for
+     * @return the filter
+     * @query.filter $mod
+     * @since 3.0
+     */
+    public static Filter mod(String field, double divisor, double remainder) {
+        return new ModFilter(field, divisor, remainder);
+    }
+
+    /**
      * $ne selects the documents where the value of the field is not equal to the specified value. This includes documents that do not
      * contain the field.
      *

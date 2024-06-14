@@ -41,6 +41,9 @@ import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 public final class FindOptions implements ReadConfigurable<FindOptions>, CollectionConfigurable<FindOptions> {
     private Boolean allowDiskUse;
     private int batchSize;
+
+    private boolean disableValidation = false;
+
     private int limit;
     private long maxTimeMS;
     private long maxAwaitTimeMS;
@@ -92,6 +95,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             logQuery(); //  reset to a new ID
         }
         if (projection != null) {
+            projection.disableValidation(disableValidation);
             iterable.projection(projection.map(mapper, type));
         }
 
@@ -249,6 +253,16 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     public FindOptions cursorType(CursorType cursorType) {
         this.cursorType = Assertions.notNull("cursorType", cursorType);
         return this;
+    }
+
+    /**
+     * @param disable
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public void disableValidation(boolean disable) {
+        this.disableValidation = disable;
     }
 
     /**

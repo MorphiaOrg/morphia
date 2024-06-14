@@ -1,0 +1,1 @@
+db.inventory.find( { qty: { $mod: [ 4, 1, 2, 3 ] } } )

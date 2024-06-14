@@ -1,10 +1,16 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.query.FindOptions;
+import dev.morphia.test.DriverVersion;
 import dev.morphia.test.ServerVersion;
 
 import static dev.morphia.test.ServerVersion.ANY;
 
 public class QueryTestOptions {
+    private FindOptions findOptions;
+
+    private DriverVersion minDriver = DriverVersion.v41;
+
     private boolean orderMatters = true;
 
     private boolean removeIds = false;
@@ -15,6 +21,24 @@ public class QueryTestOptions {
 
     public QueryTestOptions() {
         serverVersion = ANY;
+    }
+
+    public FindOptions findOptions() {
+        return findOptions;
+    }
+
+    public QueryTestOptions findOptions(FindOptions findOptions) {
+        this.findOptions = findOptions;
+        return this;
+    }
+
+    public DriverVersion minDriver() {
+        return minDriver;
+    }
+
+    public QueryTestOptions minDriver(DriverVersion minDriver) {
+        this.minDriver = minDriver;
+        return this;
     }
 
     public boolean orderMatters() {
