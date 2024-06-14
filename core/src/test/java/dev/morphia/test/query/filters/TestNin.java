@@ -10,8 +10,6 @@ public class TestNin extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/nin/example1
-     * 
-     * db.inventory.find( { quantity: { $nin: [ 5, 15 ] } }, { _id: 0 } )
      */
     @Test(testName = "Select on Unmatching Documents")
     public void testExample1() {

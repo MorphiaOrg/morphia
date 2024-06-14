@@ -8,8 +8,6 @@ public class TestLte extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/lte/example1
-     * 
-     * db.inventory.find( { quantity: { $lte: 20 } } )
      */
     @Test(testName = "Match Document Fields")
     public void testExample1() {

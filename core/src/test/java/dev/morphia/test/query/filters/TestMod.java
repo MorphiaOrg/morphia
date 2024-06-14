@@ -8,8 +8,6 @@ public class TestMod extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/mod/example1
-     * 
-     * db.inventory.find( { qty: { $mod: [ 4, 0 ] } } )
      */
     @Test(testName = "Use ``$mod`` to Select Documents")
     public void testExample1() {
@@ -19,8 +17,6 @@ public class TestMod extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/mod/example2
-     * 
-     * db.inventory.find( { qty: { $mod: [ 4 ] } } )
      */
     @Test(testName = "Not Enough Elements Error")
     public void testExample2() {
@@ -41,9 +37,7 @@ public class TestMod extends FilterTest {
     @Test(testName = "Floating Point Arguments")
     public void testExample4() {
         testQuery((query) -> query.filter(
-                mod("qty", 4.0, 0.0)
-
-        ));
+                mod("qty", 4.0, 0.0)));
     }
 
     /**
@@ -52,8 +46,6 @@ public class TestMod extends FilterTest {
     @Test(testName = "Negative Dividend")
     public void testExample5() {
         testQuery((query) -> query.filter(
-                mod("qty", -4, -0)
-
-        ));
+                mod("qty", -4, -0)));
     }
 }

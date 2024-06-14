@@ -18,8 +18,6 @@ public class TestExists extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/exists/example2
-     * 
-     * db.spices.find( { saffron: { $exists: true } } )
      */
     @Test(testName = "Null Values")
     public void testExample2() {

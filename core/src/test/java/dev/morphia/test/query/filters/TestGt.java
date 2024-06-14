@@ -8,8 +8,6 @@ public class TestGt extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/gt/example1
-     * 
-     * db.inventory.find( { quantity: { $gt: 20 } } )
      */
     @Test(testName = "Match Document Fields")
     public void testExample1() {

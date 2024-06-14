@@ -15,9 +15,6 @@ public class TestGeoWithin extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/geoWithin/example1
-     * 
-     * db.places.find( { loc: { $geoWithin: { $geometry: { type : "Polygon" ,
-     * coordinates: [ [ [ 0, 0 ], [ 3, 6 ], [ 6, 1 ], [ 0, 0 ] ] ] } } } } )
      */
     @Test(testName = "Within a Polygon")
     public void testExample1() {
@@ -33,11 +30,6 @@ public class TestGeoWithin extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/geoWithin/example2
-     * 
-     * db.places.find( { loc: { $geoWithin: { $geometry: { type : "Polygon" ,
-     * coordinates: [ [ [ -100, 60 ], [ -100, 0 ], [ -100, -60 ], [ 100, -60 ], [
-     * 100, 60 ], [ -100, 60 ] ] ], crs: { type: "name", properties: { name:
-     * "urn:x-mongodb:crs:strictwinding:EPSG:4326" } } } } } } )
      */
     @Test(testName = "Within a \"Big\" Polygon")
     public void testExample2() {
