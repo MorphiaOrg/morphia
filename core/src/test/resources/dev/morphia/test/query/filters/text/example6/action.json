@@ -1,0 +1,1 @@
+db.articles.find( { $text: { $search: "сы́рники CAFÉS" } } )

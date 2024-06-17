@@ -514,7 +514,7 @@ public final class Filters {
      * @since 2.4.0
      */
     public static RegexFilter regex(String field, String pattern) {
-        return new RegexFilter(field, pattern);
+        return new RegexFilter(field, Pattern.compile(pattern));
     }
 
     /**
@@ -528,7 +528,7 @@ public final class Filters {
      * @since 2.4.0
      */
     public static RegexFilter regex(String field, Pattern pattern) {
-        return new RegexFilter(field, pattern.pattern());
+        return new RegexFilter(field, pattern);
     }
 
     /**
@@ -562,8 +562,8 @@ public final class Filters {
      * @return the filter
      * @query.filter $type
      */
-    public static Filter type(String field, Type val) {
-        return new Filter("$type", field, val.toString().toLowerCase());
+    public static Filter type(String field, Type... val) {
+        return new Filter("$type", field, val.length == 1 ? val[0] : val);
     }
 
     /**

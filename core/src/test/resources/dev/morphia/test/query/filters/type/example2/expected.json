@@ -1,0 +1,3 @@
+{ _id : 1, name : "Alice King", classAverage : 87.33333333333333 }
+{ _id : 2, name : "Bob Jenkins", classAverage : "83.52" }
+{ _id : 3, name : "Cathy Hart", classAverage : "94.06" }

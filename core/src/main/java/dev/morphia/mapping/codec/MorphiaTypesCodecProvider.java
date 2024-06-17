@@ -34,10 +34,12 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         addCodec(new ClassCodec());
         addCodec(new LocaleCodec());
         addCodec(new ObjectCodec(datastore));
+        //        addCodec(new PatternCodec());
         addCodec(new URICodec());
         addCodec(new ByteWrapperArrayCodec());
         addCodec(new BitSetCodec());
         addCodec(new FieldsCodec(datastore));
+        addCodec(new TypeCodec());
 
         List.of(boolean.class, Boolean.class,
                 char.class, Character.class,
@@ -49,7 +51,16 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
     }
 
     protected <T> void addCodec(Codec<T> codec) {
-        codecs.put(codec.getEncoderClass(), codec);
+        Class<T> encoderClass = codec.getEncoderClass();
+        if (!encoderClass.isEnum()) {
+            codecs.put(encoderClass, codec);
+        } else {
+            T[] enumConstants = encoderClass.getEnumConstants();
+            for (T enumConstant : enumConstants) {
+                Class<?> aClass = enumConstant.getClass();
+                codecs.put(aClass, codec);
+            }
+        }
     }
 
     @Override
@@ -65,4 +76,5 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
             return null;
         }
     }
+
 }

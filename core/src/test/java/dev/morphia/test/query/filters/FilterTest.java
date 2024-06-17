@@ -48,7 +48,7 @@ public class FilterTest extends TemplatedTestBase {
 
         Query<Document> apply = function.apply(getDs().find(AGG_TEST_COLLECTION, Document.class)
                 .disableValidation());
-        List<Document> actual = runQuery(resourceName, apply, options.findOptions());
+        List<Document> actual = runQuery(options, resourceName, apply, options.findOptions());
 
         if (!options.skipDataCheck()) {
             List<Document> expected = loadExpected(resourceName);
@@ -75,11 +75,11 @@ public class FilterTest extends TemplatedTestBase {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected List<Document> runQuery(String pipelineTemplate, Query<Document> query, FindOptions options) {
+    protected List<Document> runQuery(QueryTestOptions testOptions, String pipelineTemplate, Query<Document> query, FindOptions options) {
         String resourceName = format("%s/%s/action.json", prefix(), pipelineTemplate);
         Document document = ((MorphiaQuery) query).toDocument();
 
-        if (!skipActionCheck) {
+        if (!skipActionCheck && !testOptions.skipActionCheck()) {
             Document target = loadQuery(resourceName);
             assertEquals(toJson(document), toJson(target), "Should generate the same query document");
         }

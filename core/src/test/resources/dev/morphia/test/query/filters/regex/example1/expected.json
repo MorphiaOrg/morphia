@@ -1,0 +1,3 @@
+{ _id: 101, sku: 'abc789', description: 'First line\nSecond line' },
+{ _id: 103, sku: 'xyz789', description: 'Multiple\nline description' },
+{ _id: 104, sku: 'Abc789', description: 'SKU starts with A' }

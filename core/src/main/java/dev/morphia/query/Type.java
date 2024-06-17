@@ -61,6 +61,11 @@ public enum Type {
     REGULAR_EXPRESSION(11),
 
     /**
+     * DBPointer
+     */
+    DB_POINTER(12),
+
+    /**
      * javascript
      */
     JAVASCRIPT(13),
@@ -89,6 +94,11 @@ public enum Type {
      * int64
      */
     INTEGER_64_BIT(18),
+
+    /**
+     * Decimal128
+     */
+    DECIMAL_128(19),
 
     /**
      * minKey

@@ -1,6 +1,7 @@
 package dev.morphia.test;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
@@ -40,6 +41,8 @@ class MongoHolder implements AutoCloseable {
                     .applyConnectionString(new ConnectionString(connectionString))
                     .build());
 
+            ServerAddress serverAddress = mongoClient.getClusterDescription().getClusterSettings().getHosts().get(0);
+            System.out.println("connection to database on port " + serverAddress.getPort());
         }
         return mongoClient;
     }

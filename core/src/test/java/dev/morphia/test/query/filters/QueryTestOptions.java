@@ -17,6 +17,8 @@ public class QueryTestOptions {
 
     private ServerVersion serverVersion = ANY;
 
+    private boolean skipActionCheck;
+
     private boolean skipDataCheck = false;
 
     public QueryTestOptions() {
@@ -66,6 +68,15 @@ public class QueryTestOptions {
     public QueryTestOptions serverVersion(ServerVersion serverVersion) {
         this.serverVersion = serverVersion;
         return this;
+    }
+
+    public QueryTestOptions skipActionCheck(boolean skipActionCheck) {
+        this.skipActionCheck = skipActionCheck;
+        return this;
+    }
+
+    public boolean skipActionCheck() {
+        return skipActionCheck;
     }
 
     public boolean skipDataCheck() {
