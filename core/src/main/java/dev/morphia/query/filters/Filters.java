@@ -148,13 +148,12 @@ public final class Filters {
     /**
      * Adds a comment to a query predicate.
      *
-     * @param field the field to check
-     * @param val   the value to check
+     * @param comment the comment to attach
      * @return the filter
      * @query.filter $comment
      */
-    public static Filter comment(String field, Object val) {
-        return new Filter("$comment", field, val);
+    public static Filter comment(String comment) {
+        return new CommentFilter(comment);
     }
 
     /**

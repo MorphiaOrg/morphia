@@ -1,0 +1,13 @@
+   loc: {
+      "$near": {
+         "$geometry": {
+            "type": "Point",
+            "coordinates": [
+               -74.0,
+               40.0
+            ]
+         }
+      },
+      $maxDistance: 10.0
+   }
+}

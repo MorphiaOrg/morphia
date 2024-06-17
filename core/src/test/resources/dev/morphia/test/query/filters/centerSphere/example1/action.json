@@ -1,0 +1,3 @@
+db.places.find( {
+  loc: { $geoWithin: { $centerSphere: [ [ -88.0, 30.0 ], 0.0025232135648 ] } }
+} )

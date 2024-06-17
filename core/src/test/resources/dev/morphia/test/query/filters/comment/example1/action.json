@@ -1,0 +1,6 @@
+db.records.find(
+   {
+     x: { $mod: [ 2, 0 ] },
+     $comment: "Find even values."
+   }
+)

@@ -1,0 +1,20 @@
+db.places.find(
+   {
+     loc: {
+       $geoIntersects: {
+          $geometry: {
+             type : "Polygon",
+             coordinates: [
+               [
+                 [ -100, 60 ], [ -100, 0 ], [ -100, -60 ], [ 100, -60 ], [ 100, 60 ], [ -100, 60 ]
+               ]
+             ],
+             crs: {
+                type: "name",
+                properties: { name: "urn:x-mongodb:crs:strictwinding:EPSG:4326" }
+             }
+          }
+       }
+     }
+   }
+)

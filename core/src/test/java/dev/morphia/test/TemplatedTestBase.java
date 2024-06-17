@@ -302,7 +302,7 @@ public abstract class TemplatedTestBase extends TestBase {
     private List<Document> parseAction(InputStream stream) {
         List<String> list = new ArrayList<>(new BufferedReader(new InputStreamReader(stream))
                 .lines()
-                .map(String::trim)
+                //                .map(String::trim)
                 //                .map(line -> line.replaceAll("(\\$*\\w+?):", "\"$1\":"))
                 .toList());
         unwrapArray(list);

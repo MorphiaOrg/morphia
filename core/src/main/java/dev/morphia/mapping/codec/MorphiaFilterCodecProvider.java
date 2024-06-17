@@ -7,6 +7,7 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.mapping.codec.filters.BaseFilterCodec;
 import dev.morphia.mapping.codec.filters.BoxCodec;
 import dev.morphia.mapping.codec.filters.CenterFilterCodec;
+import dev.morphia.mapping.codec.filters.CommentFilterCodec;
 import dev.morphia.mapping.codec.filters.ElemMatchFilterCodec;
 import dev.morphia.mapping.codec.filters.EqFilterCodec;
 import dev.morphia.mapping.codec.filters.ExistsFilterCodec;
@@ -37,6 +38,7 @@ public class MorphiaFilterCodecProvider implements CodecProvider {
         this.datastore = datastore;
         addCodec(new BoxCodec(datastore));
         addCodec(new CenterFilterCodec(datastore));
+        addCodec(new CommentFilterCodec(datastore));
         addCodec(new ElemMatchFilterCodec(datastore));
         addCodec(new EqFilterCodec(datastore));
         addCodec(new ExistsFilterCodec(datastore));

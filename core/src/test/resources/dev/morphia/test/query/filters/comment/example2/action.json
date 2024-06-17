@@ -1,0 +1,2 @@
+{ $match: { x: { $gt: 0 }, $comment: "Don't allow negative inputs." } },
+   { $group : { _id: { $mod: [ "$x", 2 ] }, total: { $sum: "$x" } } }
