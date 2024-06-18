@@ -14,13 +14,8 @@ public class TestPolygon extends FilterTest {
      */
     @Test(testName = "main")
     public void testExample1() {
-        Point[] point = new Point[] {
-                new Point(new Position(0, 0)),
-                new Point(new Position(3, 6)),
-                new Point(new Position(6, 0)),
-        };
-        testQuery(new QueryTestOptions().skipDataCheck(true),
-                (query) -> query.filter(
-                        polygon("loc", point)));
+        Point[] point = new Point[] { new Point(new Position(0, 0)), new Point(new Position(3, 6)),
+                new Point(new Position(6, 0)), };
+        testQuery(new QueryTestOptions().skipDataCheck(true), (query) -> query.filter(polygon("loc", point)));
     }
 }

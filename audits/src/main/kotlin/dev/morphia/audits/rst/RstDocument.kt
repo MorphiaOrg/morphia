@@ -62,10 +62,11 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
         private set
 
     init {
+        val partition = TILDE.partition(lines)
+        val tabs = partition.map { it.value.extractTabs(it.key) }
+        val entries = tabs.flatMap { it.entries }
         examples =
-            TILDE.partition(lines)
-                .map { it.value.extractTabs(it.key) }
-                .flatMap { it.entries }
+            entries
                 .map {
                     OperatorExample(
                         examples.firstOrNull { it.actionBlock != null },

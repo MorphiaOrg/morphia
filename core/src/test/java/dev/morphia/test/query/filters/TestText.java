@@ -14,8 +14,7 @@ public class TestText extends FilterTest {
      */
     @Test(testName = "Search for a Single Word")
     public void testExample1() {
-        testQuery((query) -> query.filter(
-                text("coffee")));
+        testQuery((query) -> query.filter(text("coffee")));
     }
 
     /**
@@ -23,11 +22,9 @@ public class TestText extends FilterTest {
      */
     @Test(testName = "Match Any of the Search Terms")
     public void testExample2() {
-        testQuery(new QueryTestOptions().orderMatters(false),
-                (query) -> query.filter(
-                        text("bake coffee cake")
+        testQuery(new QueryTestOptions().orderMatters(false), (query) -> query.filter(text("bake coffee cake")
 
-                ));
+        ));
     }
 
     /**
@@ -35,11 +32,9 @@ public class TestText extends FilterTest {
      */
     @Test(testName = "Search for a Phrase")
     public void testExample3() {
-        testQuery(new QueryTestOptions().orderMatters(false),
-                (query) -> query.filter(
-                        text("\"coffee shop\"")
+        testQuery(new QueryTestOptions().orderMatters(false), (query) -> query.filter(text("\"coffee shop\"")
 
-                ));
+        ));
     }
 
     /**
@@ -47,11 +42,9 @@ public class TestText extends FilterTest {
      */
     @Test(testName = "Exclude Documents That Contain a Term")
     public void testExample4() {
-        testQuery(new QueryTestOptions().orderMatters(false),
-                (query) -> query.filter(
-                        text("coffee -shop")
+        testQuery(new QueryTestOptions().orderMatters(false), (query) -> query.filter(text("coffee -shop")
 
-                ));
+        ));
     }
 
     /**
@@ -59,10 +52,7 @@ public class TestText extends FilterTest {
      */
     @Test(testName = "Search a Different Language")
     public void testExample5() {
-        testQuery(new QueryTestOptions().orderMatters(false),
-                (query) -> query.filter(
-                        text("leche")
-                                .language("es")));
+        testQuery(new QueryTestOptions().orderMatters(false), (query) -> query.filter(text("leche").language("es")));
     }
 
     /**
@@ -70,9 +60,7 @@ public class TestText extends FilterTest {
      */
     @Test(testName = "Case and Diacritic Insensitive Search")
     public void testExample6() {
-        testQuery(new QueryTestOptions().orderMatters(false),
-                (query) -> query.filter(
-                        text("сы́рники CAFÉS")));
+        testQuery(new QueryTestOptions().orderMatters(false), (query) -> query.filter(text("сы́рники CAFÉS")));
     }
 
     /**
@@ -80,9 +68,7 @@ public class TestText extends FilterTest {
      */
     @Test(testName = "Perform Case Sensitive Search")
     public void testExample7() {
-        testQuery((query) -> query.filter(
-                text("Coffee")
-                        .caseSensitive(true)));
+        testQuery((query) -> query.filter(text("Coffee").caseSensitive(true)));
     }
 
     /**
@@ -91,9 +77,7 @@ public class TestText extends FilterTest {
     @Test(testName = "Diacritic Sensitive Search")
     public void testExample8() {
         testQuery(new QueryTestOptions().orderMatters(false),
-                (query) -> query.filter(
-                        text("CAFÉ")
-                                .diacriticSensitive(true)));
+                (query) -> query.filter(text("CAFÉ").diacriticSensitive(true)));
     }
 
     /**
@@ -102,10 +86,7 @@ public class TestText extends FilterTest {
     @Test(testName = "Text Search Score Examples")
     public void testExample9() {
         QueryTestOptions options = new QueryTestOptions()
-                .findOptions(new FindOptions()
-                        .projection()
-                        .project(textScore("score")));
-        testQuery(options, (query) -> query.filter(
-                text("cake")));
+                .findOptions(new FindOptions().projection().project(textScore("score")));
+        testQuery(options, (query) -> query.filter(text("cake")));
     }
 }

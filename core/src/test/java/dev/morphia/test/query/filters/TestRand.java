@@ -16,16 +16,8 @@ public class TestRand extends FilterTest {
      */
     @Test(testName = "Select Random Items From a Collection")
     public void testExample1() {
-        QueryTestOptions options = new QueryTestOptions()
-                .orderMatters(false)
-                .removeIds(true)
-                .skipDataCheck(true)
-                .findOptions(new FindOptions()
-                        .projection()
-                        .include("name", "registered"));
-        testQuery(options,
-                (query) -> query.filter(
-                        eq("district", 3),
-                        expr(lt(0.5, rand()))));
+        QueryTestOptions options = new QueryTestOptions().orderMatters(false).removeIds(true).skipDataCheck(true)
+                .findOptions(new FindOptions().projection().include("name", "registered"));
+        testQuery(options, (query) -> query.filter(eq("district", 3), expr(lt(0.5, rand()))));
     }
 }

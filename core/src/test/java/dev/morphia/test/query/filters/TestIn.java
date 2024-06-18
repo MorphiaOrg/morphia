@@ -14,9 +14,7 @@ public class TestIn extends FilterTest {
      */
     @Test(testName = "Use the ``$in`` Operator to Match Values")
     public void testExample1() {
-        testQuery(new QueryTestOptions().removeIds(true),
-                (query) -> query.filter(
-                        in("quantity", List.of(5, 15))));
+        testQuery(new QueryTestOptions().removeIds(true), (query) -> query.filter(in("quantity", List.of(5, 15))));
     }
 
     /**
@@ -25,7 +23,6 @@ public class TestIn extends FilterTest {
     @Test(testName = "Use the ``$in`` Operator with a Regular Expression")
     public void testExample2() {
         testQuery(new QueryTestOptions().skipDataCheck(true),
-                (query) -> query.filter(
-                        in("tags", List.of(Pattern.compile("^be"), Pattern.compile("^st")))));
+                (query) -> query.filter(in("tags", List.of(Pattern.compile("^be"), Pattern.compile("^st")))));
     }
 }

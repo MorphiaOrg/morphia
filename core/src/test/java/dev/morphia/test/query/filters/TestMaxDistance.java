@@ -12,11 +12,9 @@ public class TestMaxDistance extends FilterTest {
         // legacy coordinates just won't be supported for now
 
         /*
-         * testQuery(new QueryTestOptions().skipDataCheck(true),
-         * (query) -> query.filter(
-         * near("loc", new Point(new Position(-74, 40))),
-         * maxDistance("loc",10.0)
-         * ));
+         * testQuery(new QueryTestOptions().skipDataCheck(true), (query) ->
+         * query.filter( near("loc", new Point(new Position(-74, 40))),
+         * maxDistance("loc",10.0) ));
          */
     }
 }

@@ -16,8 +16,7 @@ public class TestExpr extends FilterTest {
      */
     @Test(testName = "Compare Two Fields from A Single Document")
     public void testExample1() {
-        testQuery((query) -> query.filter(
-                expr(gt("$spent", "$budget"))));
+        testQuery((query) -> query.filter(expr(gt("$spent", "$budget"))));
     }
 
     /**
@@ -25,7 +24,7 @@ public class TestExpr extends FilterTest {
      */
     @Test(testName = "Using ``$expr`` With Conditional Statements", enabled = false, description = "parsing bug in Document's json parsing at $cond")
     public void testExample2() {
-        testQuery((query) -> query.filter(
-                expr(lt(condition(gte("qty", 100), multiply("$price", 0.5), multiply("$price", 0.75)), 5.0))));
+        testQuery((query) -> query
+                .filter(expr(lt(condition(gte("qty", 100), multiply("$price", 0.5), multiply("$price", 0.75)), 5.0))));
     }
 }

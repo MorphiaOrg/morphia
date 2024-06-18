@@ -1,6 +1,8 @@
-db.supplies.find( { $expr: { $lt: [
-   $cond: [
-      { $gte: ["$qty", 100] },
-      { $multiply: ["$price", 0.50] },
-      { $multiply: ["$price", 0.75] }
-   ] , 5 ] } } )
+let discountedPrice = { 
+   $cond: { 
+      if: { $gte: ["$qty", 100] }, 
+      then: { $multiply: ["$price", 0.50] }, 
+      else: { $multiply: ["$price", 0.75] } 
+   } 
+};
+db.supplies.find( { $expr: { $lt:[ discountedPrice,  5 ] } })

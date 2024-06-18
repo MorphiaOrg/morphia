@@ -17,7 +17,6 @@ public class TestBox extends FilterTest {
         Point bottomLeft = new Point(new Position(0, 0));
         Point upperRight = new Point(new Position(100, 100));
         testQuery(new QueryTestOptions().skipDataCheck(true),
-                (query) -> query.filter(
-                        box("loc", bottomLeft, upperRight)));
+                (query) -> query.filter(box("loc", bottomLeft, upperRight)));
     }
 }

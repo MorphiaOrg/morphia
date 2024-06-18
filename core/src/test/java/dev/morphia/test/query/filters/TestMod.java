@@ -11,8 +11,7 @@ public class TestMod extends FilterTest {
      */
     @Test(testName = "Use ``$mod`` to Select Documents")
     public void testExample1() {
-        testQuery((query) -> query.filter(
-                mod("qty", 4, 0)));
+        testQuery((query) -> query.filter(mod("qty", 4, 0)));
     }
 
     /**
@@ -36,8 +35,7 @@ public class TestMod extends FilterTest {
      */
     @Test(testName = "Floating Point Arguments")
     public void testExample4() {
-        testQuery((query) -> query.filter(
-                mod("qty", 4.0, 0.0)));
+        testQuery((query) -> query.filter(mod("qty", 4.0, 0.0)));
     }
 
     /**
@@ -45,7 +43,6 @@ public class TestMod extends FilterTest {
      */
     @Test(testName = "Negative Dividend")
     public void testExample5() {
-        testQuery((query) -> query.filter(
-                mod("qty", -4, -0)));
+        testQuery((query) -> query.filter(mod("qty", -4, -0)));
     }
 }

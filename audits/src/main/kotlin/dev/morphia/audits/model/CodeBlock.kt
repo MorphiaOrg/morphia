@@ -207,7 +207,11 @@ class CodeBlock {
         return result
     }
 
-    fun isAction(): Boolean = contains(".aggregate(") || contains(".find(")
+    fun isAction(): Boolean =
+        contains(".aggregate(") ||
+            contains(".find(") ||
+            contains(".updateOne(") ||
+            contains(".updateMany(")
 
     fun isData(): Boolean = contains(".insertOne(") || contains(".insertMany(")
 

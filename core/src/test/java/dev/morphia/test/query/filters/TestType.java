@@ -13,8 +13,7 @@ public class TestType extends FilterTest {
      */
     @Test(testName = "Querying by Data Type")
     public void testExample1() {
-        testQuery((query) -> query.filter(
-                type("zipCode", Type.STRING)));
+        testQuery((query) -> query.filter(type("zipCode", Type.STRING)));
     }
 
     /**
@@ -25,8 +24,7 @@ public class TestType extends FilterTest {
      */
     @Test(testName = "Querying by Multiple Data Types")
     public void testExample2() {
-        testQuery((query) -> query.filter(
-                type("classAverage", Type.STRING, Type.DOUBLE)));
+        testQuery((query) -> query.filter(type("classAverage", Type.STRING, Type.DOUBLE)));
     }
 
     /**
@@ -36,7 +34,6 @@ public class TestType extends FilterTest {
      */
     @Test(testName = "Querying by MinKey and MaxKey")
     public void testExample3() {
-        testQuery((query) -> query.filter(
-                type("grades.grade", Type.MIN_KEY)));
+        testQuery((query) -> query.filter(type("grades.grade", Type.MIN_KEY)));
     }
 }

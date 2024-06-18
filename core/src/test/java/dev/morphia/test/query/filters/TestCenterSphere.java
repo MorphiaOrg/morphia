@@ -18,7 +18,6 @@ public class TestCenterSphere extends FilterTest {
     @Test(testName = "main")
     public void testExample1() {
         testQuery(new QueryTestOptions().skipDataCheck(true),
-                (query) -> query.filter(
-                        centerSphere("loc", new Point(new Position(-88, 30)), 0.0025232135648)));
+                (query) -> query.filter(centerSphere("loc", new Point(new Position(-88, 30)), 0.0025232135648)));
     }
 }

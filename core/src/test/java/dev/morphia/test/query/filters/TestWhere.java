@@ -11,11 +11,9 @@ public class TestWhere extends FilterTest {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testQuery(new QueryTestOptions().skipActionCheck(true),
-                (query) -> query.filter(
-                        where("""
-                                function() {
-                                   return (hex_md5(this.name) == "9b53e667f30cd329dca1ec9e6a83e994")
-                                }""")));
+        testQuery(new QueryTestOptions().skipActionCheck(true), (query) -> query.filter(where("""
+                function() {
+                   return (hex_md5(this.name) == "9b53e667f30cd329dca1ec9e6a83e994")
+                }""")));
     }
 }

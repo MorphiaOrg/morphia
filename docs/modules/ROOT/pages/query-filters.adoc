@@ -30,7 +30,7 @@
 | link:javadoc/dev/morphia/query/filters/Filters.html#centerSphere(java.lang.String,com.mongodb.client.model.geojson.Point,double)[Filters#centerSphere(String,Point,double)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/comment[$comment]
-| link:javadoc/dev/morphia/query/filters/Filters.html#comment(java.lang.String,java.lang.Object)[Filters#comment(String,Object)]
+| link:javadoc/dev/morphia/query/filters/Filters.html#comment(java.lang.String)[Filters#comment(String)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/elemMatch[$elemMatch]
 a| 
@@ -103,7 +103,11 @@ a|
 | link:javadoc/dev/morphia/query/filters/Filters.html#minDistance(java.lang.String,java.lang.Object)[Filters#minDistance(String,Object)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/mod[$mod]
-| link:javadoc/dev/morphia/query/filters/Filters.html#mod(java.lang.String,long,long)[Filters#mod(String,long,long)]
+a| 
+
+ * link:javadoc/dev/morphia/query/filters/Filters.html#mod(java.lang.String,long,long)[Filters#mod(String,long,long)]
+ * link:javadoc/dev/morphia/query/filters/Filters.html#mod(java.lang.String,double,double)[Filters#mod(String,double,double)]
+
 
 | http://docs.mongodb.org/manual/reference/operator/query/ne[$ne]
 | link:javadoc/dev/morphia/query/filters/Filters.html#ne(java.lang.String,java.lang.Object)[Filters#ne(String,Object)]
@@ -146,7 +150,7 @@ a|
 | link:javadoc/dev/morphia/query/filters/Filters.html#text(java.lang.String)[Filters#text(String)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/type[$type]
-| link:javadoc/dev/morphia/query/filters/Filters.html#type(java.lang.String,dev.morphia.query.Type)[Filters#type(String,Type)]
+| link:javadoc/dev/morphia/query/filters/Filters.html#type(java.lang.String,dev.morphia.query.Type%2E%2E%2E)[Filters#type(String,Type...)]
 
 | http://docs.mongodb.org/manual/reference/operator/query/uniqueDocs[$uniqueDocs]
 | link:javadoc/dev/morphia/query/filters/Filters.html#uniqueDocs(java.lang.String,java.lang.Object)[Filters#uniqueDocs(String,Object)]

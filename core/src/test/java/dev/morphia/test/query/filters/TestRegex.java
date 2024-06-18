@@ -13,8 +13,7 @@ public class TestRegex extends FilterTest {
      */
     @Test(testName = "Perform a ``LIKE`` Match")
     public void testExample1() {
-        testQuery((query) -> query.filter(
-                regex("sku", Pattern.compile("789$"))));
+        testQuery((query) -> query.filter(regex("sku", Pattern.compile("789$"))));
     }
 
     /**
@@ -22,9 +21,7 @@ public class TestRegex extends FilterTest {
      */
     @Test(testName = "Perform Case-Insensitive Regular Expression Match")
     public void testExample2() {
-        testQuery((query) -> query.filter(
-                regex("sku", Pattern.compile("^ABC"))
-                        .caseInsensitive()));
+        testQuery((query) -> query.filter(regex("sku", Pattern.compile("^ABC")).caseInsensitive()));
     }
 
     /**
@@ -32,8 +29,7 @@ public class TestRegex extends FilterTest {
      */
     @Test(testName = "Multiline Match for Lines Starting with Specified Pattern")
     public void testExample3() {
-        testQuery((query) -> query.filter(
-                regex("description", Pattern.compile("^S")).multiline()));
+        testQuery((query) -> query.filter(regex("description", Pattern.compile("^S")).multiline()));
     }
 
     /**
@@ -41,10 +37,8 @@ public class TestRegex extends FilterTest {
      */
     @Test(testName = "Use the ``.`` Dot Character to Match New Line")
     public void testExample4() {
-        testQuery((query) -> query.filter(
-                regex("description", Pattern.compile("m.*line"))
-                        .special()
-                        .caseInsensitive()));
+        testQuery(
+                (query) -> query.filter(regex("description", Pattern.compile("m.*line")).special().caseInsensitive()));
     }
 
     /**
@@ -52,9 +46,8 @@ public class TestRegex extends FilterTest {
      */
     @Test(testName = "Ignore White Spaces in Pattern")
     public void testExample5() {
-        testQuery(new QueryTestOptions().skipActionCheck(true),
-                (query) -> query.filter(
-                        regex("sku", Pattern.compile("abc #category code\n123 #item number")).extended()));
+        testQuery(new QueryTestOptions().skipActionCheck(true), (query) -> query
+                .filter(regex("sku", Pattern.compile("abc #category code\n123 #item number")).extended()));
     }
 
     /**
@@ -62,8 +55,7 @@ public class TestRegex extends FilterTest {
      */
     @Test(testName = "Use a Regular Expression to Match Case in Strings")
     public void testExample6() {
-        testQuery((query) -> query.filter(
-                regex("sku", Pattern.compile("(?i)a(?-i)bc"))));
+        testQuery((query) -> query.filter(regex("sku", Pattern.compile("(?i)a(?-i)bc"))));
     }
 
     /**
@@ -71,7 +63,6 @@ public class TestRegex extends FilterTest {
      */
     @Test(testName = "Extend Regex Options to Match Characters Outside of ASCII")
     public void testExample7() {
-        testQuery((query) -> query.filter(
-                regex("artist", Pattern.compile("\\byster"))));
+        testQuery((query) -> query.filter(regex("artist", Pattern.compile("\\byster"))));
     }
 }

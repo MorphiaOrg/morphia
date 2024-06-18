@@ -12,11 +12,8 @@ public class TestComment extends FilterTest {
      */
     @Test(testName = "Attach a Comment to ``find``")
     public void testExample1() {
-        QueryTestOptions options = new QueryTestOptions()
-                .skipDataCheck(true);
-        testQuery(options, (query) -> query.filter(
-                mod("x", 2, 0),
-                comment("Find even values.")));
+        QueryTestOptions options = new QueryTestOptions().skipDataCheck(true);
+        testQuery(options, (query) -> query.filter(mod("x", 2, 0), comment("Find even values.")));
     }
 
     /**

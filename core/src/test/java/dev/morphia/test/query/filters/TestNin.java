@@ -13,8 +13,6 @@ public class TestNin extends FilterTest {
      */
     @Test(testName = "Select on Unmatching Documents")
     public void testExample1() {
-        testQuery(new QueryTestOptions().removeIds(true),
-                (query) -> query.filter(
-                        nin("quantity", List.of(5, 15))));
+        testQuery(new QueryTestOptions().removeIds(true), (query) -> query.filter(nin("quantity", List.of(5, 15))));
     }
 }

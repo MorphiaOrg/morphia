@@ -11,8 +11,6 @@ public class TestGt extends FilterTest {
      */
     @Test(testName = "Match Document Fields")
     public void testExample1() {
-        testQuery(new QueryTestOptions().removeIds(true),
-                (query) -> query.filter(
-                        gt("quantity", 20)));
+        testQuery(new QueryTestOptions().removeIds(true), (query) -> query.filter(gt("quantity", 20)));
     }
 }

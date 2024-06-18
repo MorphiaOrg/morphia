@@ -14,11 +14,8 @@ public class TestNear extends FilterTest {
      */
     @Test(testName = "Query on GeoJSON Data")
     public void testExample1() {
-        testQuery(new QueryTestOptions().skipDataCheck(true),
-                (query) -> query.filter(
-                        near("location", new Point(new Position(-73.9667, 40.78)))
-                                .minDistance(1000.0)
-                                .maxDistance(5000.0)));
+        testQuery(new QueryTestOptions().skipDataCheck(true), (query) -> query.filter(
+                near("location", new Point(new Position(-73.9667, 40.78))).minDistance(1000.0).maxDistance(5000.0)));
     }
 
     /**
@@ -28,11 +25,9 @@ public class TestNear extends FilterTest {
     public void testExample2() {
         // legacy coordinates just won't be supported for now
         /*
-         * testQuery(new QueryTestOptions().skipDataCheck(true),
-         * (query) -> query.filter(
-         * near("location", new Point(new Position(-73.9667, 40.78)))
-         * .maxDistance(0.1)
-         * ));
+         * testQuery(new QueryTestOptions().skipDataCheck(true), (query) ->
+         * query.filter( near("location", new Point(new Position(-73.9667, 40.78)))
+         * .maxDistance(0.1) ));
          */
     }
 }

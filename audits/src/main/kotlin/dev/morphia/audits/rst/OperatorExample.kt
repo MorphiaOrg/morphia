@@ -18,23 +18,23 @@ class OperatorExample(
     var indexBlock: CodeBlock? = null
 
     init {
-        findBlocks(input).forEachIndexed { index, codeBlock ->
-            when {
-                codeBlock.isData() -> {
-                    if (dataBlock.isNotEmpty()) {
-                        codeBlock.supplemental = dataBlock.size + 1
-                    }
-                    dataBlock += codeBlock
-                }
-                codeBlock.isAction() && actionBlock == null -> actionBlock = codeBlock
-                codeBlock.isIndex() && indexBlock == null -> indexBlock = codeBlock
-                index == 0 && codeBlock.isExpected() -> dataBlock += codeBlock
-                index != 0 && codeBlock.isExpected() && expectedBlock == null ->
-                    expectedBlock = codeBlock
+        val blocks = findBlocks(input)
+        dataBlock += blocks.filter { it.isData() }
+        dataBlock.forEachIndexed { index, block ->
+            if (index != 0) {
+                block.supplemental = index
             }
         }
-        dataBlock = if (dataBlock.isNotEmpty()) dataBlock else parent?.dataBlock ?: mutableListOf()
-        indexBlock = indexBlock ?: parent?.indexBlock
+        actionBlock = blocks.firstOrNull { it.isAction() }
+        indexBlock = blocks.firstOrNull { it.isIndex() }
+        expectedBlock = blocks.firstOrNull { it.isExpected() }
+
+        if (dataBlock.isEmpty()) {
+            dataBlock += (parent?.dataBlock ?: emptyList())
+        }
+        if (indexBlock == null) {
+            indexBlock = parent?.indexBlock
+        }
     }
 
     fun output(folder: File) {

@@ -13,7 +13,7 @@ class QueryAuditTest : BaseAuditTest() {
 
     @Test
     fun testOperator() {
-        val name = "bitsAllClear"
+        val name = "ne"
         val operator = Operator(FILTER, name)
         operator.examples.forEach { it.output(File("target/testOperator-${name}/${it.name}")) }
     }
