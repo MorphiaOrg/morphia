@@ -1,6 +1,6 @@
 {
       $lookup: {
-         from: "aggtest",
+         from: "example_test",
          as: "joinedField",
          let: { pt: "$location" },
          pipeline: [

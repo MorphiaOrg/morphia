@@ -1,7 +1,7 @@
  [
    {
       $graphLookup: {
-         from: "aggtest",
+         from: "example_test",
          startWith: "$reportsTo",
          connectFromField: "reportsTo",
          connectToField: "name",
