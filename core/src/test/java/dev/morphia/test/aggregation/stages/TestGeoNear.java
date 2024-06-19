@@ -35,7 +35,7 @@ public class TestGeoNear extends AggregationTest {
     @Test
     public void testExample3() {
         testPipeline(ServerVersion.v60, true, true, (aggregation) -> aggregation.pipeline(
-                lookup(AGG_TEST_COLLECTION)
+                lookup(EXAMPLE_TEST_COLLECTION)
                         .as("joinedField")
                         .let("pt", "$location")
                         .pipeline(
@@ -57,9 +57,9 @@ public class TestGeoNear extends AggregationTest {
     @Test
     public void testExample5() {
         skipDataCheck();
-        getDatabase().getCollection(AGG_TEST_COLLECTION).createIndex(new Document("location", "2dsphere"));
+        getDatabase().getCollection(EXAMPLE_TEST_COLLECTION).createIndex(new Document("location", "2dsphere"));
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                lookup(AGG_TEST_COLLECTION)
+                lookup(EXAMPLE_TEST_COLLECTION)
                         .as("joinedField")
                         .let("pt", "$location")
                         .pipeline(

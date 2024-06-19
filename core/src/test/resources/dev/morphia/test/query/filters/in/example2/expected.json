@@ -1,0 +1,4 @@
+{ item: 'Pens', quantity: 350, tags: [ 'school', 'office' ], exclude: false },
+{ item: 'Erasers', quantity: 15, tags: [ 'school', 'home' ], exclude: false },
+{ "item": "Maps", "tags": [ "office", "storage" ] },
+{ item: 'Books', quantity: 5, tags: [ 'school', 'storage', 'home' ], exclude: false }

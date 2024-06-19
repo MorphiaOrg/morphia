@@ -23,7 +23,7 @@ public class TestPlanCacheStats extends AggregationTest {
                 .append("price", 1);
         var options = new IndexOptions()
                 .partialFilterExpression(new Document("price", new Document("$gte", 10.0)));
-        getDatabase().getCollection(AGG_TEST_COLLECTION).createIndex(keys, options);
+        getDatabase().getCollection(EXAMPLE_TEST_COLLECTION).createIndex(keys, options);
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 planCacheStats()));
     }

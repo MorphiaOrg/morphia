@@ -3,6 +3,8 @@ package dev.morphia.test.query.filters;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import dev.morphia.test.util.ActionTestOptions;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
@@ -52,7 +54,7 @@ public class TestEq extends FilterTest {
      */
     @Test(testName = "Regex Match Behaviour")
     public void testExample5() {
-        testQuery(new QueryTestOptions().removeIds(true),
+        testQuery(new ActionTestOptions().removeIds(true),
                 (query) -> query.filter(eq("company", Pattern.compile("MongoDB"))));
     }
 

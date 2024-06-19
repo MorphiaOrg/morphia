@@ -3,18 +3,19 @@ package dev.morphia.audits.rst
 import dev.morphia.audits.RstAuditor
 import dev.morphia.audits.RstAuditor.Companion.includesRoot
 import dev.morphia.audits.findIndent
+import dev.morphia.audits.model.Operator
 import dev.morphia.audits.rst.Separator.DASH
 import dev.morphia.audits.rst.Separator.TILDE
 import java.io.File
 
-class RstDocument(val operator: String, lines: MutableList<String>) {
+class RstDocument(val operator: Operator, lines: MutableList<String>) {
     companion object {
         val TABS_SECTION_START = ".. tabs::"
         val SIMPLE_TAB_SECTION_START = "tabs:"
         val FANCY_TAB_START = ".. tab::"
         val SIMPLE_TAB_START = "- id:"
 
-        fun read(operator: String, file: File): RstDocument {
+        fun read(operator: Operator, file: File): RstDocument {
             val lines =
                 file
                     .readLines()
@@ -73,17 +74,19 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
             //            TILDE.partition(it)
             //                .map { it.value.extractTabs(it.key) }
             //                .flatMap { it.entries }
-            entries.forEach {
+            entries.forEachIndexed { index, it ->
                 examples +=
                     OperatorExample(
-                        examples.firstOrNull { it.actionBlock != null },
+                        examples.firstOrNull { it.dataBlock.isNotEmpty() },
                         operator,
                         it.key,
-                        it.value
+                        it.value,
+                        index
                     )
             }
         }
-        //                .filter { it.valid() }
+        examples = examples.filter { it.actionBlock != null }
+        examples.forEachIndexed { index, it -> it.ordinal = index }
     }
 
     private fun MutableList<String>.extractTabs(name: String): Map<String, MutableList<String>> {

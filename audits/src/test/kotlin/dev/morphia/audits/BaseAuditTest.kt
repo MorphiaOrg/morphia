@@ -18,7 +18,7 @@ open class BaseAuditTest {
             0,
             "All existing operators should have examples: " +
                 results.noExamples.joinToString("\n\t", prefix = "\n\t") {
-                    "${it.operator}: ${it.name}"
+                    "${it.operator.name}: ${it.name}"
                 }
         )
         assertEquals(

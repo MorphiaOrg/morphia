@@ -1,5 +1,7 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.util.ActionTestOptions;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.exists;
@@ -11,7 +13,7 @@ public class TestExists extends FilterTest {
      */
     @Test(testName = "Exists and Not Equal To")
     public void testExample1() {
-        testQuery(new QueryTestOptions().removeIds(true), (query) -> query.filter(exists("saffron")));
+        testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(exists("saffron")));
     }
 
     /**
@@ -19,7 +21,7 @@ public class TestExists extends FilterTest {
      */
     @Test(testName = "Null Values")
     public void testExample2() {
-        testQuery(new QueryTestOptions().removeIds(true), (query) -> query.filter(exists("cinnamon").not()
+        testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(exists("cinnamon").not()
 
         ));
     }

@@ -7,6 +7,8 @@ import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.client.model.geojson.PolygonCoordinates;
 import com.mongodb.client.model.geojson.Position;
 
+import dev.morphia.test.util.ActionTestOptions;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.geoWithin;
@@ -19,7 +21,7 @@ public class TestGeoWithin extends FilterTest {
     @Test(testName = "Within a Polygon")
     public void testExample1() {
         var points = List.of(new Position(0, 0), new Position(3, 6), new Position(6, 1), new Position(0, 0));
-        testQuery(new QueryTestOptions().skipDataCheck(true),
+        testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(geoWithin("loc", new Polygon(points))));
     }
 
@@ -30,7 +32,7 @@ public class TestGeoWithin extends FilterTest {
     public void testExample2() {
         var coords = new PolygonCoordinates(List.of(new Position(-100, 60), new Position(-100, 0),
                 new Position(-100, -60), new Position(100, -60), new Position(100, 60), new Position(-100, 60)));
-        testQuery(new QueryTestOptions().skipDataCheck(true), (query) -> query.filter(geoWithin("loc",
+        testQuery(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(geoWithin("loc",
                 new Polygon(new NamedCoordinateReferenceSystem("urn:x-mongodb:crs:strictwinding:EPSG:4326"), coords))));
     }
 }

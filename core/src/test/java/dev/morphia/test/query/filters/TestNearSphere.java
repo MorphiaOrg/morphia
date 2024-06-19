@@ -3,6 +3,8 @@ package dev.morphia.test.query.filters;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 
+import dev.morphia.test.util.ActionTestOptions;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.nearSphere;
@@ -14,7 +16,7 @@ public class TestNearSphere extends FilterTest {
      */
     @Test(testName = "Specify Center Point Using GeoJSON")
     public void testExample1() {
-        testQuery(new QueryTestOptions().skipDataCheck(true),
+        testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(nearSphere("location", new Point(new Position(-73.9667, 40.78)))
                         .minDistance(1000.0).maxDistance(5000.0)));
     }

@@ -49,10 +49,10 @@ public class AggregationTest extends TemplatedTestBase {
         checkMinServerVersion(serverVersion);
         checkMinDriverVersion(minDriver);
         var resourceName = discoverResourceName();
-        loadData(resourceName, AGG_TEST_COLLECTION);
-        loadIndex(resourceName, AGG_TEST_COLLECTION);
+        loadData(resourceName, EXAMPLE_TEST_COLLECTION);
+        loadIndex(resourceName, EXAMPLE_TEST_COLLECTION);
 
-        List<Document> actual = runPipeline(resourceName, pipeline.apply(getDs().aggregate(AGG_TEST_COLLECTION)));
+        List<Document> actual = runPipeline(resourceName, pipeline.apply(getDs().aggregate(EXAMPLE_TEST_COLLECTION)));
 
         if (!skipDataCheck) {
             List<Document> expected = loadExpected(resourceName);

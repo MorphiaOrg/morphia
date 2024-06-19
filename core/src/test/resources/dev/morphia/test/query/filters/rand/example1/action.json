@@ -1,6 +1,10 @@
-db.voters.find(
-   {  district: 3,
-      $expr: { $lt: [0.5, {$rand: {} } ] }
-   },
-   { _id: 0, name: 1, registered: 1 }
+db.donors.updateMany(
+   {},
+      { $set:
+         { amount:
+            { $floor:
+               { $multiply: [ { $rand: {} }, 100 ] }
+            }
+         }
+      }
 )

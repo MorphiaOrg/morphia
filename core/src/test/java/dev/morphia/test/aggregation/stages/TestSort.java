@@ -25,7 +25,7 @@ public class TestSort extends AggregationTest {
 
     @Test
     public void testExample2() {
-        getDatabase().getCollection(AGG_TEST_COLLECTION)
+        getDatabase().getCollection(EXAMPLE_TEST_COLLECTION)
                 .createIndex(new Document("$**", "text"));
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 match(text("operating")),

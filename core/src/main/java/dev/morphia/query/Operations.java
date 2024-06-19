@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringJoiner;
 
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
@@ -33,7 +35,7 @@ public class Operations {
      * @param updates  the updates
      * @param validate validate or not
      */
-    public Operations(EntityModel model, List<UpdateOperator> updates, boolean validate) {
+    public Operations(@Nullable EntityModel model, List<UpdateOperator> updates, boolean validate) {
         this.model = model;
         this.updates = updates;
         this.validate = validate;
@@ -46,19 +48,21 @@ public class Operations {
                 .toString();
     }
 
-    private void versionUpdate(MorphiaDatastore datastore, EntityModel entityModel) {
-        PropertyModel versionField = entityModel.getVersionProperty();
-        if (versionField != null) {
-            List<OperationTarget> operationTargets = ops.get("$inc");
-            String version = versionField.getMappedName();
-            boolean already = operationTargets != null
-                    && operationTargets.stream()
-                            .anyMatch(tv -> {
-                                PathTarget target = tv.getTarget();
-                                return target != null && target.translatedPath().equals(version);
-                            });
-            if (!already) {
-                add("$inc", new OperationTarget(new PathTarget(datastore.getMapper(), entityModel, versionField.getName()), 1L));
+    private void versionUpdate(MorphiaDatastore datastore, @Nullable EntityModel entityModel) {
+        if (entityModel != null) {
+            PropertyModel versionField = entityModel.getVersionProperty();
+            if (versionField != null) {
+                List<OperationTarget> operationTargets = ops.get("$inc");
+                String version = versionField.getMappedName();
+                boolean already = operationTargets != null
+                        && operationTargets.stream()
+                                .anyMatch(tv -> {
+                                    PathTarget target = tv.getTarget();
+                                    return target != null && target.translatedPath().equals(version);
+                                });
+                if (!already) {
+                    add("$inc", new OperationTarget(new PathTarget(datastore.getMapper(), entityModel, versionField.getName()), 1L));
+                }
             }
         }
     }

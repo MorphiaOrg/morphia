@@ -1,0 +1,3 @@
+{ _id: ObjectId("61ba66e2fe687fce2f042423"), item: 'nuts', quantity: 30, carrier: { name: 'Shipit', fee: 3 }, price: 9.99 },
+{ _id: ObjectId("61ba66e2fe687fce2f042424"), item: 'bolts', quantity: 50, carrier: { name: 'Shipit', fee: 4 }, price: 9.99 },
+{ _id: ObjectId("61ba66e2fe687fce2f042425"), item: 'washers', quantity: 10, carrier: { name: 'Shipit', fee: 1 } }

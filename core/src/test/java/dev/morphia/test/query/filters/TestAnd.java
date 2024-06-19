@@ -1,5 +1,7 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.util.ActionTestOptions;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.and;
@@ -17,7 +19,7 @@ public class TestAnd extends FilterTest {
      */
     @Test(testName = "``AND`` Queries With Multiple Expressions Specifying the Same Field")
     public void testExample1() {
-        testQuery(new QueryTestOptions().skipDataCheck(true),
+        testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(and(ne("price", 1.99), exists("price"))));
     }
 
@@ -26,7 +28,7 @@ public class TestAnd extends FilterTest {
      */
     @Test(testName = "``AND`` Queries With Multiple Expressions Specifying the Same Operator")
     public void testExample2() {
-        testQuery(new QueryTestOptions().skipDataCheck(true),
+        testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(and(or(lt("qty", 10), gt("qty", 50)), or(eq("sale", true), lt("price", 5)))));
     }
 }

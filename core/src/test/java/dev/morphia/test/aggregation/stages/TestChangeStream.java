@@ -33,9 +33,9 @@ public class TestChangeStream extends AggregationTest {
         checkForReplicaSet();
 
         Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream"), "data", true).iterator();
-        MongoCollection<Document> collection = getDatabase().getCollection(AGG_TEST_COLLECTION);
+        MongoCollection<Document> collection = getDatabase().getCollection(EXAMPLE_TEST_COLLECTION);
 
-        try (MorphiaCursor<Document> cursor = getDs().aggregate(AGG_TEST_COLLECTION)
+        try (MorphiaCursor<Document> cursor = getDs().aggregate(EXAMPLE_TEST_COLLECTION)
                 .changeStream(changeStream())
                 .execute(Document.class)) {
             while (input.hasNext()) {

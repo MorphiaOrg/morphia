@@ -1,1 +1,4 @@
-db.inventory.find( { tags: { $in: [ /^be/, /^st/ ] } } )
+db.inventory.updateMany(
+   { tags: { $in: [ "home", "school" ] } },
+   { $set: { exclude: false } }
+)

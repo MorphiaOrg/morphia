@@ -2,15 +2,17 @@ package dev.morphia.audits.rst
 
 import dev.morphia.audits.model.CodeBlock
 import dev.morphia.audits.model.CodeBlock.Companion.findBlocks
+import dev.morphia.audits.model.Operator
 import java.io.File
 
 class OperatorExample(
-    val parent: OperatorExample?,
-    val operator: String,
+    parent: OperatorExample?,
+    val operator: Operator,
     val name: String,
-    private val input: List<String>,
+    input: List<String>,
+    var ordinal: Int,
 ) {
-    lateinit var folder: File
+    val folder by lazy { File(operator.resourceFolder, "example${ordinal + 1}") }
     var created = false
     var actionBlock: CodeBlock? = null
     var dataBlock = mutableListOf<CodeBlock>()
@@ -38,7 +40,6 @@ class OperatorExample(
     }
 
     fun output(folder: File) {
-        this.folder = folder
         val lock = File(folder, "lock")
         if (!lock.exists() || System.getProperty("IGNORE_LOCKS") != null) {
             try {
@@ -55,7 +56,7 @@ class OperatorExample(
             }
         } else {
             if (lock.readText().isBlank()) {
-                throw RuntimeException("${lock} has no message explaining the need for a lock")
+                throw RuntimeException("$lock has no message explaining the need for a lock")
             }
         }
     }
@@ -64,8 +65,4 @@ class OperatorExample(
         "OperatorExample(name='$name', actionBlock: ${actionBlock != null}, dataBlock: ${dataBlock.isNotEmpty()}, " +
             "expectedBlock=${expectedBlock != null}, " +
             "indexBlock: ${indexBlock != null})"
-
-    fun valid(): Boolean {
-        return actionBlock != null
-    }
 }

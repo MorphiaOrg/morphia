@@ -1,5 +1,7 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.util.ActionTestOptions;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
@@ -14,7 +16,7 @@ public class TestNor extends FilterTest {
      */
     @Test(testName = "``$nor`` Query with Two Expressions")
     public void testExample1() {
-        testQuery(new QueryTestOptions().skipDataCheck(true),
+        testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(nor(eq("price", 1.99), eq("sale", true))));
     }
 
@@ -23,7 +25,7 @@ public class TestNor extends FilterTest {
      */
     @Test(testName = "``$nor`` and Additional Comparisons")
     public void testExample2() {
-        testQuery(new QueryTestOptions().skipDataCheck(true),
+        testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(nor(eq("price", 1.99), lt("qty", 20), eq("sale", true))));
     }
 
@@ -32,7 +34,7 @@ public class TestNor extends FilterTest {
      */
     @Test(testName = "``$nor`` and ``$exists``")
     public void testExample3() {
-        testQuery(new QueryTestOptions().skipDataCheck(true), (query) -> query
+        testQuery(new ActionTestOptions().skipDataCheck(true), (query) -> query
                 .filter(nor(eq("price", 1.99), exists("price").not(), eq("sale", true), exists("sale").not())
 
                 ));

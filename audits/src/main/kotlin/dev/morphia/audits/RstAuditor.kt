@@ -189,20 +189,22 @@ class RstAuditor(val type: OperatorType) {
     }
 
     private fun JavaClassSource.addTestCases(operator: Operator) {
-        operator.examples.forEachIndexed { index, example ->
-            val testCaseName = "testExample${index + 1}"
+        operator.examples
+            .filter { it.actionBlock != null }
+            .forEach { example ->
+                val testCaseName = "testExample${example.ordinal + 1}"
 
-            if (methods.none { it.name == testCaseName }) {
-                createTestCase(testCaseName, example)
-            } else {
-                methods
-                    .filter { it.name == testCaseName }
-                    .forEach { method ->
-                        updateJavadoc(method, example)
-                        updateTestAnnotation(method, example)
-                    }
+                if (methods.none { it.name == testCaseName }) {
+                    createTestCase(testCaseName, example)
+                } else {
+                    methods
+                        .filter { it.name == testCaseName }
+                        .forEach { method ->
+                            updateJavadoc(method, example)
+                            updateTestAnnotation(method, example)
+                        }
+                }
             }
-        }
     }
 
     private fun updateJavadoc(method: MethodSource<JavaClassSource>, example: OperatorExample) {

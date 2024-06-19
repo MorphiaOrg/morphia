@@ -14,7 +14,7 @@ public class TestGraphLookup extends AggregationTest {
     @Test
     public void testExample1() {
         testPipeline(ServerVersion.ANY, true, false, (aggregation) -> aggregation.pipeline(
-                graphLookup(AGG_TEST_COLLECTION)
+                graphLookup(EXAMPLE_TEST_COLLECTION)
                         .startWith("$reportsTo")
                         .connectFromField("reportsTo")
                         .connectToField("name")
@@ -39,7 +39,7 @@ public class TestGraphLookup extends AggregationTest {
     public void testExample3() {
         testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
                 match(eq("name", "Tanya Jordan")),
-                graphLookup(AGG_TEST_COLLECTION)
+                graphLookup(EXAMPLE_TEST_COLLECTION)
                         .startWith("$friends")
                         .connectFromField("friends")
                         .connectToField("name")

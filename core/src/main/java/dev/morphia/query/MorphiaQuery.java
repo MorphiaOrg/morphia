@@ -227,7 +227,8 @@ public class MorphiaQuery<T> implements Query<T> {
         if (invalid != null) {
             throw invalid;
         }
-        EntityModel entityModel = mapper.getEntityModel(getEntityClass());
+        Class<T> entityClass = getEntityClass();
+        EntityModel entityModel = !entityClass.equals(Document.class) ? mapper.getEntityModel(entityClass) : null;
         Document updateOperations = new Operations(entityModel, coalesce(first, updates), isValidate())
                 .toDocument(datastore);
 

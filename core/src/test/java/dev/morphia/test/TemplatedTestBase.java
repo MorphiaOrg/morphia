@@ -24,7 +24,6 @@ import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
 
-import org.bson.BsonInvalidOperationException;
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
 import org.bson.json.JsonParseException;
@@ -54,9 +53,9 @@ public abstract class TemplatedTestBase extends TestBase {
             .indent(true)
             .build();
 
-    protected static final String AGG_TEST_COLLECTION = "aggtest";
+    protected static final String EXAMPLE_TEST_COLLECTION = "example_test";
 
-    private static final Pattern FIND = Pattern.compile("^db\\.(\\w+)\\.find\\(.*$");
+    private static final Pattern ACTION = Pattern.compile("^db\\.\\w+\\.\\w+\\(.*$");
 
     protected final ObjectMapper mapper = new ObjectMapper();
     protected boolean skipActionCheck = false;
@@ -241,7 +240,7 @@ public abstract class TemplatedTestBase extends TestBase {
         List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
 
         if (!skipActionCheck) {
-            List<Document> target = loadPipeline(pipelineName);
+            List<Document> target = loadAction(pipelineName);
             assertEquals(toJson(pipeline), toJson(target), "Should generate the same pipeline");
         }
 
@@ -265,13 +264,7 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     protected Document loadQuery(String pipelineName) {
-        InputStream stream = getClass().getResourceAsStream(pipelineName);
-        if (stream == null) {
-            fail(format("missing data file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
-                    pipelineName));
-        }
-
-        return parseAction(stream).get(0);
+        return loadAction(pipelineName).get(0);
     }
 
     protected String loadTestName(String resourceName) {
@@ -289,49 +282,51 @@ public abstract class TemplatedTestBase extends TestBase {
         }
     }
 
-    private List<Document> loadPipeline(String pipelineName) {
-        InputStream stream = getClass().getResourceAsStream(pipelineName);
-        if (stream == null) {
-            fail(format("missing data file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
-                    pipelineName));
-        }
-
-        return parseAction(stream);
+    protected List<Document> loadAction(String actionName) {
+        return extractDocuments(unwrapArray(loadResource(actionName)));
     }
 
-    private List<Document> parseAction(InputStream stream) {
-        List<String> list = new ArrayList<>(new BufferedReader(new InputStreamReader(stream))
-                .lines()
-                //                .map(String::trim)
-                //                .map(line -> line.replaceAll("(\\$*\\w+?):", "\"$1\":"))
-                .toList());
-        unwrapArray(list);
-        extractQueryFilters(list);
-
-        var json = list.iterator();
-        List<Document> stages = new ArrayList<>();
-        String current = "";
-        while (json.hasNext()) {
-            while (current.isBlank() || !balanced(current)) {
-                var next = json.next();
-                if (!next.trim().isBlank()) {
-                    current += next;
-                }
-            }
-            try {
-                stages.add(Document.parse(current));
-            } catch (BsonInvalidOperationException e) {
-                throw new BsonInvalidOperationException("Failed to parse:\n" + current, e);
-            }
-            current = "";
+    @NotNull
+    protected String loadResource(String pipelineName) {
+        InputStream stream = getClass().getResourceAsStream(pipelineName);
+        if (stream == null) {
+            fail(format("missing action file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
+                    pipelineName));
         }
+        var resource = new BufferedReader(new InputStreamReader(stream))
+                .lines()
+                .collect(joining("\n"));
+        return resource;
+    }
 
-        return stages;
+    private List<Document> extractDocuments(String line) {
+        if (line.startsWith("db.")) {
+            if (line.endsWith(")")) {
+                line = line.substring(line.indexOf("(") + 1, line.lastIndexOf(")")).trim();
+            } else {
+                throw new IllegalStateException("I don't know how to parse this line: \n\t" + line);
+            }
+        }
+        List<Document> docs = new ArrayList<>();
+        var current = "";
+        while (!line.isEmpty()) {
+            char c = line.charAt(0);
+            line = line.substring(1);
+            if (balanced(current)) {
+                docs.add(Document.parse(current));
+                current = "";
+            } else {
+                current += c;
+            }
+        }
+        docs.add(Document.parse(current));
+
+        return docs;
     }
 
     private void extractQueryFilters(List<String> list) {
         String line = list.stream().collect(joining());
-        if (FIND.matcher(line).matches()) {
+        if (ACTION.matcher(line).matches()) {
             if (line.endsWith(")")) {
                 line = line.substring(line.indexOf("(") + 1, line.lastIndexOf(")"));
                 list.clear();
@@ -344,25 +339,16 @@ public abstract class TemplatedTestBase extends TestBase {
 
     }
 
-    private static void unwrapArray(List<String> list) {
-        String line = list.get(0);
+    private static String unwrapArray(String resource) {
+        String line = resource;
         if (line.startsWith("[")) {
             line = line.substring(1);
-            if (!line.isBlank()) {
-                list.set(0, line);
-            } else {
-                list.remove(0);
-            }
         }
-        line = list.get(list.size() - 1);
         if (line.endsWith("]")) {
             line = line.substring(0, line.length() - 1);
-            if (!line.isBlank()) {
-                list.set(list.size() - 1, line);
-            } else {
-                list.remove(list.size() - 1);
-            }
         }
+
+        return line.trim();
     }
 
     private boolean balanced(String input) {
@@ -375,7 +361,7 @@ public abstract class TemplatedTestBase extends TestBase {
                 close++;
         }
 
-        return open == close;
+        return open != 0 && open == close;
     }
 
     @NonNull

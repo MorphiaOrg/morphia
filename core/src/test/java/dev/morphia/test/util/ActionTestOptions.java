@@ -1,4 +1,4 @@
-package dev.morphia.test.query.filters;
+package dev.morphia.test.util;
 
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.DriverVersion;
@@ -6,7 +6,7 @@ import dev.morphia.test.ServerVersion;
 
 import static dev.morphia.test.ServerVersion.ANY;
 
-public class QueryTestOptions {
+public class ActionTestOptions {
     private FindOptions findOptions;
 
     private DriverVersion minDriver = DriverVersion.v41;
@@ -21,7 +21,7 @@ public class QueryTestOptions {
 
     private boolean skipDataCheck = false;
 
-    public QueryTestOptions() {
+    public ActionTestOptions() {
         serverVersion = ANY;
     }
 
@@ -29,7 +29,7 @@ public class QueryTestOptions {
         return findOptions;
     }
 
-    public QueryTestOptions findOptions(FindOptions findOptions) {
+    public ActionTestOptions findOptions(FindOptions findOptions) {
         this.findOptions = findOptions;
         return this;
     }
@@ -38,7 +38,7 @@ public class QueryTestOptions {
         return minDriver;
     }
 
-    public QueryTestOptions minDriver(DriverVersion minDriver) {
+    public ActionTestOptions minDriver(DriverVersion minDriver) {
         this.minDriver = minDriver;
         return this;
     }
@@ -47,7 +47,7 @@ public class QueryTestOptions {
         return orderMatters;
     }
 
-    public QueryTestOptions orderMatters(boolean orderMatters) {
+    public ActionTestOptions orderMatters(boolean orderMatters) {
         this.orderMatters = orderMatters;
         return this;
     }
@@ -56,7 +56,7 @@ public class QueryTestOptions {
         return removeIds;
     }
 
-    public QueryTestOptions removeIds(boolean removeIds) {
+    public ActionTestOptions removeIds(boolean removeIds) {
         this.removeIds = removeIds;
         return this;
     }
@@ -65,12 +65,12 @@ public class QueryTestOptions {
         return serverVersion;
     }
 
-    public QueryTestOptions serverVersion(ServerVersion serverVersion) {
+    public ActionTestOptions serverVersion(ServerVersion serverVersion) {
         this.serverVersion = serverVersion;
         return this;
     }
 
-    public QueryTestOptions skipActionCheck(boolean skipActionCheck) {
+    public ActionTestOptions skipActionCheck(boolean skipActionCheck) {
         this.skipActionCheck = skipActionCheck;
         return this;
     }
@@ -83,7 +83,7 @@ public class QueryTestOptions {
         return skipDataCheck;
     }
 
-    public QueryTestOptions skipDataCheck(boolean skipDataCheck) {
+    public ActionTestOptions skipDataCheck(boolean skipDataCheck) {
         this.skipDataCheck = skipDataCheck;
         return this;
     }

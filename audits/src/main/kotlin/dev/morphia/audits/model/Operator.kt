@@ -37,7 +37,7 @@ class Operator private constructor(var type: OperatorType) {
     val url: String by lazy {
         "https://www.mongodb.com/docs/manual/reference/operator/${type.root()}/$name/"
     }
-    val examples by lazy { RstDocument.read(operator, source).examples }
+    val examples by lazy { RstDocument.read(this, source).examples }
     lateinit var source: File
     lateinit var name: String
 
@@ -64,10 +64,8 @@ class Operator private constructor(var type: OperatorType) {
     fun output() {
         if (!ignored()) {
             examples
-                .filter { it.actionBlock?.isAction() == true }
-                .forEachIndexed { index, it ->
-                    it.output(File(resourceFolder, "example${index + 1}"))
-                }
+                .filter { it.actionBlock != null }
+                .forEach { it.output(File(resourceFolder, "example${it.ordinal + 1}")) }
         }
     }
 

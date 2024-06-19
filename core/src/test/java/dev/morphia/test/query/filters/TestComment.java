@@ -1,5 +1,7 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.util.ActionTestOptions;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.comment;
@@ -12,7 +14,7 @@ public class TestComment extends FilterTest {
      */
     @Test(testName = "Attach a Comment to ``find``")
     public void testExample1() {
-        QueryTestOptions options = new QueryTestOptions().skipDataCheck(true);
+        ActionTestOptions options = new ActionTestOptions().skipDataCheck(true);
         testQuery(options, (query) -> query.filter(mod("x", 2, 0), comment("Find even values.")));
     }
 
