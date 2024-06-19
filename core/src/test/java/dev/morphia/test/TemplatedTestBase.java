@@ -24,6 +24,7 @@ import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
 
+import org.bson.BsonInvalidOperationException;
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
 import org.bson.json.JsonParseException;
@@ -299,7 +300,8 @@ public abstract class TemplatedTestBase extends TestBase {
         return resource;
     }
 
-    private List<Document> extractDocuments(String line) {
+    private List<Document> extractDocuments(String resource) {
+        var line = resource;
         if (line.startsWith("db.")) {
             if (line.endsWith(")")) {
                 line = line.substring(line.indexOf("(") + 1, line.lastIndexOf(")")).trim();
@@ -313,7 +315,11 @@ public abstract class TemplatedTestBase extends TestBase {
             char c = line.charAt(0);
             line = line.substring(1);
             if (balanced(current)) {
-                docs.add(Document.parse(current));
+                try {
+                    docs.add(Document.parse(current));
+                } catch (BsonInvalidOperationException e) {
+                    throw new RuntimeException("Error parsing " + resource, e);
+                }
                 current = "";
             } else {
                 current += c;
@@ -340,7 +346,7 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     private static String unwrapArray(String resource) {
-        String line = resource;
+        String line = resource.trim();
         if (line.startsWith("[")) {
             line = line.substring(1);
         }
