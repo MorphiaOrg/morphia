@@ -21,9 +21,6 @@ public class TestNin extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/nin/example2
-     * 
-     * db.inventory.updateMany( { tags: { $nin: [ "school" ] } }, { $set: { exclude:
-     * true } } )
      */
     @Test(testName = "Select on Elements Not in an Array")
     public void testExample2() {

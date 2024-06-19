@@ -18,9 +18,6 @@ public class TestType extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/type/example2
-     * 
-     * db.grades.find( { classAverage : { $type : [ 2 , 1 ] } } ); db.grades.find( {
-     * classAverage : { $type : [ "string" , "double" ] } } );
      */
     @Test(testName = "Querying by Multiple Data Types")
     public void testExample2() {
@@ -29,8 +26,6 @@ public class TestType extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/type/example3
-     * 
-     * db.restaurants.find( { "grades.grade" : { $type : "minKey" } } )
      */
     @Test(testName = "Querying by MinKey and MaxKey")
     public void testExample3() {

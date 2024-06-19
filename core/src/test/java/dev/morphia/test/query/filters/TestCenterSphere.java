@@ -13,9 +13,6 @@ public class TestCenterSphere extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/centerSphere/example1
-     * 
-     * db.places.find( { loc: { $geoWithin: { $centerSphere: [ [ -88, 30 ],
-     * 10/3963.2 ] } } } )
      */
     @Test(testName = "main")
     public void testExample1() {

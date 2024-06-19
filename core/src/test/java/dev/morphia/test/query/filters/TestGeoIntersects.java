@@ -25,11 +25,6 @@ public class TestGeoIntersects extends FilterTest {
 
     /**
      * test data: dev/morphia/test/query/filters/geoIntersects/example2
-     * 
-     * db.places.find( { loc: { $geoIntersects: { $geometry: { type : "Polygon",
-     * coordinates: [ [ [ -100, 60 ], [ -100, 0 ], [ -100, -60 ], [ 100, -60 ], [
-     * 100, 60 ], [ -100, 60 ] ] ], crs: { type: "name", properties: { name:
-     * "urn:x-mongodb:crs:strictwinding:EPSG:4326" } } } } } } )
      */
     @Test(testName = "Intersects a \"Big\" Polygon")
     public void testExample2() {
