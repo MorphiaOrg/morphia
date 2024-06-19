@@ -22,9 +22,7 @@ public class TestLt extends FilterTest {
      */
     @Test(testName = "Perform an Update Based on Embedded Document Fields")
     public void testExample2() {
-        testUpdate(new ActionTestOptions().removeIds(true),
-                (query) -> query.filter(
-                        lt("carrier.fee", 20)),
+        testUpdate(new ActionTestOptions().removeIds(true), (query) -> query.filter(lt("carrier.fee", 20)),
                 set("price", 9.99));
     }
 }

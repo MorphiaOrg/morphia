@@ -22,8 +22,7 @@ public class TestRand extends FilterTest {
     public void testExample1() {
         ActionTestOptions options = new ActionTestOptions().skipDataCheck(true)
                 .findOptions(new FindOptions().projection().include("name", "registered"));
-        testUpdate(options, (query) -> query,
-                UpdateOperators.set("amount", floor(multiply(rand(), 100))));
+        testUpdate(options, (query) -> query, UpdateOperators.set("amount", floor(multiply(rand(), 100))));
     }
 
     /**

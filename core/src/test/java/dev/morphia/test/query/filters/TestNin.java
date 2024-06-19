@@ -27,9 +27,7 @@ public class TestNin extends FilterTest {
      */
     @Test(testName = "Select on Elements Not in an Array")
     public void testExample2() {
-        testUpdate(new ActionTestOptions().removeIds(true),
-                (query) -> query.filter(
-                        nin("tags", List.of("school"))),
+        testUpdate(new ActionTestOptions().removeIds(true), (query) -> query.filter(nin("tags", List.of("school"))),
                 set("exclude", true));
     }
 }

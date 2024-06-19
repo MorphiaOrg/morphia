@@ -47,6 +47,7 @@ class RstAuditor(val type: OperatorType) {
 
         val noTest =
             operators
+                .filter { it.examples.isNotEmpty() }
                 .filter { it.type == type }
                 .filter { !it.testCaseExists }
                 .filter { !File(it.resourceFolder, "ignored").exists() }
@@ -157,6 +158,9 @@ class RstAuditor(val type: OperatorType) {
     }
 
     private fun update(operator: Operator) {
+        if (operator.examples.isEmpty()) {
+            return
+        }
         val outputFile: File = operator.testSource
         val source =
             if (!outputFile.exists()) {

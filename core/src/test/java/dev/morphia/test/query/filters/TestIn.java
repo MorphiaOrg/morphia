@@ -25,11 +25,8 @@ public class TestIn extends FilterTest {
      */
     @Test(testName = "Use the ``$in`` Operator to Match Values in an Array")
     public void testExample2() {
-        testUpdate(new ActionTestOptions()
-                .removeIds(true)
-                .orderMatters(false),
-                (query) -> query.filter(in("tags", List.of("home", "school"))),
-                set("exclude", false));
+        testUpdate(new ActionTestOptions().removeIds(true).orderMatters(false),
+                (query) -> query.filter(in("tags", List.of("home", "school"))), set("exclude", false));
     }
 
     /**

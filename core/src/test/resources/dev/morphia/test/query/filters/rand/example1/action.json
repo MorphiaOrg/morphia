@@ -1,5 +1,6 @@
 db.donors.updateMany(
    {},
+   [
       { $set:
          { amount:
             { $floor:
@@ -7,4 +8,5 @@ db.donors.updateMany(
             }
          }
       }
+    ]
 )

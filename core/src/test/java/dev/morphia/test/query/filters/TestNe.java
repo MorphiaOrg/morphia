@@ -14,9 +14,7 @@ public class TestNe extends FilterTest {
      */
     @Test(testName = "Match Document Fields That Are Not Equal")
     public void testExample1() {
-        testQuery(new ActionTestOptions().removeIds(true),
-                (query) -> query.filter(
-                        ne("quantity", 20)));
+        testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(ne("quantity", 20)));
     }
 
     /**
@@ -24,9 +22,7 @@ public class TestNe extends FilterTest {
      */
     @Test(testName = "Update Based on Not Equal Embedded Document Fields")
     public void testExample2() {
-        testUpdate(new ActionTestOptions().removeIds(true),
-                (query) -> query.filter(
-                        ne("carrier.fee", 1)),
+        testUpdate(new ActionTestOptions().removeIds(true), (query) -> query.filter(ne("carrier.fee", 1)),
                 set("price", 9.99));
     }
 }
