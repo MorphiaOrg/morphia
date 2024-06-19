@@ -16,9 +16,16 @@ class CodeBlock {
             val blocks = mutableListOf<CodeBlock>()
             val data = lines.toMutableList()
             while (data.isNotEmpty()) {
-                data.removeWhile { !it.trim().startsWith(".. code-block:: ") }
+                data.removeWhile {
+                    !it.trim().startsWith(".. code-block::") &&
+                        !it.trim().startsWith(".. io-code-block::")
+                }
                 if (data.isNotEmpty()) {
-                    blocks += readBlock(data)
+                    if (data[0].trim().startsWith(".. code-block::")) {
+                        blocks += readBlock(data)
+                    } else {
+                        blocks += readIoCodeBlock(data)
+                    }
                 }
             }
             return blocks
@@ -36,6 +43,34 @@ class CodeBlock {
                 block += lines.removeFirst()
             }
             return block
+        }
+
+        private fun readIoCodeBlock(lines: MutableList<String>): List<CodeBlock> {
+            lines.removeFirst()
+            val indent = lines.first().findIndent()
+            lines.removeWhile { it.trim().startsWith(":") || it.isBlank() }
+            val blocks = mutableListOf<CodeBlock>()
+            var block: CodeBlock? = null
+            while (
+                lines.isNotEmpty() &&
+                    (lines.first().findIndent() >= indent || lines.first().isBlank())
+            ) {
+                if (lines.first().trim() == ".. input::" || lines.first().trim() == ".. output::") {
+                    lines.removeFirst()
+                    block =
+                        CodeBlock().also { newBlock ->
+                            blocks += newBlock
+                            newBlock.indent = indent
+                        }
+                } else {
+                    val first = lines.removeFirst()
+                    val notControl = notControl(first)
+                    if (notControl) {
+                        block?.let { it += first }
+                    }
+                }
+            }
+            return blocks
         }
     }
 

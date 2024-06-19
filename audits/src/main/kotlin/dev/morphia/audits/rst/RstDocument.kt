@@ -3,6 +3,7 @@ package dev.morphia.audits.rst
 import dev.morphia.audits.RstAuditor
 import dev.morphia.audits.RstAuditor.Companion.includesRoot
 import dev.morphia.audits.findIndent
+import dev.morphia.audits.rst.Separator.DASH
 import dev.morphia.audits.rst.Separator.TILDE
 import java.io.File
 
@@ -18,7 +19,7 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
                 file
                     .readLines()
                     .dropWhile { line -> line.trim() !in listOf("Example", "Examples") }
-                    .drop(3)
+                    //                    .drop(3)
                     .flatMap { line ->
                         if (line.trim().startsWith(".. include:: ")) {
                             val include = File(RstAuditor.includesRoot, line.substringAfter(":: "))
@@ -62,20 +63,27 @@ class RstDocument(val operator: String, lines: MutableList<String>) {
         private set
 
     init {
-        val partition = TILDE.partition(lines)
-        val tabs = partition.map { it.value.extractTabs(it.key) }
-        val entries = tabs.flatMap { it.entries }
-        examples =
-            entries
-                .map {
+        //        lines.removeWhile { line -> !line.startsWith("Example") }
+        val sections = DASH.partition(lines)
+        (sections["Examples"] ?: sections["Example"])?.let {
+            val partition = TILDE.partition(lines)
+            val tabs = partition.map { it.value.extractTabs(it.key) }
+            val entries = tabs.flatMap { it.entries }
+
+            //            TILDE.partition(it)
+            //                .map { it.value.extractTabs(it.key) }
+            //                .flatMap { it.entries }
+            entries.forEach {
+                examples +=
                     OperatorExample(
                         examples.firstOrNull { it.actionBlock != null },
                         operator,
                         it.key,
                         it.value
                     )
-                }
-                .filter { it.valid() }
+            }
+        }
+        //                .filter { it.valid() }
     }
 
     private fun MutableList<String>.extractTabs(name: String): Map<String, MutableList<String>> {
