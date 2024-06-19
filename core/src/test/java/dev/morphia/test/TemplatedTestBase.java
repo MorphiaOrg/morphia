@@ -297,7 +297,7 @@ public abstract class TemplatedTestBase extends TestBase {
         var resource = new BufferedReader(new InputStreamReader(stream))
                 .lines()
                 .collect(joining("\n"));
-        return resource;
+        return resource.trim();
     }
 
     private List<Document> extractDocuments(String resource) {
