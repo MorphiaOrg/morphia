@@ -66,6 +66,7 @@ class RstAuditor(val type: OperatorType) {
                 .filter { !it.equals(operatorRoot) }
                 .map { Operator(type, it) }
                 .filter { it.type == type }
+                .filter { !it.ignored() }
 
         operators.forEach { it.output() }
         return operators
@@ -229,10 +230,7 @@ class RstAuditor(val type: OperatorType) {
         }
     }
 
-    private fun JavaClassSource.createTestCase(
-        testCaseName: String,
-        example: OperatorExample,
-    ) {
+    private fun JavaClassSource.createTestCase(testCaseName: String, example: OperatorExample) {
         val method = addMethod().setName(testCaseName).setVisibility(PUBLIC)
 
         val text = "test data: ${example.folder.relativeTo(coreTestRoot)}\n\n"
@@ -240,12 +238,23 @@ class RstAuditor(val type: OperatorType) {
 
         method.addAnnotation("org.testng.annotations.Test").setStringValue("testName", example.name)
 
-        method.setBody(
-            """
+        if (!example.folder.path.contains("aggregation")) {
+            method.setBody(
+                """
                         |testQuery((query) -> query.filter(  ));
                         | """
-                .trimMargin()
-        )
+                    .trimMargin()
+            )
+        } else {
+            method.setBody(
+                """
+                    |testPipeline(dev.morphia.test.ServerVersion.ANY, false, true, aggregation -> aggregation
+                    |   .pipeline(
+                    |
+                    |)); """
+                    .trimMargin()
+            )
+        }
     }
 }
 

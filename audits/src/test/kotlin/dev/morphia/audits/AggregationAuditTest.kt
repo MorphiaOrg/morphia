@@ -10,9 +10,10 @@ class AggregationAuditTest : BaseAuditTest() {
 
     @Test
     fun testOperator() {
-        val name = "sinh"
-        val operator = Operator(EXPRESSION, name)
-        operator.examples.forEach { it.output(File("target/testOperator-${name}/${it.name}")) }
+        val name = "count"
+        Operator(STAGE, name).examples.forEach {
+            it.output(File("target/testOperator-${name}/${it.name}"))
+        }
     }
 
     @Test

@@ -71,9 +71,6 @@ class RstDocument(val operator: Operator, lines: MutableList<String>) {
             val tabs = partition.map { it.value.extractTabs(it.key) }
             val entries = tabs.flatMap { it.entries }
 
-            //            TILDE.partition(it)
-            //                .map { it.value.extractTabs(it.key) }
-            //                .flatMap { it.entries }
             entries.forEachIndexed { index, it ->
                 examples +=
                     OperatorExample(

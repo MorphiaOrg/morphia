@@ -2,6 +2,7 @@ package dev.morphia.audits.rst
 
 import dev.morphia.audits.model.CodeBlock
 import dev.morphia.audits.model.CodeBlock.Companion.findBlocks
+import dev.morphia.audits.model.CodeBlock.Type.DATA
 import dev.morphia.audits.model.Operator
 import java.io.File
 
@@ -21,8 +22,9 @@ class OperatorExample(
 
     init {
         val blocks = findBlocks(input)
-        dataBlock += blocks.filter { it.isData() }
+        dataBlock += blocks.removeWhile { !it.isAction() }
         dataBlock.forEachIndexed { index, block ->
+            block.type = DATA
             if (index != 0) {
                 block.supplemental = index
             }
@@ -40,10 +42,10 @@ class OperatorExample(
     }
 
     fun output(folder: File) {
+        created = folder.mkdirs()
         val lock = File(folder, "lock")
         if (!lock.exists() || System.getProperty("IGNORE_LOCKS") != null) {
             try {
-                created = this.folder.mkdirs()
                 dataBlock.forEach { it.output(File(folder, "data.json")) }
                 indexBlock?.output(File(folder, "index.json"))
                 actionBlock?.output(File(folder, "action.json"))
@@ -52,7 +54,7 @@ class OperatorExample(
                     File(folder, "name").writeText(name)
                 }
             } catch (e: Exception) {
-                throw RuntimeException("Failed to extract example to ${this.folder}", e)
+                throw RuntimeException("Failed to extract example to ${folder}", e)
             }
         } else {
             if (lock.readText().isBlank()) {

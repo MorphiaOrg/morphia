@@ -94,7 +94,6 @@ class CodeBlock {
     }
 
     lateinit var type: Type
-        private set
 
     var supplemental: Int? = null
 
