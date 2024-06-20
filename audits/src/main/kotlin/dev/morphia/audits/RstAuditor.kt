@@ -123,8 +123,7 @@ class RstAuditor(val type: OperatorType) {
         )
 
         methods.forEach {
-            val methods = it.value
-            val docs = docsLinks(methods)
+            val docs = docsLinks(it.value)
             val operator = it.key
             val referenceLink =
                 "http://docs.mongodb.org/manual/reference/operator/${type.root()}/${operator.substringAfter("$")}"
@@ -265,23 +264,6 @@ private fun ParameterSource<*>.anchorLink(anchor: Boolean = true): String {
     val varargs = isVarArgs()
     val qualified = type.isQualified()
     return if (varargs) "$name${ellipsis}" else name
-}
-
-fun List<String>.sections(): Map<String, MutableList<String>> {
-    val sections = mutableMapOf<String, MutableList<String>>()
-    var current = mutableListOf<String>()
-    sections.put("main", current)
-    forEach {
-        if (it.startsWith("~~~")) {
-            val name = current.removeLast()
-            current = mutableListOf()
-            sections.put(name, current)
-        } else {
-            current.add(it)
-        }
-    }
-
-    return sections
 }
 
 fun notControl(it: String): Boolean {
