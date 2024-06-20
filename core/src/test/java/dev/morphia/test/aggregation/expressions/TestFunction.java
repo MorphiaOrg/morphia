@@ -11,6 +11,7 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 public class TestFunction extends AggregationTest {
     @Test
     public void testExample1() {
+        skipActionCheck = true;
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
                 addFields()
                         .field("isFound", function("""

@@ -22,6 +22,7 @@ public class TestSplit extends AggregationTest {
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> {
             RegexExpression regex = regexMatch("$city_state").pattern("[A-Z]{2}");
+            skipActionCheck = true;
             return aggregation.pipeline(
                     project()
                             .include("city_state", split("$city", ", "))

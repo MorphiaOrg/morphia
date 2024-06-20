@@ -4,8 +4,8 @@
         isFound:
             { $function:
                {
-                  body: "function(name) {\n
-                     return hex_md5(name) == \"15b0a220baa16331e8d80e15367677ad\"\n
+                  body: "function(name) {
+                     return hex_md5(name) == \"15b0a220baa16331e8d80e15367677ad\"
                   }",
                   args: [ "$name" ],
                   lang: "js"

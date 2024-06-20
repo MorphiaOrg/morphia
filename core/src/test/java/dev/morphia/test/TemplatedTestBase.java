@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -287,74 +288,56 @@ public abstract class TemplatedTestBase extends TestBase {
         return extractDocuments(unwrapArray(loadResource(actionName)));
     }
 
-    @NotNull
-    protected String loadResource(String pipelineName) {
+    protected List<String> loadResource(String pipelineName) {
         InputStream stream = getClass().getResourceAsStream(pipelineName);
         if (stream == null) {
             fail(format("missing action file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
                     pipelineName));
         }
-        var resource = new BufferedReader(new InputStreamReader(stream))
+        return new BufferedReader(new InputStreamReader(stream))
                 .lines()
-                .collect(joining("\n"));
-        return resource.trim();
+                .collect(toList());
     }
 
-    private List<Document> extractDocuments(String resource) {
-        var line = resource;
+    private List<Document> extractDocuments(List<String> resource) {
+        var line = resource.get(0).trim();
         if (line.startsWith("db.")) {
-            if (line.endsWith(")")) {
-                line = line.substring(line.indexOf("(") + 1, line.lastIndexOf(")")).trim();
-            } else {
-                throw new IllegalStateException("I don't know how to parse this line: \n\t" + line);
-            }
+            line = line.substring(line.indexOf("(") + 1).trim();
+            resource.set(0, line);
+            line = resource.get(resource.size() - 1);
+            line = line.substring(0, line.lastIndexOf(")"));
+            resource.set(resource.size() - 1, line);
         }
         List<Document> docs = new ArrayList<>();
+        Iterator<String> lines = resource.iterator();
         var current = "";
-        while (!line.isEmpty()) {
-            char c = line.charAt(0);
-            line = line.substring(1);
+        while (lines.hasNext()) {
+            current += lines.next();
             if (balanced(current)) {
                 try {
                     docs.add(Document.parse(current));
-                } catch (BsonInvalidOperationException e) {
-                    throw new RuntimeException("Error parsing " + resource, e);
+                    current = "";
+                } catch (JsonParseException | BsonInvalidOperationException e) {
+                    throw new RuntimeException("Error parsing " + current, e);
                 }
-                current = "";
-            } else {
-                current += c;
             }
         }
-        docs.add(Document.parse(current));
 
         return docs;
     }
 
-    private void extractQueryFilters(List<String> list) {
-        String line = list.stream().collect(joining());
-        if (ACTION.matcher(line).matches()) {
-            if (line.endsWith(")")) {
-                line = line.substring(line.indexOf("(") + 1, line.lastIndexOf(")"));
-                list.clear();
-                list.add(line.trim());
-            } else {
-                throw new IllegalStateException("I don't know how to parse this line: \n\t" + line);
-            }
-
-        }
-
-    }
-
-    private static String unwrapArray(String resource) {
-        String line = resource.trim();
+    private static List<String> unwrapArray(List<String> resource) {
+        String line = resource.get(0).trim();
         if (line.startsWith("[")) {
-            line = line.substring(1);
+            resource.set(0, line.trim().substring(1));
         }
+        var last = resource.size() - 1;
+        line = resource.get(last).trim();
         if (line.endsWith("]")) {
-            line = line.substring(0, line.length() - 1);
+            resource.set(last, line.substring(0, line.length() - 1));
         }
 
-        return line.trim();
+        return resource;
     }
 
     private boolean balanced(String input) {
