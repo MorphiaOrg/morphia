@@ -2,6 +2,7 @@ package dev.morphia.test.query.filters;
 
 import java.util.regex.Pattern;
 
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
@@ -48,8 +49,11 @@ public class TestRegex extends FilterTest {
      */
     @Test(testName = "Ignore White Spaces in Pattern")
     public void testExample5() {
-        testQuery(new ActionTestOptions().skipActionCheck(true), (query) -> query
-                .filter(regex("sku", Pattern.compile("abc #category code\n123 #item number")).extended()));
+        testQuery(new ActionTestOptions()
+                .serverVersion(ServerVersion.v70)
+                .skipActionCheck(true),
+                (query) -> query
+                        .filter(regex("sku", Pattern.compile("abc #category code\n123 #item number")).extended()));
     }
 
     /**
