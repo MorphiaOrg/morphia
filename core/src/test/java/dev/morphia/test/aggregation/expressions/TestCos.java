@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -10,15 +11,16 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.cos;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.degreesToRadians;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 
-public class TestCos extends AggregationTest {
+public class TestCos extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/cos/example1
      * 
      */
     @Test(testName = "main :: Cosine of Value in Degrees")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(addFields().field("side_a", multiply(cos(degreesToRadians("$angle_a")), "$hypotenuse"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(
+                        addFields().field("side_a", multiply(cos(degreesToRadians("$angle_a")), "$hypotenuse"))));
     }
 
     /**
@@ -27,8 +29,9 @@ public class TestCos extends AggregationTest {
      */
     @Test(testName = "main :: Cosine of Value in Radians")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(addFields().field("side_b", multiply(cos("$angle_a"), "$hypotenuse"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation
+                        .pipeline(addFields().field("side_b", multiply(cos("$angle_a"), "$hypotenuse"))));
     }
 
 }

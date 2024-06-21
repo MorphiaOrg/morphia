@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -26,18 +27,16 @@ import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.gte;
 import static dev.morphia.query.filters.Filters.lt;
 
-public class TestMerge extends AggregationTest {
-    public TestMerge() {
-        skipDataCheck();
-    }
-
+public class TestMerge extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/merge/example1
      * 
      */
     @Test(testName = "On-Demand Materialized View: Initial Creation")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
+                        .skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(
                         group(id().field("fiscal_year", "$fiscal_year").field("dept", "$dept")).field("salaries",
                                 sum("$salary")),
@@ -50,7 +49,9 @@ public class TestMerge extends AggregationTest {
      */
     @Test(testName = "On-Demand Materialized View: Update/Replace Data")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
+                        .skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(gte("fiscal_year", 2019)),
                         group(id().field("fiscal_year", "$fiscal_year").field("dept", "$dept")).field("salaries",
                                 sum("$salary")),
@@ -63,7 +64,9 @@ public class TestMerge extends AggregationTest {
      */
     @Test(testName = "Only Insert New Data")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
+                        .skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(eq("fiscal_year", 2019)),
                         group(id().field("fiscal_year", "$fiscal_year").field("dept", "$dept")).field("employees",
                                 push("$employee")),
@@ -78,7 +81,9 @@ public class TestMerge extends AggregationTest {
      */
     @Test(testName = "Merge Results from Multiple Collections")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
+                        .skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(group().field("_id", "$quarter").field("purchased", sum("$qty")),
                         merge("quarterlyreport").on("_id").whenMatched(MERGE).whenNotMatched(INSERT)));
     }
@@ -89,7 +94,9 @@ public class TestMerge extends AggregationTest {
      */
     @Test(testName = "Use the Pipeline to Customize the Merge")
     public void testExample5() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
+                        .skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(
                         match(gte("date", LocalDate.of(2019, Month.MAY, 7)),
                                 lt("date", LocalDate.of(2019, Month.MAY, 8))),

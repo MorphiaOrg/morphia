@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.aggregation.stages.Projection;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -11,15 +12,17 @@ import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.test.ServerVersion.ANY;
 
-public class TestAvg extends AggregationTest {
+public class TestAvg extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/avg/example1
      * 
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(ANY, false, false, aggregation -> aggregation.pipeline(group(id("$item"))
-                .field("avgAmount", avg(multiply("$price", "$quantity"))).field("avgQuantity", avg("$quantity"))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(false),
+                aggregation -> aggregation
+                        .pipeline(group(id("$item")).field("avgAmount", avg(multiply("$price", "$quantity")))
+                                .field("avgQuantity", avg("$quantity"))));
 
     }
 
@@ -29,7 +32,7 @@ public class TestAvg extends AggregationTest {
      */
     @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
-        testPipeline(ANY, false, false,
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(false),
                 aggregation -> aggregation.project(Projection.project().include("quizAvg", avg("$quizzes"))
                         .include("labAvg", avg("$labs")).include("examAvg", avg("$final", "$midterm"))));
 
@@ -43,7 +46,9 @@ public class TestAvg extends AggregationTest {
     public void testExample3() {
         // this has an include and throws off the parser
         /*
-         * testPipeline(v50, false, false, aggregation -> aggregation
+         * testPipeline(new
+         * dev.morphia.test.util.ActionTestOptions().serverVersion(v50).removeIds(false)
+         * .orderMatters(false), aggregation -> aggregation
          * .setWindowFields(SetWindowFields.setWindowFields() .partitionBy("$state")
          * .sortBy(ascending("orderDate")) .output(output("averageQuantityForState")
          * .operator(avg("$quantity")) .window() .documents("unbounded", "current"))

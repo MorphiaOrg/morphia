@@ -11,7 +11,7 @@ import com.mongodb.client.model.changestream.FullDocumentBeforeChange;
 import dev.morphia.aggregation.stages.ChangeStream;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
 
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -25,7 +25,7 @@ import static java.time.LocalDateTime.now;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-public class TestChangeStream extends AggregationTest {
+public class TestChangeStream extends TemplatedTestBase {
     @Test
     @SuppressWarnings("unchecked")
     public void testChangeStream() {

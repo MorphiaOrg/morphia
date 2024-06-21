@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -19,14 +20,14 @@ import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.filters.Filters.gt;
 
-public class TestReduce extends AggregationTest {
+public class TestReduce extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/reduce/example1
      * 
      */
     @Test(testName = "Multiplication")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, false,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id("$experimentId")).field("probabilityArr", push("$probability")),
                         project().include("description").include("results",
@@ -39,10 +40,11 @@ public class TestReduce extends AggregationTest {
      */
     @Test(testName = "String Concatenation")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(gt("hobbies", array())),
-                project().include("name").include("bio", reduce("$hobbies", "My hobbies include:",
-                        concat("$$value", condition(eq("$$value", "My hobbies include:"), " ", ", "), "$$this")))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(match(gt("hobbies", array())),
+                        project().include("name").include("bio",
+                                reduce("$hobbies", "My hobbies include:", concat("$$value",
+                                        condition(eq("$$value", "My hobbies include:"), " ", ", "), "$$this")))));
     }
 
     /**
@@ -51,8 +53,9 @@ public class TestReduce extends AggregationTest {
      */
     @Test(testName = "Array Concatenation")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation
-                .pipeline(project().include("collapsed", reduce("$arr", array(), concatArrays("$$value", "$$this")))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+                (aggregation) -> aggregation.pipeline(
+                        project().include("collapsed", reduce("$arr", array(), concatArrays("$$value", "$$this")))));
     }
 
 }

@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -16,14 +17,14 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.query.Sort.*;
 
-public class TestPush extends AggregationTest {
+public class TestPush extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/push/example1
      * 
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, false,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(sort().ascending("date").ascending("item"),
                         group(id().field("day", dayOfYear("$date")).field("year", year("$date"))).field("itemsSold",
                                 push(document().field("item", "$item").field("quantity", "$quantity")))));
@@ -35,7 +36,7 @@ public class TestPush extends AggregationTest {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(ascending("orderDate")).output(output("quantitiesForState").operator(push("$quantity"))
                                 .window().documents("unbounded", "current"))));

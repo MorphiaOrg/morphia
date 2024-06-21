@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.DriverVersion;
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -17,19 +18,16 @@ import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.expr;
 
-public class TestRand extends AggregationTest {
-    public TestRand() {
-        skipDataCheck();
-        minDriver = DriverVersion.v43;
-    }
-
+public class TestRand extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/rand/example1
      * 
      */
     @Test(testName = "Generate Random Data Points")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, true, false,
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(false)
+                        .minDriver(DriverVersion.v43).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(set().field("amount", multiply(rand(), 100)),
                         set().field("amount", floor("$amount")), merge("donors")));
     }
@@ -40,8 +38,9 @@ public class TestRand extends AggregationTest {
      */
     @Test(testName = "Select Random Items From a Collection")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(match(eq("district", 3)),
-                match(expr(lt(0.5, rand()))), project().suppressId().include("name").include("registered")));
+        testPipeline(new ActionTestOptions().orderMatters(false).minDriver(DriverVersion.v43).skipDataCheck(true),
+                (aggregation) -> aggregation.pipeline(match(eq("district", 3)), match(expr(lt(0.5, rand()))),
+                        project().suppressId().include("name").include("registered")));
     }
 
 }

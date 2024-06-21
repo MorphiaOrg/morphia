@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -19,14 +20,14 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static java.time.DayOfWeek.*;
 import static java.time.DayOfWeek.FRIDAY;
 
-public class TestDateDiff extends AggregationTest {
+public class TestDateDiff extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/dateDiff/example1
      * 
      */
     @Test(testName = "Elapsed Time")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(
                         group(id(null)).field("averageTime", avg(dateDiff("$purchased", "$delivered", TimeUnit.DAY))),
                         project().suppressId().include("numDays", trunc("$averageTime", 1))
@@ -40,7 +41,7 @@ public class TestDateDiff extends AggregationTest {
      */
     @Test(testName = "Result Precision")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(project().suppressId().include("start", "$start")
                         .include("end", "$end").include("years", dateDiff("$start", "$end", YEAR))
                         .include("months", dateDiff("$start", "$end", MONTH))
@@ -53,7 +54,7 @@ public class TestDateDiff extends AggregationTest {
      */
     @Test(testName = "Weeks Per Month")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation
                         .pipeline(project().suppressId().include("wks_default", dateDiff("$start", "$end", WEEK))
                                 .include("wks_monday", dateDiff("$start", "$end", WEEK).startOfWeek(MONDAY))

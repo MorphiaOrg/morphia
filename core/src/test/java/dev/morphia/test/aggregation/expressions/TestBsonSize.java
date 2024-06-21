@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -14,14 +15,14 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.test.ServerVersion.ANY;
 
-public class TestBsonSize extends AggregationTest {
+public class TestBsonSize extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/bsonSize/example1
      * 
      */
     @Test(testName = "Return Sizes of Documents")
     public void testExample1() {
-        testPipeline(ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
                 aggregation -> aggregation.pipeline(project().include("name").include("object_size", bsonSize(ROOT))));
 
     }
@@ -32,8 +33,9 @@ public class TestBsonSize extends AggregationTest {
      */
     @Test(testName = "Return Combined Size of All Documents in a Collection")
     public void testExample2() {
-        testPipeline(ANY, false, true, aggregation -> aggregation
-                .pipeline(group(id(null)).field("combined_object_size", sum(bsonSize(ROOT)))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
+                aggregation -> aggregation
+                        .pipeline(group(id(null)).field("combined_object_size", sum(bsonSize(ROOT)))));
 
     }
 
@@ -43,7 +45,7 @@ public class TestBsonSize extends AggregationTest {
      */
     @Test(testName = "Return Document with Largest Specified Field")
     public void testExample3() {
-        testPipeline(ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
                 aggregation -> aggregation.pipeline(
                         project().include("name", "$name").include("task_object_size", bsonSize("$$CURRENT")),
                         sort().descending("task_object_size"), limit(1)));

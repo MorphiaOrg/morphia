@@ -1,8 +1,7 @@
 package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
-import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.Test;
 
@@ -17,14 +16,14 @@ import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Redact.redact;
 import static dev.morphia.query.filters.Filters.eq;
 
-public class TestRedact extends AggregationTest {
+public class TestRedact extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/redact/example1
      * 
      */
     @Test(testName = "Evaluate Access at Every Document Level")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(match(eq("year", 2014)),
+        testPipeline((aggregation) -> aggregation.pipeline(match(eq("year", 2014)),
                 redact(condition(gt(size(setIntersection("$tags", array("STLW", "G"))), 0), DESCEND, PRUNE))));
     }
 
@@ -34,7 +33,7 @@ public class TestRedact extends AggregationTest {
      */
     @Test(testName = "Exclude All Fields at a Given Level")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(match(eq("status", "A")),
+        testPipeline((aggregation) -> aggregation.pipeline(match(eq("status", "A")),
                 redact(condition(ComparisonExpressions.eq("$level", 5), PRUNE, DESCEND))));
     }
 

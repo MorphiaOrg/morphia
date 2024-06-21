@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.stages;
 import com.github.zafarkhaja.semver.Version;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -16,7 +17,7 @@ import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.aggregation.stages.UnionWith.unionWith;
 
-public class TestUnionWith extends AggregationTest {
+public class TestUnionWith extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/unionWith/example1
      * 
@@ -26,7 +27,7 @@ public class TestUnionWith extends AggregationTest {
         loadData("sales_2018", 1);
         loadData("sales_2019", 2);
         loadData("sales_2020", 3);
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(set().field("_id", "2017"),
                         unionWith("sales_2018", set().field("_id", "2018")),
                         unionWith("sales_2019", set().field("_id", "2019")),
@@ -42,7 +43,7 @@ public class TestUnionWith extends AggregationTest {
         loadData("sales_2018", 1);
         loadData("sales_2019", 2);
         loadData("sales_2020", 3);
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(unionWith("sales_2018"), unionWith("sales_2019"),
                         unionWith("sales_2020"), group(id("$item")).field("total", sum("$quantity")),
                         sort().descending("total")));
@@ -55,7 +56,7 @@ public class TestUnionWith extends AggregationTest {
     @Test(testName = "Create a Union with Specified Documents")
     public void testExample3() {
         assumeTrue(serverIsAtLeastVersion(Version.of(6)), "Minimum server version is 6");
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(unionWith(documents(document("_id", 4).field("flavor", "orange"),
                         document("_id", 5).field("flavor", "vanilla").field("price", 20)))));
     }

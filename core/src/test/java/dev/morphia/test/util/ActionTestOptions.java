@@ -21,10 +21,6 @@ public class ActionTestOptions {
 
     private boolean skipDataCheck = false;
 
-    public ActionTestOptions() {
-        serverVersion = ANY;
-    }
-
     public FindOptions findOptions() {
         return findOptions;
     }

@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -14,15 +15,16 @@ import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Projection.project;
 
-public class TestArrayToObject extends AggregationTest {
+public class TestArrayToObject extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/arrayToObject/example1
      * 
      */
     @Test(testName = "``$arrayToObject``  Example")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(project().include("item").include("dimensions", arrayToObject("$dimensions"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation
+                        .pipeline(project().include("item").include("dimensions", arrayToObject("$dimensions"))));
     }
 
     /**
@@ -31,7 +33,7 @@ public class TestArrayToObject extends AggregationTest {
      */
     @Test(testName = "``$objectToArray`` + ``$arrayToObject`` Example")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("instock", objectToArray("$instock")),
                         addFields().field("instock",
                                 concatArrays("$instock",

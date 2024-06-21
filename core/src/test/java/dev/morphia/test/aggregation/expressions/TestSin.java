@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -10,15 +11,16 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.degree
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.sin;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 
-public class TestSin extends AggregationTest {
+public class TestSin extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/sin/example1
      * 
      */
     @Test(testName = "main :: Sine of Value in Degrees")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(addFields().field("side_b", multiply(sin(degreesToRadians("$angle_a")), "$hypotenuse"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(
+                        addFields().field("side_b", multiply(sin(degreesToRadians("$angle_a")), "$hypotenuse"))));
     }
 
     /**
@@ -27,8 +29,9 @@ public class TestSin extends AggregationTest {
      */
     @Test(testName = "main :: Sine of Value in Radians")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(addFields().field("side_b", multiply(sin("$angle_a"), "$hypotenuse"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation
+                        .pipeline(addFields().field("side_b", multiply(sin("$angle_a"), "$hypotenuse"))));
     }
 
 }

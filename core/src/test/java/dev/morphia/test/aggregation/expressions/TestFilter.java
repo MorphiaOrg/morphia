@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -12,15 +13,16 @@ import static dev.morphia.aggregation.expressions.StringExpressions.regexMatch;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.test.ServerVersion.v52;
 
-public class TestFilter extends AggregationTest {
+public class TestFilter extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/filter/example1
      * 
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(v52, false, true, (aggregation) -> aggregation
-                .pipeline(project().include("items", filter("$items", gte("$$item.price", 100)).as("item"))));
+        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation
+                        .pipeline(project().include("items", filter("$items", gte("$$item.price", 100)).as("item"))));
     }
 
     /**
@@ -29,8 +31,9 @@ public class TestFilter extends AggregationTest {
      */
     @Test(testName = "Use the limit Field")
     public void testExample2() {
-        testPipeline(v52, false, true, (aggregation) -> aggregation
-                .pipeline(project().include("items", filter("$items", gte("$$item.price", 100)).as("item").limit(1))));
+        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(
+                        project().include("items", filter("$items", gte("$$item.price", 100)).as("item").limit(1))));
     }
 
     /**
@@ -49,8 +52,9 @@ public class TestFilter extends AggregationTest {
      */
     @Test(testName = "Filter Based on String Equality Match")
     public void testExample4() {
-        testPipeline(v52, false, true, (aggregation) -> aggregation
-                .pipeline(project().include("items", filter("$items", eq("$$item.name", "pen")).as("item"))));
+        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation
+                        .pipeline(project().include("items", filter("$items", eq("$$item.name", "pen")).as("item"))));
     }
 
     /**
@@ -58,7 +62,8 @@ public class TestFilter extends AggregationTest {
      */
     @Test(testName = "Filter Based on Regular Expression Match")
     public void testExample5() {
-        testPipeline(ServerVersion.ANY, false, true, aggregation -> aggregation.pipeline(
-                project().include("items", filter("$items", regexMatch("$$item.name").pattern("^p")).as("item"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                aggregation -> aggregation.pipeline(project().include("items",
+                        filter("$items", regexMatch("$$item.name").pattern("^p")).as("item"))));
     }
 }

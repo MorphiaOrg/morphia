@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -16,13 +17,13 @@ import static dev.morphia.query.filters.Filters.lt;
 import static dev.morphia.query.filters.Filters.or;
 import static dev.morphia.test.ServerVersion.ANY;
 
-public class TestMatch extends AggregationTest {
+public class TestMatch extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/match/example1
      */
     @Test(testName = "Equality Match")
     public void testExample1() {
-        testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(match(eq("author", "dave"))));
+        testPipeline(aggregation -> aggregation.pipeline(match(eq("author", "dave"))));
     }
 
     /**
@@ -31,7 +32,7 @@ public class TestMatch extends AggregationTest {
      */
     @Test(testName = "Perform a Count")
     public void testExample2() {
-        testPipeline(ANY, true, false,
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         match(or(and(gt("score", 70), lt("score", 90)), gte("views", 1000))),
                         group(id(null)).field("count", sum(1))));

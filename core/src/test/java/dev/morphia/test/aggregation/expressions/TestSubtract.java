@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -9,15 +10,16 @@ import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.expressions.MathExpressions.subtract;
 import static dev.morphia.aggregation.stages.Projection.project;
 
-public class TestSubtract extends AggregationTest {
+public class TestSubtract extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/subtract/example1
      * 
      */
     @Test(testName = "Subtract Numbers")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(project().include("item").include("total", subtract(add("$price", "$fee"), "$discount"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(
+                        project().include("item").include("total", subtract(add("$price", "$fee"), "$discount"))));
     }
 
     /**
@@ -26,9 +28,11 @@ public class TestSubtract extends AggregationTest {
      */
     @Test(testName = "Subtract Two Dates")
     public void testExample2() {
-        skipDataCheck();
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(project().include("item").include("dateDifference", subtract("$$NOW", "$date"))));
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
+                        .skipDataCheck(true),
+                (aggregation) -> aggregation
+                        .pipeline(project().include("item").include("dateDifference", subtract("$$NOW", "$date"))));
     }
 
     /**
@@ -37,7 +41,8 @@ public class TestSubtract extends AggregationTest {
      */
     @Test(testName = "Subtract Milliseconds from a Date")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(project().include("item").include("dateDifference", subtract("$date", 5 * 60 * 1000))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(
+                        project().include("item").include("dateDifference", subtract("$date", 5 * 60 * 1000))));
     }
 }

@@ -1,22 +1,24 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.dateFromString;
 import static dev.morphia.aggregation.stages.Projection.project;
 
-public class TestDateFromString extends AggregationTest {
+public class TestDateFromString extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/dateFromString/example1
      * 
      */
     @Test(testName = "Converting Dates")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project().include("date", dateFromString().dateString("$date").timeZone("America/New_York"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(
+                        project().include("date", dateFromString().dateString("$date").timeZone("America/New_York"))));
     }
 
     /**
@@ -25,7 +27,7 @@ public class TestDateFromString extends AggregationTest {
      */
     @Test(testName = "``onError``")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(project().include("date",
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("date",
                 dateFromString().dateString("$date").timeZone("$timezone").onError("$date"))));
     }
 
@@ -35,10 +37,11 @@ public class TestDateFromString extends AggregationTest {
      */
     @Test(testName = "``onNull``")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project().include("date", dateFromString().dateString("$date").timeZone("$timezone").onNull("oops"))
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(project().include("date",
+                        dateFromString().dateString("$date").timeZone("$timezone").onNull("oops"))
 
-        ));
+                ));
     }
 
 }

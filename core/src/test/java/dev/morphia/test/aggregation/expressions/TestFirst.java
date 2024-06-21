@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -10,7 +11,7 @@ import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.test.ServerVersion.v50;
 
-public class TestFirst extends AggregationTest {
+public class TestFirst extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/aggregation/expressions/first/example1
@@ -18,8 +19,9 @@ public class TestFirst extends AggregationTest {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(v50, false, false, (aggregation) -> aggregation.pipeline(sort().ascending("item", "date"),
-                group(id("$item")).field("firstSale", first("$date"))));
+        testPipeline(new ActionTestOptions().serverVersion(v50).removeIds(false).orderMatters(false),
+                (aggregation) -> aggregation.pipeline(sort().ascending("item", "date"),
+                        group(id("$item")).field("firstSale", first("$date"))));
     }
 
     /**
@@ -28,10 +30,11 @@ public class TestFirst extends AggregationTest {
      */
     @Test(testName = "Missing Data")
     public void testExample2() {
-        testPipeline(v50, false, false, (aggregation) -> aggregation.pipeline(sort().ascending("item", "price"),
-                group(id("$item")).field("inStock", first("$quantity"))
+        testPipeline(new ActionTestOptions().serverVersion(v50).removeIds(false).orderMatters(false),
+                (aggregation) -> aggregation.pipeline(sort().ascending("item", "price"),
+                        group(id("$item")).field("inStock", first("$quantity"))
 
-        ));
+                ));
     }
 
     /**
@@ -44,9 +47,10 @@ public class TestFirst extends AggregationTest {
         // I care
         // to make the parser support. we have working examples already.
         /*
-         * testPipeline(ServerVersion.ANY, false, true, (aggregation) ->
-         * aggregation.pipeline( setWindowFields() .partitionBy("$state")
-         * .sortBy(Sort.ascending("orderDate"))
+         * testPipeline(new
+         * dev.morphia.test.util.ActionTestOptions().serverVersion(ServerVersion.ANY).
+         * removeIds(false).orderMatters(true), (aggregation) -> aggregation.pipeline(
+         * setWindowFields() .partitionBy("$state") .sortBy(Sort.ascending("orderDate"))
          * .output(Output.output("firstOrderTypeForState") .operator(first("$type"))
          * .window() .documents("unbounded", "current"))));
          */

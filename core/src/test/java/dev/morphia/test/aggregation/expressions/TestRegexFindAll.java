@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -12,15 +13,16 @@ import static dev.morphia.aggregation.expressions.StringExpressions.regexFindAll
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Set.set;
 
-public class TestRegexFindAll extends AggregationTest {
+public class TestRegexFindAll extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example1
      * 
      */
     @Test(testName = "``$regexFindAll`` and Its Options")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation
-                .pipeline(addFields().field("returnObject", regexFindAll("$description").pattern("line"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+                (aggregation) -> aggregation
+                        .pipeline(addFields().field("returnObject", regexFindAll("$description").pattern("line"))));
 
     }
 
@@ -30,7 +32,7 @@ public class TestRegexFindAll extends AggregationTest {
      */
     @Test(testName = "Use ``$regexFindAll`` to Parse Email from String")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(
                         addFields().field("email", regexFindAll("$comment")
                                 .pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+").options("i")),
@@ -43,7 +45,7 @@ public class TestRegexFindAll extends AggregationTest {
      */
     @Test(testName = "Use Captured Groupings to Parse User Name")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(
                         addFields().field("names",
                                 regexFindAll("$comment").pattern("([a-z0-9_.+-]+)@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+")

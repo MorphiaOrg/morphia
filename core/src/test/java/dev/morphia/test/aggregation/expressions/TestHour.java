@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -16,14 +17,14 @@ import static dev.morphia.aggregation.expressions.DateExpressions.second;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.stages.Projection.project;
 
-public class TestHour extends AggregationTest {
+public class TestHour extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/hour/example1
      * 
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(project().include("year", year("$date"))
                         .include("month", month("$date")).include("day", dayOfMonth("$date"))
                         .include("hour", hour("$date")).include("minutes", minute("$date"))

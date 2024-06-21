@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -11,14 +12,14 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 
-public class TestRank extends AggregationTest {
+public class TestRank extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/rank/example1
      * 
      */
     @Test(testName = "Rank Partitions by an Integer Field")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(descending("quantity")).output(output("rankQuantityForState").operator(rank()))));
     }
@@ -29,7 +30,7 @@ public class TestRank extends AggregationTest {
      */
     @Test(testName = "Rank Partitions by a Date Field")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(ascending("orderDate")).output(output("rankOrderDateForState").operator(rank()))));
     }
@@ -40,7 +41,7 @@ public class TestRank extends AggregationTest {
      */
     @Test(testName = "Rank Partitions Containing Duplicate Values, Nulls, or Missing Data")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(descending("quantity")).output(output("rankQuantityForState").operator(rank()))));
     }

@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -10,15 +11,16 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radian
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.test.ServerVersion.ANY;
 
-public class TestAcos extends AggregationTest {
+public class TestAcos extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/acos/example1
      * 
      */
     @Test(testName = "main :: Inverse Cosine of Value in Degrees")
     public void testExample1() {
-        testPipeline(ANY, false, true, aggregation -> aggregation
-                .pipeline(addFields().field("angle_a", radiansToDegrees(acos(divide("$side_b", "$hypotenuse"))))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
+                aggregation -> aggregation.pipeline(
+                        addFields().field("angle_a", radiansToDegrees(acos(divide("$side_b", "$hypotenuse"))))));
 
     }
 
@@ -28,8 +30,9 @@ public class TestAcos extends AggregationTest {
      */
     @Test(testName = "main :: Inverse Cosine of Value in Radians")
     public void testExample2() {
-        testPipeline(ANY, false, true, aggregation -> aggregation
-                .pipeline(addFields().field("angle_a", acos(divide("$side_b", "$hypotenuse")))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
+                aggregation -> aggregation
+                        .pipeline(addFields().field("angle_a", acos(divide("$side_b", "$hypotenuse")))));
 
     }
 }

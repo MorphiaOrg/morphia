@@ -1,21 +1,22 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.SetExpressions.setIntersection;
 import static dev.morphia.aggregation.stages.Projection.project;
 
-public class TestSetIntersection extends AggregationTest {
+public class TestSetIntersection extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/setIntersection/example1
      * 
      */
     @Test(testName = "Elements Array Example")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, false,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(project().suppressId().include("flowerFieldA").include("flowerFieldB")
                                 .include("commonToBoth", setIntersection("$flowerFieldA", "$flowerFieldB"))));

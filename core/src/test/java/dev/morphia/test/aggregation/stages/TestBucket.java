@@ -6,9 +6,10 @@ import java.util.List;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Artwork;
 import dev.morphia.test.aggregation.model.Book;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.bson.Document;
 import org.testng.Assert;
@@ -27,24 +28,18 @@ import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 
-public class TestBucket extends AggregationTest {
+public class TestBucket extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/bucket/example1
      * 
      */
     @Test(testName = "Bucket by Year and Filter by Bucket Results")
     public void testExample1() {
-        testPipeline(
-                ServerVersion.ANY, false, true, (
-                        aggregation) -> aggregation
-                                .pipeline(
-                                        bucket().groupBy("$year_born").boundaries(1840, 1850, 1860, 1870, 1880)
-                                                .defaultValue("Other").outputField("count",
-                                                        sum(1))
-                                                .outputField("artists",
-                                                        push().field("name", concat("$first_name", " ", "$last_name"))
-                                                                .field("year_born", "$year_born")),
-                                        match(gt("count", 3))));
+        testPipeline((aggregation) -> aggregation.pipeline(bucket()
+                .groupBy("$year_born").boundaries(1840, 1850, 1860, 1870, 1880).defaultValue("Other")
+                .outputField("count", sum(1)).outputField("artists", push()
+                        .field("name", concat("$first_name", " ", "$last_name")).field("year_born", "$year_born")),
+                match(gt("count", 3))));
     }
 
     /**
@@ -53,7 +48,9 @@ public class TestBucket extends AggregationTest {
      */
     @Test(testName = "Use $bucket with $facet to Bucket by Multiple Fields")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(
+                new ActionTestOptions().serverVersion(
+                        ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(facet()
                         .field("price",
                                 bucket().groupBy("$price").boundaries(0, 200, 400).defaultValue("Other")

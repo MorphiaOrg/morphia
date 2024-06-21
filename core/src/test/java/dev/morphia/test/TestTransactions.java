@@ -13,7 +13,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.filters.Filters;
-import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.mapping.lazy.TestLazyCircularReference.ReferencedEntity;
 import dev.morphia.test.mapping.lazy.TestLazyCircularReference.RootEntity;
 import dev.morphia.test.models.Rectangle;
@@ -34,7 +33,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 //@Tags(@Tag("transactions"))
-public class TestTransactions extends AggregationTest {
+public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
     @BeforeMethod
     public void before() {
         checkForReplicaSet();
@@ -168,14 +167,16 @@ public class TestTransactions extends AggregationTest {
     @Test(testName = "transactional aggregations")
     public void aggregation() {
         getDs().withTransaction(session -> {
-            testPipeline(ServerVersion.ANY, false, false, aggregation -> {
-                loadData("aggTest2", 2);
-                return aggregation
-                        .lookup(Lookup.lookup("aggTest2")
-                                .localField("item")
-                                .foreignField("sku")
-                                .as("inventory_docs"));
-            });
+            testPipeline(
+                    new dev.morphia.test.util.ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+                    aggregation -> {
+                        loadData("aggTest2", 2);
+                        return aggregation
+                                .lookup(Lookup.lookup("aggTest2")
+                                        .localField("item")
+                                        .foreignField("sku")
+                                        .as("inventory_docs"));
+                    });
             return null;
         });
     }

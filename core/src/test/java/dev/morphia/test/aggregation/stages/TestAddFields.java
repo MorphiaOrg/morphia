@@ -3,8 +3,9 @@ package dev.morphia.test.aggregation.stages;
 import java.util.List;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Score;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.bson.Document;
 import org.testng.annotations.Test;
@@ -19,7 +20,7 @@ import static dev.morphia.query.filters.Filters.eq;
 import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 
-public class TestAddFields extends AggregationTest {
+public class TestAddFields extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/addFields/example1
      * 
@@ -52,7 +53,7 @@ public class TestAddFields extends AggregationTest {
      */
     @Test(testName = "Adding Fields to an Embedded Document")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("specs.fuel_type", "unleaded")));
     }
 
@@ -62,7 +63,7 @@ public class TestAddFields extends AggregationTest {
      */
     @Test(testName = "Overwriting an existing field")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, false,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(addFields().field("cats", 20)));
     }
 
@@ -72,7 +73,7 @@ public class TestAddFields extends AggregationTest {
      */
     @Test(testName = "Add Element to an Array")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
+        testPipeline((aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
                 addFields().field("homework", concatArrays("$homework", array(7)))));
     }
 

@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -14,14 +15,14 @@ import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.query.filters.Filters.eq;
 
-public class TestSet extends AggregationTest {
+public class TestSet extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/set/example1
      * 
      */
     @Test(testName = "Using Two ``$set`` Stages")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(
                         set().field("totalHomework", sum("$homework")).field("totalQuiz", sum("$quiz")),
                         set().field("totalScore", add("$totalHomework", "$totalQuiz", "$extraCredit"))));
@@ -33,7 +34,7 @@ public class TestSet extends AggregationTest {
      */
     @Test(testName = "Adding Fields to an Embedded Document")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(set().field("specs.fuel_type", "unleaded")));
     }
 
@@ -43,7 +44,8 @@ public class TestSet extends AggregationTest {
      */
     @Test(testName = "Overwriting an existing field")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(set().field("cats", 20)));
+        testPipeline(new ActionTestOptions().orderMatters(false),
+                (aggregation) -> aggregation.pipeline(set().field("cats", 20)));
     }
 
     /**
@@ -52,7 +54,7 @@ public class TestSet extends AggregationTest {
      */
     @Test(testName = "Add Element to an Array")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
+        testPipeline((aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
                 set().field("homework", concatArrays("$homework", array(7)))));
     }
 
@@ -62,7 +64,7 @@ public class TestSet extends AggregationTest {
      */
     @Test(testName = "Creating a New Field with Existing Fields")
     public void testExample5() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(set().field("quizAverage", avg("$quiz"))));
     }
 

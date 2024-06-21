@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -17,15 +18,16 @@ import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
 
-public class TestObjectToArray extends AggregationTest {
+public class TestObjectToArray extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/objectToArray/example1
      * 
      */
     @Test(testName = "``$objectToArray`` Example")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(project().include("item").include("dimensions", objectToArray("$dimensions"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation
+                        .pipeline(project().include("item").include("dimensions", objectToArray("$dimensions"))));
     }
 
     /**
@@ -34,7 +36,7 @@ public class TestObjectToArray extends AggregationTest {
      */
     @Test(testName = "``$objectToArray`` to Sum Nested Fields")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, false,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(project().include("warehouses", objectToArray("$instock")),
                         unwind("warehouses"), group(id("$warehouses.k")).field("total", sum("$warehouses.v"))));
     }
@@ -45,7 +47,7 @@ public class TestObjectToArray extends AggregationTest {
      */
     @Test(testName = "``$objectToArray`` + ``$arrayToObject`` Example")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("instock", objectToArray("$instock")),
                         addFields().field("instock",
                                 concatArrays("$instock",

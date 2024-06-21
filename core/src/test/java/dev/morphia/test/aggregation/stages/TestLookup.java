@@ -4,9 +4,10 @@ import java.util.List;
 
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Inventory;
 import dev.morphia.test.aggregation.model.Order;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -27,7 +28,7 @@ import static dev.morphia.query.filters.Filters.expr;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
-public class TestLookup extends AggregationTest {
+public class TestLookup extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/lookup/example1
      * 
@@ -35,8 +36,9 @@ public class TestLookup extends AggregationTest {
     @Test(testName = "Perform a Single Equality Join with ``$lookup``")
     public void testExample1() {
         loadData("inventory", 2);
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(lookup("inventory").localField("item").foreignField("sku").as("inventory_docs")));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation
+                        .pipeline(lookup("inventory").localField("item").foreignField("sku").as("inventory_docs")));
     }
 
     /**
@@ -46,8 +48,9 @@ public class TestLookup extends AggregationTest {
     @Test(testName = "Use ``$lookup`` with an Array")
     public void testExample2() {
         loadData("members", 2);
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(lookup("members").localField("enrollmentlist").foreignField("name").as("enrollee_info")));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(
+                        lookup("members").localField("enrollmentlist").foreignField("name").as("enrollee_info")));
     }
 
     /**
@@ -56,7 +59,7 @@ public class TestLookup extends AggregationTest {
      */
     @Test(testName = "Use ``$lookup`` with ``$mergeObjects``")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(
                         lookup("items").localField("item").foreignField("item").as("fromItems"),
                         replaceRoot(mergeObjects().add(elementAt("$fromItems", 0)).add(ROOT)),
@@ -70,7 +73,9 @@ public class TestLookup extends AggregationTest {
     @Test(testName = "Perform Multiple Joins and a Correlated Subquery with ``$lookup``")
     public void testExample4() {
         loadData("warehouses", 2);
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(
+                new ActionTestOptions().serverVersion(
+                        ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation
                         .pipeline(lookup("warehouses")
                                 .pipeline(
@@ -87,17 +92,12 @@ public class TestLookup extends AggregationTest {
     @Test(testName = "Perform an Uncorrelated Subquery with ``$lookup``")
     public void testExample5() {
         loadData("holidays", 2);
-        testPipeline(
-                ServerVersion.ANY, false, true, (
-                        aggregation) -> aggregation
-                                .pipeline(
-                                        lookup("holidays")
-                                                .pipeline(match(eq("year", 2018)),
-                                                        project().suppressId().include("date",
-                                                                document().field("name", "$name").field("date",
-                                                                        "$date")),
-                                                        replaceRoot("$date"))
-                                                .as("holidays")));
+        testPipeline((aggregation) -> aggregation.pipeline(lookup("holidays")
+                .pipeline(match(eq("year", 2018)),
+                        project().suppressId().include("date",
+                                document().field("name", "$name").field("date", "$date")),
+                        replaceRoot("$date"))
+                .as("holidays")));
     }
 
     /**
@@ -107,7 +107,7 @@ public class TestLookup extends AggregationTest {
     @Test(testName = "Perform a Concise Correlated Subquery with ``$lookup``")
     public void testExample6() {
         loadData("restaurants", 2);
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(lookup("restaurants").localField("restaurant_name")
                         .foreignField("name").pipeline(match(expr(in("$$orders_drink", "$beverages"))))
                         .let("orders_drink", "$drink").as("matches")));

@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -14,15 +15,17 @@ import static dev.morphia.aggregation.stages.ReplaceRoot.replaceRoot;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
 import static dev.morphia.query.filters.Filters.gte;
 
-public class TestReplaceRoot extends AggregationTest {
+public class TestReplaceRoot extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/replaceRoot/example1
      * 
      */
     @Test(testName = "``$replaceRoot`` with an Embedded Document Field")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects()
-                .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0)).add("$pets"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects()
+                        .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0))
+                        .add("$pets"))));
     }
 
     /**
@@ -31,8 +34,8 @@ public class TestReplaceRoot extends AggregationTest {
      */
     @Test(testName = "``$replaceRoot`` with a Document Nested in an Array")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(unwind("grades"),
-                match(gte("grades.grade", 90)), replaceRoot("$grades")));
+        testPipeline((aggregation) -> aggregation.pipeline(unwind("grades"), match(gte("grades.grade", 90)),
+                replaceRoot("$grades")));
     }
 
     /**
@@ -41,8 +44,9 @@ public class TestReplaceRoot extends AggregationTest {
      */
     @Test(testName = "``$replaceRoot`` with a newly created document")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(replaceRoot().field("full_name", concat("$first_name", " ", "$last_name"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation
+                        .pipeline(replaceRoot().field("full_name", concat("$first_name", " ", "$last_name"))));
     }
 
     /**
@@ -51,14 +55,8 @@ public class TestReplaceRoot extends AggregationTest {
      */
     @Test(testName = "``$replaceRoot`` with a New Document Created from ``$$ROOT`` and a Default Document")
     public void testExample4() {
-        testPipeline(
-                ServerVersion.ANY, false, true, (
-                        aggregation) -> aggregation
-                                .pipeline(
-                                        replaceRoot(
-                                                mergeObjects()
-                                                        .add(document().field("_id", "").field("name", "")
-                                                                .field("email", "").field("cell", "").field("home", ""))
-                                                        .add(ROOT))));
+        testPipeline((aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects().add(
+                document().field("_id", "").field("name", "").field("email", "").field("cell", "").field("home", ""))
+                .add(ROOT))));
     }
 }

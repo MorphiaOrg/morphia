@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -14,13 +15,13 @@ import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.test.ServerVersion.ANY;
 import static dev.morphia.test.ServerVersion.v70;
 
-public class TestMedian extends AggregationTest {
+public class TestMedian extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/median/example1
      */
     @Test(testName = "Use |operatorName| as an Accumulator")
     public void testExample1() {
-        testPipeline(ANY, false, false,
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(false),
                 aggregation -> aggregation.pipeline(group().field("test01_median", median("$test01"))));
     }
 
@@ -30,8 +31,9 @@ public class TestMedian extends AggregationTest {
      */
     @Test(testName = "Use |operatorName| in a ``$project`` Stage")
     public void testExample2() {
-        testPipeline(v70, false, true, aggregation -> aggregation.pipeline(project().suppressId().include("studentId")
-                .include("testMedians", median(array("$test01", "$test02", "$test03")))));
+        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(true),
+                aggregation -> aggregation.pipeline(project().suppressId().include("studentId").include("testMedians",
+                        median(array("$test01", "$test02", "$test03")))));
     }
 
     /**
@@ -40,7 +42,7 @@ public class TestMedian extends AggregationTest {
      */
     @Test(testName = "Use |operatorName| in a ``$setWindowField`` Stage")
     public void testExample3() {
-        testPipeline(v70, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(true),
                 aggregation -> aggregation.pipeline(
                         setWindowFields().sortBy(ascending("test01"))
                                 .output(output("test01_median").operator(median("$test01")).window().range(-3, 3)),

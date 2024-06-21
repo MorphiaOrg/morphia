@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -13,14 +14,14 @@ import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.Sort.naturalAscending;
 import static dev.morphia.test.ServerVersion.v52;
 
-public class TestSortArray extends AggregationTest {
+public class TestSortArray extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/sortArray/example1
      * 
      */
     @Test(testName = "Sort on a Field ")
     public void testExample1() {
-        testPipeline(v52, (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion(v52), (aggregation) -> aggregation
                 .pipeline(project().suppressId().include("result", sortArray("$team", ascending("name")))));
 
     }
@@ -31,7 +32,7 @@ public class TestSortArray extends AggregationTest {
      */
     @Test(testName = "Sort on a Subfield")
     public void testExample2() {
-        testPipeline(v52, (aggregation) -> {
+        testPipeline(new ActionTestOptions().serverVersion(v52), (aggregation) -> {
             return aggregation
                     .project(project().suppressId().include("result", sortArray("$team", descending("address.city"))));
         });
@@ -44,7 +45,7 @@ public class TestSortArray extends AggregationTest {
      */
     @Test(testName = "Sort on Multiple Fields")
     public void testExample3() {
-        testPipeline(v52, (aggregation) -> aggregation.pipeline(
+        testPipeline(new ActionTestOptions().serverVersion(v52), (aggregation) -> aggregation.pipeline(
                 project().suppressId().include("result", sortArray("$team", descending("age"), ascending("name")))));
     }
 
@@ -54,7 +55,7 @@ public class TestSortArray extends AggregationTest {
      */
     @Test(testName = "Sort an Array of Integers")
     public void testExample4() {
-        testPipeline(v52, (aggregation) -> {
+        testPipeline(new ActionTestOptions().serverVersion(v52), (aggregation) -> {
             return aggregation.project(
                     project().suppressId().include("result", sortArray(array(1, 4, 1, 6, 12, 5), naturalAscending())));
         });
@@ -68,7 +69,7 @@ public class TestSortArray extends AggregationTest {
     @Test(testName = "Sort on Mixed Type Fields")
     public void testExample5() {
         testPipeline(
-                v52, false, false, (
+                new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false), (
                         aggregation) -> aggregation
                                 .pipeline(
                                         project().suppressId()

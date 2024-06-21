@@ -4,8 +4,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.models.User;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -23,14 +24,15 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
-public class TestUnwind extends AggregationTest {
+public class TestUnwind extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/unwind/example1
      * 
      */
     @Test(testName = "Unwind Array")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(unwind("sizes")));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
     /**
@@ -39,7 +41,8 @@ public class TestUnwind extends AggregationTest {
      */
     @Test(testName = "Missing or Non-array Values")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(unwind("sizes")));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+                (aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
     /**
@@ -48,7 +51,7 @@ public class TestUnwind extends AggregationTest {
      */
     @Test(testName = "``preserveNullAndEmptyArrays`` and ``includeArrayIndex``")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true)));
     }
 
@@ -58,7 +61,7 @@ public class TestUnwind extends AggregationTest {
      */
     @Test(testName = "Group by Unwound Values")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, false,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true),
                         group(id("$sizes")).field("averagePrice", avg("$price")), sort().descending("averagePrice")));
     }
@@ -69,7 +72,7 @@ public class TestUnwind extends AggregationTest {
      */
     @Test(testName = "Unwind Embedded Arrays")
     public void testExample5() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(unwind("items"),
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(unwind("items"),
                 unwind("items.tags"),
                 group(id("$items.tags")).field("totalSalesAmount", sum(multiply("$items.price", "$items.quantity")))));
     }

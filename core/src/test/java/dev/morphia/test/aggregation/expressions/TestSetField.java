@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.DriverVersion;
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -14,19 +15,18 @@ import static dev.morphia.aggregation.stages.ReplaceWith.replaceWith;
 import static dev.morphia.aggregation.stages.Unset.unset;
 import static dev.morphia.query.filters.Filters.eq;
 
-public class TestSetField extends AggregationTest {
-    public TestSetField() {
-        minDriver = DriverVersion.v43;
-    }
-
+public class TestSetField extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/setField/example1
      * 
      */
     @Test(testName = "Add Fields that Contain Periods (``.``)")
     public void testExample1() {
-        testPipeline(ServerVersion.v50, false, true, (aggregation) -> aggregation
-                .pipeline(replaceWith(setField("price.usd", ROOT, "$price")), unset("price")));
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.v50).removeIds(false).orderMatters(true)
+                        .minDriver(DriverVersion.v43),
+                (aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, "$price")),
+                        unset("price")));
     }
 
     /**
@@ -35,8 +35,11 @@ public class TestSetField extends AggregationTest {
      */
     @Test(testName = "Add Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
-                .pipeline(replaceWith(setField(literal("$price"), ROOT, "$price")), unset("price")));
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
+                        .minDriver(DriverVersion.v43),
+                (aggregation) -> aggregation.pipeline(replaceWith(setField(literal("$price"), ROOT, "$price")),
+                        unset("price")));
     }
 
     /**
@@ -45,8 +48,11 @@ public class TestSetField extends AggregationTest {
      */
     @Test(testName = "Update Fields that Contain Periods (``.``)")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
-                replaceWith(setField("price.usd", ROOT, 49.99))));
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
+                        .minDriver(DriverVersion.v43),
+                (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
+                        replaceWith(setField("price.usd", ROOT, 49.99))));
     }
 
     /**
@@ -55,8 +61,11 @@ public class TestSetField extends AggregationTest {
      */
     @Test(testName = "Update Fields that Start with a Dollar Sign (``$``)")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
-                replaceWith(setField(literal("$price"), ROOT, 49.99))));
+        testPipeline(
+                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
+                        .minDriver(DriverVersion.v43),
+                (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
+                        replaceWith(setField(literal("$price"), ROOT, 49.99))));
     }
 
     /**
@@ -65,7 +74,7 @@ public class TestSetField extends AggregationTest {
      */
     @Test(testName = "Remove Fields that Contain Periods (``.``)")
     public void testExample5() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, REMOVE))));
     }
 
@@ -75,7 +84,7 @@ public class TestSetField extends AggregationTest {
      */
     @Test(testName = "Remove Fields that Start with a Dollar Sign (``$``)")
     public void testExample6() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(replaceWith(setField(literal("$price"), ROOT, REMOVE))));
     }
 

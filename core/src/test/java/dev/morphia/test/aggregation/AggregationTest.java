@@ -16,50 +16,9 @@
 
 package dev.morphia.test.aggregation;
 
-import java.util.List;
-import java.util.function.Function;
-
-import dev.morphia.aggregation.Aggregation;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.Comparanator;
-
-import org.bson.Document;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
 public class AggregationTest extends TemplatedTestBase {
-
-    public void testPipeline(ServerVersion serverVersion,
-            Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        testPipeline(serverVersion, true, true, pipeline);
-    }
-
-    public void testPipeline(ServerVersion serverVersion,
-            boolean removeIds,
-            boolean orderMatters,
-            Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        checkMinServerVersion(serverVersion);
-        checkMinDriverVersion(minDriver);
-        var resourceName = discoverResourceName();
-        validateTestName(resourceName);
-        loadData(resourceName, EXAMPLE_TEST_COLLECTION);
-        loadIndex(resourceName, EXAMPLE_TEST_COLLECTION);
-
-        List<Document> actual = runPipeline(resourceName, pipeline.apply(getDs().aggregate(EXAMPLE_TEST_COLLECTION)));
-
-        if (!skipDataCheck) {
-            List<Document> expected = loadExpected(resourceName);
-
-            actual = removeIds ? removeIds(actual) : actual;
-            expected = removeIds ? removeIds(expected) : expected;
-
-            try {
-                Comparanator.of(null, actual, expected, orderMatters).compare();
-            } catch (AssertionError e) {
-                throw new AssertionError("%s\n\n actual: %s".formatted(e.getMessage(), toString(actual, "\n\t")),
-                        e);
-            }
-        }
-    }
 
 }

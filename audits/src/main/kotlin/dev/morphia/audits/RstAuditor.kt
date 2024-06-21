@@ -251,7 +251,7 @@ class RstAuditor(val type: OperatorType) {
         } else {
             method.setBody(
                 """
-                    |testPipeline(dev.morphia.test.ServerVersion.ANY, false, true, aggregation -> aggregation
+                    |testPipeline(new dev.morphia.test.util.ActionTestOptions().serverVersion(dev.morphia.test.ServerVersion.ANY).removeIds(false).orderMatters(true), aggregation -> aggregation
                     |   .pipeline(
                     |
                     |)); """

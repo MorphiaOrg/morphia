@@ -5,10 +5,11 @@ import java.util.Iterator;
 import com.mongodb.client.model.BucketGranularity;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Book;
 import dev.morphia.test.aggregation.model.BooksBucketResult;
 import dev.morphia.test.aggregation.model.BucketAutoResult;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -22,14 +23,14 @@ import static dev.morphia.aggregation.stages.Facet.facet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 
-public class TestBucketAuto extends AggregationTest {
+public class TestBucketAuto extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/bucketAuto/example1
      * 
      */
     @Test(testName = "Single Facet Aggregation")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(autoBucket().groupBy("$price").buckets(4)));
     }
 
@@ -39,7 +40,7 @@ public class TestBucketAuto extends AggregationTest {
      */
     @Test(testName = "Multi-Faceted Aggregation")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
                         .field("year",
                                 autoBucket().groupBy("$year").buckets(3).outputField("count", sum(1))
@@ -50,7 +51,7 @@ public class TestBucketAuto extends AggregationTest {
 
     @Test(testName = "Multi-Faceted Aggregation")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true,
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
                 (aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
                         .field("year",
                                 autoBucket().groupBy("$year").buckets(3).outputField("count", sum(1))

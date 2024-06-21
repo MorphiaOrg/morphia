@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.aggregation.expressions.StringExpressions;
 import dev.morphia.aggregation.stages.Fill.Method;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -15,16 +16,16 @@ import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.test.DriverVersion.v42;
 import static dev.morphia.test.ServerVersion.v53;
 
-public class TestFill extends AggregationTest {
+public class TestFill extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/fill/example1
      * 
      */
     @Test(testName = "Fill Missing Field Values with a Constant Value")
     public void testExample1() {
-        minDriver = v42;
-        testPipeline(v53, aggregation -> aggregation
-                .pipeline(fill().field("bootsSold", 0).field("sandalsSold", 0).field("sneakersSold", 0)));
+        testPipeline(new ActionTestOptions().serverVersion(v53).minDriver(v42).removeIds(true),
+                aggregation -> aggregation
+                        .pipeline(fill().field("bootsSold", 0).field("sandalsSold", 0).field("sneakersSold", 0)));
     }
 
     /**
@@ -33,7 +34,7 @@ public class TestFill extends AggregationTest {
      */
     @Test(testName = "Fill Missing Field Values with Linear Interpolation")
     public void testExample2() {
-        testPipeline(v53,
+        testPipeline(new ActionTestOptions().serverVersion(v53).removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("time")).field("price", Method.LINEAR)));
     }
 
@@ -43,9 +44,7 @@ public class TestFill extends AggregationTest {
      */
     @Test(testName = "Fill Missing Field Values Based on the Last Observed Value")
     public void testExample3() {
-        minDriver = v42;
-
-        testPipeline(v53,
+        testPipeline(new ActionTestOptions().serverVersion(v53).minDriver(v42).removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("date")).field("score", Method.LOCF)));
     }
 
@@ -55,9 +54,9 @@ public class TestFill extends AggregationTest {
      */
     @Test(testName = "Fill Data for Distinct Partitions")
     public void testExample4() {
-        minDriver = v42;
-        testPipeline(v53, aggregation -> aggregation.pipeline(fill().sortBy(ascending("date"))
-                .partitionBy(document("restaurant", "$restaurant")).field("score", Method.LOCF)));
+        testPipeline(new ActionTestOptions().serverVersion(v53).minDriver(v42).removeIds(true),
+                aggregation -> aggregation.pipeline(fill().sortBy(ascending("date"))
+                        .partitionBy(document("restaurant", "$restaurant")).field("score", Method.LOCF)));
     }
 
     /**
@@ -66,7 +65,7 @@ public class TestFill extends AggregationTest {
      */
     @Test(testName = "Indicate if a Field was Populated Using ``$fill``")
     public void testExample5() {
-        testPipeline(v53, true, true,
+        testPipeline(new ActionTestOptions().serverVersion(v53).removeIds(true).orderMatters(true),
                 (aggregation) -> aggregation
                         .pipeline(
                                 set().field("valueExisted",
