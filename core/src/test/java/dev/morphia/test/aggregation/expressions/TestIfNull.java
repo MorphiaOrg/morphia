@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -16,9 +14,8 @@ public class TestIfNull extends TemplatedTestBase {
      */
     @Test(testName = "Single Input Expression")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(project().include("item").include("description",
-                        ifNull().target("$description").replacement("Unspecified"))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("item").include("description",
+                ifNull().target("$description").replacement("Unspecified"))));
     }
 
     /**
@@ -27,9 +24,8 @@ public class TestIfNull extends TemplatedTestBase {
      */
     @Test(testName = "Multiple Input Expressions")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(project().include("item").include("value",
-                        ifNull().input("$description", "$quantity").replacement("Unspecified"))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("item").include("value",
+                ifNull().input("$description", "$quantity").replacement("Unspecified"))));
     }
 
 }

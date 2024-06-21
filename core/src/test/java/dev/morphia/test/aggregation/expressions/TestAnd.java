@@ -18,9 +18,8 @@ public class TestAnd extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
-                aggregation -> aggregation.pipeline(project().include("item").include("qty").include("result",
-                        and(gt("$qty", 100), lt("$qty", 250)))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation.pipeline(
+                project().include("item").include("qty").include("result", and(gt("$qty", 100), lt("$qty", 250)))));
 
     }
 }

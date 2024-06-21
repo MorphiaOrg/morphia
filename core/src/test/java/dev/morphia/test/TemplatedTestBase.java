@@ -212,7 +212,7 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     public void testQuery(Function<Query<Document>, Query<Document>> function) {
-        testQuery(new ActionTestOptions(), function);
+        testQuery(function);
     }
 
     public void testQuery(ActionTestOptions options,
@@ -228,7 +228,7 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     public void testUpdate(Function<Query<Document>, Query<Document>> function, UpdateOperator... operators) {
-        testUpdate(new ActionTestOptions(), function, operators);
+        testUpdate(function, operators);
     }
 
     public void testUpdate(ActionTestOptions options,

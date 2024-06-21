@@ -2,7 +2,6 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Meta;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -26,7 +25,7 @@ public class TestMeta extends TemplatedTestBase {
      */
     @Test(testName = "``$meta: \"textScore\"`` :: Aggregation")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(match(text("cake")), group(id(meta())).field("count", sum(1))));
     }
 

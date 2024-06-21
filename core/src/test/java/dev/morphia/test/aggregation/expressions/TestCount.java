@@ -20,7 +20,7 @@ public class TestCount extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v50).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v50).orderMatters(false),
                 aggregation -> aggregation.pipeline(group(Group.id("$state")).field("countNumberOfDocumentsForState",
                         AccumulatorExpressions.count())));
 
@@ -32,7 +32,7 @@ public class TestCount extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v50).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v50).orderMatters(false),
                 aggregation -> aggregation.setWindowFields(setWindowFields().partitionBy(("$state"))
                         .sortBy(Sort.ascending("orderDate")).output(output("countNumberOfDocumentsForState")
                                 .operator(AccumulatorExpressions.count()).window().documents("unbounded", "current"))));

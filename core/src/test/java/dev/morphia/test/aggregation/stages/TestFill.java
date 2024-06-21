@@ -65,7 +65,7 @@ public class TestFill extends TemplatedTestBase {
      */
     @Test(testName = "Indicate if a Field was Populated Using ``$fill``")
     public void testExample5() {
-        testPipeline(new ActionTestOptions().serverVersion(v53).removeIds(true).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(v53).removeIds(true),
                 (aggregation) -> aggregation
                         .pipeline(
                                 set().field("valueExisted",

@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -17,9 +16,8 @@ public class TestCosh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Hyperbolic Cosine in Degrees")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(addFields().field("cosh_output", cosh(degreesToRadians("$angle")))));
+        testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation
+                .pipeline(addFields().field("cosh_output", cosh(degreesToRadians("$angle")))));
     }
 
     /**
@@ -28,7 +26,7 @@ public class TestCosh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Hyperbolic Cosine in Radians")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("cosh_output", cosh("$angle"))));
     }
 

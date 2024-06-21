@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.aggregation.expressions.TimeUnit;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -20,7 +19,7 @@ public class TestSetWindowFields extends TemplatedTestBase {
      */
     @Test(testName = "Documents Window Examples")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(ascending("orderDate")).output(output("cumulativeQuantityForState")
                                 .operator(sum("$quantity")).window().documents("unbounded", "current"))));
@@ -32,10 +31,9 @@ public class TestSetWindowFields extends TemplatedTestBase {
      */
     @Test(testName = "Range Window Example")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state").sortBy(ascending("price"))
-                        .output(output("quantityFromSimilarOrders").operator(sum("$quantity")).window().range(-10,
-                                10))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(setWindowFields().partitionBy("$state").sortBy(ascending("price")).output(
+                        output("quantityFromSimilarOrders").operator(sum("$quantity")).window().range(-10, 10))));
     }
 
     /**
@@ -44,10 +42,9 @@ public class TestSetWindowFields extends TemplatedTestBase {
      */
     @Test(testName = "Time Range Window Examples")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
-                        .sortBy(ascending("orderDate")).output(output("recentOrders").operator(push("$orderDate"))
-                                .window().range("unbounded", 10, TimeUnit.MONTH))));
+        testPipeline((aggregation) -> aggregation.pipeline(
+                setWindowFields().partitionBy("$state").sortBy(ascending("orderDate")).output(output("recentOrders")
+                        .operator(push("$orderDate")).window().range("unbounded", 10, TimeUnit.MONTH))));
     }
 
 }

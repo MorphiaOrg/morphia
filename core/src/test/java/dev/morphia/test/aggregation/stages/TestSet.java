@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -22,10 +21,9 @@ public class TestSet extends TemplatedTestBase {
      */
     @Test(testName = "Using Two ``$set`` Stages")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        set().field("totalHomework", sum("$homework")).field("totalQuiz", sum("$quiz")),
-                        set().field("totalScore", add("$totalHomework", "$totalQuiz", "$extraCredit"))));
+        testPipeline((aggregation) -> aggregation.pipeline(
+                set().field("totalHomework", sum("$homework")).field("totalQuiz", sum("$quiz")),
+                set().field("totalScore", add("$totalHomework", "$totalQuiz", "$extraCredit"))));
     }
 
     /**
@@ -34,8 +32,7 @@ public class TestSet extends TemplatedTestBase {
      */
     @Test(testName = "Adding Fields to an Embedded Document")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(set().field("specs.fuel_type", "unleaded")));
+        testPipeline((aggregation) -> aggregation.pipeline(set().field("specs.fuel_type", "unleaded")));
     }
 
     /**
@@ -64,8 +61,7 @@ public class TestSet extends TemplatedTestBase {
      */
     @Test(testName = "Creating a New Field with Existing Fields")
     public void testExample5() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(set().field("quizAverage", avg("$quiz"))));
+        testPipeline((aggregation) -> aggregation.pipeline(set().field("quizAverage", avg("$quiz"))));
     }
 
 }

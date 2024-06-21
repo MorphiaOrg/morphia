@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -27,7 +26,7 @@ public class TestReduce extends TemplatedTestBase {
      */
     @Test(testName = "Multiplication")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id("$experimentId")).field("probabilityArr", push("$probability")),
                         project().include("description").include("results",
@@ -40,11 +39,9 @@ public class TestReduce extends TemplatedTestBase {
      */
     @Test(testName = "String Concatenation")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(match(gt("hobbies", array())),
-                        project().include("name").include("bio",
-                                reduce("$hobbies", "My hobbies include:", concat("$$value",
-                                        condition(eq("$$value", "My hobbies include:"), " ", ", "), "$$this")))));
+        testPipeline((aggregation) -> aggregation.pipeline(match(gt("hobbies", array())),
+                project().include("name").include("bio", reduce("$hobbies", "My hobbies include:",
+                        concat("$$value", condition(eq("$$value", "My hobbies include:"), " ", ", "), "$$this")))));
     }
 
     /**
@@ -53,9 +50,8 @@ public class TestReduce extends TemplatedTestBase {
      */
     @Test(testName = "Array Concatenation")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
-                (aggregation) -> aggregation.pipeline(
-                        project().include("collapsed", reduce("$arr", array(), concatArrays("$$value", "$$this")))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+                .pipeline(project().include("collapsed", reduce("$arr", array(), concatArrays("$$value", "$$this")))));
     }
 
 }

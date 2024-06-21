@@ -31,7 +31,7 @@ public class TestLocf extends TemplatedTestBase {
      */
     @Test(testName = "Use Multiple Fill Methods in a Single Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v52).removeIds(true).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v52).removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time")).output(
                         output("linearFillPrice").operator(linearFill("$price")),
                         output("locfPrice").operator(locf("$price")))));

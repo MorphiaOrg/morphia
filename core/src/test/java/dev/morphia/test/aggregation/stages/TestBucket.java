@@ -48,9 +48,7 @@ public class TestBucket extends TemplatedTestBase {
      */
     @Test(testName = "Use $bucket with $facet to Bucket by Multiple Fields")
     public void testExample2() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(
-                        ServerVersion.ANY).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY),
                 (aggregation) -> aggregation.pipeline(facet()
                         .field("price",
                                 bucket().groupBy("$price").boundaries(0, 200, 400).defaultValue("Other")

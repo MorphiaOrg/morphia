@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -22,10 +20,8 @@ public class TestReplaceRoot extends TemplatedTestBase {
      */
     @Test(testName = "``$replaceRoot`` with an Embedded Document Field")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects()
-                        .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0))
-                        .add("$pets"))));
+        testPipeline((aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects()
+                .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0)).add("$pets"))));
     }
 
     /**
@@ -44,9 +40,8 @@ public class TestReplaceRoot extends TemplatedTestBase {
      */
     @Test(testName = "``$replaceRoot`` with a newly created document")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(replaceRoot().field("full_name", concat("$first_name", " ", "$last_name"))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(replaceRoot().field("full_name", concat("$first_name", " ", "$last_name"))));
     }
 
     /**

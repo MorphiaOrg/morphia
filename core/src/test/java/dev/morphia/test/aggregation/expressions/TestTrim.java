@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -16,9 +15,8 @@ public class TestTrim extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
-                (aggregation) -> aggregation
-                        .pipeline(project().include("item").include("description", trim("$description"))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+                .pipeline(project().include("item").include("description", trim("$description"))));
     }
 
 }

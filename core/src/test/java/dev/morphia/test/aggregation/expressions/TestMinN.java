@@ -35,9 +35,8 @@ public class TestMinN extends TemplatedTestBase {
      */
     @Test(testName = "Finding the Minimum Three Documents Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
-                (aggregation) -> aggregation
-                        .pipeline(group(id("$gameId")).field("minScores", minN(3, array("$score", "$playerId")))));
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false), (aggregation) -> aggregation
+                .pipeline(group(id("$gameId")).field("minScores", minN(3, array("$score", "$playerId")))));
 
     }
 
@@ -47,7 +46,7 @@ public class TestMinN extends TemplatedTestBase {
      */
     @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id().field("gameId", "$gameId")).field("gamescores", minN(
                         condition(ComparisonExpressions.eq("$gameId", "G2"), 1, 3), array("$score", "$playerId")))));
     }

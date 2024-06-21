@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -23,7 +22,7 @@ import static dev.morphia.test.ServerVersion.v52;
 public class TestFirstN extends TemplatedTestBase {
     @Test(testName = "Find the First Three Player Scores for a Single Game")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         match(eq("gameId", "G1")),
                         group(id("$gameId"))
@@ -34,7 +33,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test(testName = "Finding the First Three Player Scores Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id("$gameId"))
                                 .field("playerId", firstN(
@@ -45,7 +44,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test(testName = "Using ``$sort`` With ``$firstN``")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         sort().descending("score"),
                         group(id("$gameId"))
@@ -57,7 +56,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id()
                                 .field("gameId", "$gameId"))
@@ -71,7 +70,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test(enabled = false, description = "this needs to run against the db rather than a collection and that requires fixes in the agg code")
     public void testExample5() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+        testPipeline(
                 (aggregation) -> aggregation.pipeline(
                         documents(document().field("array", array(10, 20, 30, 40))),
                         project()

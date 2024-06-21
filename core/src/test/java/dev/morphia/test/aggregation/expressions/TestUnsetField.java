@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -22,8 +21,7 @@ public class TestUnsetField extends TemplatedTestBase {
     @Test(testName = "Remove Fields that Contain Periods (``.``)")
     public void testExample1() {
         checkMinDriverVersion(v43);
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(replaceWith(unsetField("price.usd", ROOT))));
+        testPipeline((aggregation) -> aggregation.pipeline(replaceWith(unsetField("price.usd", ROOT))));
     }
 
     /**
@@ -32,8 +30,7 @@ public class TestUnsetField extends TemplatedTestBase {
      */
     @Test(testName = "Remove Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                .minDriver(v43),
+        testPipeline(new ActionTestOptions().minDriver(v43),
                 (aggregation) -> aggregation.pipeline(replaceWith(unsetField(literal("$price"), ROOT))));
     }
 
@@ -43,9 +40,8 @@ public class TestUnsetField extends TemplatedTestBase {
      */
     @Test(testName = "Remove A Subfield")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(replaceWith(setField("price", ROOT, unsetField("euro", getField("price"))))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(replaceWith(setField("price", ROOT, unsetField("euro", getField("price"))))));
     }
 
 }

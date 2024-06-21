@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.DriverVersion;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -21,9 +20,7 @@ public class TestGetField extends TemplatedTestBase {
      */
     @Test(testName = "Query Fields that Contain Periods (``.``)")
     public void testExample1() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .minDriver(DriverVersion.v43),
+        testPipeline(new ActionTestOptions().minDriver(DriverVersion.v43),
                 (aggregation) -> aggregation.pipeline(match(expr(gt(getField("price.usd"), 200)))));
     }
 
@@ -33,8 +30,7 @@ public class TestGetField extends TemplatedTestBase {
      */
     @Test(testName = "Query Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(match(expr(gt(getField(literal("$price")), 200)))));
+        testPipeline((aggregation) -> aggregation.pipeline(match(expr(gt(getField(literal("$price")), 200)))));
     }
 
     /**
@@ -43,9 +39,8 @@ public class TestGetField extends TemplatedTestBase {
      */
     @Test(testName = "Query a Field in a Sub-document")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(match(expr(lte(getField(literal("$small")).input("$quantity"), 20)))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(match(expr(lte(getField(literal("$small")).input("$quantity"), 20)))));
     }
 
 }

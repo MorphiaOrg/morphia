@@ -19,9 +19,8 @@ public class TestFirst extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v50).removeIds(false).orderMatters(false),
-                (aggregation) -> aggregation.pipeline(sort().ascending("item", "date"),
-                        group(id("$item")).field("firstSale", first("$date"))));
+        testPipeline(new ActionTestOptions().serverVersion(v50).orderMatters(false), (aggregation) -> aggregation
+                .pipeline(sort().ascending("item", "date"), group(id("$item")).field("firstSale", first("$date"))));
     }
 
     /**
@@ -30,9 +29,8 @@ public class TestFirst extends TemplatedTestBase {
      */
     @Test(testName = "Missing Data")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v50).removeIds(false).orderMatters(false),
-                (aggregation) -> aggregation.pipeline(sort().ascending("item", "price"),
-                        group(id("$item")).field("inStock", first("$quantity"))
+        testPipeline(new ActionTestOptions().serverVersion(v50).orderMatters(false), (aggregation) -> aggregation
+                .pipeline(sort().ascending("item", "price"), group(id("$item")).field("inStock", first("$quantity"))
 
                 ));
     }
@@ -47,10 +45,9 @@ public class TestFirst extends TemplatedTestBase {
         // I care
         // to make the parser support. we have working examples already.
         /*
-         * testPipeline(new
-         * dev.morphia.test.util.ActionTestOptions().serverVersion(ServerVersion.ANY).
-         * removeIds(false).orderMatters(true), (aggregation) -> aggregation.pipeline(
-         * setWindowFields() .partitionBy("$state") .sortBy(Sort.ascending("orderDate"))
+         * testPipeline(new dev.morphia.test.util.ActionTestOptions(). removeIds(false),
+         * (aggregation) -> aggregation.pipeline( setWindowFields()
+         * .partitionBy("$state") .sortBy(Sort.ascending("orderDate"))
          * .output(Output.output("firstOrderTypeForState") .operator(first("$type"))
          * .window() .documents("unbounded", "current"))));
          */

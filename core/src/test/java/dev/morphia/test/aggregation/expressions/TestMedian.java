@@ -21,7 +21,7 @@ public class TestMedian extends TemplatedTestBase {
      */
     @Test(testName = "Use |operatorName| as an Accumulator")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(ANY).orderMatters(false),
                 aggregation -> aggregation.pipeline(group().field("test01_median", median("$test01"))));
     }
 
@@ -31,7 +31,7 @@ public class TestMedian extends TemplatedTestBase {
      */
     @Test(testName = "Use |operatorName| in a ``$project`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(v70),
                 aggregation -> aggregation.pipeline(project().suppressId().include("studentId").include("testMedians",
                         median(array("$test01", "$test02", "$test03")))));
     }
@@ -42,7 +42,7 @@ public class TestMedian extends TemplatedTestBase {
      */
     @Test(testName = "Use |operatorName| in a ``$setWindowField`` Stage")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(v70),
                 aggregation -> aggregation.pipeline(
                         setWindowFields().sortBy(ascending("test01"))
                                 .output(output("test01_median").operator(median("$test01")).window().range(-3, 3)),

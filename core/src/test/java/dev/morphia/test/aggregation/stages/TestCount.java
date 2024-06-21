@@ -1,9 +1,7 @@
 package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.aggregation.stages.Count;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -18,8 +16,7 @@ public class TestCount extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(match(gt("score", 80)), Count.count("passing_scores")));
+        testPipeline((aggregation) -> aggregation.pipeline(match(gt("score", 80)), Count.count("passing_scores")));
     }
 
 }

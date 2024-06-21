@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -31,10 +29,9 @@ public class TestStdDevSamp extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
-                        .sortBy(ascending("orderDate")).output(output("stdDevSampQuantityForState")
-                                .operator(stdDevSamp("$quantity")).window().documents("unbounded", "current"))));
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                .sortBy(ascending("orderDate")).output(output("stdDevSampQuantityForState")
+                        .operator(stdDevSamp("$quantity")).window().documents("unbounded", "current"))));
     }
 
 }

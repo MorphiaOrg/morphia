@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -18,10 +16,9 @@ public class TestSubstrCP extends TemplatedTestBase {
      */
     @Test(testName = "Single-Byte Character Set")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        project().include("item").include("yearSubstring", substrCP("$quarter", 0, 2)).include(
-                                "quarterSubtring", substrCP("$quarter", 2, subtract(strLenCP("$quarter"), 2)))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(project().include("item").include("yearSubstring", substrCP("$quarter", 0, 2))
+                        .include("quarterSubtring", substrCP("$quarter", 2, subtract(strLenCP("$quarter"), 2)))));
     }
 
     /**
@@ -30,9 +27,8 @@ public class TestSubstrCP extends TemplatedTestBase {
      */
     @Test(testName = "Single-Byte and Multibyte Character Set")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(project().include("name").include("menuCode", substrCP("$name", 0, 3))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(project().include("name").include("menuCode", substrCP("$name", 0, 3))));
     }
 
 }

@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -22,9 +20,8 @@ public class TestZip extends TemplatedTestBase {
      */
     @Test(testName = "Matrix Transposition")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(project().suppressId().include("transposed",
-                        zip(elementAt("$matrix", 0), elementAt("$matrix", 1), elementAt("$matrix", 2)))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("transposed",
+                zip(elementAt("$matrix", 0), elementAt("$matrix", 1), elementAt("$matrix", 2)))));
     }
 
     /**
@@ -33,13 +30,12 @@ public class TestZip extends TemplatedTestBase {
      */
     @Test(testName = "Filtering and Preserving Indexes")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> {
-                    return aggregation.pipeline(project().suppressId().include("pages",
-                            filter(zip("$pages", range(0, size("$pages"))),
-                                    let(gte("$$page.reviews", 1)).variable("page", elementAt("$$pageWithIndex", 0)))
-                                    .as("pageWithIndex")));
-                });
+        testPipeline((aggregation) -> {
+            return aggregation.pipeline(project().suppressId().include("pages",
+                    filter(zip("$pages", range(0, size("$pages"))),
+                            let(gte("$$page.reviews", 1)).variable("page", elementAt("$$pageWithIndex", 0)))
+                            .as("pageWithIndex")));
+        });
     }
 
 }

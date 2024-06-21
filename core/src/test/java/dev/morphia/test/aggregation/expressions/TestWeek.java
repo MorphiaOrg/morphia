@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -25,13 +23,11 @@ public class TestWeek extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(project().include("year", year("$date")).include("month", month("$date"))
-                                .include("day", dayOfMonth("$date")).include("hour", hour("$date"))
-                                .include("minutes", minute("$date")).include("seconds", second("$date"))
-                                .include("milliseconds", milliseconds("$date")).include("dayOfYear", dayOfYear("$date"))
-                                .include("dayOfWeek", dayOfWeek("$date")).include("week", week("$date"))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("year", year("$date"))
+                .include("month", month("$date")).include("day", dayOfMonth("$date")).include("hour", hour("$date"))
+                .include("minutes", minute("$date")).include("seconds", second("$date"))
+                .include("milliseconds", milliseconds("$date")).include("dayOfYear", dayOfYear("$date"))
+                .include("dayOfWeek", dayOfWeek("$date")).include("week", week("$date"))));
     }
 
 }

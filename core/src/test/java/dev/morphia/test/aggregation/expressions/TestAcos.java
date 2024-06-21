@@ -18,9 +18,8 @@ public class TestAcos extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Cosine of Value in Degrees")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
-                aggregation -> aggregation.pipeline(
-                        addFields().field("angle_a", radiansToDegrees(acos(divide("$side_b", "$hypotenuse"))))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+                .pipeline(addFields().field("angle_a", radiansToDegrees(acos(divide("$side_b", "$hypotenuse"))))));
 
     }
 
@@ -30,9 +29,8 @@ public class TestAcos extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Cosine of Value in Radians")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
-                aggregation -> aggregation
-                        .pipeline(addFields().field("angle_a", acos(divide("$side_b", "$hypotenuse")))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+                .pipeline(addFields().field("angle_a", acos(divide("$side_b", "$hypotenuse")))));
 
     }
 }

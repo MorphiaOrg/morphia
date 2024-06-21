@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -19,10 +17,9 @@ public class TestToDecimal extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        addFields().field("convertedPrice", toDecimal("$price")).field("convertedQty", toInt("$qty")),
-                        project().include("item").include("totalPrice", multiply("$convertedPrice", "$convertedQty"))));
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("convertedPrice", toDecimal("$price")).field("convertedQty", toInt("$qty")),
+                project().include("item").include("totalPrice", multiply("$convertedPrice", "$convertedQty"))));
     }
 
 }

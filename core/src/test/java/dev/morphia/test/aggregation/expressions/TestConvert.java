@@ -25,20 +25,15 @@ public class TestConvert extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(
-                        ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        addFields().field("convertedPrice", convert("$price", DECIMAL).onError("Error").onNull(0.0))
-                                .field("convertedQty",
-                                        convert("$qty", INT)
-                                                .onError(concat("Could not convert ",
-                                                        StringExpressions.toString("$qty"), " to type integer."))
-                                                .onNull(0)),
-                        project().include("totalPrice",
-                                switchExpression().branch(eq(type("$convertedPrice"), "string"), "NaN")
-                                        .branch(eq(type("$convertedQty"), "string"), "NaN")
-                                        .defaultCase(multiply("$convertedPrice", "$convertedQty")))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY), (aggregation) -> aggregation.pipeline(
+                addFields().field("convertedPrice", convert("$price", DECIMAL).onError("Error").onNull(0.0))
+                        .field("convertedQty",
+                                convert("$qty", INT).onError(concat("Could not convert ",
+                                        StringExpressions.toString("$qty"), " to type integer.")).onNull(0)),
+                project().include("totalPrice",
+                        switchExpression().branch(eq(type("$convertedPrice"), "string"), "NaN")
+                                .branch(eq(type("$convertedQty"), "string"), "NaN")
+                                .defaultCase(multiply("$convertedPrice", "$convertedQty")))));
     }
 
 }

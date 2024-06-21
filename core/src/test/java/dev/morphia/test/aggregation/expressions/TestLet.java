@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -19,10 +17,9 @@ public class TestLet extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(project().include("finalTotal",
-                        let(multiply("$$total", "$$discounted")).variable("total", add("$price", "$tax"))
-                                .variable("discounted", condition("$applyDiscount", 0.9, 1)))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("finalTotal",
+                let(multiply("$$total", "$$discounted")).variable("total", add("$price", "$tax")).variable("discounted",
+                        condition("$applyDiscount", 0.9, 1)))));
     }
 
 }

@@ -168,7 +168,7 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
     public void aggregation() {
         getDs().withTransaction(session -> {
             testPipeline(
-                    new dev.morphia.test.util.ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+                    new dev.morphia.test.util.ActionTestOptions().orderMatters(false),
                     aggregation -> {
                         loadData("aggTest2", 2);
                         return aggregation

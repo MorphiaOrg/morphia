@@ -22,7 +22,7 @@ public class TestDateAdd extends TemplatedTestBase {
      */
     @Test(testName = "Add a Future Date")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(true).orderMatters(true).minDriver(v42),
+        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(true).minDriver(v42),
                 aggregation -> aggregation.pipeline(
                         project().include("expectedDeliveryDate", dateAdd("$purchaseDate", 3, TimeUnit.DAY))));
 
@@ -34,7 +34,7 @@ public class TestDateAdd extends TemplatedTestBase {
      */
     @Test(testName = "Filter on a Date Range")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(ANY),
                 aggregation -> aggregation.pipeline(
                         match(expr(gt("$deliveryDate", dateAdd("$purchaseDate", 5, TimeUnit.DAY)))),
 
@@ -52,23 +52,21 @@ public class TestDateAdd extends TemplatedTestBase {
      */
     @Test(testName = "Adjust for Daylight Savings Time")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
-                aggregation -> aggregation.pipeline(project().suppressId().include("location")
-                        .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
-                        .include("days",
-                                dateToString().date(dateAdd("$login", 1, TimeUnit.DAY).timezone("$location"))
-                                        .format("%Y-%m-%d %H:%M"))
-                        .include("hours",
-                                dateToString().date(dateAdd("$login", 24, TimeUnit.HOUR).timezone("$location"))
-                                        .format("%Y-%m-%d %H:%M"))
-                        .include("startTZInfo",
-                                dateToString().date("$login").format("%Y-%m-%d %H:%M").timeZone("$location"))
-                        .include("daysTZInfo",
-                                dateToString().date(dateAdd("$login", 1, TimeUnit.DAY).timezone("$location"))
-                                        .format("%Y-%m-%d %H:%M").timeZone("$location"))
-                        .include("hoursTZInfo",
-                                dateToString().date(dateAdd("$login", 24, TimeUnit.HOUR).timezone("$location"))
-                                        .format("%Y-%m-%d %H:%M").timeZone("$location")))
+        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation.pipeline(project()
+                .suppressId().include("location")
+                .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
+                .include("days",
+                        dateToString().date(dateAdd("$login", 1, TimeUnit.DAY).timezone("$location"))
+                                .format("%Y-%m-%d %H:%M"))
+                .include("hours",
+                        dateToString().date(dateAdd("$login", 24, TimeUnit.HOUR).timezone("$location"))
+                                .format("%Y-%m-%d %H:%M"))
+                .include("startTZInfo", dateToString().date("$login").format("%Y-%m-%d %H:%M").timeZone("$location"))
+                .include("daysTZInfo",
+                        dateToString().date(dateAdd("$login", 1, TimeUnit.DAY).timezone("$location"))
+                                .format("%Y-%m-%d %H:%M").timeZone("$location"))
+                .include("hoursTZInfo", dateToString().date(dateAdd("$login", 24, TimeUnit.HOUR).timezone("$location"))
+                        .format("%Y-%m-%d %H:%M").timeZone("$location")))
 
         );
 

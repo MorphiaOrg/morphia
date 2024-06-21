@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -16,7 +15,7 @@ public class TestRadiansToDegrees extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("angle_a_deg", radiansToDegrees("$angle_a"))
                         .field("angle_b_deg", radiansToDegrees("$angle_b"))
                         .field("angle_c_deg", radiansToDegrees("$angle_c"))));

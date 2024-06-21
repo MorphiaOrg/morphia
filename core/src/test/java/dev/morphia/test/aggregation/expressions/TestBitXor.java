@@ -17,7 +17,7 @@ public class TestBitXor extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v63).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(v63),
                 aggregation -> aggregation.pipeline(project().include("result", bitXor("$a", "$b"))));
     }
 }

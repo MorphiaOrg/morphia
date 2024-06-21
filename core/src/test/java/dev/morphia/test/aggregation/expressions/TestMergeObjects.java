@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -23,11 +22,9 @@ public class TestMergeObjects extends TemplatedTestBase {
     @Test(testName = "``$mergeObjects``")
     public void testExample1() {
         loadData("items", 2);
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        lookup("items").foreignField("item").localField("item").as("fromItems"),
-                        replaceRoot(mergeObjects().add(elementAt("$fromItems", 0)).add(ROOT)),
-                        project().exclude("fromItems")));
+        testPipeline((aggregation) -> aggregation.pipeline(
+                lookup("items").foreignField("item").localField("item").as("fromItems"),
+                replaceRoot(mergeObjects().add(elementAt("$fromItems", 0)).add(ROOT)), project().exclude("fromItems")));
     }
 
     /**
@@ -36,9 +33,8 @@ public class TestMergeObjects extends TemplatedTestBase {
      */
     @Test(testName = "``$mergeObjects`` as an Accumulator")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
-                (aggregation) -> aggregation
-                        .pipeline(group(id("$item")).field("mergedSales", mergeObjects().add("$quantity"))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+                .pipeline(group(id("$item")).field("mergedSales", mergeObjects().add("$quantity"))));
     }
 
 }

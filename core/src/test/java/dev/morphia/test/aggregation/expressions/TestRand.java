@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.DriverVersion;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -26,8 +25,8 @@ public class TestRand extends TemplatedTestBase {
     @Test(testName = "Generate Random Data Points")
     public void testExample1() {
         testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(false)
-                        .minDriver(DriverVersion.v43).skipDataCheck(true),
+                new ActionTestOptions().removeIds(true).orderMatters(false).minDriver(DriverVersion.v43)
+                        .skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(set().field("amount", multiply(rand(), 100)),
                         set().field("amount", floor("$amount")), merge("donors")));
     }

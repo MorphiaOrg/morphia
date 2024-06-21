@@ -17,9 +17,8 @@ public class TestCond extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
-                aggregation -> aggregation
-                        .pipeline(project().include("item").include("discount", condition(gte("$qty", 250), 30, 20))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+                .pipeline(project().include("item").include("discount", condition(gte("$qty", 250), 30, 20))));
 
     }
 }

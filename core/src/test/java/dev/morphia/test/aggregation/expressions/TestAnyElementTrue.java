@@ -16,9 +16,8 @@ public class TestAnyElementTrue extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
-                aggregation -> aggregation.pipeline(project().suppressId().include("responses").include("isAnyTrue",
-                        anyElementTrue("$responses"))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation.pipeline(
+                project().suppressId().include("responses").include("isAnyTrue", anyElementTrue("$responses"))));
 
     }
 }

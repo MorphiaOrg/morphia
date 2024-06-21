@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import dev.morphia.aggregation.expressions.AccumulatorExpressions;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -29,7 +28,7 @@ public class TestGroup extends TemplatedTestBase {
      */
     @Test(testName = "Count the Number of Documents in a Collection")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+        testPipeline(
                 (aggregation) -> aggregation.pipeline(group(id(null)).field("count", AccumulatorExpressions.count())));
     }
 
@@ -39,7 +38,7 @@ public class TestGroup extends TemplatedTestBase {
      */
     @Test(testName = "Retrieve Distinct Values")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$item"))));
     }
 
@@ -49,7 +48,7 @@ public class TestGroup extends TemplatedTestBase {
      */
     @Test(testName = "Group by Item Having")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id("$item")).field("totalSaleAmount", sum(multiply("$price", "$quantity"))),
                         match(gte("totalSaleAmount", 100))));
@@ -61,14 +60,13 @@ public class TestGroup extends TemplatedTestBase {
      */
     @Test(testName = "Calculate Count, Sum, and Average")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        match(gte("date", LocalDate.of(2014, Month.JANUARY, 1)),
-                                lt("date", LocalDate.of(2015, Month.JANUARY, 1))),
-                        group(id(dateToString().date("$date").format("%Y-%m-%d")))
-                                .field("totalSaleAmount", sum(multiply("$price", "$quantity")))
-                                .field("averageQuantity", avg("$quantity")).field("count", sum(1)),
-                        sort().descending("totalSaleAmount")));
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(gte("date", LocalDate.of(2014, Month.JANUARY, 1)),
+                        lt("date", LocalDate.of(2015, Month.JANUARY, 1))),
+                group(id(dateToString().date("$date").format("%Y-%m-%d")))
+                        .field("totalSaleAmount", sum(multiply("$price", "$quantity")))
+                        .field("averageQuantity", avg("$quantity")).field("count", sum(1)),
+                sort().descending("totalSaleAmount")));
     }
 
     /**
@@ -77,7 +75,7 @@ public class TestGroup extends TemplatedTestBase {
      */
     @Test(testName = "Pivot Data")
     public void testExample5() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$author")).field("books", push("$title"))));
     }
 

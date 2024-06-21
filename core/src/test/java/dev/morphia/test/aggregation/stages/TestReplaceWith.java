@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -24,10 +23,8 @@ public class TestReplaceWith extends TemplatedTestBase {
      */
     @Test(testName = "``$replaceWith`` an Embedded Document Field")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(replaceWith(mergeObjects()
-                        .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0))
-                        .add("$pets"))));
+        testPipeline((aggregation) -> aggregation.pipeline(replaceWith(mergeObjects()
+                .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0)).add("$pets"))));
     }
 
     /**
@@ -46,9 +43,7 @@ public class TestReplaceWith extends TemplatedTestBase {
      */
     @Test(testName = "``$replaceWith`` a Newly Created Document")
     public void testExample3() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false)
-                        .skipDataCheck(true),
+        testPipeline(new ActionTestOptions().orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(eq("status", "C")),
                         replaceWith().field("_id", "$_id").field("item", "$item")
                                 .field("amount", multiply("$price", "$quantity")).field("status", "Complete")
@@ -61,14 +56,8 @@ public class TestReplaceWith extends TemplatedTestBase {
      */
     @Test(testName = "``$replaceWith`` a New Document Created from ``$$ROOT`` and a Default Document", enabled = false, description = "failing oddly")
     public void testExample4() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true), (
-                        aggregation) -> aggregation
-                                .pipeline(
-                                        replaceWith(
-                                                mergeObjects()
-                                                        .add(document().field("_id", "").field("name", "")
-                                                                .field("email", "").field("cell", "").field("home", ""))
-                                                        .add(ROOT))));
+        testPipeline((aggregation) -> aggregation.pipeline(replaceWith(mergeObjects().add(
+                document().field("_id", "").field("name", "").field("email", "").field("cell", "").field("home", ""))
+                .add(ROOT))));
     }
 }

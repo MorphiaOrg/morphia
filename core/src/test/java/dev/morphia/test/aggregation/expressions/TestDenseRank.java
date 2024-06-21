@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -18,10 +16,8 @@ public class TestDenseRank extends TemplatedTestBase {
      */
     @Test(testName = "Dense Rank Partitions by an Integer Field")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity"))
-                                .output(output("denseRankQuantityForState").operator(denseRank()))));
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                .sortBy(descending("quantity")).output(output("denseRankQuantityForState").operator(denseRank()))));
     }
 
     /**
@@ -30,10 +26,8 @@ public class TestDenseRank extends TemplatedTestBase {
      */
     @Test(testName = "Dense Rank Partitions by a Date Field")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(setWindowFields().partitionBy("$state").sortBy(ascending("orderDate"))
-                                .output(output("denseRankOrderDateForState").operator(denseRank()))));
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                .sortBy(ascending("orderDate")).output(output("denseRankOrderDateForState").operator(denseRank()))));
     }
 
     /**
@@ -42,10 +36,8 @@ public class TestDenseRank extends TemplatedTestBase {
      */
     @Test(testName = "Dense Rank for Duplicate, Null, and Missing Values")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity"))
-                                .output(output("denseRankQuantityForState").operator(denseRank()))));
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                .sortBy(descending("quantity")).output(output("denseRankQuantityForState").operator(denseRank()))));
     }
 
 }

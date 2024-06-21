@@ -18,7 +18,7 @@ public class TestBitAnd extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise ``AND`` with Two Integers ")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(v70),
                 aggregation -> aggregation.pipeline(project().include("result", bitAnd("$a", "$b"))));
     }
 
@@ -28,7 +28,7 @@ public class TestBitAnd extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise ``AND`` with a Long and Integer ")
     public void testExample2() throws FileNotFoundException {
-        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(v70),
                 aggregation -> aggregation.project(project().include("result", bitAnd("$a", 63L))));
     }
 

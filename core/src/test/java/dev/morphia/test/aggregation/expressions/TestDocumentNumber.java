@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -18,10 +16,8 @@ public class TestDocumentNumber extends TemplatedTestBase {
      */
     @Test(testName = "Document Number for Each State")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity"))
-                                .output(output("documentNumberForState").operator(documentNumber()))));
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                .sortBy(descending("quantity")).output(output("documentNumberForState").operator(documentNumber()))));
     }
 
     /**
@@ -30,10 +26,8 @@ public class TestDocumentNumber extends TemplatedTestBase {
      */
     @Test(testName = "Document Number for Duplicate, Null, and Missing Values")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity"))
-                                .output(output("documentNumberForState").operator(documentNumber()))));
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                .sortBy(descending("quantity")).output(output("documentNumberForState").operator(documentNumber()))));
     }
 
 }

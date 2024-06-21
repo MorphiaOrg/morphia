@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -15,7 +14,6 @@ public class TestSkip extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                .skipDataCheck(true), (aggregation) -> aggregation.pipeline(skip(5)));
+        testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation.pipeline(skip(5)));
     }
 }

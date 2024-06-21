@@ -1,9 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.impls.Expression;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -20,7 +18,7 @@ public class TestLog extends TemplatedTestBase {
     @Test(testName = "main")
     public void testExample1() {
         Expression value;
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+        testPipeline(
                 (aggregation) -> aggregation.pipeline(project().include("bitsNeeded", floor(add(1, log("$int", 2))))));
     }
 

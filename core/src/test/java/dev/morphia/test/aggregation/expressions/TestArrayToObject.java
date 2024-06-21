@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -22,9 +20,8 @@ public class TestArrayToObject extends TemplatedTestBase {
      */
     @Test(testName = "``$arrayToObject``  Example")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(project().include("item").include("dimensions", arrayToObject("$dimensions"))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(project().include("item").include("dimensions", arrayToObject("$dimensions"))));
     }
 
     /**
@@ -33,12 +30,10 @@ public class TestArrayToObject extends TemplatedTestBase {
      */
     @Test(testName = "``$objectToArray`` + ``$arrayToObject`` Example")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(addFields().field("instock", objectToArray("$instock")),
-                        addFields().field("instock",
-                                concatArrays("$instock",
-                                        array(document().field("k", "total").field("v", sum("$instock.v"))))),
-                        addFields().field("instock", arrayToObject("$instock"))));
+        testPipeline((aggregation) -> aggregation.pipeline(addFields().field("instock", objectToArray("$instock")),
+                addFields().field("instock",
+                        concatArrays("$instock", array(document().field("k", "total").field("v", sum("$instock.v"))))),
+                addFields().field("instock", arrayToObject("$instock"))));
     }
 
 }

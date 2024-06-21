@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -15,8 +13,7 @@ public class TestUnset extends TemplatedTestBase {
      */
     @Test(testName = "Remove a Single Field")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(unset("copies")));
+        testPipeline((aggregation) -> aggregation.pipeline(unset("copies")));
     }
 
     /**
@@ -34,7 +31,6 @@ public class TestUnset extends TemplatedTestBase {
      */
     @Test(testName = "Remove Embedded Fields")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(unset("isbn", "author.first", "copies.warehouse")));
+        testPipeline((aggregation) -> aggregation.pipeline(unset("isbn", "author.first", "copies.warehouse")));
     }
 }

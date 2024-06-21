@@ -22,7 +22,7 @@ public class TestGeoNear extends TemplatedTestBase {
      */
     @Test(testName = "Maximum Distance")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(false),
+        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(geoNear(new Point(new Position(-73.99279, 40.719296)))
                         .distanceField("dist.calculated").maxDistance(2).query(eq("category", "Parks"))
                         .includeLocs("dist.location").spherical(true)));
@@ -65,9 +65,7 @@ public class TestGeoNear extends TemplatedTestBase {
      */
     @Test(testName = "Specify Which Geospatial Index to Use")
     public void testExample5() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(false)
-                        .skipDataCheck(true),
+        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(geoNear(new Point(new Position(-73.98142, 40.71782)))
                         .distanceField("dist.calculated").key("location").query(eq("category", "Parks")), limit(5)));
     }

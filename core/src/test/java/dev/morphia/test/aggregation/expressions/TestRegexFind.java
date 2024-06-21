@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -26,9 +25,8 @@ public class TestRegexFind extends TemplatedTestBase {
      */
     @Test(testName = "``$regexFind`` and Its Options")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
-                (aggregation) -> aggregation
-                        .pipeline(addFields().field("returnObject", regexFind("$description").pattern("line"))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+                .pipeline(addFields().field("returnObject", regexFind("$description").pattern("line"))));
     }
 
     /**
@@ -37,11 +35,10 @@ public class TestRegexFind extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$regexFind`` to Parse Email from String")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        addFields().field("email", regexFind("$comment")
-                                .pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+").options("i")),
-                        set().field("email", "$email.match")));
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("email",
+                        regexFind("$comment").pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+").options("i")),
+                set().field("email", "$email.match")));
     }
 
     /**
@@ -68,7 +65,7 @@ public class TestRegexFind extends TemplatedTestBase {
      */
     @Test(testName = "Use Captured Groupings to Parse User Name")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
+        testPipeline(
                 (aggregation) -> aggregation
                         .pipeline(
                                 addFields().field("username",

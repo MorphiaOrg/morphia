@@ -2,7 +2,6 @@ package dev.morphia.test.aggregation.stages;
 
 import com.mongodb.client.model.IndexOptions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -23,8 +22,8 @@ public class TestPlanCacheStats extends TemplatedTestBase {
         Document keys = new Document("item", 1).append("price", 1);
         var options = new IndexOptions().partialFilterExpression(new Document("price", new Document("$gte", 10.0)));
         getDatabase().getCollection(EXAMPLE_TEST_COLLECTION).createIndex(keys, options);
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                .skipDataCheck(true), (aggregation) -> aggregation.pipeline(planCacheStats()));
+        testPipeline(new ActionTestOptions().skipDataCheck(true),
+                (aggregation) -> aggregation.pipeline(planCacheStats()));
     }
 
     /**
@@ -35,9 +34,7 @@ public class TestPlanCacheStats extends TemplatedTestBase {
     public void testExample2() {
         Document keys = new Document("item", 1).append("price", 1);
         var options = new IndexOptions().partialFilterExpression(new Document("price", new Document("$gte", 10.0)));
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
+        testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(planCacheStats(), match(eq("planCacheKey", "B1435201"))));
     }
 
@@ -46,9 +43,7 @@ public class TestPlanCacheStats extends TemplatedTestBase {
      */
     @Test(testName = "Find Cache Entry Details for a Query Hash")
     public void testExample3() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
+        testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(planCacheStats(), match(eq("planCacheKey", "B1435201"))));
     }
 }

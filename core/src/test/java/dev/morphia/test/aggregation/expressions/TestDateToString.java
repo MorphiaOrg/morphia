@@ -16,7 +16,7 @@ public class TestDateToString extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v70).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v70),
                 (aggregation) -> aggregation.pipeline(project()
                         .include("yearMonthDayUTC", dateToString().date("$date").format("%Y-%m-%d"))
                         .include("timewithOffsetNY",

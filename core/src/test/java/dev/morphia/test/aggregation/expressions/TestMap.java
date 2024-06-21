@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -20,9 +19,8 @@ public class TestMap extends TemplatedTestBase {
      */
     @Test(testName = "Add to Each Element of an Array")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(project().include("adjustedGrades", map("$quizzes", add("$$grade", 2)).as("grade"))));
+        testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation
+                .pipeline(project().include("adjustedGrades", map("$quizzes", add("$$grade", 2)).as("grade"))));
     }
 
     /**
@@ -31,7 +29,7 @@ public class TestMap extends TemplatedTestBase {
      */
     @Test(testName = "Truncate Each Array Element")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(project().include("city", "$city").include("integerValues",
                         map("$distances", trunc("$$decimalValue")).as("decimalValue"))));
     }
@@ -42,8 +40,7 @@ public class TestMap extends TemplatedTestBase {
      */
     @Test(testName = "Convert Celsius Temperatures to Fahrenheit")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(addFields().field("tempsF",
-                        map("$tempsC", add(multiply("$$tempInCelsius", 1.8), 32)).as("tempInCelsius"))));
+        testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation.pipeline(addFields()
+                .field("tempsF", map("$tempsC", add(multiply("$$tempInCelsius", 1.8), 32)).as("tempInCelsius"))));
     }
 }

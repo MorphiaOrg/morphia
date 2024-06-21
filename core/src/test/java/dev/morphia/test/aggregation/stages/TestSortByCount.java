@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -18,7 +17,7 @@ public class TestSortByCount extends TemplatedTestBase {
     public void testExample1() {
         // orderMatters is false here because of the indeterminate sort order on equal
         // values
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(unwind("$tags"), sortByCount("$tags")));
     }
 }

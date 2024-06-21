@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -18,9 +16,8 @@ public class TestSin extends TemplatedTestBase {
      */
     @Test(testName = "main :: Sine of Value in Degrees")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        addFields().field("side_b", multiply(sin(degreesToRadians("$angle_a")), "$hypotenuse"))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(addFields().field("side_b", multiply(sin(degreesToRadians("$angle_a")), "$hypotenuse"))));
     }
 
     /**
@@ -29,9 +26,8 @@ public class TestSin extends TemplatedTestBase {
      */
     @Test(testName = "main :: Sine of Value in Radians")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(addFields().field("side_b", multiply(sin("$angle_a"), "$hypotenuse"))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(addFields().field("side_b", multiply(sin("$angle_a"), "$hypotenuse"))));
     }
 
 }

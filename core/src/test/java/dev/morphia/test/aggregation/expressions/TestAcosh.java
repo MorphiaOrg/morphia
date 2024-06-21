@@ -17,9 +17,8 @@ public class TestAcosh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Hyperbolic Cosine in Degrees")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
-                aggregation -> aggregation
-                        .pipeline(addFields().field("y-coordinate", radiansToDegrees(acosh("$x-coordinate")))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+                .pipeline(addFields().field("y-coordinate", radiansToDegrees(acosh("$x-coordinate")))));
 
     }
 
@@ -29,7 +28,7 @@ public class TestAcosh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Hyperbolic Cosine in Radians")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(ANY),
                 aggregation -> aggregation.pipeline(addFields().field("y-coordinate", acosh("$x-coordinate"))));
 
     }

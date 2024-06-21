@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -16,9 +15,7 @@ public class TestFunction extends TemplatedTestBase {
      */
     @Test(testName = "Example 1: Usage Example")
     public void testExample1() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipActionCheck(true),
+        testPipeline(new ActionTestOptions().skipActionCheck(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("isFound", function("""
                         function(name) {
                         return hex_md5(name) == "15b0a220baa16331e8d80e15367677ad"

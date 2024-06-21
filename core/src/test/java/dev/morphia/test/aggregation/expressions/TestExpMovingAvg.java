@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -18,7 +17,7 @@ public class TestExpMovingAvg extends TemplatedTestBase {
      */
     @Test(testName = "Exponential Moving Average Using ``N``")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))
                         .output(output("expMovingAvgForStock").operator(expMovingAvg("$price", 2)))));
     }
@@ -29,7 +28,7 @@ public class TestExpMovingAvg extends TemplatedTestBase {
      */
     @Test(testName = "Exponential Moving Average Using ``alpha``")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))
                         .output(output("expMovingAvgForStock").operator(expMovingAvg("$price", 0.75)))));
     }

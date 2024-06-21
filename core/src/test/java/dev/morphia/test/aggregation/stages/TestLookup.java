@@ -36,9 +36,8 @@ public class TestLookup extends TemplatedTestBase {
     @Test(testName = "Perform a Single Equality Join with ``$lookup``")
     public void testExample1() {
         loadData("inventory", 2);
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(lookup("inventory").localField("item").foreignField("sku").as("inventory_docs")));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(lookup("inventory").localField("item").foreignField("sku").as("inventory_docs")));
     }
 
     /**
@@ -48,9 +47,8 @@ public class TestLookup extends TemplatedTestBase {
     @Test(testName = "Use ``$lookup`` with an Array")
     public void testExample2() {
         loadData("members", 2);
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        lookup("members").localField("enrollmentlist").foreignField("name").as("enrollee_info")));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(lookup("members").localField("enrollmentlist").foreignField("name").as("enrollee_info")));
     }
 
     /**
@@ -59,11 +57,9 @@ public class TestLookup extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$lookup`` with ``$mergeObjects``")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        lookup("items").localField("item").foreignField("item").as("fromItems"),
-                        replaceRoot(mergeObjects().add(elementAt("$fromItems", 0)).add(ROOT)),
-                        project().exclude("fromItems")));
+        testPipeline((aggregation) -> aggregation.pipeline(
+                lookup("items").localField("item").foreignField("item").as("fromItems"),
+                replaceRoot(mergeObjects().add(elementAt("$fromItems", 0)).add(ROOT)), project().exclude("fromItems")));
     }
 
     /**
@@ -73,9 +69,7 @@ public class TestLookup extends TemplatedTestBase {
     @Test(testName = "Perform Multiple Joins and a Correlated Subquery with ``$lookup``")
     public void testExample4() {
         loadData("warehouses", 2);
-        testPipeline(
-                new ActionTestOptions().serverVersion(
-                        ServerVersion.ANY).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY),
                 (aggregation) -> aggregation
                         .pipeline(lookup("warehouses")
                                 .pipeline(
@@ -107,10 +101,9 @@ public class TestLookup extends TemplatedTestBase {
     @Test(testName = "Perform a Concise Correlated Subquery with ``$lookup``")
     public void testExample6() {
         loadData("restaurants", 2);
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(lookup("restaurants").localField("restaurant_name")
-                        .foreignField("name").pipeline(match(expr(in("$$orders_drink", "$beverages"))))
-                        .let("orders_drink", "$drink").as("matches")));
+        testPipeline((aggregation) -> aggregation.pipeline(lookup("restaurants").localField("restaurant_name")
+                .foreignField("name").pipeline(match(expr(in("$$orders_drink", "$beverages"))))
+                .let("orders_drink", "$drink").as("matches")));
     }
 
     @Test

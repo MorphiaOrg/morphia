@@ -20,7 +20,7 @@ public class TestLastN extends TemplatedTestBase {
 
     @Test(testName = "Find the Last Three Player Scores for a Single Game")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(
                                 match(eq("gameId", "G1")),
@@ -33,7 +33,7 @@ public class TestLastN extends TemplatedTestBase {
 
     @Test(testName = "Finding the Last Three Player Scores Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id("$gameId"))
                                 .field("playerId", lastN(
@@ -44,7 +44,7 @@ public class TestLastN extends TemplatedTestBase {
 
     @Test(testName = "Using ``$sort`` With ``$lastN``")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(
                                 sort().descending("score"),
@@ -57,7 +57,7 @@ public class TestLastN extends TemplatedTestBase {
 
     @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id().field("gameId", "$gameId"))
                                 .field("gamescores", lastN(

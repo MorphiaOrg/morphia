@@ -22,9 +22,7 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Add Fields that Contain Periods (``.``)")
     public void testExample1() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.v50).removeIds(false).orderMatters(true)
-                        .minDriver(DriverVersion.v43),
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v50).minDriver(DriverVersion.v43),
                 (aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, "$price")),
                         unset("price")));
     }
@@ -35,11 +33,8 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Add Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .minDriver(DriverVersion.v43),
-                (aggregation) -> aggregation.pipeline(replaceWith(setField(literal("$price"), ROOT, "$price")),
-                        unset("price")));
+        testPipeline(new ActionTestOptions().minDriver(DriverVersion.v43), (aggregation) -> aggregation
+                .pipeline(replaceWith(setField(literal("$price"), ROOT, "$price")), unset("price")));
     }
 
     /**
@@ -48,11 +43,8 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Update Fields that Contain Periods (``.``)")
     public void testExample3() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .minDriver(DriverVersion.v43),
-                (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
-                        replaceWith(setField("price.usd", ROOT, 49.99))));
+        testPipeline(new ActionTestOptions().minDriver(DriverVersion.v43), (aggregation) -> aggregation
+                .pipeline(match(eq("_id", 1)), replaceWith(setField("price.usd", ROOT, 49.99))));
     }
 
     /**
@@ -61,11 +53,8 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Update Fields that Start with a Dollar Sign (``$``)")
     public void testExample4() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .minDriver(DriverVersion.v43),
-                (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
-                        replaceWith(setField(literal("$price"), ROOT, 49.99))));
+        testPipeline(new ActionTestOptions().minDriver(DriverVersion.v43), (aggregation) -> aggregation
+                .pipeline(match(eq("_id", 1)), replaceWith(setField(literal("$price"), ROOT, 49.99))));
     }
 
     /**
@@ -74,8 +63,7 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Remove Fields that Contain Periods (``.``)")
     public void testExample5() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, REMOVE))));
+        testPipeline((aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, REMOVE))));
     }
 
     /**
@@ -84,8 +72,7 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Remove Fields that Start with a Dollar Sign (``$``)")
     public void testExample6() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(replaceWith(setField(literal("$price"), ROOT, REMOVE))));
+        testPipeline((aggregation) -> aggregation.pipeline(replaceWith(setField(literal("$price"), ROOT, REMOVE))));
     }
 
 }

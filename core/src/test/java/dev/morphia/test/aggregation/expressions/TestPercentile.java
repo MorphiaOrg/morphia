@@ -22,9 +22,8 @@ public class TestPercentile extends TemplatedTestBase {
      */
     @Test(testName = "Calculate a Single Value as an Accumulator")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(false),
-                aggregation -> aggregation
-                        .pipeline(group().field("test01_percentiles", percentile("$test01", of(0.95)))));
+        testPipeline(new ActionTestOptions().serverVersion(v70).orderMatters(false), aggregation -> aggregation
+                .pipeline(group().field("test01_percentiles", percentile("$test01", of(0.95)))));
     }
 
     /**
@@ -33,7 +32,7 @@ public class TestPercentile extends TemplatedTestBase {
      */
     @Test(testName = "Calculate Multiple Values as an Accumulator")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v70).orderMatters(false),
                 aggregation -> aggregation
                         .pipeline(group().field("test01_percentiles", percentile("$test01", of(0.5, 0.75, 0.9, 0.95)))
                                 .field("test02_percentiles", percentile("$test02", of(0.5, 0.75, 0.9, 0.95)))
@@ -47,7 +46,7 @@ public class TestPercentile extends TemplatedTestBase {
      */
     @Test(testName = "Use |operatorName| in a ``$project`` Stage")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v70).orderMatters(false),
                 aggregation -> aggregation.pipeline(project().suppressId().include("studentId").include(
                         "testPercentiles", percentile(List.of("$test01", "$test02", "$test03"), of(0.5, 0.95)))));
     }
@@ -59,7 +58,7 @@ public class TestPercentile extends TemplatedTestBase {
     @Test(testName = "Use |operatorName| in a ``$setWindowField`` Stage")
     public void testExample4() {
 
-        testPipeline(new ActionTestOptions().serverVersion(v70).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v70).orderMatters(false),
                 aggregation -> aggregation.pipeline(
                         setWindowFields().sortBy(ascending("test01"))
                                 .output(output("test01_95percentile").operator(percentile("$test01", List.of(0.95)))

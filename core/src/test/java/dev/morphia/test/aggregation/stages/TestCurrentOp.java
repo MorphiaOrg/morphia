@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -17,9 +16,7 @@ public class TestCurrentOp extends TemplatedTestBase {
      */
     @Test(testName = "Inactive Sessions  :: Replica Set")
     public void testExample1() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
+        testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(currentOp().allUsers(true).idleSessions(true),
                         match(eq("active", false), exists("transaction"))));
     }
@@ -29,9 +26,7 @@ public class TestCurrentOp extends TemplatedTestBase {
      */
     @Test(testName = "Inactive Sessions  :: Sharded Cluster (localOps: true)")
     public void testExample2() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
+        testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(currentOp().allUsers(true).idleSessions(true),
                         match(eq("active", false), exists("transaction"))));
     }
@@ -41,9 +36,7 @@ public class TestCurrentOp extends TemplatedTestBase {
      */
     @Test(testName = "Inactive Sessions  :: Sharded Cluster")
     public void testExample3() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
+        testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(currentOp().allUsers(true).idleSessions(true),
                         match(eq("active", false), exists("transaction"))));
     }
@@ -53,11 +46,8 @@ public class TestCurrentOp extends TemplatedTestBase {
      */
     @Test(testName = "Sampled Queries :: Replica Set")
     public void testExample4() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
-                (aggregation) -> aggregation.pipeline(currentOp().allUsers(true).localOps(true),
-                        match(eq("desc", "query analyzer"))));
+        testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation
+                .pipeline(currentOp().allUsers(true).localOps(true), match(eq("desc", "query analyzer"))));
     }
 
     /**
@@ -65,11 +55,8 @@ public class TestCurrentOp extends TemplatedTestBase {
      */
     @Test(testName = "Sampled Queries :: Sharded Cluster: mongos")
     public void testExample5() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
-                (aggregation) -> aggregation.pipeline(currentOp().allUsers(true).localOps(true),
-                        match(eq("desc", "query analyzer"))));
+        testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation
+                .pipeline(currentOp().allUsers(true).localOps(true), match(eq("desc", "query analyzer"))));
     }
 
     /**
@@ -77,10 +64,7 @@ public class TestCurrentOp extends TemplatedTestBase {
      */
     @Test(testName = "Sampled Queries :: Sharded Cluster: mongod --shardsvr")
     public void testExample6() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
-                (aggregation) -> aggregation.pipeline(currentOp().allUsers(true).localOps(true),
-                        match(eq("desc", "query analyzer"))));
+        testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation
+                .pipeline(currentOp().allUsers(true).localOps(true), match(eq("desc", "query analyzer"))));
     }
 }

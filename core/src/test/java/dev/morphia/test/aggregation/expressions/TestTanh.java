@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -17,9 +16,8 @@ public class TestTanh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Hyperbolic Tangent in Degrees")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(true).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(addFields().field("tanh_output", tanh(degreesToRadians("$angle")))));
+        testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation
+                .pipeline(addFields().field("tanh_output", tanh(degreesToRadians("$angle")))));
     }
 
     /**
@@ -28,8 +26,7 @@ public class TestTanh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Hyperbolic Tangent in Radians")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(addFields().field("tanh_output", tanh("$angle"))));
+        testPipeline((aggregation) -> aggregation.pipeline(addFields().field("tanh_output", tanh("$angle"))));
     }
 
 }

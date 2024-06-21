@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -20,12 +18,10 @@ public class TestSwitch extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(project().include("name").include("summary",
-                        switchExpression().branch(gte(avg("$scores"), 90), "Doing great!")
-                                .branch(and(gte(avg("$scores"), 80), lt(avg("$scores"), 90)), "Doing pretty well.")
-                                .branch(lt(avg("$scores"), 80), "Needs improvement.")
-                                .defaultCase("No scores found."))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("name").include("summary",
+                switchExpression().branch(gte(avg("$scores"), 90), "Doing great!")
+                        .branch(and(gte(avg("$scores"), 80), lt(avg("$scores"), 90)), "Doing pretty well.")
+                        .branch(lt(avg("$scores"), 80), "Needs improvement.").defaultCase("No scores found."))));
     }
 
 }

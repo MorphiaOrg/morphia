@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -23,9 +22,8 @@ public class TestIsNumber extends TemplatedTestBase {
      */
     @Test(testName = "Use $isNumber to Check if a Field is Numeric")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        addFields().field("isNumber", isNumber("$reading")).field("hasType", type("$reading"))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(addFields().field("isNumber", isNumber("$reading")).field("hasType", type("$reading"))));
     }
 
     /**
@@ -34,7 +32,7 @@ public class TestIsNumber extends TemplatedTestBase {
      */
     @Test(testName = "Conditionally Modify Fields using $isNumber")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         addFields().field("points",
                                 condition(isNumber("$grade"), "$grade",

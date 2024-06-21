@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -17,9 +16,8 @@ public class TestRegexMatch extends TemplatedTestBase {
      */
     @Test(testName = "``$regexMatch`` and Its Options")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
-                (aggregation) -> aggregation
-                        .pipeline(addFields().field("result", regexMatch("$description").pattern("line"))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+                .pipeline(addFields().field("result", regexMatch("$description").pattern("line"))));
 
     }
 
@@ -29,10 +27,8 @@ public class TestRegexMatch extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$regexMatch`` to Check Email Address")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(addFields().field("category",
-                        condition(regexMatch("$comment").pattern("[a-z0-9_.+-]+@mongodb.com").options("i"), "Employee",
-                                "External"))));
+        testPipeline((aggregation) -> aggregation.pipeline(addFields().field("category", condition(
+                regexMatch("$comment").pattern("[a-z0-9_.+-]+@mongodb.com").options("i"), "Employee", "External"))));
     }
 
 }

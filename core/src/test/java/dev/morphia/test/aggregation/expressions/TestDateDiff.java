@@ -1,9 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.TimeUnit;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -27,12 +25,11 @@ public class TestDateDiff extends TemplatedTestBase {
      */
     @Test(testName = "Elapsed Time")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(
-                        group(id(null)).field("averageTime", avg(dateDiff("$purchased", "$delivered", TimeUnit.DAY))),
-                        project().suppressId().include("numDays", trunc("$averageTime", 1))
+        testPipeline((aggregation) -> aggregation.pipeline(
+                group(id(null)).field("averageTime", avg(dateDiff("$purchased", "$delivered", TimeUnit.DAY))),
+                project().suppressId().include("numDays", trunc("$averageTime", 1))
 
-                ));
+        ));
     }
 
     /**
@@ -41,11 +38,10 @@ public class TestDateDiff extends TemplatedTestBase {
      */
     @Test(testName = "Result Precision")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(project().suppressId().include("start", "$start")
-                        .include("end", "$end").include("years", dateDiff("$start", "$end", YEAR))
-                        .include("months", dateDiff("$start", "$end", MONTH))
-                        .include("days", dateDiff("$start", "$end", DAY))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("start", "$start")
+                .include("end", "$end").include("years", dateDiff("$start", "$end", YEAR))
+                .include("months", dateDiff("$start", "$end", MONTH))
+                .include("days", dateDiff("$start", "$end", DAY))));
     }
 
     /**
@@ -54,11 +50,10 @@ public class TestDateDiff extends TemplatedTestBase {
      */
     @Test(testName = "Weeks Per Month")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(project().suppressId().include("wks_default", dateDiff("$start", "$end", WEEK))
-                                .include("wks_monday", dateDiff("$start", "$end", WEEK).startOfWeek(MONDAY))
-                                .include("wks_friday", dateDiff("$start", "$end", WEEK).startOfWeek(FRIDAY))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(project().suppressId().include("wks_default", dateDiff("$start", "$end", WEEK))
+                        .include("wks_monday", dateDiff("$start", "$end", WEEK).startOfWeek(MONDAY))
+                        .include("wks_friday", dateDiff("$start", "$end", WEEK).startOfWeek(FRIDAY))));
     }
 
 }

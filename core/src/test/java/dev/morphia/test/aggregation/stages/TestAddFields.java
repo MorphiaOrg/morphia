@@ -2,7 +2,6 @@ package dev.morphia.test.aggregation.stages;
 
 import java.util.List;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Score;
 import dev.morphia.test.util.ActionTestOptions;
@@ -53,8 +52,7 @@ public class TestAddFields extends TemplatedTestBase {
      */
     @Test(testName = "Adding Fields to an Embedded Document")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(addFields().field("specs.fuel_type", "unleaded")));
+        testPipeline((aggregation) -> aggregation.pipeline(addFields().field("specs.fuel_type", "unleaded")));
     }
 
     /**
@@ -63,7 +61,7 @@ public class TestAddFields extends TemplatedTestBase {
      */
     @Test(testName = "Overwriting an existing field")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(addFields().field("cats", 20)));
     }
 

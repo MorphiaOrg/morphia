@@ -22,7 +22,7 @@ public class TestMax extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id("$item")).field("maxTotalAmount", max(multiply("$price", "$quantity")))
                                 .field("maxQuantity", max("$quantity"))));
@@ -34,9 +34,8 @@ public class TestMax extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(project().include("quizMax", max("$quizzes"))
-                        .include("labMax", max("$labs")).include("examMax", max("$final", "$midterm"))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("quizMax", max("$quizzes"))
+                .include("labMax", max("$labs")).include("examMax", max("$final", "$midterm"))));
     }
 
     /**
@@ -45,7 +44,7 @@ public class TestMax extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v50).removeIds(false).orderMatters(true),
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v50),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(ascending("orderDate")).output(output("maximumQuantityForState")
                                 .operator(max("$quantity")).window().documents("unbounded", "current"))));

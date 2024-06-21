@@ -21,7 +21,7 @@ public class TestTop extends TemplatedTestBase {
      */
     @Test(testName = "Find the Top ``Score``")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(match(eq("gameId", "G1")), group(id("$gameId")).field("playerId",
                         top(array("$playerId", "$score"), descending("score")))));
     }
@@ -32,7 +32,7 @@ public class TestTop extends TemplatedTestBase {
      */
     @Test(testName = "Find the Top ``Score`` Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$gameId")).field("playerId",
                         top(array("$playerId", "$score"), descending("score")))));
     }

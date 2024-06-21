@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.query.Sort;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -26,7 +25,7 @@ public class TestSum extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v50).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v50).orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id(document().field("day", dayOfYear("$date")).field("year", year("$date"))))
                                 .field("totalAmount", sum(multiply("$price", "$quantity"))).field("count", sum(1))));
@@ -38,9 +37,8 @@ public class TestSum extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(project().include("quizTotal", sum("$quizzes"))
-                        .include("labTotal", sum("$labs")).include("examTotal", sum("$final", "$midterm"))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("quizTotal", sum("$quizzes"))
+                .include("labTotal", sum("$labs")).include("examTotal", sum("$final", "$midterm"))));
     }
 
     /**
@@ -49,10 +47,9 @@ public class TestSum extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
-                        .sortBy(Sort.ascending("orderDate")).output(output("sumQuantityForState")
-                                .operator(sum("$quantity")).window().documents("unbounded", "current"))));
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                .sortBy(Sort.ascending("orderDate")).output(output("sumQuantityForState").operator(sum("$quantity"))
+                        .window().documents("unbounded", "current"))));
     }
 
 }

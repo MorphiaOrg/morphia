@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -20,7 +19,7 @@ public class TestLast extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(sort().ascending("item").ascending("date"),
                         group(id("$item")).field("lastSalesDate", last("$date"))));
     }
@@ -35,10 +34,9 @@ public class TestLast extends TemplatedTestBase {
         // I care
         // to make the parser support. we have working examples already.
         /*
-         * testPipeline(new
-         * dev.morphia.test.util.ActionTestOptions().serverVersion(ServerVersion.ANY).
-         * removeIds(false).orderMatters(true), (aggregation) -> aggregation.pipeline(
-         * setWindowFields() .partitionBy("$state") .sortBy(ascending("orderDate"))
+         * testPipeline(new dev.morphia.test.util.ActionTestOptions(). removeIds(false),
+         * (aggregation) -> aggregation.pipeline( setWindowFields()
+         * .partitionBy("$state") .sortBy(ascending("orderDate"))
          * .output(output("lastOrderTypeForState") .operator(last("$type")) .window()
          * .documents("current", "unbounded"))));
          */

@@ -17,9 +17,8 @@ public class TestAbs extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(false).orderMatters(true),
-                aggregation -> aggregation
-                        .pipeline(project().include("delta", abs(subtract("$startTemp", "$endTemp")))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+                .pipeline(project().include("delta", abs(subtract("$startTemp", "$endTemp")))));
 
     }
 }

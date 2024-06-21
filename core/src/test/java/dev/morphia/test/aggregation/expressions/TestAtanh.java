@@ -1,8 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -17,9 +15,8 @@ public class TestAtanh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Hyperbolic Tangent in Degrees")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation
-                        .pipeline(addFields().field("y-coordinate", radiansToDegrees(atanh("$x-coordinate")))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(addFields().field("y-coordinate", radiansToDegrees(atanh("$x-coordinate")))));
     }
 
     /**
@@ -28,8 +25,7 @@ public class TestAtanh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Hyperbolic Tangent in Radians")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(addFields().field("y-coordinate", atanh("$x-coordinate"))));
+        testPipeline((aggregation) -> aggregation.pipeline(addFields().field("y-coordinate", atanh("$x-coordinate"))));
     }
 
 }

@@ -69,7 +69,7 @@ public class TestSortArray extends TemplatedTestBase {
     @Test(testName = "Sort on Mixed Type Fields")
     public void testExample5() {
         testPipeline(
-                new ActionTestOptions().serverVersion(v52).removeIds(false).orderMatters(false), (
+                new ActionTestOptions().serverVersion(v52).orderMatters(false), (
                         aggregation) -> aggregation
                                 .pipeline(
                                         project().suppressId()

@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.models.Author;
 import dev.morphia.test.util.ActionTestOptions;
@@ -19,11 +18,8 @@ public class TestOut extends TemplatedTestBase {
      */
     @Test(testName = "Output to Same Database")
     public void testExample1() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
-                (aggregation) -> aggregation.pipeline(group(id("$author")).field("books", push().single("$title")),
-                        out(Author.class)));
+        testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation
+                .pipeline(group(id("$author")).field("books", push().single("$title")), out(Author.class)));
     }
 
     /**
@@ -32,9 +28,7 @@ public class TestOut extends TemplatedTestBase {
      */
     @Test(testName = "Output to a Different Database")
     public void testExample2() {
-        testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true)
-                        .skipDataCheck(true),
+        testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(group(id("$author")).field("books", push().single("$title")),
                         out(Author.class).database("reporting")));
     }

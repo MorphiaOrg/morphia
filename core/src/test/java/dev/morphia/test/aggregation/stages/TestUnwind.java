@@ -3,7 +3,6 @@ package dev.morphia.test.aggregation.stages;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.models.User;
 import dev.morphia.test.util.ActionTestOptions;
@@ -31,8 +30,7 @@ public class TestUnwind extends TemplatedTestBase {
      */
     @Test(testName = "Unwind Array")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(unwind("sizes")));
+        testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
     /**
@@ -41,8 +39,7 @@ public class TestUnwind extends TemplatedTestBase {
      */
     @Test(testName = "Missing or Non-array Values")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(unwind("sizes")));
+        testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
     /**
@@ -51,8 +48,7 @@ public class TestUnwind extends TemplatedTestBase {
      */
     @Test(testName = "``preserveNullAndEmptyArrays`` and ``includeArrayIndex``")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(true),
-                (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true)));
+        testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true)));
     }
 
     /**
@@ -61,7 +57,7 @@ public class TestUnwind extends TemplatedTestBase {
      */
     @Test(testName = "Group by Unwound Values")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY).removeIds(false).orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true),
                         group(id("$sizes")).field("averagePrice", avg("$price")), sort().descending("averagePrice")));
     }
