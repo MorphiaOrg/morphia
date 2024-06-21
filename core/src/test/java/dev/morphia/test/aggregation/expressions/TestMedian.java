@@ -12,7 +12,6 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
-import static dev.morphia.test.ServerVersion.ANY;
 import static dev.morphia.test.ServerVersion.v70;
 
 public class TestMedian extends TemplatedTestBase {
@@ -21,7 +20,7 @@ public class TestMedian extends TemplatedTestBase {
      */
     @Test(testName = "Use |operatorName| as an Accumulator")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion(v70).orderMatters(false),
                 aggregation -> aggregation.pipeline(group().field("test01_median", median("$test01"))));
     }
 
