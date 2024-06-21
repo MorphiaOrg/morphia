@@ -17,9 +17,8 @@ public class TestLinearFill extends AggregationTest {
      */
     @Test(testName = "Fill Missing Values with Linear Interpolation")
     public void testExample1() {
-        testPipeline(v53, true, false,
-                (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time")).output(
-                        output("price").operator(linearFill("$price")))));
+        testPipeline(v53, true, false, (aggregation) -> aggregation.pipeline(
+                setWindowFields().sortBy(ascending("time")).output(output("price").operator(linearFill("$price")))));
 
     }
 
@@ -29,12 +28,10 @@ public class TestLinearFill extends AggregationTest {
      */
     @Test(testName = "Use Multiple Fill Methods in a Single Stage")
     public void testExample2() {
-        testPipeline(v53, true, false, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .sortBy(ascending("time"))
-                        .output(
-                                output("linearFillPrice").operator(linearFill("$price")),
-                                output("locfPrice").operator(locf("$price")))));
+        testPipeline(v53, true, false,
+                (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time")).output(
+                        output("linearFillPrice").operator(linearFill("$price")),
+                        output("locfPrice").operator(locf("$price")))));
 
     }
 }

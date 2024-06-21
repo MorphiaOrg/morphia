@@ -36,11 +36,9 @@ public class TestMeta extends AggregationTest {
      */
     @Test(testName = "``$meta: \"textScore\"`` :: Find and Project")
     public void testExample2() {
-        testQuery(new ActionTestOptions()
-                .orderMatters(false)
-                .findOptions(new FindOptions()
-                        .projection()
-                        .project(Meta.textScore("score"))),
+        testQuery(
+                new ActionTestOptions().orderMatters(false)
+                        .findOptions(new FindOptions().projection().project(Meta.textScore("score"))),
                 (query) -> query.filter(text("cake")));
     }
 
@@ -49,10 +47,8 @@ public class TestMeta extends AggregationTest {
      */
     @Test(testName = "``$meta: \"indexKey\"`` :: Aggregation")
     public void testExample3() {
-        testPipeline(dev.morphia.test.ServerVersion.ANY, true, true, aggregation -> aggregation.pipeline(
-                match(eq("type", "apparel")),
-                addFields()
-                        .field("idxKey", meta(INDEXKEY))));
+        testPipeline(ServerVersion.ANY, true, true, aggregation -> aggregation.pipeline(match(eq("type", "apparel")),
+                addFields().field("idxKey", meta(INDEXKEY))));
     }
 
     /**
@@ -60,12 +56,9 @@ public class TestMeta extends AggregationTest {
      */
     @Test(testName = "``$meta: \"indexKey\"`` :: Find and Project")
     public void testExample4() {
-        testQuery(new ActionTestOptions()
-                .orderMatters(false)
-                .removeIds(true)
-                .findOptions(new FindOptions()
-                        .projection()
-                        .project(Meta.indexKey("idxKey"))),
+        testQuery(
+                new ActionTestOptions().orderMatters(false).removeIds(true)
+                        .findOptions(new FindOptions().projection().project(Meta.indexKey("idxKey"))),
                 (query) -> query.filter(eq("type", "apparel")));
     }
 
@@ -83,12 +76,9 @@ public class TestMeta extends AggregationTest {
      */
     @Test(testName = "``$meta: \"indexKey\"`` :: Find and Project [1]")
     public void testExample6() {
-        testQuery(new ActionTestOptions()
-                .orderMatters(false)
-                .removeIds(true)
-                .findOptions(new FindOptions()
-                        .projection()
-                        .project(Meta.indexKey("idxKey"))),
+        testQuery(
+                new ActionTestOptions().orderMatters(false).removeIds(true)
+                        .findOptions(new FindOptions().projection().project(Meta.indexKey("idxKey"))),
                 (query) -> query.filter(gte("price", 10)));
     }
 

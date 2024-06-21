@@ -2,6 +2,7 @@ package dev.morphia.test.aggregation.expressions;
 
 import java.io.FileNotFoundException;
 
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
@@ -17,9 +18,8 @@ public class TestBitAnd extends AggregationTest {
      */
     @Test(testName = "Bitwise ``AND`` with Two Integers ")
     public void testExample1() {
-        testPipeline(dev.morphia.test.ServerVersion.ANY, false, true, aggregation -> aggregation.pipeline(
-                project()
-                        .include("result", bitAnd("$a", "$b"))));
+        testPipeline(ServerVersion.ANY, false, true,
+                aggregation -> aggregation.pipeline(project().include("result", bitAnd("$a", "$b"))));
     }
 
     /**

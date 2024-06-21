@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.testng.annotations.Test;
@@ -48,11 +49,8 @@ public class TestFilter extends AggregationTest {
      */
     @Test(testName = "Filter Based on String Equality Match")
     public void testExample4() {
-        testPipeline(v52, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("items",
-                                filter("$items", eq("$$item.name", "pen"))
-                                        .as("item"))));
+        testPipeline(v52, false, true, (aggregation) -> aggregation
+                .pipeline(project().include("items", filter("$items", eq("$$item.name", "pen")).as("item"))));
     }
 
     /**
@@ -60,11 +58,7 @@ public class TestFilter extends AggregationTest {
      */
     @Test(testName = "Filter Based on Regular Expression Match")
     public void testExample5() {
-        testPipeline(dev.morphia.test.ServerVersion.ANY, false, true, aggregation -> aggregation.pipeline(
-                project()
-                        .include("items",
-                                filter("$items", regexMatch("$$item.name")
-                                        .pattern("^p"))
-                                        .as("item"))));
+        testPipeline(ServerVersion.ANY, false, true, aggregation -> aggregation.pipeline(
+                project().include("items", filter("$items", regexMatch("$$item.name").pattern("^p")).as("item"))));
     }
 }

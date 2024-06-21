@@ -21,9 +21,7 @@ public class TestMedian extends AggregationTest {
     @Test(testName = "Use |operatorName| as an Accumulator")
     public void testExample1() {
         testPipeline(ANY, false, false,
-                aggregation -> aggregation.pipeline(
-                        group()
-                                .field("test01_median", median("$test01"))));
+                aggregation -> aggregation.pipeline(group().field("test01_median", median("$test01"))));
     }
 
     /**
@@ -32,11 +30,8 @@ public class TestMedian extends AggregationTest {
      */
     @Test(testName = "Use |operatorName| in a ``$project`` Stage")
     public void testExample2() {
-        testPipeline(v70, false, true, aggregation -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("studentId")
-                        .include("testMedians", median(array("$test01", "$test02", "$test03")))));
+        testPipeline(v70, false, true, aggregation -> aggregation.pipeline(project().suppressId().include("studentId")
+                .include("testMedians", median(array("$test01", "$test02", "$test03")))));
     }
 
     /**
