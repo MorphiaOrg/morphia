@@ -16,7 +16,8 @@ public class TestBitOr extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise ``OR`` with Two Integers ")
     public void testExample1() {
-        testPipeline(aggregation -> aggregation.pipeline(project().include("result", bitOr("$a", "$b"))));
+        testPipeline(new ActionTestOptions().serverVersion(v63),
+                aggregation -> aggregation.pipeline(project().include("result", bitOr("$a", "$b"))));
     }
 
     /**
